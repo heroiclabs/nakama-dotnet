@@ -27,14 +27,19 @@ namespace Nakama.Tests
         public void ShouldBeExpired()
         {
             var session = Session.Restore(AuthToken);
+            Assert.NotNull(session.AuthToken);
+            Assert.AreEqual(AuthToken, session.AuthToken);
             Assert.IsTrue(session.IsExpired);
             Assert.AreEqual(1516910973, session.ExpireTime);
+            Assert.AreNotEqual(0, session.CreateTime);
         }
 
         [Test]
         public void ShouldHaveUsernameAndUserId()
         {
             var session = Session.Restore(AuthToken);
+            Assert.NotNull(session.AuthToken);
+            Assert.AreEqual(AuthToken, session.AuthToken);
             Assert.NotNull(session.Username);
             Assert.AreEqual("vTGdGHyxvl", session.Username);
             Assert.NotNull(session.UserId);

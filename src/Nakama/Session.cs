@@ -74,7 +74,7 @@ namespace Nakama
         /// </summary>
         /// <param name="authToken">The authentication token from a <c>Session</c>.</param>
         /// <returns>A session restored from the authentication token.</returns>
-        public static Session Restore(string authToken)
+        public static ISession Restore(string authToken)
         {
             return new Session(authToken);
         }
