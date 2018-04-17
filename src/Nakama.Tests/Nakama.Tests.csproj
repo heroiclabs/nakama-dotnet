@@ -35,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SessionTest.cs" />
+    <Compile Include="SystemConsoleLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

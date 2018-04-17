@@ -32,7 +32,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IClient.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="ISession.cs" />
+    <Compile Include="NoopLogger.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="TinyJson\JsonParser.cs" />
     <Compile Include="TinyJson\JsonWriter.cs" />
