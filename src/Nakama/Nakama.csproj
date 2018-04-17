@@ -31,8 +31,14 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IClient.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="TinyJson\JsonParser.cs" />
+    <Compile Include="TinyJson\JsonWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TinyJson\LICENSE" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
