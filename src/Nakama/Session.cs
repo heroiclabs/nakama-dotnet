@@ -18,6 +18,8 @@ namespace Nakama
 {
     using System;
     using System.Text;
+    using System.Collections.Generic;
+    using TinyJson;
 
     /// <inheritdoc />
     public class Session : ISession
@@ -55,12 +57,11 @@ namespace Nakama
             CreateTime = span.Seconds;
             AuthToken = authToken;
 
-            // Hack extract fields from JSON.
-            var decoded = JwtUnpack(authToken);
-            var expireTime = decoded.Split('"')[2].TrimStart(':').TrimEnd(',');
-            ExpireTime = Convert.ToInt64(expireTime);
-            Username = decoded.Split('"')[9];
-            UserId = decoded.Split('"')[5];
+            var json = JwtUnpack(authToken);
+            var decoded = json.FromJson<Dictionary<string, object>>();
+            ExpireTime = Convert.ToInt64(decoded["exp"]);
+            Username = decoded["usn"].ToString();
+            UserId = decoded["uid"].ToString();
         }
 
         public override string ToString()
