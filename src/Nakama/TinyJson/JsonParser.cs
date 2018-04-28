@@ -49,70 +49,74 @@ namespace Nakama.TinyJson
     // - Parsing of abstract classes or interfaces is NOT supported and will throw an exception.
     public static class JsonParser
     {
-        private static readonly Stack<List<string>> SplitArrayPool = new Stack<List<string>>();
-        private static readonly StringBuilder StringBuilder = new StringBuilder();
-
-        private static readonly Dictionary<Type, Dictionary<string, FieldInfo>> FieldInfoCache =
-            new Dictionary<Type, Dictionary<string, FieldInfo>>();
-
-        private static readonly Dictionary<Type, Dictionary<string, PropertyInfo>> PropertyInfoCache =
-            new Dictionary<Type, Dictionary<string, PropertyInfo>>();
+        [ThreadStatic] private static Stack<List<string>> _splitArrayPool;
+        [ThreadStatic] private static StringBuilder _stringBuilder;
+        [ThreadStatic] private static Dictionary<Type, Dictionary<string, FieldInfo>> _fieldInfoCache;
+        [ThreadStatic] private static Dictionary<Type, Dictionary<string, PropertyInfo>> _propertyInfoCache;
 
         public static T FromJson<T>(this string json)
         {
-            //Remove all whitespace not within strings to make parsing simpler
-            StringBuilder.Length = 0;
+            // Initialize, if needed, the ThreadStatic variables
+            if (null == _propertyInfoCache)
+                _propertyInfoCache = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
+            if (null == _fieldInfoCache) _fieldInfoCache = new Dictionary<Type, Dictionary<string, FieldInfo>>();
+            if (null == _stringBuilder) _stringBuilder = new StringBuilder();
+            if (null == _splitArrayPool) _splitArrayPool = new Stack<List<string>>();
+
+            // Remove all whitespace not within strings to make parsing simpler
+            _stringBuilder.Length = 0;
             for (var i = 0; i < json.Length; i++)
             {
                 var c = json[i];
-                if (c == '\"')
+                if (c == '"')
                 {
                     i = AppendUntilStringEnd(true, i, json);
                     continue;
                 }
+
                 if (char.IsWhiteSpace(c))
                     continue;
 
-                StringBuilder.Append(c);
+                _stringBuilder.Append(c);
             }
 
             //Parse the thing!
-            return (T) ParseValue(typeof(T), StringBuilder.ToString());
+            return (T) ParseValue(typeof(T), _stringBuilder.ToString());
         }
 
         private static int AppendUntilStringEnd(bool appendEscapeCharacter, int startIdx, string json)
         {
-            StringBuilder.Append(json[startIdx]);
+            _stringBuilder.Append(json[startIdx]);
             for (var i = startIdx + 1; i < json.Length; i++)
             {
-                switch (json[i])
+                if (json[i] == '\\')
                 {
-                    case '\\':
-                        if (appendEscapeCharacter)
-                            StringBuilder.Append(json[i]);
-                        StringBuilder.Append(json[i + 1]);
-                        i++; //Skip next character as it is escaped
-                        break;
-                    case '\"':
-                        StringBuilder.Append(json[i]);
-                        return i;
-                    default:
-                        StringBuilder.Append(json[i]);
-                        break;
+                    if (appendEscapeCharacter)
+                        _stringBuilder.Append(json[i]);
+                    _stringBuilder.Append(json[i + 1]);
+                    i++; //Skip next character as it is escaped
                 }
+                else if (json[i] == '"')
+                {
+                    _stringBuilder.Append(json[i]);
+                    return i;
+                }
+                else
+                    _stringBuilder.Append(json[i]);
             }
+
             return json.Length - 1;
         }
 
         //Splits { <value>:<value>, <value>:<value> } and [ <value>, <value> ] into a list of <value> strings
         private static List<string> Split(string json)
         {
-            var splitArray = SplitArrayPool.Count > 0 ? SplitArrayPool.Pop() : new List<string>();
+            var splitArray = _splitArrayPool.Count > 0 ? _splitArrayPool.Pop() : new List<string>();
             splitArray.Clear();
             if (json.Length == 2)
                 return splitArray;
             var parseDepth = 0;
-            StringBuilder.Length = 0;
+            _stringBuilder.Length = 0;
             for (var i = 1; i < json.Length - 1; i++)
             {
                 if (json[i] == '[' || json[i] == '{')
@@ -123,7 +127,7 @@ namespace Nakama.TinyJson
                 {
                     parseDepth--;
                 }
-                else if (json[i] == '\"')
+                else if (json[i] == '"')
                 {
                     i = AppendUntilStringEnd(true, i, json);
                     continue;
@@ -132,16 +136,16 @@ namespace Nakama.TinyJson
                 {
                     if (parseDepth == 0)
                     {
-                        splitArray.Add(StringBuilder.ToString());
-                        StringBuilder.Length = 0;
+                        splitArray.Add(_stringBuilder.ToString());
+                        _stringBuilder.Length = 0;
                         continue;
                     }
                 }
 
-                StringBuilder.Append(json[i]);
+                _stringBuilder.Append(json[i]);
             }
 
-            splitArray.Add(StringBuilder.ToString());
+            splitArray.Add(_stringBuilder.ToString());
 
             return splitArray;
         }
@@ -152,82 +156,78 @@ namespace Nakama.TinyJson
             {
                 if (json.Length <= 2)
                     return string.Empty;
-                var sb = new StringBuilder();
+                var stringBuilder = new StringBuilder();
                 for (var i = 1; i < json.Length - 1; ++i)
                 {
                     if (json[i] == '\\' && i + 1 < json.Length - 1)
                     {
-                        switch (json[i + 1])
+                        var j = "\"\\nrtbf/".IndexOf(json[i + 1]);
+                        if (j >= 0)
                         {
-                            case '"':
-                                sb.Append('"');
-                                break;
-                            case '\\':
-                                sb.Append("\\");
-                                break;
-                            case 'b':
-                                sb.Append("\b");
-                                break;
-                            case 'f':
-                                sb.Append("\f");
-                                break;
-                            case 't':
-                                sb.Append("\t");
-                                break;
-                            case 'n':
-                                sb.Append("\n");
-                                break;
-                            case 'r':
-                                sb.Append("\r");
-                                break;
-                            case '0':
-                                sb.Append("\0");
-                                break;
-                            default:
-                                sb.Append(json[i]);
-                                break;
+                            stringBuilder.Append("\"\\\n\r\t\b\f/"[j]);
+                            ++i;
+                            continue;
                         }
-                        ++i;
+
+                        if (json[i + 1] == 'u' && i + 5 < json.Length - 1)
+                        {
+                            uint c;
+                            if (uint.TryParse(json.Substring(i + 2, 4),
+                                System.Globalization.NumberStyles.AllowHexSpecifier, null, out c))
+                            {
+                                stringBuilder.Append((char) c);
+                                i += 5;
+                                continue;
+                            }
+                        }
                     }
-                    else
-                        sb.Append(json[i]);
+
+                    stringBuilder.Append(json[i]);
                 }
-                return sb.ToString();
+
+                return stringBuilder.ToString();
             }
-            if (type == typeof(int))
+
+            if (type == typeof(int) || type == typeof(int?))
             {
                 int result;
                 int.TryParse(json, out result);
                 return result;
             }
-            if (type == typeof(byte))
+
+            if (type == typeof(byte) || type == typeof(byte?))
             {
                 byte result;
                 byte.TryParse(json, out result);
                 return result;
             }
-            if (type == typeof(float))
+
+            if (type == typeof(float) || type == typeof(float?))
             {
                 float result;
                 float.TryParse(json, System.Globalization.NumberStyles.Float,
                     System.Globalization.CultureInfo.InvariantCulture, out result);
                 return result;
             }
-            if (type == typeof(double))
+
+            if (type == typeof(double) || type == typeof(double?))
             {
                 double result;
                 double.TryParse(json, System.Globalization.NumberStyles.Float,
                     System.Globalization.CultureInfo.InvariantCulture, out result);
                 return result;
             }
-            if (type == typeof(bool))
+
+            if (type == typeof(bool) || type == typeof(bool?))
             {
                 return json.ToLower() == "true";
             }
+
             if (json == "null")
             {
                 return null;
             }
+
             if (type.IsArray)
             {
                 var arrayType = type.GetElementType();
@@ -238,9 +238,10 @@ namespace Nakama.TinyJson
                 var newArray = Array.CreateInstance(arrayType, elems.Count);
                 for (var i = 0; i < elems.Count; i++)
                     newArray.SetValue(ParseValue(arrayType, elems[i]), i);
-                SplitArrayPool.Push(elems);
+                _splitArrayPool.Push(elems);
                 return newArray;
             }
+
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
             {
                 var listType = type.GetGenericArguments()[0];
@@ -248,12 +249,14 @@ namespace Nakama.TinyJson
                     return null;
 
                 var elems = Split(json);
-                var list = (IList) type.GetConstructor(new Type[] {typeof(int)}).Invoke(new object[] {elems.Count});
+                var list = (IList) type.GetConstructor(new[] {typeof(int)}).Invoke(new object[] {elems.Count});
                 foreach (var t in elems)
                     list.Add(ParseValue(listType, t));
-                SplitArrayPool.Push(elems);
+
+                _splitArrayPool.Push(elems);
                 return list;
             }
+
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
                 Type keyType, valueType;
@@ -274,7 +277,7 @@ namespace Nakama.TinyJson
                 if (elems.Count % 2 != 0)
                     return null;
 
-                var dictionary = (IDictionary) type.GetConstructor(new Type[] {typeof(int)})
+                var dictionary = (IDictionary) type.GetConstructor(new[] {typeof(int)})
                     .Invoke(new object[] {elems.Count / 2});
                 for (var i = 0; i < elems.Count; i += 2)
                 {
@@ -284,12 +287,15 @@ namespace Nakama.TinyJson
                     var val = ParseValue(valueType, elems[i + 1]);
                     dictionary.Add(keyValue, val);
                 }
+
                 return dictionary;
             }
+
             if (type == typeof(object))
             {
                 return ParseAnonymousValue(json);
             }
+
             if (json[0] == '{' && json[json.Length - 1] == '}')
             {
                 return ParseObject(type, json);
@@ -312,15 +318,18 @@ namespace Nakama.TinyJson
                     dict.Add(elems[i].Substring(1, elems[i].Length - 2), ParseAnonymousValue(elems[i + 1]));
                 return dict;
             }
+
             if (json[0] == '[' && json[json.Length - 1] == ']')
             {
                 var items = Split(json);
                 var finalList = new List<object>(items.Count);
                 foreach (var t in items)
                     finalList.Add(ParseAnonymousValue(t));
+
                 return finalList;
             }
-            if (json[0] == '\"' && json[json.Length - 1] == '\"')
+
+            if (json[0] == '"' && json[json.Length - 1] == '"')
             {
                 var str = json.Substring(1, json.Length - 2);
                 return str.Replace("\\", string.Empty);
@@ -343,13 +352,10 @@ namespace Nakama.TinyJson
                 }
             }
 
-            switch (json)
-            {
-                case "true":
-                    return true;
-                case "false":
-                    return false;
-            }
+            if (json == "true")
+                return true;
+            if (json == "false")
+                return false;
             // handles json == "null" as well as invalid JSON
             return null;
         }
@@ -365,23 +371,36 @@ namespace Nakama.TinyJson
 
             Dictionary<string, FieldInfo> nameToField;
             Dictionary<string, PropertyInfo> nameToProperty;
-            if (!FieldInfoCache.TryGetValue(type, out nameToField))
+            if (!_fieldInfoCache.TryGetValue(type, out nameToField))
             {
                 nameToField = type.GetFields().Where(field => field.IsPublic).ToDictionary(field => field.Name);
-                FieldInfoCache.Add(type, nameToField);
+                _fieldInfoCache.Add(type, nameToField);
             }
-            if (!PropertyInfoCache.TryGetValue(type, out nameToProperty))
+
+            if (!_propertyInfoCache.TryGetValue(type, out nameToProperty))
             {
                 nameToProperty = type.GetProperties().ToDictionary(p => p.Name);
-                PropertyInfoCache.Add(type, nameToProperty);
+                _propertyInfoCache.Add(type, nameToProperty);
             }
+
 
             for (var i = 0; i < elems.Count; i += 2)
             {
                 if (elems[i].Length <= 2)
                     continue;
+
+
                 var key = elems[i].Substring(1, elems[i].Length - 2);
                 var value = elems[i + 1];
+
+
+                foreach (var infoDic in nameToProperty.ToList())
+                {
+                    var jsonPropertyAttribute =
+                        (JsonPropertyAttribute) infoDic.Value.GetCustomAttribute(typeof(JsonPropertyAttribute), false);
+                    if (jsonPropertyAttribute != null && jsonPropertyAttribute.Name == key)
+                        key = infoDic.Value.Name;
+                }
 
                 FieldInfo fieldInfo;
                 PropertyInfo propertyInfo;

@@ -25,6 +25,7 @@ namespace Nakama.TinyJson
     using System.Collections;
     using System.Collections.Generic;
     using System.Text;
+    using System.Reflection;
 
     // Really simple JSON writer
     // - Outputs JSON structures from an object
@@ -43,7 +44,7 @@ namespace Nakama.TinyJson
         {
             if (item == null)
             {
-                stringBuilder.Append("null");
+                stringBuilder.Append(item.GetType().Name + ": null");
                 return;
             }
 
@@ -53,36 +54,18 @@ namespace Nakama.TinyJson
                 stringBuilder.Append('"');
                 var str = (string) item;
                 foreach (var t in str)
-                    switch (t)
+                    if (t < ' ' || t == '"' || t == '\\')
                     {
-                        case '\\':
-                            stringBuilder.Append("\\\\");
-                            break;
-                        case '\"':
-                            stringBuilder.Append("\\\"");
-                            break;
-                        case '\b':
-                            stringBuilder.Append("\\b");
-                            break;
-                        case '\f':
-                            stringBuilder.Append("\\f");
-                            break;
-                        case '\t':
-                            stringBuilder.Append("\\t");
-                            break;
-                        case '\n':
-                            stringBuilder.Append("\\n");
-                            break;
-                        case '\r':
-                            stringBuilder.Append("\\r");
-                            break;
-                        case '\0':
-                            stringBuilder.Append("\\0");
-                            break;
-                        default:
-                            stringBuilder.Append(t);
-                            break;
+                        stringBuilder.Append('\\');
+                        var j = "\"\\\n\r\t\b\f".IndexOf(t);
+                        if (j >= 0)
+                            stringBuilder.Append("\"\\nrtbf"[j]);
+                        else
+                            stringBuilder.AppendFormat("u{0:X4}", (uint) t);
                     }
+                    else
+                        stringBuilder.Append(t);
+
                 stringBuilder.Append('"');
             }
             else if (type == typeof(byte) || type == typeof(int))
@@ -99,7 +82,7 @@ namespace Nakama.TinyJson
             }
             else if (type == typeof(bool))
             {
-                stringBuilder.Append((bool) item ? "true" : "false");
+                stringBuilder.Append(((bool) item) ? "true" : "false");
             }
             else if (item is IList)
             {
@@ -114,6 +97,7 @@ namespace Nakama.TinyJson
                         stringBuilder.Append(',');
                     AppendValue(stringBuilder, t);
                 }
+
                 stringBuilder.Append(']');
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
@@ -141,6 +125,7 @@ namespace Nakama.TinyJson
                     stringBuilder.Append("\":");
                     AppendValue(stringBuilder, dict[key]);
                 }
+
                 stringBuilder.Append('}');
             }
             else
@@ -151,32 +136,78 @@ namespace Nakama.TinyJson
                 var fieldInfos = type.GetFields();
                 foreach (var t in fieldInfos)
                 {
+                    var ignoreAttr =
+                        (JsonIgnoreAttribute) t.GetCustomAttribute(typeof(JsonIgnoreAttribute), false);
+                    if (ignoreAttr != null)
+                        continue;
+
                     if (!t.IsPublic || t.IsStatic) continue;
                     var value = t.GetValue(item);
-                    if (value == null) continue;
-                    if (isFirst)
-                        isFirst = false;
+                    if (value != null)
+                    {
+                        if (isFirst)
+                            isFirst = false;
+                        else
+                            stringBuilder.Append(',');
+                        stringBuilder.Append('\"');
+                        stringBuilder.Append(t.Name);
+                        stringBuilder.Append("\":");
+                        AppendValue(stringBuilder, value);
+                    }
                     else
-                        stringBuilder.Append(',');
-                    stringBuilder.Append('\"');
-                    stringBuilder.Append(t.Name);
-                    stringBuilder.Append("\":");
-                    AppendValue(stringBuilder, value);
+                    {
+                        if (isFirst)
+                            isFirst = false;
+                        else
+                            stringBuilder.Append(',');
+                        stringBuilder.Append('\"');
+                        stringBuilder.Append(t.Name);
+                        stringBuilder.Append("\":");
+                        stringBuilder.Append("null");
+                    }
                 }
+
                 var propertyInfo = type.GetProperties();
                 foreach (var t in propertyInfo)
                 {
                     if (!t.CanRead) continue;
+                    var propertyName = t.Name;
+
+                    var ignoreAttr =
+                        (JsonIgnoreAttribute) t
+                            .GetCustomAttribute(typeof(JsonIgnoreAttribute), false);
+                    if (ignoreAttr != null)
+                        continue;
+
+                    var nameAttribute =
+                        (JsonPropertyAttribute) t
+                            .GetCustomAttribute(typeof(JsonPropertyAttribute), false);
+                    if (nameAttribute != null)
+                        propertyName = nameAttribute.Name;
+
                     var value = t.GetValue(item, null);
-                    if (value == null) continue;
-                    if (isFirst)
-                        isFirst = false;
+                    if (value != null)
+                    {
+                        if (isFirst)
+                            isFirst = false;
+                        else
+                            stringBuilder.Append(',');
+                        stringBuilder.Append('\"');
+                        stringBuilder.Append(propertyName);
+                        stringBuilder.Append("\":");
+                        AppendValue(stringBuilder, value);
+                    }
                     else
-                        stringBuilder.Append(',');
-                    stringBuilder.Append('\"');
-                    stringBuilder.Append(t.Name);
-                    stringBuilder.Append("\":");
-                    AppendValue(stringBuilder, value);
+                    {
+                        if (isFirst)
+                            isFirst = false;
+                        else
+                            stringBuilder.Append(',');
+                        stringBuilder.Append('\"');
+                        stringBuilder.Append(propertyName);
+                        stringBuilder.Append("\":");
+                        stringBuilder.Append("null");
+                    }
                 }
 
                 stringBuilder.Append('}');
