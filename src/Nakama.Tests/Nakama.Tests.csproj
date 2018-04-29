@@ -34,6 +34,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\AuthenticateTest.cs" />
+    <Compile Include="ClientTest.cs" />
+    <Compile Include="Protocol\WebSocketTest.cs" />
     <Compile Include="SessionTest.cs" />
     <Compile Include="SystemConsoleLogger.cs" />
   </ItemGroup>

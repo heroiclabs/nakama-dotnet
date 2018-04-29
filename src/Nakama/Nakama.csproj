@@ -28,19 +28,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="deniszykov.WebSocketListener, Version=4.2.2.0, Culture=neutral, PublicKeyToken=7f78616efb4a208d">
+      <HintPath>..\packages\deniszykov.WebSocketListener.4.2.2\lib\net45\deniszykov.WebSocketListener.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiClient.gen.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="IClient.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="ISession.cs" />
+    <Compile Include="ISocket.cs" />
     <Compile Include="NoopLogger.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="TinyJson\JsonIgnoreAttribute.cs" />
     <Compile Include="TinyJson\JsonParser.cs" />
+    <Compile Include="TinyJson\JsonPropertyAttribute.cs" />
     <Compile Include="TinyJson\JsonWriter.cs" />
+    <Compile Include="WebSocket.cs" />
+    <Compile Include="WebSocketLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TinyJson\LICENSE" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
