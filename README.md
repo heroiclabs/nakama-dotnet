@@ -11,6 +11,6 @@ Nakama .NET
 $> ./build.sh --target=Default
 ```
 
-### Special Thanks
+### Special Thanks
 
 Thanks to Alex Parker (@zanders3) for the excellent [json](https://github.com/zanders3/json) library.
