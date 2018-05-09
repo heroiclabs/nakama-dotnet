@@ -85,23 +85,23 @@ namespace Nakama
         {{- $fieldname := $propname | pascalCase }}
 
         /// <inheritdoc />
-        {{- if eq $property.Type "integer"}}
+        {{- if eq $property.Type "integer" }}
         [JsonProperty("{{ $propname }}")]
         public int {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "boolean" }}
         [JsonProperty("{{ $propname }}")]
         public bool {{ $fieldname }} { get; set; }
-        {{- else if eq $property.Type "string"}}
+        {{- else if eq $property.Type "string" }}
         [JsonProperty("{{ $propname }}")]
         public string {{ $fieldname }} { get; set; }
-        {{- else if eq $property.Type "array"}}
-          {{- if eq $property.Items.Type "string"}}
+        {{- else if eq $property.Type "array" }}
+          {{- if eq $property.Items.Type "string" }}
         [JsonProperty("{{ $propname }}")]
         public List<string> {{ $fieldname }} { get; set; }
-          {{- else if eq $property.Items.Type "integer"}}
+          {{- else if eq $property.Items.Type "integer" }}
         [JsonProperty("{{ $propname }}")]
         public List<int> {{ $fieldname }} { get; set; }
-          {{- else if eq $property.Items.Type "boolean"}}
+          {{- else if eq $property.Items.Type "boolean" }}
         [JsonProperty("{{ $propname }}")]
         public List<bool> {{ $fieldname }} { get; set; }
           {{- else}}
@@ -177,7 +177,7 @@ namespace Nakama
             , {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
             {{- end }}
         {{- else if eq $parameter.Type "array"}}
-            , List<{{ $parameter.Items.Type }}> {{ $camelcase }}
+            , IEnumerable<{{ $parameter.Items.Type }}> {{ $camelcase }}
         {{- else if eq $parameter.Type "integer" }}
             , int {{ $camelcase }}
         {{- else if eq $parameter.Type "boolean" }}
@@ -198,11 +198,31 @@ namespace Nakama
             {{- end }}
             {{- end }}
 
-            var urlpath = "{{- $url }}";
+            var urlpath = "{{- $url }}?";
             {{- range $parameter := $operation.Parameters }}
             {{- $camelcase := $parameter.Name | camelCase }}
             {{- if eq $parameter.In "path" }}
             urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $camelcase }}));
+            {{- end }}
+            {{- end }}
+
+            {{- range $parameter := $operation.Parameters }}
+            {{- $camelcase := $parameter.Name | camelCase }}
+            {{- if eq $parameter.In "query"}}
+                {{- if eq $parameter.Type "integer" }}
+            urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
+                {{- else if eq $parameter.Type "string" }}
+            urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }}), "&");
+                {{- else if eq $parameter.Type "boolean" }}
+            urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", {{ $camelcase }}.ToString().ToLower(), "&");
+                {{- else if eq $parameter.Type "array" }}
+            foreach (var elem in {{ $camelcase }})
+            {
+                urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", elem, "&");
+            }
+                {{- else }}
+            {{ $parameter }} // ERROR
+                {{- end }}
             {{- end }}
             {{- end }}
 
@@ -212,8 +232,7 @@ namespace Nakama
                 Method = new HttpMethod("{{- $method | uppercase }}"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
 

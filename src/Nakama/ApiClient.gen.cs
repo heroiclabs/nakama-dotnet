@@ -2546,7 +2546,7 @@ namespace Nakama
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/healthcheck";
+            var urlpath = "/healthcheck?";
 
             var request = new HttpRequestMessage
             {
@@ -2575,7 +2575,7 @@ namespace Nakama
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/v2/account";
+            var urlpath = "/v2/account?";
 
             var request = new HttpRequestMessage
             {
@@ -2609,7 +2609,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account";
+            var urlpath = "/v2/account?";
 
             var request = new HttpRequestMessage
             {
@@ -2645,7 +2645,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/custom";
+            var urlpath = "/v2/account/authenticate/custom?";
 
             var request = new HttpRequestMessage
             {
@@ -2653,8 +2653,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
@@ -2682,7 +2681,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/device";
+            var urlpath = "/v2/account/authenticate/device?";
 
             var request = new HttpRequestMessage
             {
@@ -2719,7 +2718,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/email";
+            var urlpath = "/v2/account/authenticate/email?";
 
             var request = new HttpRequestMessage
             {
@@ -2756,7 +2755,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/facebook";
+            var urlpath = "/v2/account/authenticate/facebook?";
 
             var request = new HttpRequestMessage
             {
@@ -2793,7 +2792,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/gamecenter";
+            var urlpath = "/v2/account/authenticate/gamecenter?";
 
             var request = new HttpRequestMessage
             {
@@ -2830,7 +2829,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/google";
+            var urlpath = "/v2/account/authenticate/google?";
 
             var request = new HttpRequestMessage
             {
@@ -2867,7 +2866,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/steam";
+            var urlpath = "/v2/account/authenticate/steam?";
 
             var request = new HttpRequestMessage
             {
@@ -2903,7 +2902,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/custom";
+            var urlpath = "/v2/account/link/custom?";
 
             var request = new HttpRequestMessage
             {
@@ -2938,7 +2937,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/device";
+            var urlpath = "/v2/account/link/device?";
 
             var request = new HttpRequestMessage
             {
@@ -2973,7 +2972,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/email";
+            var urlpath = "/v2/account/link/email?";
 
             var request = new HttpRequestMessage
             {
@@ -3008,7 +3007,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/facebook";
+            var urlpath = "/v2/account/link/facebook?";
 
             var request = new HttpRequestMessage
             {
@@ -3043,7 +3042,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/gamecenter";
+            var urlpath = "/v2/account/link/gamecenter?";
 
             var request = new HttpRequestMessage
             {
@@ -3078,7 +3077,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/google";
+            var urlpath = "/v2/account/link/google?";
 
             var request = new HttpRequestMessage
             {
@@ -3113,7 +3112,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/steam";
+            var urlpath = "/v2/account/link/steam?";
 
             var request = new HttpRequestMessage
             {
@@ -3148,7 +3147,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/custom";
+            var urlpath = "/v2/account/unlink/custom?";
 
             var request = new HttpRequestMessage
             {
@@ -3183,7 +3182,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/device";
+            var urlpath = "/v2/account/unlink/device?";
 
             var request = new HttpRequestMessage
             {
@@ -3218,7 +3217,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/email";
+            var urlpath = "/v2/account/unlink/email?";
 
             var request = new HttpRequestMessage
             {
@@ -3253,7 +3252,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/facebook";
+            var urlpath = "/v2/account/unlink/facebook?";
 
             var request = new HttpRequestMessage
             {
@@ -3288,7 +3287,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/gamecenter";
+            var urlpath = "/v2/account/unlink/gamecenter?";
 
             var request = new HttpRequestMessage
             {
@@ -3323,7 +3322,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/google";
+            var urlpath = "/v2/account/unlink/google?";
 
             var request = new HttpRequestMessage
             {
@@ -3358,7 +3357,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/steam";
+            var urlpath = "/v2/account/unlink/steam?";
 
             var request = new HttpRequestMessage
             {
@@ -3396,8 +3395,11 @@ namespace Nakama
                 throw new ArgumentException("'channelId' is required but was null.");
             }
 
-            var urlpath = "/v2/channel/{channel_id}";
+            var urlpath = "/v2/channel/{channel_id}?";
             urlpath = urlpath.Replace("{channel_id}", Uri.EscapeDataString(channelId));
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            urlpath = string.Concat(urlpath, "forward=", forward.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
 
             var request = new HttpRequestMessage
             {
@@ -3423,12 +3425,20 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> DeleteFriendsAsync(
             string bearerToken
-            , List<string> ids
-            , List<string> usernames)
+            , IEnumerable<string> ids
+            , IEnumerable<string> usernames)
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/v2/friend";
+            var urlpath = "/v2/friend?";
+            foreach (var elem in ids)
+            {
+                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+            }
+            foreach (var elem in usernames)
+            {
+                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -3457,7 +3467,7 @@ namespace Nakama
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/v2/friend";
+            var urlpath = "/v2/friend?";
 
             var request = new HttpRequestMessage
             {
@@ -3486,7 +3496,7 @@ namespace Nakama
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/v2/friend";
+            var urlpath = "/v2/friend?";
 
             var request = new HttpRequestMessage
             {
@@ -3515,7 +3525,7 @@ namespace Nakama
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/v2/friend/block";
+            var urlpath = "/v2/friend/block?";
 
             var request = new HttpRequestMessage
             {
@@ -3549,7 +3559,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/friend/facebook";
+            var urlpath = "/v2/friend/facebook?";
 
             var request = new HttpRequestMessage
             {
@@ -3584,7 +3594,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group";
+            var urlpath = "/v2/group?";
 
             var request = new HttpRequestMessage
             {
@@ -3619,7 +3629,7 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}";
+            var urlpath = "/v2/group/{group_id}?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var request = new HttpRequestMessage
@@ -3659,7 +3669,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}";
+            var urlpath = "/v2/group/{group_id}?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var request = new HttpRequestMessage
@@ -3700,7 +3710,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/add";
+            var urlpath = "/v2/group/{group_id}/add?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var request = new HttpRequestMessage
@@ -3741,7 +3751,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/join";
+            var urlpath = "/v2/group/{group_id}/join?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var request = new HttpRequestMessage
@@ -3782,7 +3792,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/kick";
+            var urlpath = "/v2/group/{group_id}/kick?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var request = new HttpRequestMessage
@@ -3823,7 +3833,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/leave";
+            var urlpath = "/v2/group/{group_id}/leave?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var request = new HttpRequestMessage
@@ -3864,7 +3874,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/promote";
+            var urlpath = "/v2/group/{group_id}/promote?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var request = new HttpRequestMessage
@@ -3900,7 +3910,7 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/user";
+            var urlpath = "/v2/group/{group_id}/user?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var request = new HttpRequestMessage
@@ -3935,7 +3945,7 @@ namespace Nakama
                 throw new ArgumentException("'leaderboardId' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}";
+            var urlpath = "/v2/leaderboard/{leaderboard_id}?";
             urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
 
             var request = new HttpRequestMessage
@@ -3963,7 +3973,7 @@ namespace Nakama
         public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(
             string bearerToken
             , string leaderboardId
-            , List<string> ownerIds
+            , IEnumerable<string> ownerIds
             , int limit
             , string cursor)
         {
@@ -3973,8 +3983,14 @@ namespace Nakama
                 throw new ArgumentException("'leaderboardId' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}";
+            var urlpath = "/v2/leaderboard/{leaderboard_id}?";
             urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
+            foreach (var elem in ownerIds)
+            {
+                urlpath = string.Concat(urlpath, "owner_ids=", elem, "&");
+            }
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4013,7 +4029,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}";
+            var urlpath = "/v2/leaderboard/{leaderboard_id}?";
             urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
 
             var request = new HttpRequestMessage
@@ -4049,7 +4065,12 @@ namespace Nakama
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/v2/match";
+            var urlpath = "/v2/match?";
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            urlpath = string.Concat(urlpath, "authoritative=", authoritative.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "label=", Uri.EscapeDataString(label), "&");
+            urlpath = string.Concat(urlpath, "min_size=", minSize, "&");
+            urlpath = string.Concat(urlpath, "max_size=", maxSize, "&");
 
             var request = new HttpRequestMessage
             {
@@ -4075,11 +4096,15 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> DeleteNotificationsAsync(
             string bearerToken
-            , List<string> ids)
+            , IEnumerable<string> ids)
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/v2/notification";
+            var urlpath = "/v2/notification?";
+            foreach (var elem in ids)
+            {
+                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -4110,7 +4135,9 @@ namespace Nakama
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/v2/notification";
+            var urlpath = "/v2/notification?";
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            urlpath = string.Concat(urlpath, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4146,8 +4173,10 @@ namespace Nakama
                 throw new ArgumentException("'id' is required but was null.");
             }
 
-            var urlpath = "/v2/rpc/{id}";
+            var urlpath = "/v2/rpc/{id}?";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+            urlpath = string.Concat(urlpath, "payload=", Uri.EscapeDataString(payload), "&");
+            urlpath = string.Concat(urlpath, "http_key=", Uri.EscapeDataString(httpKey), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4189,7 +4218,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/rpc/{id}";
+            var urlpath = "/v2/rpc/{id}?";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
 
             var request = new HttpRequestMessage
@@ -4228,7 +4257,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/storage";
+            var urlpath = "/v2/storage?";
 
             var request = new HttpRequestMessage
             {
@@ -4263,7 +4292,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/storage";
+            var urlpath = "/v2/storage?";
 
             var request = new HttpRequestMessage
             {
@@ -4298,7 +4327,7 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/storage/delete";
+            var urlpath = "/v2/storage/delete?";
 
             var request = new HttpRequestMessage
             {
@@ -4336,8 +4365,11 @@ namespace Nakama
                 throw new ArgumentException("'collection' is required but was null.");
             }
 
-            var urlpath = "/v2/storage/{collection}";
+            var urlpath = "/v2/storage/{collection}?";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
+            urlpath = string.Concat(urlpath, "user_id=", Uri.EscapeDataString(userId), "&");
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4378,9 +4410,11 @@ namespace Nakama
                 throw new ArgumentException("'userId' is required but was null.");
             }
 
-            var urlpath = "/v2/storage/{collection}/{user_id}";
+            var urlpath = "/v2/storage/{collection}/{user_id}?";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
             urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4406,13 +4440,25 @@ namespace Nakama
         /// </summary>
         public async Task<IApiUsers> GetUsersAsync(
             string bearerToken
-            , List<string> ids
-            , List<string> usernames
-            , List<string> facebookIds)
+            , IEnumerable<string> ids
+            , IEnumerable<string> usernames
+            , IEnumerable<string> facebookIds)
         {
         	HttpClient client = new HttpClient(); // FIXME
 
-            var urlpath = "/v2/user";
+            var urlpath = "/v2/user?";
+            foreach (var elem in ids)
+            {
+                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+            }
+            foreach (var elem in usernames)
+            {
+                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
+            }
+            foreach (var elem in facebookIds)
+            {
+                urlpath = string.Concat(urlpath, "facebook_ids=", elem, "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -4446,7 +4492,7 @@ namespace Nakama
                 throw new ArgumentException("'userId' is required but was null.");
             }
 
-            var urlpath = "/v2/user/{user_id}/group";
+            var urlpath = "/v2/user/{user_id}/group?";
             urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
 
             var request = new HttpRequestMessage
