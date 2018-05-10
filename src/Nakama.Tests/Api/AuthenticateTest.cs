@@ -31,6 +31,7 @@ namespace Nakama.Tests.Api
             IClient client = new Client("defaultkey", "127.0.0.1", 7350, false);
             var session = await client.AuthenticateCustomAsync(customid.ToString());
 
+            Console.WriteLine(session);
             Assert.IsNotNull(session);
             Assert.IsNotNull(session.UserId);
             Assert.IsNotNull(session.Username);

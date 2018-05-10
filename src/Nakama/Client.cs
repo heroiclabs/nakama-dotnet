@@ -19,12 +19,7 @@ using System.Threading;
 namespace Nakama
 {
     using System;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Text;
     using System.Threading.Tasks;
-    using TinyJson;
     using vtortola.WebSockets;
     using vtortola.WebSockets.Rfc6455;
 
@@ -70,6 +65,7 @@ namespace Nakama
         /// <inheritdoc />
         public int Timeout { get; set; }
 
+        private readonly ApiClient _apiClient;
         private WebSocketClient _client;
 
         public Client(string serverKey = DefaultServerKey, string host = DefaultHost, int port = DefaultPort,
@@ -83,33 +79,17 @@ namespace Nakama
             Secure = secure;
             Trace = false;
             Timeout = 5000;
+
+            var scheme = Secure ? "https" : "http";
+            _apiClient = new ApiClient(null, new UriBuilder(scheme, Host, Port).Uri);
         }
 
         /// <inheritdoc />
         public async Task<ISession> AuthenticateCustomAsync(string id)
         {
-            var httpClient = new HttpClient();
-            var scheme = Secure ? "https" : "http";
-            httpClient.BaseAddress = new UriBuilder(scheme, Host, Port).Uri;
-            httpClient.Timeout = TimeSpan.FromMilliseconds(Timeout);
-
-            var buffer = Encoding.UTF8.GetBytes(ServerKey + ":");
-            var authHeader = string.Concat("Basic ", Convert.ToBase64String(buffer));
-            httpClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(authHeader);
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            var message = new ApiAccountCustom {Id = id};
-            var request = new StringContent(message.ToJson());
-            var response = await httpClient.PostAsync("/v2/account/authenticate/custom", request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new WebException(); // FIXME
-            }
-
-            var content = await response.Content.ReadAsStringAsync();
-            var session = content.FromJson<ApiSession>();
-            return Session.Restore(session.Token);
+            var body = new ApiAccountCustom {Id = id};
+            var resp = await _apiClient.AuthenticateCustomAsync(ServerKey, "", body);
+            return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
