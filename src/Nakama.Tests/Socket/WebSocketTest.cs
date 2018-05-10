@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Nakama.Tests.Protocol
+namespace Nakama.Tests.Socket
 {
     using System;
     using System.Threading.Tasks;
