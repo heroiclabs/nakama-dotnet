@@ -24,8 +24,9 @@ namespace Nakama.TinyJson
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.Text;
     using System.Reflection;
+    using System.Runtime.Serialization;
+    using System.Text;
 
     // Really simple JSON writer
     // - Outputs JSON structures from an object
@@ -44,7 +45,7 @@ namespace Nakama.TinyJson
         {
             if (item == null)
             {
-                stringBuilder.Append(item.GetType().Name + ": null");
+                stringBuilder.Append("null");
                 return;
             }
 
@@ -70,7 +71,7 @@ namespace Nakama.TinyJson
             }
             else if (type == typeof(byte) || type == typeof(int))
             {
-                stringBuilder.Append(item);
+                stringBuilder.Append(item.ToString());
             }
             else if (type == typeof(float))
             {
@@ -82,7 +83,7 @@ namespace Nakama.TinyJson
             }
             else if (type == typeof(bool))
             {
-                stringBuilder.Append(((bool) item) ? "true" : "false");
+                stringBuilder.Append((bool) item ? "true" : "false");
             }
             else if (item is IList)
             {
@@ -133,85 +134,55 @@ namespace Nakama.TinyJson
                 stringBuilder.Append('{');
 
                 var isFirst = true;
-                var fieldInfos = type.GetFields();
+                var fieldInfos =
+                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
                 foreach (var t in fieldInfos)
                 {
-                    var ignoreAttr =
-                        (JsonIgnoreAttribute) t.GetCustomAttribute(typeof(JsonIgnoreAttribute), false);
-                    if (ignoreAttr != null)
+                    if (t.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
                         continue;
 
-                    if (!t.IsPublic || t.IsStatic) continue;
                     var value = t.GetValue(item);
-                    if (value != null)
-                    {
-                        if (isFirst)
-                            isFirst = false;
-                        else
-                            stringBuilder.Append(',');
-                        stringBuilder.Append('\"');
-                        stringBuilder.Append(t.Name);
-                        stringBuilder.Append("\":");
-                        AppendValue(stringBuilder, value);
-                    }
+                    if (value == null) continue;
+                    if (isFirst)
+                        isFirst = false;
                     else
-                    {
-                        if (isFirst)
-                            isFirst = false;
-                        else
-                            stringBuilder.Append(',');
-                        stringBuilder.Append('\"');
-                        stringBuilder.Append(t.Name);
-                        stringBuilder.Append("\":");
-                        stringBuilder.Append("null");
-                    }
+                        stringBuilder.Append(',');
+                    stringBuilder.Append('\"');
+                    stringBuilder.Append(GetMemberName(t));
+                    stringBuilder.Append("\":");
+                    AppendValue(stringBuilder, value);
                 }
 
-                var propertyInfo = type.GetProperties();
+                var propertyInfo =
+                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
                 foreach (var t in propertyInfo)
                 {
-                    if (!t.CanRead) continue;
-                    var propertyName = t.Name;
-
-                    var ignoreAttr =
-                        (JsonIgnoreAttribute) t
-                            .GetCustomAttribute(typeof(JsonIgnoreAttribute), false);
-                    if (ignoreAttr != null)
+                    if (!t.CanRead ||
+                        t.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
                         continue;
 
-                    var nameAttribute =
-                        (JsonPropertyAttribute) t
-                            .GetCustomAttribute(typeof(JsonPropertyAttribute), false);
-                    if (nameAttribute != null)
-                        propertyName = nameAttribute.Name;
-
                     var value = t.GetValue(item, null);
-                    if (value != null)
-                    {
-                        if (isFirst)
-                            isFirst = false;
-                        else
-                            stringBuilder.Append(',');
-                        stringBuilder.Append('\"');
-                        stringBuilder.Append(propertyName);
-                        stringBuilder.Append("\":");
-                        AppendValue(stringBuilder, value);
-                    }
+                    if (value == null) continue;
+                    if (isFirst)
+                        isFirst = false;
                     else
-                    {
-                        if (isFirst)
-                            isFirst = false;
-                        else
-                            stringBuilder.Append(',');
-                        stringBuilder.Append('\"');
-                        stringBuilder.Append(propertyName);
-                        stringBuilder.Append("\":");
-                        stringBuilder.Append("null");
-                    }
+                        stringBuilder.Append(',');
+                    stringBuilder.Append('\"');
+                    stringBuilder.Append(GetMemberName(t));
+                    stringBuilder.Append("\":");
+                    AppendValue(stringBuilder, value);
                 }
 
                 stringBuilder.Append('}');
             }
+        }
+
+        private static string GetMemberName(MemberInfo member)
+        {
+            var dataMemberAttribute = member.GetCustomAttribute<DataMemberAttribute>();
+            if (dataMemberAttribute != null && dataMemberAttribute.IsNameSetExplicitly)
+                return dataMemberAttribute.Name;
+            return member.Name;
         }
     }
 }

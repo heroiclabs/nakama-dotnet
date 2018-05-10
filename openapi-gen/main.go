@@ -38,6 +38,7 @@ namespace Nakama
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
     using TinyJson;
@@ -86,30 +87,30 @@ namespace Nakama
 
         /// <inheritdoc />
         {{- if eq $property.Type "integer" }}
-        [JsonProperty("{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}")]
         public int {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "boolean" }}
-        [JsonProperty("{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}")]
         public bool {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "string" }}
-        [JsonProperty("{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}")]
         public string {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "array" }}
           {{- if eq $property.Items.Type "string" }}
-        [JsonProperty("{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}")]
         public List<string> {{ $fieldname }} { get; set; }
           {{- else if eq $property.Items.Type "integer" }}
-        [JsonProperty("{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}")]
         public List<int> {{ $fieldname }} { get; set; }
           {{- else if eq $property.Items.Type "boolean" }}
-        [JsonProperty("{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}")]
         public List<bool> {{ $fieldname }} { get; set; }
           {{- else}}
-        [JsonProperty("{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}")]
         public List<I{{ $property.Items.Ref | cleanRef }}> {{ $fieldname }} { get; set; }
           {{- end }}
         {{- else }}
-        [JsonProperty("{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}")]
         public I{{ $property.Ref | cleanRef }} {{ $fieldname }} { get; set; }
         {{- end }}
         {{- end }}

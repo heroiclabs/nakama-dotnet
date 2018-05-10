@@ -25,7 +25,6 @@ namespace Nakama.TinyJson
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Text;
@@ -63,7 +62,7 @@ namespace Nakama.TinyJson
             if (null == _stringBuilder) _stringBuilder = new StringBuilder();
             if (null == _splitArrayPool) _splitArrayPool = new Stack<List<string>>();
 
-            // Remove all whitespace not within strings to make parsing simpler
+            //Remove all whitespace not within strings to make parsing simpler
             _stringBuilder.Length = 0;
             for (var i = 0; i < json.Length; i++)
             {
@@ -188,21 +187,21 @@ namespace Nakama.TinyJson
                 return stringBuilder.ToString();
             }
 
-            if (type == typeof(int) || type == typeof(int?))
+            if (type == typeof(int))
             {
                 int result;
                 int.TryParse(json, out result);
                 return result;
             }
 
-            if (type == typeof(byte) || type == typeof(byte?))
+            if (type == typeof(byte))
             {
                 byte result;
                 byte.TryParse(json, out result);
                 return result;
             }
 
-            if (type == typeof(float) || type == typeof(float?))
+            if (type == typeof(float))
             {
                 float result;
                 float.TryParse(json, System.Globalization.NumberStyles.Float,
@@ -210,7 +209,7 @@ namespace Nakama.TinyJson
                 return result;
             }
 
-            if (type == typeof(double) || type == typeof(double?))
+            if (type == typeof(double))
             {
                 double result;
                 double.TryParse(json, System.Globalization.NumberStyles.Float,
@@ -218,7 +217,7 @@ namespace Nakama.TinyJson
                 return result;
             }
 
-            if (type == typeof(bool) || type == typeof(bool?))
+            if (type == typeof(bool))
             {
                 return json.ToLower() == "true";
             }
@@ -249,7 +248,7 @@ namespace Nakama.TinyJson
                     return null;
 
                 var elems = Split(json);
-                var list = (IList) type.GetConstructor(new[] {typeof(int)}).Invoke(new object[] {elems.Count});
+                var list = (IList) type.GetConstructor(new Type[] {typeof(int)}).Invoke(new object[] {elems.Count});
                 foreach (var t in elems)
                     list.Add(ParseValue(listType, t));
 
@@ -277,7 +276,7 @@ namespace Nakama.TinyJson
                 if (elems.Count % 2 != 0)
                     return null;
 
-                var dictionary = (IDictionary) type.GetConstructor(new[] {typeof(int)})
+                var dictionary = (IDictionary) type.GetConstructor(new Type[] {typeof(int)})
                     .Invoke(new object[] {elems.Count / 2});
                 for (var i = 0; i < elems.Count; i += 2)
                 {
@@ -360,6 +359,27 @@ namespace Nakama.TinyJson
             return null;
         }
 
+        private static Dictionary<string, T> CreateMemberNameDictionary<T>(IEnumerable<T> members) where T : MemberInfo
+        {
+            var nameToMember = new Dictionary<string, T>();
+            foreach (var member in members)
+            {
+                if (member.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
+                    continue;
+
+                string name;
+                var dataMemberAttribute = member.GetCustomAttribute<DataMemberAttribute>();
+                if (dataMemberAttribute != null && dataMemberAttribute.IsNameSetExplicitly)
+                    name = dataMemberAttribute.Name;
+                else
+                    name = member.Name;
+
+                nameToMember.Add(name, member);
+            }
+
+            return nameToMember;
+        }
+
         private static object ParseObject(Type type, string json)
         {
             var instance = FormatterServices.GetUninitializedObject(type);
@@ -373,34 +393,26 @@ namespace Nakama.TinyJson
             Dictionary<string, PropertyInfo> nameToProperty;
             if (!_fieldInfoCache.TryGetValue(type, out nameToField))
             {
-                nameToField = type.GetFields().Where(field => field.IsPublic).ToDictionary(field => field.Name);
+                var fields =
+                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+                nameToField = CreateMemberNameDictionary(fields);
                 _fieldInfoCache.Add(type, nameToField);
             }
 
             if (!_propertyInfoCache.TryGetValue(type, out nameToProperty))
             {
-                nameToProperty = type.GetProperties().ToDictionary(p => p.Name);
+                var properties =
+                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+                nameToProperty = CreateMemberNameDictionary(properties);
                 _propertyInfoCache.Add(type, nameToProperty);
             }
-
 
             for (var i = 0; i < elems.Count; i += 2)
             {
                 if (elems[i].Length <= 2)
                     continue;
-
-
                 var key = elems[i].Substring(1, elems[i].Length - 2);
                 var value = elems[i + 1];
-
-
-                foreach (var infoDic in nameToProperty.ToList())
-                {
-                    var jsonPropertyAttribute =
-                        (JsonPropertyAttribute) infoDic.Value.GetCustomAttribute(typeof(JsonPropertyAttribute), false);
-                    if (jsonPropertyAttribute != null && jsonPropertyAttribute.Name == key)
-                        key = infoDic.Value.Name;
-                }
 
                 FieldInfo fieldInfo;
                 PropertyInfo propertyInfo;

@@ -11,6 +11,7 @@ namespace Nakama
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
     using TinyJson;
@@ -37,11 +38,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("state")]
+        [DataMember(Name="state")]
         public int State { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("user")]
+        [DataMember(Name="user")]
         public IApiUser User { get; set; }
 
         public override string ToString()
@@ -75,11 +76,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("group")]
+        [DataMember(Name="group")]
         public IApiGroup Group { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("state")]
+        [DataMember(Name="state")]
         public int State { get; set; }
 
         public override string ToString()
@@ -118,15 +119,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("metadata")]
+        [DataMember(Name="metadata")]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("score")]
+        [DataMember(Name="score")]
         public string Score { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("subscore")]
+        [DataMember(Name="subscore")]
         public string Subscore { get; set; }
 
         public override string ToString()
@@ -181,27 +182,27 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("custom_id")]
+        [DataMember(Name="custom_id")]
         public string CustomId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("devices")]
+        [DataMember(Name="devices")]
         public List<IApiAccountDevice> Devices { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("email")]
+        [DataMember(Name="email")]
         public string Email { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("user")]
+        [DataMember(Name="user")]
         public IApiUser User { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("verify_time")]
+        [DataMember(Name="verify_time")]
         public string VerifyTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("wallet")]
+        [DataMember(Name="wallet")]
         public string Wallet { get; set; }
 
         public override string ToString()
@@ -234,7 +235,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("id")]
+        [DataMember(Name="id")]
         public string Id { get; set; }
 
         public override string ToString()
@@ -262,7 +263,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("id")]
+        [DataMember(Name="id")]
         public string Id { get; set; }
 
         public override string ToString()
@@ -295,11 +296,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("email")]
+        [DataMember(Name="email")]
         public string Email { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("password")]
+        [DataMember(Name="password")]
         public string Password { get; set; }
 
         public override string ToString()
@@ -328,7 +329,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("token")]
+        [DataMember(Name="token")]
         public string Token { get; set; }
 
         public override string ToString()
@@ -381,27 +382,27 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("bundle_id")]
+        [DataMember(Name="bundle_id")]
         public string BundleId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("player_id")]
+        [DataMember(Name="player_id")]
         public string PlayerId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("public_key_url")]
+        [DataMember(Name="public_key_url")]
         public string PublicKeyUrl { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("salt")]
+        [DataMember(Name="salt")]
         public string Salt { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("signature")]
+        [DataMember(Name="signature")]
         public string Signature { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("timestamp_seconds")]
+        [DataMember(Name="timestamp_seconds")]
         public string TimestampSeconds { get; set; }
 
         public override string ToString()
@@ -434,7 +435,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("token")]
+        [DataMember(Name="token")]
         public string Token { get; set; }
 
         public override string ToString()
@@ -462,7 +463,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("token")]
+        [DataMember(Name="token")]
         public string Token { get; set; }
 
         public override string ToString()
@@ -495,11 +496,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("group_id")]
+        [DataMember(Name="group_id")]
         public string GroupId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("user_ids")]
+        [DataMember(Name="user_ids")]
         public List<string> UserIds { get; set; }
 
         public override string ToString()
@@ -568,39 +569,39 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("channel_id")]
+        [DataMember(Name="channel_id")]
         public string ChannelId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("code")]
+        [DataMember(Name="code")]
         public int Code { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("content")]
+        [DataMember(Name="content")]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("create_time")]
+        [DataMember(Name="create_time")]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("message_id")]
+        [DataMember(Name="message_id")]
         public string MessageId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("persistent")]
+        [DataMember(Name="persistent")]
         public bool Persistent { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("sender_id")]
+        [DataMember(Name="sender_id")]
         public string SenderId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("update_time")]
+        [DataMember(Name="update_time")]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("username")]
+        [DataMember(Name="username")]
         public string Username { get; set; }
 
         public override string ToString()
@@ -646,15 +647,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("messages")]
+        [DataMember(Name="messages")]
         public List<IApiChannelMessage> Messages { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("next_cursor")]
+        [DataMember(Name="next_cursor")]
         public string NextCursor { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("prev_cursor")]
+        [DataMember(Name="prev_cursor")]
         public string PrevCursor { get; set; }
 
         public override string ToString()
@@ -704,23 +705,23 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("avatar_url")]
+        [DataMember(Name="avatar_url")]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("description")]
+        [DataMember(Name="description")]
         public string Description { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("lang_tag")]
+        [DataMember(Name="lang_tag")]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("name")]
+        [DataMember(Name="name")]
         public string Name { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("open")]
+        [DataMember(Name="open")]
         public bool Open { get; set; }
 
         public override string ToString()
@@ -762,15 +763,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("collection")]
+        [DataMember(Name="collection")]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("key")]
+        [DataMember(Name="key")]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("version")]
+        [DataMember(Name="version")]
         public string Version { get; set; }
 
         public override string ToString()
@@ -800,7 +801,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("object_ids")]
+        [DataMember(Name="object_ids")]
         public List<IApiDeleteStorageObjectId> ObjectIds { get; set; }
 
         public override string ToString()
@@ -833,11 +834,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("state")]
+        [DataMember(Name="state")]
         public int State { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("user")]
+        [DataMember(Name="user")]
         public IApiUser User { get; set; }
 
         public override string ToString()
@@ -866,7 +867,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("friends")]
+        [DataMember(Name="friends")]
         public List<IApiFriend> Friends { get; set; }
 
         public override string ToString()
@@ -949,51 +950,51 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("avatar_url")]
+        [DataMember(Name="avatar_url")]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("create_time")]
+        [DataMember(Name="create_time")]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("creator_id")]
+        [DataMember(Name="creator_id")]
         public string CreatorId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("description")]
+        [DataMember(Name="description")]
         public string Description { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("edge_count")]
+        [DataMember(Name="edge_count")]
         public int EdgeCount { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("id")]
+        [DataMember(Name="id")]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("lang_tag")]
+        [DataMember(Name="lang_tag")]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("max_count")]
+        [DataMember(Name="max_count")]
         public int MaxCount { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("metadata")]
+        [DataMember(Name="metadata")]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("name")]
+        [DataMember(Name="name")]
         public string Name { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("open")]
+        [DataMember(Name="open")]
         public bool Open { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("update_time")]
+        [DataMember(Name="update_time")]
         public string UpdateTime { get; set; }
 
         public override string ToString()
@@ -1016,6 +1017,44 @@ namespace Nakama
     }
 
     /// <summary>
+    /// One or more groups returned from a listing operation.
+    /// </summary>
+    public interface IApiGroupList
+    {
+
+        /// <summary>
+        /// A cursor used to get the next page.
+        /// </summary>
+        string Cursor { get; }
+
+        /// <summary>
+        /// One or more groups.
+        /// </summary>
+        List<IApiGroup> Groups { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiGroupList : IApiGroupList
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cursor")]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="groups")]
+        public List<IApiGroup> Groups { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output += string.Concat(output, "Cursor: ", Cursor, ", ");
+            output += string.Concat(output, "Groups: ", Groups, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A list of users belonging to a group, along with their role.
     /// </summary>
     public interface IApiGroupUserList
@@ -1032,7 +1071,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("group_users")]
+        [DataMember(Name="group_users")]
         public List<IGroupUserListGroupUser> GroupUsers { get; set; }
 
         public override string ToString()
@@ -1060,7 +1099,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("group_id")]
+        [DataMember(Name="group_id")]
         public string GroupId { get; set; }
 
         public override string ToString()
@@ -1093,11 +1132,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("group_id")]
+        [DataMember(Name="group_id")]
         public string GroupId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("user_ids")]
+        [DataMember(Name="user_ids")]
         public List<string> UserIds { get; set; }
 
         public override string ToString()
@@ -1176,47 +1215,47 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("create_time")]
+        [DataMember(Name="create_time")]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("expiry_time")]
+        [DataMember(Name="expiry_time")]
         public string ExpiryTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("leaderboard_id")]
+        [DataMember(Name="leaderboard_id")]
         public string LeaderboardId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("metadata")]
+        [DataMember(Name="metadata")]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("num_score")]
+        [DataMember(Name="num_score")]
         public int NumScore { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("owner_id")]
+        [DataMember(Name="owner_id")]
         public string OwnerId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("rank")]
+        [DataMember(Name="rank")]
         public string Rank { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("score")]
+        [DataMember(Name="score")]
         public string Score { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("subscore")]
+        [DataMember(Name="subscore")]
         public string Subscore { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("update_time")]
+        [DataMember(Name="update_time")]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("username")]
+        [DataMember(Name="username")]
         public string Username { get; set; }
 
         public override string ToString()
@@ -1269,19 +1308,19 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("next_cursor")]
+        [DataMember(Name="next_cursor")]
         public string NextCursor { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("owner_records")]
+        [DataMember(Name="owner_records")]
         public List<IApiLeaderboardRecord> OwnerRecords { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("prev_cursor")]
+        [DataMember(Name="prev_cursor")]
         public string PrevCursor { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("records")]
+        [DataMember(Name="records")]
         public List<IApiLeaderboardRecord> Records { get; set; }
 
         public override string ToString()
@@ -1312,7 +1351,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("group_id")]
+        [DataMember(Name="group_id")]
         public string GroupId { get; set; }
 
         public override string ToString()
@@ -1355,19 +1394,19 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("authoritative")]
+        [DataMember(Name="authoritative")]
         public bool Authoritative { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("label")]
+        [DataMember(Name="label")]
         public string Label { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("match_id")]
+        [DataMember(Name="match_id")]
         public string MatchId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("size")]
+        [DataMember(Name="size")]
         public int Size { get; set; }
 
         public override string ToString()
@@ -1398,7 +1437,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("matches")]
+        [DataMember(Name="matches")]
         public List<IApiMatch> Matches { get; set; }
 
         public override string ToString()
@@ -1456,31 +1495,31 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("code")]
+        [DataMember(Name="code")]
         public int Code { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("content")]
+        [DataMember(Name="content")]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("create_time")]
+        [DataMember(Name="create_time")]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("id")]
+        [DataMember(Name="id")]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("persistent")]
+        [DataMember(Name="persistent")]
         public bool Persistent { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("sender_id")]
+        [DataMember(Name="sender_id")]
         public string SenderId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("subject")]
+        [DataMember(Name="subject")]
         public string Subject { get; set; }
 
         public override string ToString()
@@ -1519,11 +1558,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("cacheable_cursor")]
+        [DataMember(Name="cacheable_cursor")]
         public string CacheableCursor { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("notifications")]
+        [DataMember(Name="notifications")]
         public List<IApiNotification> Notifications { get; set; }
 
         public override string ToString()
@@ -1557,11 +1596,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("group_id")]
+        [DataMember(Name="group_id")]
         public string GroupId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("user_ids")]
+        [DataMember(Name="user_ids")]
         public List<string> UserIds { get; set; }
 
         public override string ToString()
@@ -1600,15 +1639,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("collection")]
+        [DataMember(Name="collection")]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("key")]
+        [DataMember(Name="key")]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("user_id")]
+        [DataMember(Name="user_id")]
         public string UserId { get; set; }
 
         public override string ToString()
@@ -1638,7 +1677,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("object_ids")]
+        [DataMember(Name="object_ids")]
         public List<IApiReadStorageObjectId> ObjectIds { get; set; }
 
         public override string ToString()
@@ -1676,15 +1715,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("http_key")]
+        [DataMember(Name="http_key")]
         public string HttpKey { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("id")]
+        [DataMember(Name="id")]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("payload")]
+        [DataMember(Name="payload")]
         public string Payload { get; set; }
 
         public override string ToString()
@@ -1724,15 +1763,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("created")]
+        [DataMember(Name="created")]
         public bool Created { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("token")]
+        [DataMember(Name="token")]
         public string Token { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("udp_token")]
+        [DataMember(Name="udp_token")]
         public string UdpToken { get; set; }
 
         public override string ToString()
@@ -1802,39 +1841,39 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("collection")]
+        [DataMember(Name="collection")]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("create_time")]
+        [DataMember(Name="create_time")]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("key")]
+        [DataMember(Name="key")]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("permission_read")]
+        [DataMember(Name="permission_read")]
         public int PermissionRead { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("permission_write")]
+        [DataMember(Name="permission_write")]
         public int PermissionWrite { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("update_time")]
+        [DataMember(Name="update_time")]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("user_id")]
+        [DataMember(Name="user_id")]
         public string UserId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("value")]
+        [DataMember(Name="value")]
         public string Value { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("version")]
+        [DataMember(Name="version")]
         public string Version { get; set; }
 
         public override string ToString()
@@ -1885,19 +1924,19 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("collection")]
+        [DataMember(Name="collection")]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("key")]
+        [DataMember(Name="key")]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("user_id")]
+        [DataMember(Name="user_id")]
         public string UserId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("version")]
+        [DataMember(Name="version")]
         public string Version { get; set; }
 
         public override string ToString()
@@ -1928,7 +1967,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("acks")]
+        [DataMember(Name="acks")]
         public List<IApiStorageObjectAck> Acks { get; set; }
 
         public override string ToString()
@@ -1961,11 +2000,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("cursor")]
+        [DataMember(Name="cursor")]
         public string Cursor { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("objects")]
+        [DataMember(Name="objects")]
         public List<IApiStorageObject> Objects { get; set; }
 
         public override string ToString()
@@ -1994,7 +2033,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("objects")]
+        [DataMember(Name="objects")]
         public List<IApiStorageObject> Objects { get; set; }
 
         public override string ToString()
@@ -2047,27 +2086,27 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("avatar_url")]
+        [DataMember(Name="avatar_url")]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("display_name")]
+        [DataMember(Name="display_name")]
         public string DisplayName { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("lang_tag")]
+        [DataMember(Name="lang_tag")]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("location")]
+        [DataMember(Name="location")]
         public string Location { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("timezone")]
+        [DataMember(Name="timezone")]
         public string Timezone { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("username")]
+        [DataMember(Name="username")]
         public string Username { get; set; }
 
         public override string ToString()
@@ -2125,27 +2164,27 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("avatar_url")]
+        [DataMember(Name="avatar_url")]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("description")]
+        [DataMember(Name="description")]
         public string Description { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("group_id")]
+        [DataMember(Name="group_id")]
         public string GroupId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("lang_tag")]
+        [DataMember(Name="lang_tag")]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("name")]
+        [DataMember(Name="name")]
         public string Name { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("open")]
+        [DataMember(Name="open")]
         public bool Open { get; set; }
 
         public override string ToString()
@@ -2253,67 +2292,67 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("avatar_url")]
+        [DataMember(Name="avatar_url")]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("create_time")]
+        [DataMember(Name="create_time")]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("display_name")]
+        [DataMember(Name="display_name")]
         public string DisplayName { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("edge_count")]
+        [DataMember(Name="edge_count")]
         public int EdgeCount { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("facebook_id")]
+        [DataMember(Name="facebook_id")]
         public string FacebookId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("gamecenter_id")]
+        [DataMember(Name="gamecenter_id")]
         public string GamecenterId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("google_id")]
+        [DataMember(Name="google_id")]
         public string GoogleId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("id")]
+        [DataMember(Name="id")]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("lang_tag")]
+        [DataMember(Name="lang_tag")]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("location")]
+        [DataMember(Name="location")]
         public string Location { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("metadata")]
+        [DataMember(Name="metadata")]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("online")]
+        [DataMember(Name="online")]
         public bool Online { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("steam_id")]
+        [DataMember(Name="steam_id")]
         public string SteamId { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("timezone")]
+        [DataMember(Name="timezone")]
         public string Timezone { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("update_time")]
+        [DataMember(Name="update_time")]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("username")]
+        [DataMember(Name="username")]
         public string Username { get; set; }
 
         public override string ToString()
@@ -2356,7 +2395,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("user_groups")]
+        [DataMember(Name="user_groups")]
         public List<IUserGroupListUserGroup> UserGroups { get; set; }
 
         public override string ToString()
@@ -2384,7 +2423,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("users")]
+        [DataMember(Name="users")]
         public List<IApiUser> Users { get; set; }
 
         public override string ToString()
@@ -2437,27 +2476,27 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("collection")]
+        [DataMember(Name="collection")]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("key")]
+        [DataMember(Name="key")]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("permission_read")]
+        [DataMember(Name="permission_read")]
         public int PermissionRead { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("permission_write")]
+        [DataMember(Name="permission_write")]
         public int PermissionWrite { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("value")]
+        [DataMember(Name="value")]
         public string Value { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("version")]
+        [DataMember(Name="version")]
         public string Version { get; set; }
 
         public override string ToString()
@@ -2490,7 +2529,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [JsonProperty("objects")]
+        [DataMember(Name="objects")]
         public List<IApiWriteStorageObject> Objects { get; set; }
 
         public override string ToString()
@@ -2554,8 +2593,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -2583,8 +2621,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -2617,8 +2654,7 @@ namespace Nakama
                 Method = new HttpMethod("PUT"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -2689,8 +2725,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
@@ -2726,8 +2761,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
@@ -2763,8 +2797,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
@@ -2800,8 +2833,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
@@ -2837,8 +2869,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
@@ -2874,8 +2905,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
@@ -2910,8 +2940,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -2945,8 +2974,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -2980,8 +3008,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3015,8 +3042,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3050,8 +3076,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3085,8 +3110,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3120,8 +3144,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3155,8 +3178,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3190,8 +3212,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3225,8 +3246,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3260,8 +3280,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3295,8 +3314,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3330,8 +3348,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3365,8 +3382,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3407,8 +3423,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3446,8 +3461,7 @@ namespace Nakama
                 Method = new HttpMethod("DELETE"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3475,8 +3489,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3504,8 +3517,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3533,8 +3545,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3567,8 +3578,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3579,6 +3589,40 @@ namespace Nakama
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
             return contents.FromJson<ProtobufEmpty>();
+        }
+
+        /// <summary>
+        /// List groups based on given filters.
+        /// </summary>
+        public async Task<IApiGroupList> ListGroupsAsync(
+            string bearerToken
+            , string name
+            , string cursor
+            , int limit)
+        {
+        	HttpClient client = new HttpClient(); // FIXME
+
+            var urlpath = "/v2/group?";
+            urlpath = string.Concat(urlpath, "name=", Uri.EscapeDataString(name), "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(_baseUri, urlpath),
+                Method = new HttpMethod("GET"),
+                Headers =
+                {
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", bearerToken);
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var contents = await response.Content.ReadAsStringAsync();
+            return contents.FromJson<ApiGroupList>();
         }
 
         /// <summary>
@@ -3602,8 +3646,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3638,8 +3681,7 @@ namespace Nakama
                 Method = new HttpMethod("DELETE"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3678,8 +3720,7 @@ namespace Nakama
                 Method = new HttpMethod("PUT"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3719,8 +3760,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3760,8 +3800,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3801,8 +3840,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3842,8 +3880,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3883,8 +3920,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3919,8 +3955,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3954,8 +3989,7 @@ namespace Nakama
                 Method = new HttpMethod("DELETE"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -3998,8 +4032,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4038,8 +4071,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4078,8 +4110,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4092,7 +4123,7 @@ namespace Nakama
         }
 
         /// <summary>
-        /// Delete one or more users by ID or username.
+        /// Delete one or more notifications for the current user.
         /// </summary>
         public async Task<IProtobufEmpty> DeleteNotificationsAsync(
             string bearerToken
@@ -4112,8 +4143,7 @@ namespace Nakama
                 Method = new HttpMethod("DELETE"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4145,8 +4175,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4184,8 +4213,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             if (!string.IsNullOrEmpty(bearerToken))
@@ -4227,8 +4255,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             if (!string.IsNullOrEmpty(bearerToken))
@@ -4265,8 +4292,7 @@ namespace Nakama
                 Method = new HttpMethod("POST"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4300,8 +4326,7 @@ namespace Nakama
                 Method = new HttpMethod("PUT"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4335,8 +4360,7 @@ namespace Nakama
                 Method = new HttpMethod("PUT"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4377,8 +4401,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4422,8 +4445,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4466,8 +4488,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
@@ -4501,8 +4522,7 @@ namespace Nakama
                 Method = new HttpMethod("GET"),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")},
-                    UserAgent = {new ProductInfoHeaderValue("nakama-dotnet", "")}
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
             var header = string.Concat("Bearer ", bearerToken);
