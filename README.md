@@ -43,7 +43,7 @@ System.Console.WriteLine(session);
 
 ### Sessions
 
-When authenticated the server responses with an auth token (JWT) which contains useful properties and gets deserialized into a `Session` object.
+When authenticated the server responds with an auth token (JWT) which contains useful properties and gets deserialized into a `Session` object.
 
 ```csharp
 System.Console.WriteLine(session.AuthToken); // raw JWT token
@@ -53,9 +53,20 @@ System.Console.WriteLine("Session has expired: {0}", session.IsExpired);
 System.Console.WriteLine("Session expires at: {0}", session.ExpireTime);
 ```
 
+It is recommended to store the auth token from the session and check at startup if it has expired. If the token has expired you must reauthenticate. The expiry time of the token can be changed as a setting in the server.
+
+```csharp
+var authtoken = "restored from somewhere";
+var session = Session.Restore(authtoken);
+if (session.IsExpired)
+{
+    System.Console.WriteLine("Session has expired. Must reauthenticate!");
+}
+```
+
 ### Requests
 
-The client includes lots of builtin APIs for various features of the game server. These can be accessed with the async methods. It is also possible to call RPC functions registered with the server over the REST API as well as on the socket.
+The client includes lots of builtin APIs for various features of the game server. These can be accessed with the async methods. It is also possible to call RPC functions for custom logic registered with the server as well as with a socket object.
 
 All requests are sent with a session object which authorizes the client.
 
@@ -85,7 +96,16 @@ The development roadmap is managed as GitHub issues and pull requests are welcom
 The codebase can be built with [Cake](https://cakebuild.net). All dependencies are downloaded at build time with Nuget.
 
 ```shell
-./build.sh --target=Default
+./build.sh --target=Build
+```
+
+### Run Tests
+
+To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the [documentation](https://heroiclabs.com/docs/install-docker-quickstart).
+
+```shell
+docker-compose -f ./docker-compose.yml up
+./build.sh --target=Run-Unit-Tests
 ```
 
 ### License
