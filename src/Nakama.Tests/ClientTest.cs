@@ -22,6 +22,16 @@ namespace Nakama.Tests
     public class ClientTest
     {
         [Test]
+        public void ShouldCreateClientDefaults()
+        {
+            IClient client = new Client();
+
+            Assert.AreEqual("127.0.0.1", client.Host);
+            Assert.AreEqual(7350, client.Port);
+            Assert.AreEqual("defaultkey", client.ServerKey);
+        }
+
+        [Test]
         public void ShouldSetCustomLogger()
         {
             const string serverkey = "somesecretkey";

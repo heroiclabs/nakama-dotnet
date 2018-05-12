@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Nakama
@@ -88,8 +89,225 @@ namespace Nakama
         public async Task<ISession> AuthenticateCustomAsync(string id)
         {
             var body = new ApiAccountCustom {Id = id};
-            var resp = await _apiClient.AuthenticateCustomAsync(ServerKey, "", body);
+            var resp = await _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty, body);
             return Session.Restore(resp.Token);
+        }
+
+        /// <inheritdoc />
+        public async Task<ISession> AuthenticateDeviceAsync(string id)
+        {
+            var body = new ApiAccountDevice {Id = id};
+            var resp = await _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty, body);
+            return Session.Restore(resp.Token);
+        }
+
+        /// <inheritdoc />
+        public async Task<ISession> AuthenticateEmailAsync(string email, string password)
+        {
+            var body = new ApiAccountEmail {Email = email, Password = password};
+            var resp = await _apiClient.AuthenticateEmailAsync(ServerKey, string.Empty, body);
+            return Session.Restore(resp.Token);
+        }
+
+        /// <inheritdoc />
+        public async Task<ISession> AuthenticateFacebookAsync(string token)
+        {
+            var body = new ApiAccountFacebook {Token = token};
+            var resp = await _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty, body);
+            return Session.Restore(resp.Token);
+        }
+
+        /// <inheritdoc />
+        public async Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl,
+            string salt, string signature, string timestampSeconds)
+        {
+            var body = new ApiAccountGameCenter
+            {
+                BundleId = bundleId,
+                PlayerId = playerId,
+                PublicKeyUrl = publicKeyUrl,
+                Salt = salt,
+                Signature = signature,
+                TimestampSeconds = timestampSeconds
+            };
+            var resp = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty, body);
+            return Session.Restore(resp.Token);
+        }
+
+        /// <inheritdoc />
+        public async Task<ISession> AuthenticateGoogleAsync(string token)
+        {
+            var body = new ApiAccountGoogle {Token = token};
+            var resp = await _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty, body);
+            return Session.Restore(resp.Token);
+        }
+
+        /// <inheritdoc />
+        public async Task<ISession> AuthenticateSteamAsync(string token)
+        {
+            var body = new ApiAccountSteam {Token = token};
+            var resp = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty, body);
+            return Session.Restore(resp.Token);
+        }
+
+        /// <inheritdoc />
+        public async Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids,
+            IEnumerable<string> usernames = null)
+        {
+            if (ids == null)
+            {
+                ids = new string[0];
+            }
+            if (usernames == null)
+            {
+                usernames = new string[0];
+            }
+            await _apiClient.DeleteFriendsAsync(session.AuthToken, ids, usernames);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiAccount> GetAccountAsync(ISession session)
+        {
+            return await _apiClient.GetAccountAsync(session.AuthToken);
+        }
+
+        /// <inheritdoc />
+        public async Task LinkCustomAsync(ISession session, string id)
+        {
+            var body = new ApiAccountCustom {Id = id};
+            await _apiClient.LinkCustomAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task LinkDeviceAsync(ISession session, string id)
+        {
+            var body = new ApiAccountDevice {Id = id};
+            await _apiClient.LinkDeviceAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task LinkEmailAsync(ISession session, string email, string password)
+        {
+            var body = new ApiAccountEmail {Email = email, Password = password};
+            await _apiClient.LinkEmailAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task LinkFacebookAsync(ISession session, string token)
+        {
+            var body = new ApiAccountFacebook {Token = token};
+            await _apiClient.LinkFacebookAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
+            string salt, string signature, string timestampSeconds)
+        {
+            var body = new ApiAccountGameCenter
+            {
+                BundleId = bundleId,
+                PlayerId = playerId,
+                PublicKeyUrl = publicKeyUrl,
+                Salt = salt,
+                Signature = signature,
+                TimestampSeconds = timestampSeconds
+            };
+            await _apiClient.LinkGameCenterAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task LinkGoogleAsync(ISession session, string token)
+        {
+            var body = new ApiAccountGoogle {Token = token};
+            await _apiClient.LinkGoogleAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task LinkSteamAsync(ISession session, string token)
+        {
+            var body = new ApiAccountSteam {Token = token};
+            await _apiClient.LinkSteamAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId,
+            int limit = 1, bool forward = true, string cursor = null)
+        {
+            return await _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor);
+        }
+
+        /// <inheritdoc />
+        public async Task UnlinkCustomAsync(ISession session, string id)
+        {
+            var body = new ApiAccountCustom {Id = id};
+            await _apiClient.UnlinkCustomAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task UnlinkDeviceAsync(ISession session, string id)
+        {
+            var body = new ApiAccountDevice {Id = id};
+            await _apiClient.UnlinkDeviceAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task UnlinkEmailAsync(ISession session, string email, string password)
+        {
+            var body = new ApiAccountEmail {Email = email, Password = password};
+            await _apiClient.UnlinkEmailAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task UnlinkFacebookAsync(ISession session, string token)
+        {
+            var body = new ApiAccountFacebook {Token = token};
+            await _apiClient.UnlinkFacebookAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
+            string salt, string signature, string timestampSeconds)
+        {
+            var body = new ApiAccountGameCenter
+            {
+                BundleId = bundleId,
+                PlayerId = playerId,
+                PublicKeyUrl = publicKeyUrl,
+                Salt = salt,
+                Signature = signature,
+                TimestampSeconds = timestampSeconds
+            };
+            await _apiClient.UnlinkGameCenterAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task UnlinkGoogleAsync(ISession session, string token)
+        {
+            var body = new ApiAccountGoogle {Token = token};
+            await _apiClient.UnlinkGoogleAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task UnlinkSteamAsync(ISession session, string token)
+        {
+            var body = new ApiAccountSteam {Token = token};
+            await _apiClient.UnlinkSteamAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task UpdateAccountAsync(ISession session, string username = null, string displayName = null,
+            string avatarUrl = null, string langTag = null, string location = null, string timezone = null)
+        {
+            var body = new ApiUpdateAccountRequest
+            {
+                AvatarUrl = avatarUrl,
+                DisplayName = displayName,
+                LangTag = langTag,
+                Location = location,
+                Timezone = timezone,
+                Username = username
+            };
+            await _apiClient.UpdateAccountAsync(session.AuthToken, body);
         }
 
         /// <inheritdoc />
