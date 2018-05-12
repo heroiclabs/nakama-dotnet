@@ -47,7 +47,7 @@ namespace Nakama
         /// <inheritdoc />
         public bool HasExpired(DateTime dateTime)
         {
-            var expireDatetime = Epoch - TimeSpan.FromSeconds(ExpireTime);
+            var expireDatetime = Epoch + TimeSpan.FromSeconds(ExpireTime);
             return dateTime > expireDatetime;
         }
 
