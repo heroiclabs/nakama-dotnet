@@ -214,11 +214,11 @@ namespace Nakama
                 {{- if eq $parameter.Type "integer" }}
             urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
                 {{- else if eq $parameter.Type "string" }}
-            urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }}), "&");
+            urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }} ?? ""), "&");
                 {{- else if eq $parameter.Type "boolean" }}
             urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", {{ $camelcase }}.ToString().ToLower(), "&");
                 {{- else if eq $parameter.Type "array" }}
-            foreach (var elem in {{ $camelcase }})
+            foreach (var elem in {{ $camelcase }} ?? new {{ $parameter.Items.Type }}[0])
             {
                 urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", elem, "&");
             }
@@ -269,6 +269,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>();
         }
         {{- end }}

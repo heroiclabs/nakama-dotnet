@@ -2618,6 +2618,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2646,6 +2647,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiAccount>();
         }
 
@@ -2680,6 +2682,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2716,6 +2719,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2752,6 +2756,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2788,6 +2793,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2824,6 +2830,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2860,6 +2867,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2896,6 +2904,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2932,6 +2941,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2966,6 +2976,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3000,6 +3011,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3034,6 +3046,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3068,6 +3081,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3102,6 +3116,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3136,6 +3151,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3170,6 +3186,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3204,6 +3221,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3238,6 +3256,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3272,6 +3291,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3306,6 +3326,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3340,6 +3361,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3374,6 +3396,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3408,6 +3431,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3431,7 +3455,7 @@ namespace Nakama
             urlpath = urlpath.Replace("{channel_id}", Uri.EscapeDataString(channelId));
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
             urlpath = string.Concat(urlpath, "forward=", forward.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -3448,6 +3472,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiChannelMessageList>();
         }
 
@@ -3462,11 +3487,11 @@ namespace Nakama
         	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/friend?";
-            foreach (var elem in ids)
+            foreach (var elem in ids ?? new string[0])
             {
                 urlpath = string.Concat(urlpath, "ids=", elem, "&");
             }
-            foreach (var elem in usernames)
+            foreach (var elem in usernames ?? new string[0])
             {
                 urlpath = string.Concat(urlpath, "usernames=", elem, "&");
             }
@@ -3486,6 +3511,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3514,6 +3540,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiFriends>();
         }
 
@@ -3542,6 +3569,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3570,6 +3598,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3604,6 +3633,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3619,8 +3649,8 @@ namespace Nakama
         	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/group?";
-            urlpath = string.Concat(urlpath, "name=", Uri.EscapeDataString(name), "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            urlpath = string.Concat(urlpath, "name=", Uri.EscapeDataString(name ?? ""), "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
 
             var request = new HttpRequestMessage
@@ -3638,6 +3668,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiGroupList>();
         }
 
@@ -3672,6 +3703,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiGroup>();
         }
 
@@ -3706,6 +3738,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3746,6 +3779,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3786,6 +3820,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3826,6 +3861,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3866,6 +3902,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3906,6 +3943,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3946,6 +3984,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3980,6 +4019,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiGroupUserList>();
         }
 
@@ -4014,6 +4054,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -4035,12 +4076,12 @@ namespace Nakama
 
             var urlpath = "/v2/leaderboard/{leaderboard_id}?";
             urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
-            foreach (var elem in ownerIds)
+            foreach (var elem in ownerIds ?? new string[0])
             {
                 urlpath = string.Concat(urlpath, "owner_ids=", elem, "&");
             }
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4057,6 +4098,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiLeaderboardRecordList>();
         }
 
@@ -4097,6 +4139,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiLeaderboardRecord>();
         }
 
@@ -4116,7 +4159,7 @@ namespace Nakama
             var urlpath = "/v2/match?";
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
             urlpath = string.Concat(urlpath, "authoritative=", authoritative.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "label=", Uri.EscapeDataString(label), "&");
+            urlpath = string.Concat(urlpath, "label=", Uri.EscapeDataString(label ?? ""), "&");
             urlpath = string.Concat(urlpath, "min_size=", minSize, "&");
             urlpath = string.Concat(urlpath, "max_size=", maxSize, "&");
 
@@ -4135,6 +4178,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiMatchList>();
         }
 
@@ -4148,7 +4192,7 @@ namespace Nakama
         	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/notification?";
-            foreach (var elem in ids)
+            foreach (var elem in ids ?? new string[0])
             {
                 urlpath = string.Concat(urlpath, "ids=", elem, "&");
             }
@@ -4168,6 +4212,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -4183,7 +4228,7 @@ namespace Nakama
 
             var urlpath = "/v2/notification?";
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor), "&");
+            urlpath = string.Concat(urlpath, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4200,6 +4245,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiNotificationList>();
         }
 
@@ -4220,8 +4266,8 @@ namespace Nakama
 
             var urlpath = "/v2/rpc/{id}?";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
-            urlpath = string.Concat(urlpath, "payload=", Uri.EscapeDataString(payload), "&");
-            urlpath = string.Concat(urlpath, "http_key=", Uri.EscapeDataString(httpKey), "&");
+            urlpath = string.Concat(urlpath, "payload=", Uri.EscapeDataString(payload ?? ""), "&");
+            urlpath = string.Concat(urlpath, "http_key=", Uri.EscapeDataString(httpKey ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4241,6 +4287,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiRpc>();
         }
 
@@ -4284,6 +4331,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiRpc>();
         }
 
@@ -4318,6 +4366,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiStorageObjects>();
         }
 
@@ -4352,6 +4401,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiStorageObjectAcks>();
         }
 
@@ -4386,6 +4436,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -4407,9 +4458,9 @@ namespace Nakama
 
             var urlpath = "/v2/storage/{collection}?";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
-            urlpath = string.Concat(urlpath, "user_id=", Uri.EscapeDataString(userId), "&");
+            urlpath = string.Concat(urlpath, "user_id=", Uri.EscapeDataString(userId ?? ""), "&");
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4426,6 +4477,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiStorageObjectList>();
         }
 
@@ -4453,7 +4505,7 @@ namespace Nakama
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
             urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -4470,6 +4522,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiStorageObjectList>();
         }
 
@@ -4485,15 +4538,15 @@ namespace Nakama
         	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/user?";
-            foreach (var elem in ids)
+            foreach (var elem in ids ?? new string[0])
             {
                 urlpath = string.Concat(urlpath, "ids=", elem, "&");
             }
-            foreach (var elem in usernames)
+            foreach (var elem in usernames ?? new string[0])
             {
                 urlpath = string.Concat(urlpath, "usernames=", elem, "&");
             }
-            foreach (var elem in facebookIds)
+            foreach (var elem in facebookIds ?? new string[0])
             {
                 urlpath = string.Concat(urlpath, "facebook_ids=", elem, "&");
             }
@@ -4513,6 +4566,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiUsers>();
         }
 
@@ -4547,6 +4601,7 @@ namespace Nakama
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
+            client.Dispose();
             return contents.FromJson<ApiUserGroupList>();
         }
     }
