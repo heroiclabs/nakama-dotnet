@@ -136,11 +136,38 @@ namespace Nakama
         Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null);
 
         /// <summary>
+        /// Delete a leaderboard record.
+        /// </summary>
+        /// <param name="session">The session for the user.</param>
+        /// <param name="leaderboardId">The id of the leaderboard with the record to be deleted.</param>
+        /// <returns>A task.</returns>
+        Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId);
+
+        /// <summary>
+        /// Delete one or more notifications by id.
+        /// </summary>
+        /// <param name="session">The session for the user.</param>
+        /// <param name="ids">The notification ids to remove.</param>
+        /// <returns>A task.</returns>
+        Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids);
+
+        /// <summary>
         /// Fetch the user account owned by the session.
         /// </summary>
         /// <param name="session">The session for the user.</param>
         /// <returns>A task to resolve an account object.</returns>
         Task<IApiAccount> GetAccountAsync(ISession session);
+
+        /// <summary>
+        /// Fetch one or more users by id, usernames, and Facebook ids.
+        /// </summary>
+        /// <param name="session">The session for the user.</param>
+        /// <param name="ids"></param>
+        /// <param name="usernames"></param>
+        /// <param name="facebookIds"></param>
+        /// <returns>A task to resolve user objects.</returns>
+        Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null,
+            IEnumerable<string> facebookIds = null);
 
         /// <summary>
         /// Link a custom id to the user account owned by the session.
@@ -213,9 +240,57 @@ namespace Nakama
         /// <param name="limit">The number of chat messages to list.</param>
         /// <param name="forward">Fetch messages forward from the current cursor (or the start).</param>
         /// <param name="cursor">A cursor for the current position in the messages history to list.</param>
-        /// <returns></returns>
+        /// <returns>A task to resolve channel message objects.</returns>
         Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit = 1,
             bool forward = true, string cursor = null);
+
+        /// <summary>
+        /// List records from a leaderboard.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="leaderboardId">The id of the leaderboard to list.</param>
+        /// <param name="ownerIds">Record owners to fetch with the list of records.</param>
+        /// <param name="limit">The number of records to list.</param>
+        /// <param name="cursor">A cursor for the current position in the leaderboard records to list.</param>
+        /// <returns>A task to resolve leaderboard record objects.</returns>
+        Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
+            IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null);
+
+        /// <summary>
+        /// List notifications for the user with an optional cursor.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="limit">The number of notifications to list.</param>
+        /// <param name="cacheableCursor">A cursor for the current position in notifications to list.</param>
+        /// <returns>A task to resolve notifications objects.</returns>
+        Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
+            string cacheableCursor = null);
+
+        /// <summary>
+        /// Execute a Lua function with an input payload on the server.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="id">The id of the function to execute on the server.</param>
+        /// <param name="payload">The payload to send with the function call.</param>
+        /// <returns>A task to resolve an RPC response.</returns>
+        Task<IApiRpc> RpcAsync(ISession session, string id, string payload);
+
+        /// <summary>
+        /// Execute a Lua function on the server.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="id">The id of the function to execute on the server.</param>
+        /// <returns>A task to resolve an RPC response.</returns>
+        Task<IApiRpc> RpcAsync(ISession session, string id);
+
+        /// <summary>
+        /// Execute a Lua function on the server without a session.
+        /// </summary>
+        /// <param name="httpkey">The secure HTTP key used to authenticate.</param>
+        /// <param name="id">The id of the function to execute on the server.</param>
+        /// <param name="payload">A payload to send with the function call.</param>
+        /// <returns>A task to resolve an RPC response.</returns>
+        Task<IApiRpc> RpcAsync(string httpkey, string id, string payload = null);
 
         /// <summary>
         /// Unlink a custom id from the user account owned by the session.
@@ -293,6 +368,18 @@ namespace Nakama
         /// <returns>A task to complete the account update.</returns>
         Task UpdateAccountAsync(ISession session, string username = null, string displayName = null,
             string avatarUrl = null, string langTag = null, string location = null, string timezone = null);
+
+        /// <summary>
+        /// Write a record to a leaderboard.
+        /// </summary>
+        /// <param name="session">The session for the user.</param>
+        /// <param name="leaderboardId">The id of the leaderboard to write.</param>
+        /// <param name="score">The score for the leaderboard record.</param>
+        /// <param name="subscore">The subscore for the leaderboard record.</param>
+        /// <param name="metadata">The metadata for the leaderboard record.</param>
+        /// <returns>A task to complete the leaderboard record write.</returns>
+        Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
+            long subscore = 0L, string metadata = null);
 
         /// <summary>
         /// Create a new WebSocket from the client.

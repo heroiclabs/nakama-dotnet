@@ -154,21 +154,32 @@ namespace Nakama
         public async Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids,
             IEnumerable<string> usernames = null)
         {
-            if (ids == null)
-            {
-                ids = new string[0];
-            }
-            if (usernames == null)
-            {
-                usernames = new string[0];
-            }
             await _apiClient.DeleteFriendsAsync(session.AuthToken, ids, usernames);
+        }
+
+        /// <inheritdoc />
+        public async Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId)
+        {
+            await _apiClient.DeleteLeaderboardRecordAsync(session.AuthToken, leaderboardId);
+        }
+
+        /// <inheritdoc />
+        public async Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids)
+        {
+            await _apiClient.DeleteNotificationsAsync(session.AuthToken, ids);
         }
 
         /// <inheritdoc />
         public async Task<IApiAccount> GetAccountAsync(ISession session)
         {
             return await _apiClient.GetAccountAsync(session.AuthToken);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids,
+            IEnumerable<string> usernames = null, IEnumerable<string> facebookIds = null)
+        {
+            return await _apiClient.GetUsersAsync(session.AuthToken, ids, usernames, facebookIds);
         }
 
         /// <inheritdoc />
@@ -234,6 +245,39 @@ namespace Nakama
             int limit = 1, bool forward = true, string cursor = null)
         {
             return await _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
+            IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null)
+        {
+            return await _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit,
+                cursor);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
+            string cacheableCursor = null)
+        {
+            return await _apiClient.ListNotificationsAsync(session.AuthToken, limit, cacheableCursor);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiRpc> RpcAsync(ISession session, string id, string payload)
+        {
+            return await _apiClient.RpcFuncAsync(session.AuthToken, id, payload);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiRpc> RpcAsync(ISession session, string id)
+        {
+            return await _apiClient.RpcFunc2Async(session.AuthToken, id, null, null);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiRpc> RpcAsync(string httpKey, string id, string payload = null)
+        {
+            return await _apiClient.RpcFunc2Async(null, id, payload, httpKey);
         }
 
         /// <inheritdoc />
@@ -308,6 +352,19 @@ namespace Nakama
                 Username = username
             };
             await _apiClient.UpdateAccountAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId,
+            long score, long subscore = 0L, string metadata = null)
+        {
+            var body = new WriteLeaderboardRecordRequestLeaderboardRecordWrite
+            {
+                Metadata = metadata,
+                Score = score.ToString(),
+                Subscore = subscore.ToString()
+            };
+            return await _apiClient.WriteLeaderboardRecordAsync(session.AuthToken, leaderboardId, body);
         }
 
         /// <inheritdoc />

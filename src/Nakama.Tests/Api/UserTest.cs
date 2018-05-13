@@ -17,6 +17,7 @@
 namespace Nakama.Tests.Api
 {
     using System;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using NUnit.Framework;
@@ -37,7 +38,6 @@ namespace Nakama.Tests.Api
         public async Task ShouldGetAccount()
         {
             var customid = Guid.NewGuid().ToString();
-
             var session = await _client.AuthenticateCustomAsync(customid);
             var account = await _client.GetAccountAsync(session);
 
@@ -56,8 +56,7 @@ namespace Nakama.Tests.Api
         [Test]
         public async Task ShouldUpdateAccount()
         {
-            var customid = Guid.NewGuid().ToString();
-            var session = await _client.AuthenticateCustomAsync(customid);
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             Assert.NotNull(session);
 
@@ -83,8 +82,7 @@ namespace Nakama.Tests.Api
         [Test]
         public async Task ShouldUpdateAccountUsername()
         {
-            var customid = Guid.NewGuid().ToString();
-            var session = await _client.AuthenticateCustomAsync(customid);
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var original = await _client.GetAccountAsync(session);
 
             // Must sleep because update_time is in UTC (seconds).
@@ -107,6 +105,38 @@ namespace Nakama.Tests.Api
             Assert.AreNotEqual(original.User.UpdateTime, updated.User.UpdateTime);
             Assert.AreEqual(username, updated.User.Username);
             Assert.AreNotEqual(username, original.User.Username);
+        }
+
+        [Test]
+        public async Task ShouldGetUsersEmpty()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var result = await _client.GetUsersAsync(session, null);
+
+            Assert.NotNull(result);
+            Assert.IsEmpty(result.Users);
+        }
+
+        [Test]
+        public async Task ShouldGetUsersSelf()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var result = await _client.GetUsersAsync(session, new[] {session.UserId});
+
+            Assert.NotNull(result);
+            Assert.That(result.Users.Count(u => u.Id == session.UserId), Is.EqualTo(1));
+        }
+
+        [Test]
+        public async Task ShouldGetUsersTwo()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var result = await _client.GetUsersAsync(session1, new[] {session1.UserId}, new[] {session2.Username});
+
+            Assert.NotNull(result);
+            Assert.That(result.Users, Has.Count.EqualTo(2));
+            Assert.That(result.Users.Count(u => u.Id == session1.UserId || u.Id == session2.UserId), Is.EqualTo(2));
         }
     }
 }

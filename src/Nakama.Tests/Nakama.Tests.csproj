@@ -38,7 +38,10 @@
     <Compile Include="Api\AuthenticateTest.cs" />
     <Compile Include="Api\ChannelTest.cs" />
     <Compile Include="Api\FriendTest.cs" />
+    <Compile Include="Api\LeaderboardTest.cs" />
     <Compile Include="Api\LinkUnlinkTest.cs" />
+    <Compile Include="Api\NotificationTest.cs" />
+    <Compile Include="Api\RpcTest.cs" />
     <Compile Include="Api\UserTest.cs" />
     <Compile Include="ClientTest.cs" />
     <Compile Include="Socket\WebSocketTest.cs" />
