@@ -170,6 +170,18 @@ namespace Nakama
             IEnumerable<string> facebookIds = null);
 
         /// <summary>
+        /// Import Facebook friends and add them to the user's account.
+        /// </summary>
+        /// <remarks>
+        /// The server will import friends when the user authenticates with Facebook. This function can be used to be
+        /// explicit with the import operation.
+        /// </remarks>
+        /// <param name="session">The session for the user.</param>
+        /// <param name="token">An OAuth access token from the Facebook SDK.</param>
+        /// <returns>A task.</returns>
+        Task ImportFacebookFriendsAsync(ISession session, string token);
+
+        /// <summary>
         /// Link a custom id to the user account owned by the session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -257,6 +269,19 @@ namespace Nakama
             IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null);
 
         /// <summary>
+        /// Fetch a list of matches active on the server.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="min">The minimum number of match participants.</param>
+        /// <param name="max">The maximum number of match participants.</param>
+        /// <param name="limit">The number of matches to list.</param>
+        /// <param name="authoritative"><c>True</c> to include authoritative matches.</param>
+        /// <param name="label">The label to filter the match list on.</param>
+        /// <returns></returns>
+        Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
+            string label);
+
+        /// <summary>
         /// List notifications for the user with an optional cursor.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -265,6 +290,21 @@ namespace Nakama
         /// <returns>A task to resolve notifications objects.</returns>
         Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
             string cacheableCursor = null);
+
+        /// <summary>
+        /// List of groups the current user is a member of.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <returns>A task which resolves to group objects.</returns>
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session);
+
+        /// <summary>
+        /// List groups a user is a member of.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="userId">The id of the user whose groups to list.</param>
+        /// <returns>A task which resolves to group objects.</returns>
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId);
 
         /// <summary>
         /// Execute a Lua function with an input payload on the server.

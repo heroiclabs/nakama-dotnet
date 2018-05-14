@@ -17,6 +17,7 @@
 namespace Nakama.Tests.Api
 {
     using System;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using NUnit.Framework;
 
@@ -30,6 +31,16 @@ namespace Nakama.Tests.Api
         public void SetUp()
         {
             _client = new Client("defaultkey", "127.0.0.1", 7350, false);
+        }
+
+        [Test]
+        public async Task ShouldNotImportFacebookFriends()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+                _client.ImportFacebookFriendsAsync(session, "invalid"));
+            Assert.AreEqual("401 (Unauthorized)", ex.Message);
         }
 
         [Test]

@@ -38,6 +38,7 @@
     <Compile Include="Api\AuthenticateTest.cs" />
     <Compile Include="Api\ChannelTest.cs" />
     <Compile Include="Api\FriendTest.cs" />
+    <Compile Include="Api\GroupTest.cs" />
     <Compile Include="Api\LeaderboardTest.cs" />
     <Compile Include="Api\LinkUnlinkTest.cs" />
     <Compile Include="Api\NotificationTest.cs" />

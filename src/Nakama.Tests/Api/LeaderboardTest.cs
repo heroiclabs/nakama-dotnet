@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Net.Http;
-using Nakama.TinyJson;
-
 namespace Nakama.Tests.Api
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using TinyJson;
 
     public class LeaderboardTest
     {
@@ -54,7 +54,7 @@ namespace Nakama.Tests.Api
             const string metadata = "{\"race_conditions\": \"wet\"}";
             var record = await _client.WriteLeaderboardRecordAsync(session, _leaderboardId, score, subscore, metadata);
 
-            Assert.NotNull(record);
+            Assert.IsNotNull(record);
             Assert.IsNotEmpty(record.CreateTime);
             Assert.IsNotEmpty(record.UpdateTime);
             Assert.AreEqual(_leaderboardId, record.LeaderboardId);
@@ -87,10 +87,24 @@ namespace Nakama.Tests.Api
 
             var result = await _client.ListLeaderboardRecordsAsync(session1, _leaderboardId, null, 10);
 
-            Assert.NotNull(result);
+            Assert.IsNotNull(result);
             Assert.IsEmpty(result.OwnerRecords);
             Assert.IsNotEmpty(result.Records);
             Assert.That(result.Records, Has.Count.EqualTo(2));
+        }
+
+        [Test]
+        public async Task ShouldListLeaderboardRecordsWithOwnerId()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _client.WriteLeaderboardRecordAsync(session, _leaderboardId, 10L);
+            var result = await _client.ListLeaderboardRecordsAsync(session, _leaderboardId, new[] {session.UserId});
+
+            Assert.IsNotNull(result);
+            Assert.IsNull(result.NextCursor);
+            Assert.IsNull(result.PrevCursor);
+            Assert.IsNotEmpty(result.Records);
+            Assert.That(result.OwnerRecords.Count(r => r.OwnerId == session.UserId), Is.EqualTo(1));
         }
 
         [Test]
@@ -99,11 +113,42 @@ namespace Nakama.Tests.Api
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var result = await _client.ListLeaderboardRecordsAsync(session, _leaderboardId);
 
-            Assert.NotNull(result);
+            Assert.IsNotNull(result);
             Assert.IsNull(result.NextCursor);
             Assert.IsNull(result.PrevCursor);
             Assert.IsEmpty(result.Records);
             Assert.IsEmpty(result.OwnerRecords);
+        }
+
+        [Test]
+        public async Task ShouldDeleteLeaderboardRecord()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _client.WriteLeaderboardRecordAsync(session, _leaderboardId, 10L);
+            await _client.DeleteLeaderboardRecordAsync(session, _leaderboardId);
+            var result = await _client.ListLeaderboardRecordsAsync(session, _leaderboardId, null, 100);
+
+            Assert.IsNotNull(result);
+            Assert.IsNull(result.NextCursor);
+            Assert.IsNull(result.PrevCursor);
+            Assert.IsEmpty(result.Records);
+        }
+
+        [Test]
+        public async Task ShouldDeleteLeaderboardRecordNotFound()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            Assert.DoesNotThrowAsync(() => _client.DeleteLeaderboardRecordAsync(session, _leaderboardId));
+        }
+
+        [Test]
+        public async Task ShouldDeleteLeaderboardRecordNotExists()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+                _client.DeleteLeaderboardRecordAsync(session, "invalid"));
+            Assert.AreEqual("404 (Not Found)", ex.Message);
         }
     }
 }

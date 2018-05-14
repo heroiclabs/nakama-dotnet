@@ -183,6 +183,13 @@ namespace Nakama
         }
 
         /// <inheritdoc />
+        public async Task ImportFacebookFriendsAsync(ISession session, string token)
+        {
+            var body = new ApiAccountFacebook {Token = token};
+            await _apiClient.ImportFacebookFriendsAsync(session.AuthToken, body);
+        }
+
+        /// <inheritdoc />
         public async Task LinkCustomAsync(ISession session, string id)
         {
             var body = new ApiAccountCustom {Id = id};
@@ -256,10 +263,30 @@ namespace Nakama
         }
 
         /// <inheritdoc />
+        public async Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit,
+            bool authoritative, string label)
+        {
+            // Arguments are re-ordered for more natural usage than is code generated.
+            return await _apiClient.ListMatchesAsync(session.AuthToken, limit, authoritative, label, min, max);
+        }
+
+        /// <inheritdoc />
         public async Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
             string cacheableCursor = null)
         {
             return await _apiClient.ListNotificationsAsync(session.AuthToken, limit, cacheableCursor);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiUserGroupList> ListUserGroupsAsync(ISession session)
+        {
+            return await ListUserGroupsAsync(session, session.UserId);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId)
+        {
+            return await _apiClient.ListUserGroupsAsync(session.AuthToken, userId);
         }
 
         /// <inheritdoc />

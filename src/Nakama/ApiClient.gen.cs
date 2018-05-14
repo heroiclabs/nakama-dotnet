@@ -474,44 +474,6 @@ namespace Nakama
     }
 
     /// <summary>
-    /// Add users to a group.
-    /// </summary>
-    public interface IApiAddGroupUsersRequest
-    {
-
-        /// <summary>
-        /// The group to add users to.
-        /// </summary>
-        string GroupId { get; }
-
-        /// <summary>
-        /// The users to add.
-        /// </summary>
-        List<string> UserIds { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiAddGroupUsersRequest : IApiAddGroupUsersRequest
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="group_id")]
-        public string GroupId { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="user_ids")]
-        public List<string> UserIds { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "GroupId: ", GroupId, ", ");
-            output = string.Concat(output, "UserIds: [", string.Join(", ", UserIds), "], ");
-            return output;
-        }
-    }
-
-    /// <summary>
     /// A message sent on a channel.
     /// </summary>
     public interface IApiChannelMessage
@@ -1088,72 +1050,6 @@ namespace Nakama
     }
 
     /// <summary>
-    /// Immediately join an open group, or request to join a closed one.
-    /// </summary>
-    public interface IApiJoinGroupRequest
-    {
-
-        /// <summary>
-        /// The group ID to join.
-        /// </summary>
-        string GroupId { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiJoinGroupRequest : IApiJoinGroupRequest
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="group_id")]
-        public string GroupId { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "GroupId: ", GroupId, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// Kick a set of users from a group.
-    /// </summary>
-    public interface IApiKickGroupUsersRequest
-    {
-
-        /// <summary>
-        /// The group ID to kick from.
-        /// </summary>
-        string GroupId { get; }
-
-        /// <summary>
-        /// The users to kick.
-        /// </summary>
-        List<string> UserIds { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiKickGroupUsersRequest : IApiKickGroupUsersRequest
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="group_id")]
-        public string GroupId { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="user_ids")]
-        public List<string> UserIds { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "GroupId: ", GroupId, ", ");
-            output = string.Concat(output, "UserIds: [", string.Join(", ", UserIds), "], ");
-            return output;
-        }
-    }
-
-    /// <summary>
     /// Represents a complete leaderboard record with all scores and associated metadata.
     /// </summary>
     public interface IApiLeaderboardRecord
@@ -1337,34 +1233,6 @@ namespace Nakama
             output = string.Concat(output, "OwnerRecords: [", string.Join(", ", OwnerRecords), "], ");
             output = string.Concat(output, "PrevCursor: ", PrevCursor, ", ");
             output = string.Concat(output, "Records: [", string.Join(", ", Records), "], ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// Leave a group.
-    /// </summary>
-    public interface IApiLeaveGroupRequest
-    {
-
-        /// <summary>
-        /// The group ID to leave.
-        /// </summary>
-        string GroupId { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiLeaveGroupRequest : IApiLeaveGroupRequest
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="group_id")]
-        public string GroupId { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "GroupId: ", GroupId, ", ");
             return output;
         }
     }
@@ -1579,44 +1447,6 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "CacheableCursor: ", CacheableCursor, ", ");
             output = string.Concat(output, "Notifications: [", string.Join(", ", Notifications), "], ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// Promote a set of users in a group to the next role up.
-    /// </summary>
-    public interface IApiPromoteGroupUsersRequest
-    {
-
-        /// <summary>
-        /// The group ID to promote in.
-        /// </summary>
-        string GroupId { get; }
-
-        /// <summary>
-        /// The users to promote.
-        /// </summary>
-        List<string> UserIds { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiPromoteGroupUsersRequest : IApiPromoteGroupUsersRequest
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="group_id")]
-        public string GroupId { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="user_ids")]
-        public List<string> UserIds { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "GroupId: ", GroupId, ", ");
-            output = string.Concat(output, "UserIds: [", string.Join(", ", UserIds), "], ");
             return output;
         }
     }
@@ -3788,17 +3618,12 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> AddGroupUsersAsync(
             string bearerToken
-            , string groupId
-            , ApiAddGroupUsersRequest body)
+            , string groupId)
         {
         	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
-            }
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
             }
 
             var urlpath = "/v2/group/{group_id}/add?";
@@ -3815,7 +3640,6 @@ namespace Nakama
             };
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
 
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
@@ -3829,17 +3653,12 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> JoinGroupAsync(
             string bearerToken
-            , string groupId
-            , ApiJoinGroupRequest body)
+            , string groupId)
         {
         	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
-            }
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
             }
 
             var urlpath = "/v2/group/{group_id}/join?";
@@ -3856,7 +3675,6 @@ namespace Nakama
             };
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
 
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
@@ -3870,17 +3688,12 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> KickGroupUsersAsync(
             string bearerToken
-            , string groupId
-            , ApiKickGroupUsersRequest body)
+            , string groupId)
         {
         	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
-            }
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
             }
 
             var urlpath = "/v2/group/{group_id}/kick?";
@@ -3897,7 +3710,6 @@ namespace Nakama
             };
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
 
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
@@ -3911,17 +3723,12 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> LeaveGroupAsync(
             string bearerToken
-            , string groupId
-            , ApiLeaveGroupRequest body)
+            , string groupId)
         {
         	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
-            }
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
             }
 
             var urlpath = "/v2/group/{group_id}/leave?";
@@ -3938,7 +3745,6 @@ namespace Nakama
             };
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
 
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
@@ -3952,17 +3758,12 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> PromoteGroupUsersAsync(
             string bearerToken
-            , string groupId
-            , ApiPromoteGroupUsersRequest body)
+            , string groupId)
         {
         	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
-            }
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
             }
 
             var urlpath = "/v2/group/{group_id}/promote?";
@@ -3979,7 +3780,6 @@ namespace Nakama
             };
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
 
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();

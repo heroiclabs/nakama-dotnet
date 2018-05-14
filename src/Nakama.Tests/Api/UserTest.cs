@@ -138,5 +138,15 @@ namespace Nakama.Tests.Api
             Assert.That(result.Users, Has.Count.EqualTo(2));
             Assert.That(result.Users.Count(u => u.Id == session1.UserId || u.Id == session2.UserId), Is.EqualTo(2));
         }
+
+        [Test]
+        public async Task ShouldListUserGroupsEmpty()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var result = await _client.ListUserGroupsAsync(session);
+
+            Assert.NotNull(result);
+            Assert.IsEmpty(result.UserGroups);
+        }
     }
 }

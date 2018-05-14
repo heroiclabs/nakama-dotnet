@@ -120,7 +120,7 @@ namespace Nakama.Tests.Api
             var result1 = await _client.ListNotificationsAsync(session, 1);
             Assert.NotNull(result1);
             Assert.NotNull(result1.CacheableCursor);
-            var result2 = await _client.ListNotificationsAsync(session, 1, result1.CacheableCursor);
+            var result2 = await _client.ListNotificationsAsync(session, 2, result1.CacheableCursor);
             Assert.That(result2.Notifications.Count(n => result1.Notifications.First().Id != n.Id), Is.EqualTo(2));
         }
     }
