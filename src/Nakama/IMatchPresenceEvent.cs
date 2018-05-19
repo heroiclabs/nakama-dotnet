@@ -14,23 +14,28 @@
  * limitations under the License.
  */
 
-namespace Nakama.Tests.Socket
+namespace Nakama
 {
-    using System.Threading.Tasks;
-    using NUnit.Framework;
+    using System.Collections.Generic;
 
-    [TestFixture]
-    public class WebSocketTest
+    /// <summary>
+    /// A batch of join and leave presences for a match.
+    /// </summary>
+    public interface IMatchPresenceEvent
     {
-        [Test]
-        public async Task ShouldCreateSocket()
-        {
-            IClient client = new Client();
-            var socket = await client.CreateWebSocket(5);
+        /// <summary>
+        /// Presences of users who joined the match.
+        /// </summary>
+        IEnumerable<IUserPresence> Joins { get; }
 
-            Assert.NotNull(socket);
-            Assert.AreSame(client.Logger, socket.Logger);
-            Assert.AreEqual(5, socket.Reconnect);
-        }
+        /// <summary>
+        /// Presences of users who left the match.
+        /// </summary>
+        IEnumerable<IUserPresence> Leaves { get; }
+
+        /// <summary>
+        /// The unique match identifier.
+        /// </summary>
+        string MatchId { get; }
     }
 }

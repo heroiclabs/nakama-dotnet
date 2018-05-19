@@ -16,6 +16,8 @@
 
 namespace Nakama
 {
+    using System;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -34,10 +36,62 @@ namespace Nakama
         int Reconnect { get; set; }
 
         /// <summary>
+        /// A logger which can write log messages. Defaults to <c>NoopLogger</c>.
+        /// </summary>
+        ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Trace all actions performed by the socket. Defaults to false.
+        /// </summary>
+        bool Trace { get; set; }
+
+        Action<IApiChannelMessage> OnChannelMessage { get; set; }
+
+        Action<IChannelPresenceEvent> OnChannelPresence { get; set; }
+
+        Action OnConnect { get; set; }
+
+        Action OnDisconnect { get; set; }
+
+        Action OnError { get; set; }
+
+        Action<IMatchState> OnMatchState { get; set; }
+
+        Action<IMatchPresenceEvent> OnMatchPresence { get; set; }
+
+        Action<IMatchmakerMatched> OnMatchmakerMatched { get; set; }
+
+        Action<IApiNotification> OnNotification { get; set; }
+
+        Action<IStatusPresenceEvent> OnStatusPresence { get; set; }
+
+        Action<IStreamPresenceEvent> OnStreamPresence { get; set; }
+
+        Action<IStreamState> OnStreamState { get; set; }
+
+        /// <summary>
+        /// Connect to the server.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="appearOnline">True if the socket should show the user as online to others.</param>
+        /// <returns>A task to resolve the session object as valid.</returns>
+        Task<ISession> ConnectAsync(ISession session, bool appearOnline = false);
+
+        /// <summary>
+        /// Connect to the server.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="appearOnline">True if the socket should show the user as online to others.</param>
+        /// <param name="ct">A cancellation token for the asynchronous operation.</param>
+        /// <returns>A task to resolve the session object as valid.</returns>
+        Task<ISession> ConnectAsync(ISession session, bool appearOnline, CancellationToken ct);
+
+        /// <summary>
         /// Close the connection with the server.
         /// </summary>
+        /// <param name="dispatch">True if the disconnect should dispatch an on disconnect event.</param>
         /// <returns>A close task.</returns>
-        Task DisconnectAsync();
+        Task DisconnectAsync(bool dispatch = true);
     }
 
     /// <summary>
@@ -46,16 +100,12 @@ namespace Nakama
     public enum SocketProtocol
     {
         /// <summary>
-        /// Use an custom protocol with the <c>ISocket</c>.
-        /// </summary>
-        Custom = 0,
-        /// <summary>
         /// Use the WebSocket protocol with the <c>ISocket</c>.
         /// </summary>
-        WebSocket = 1,
+        WebSocket = 0,
         /// <summary>
         /// Use the rUDP protocol with the <c>ISocket</c>.
         /// </summary>
-        Udp = 2
+        //Udp = 1
     }
 }

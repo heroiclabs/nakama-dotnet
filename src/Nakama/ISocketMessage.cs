@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-namespace Nakama.Tests.Socket
+namespace Nakama
 {
-    using System.Threading.Tasks;
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class WebSocketTest
+    /// <summary>
+    /// A message which can be sent over the socket.
+    /// </summary>
+    /// <seealso cref="ISocket" />
+    public interface ISocketMessage<T>
     {
-        [Test]
-        public async Task ShouldCreateSocket()
-        {
-            IClient client = new Client();
-            var socket = await client.CreateWebSocket(5);
-
-            Assert.NotNull(socket);
-            Assert.AreSame(client.Logger, socket.Logger);
-            Assert.AreEqual(5, socket.Reconnect);
-        }
+        /// <summary>
+        /// Write the message object as JSON.
+        /// </summary>
+        /// <returns>A string of JSON content.</returns>
+        string ToJson();
     }
 }

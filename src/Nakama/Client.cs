@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Threading;
-
 namespace Nakama
 {
     using System;
+    using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using vtortola.WebSockets;
     using vtortola.WebSockets.Rfc6455;
@@ -86,34 +85,109 @@ namespace Nakama
         }
 
         /// <inheritdoc />
+        public async Task AddFriendsAsync(ISession session, IEnumerable<string> ids,
+            IEnumerable<string> usernames = null)
+        {
+            // TODO
+            //await _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames);
+
+            var client = new System.Net.Http.HttpClient(); // FIXME
+
+            var urlpath = "/v2/friend?";
+            foreach (var elem in ids ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+            }
+
+            foreach (var elem in usernames ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
+            }
+
+            var request = new System.Net.Http.HttpRequestMessage
+            {
+                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
+                Method = new System.Net.Http.HttpMethod("POST"),
+                Headers =
+                {
+                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", session.AuthToken);
+            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
+
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            await response.Content.ReadAsStringAsync();
+            client.Dispose();
+        }
+
+        /// <inheritdoc />
+        public async Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
+        {
+            // TODO
+            //await _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids);
+
+            var client = new System.Net.Http.HttpClient(); // FIXME
+            if (groupId == null)
+            {
+                throw new ArgumentException("'groupId' is required but was null.");
+            }
+
+            var urlpath = "/v2/group/{group_id}/add?";
+            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            foreach (var elem in ids ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+            }
+
+            var request = new System.Net.Http.HttpRequestMessage
+            {
+                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
+                Method = new System.Net.Http.HttpMethod("POST"),
+                Headers =
+                {
+                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", session.AuthToken);
+            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
+
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            await response.Content.ReadAsStringAsync();
+            client.Dispose();
+        }
+
+        /// <inheritdoc />
         public async Task<ISession> AuthenticateCustomAsync(string id)
         {
-            var body = new ApiAccountCustom {Id = id};
-            var resp = await _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty, body);
+            var request = new ApiAccountCustom {Id = id};
+            var resp = await _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty, request);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
         public async Task<ISession> AuthenticateDeviceAsync(string id)
         {
-            var body = new ApiAccountDevice {Id = id};
-            var resp = await _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty, body);
+            var request = new ApiAccountDevice {Id = id};
+            var resp = await _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty, request);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
         public async Task<ISession> AuthenticateEmailAsync(string email, string password)
         {
-            var body = new ApiAccountEmail {Email = email, Password = password};
-            var resp = await _apiClient.AuthenticateEmailAsync(ServerKey, string.Empty, body);
+            var request = new ApiAccountEmail {Email = email, Password = password};
+            var resp = await _apiClient.AuthenticateEmailAsync(ServerKey, string.Empty, request);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
         public async Task<ISession> AuthenticateFacebookAsync(string token)
         {
-            var body = new ApiAccountFacebook {Token = token};
-            var resp = await _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty, body);
+            var request = new ApiAccountFacebook {Token = token};
+            var resp = await _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty, request);
             return Session.Restore(resp.Token);
         }
 
@@ -121,7 +195,7 @@ namespace Nakama
         public async Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl,
             string salt, string signature, string timestampSeconds)
         {
-            var body = new ApiAccountGameCenter
+            var request = new ApiAccountGameCenter
             {
                 BundleId = bundleId,
                 PlayerId = playerId,
@@ -130,24 +204,77 @@ namespace Nakama
                 Signature = signature,
                 TimestampSeconds = timestampSeconds
             };
-            var resp = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty, body);
+            var resp = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty, request);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
         public async Task<ISession> AuthenticateGoogleAsync(string token)
         {
-            var body = new ApiAccountGoogle {Token = token};
-            var resp = await _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty, body);
+            var request = new ApiAccountGoogle {Token = token};
+            var resp = await _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty, request);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
         public async Task<ISession> AuthenticateSteamAsync(string token)
         {
-            var body = new ApiAccountSteam {Token = token};
-            var resp = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty, body);
+            var request = new ApiAccountSteam {Token = token};
+            var resp = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty, request);
             return Session.Restore(resp.Token);
+        }
+
+        /// <inheritdoc />
+        public async Task BlockFriendsAsync(ISession session, IEnumerable<string> ids,
+            IEnumerable<string> usernames = null)
+        {
+            // TODO
+            //await _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames);
+
+            var client = new System.Net.Http.HttpClient(); // FIXME
+
+            var urlpath = "/v2/friend/block?";
+            foreach (var id in ids ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "ids=", id, "&");
+            }
+
+            foreach (var username in usernames ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "usernames=", username, "&");
+            }
+
+            var request = new System.Net.Http.HttpRequestMessage
+            {
+                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
+                Method = new System.Net.Http.HttpMethod("POST"),
+                Headers =
+                {
+                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", session.AuthToken);
+            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
+
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            await response.Content.ReadAsStringAsync();
+            client.Dispose();
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description = "",
+            string avatarUrl = null, string langTag = null, bool open = true)
+        {
+            var request = new ApiCreateGroupRequest
+            {
+                Name = name,
+                Description = description,
+                AvatarUrl = avatarUrl,
+                LangTag = langTag,
+                Open = open
+            };
+            return await _apiClient.CreateGroupAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
@@ -155,6 +282,12 @@ namespace Nakama
             IEnumerable<string> usernames = null)
         {
             await _apiClient.DeleteFriendsAsync(session.AuthToken, ids, usernames);
+        }
+
+        /// <inheritdoc />
+        public async Task DeleteGroupAsync(ISession session, string groupId)
+        {
+            await _apiClient.DeleteGroupAsync(session.AuthToken, groupId);
         }
 
         /// <inheritdoc />
@@ -167,6 +300,24 @@ namespace Nakama
         public async Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids)
         {
             await _apiClient.DeleteNotificationsAsync(session.AuthToken, ids);
+        }
+
+        /// <inheritdoc />
+        public async Task DeleteStorageObjectsAsync(ISession session, params StorageObjectId[] ids)
+        {
+            var objects = new List<ApiDeleteStorageObjectId>(ids.Length);
+            foreach (var id in ids)
+            {
+                objects.Add(new ApiDeleteStorageObjectId
+                {
+                    Collection = id.Collection,
+                    Key = id.Key,
+                    Version = id.Version
+                });
+            }
+
+            var request = new ApiDeleteStorageObjectsRequest {_objectIds = objects};
+            await _apiClient.DeleteStorageObjectsAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
@@ -185,43 +336,92 @@ namespace Nakama
         /// <inheritdoc />
         public async Task ImportFacebookFriendsAsync(ISession session, string token)
         {
-            var body = new ApiAccountFacebook {Token = token};
-            await _apiClient.ImportFacebookFriendsAsync(session.AuthToken, body);
+            var request = new ApiAccountFacebook {Token = token};
+            await _apiClient.ImportFacebookFriendsAsync(session.AuthToken, request);
+        }
+
+        /// <inheritdoc />
+        public async Task JoinGroupAsync(ISession session, string groupId)
+        {
+            await _apiClient.JoinGroupAsync(session.AuthToken, groupId);
+        }
+
+        /// <inheritdoc />
+        public async Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
+        {
+            // TODO
+            //await _apiClient.KickGroupUsersAsync(session.AuthToken, groupId);
+
+            var client = new System.Net.Http.HttpClient(); // FIXME
+            if (groupId == null)
+            {
+                throw new ArgumentException("'groupId' is required but was null.");
+            }
+
+            var urlpath = "/v2/group/{group_id}/kick?";
+            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            foreach (var id in ids ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "ids=", id, "&");
+            }
+
+            var request = new System.Net.Http.HttpRequestMessage
+            {
+                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
+                Method = new System.Net.Http.HttpMethod("POST"),
+                Headers =
+                {
+                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", session.AuthToken);
+            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
+
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            await response.Content.ReadAsStringAsync();
+            client.Dispose();
+        }
+
+        /// <inheritdoc />
+        public async Task LeaveGroupAsync(ISession session, string groupId)
+        {
+            await _apiClient.LeaveGroupAsync(session.AuthToken, groupId);
         }
 
         /// <inheritdoc />
         public async Task LinkCustomAsync(ISession session, string id)
         {
-            var body = new ApiAccountCustom {Id = id};
-            await _apiClient.LinkCustomAsync(session.AuthToken, body);
+            var request = new ApiAccountCustom {Id = id};
+            await _apiClient.LinkCustomAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task LinkDeviceAsync(ISession session, string id)
         {
-            var body = new ApiAccountDevice {Id = id};
-            await _apiClient.LinkDeviceAsync(session.AuthToken, body);
+            var request = new ApiAccountDevice {Id = id};
+            await _apiClient.LinkDeviceAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task LinkEmailAsync(ISession session, string email, string password)
         {
-            var body = new ApiAccountEmail {Email = email, Password = password};
-            await _apiClient.LinkEmailAsync(session.AuthToken, body);
+            var request = new ApiAccountEmail {Email = email, Password = password};
+            await _apiClient.LinkEmailAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task LinkFacebookAsync(ISession session, string token)
         {
-            var body = new ApiAccountFacebook {Token = token};
-            await _apiClient.LinkFacebookAsync(session.AuthToken, body);
+            var request = new ApiAccountFacebook {Token = token};
+            await _apiClient.LinkFacebookAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
             string salt, string signature, string timestampSeconds)
         {
-            var body = new ApiAccountGameCenter
+            var request = new ApiAccountGameCenter
             {
                 BundleId = bundleId,
                 PlayerId = playerId,
@@ -230,21 +430,21 @@ namespace Nakama
                 Signature = signature,
                 TimestampSeconds = timestampSeconds
             };
-            await _apiClient.LinkGameCenterAsync(session.AuthToken, body);
+            await _apiClient.LinkGameCenterAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task LinkGoogleAsync(ISession session, string token)
         {
-            var body = new ApiAccountGoogle {Token = token};
-            await _apiClient.LinkGoogleAsync(session.AuthToken, body);
+            var request = new ApiAccountGoogle {Token = token};
+            await _apiClient.LinkGoogleAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task LinkSteamAsync(ISession session, string token)
         {
-            var body = new ApiAccountSteam {Token = token};
-            await _apiClient.LinkSteamAsync(session.AuthToken, body);
+            var request = new ApiAccountSteam {Token = token};
+            await _apiClient.LinkSteamAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
@@ -252,6 +452,25 @@ namespace Nakama
             int limit = 1, bool forward = true, string cursor = null)
         {
             return await _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiFriends> ListFriendsAsync(ISession session)
+        {
+            return await _apiClient.ListFriendsAsync(session.AuthToken);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId)
+        {
+            return await _apiClient.ListGroupUsersAsync(session.AuthToken, groupId);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1,
+            string cursor = null)
+        {
+            return await _apiClient.ListGroupsAsync(session.AuthToken, name, cursor, limit);
         }
 
         /// <inheritdoc />
@@ -290,6 +509,62 @@ namespace Nakama
         }
 
         /// <inheritdoc />
+        public async Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
+        {
+            // TODO
+            //await _apiClient.PromoteGroupUsersAsync(session.AuthToken, groupId, ids);
+
+            var client = new System.Net.Http.HttpClient(); // FIXME
+            if (groupId == null)
+            {
+                throw new ArgumentException("'groupId' is required but was null.");
+            }
+
+            var urlpath = "/v2/group/{group_id}/promote?";
+            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            foreach (var id in ids ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "ids=", id, "&");
+            }
+
+            var request = new System.Net.Http.HttpRequestMessage
+            {
+                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
+                Method = new System.Net.Http.HttpMethod("POST"),
+                Headers =
+                {
+                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", session.AuthToken);
+            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
+
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            await response.Content.ReadAsStringAsync();
+            client.Dispose();
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session,
+            params IApiReadStorageObjectId[] ids)
+        {
+            var wrapper = new List<ApiReadStorageObjectId>(ids.Length);
+            foreach (var id in ids)
+            {
+                wrapper.Add(new ApiReadStorageObjectId
+                {
+                    Collection = id.Collection,
+                    Key = id.Key,
+                    UserId = id.UserId
+                });
+            }
+
+            var request = new ApiReadStorageObjectsRequest {_objectIds = wrapper};
+            return await _apiClient.ReadStorageObjectsAsync(session.AuthToken, request);
+        }
+
+        /// <inheritdoc />
         public async Task<IApiRpc> RpcAsync(ISession session, string id, string payload)
         {
             return await _apiClient.RpcFuncAsync(session.AuthToken, id, payload);
@@ -310,36 +585,36 @@ namespace Nakama
         /// <inheritdoc />
         public async Task UnlinkCustomAsync(ISession session, string id)
         {
-            var body = new ApiAccountCustom {Id = id};
-            await _apiClient.UnlinkCustomAsync(session.AuthToken, body);
+            var request = new ApiAccountCustom {Id = id};
+            await _apiClient.UnlinkCustomAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task UnlinkDeviceAsync(ISession session, string id)
         {
-            var body = new ApiAccountDevice {Id = id};
-            await _apiClient.UnlinkDeviceAsync(session.AuthToken, body);
+            var request = new ApiAccountDevice {Id = id};
+            await _apiClient.UnlinkDeviceAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task UnlinkEmailAsync(ISession session, string email, string password)
         {
-            var body = new ApiAccountEmail {Email = email, Password = password};
-            await _apiClient.UnlinkEmailAsync(session.AuthToken, body);
+            var request = new ApiAccountEmail {Email = email, Password = password};
+            await _apiClient.UnlinkEmailAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task UnlinkFacebookAsync(ISession session, string token)
         {
-            var body = new ApiAccountFacebook {Token = token};
-            await _apiClient.UnlinkFacebookAsync(session.AuthToken, body);
+            var request = new ApiAccountFacebook {Token = token};
+            await _apiClient.UnlinkFacebookAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
             string salt, string signature, string timestampSeconds)
         {
-            var body = new ApiAccountGameCenter
+            var request = new ApiAccountGameCenter
             {
                 BundleId = bundleId,
                 PlayerId = playerId,
@@ -348,28 +623,28 @@ namespace Nakama
                 Signature = signature,
                 TimestampSeconds = timestampSeconds
             };
-            await _apiClient.UnlinkGameCenterAsync(session.AuthToken, body);
+            await _apiClient.UnlinkGameCenterAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task UnlinkGoogleAsync(ISession session, string token)
         {
-            var body = new ApiAccountGoogle {Token = token};
-            await _apiClient.UnlinkGoogleAsync(session.AuthToken, body);
+            var request = new ApiAccountGoogle {Token = token};
+            await _apiClient.UnlinkGoogleAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
         public async Task UnlinkSteamAsync(ISession session, string token)
         {
-            var body = new ApiAccountSteam {Token = token};
-            await _apiClient.UnlinkSteamAsync(session.AuthToken, body);
+            var request = new ApiAccountSteam {Token = token};
+            await _apiClient.UnlinkSteamAsync(session.AuthToken, request);
         }
 
         /// <inheritdoc />
-        public async Task UpdateAccountAsync(ISession session, string username = null, string displayName = null,
+        public async Task UpdateAccountAsync(ISession session, string username, string displayName = null,
             string avatarUrl = null, string langTag = null, string location = null, string timezone = null)
         {
-            var body = new ApiUpdateAccountRequest
+            var request = new ApiUpdateAccountRequest
             {
                 AvatarUrl = avatarUrl,
                 DisplayName = displayName,
@@ -378,62 +653,65 @@ namespace Nakama
                 Timezone = timezone,
                 Username = username
             };
-            await _apiClient.UpdateAccountAsync(session.AuthToken, body);
+            await _apiClient.UpdateAccountAsync(session.AuthToken, request);
+        }
+
+        /// <inheritdoc />
+        public async Task UpdateGroupAsync(ISession session, string groupId, string name, string description = null,
+            string avatarUrl = null, string langTag = null, bool open = false)
+        {
+            var request = new ApiUpdateGroupRequest
+            {
+                AvatarUrl = avatarUrl,
+                Description = description,
+                LangTag = langTag,
+                Name = name,
+                Open = open
+            };
+            await _apiClient.UpdateGroupAsync(session.AuthToken, groupId, request);
         }
 
         /// <inheritdoc />
         public async Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId,
             long score, long subscore = 0L, string metadata = null)
         {
-            var body = new WriteLeaderboardRecordRequestLeaderboardRecordWrite
+            var request = new WriteLeaderboardRecordRequestLeaderboardRecordWrite
             {
                 Metadata = metadata,
                 Score = score.ToString(),
                 Subscore = subscore.ToString()
             };
-            return await _apiClient.WriteLeaderboardRecordAsync(session.AuthToken, leaderboardId, body);
+            return await _apiClient.WriteLeaderboardRecordAsync(session.AuthToken, leaderboardId, request);
         }
 
         /// <inheritdoc />
-        public async Task<ISocket> CreateWebSocketAsync(ISession session, bool appearOnline = true, int reconnect = 3)
+        public async Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session,
+            params IApiWriteStorageObject[] objects)
         {
-            lock (this)
+            var wrapper = new List<ApiWriteStorageObject>(objects.Length);
+            foreach (var o in objects)
             {
-                if (_client == null)
+                wrapper.Add(new ApiWriteStorageObject
                 {
-                    const int bufferSize = 1024 * 8; // 8KiB
-                    const int bufferPoolSize = 100 * bufferSize; // 800KiB pool
-
-                    var options = new WebSocketListenerOptions
-                    {
-                        SendBufferSize = bufferSize,
-                        BufferManager = BufferManager.CreateBufferManager(bufferPoolSize, bufferSize),
-                        Logger = new WebSocketLogger(Logger, Trace)
-                    };
-                    options.Standards.RegisterRfc6455();
-
-                    options.Transports.ConfigureTcp(tcp =>
-                    {
-                        tcp.BacklogSize = 10;
-                        tcp.ReceiveBufferSize = bufferSize;
-                        tcp.SendBufferSize = bufferSize;
-                        tcp.NoDelay = true;
-                        tcp.DualMode = true;
-                    });
-
-                    _client = new WebSocketClient(options);
-                }
+                    Collection = o.Collection,
+                    Key = o.Key,
+                    PermissionRead = o.PermissionRead,
+                    PermissionWrite = o.PermissionWrite,
+                    Value = o.Value,
+                    Version = o.Version
+                });
             }
 
-            var scheme = Secure ? "wss" : "ws";
-            var baseAddr = new UriBuilder(scheme, Host, Port)
-            {
-                Path = "/ws",
-                Query = string.Concat("lang=en&status=", appearOnline, "&token=", session.AuthToken)
-            };
+            var request = new ApiWriteStorageObjectsRequest {_objects = wrapper};
+            return await _apiClient.WriteStorageObjectsAsync(session.AuthToken, request);
+        }
 
-            var websocket = await _client.ConnectAsync(baseAddr.Uri, CancellationToken.None);
-            return new WebSocket(websocket, reconnect);
+        /// <inheritdoc />
+        public async Task<ISocket> CreateWebSocket(int reconnect = 3)
+        {
+            var scheme = Secure ? "wss" : "ws";
+            var baseUri = new UriBuilder(scheme, Host, Port);
+            return new WebSocket(baseUri.Uri, reconnect, Logger, Trace);
         }
     }
 }

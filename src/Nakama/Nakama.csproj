@@ -38,12 +38,22 @@
   <ItemGroup>
     <Compile Include="ApiClient.gen.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="IChannelPresenceEvent.cs" />
     <Compile Include="IClient.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="IMatchmakerMatched.cs" />
+    <Compile Include="IMatchPresenceEvent.cs" />
+    <Compile Include="IMatchState.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="ISocket.cs" />
+    <Compile Include="ISocketMessage.cs" />
+    <Compile Include="IStatusPresenceEvent.cs" />
+    <Compile Include="IStreamPresenceEvent.cs" />
+    <Compile Include="IUserPresence.cs" />
     <Compile Include="NoopLogger.cs" />
+    <Compile Include="StorageObjectId.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="WriteStorageObject.cs" />
     <Compile Include="TinyJson\JsonParser.cs" />
     <Compile Include="TinyJson\JsonWriter.cs" />
     <Compile Include="WebSocket.cs" />

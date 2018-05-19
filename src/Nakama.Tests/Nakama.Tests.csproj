@@ -43,6 +43,7 @@
     <Compile Include="Api\LinkUnlinkTest.cs" />
     <Compile Include="Api\NotificationTest.cs" />
     <Compile Include="Api\RpcTest.cs" />
+    <Compile Include="Api\StorageTest.cs" />
     <Compile Include="Api\UserTest.cs" />
     <Compile Include="ClientTest.cs" />
     <Compile Include="Socket\WebSocketTest.cs" />

@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-namespace Nakama.Tests.Socket
+namespace Nakama
 {
-    using System.Threading.Tasks;
-    using NUnit.Framework;
-
-    [TestFixture]
-    public class WebSocketTest
+    /// <summary>
+    /// An identifier for a storage object.
+    /// </summary>
+    /// <inheritdoc cref="IApiReadStorageObjectId" />
+    public class StorageObjectId : IApiReadStorageObjectId, IApiDeleteStorageObjectId
     {
-        [Test]
-        public async Task ShouldCreateSocket()
-        {
-            IClient client = new Client();
-            var socket = await client.CreateWebSocket(5);
+        /// <inheritdoc cref="IApiReadStorageObjectId" />
+        public string Collection { get; set; }
 
-            Assert.NotNull(socket);
-            Assert.AreSame(client.Logger, socket.Logger);
-            Assert.AreEqual(5, socket.Reconnect);
-        }
+        /// <inheritdoc cref="IApiReadStorageObjectId" />
+        public string Key { get; set; }
+
+        /// <inheritdoc />
+        public string Version { get; set; }
+
+        /// <inheritdoc />
+        public string UserId { get; set; }
     }
 }

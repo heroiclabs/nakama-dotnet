@@ -140,6 +140,20 @@ namespace Nakama.Tests.Api
         }
 
         [Test]
+        public async Task ShouldListUserGroups()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var name = $"{Guid.NewGuid()}";
+            await _client.CreateGroupAsync(session, name);
+            var result = await _client.ListUserGroupsAsync(session, session.UserId);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.UserGroups);
+            Assert.That(result.UserGroups, Has.Count.EqualTo(1));
+            Assert.That(result.UserGroups.Count(ug => ug.Group.Name.Equals(name)), Is.EqualTo(1));
+        }
+
+        [Test]
         public async Task ShouldListUserGroupsEmpty()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
