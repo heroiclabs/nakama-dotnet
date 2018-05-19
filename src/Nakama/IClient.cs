@@ -30,7 +30,7 @@ namespace Nakama
         string Host { get; }
 
         /// <summary>
-        /// A logger which can write log messages. Defaults to <c>NoopLogger</c>.
+        /// A logger which can write log messages. Defaults to <c>NullLogger</c>.
         /// </summary>
         ILogger Logger { get; set; }
 

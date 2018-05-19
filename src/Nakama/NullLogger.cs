@@ -19,8 +19,10 @@ namespace Nakama
     /// <summary>
     /// A logger which performs no operation (no-op).
     /// </summary>
-    internal class NoopLogger : ILogger
+    internal class NullLogger : ILogger
     {
+        public static readonly ILogger Instance = new NullLogger();
+
         /// <inheritdoc />
         public void Debug(object message)
         {

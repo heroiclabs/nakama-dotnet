@@ -36,7 +36,7 @@ namespace Nakama
         int Reconnect { get; set; }
 
         /// <summary>
-        /// A logger which can write log messages. Defaults to <c>NoopLogger</c>.
+        /// A logger which can write log messages. Defaults to <c>NullLogger</c>.
         /// </summary>
         ILogger Logger { get; set; }
 
@@ -45,28 +45,64 @@ namespace Nakama
         /// </summary>
         bool Trace { get; set; }
 
+        /// <summary>
+        /// Receive chat channel messages.
+        /// </summary>
         Action<IApiChannelMessage> OnChannelMessage { get; set; }
 
+        /// <summary>
+        /// Receive chat channel presences for when users join and leave.
+        /// </summary>
         Action<IChannelPresenceEvent> OnChannelPresence { get; set; }
 
+        /// <summary>
+        /// Receive an event when the socket connects.
+        /// </summary>
         Action OnConnect { get; set; }
 
+        /// <summary>
+        /// Receive an event when the socket disconnects.
+        /// </summary>
         Action OnDisconnect { get; set; }
 
+        /// <summary>
+        /// Receive an event when the socket has an error.
+        /// </summary>
         Action OnError { get; set; }
 
+        /// <summary>
+        /// Receive state messages from a realtime match.
+        /// </summary>
         Action<IMatchState> OnMatchState { get; set; }
 
+        /// <summary>
+        /// Receive match presences for when users join and leave.
+        /// </summary>
         Action<IMatchPresenceEvent> OnMatchPresence { get; set; }
 
+        /// <summary>
+        /// Receive an event when the player gets matched by the matchmaker.
+        /// </summary>
         Action<IMatchmakerMatched> OnMatchmakerMatched { get; set; }
 
+        /// <summary>
+        /// Receive realtime notifications.
+        /// </summary>
         Action<IApiNotification> OnNotification { get; set; }
 
+        /// <summary>
+        /// Receive presence events for when a user updates their status.
+        /// </summary>
         Action<IStatusPresenceEvent> OnStatusPresence { get; set; }
 
+        /// <summary>
+        /// Receive low level presence events from a realtime stream.
+        /// </summary>
         Action<IStreamPresenceEvent> OnStreamPresence { get; set; }
 
+        /// <summary>
+        /// Receive state messages from a realtime stream.
+        /// </summary>
         Action<IStreamState> OnStreamState { get; set; }
 
         /// <summary>
@@ -92,8 +128,6 @@ namespace Nakama
         /// <param name="dispatch">True if the disconnect should dispatch an on disconnect event.</param>
         /// <returns>A close task.</returns>
         Task DisconnectAsync(bool dispatch = true);
-
-        Task<T> SendAsync<T>(ISocketMessage<T> message);
     }
 
     /// <summary>

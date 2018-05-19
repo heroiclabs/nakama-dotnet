@@ -50,7 +50,7 @@
     <Compile Include="IStatusPresenceEvent.cs" />
     <Compile Include="IStreamPresenceEvent.cs" />
     <Compile Include="IUserPresence.cs" />
-    <Compile Include="NoopLogger.cs" />
+    <Compile Include="NullLogger.cs" />
     <Compile Include="StorageObjectId.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="WriteStorageObject.cs" />

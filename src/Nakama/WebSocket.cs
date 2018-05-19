@@ -93,8 +93,7 @@ namespace Nakama
                 BufferManager = BufferManager.CreateBufferManager(bufferPoolSize, bufferSize),
                 Logger = new WebSocketLogger(Logger, Trace),
                 PingTimeout = TimeSpan.FromSeconds(10), // FIXME make configurable.
-                SendBufferSize = bufferSize,
-                SubProtocols = new[] {"text"}
+                SendBufferSize = bufferSize
             };
             options.Standards.RegisterRfc6455();
 
@@ -231,12 +230,10 @@ namespace Nakama
                     if (dispatch) OnDisconnect.Invoke();
                 }, null);
             }
-        }
-
-        /// <inheritdoc />
-        public async Task<T> SendAsync<T>(ISocketMessage<T> message)
-        {
-            throw new NotImplementedException();
+            else
+            {
+                if (dispatch) OnDisconnect.Invoke();
+            }
         }
 
         public void Dispose()

@@ -18,10 +18,7 @@ namespace Nakama
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using System.Threading.Tasks;
-    using vtortola.WebSockets;
-    using vtortola.WebSockets.Rfc6455;
 
     /// <inheritdoc />
     public class Client : IClient
@@ -66,14 +63,13 @@ namespace Nakama
         public int Timeout { get; set; }
 
         private readonly ApiClient _apiClient;
-        private WebSocketClient _client;
 
         public Client(string serverKey = DefaultServerKey, string host = DefaultHost, int port = DefaultPort,
             bool secure = false)
         {
             ServerKey = serverKey;
             Host = host;
-            Logger = new NoopLogger(); // dont log by default.
+            Logger = NullLogger.Instance; // dont log by default.
             Port = port;
             Retries = 3;
             Secure = secure;
