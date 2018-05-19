@@ -3,7 +3,7 @@ Nakama .NET
 
 > .NET client for Nakama server written in C#.
 
-[Nakama](https://github.com/heroiclabs/nakama) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and [much more](https://heroiclabs.com).
+[Nakama](https://github.com/heroiclabs/nakama) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
 
 This client implements the full API and socket options with the server. It's written in C# with minimal dependencies to support Unity, Xamarin, Godot, XNA, and other engines and frameworks.
 
@@ -15,7 +15,7 @@ You'll need to setup the server and database before you can connect with the cli
 
 1. Install and run the servers. Follow these [instructions](https://heroiclabs.com/docs/install-docker-quickstart).
 
-2. Download the client from the [releases page](https://github.com/heroiclabs/nakama-dotnet/releases) and import it into your project. You can also [build from source](#source-builds) with the cake build tool.
+2. Download the client from the [releases page](https://github.com/heroiclabs/nakama-dotnet/releases) and import it into your project. You can also [build from source](#source-builds).
 
 3. Use the connection credentials to build a client object.
 
@@ -28,7 +28,7 @@ You'll need to setup the server and database before you can connect with the cli
 
 ## Usage
 
-The client object has many methods to execute various features in the server and also create sockets to open connections with the server.
+The client object has many methods to execute various features in the server or open realtime socket connections with the server.
 
 ### Authenticate
 
@@ -66,7 +66,7 @@ if (session.IsExpired)
 
 ### Requests
 
-The client includes lots of builtin APIs for various features of the game server. These can be accessed with the async methods. It is also possible to call RPC functions for custom logic registered with the server as well as with a socket object.
+The client includes lots of builtin APIs for various features of the game server. These can be accessed with the async methods. It can also call custom logic as RPC functions on the server. These can also be executed with a socket object.
 
 All requests are sent with a session object which authorizes the client.
 
