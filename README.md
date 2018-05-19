@@ -84,7 +84,11 @@ The client can create one or more sockets with the server. Each socket can have 
 ```csharp
 var appearOnline = false;
 var reconnects = 5; // set reconnect attempts (default is 3).
-var socket = client.CreateWebSocketAsync(session, appearOnline, reconnects);
+var socket = client.CreateWebSocket(reconnects);
+socket.OnConnect = () => {
+    System.Console.WriteLine("Socket connected.");
+};
+var session = await socket.ConnectAsync(session, appearOnline);
 ```
 
 ## Contribute
