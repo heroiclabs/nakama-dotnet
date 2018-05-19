@@ -23,7 +23,7 @@ namespace Nakama
     /// <summary>
     /// A socket to interact with Nakama server.
     /// </summary>
-    public interface ISocket
+    public interface ISocket : IDisposable
     {
         /// <summary>
         /// The protocol in use with this socket.
@@ -92,6 +92,8 @@ namespace Nakama
         /// <param name="dispatch">True if the disconnect should dispatch an on disconnect event.</param>
         /// <returns>A close task.</returns>
         Task DisconnectAsync(bool dispatch = true);
+
+        Task<T> SendAsync<T>(ISocketMessage<T> message);
     }
 
     /// <summary>

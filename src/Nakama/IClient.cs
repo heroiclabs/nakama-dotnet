@@ -574,6 +574,6 @@ namespace Nakama
         /// </summary>
         /// <param name="reconnect">Set the number of retries to attempt after a disconnect.</param>
         /// <returns>A socket object.</returns>
-        Task<ISocket> CreateWebSocket(int reconnect = 3);
+        ISocket CreateWebSocket(int reconnect = 3);
     }
 }

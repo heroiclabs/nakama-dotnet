@@ -707,7 +707,7 @@ namespace Nakama
         }
 
         /// <inheritdoc />
-        public async Task<ISocket> CreateWebSocket(int reconnect = 3)
+        public ISocket CreateWebSocket(int reconnect = 3)
         {
             var scheme = Secure ? "wss" : "ws";
             var baseUri = new UriBuilder(scheme, Host, Port);

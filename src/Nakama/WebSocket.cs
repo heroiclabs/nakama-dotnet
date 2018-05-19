@@ -77,11 +77,37 @@ namespace Nakama
 
         private readonly Uri _baseUri;
 
+        private readonly WebSocketClient _client;
         private vtortola.WebSockets.WebSocket _listener;
 
         public WebSocket(Uri baseUri, int reconnect, ILogger logger, bool trace)
         {
             _baseUri = baseUri;
+
+            // FIXME make configurable.
+            const int bufferSize = 1024 * 8; // 8KiB
+            const int bufferPoolSize = 100 * bufferSize; // 800KiB pool
+
+            var options = new WebSocketListenerOptions
+            {
+                BufferManager = BufferManager.CreateBufferManager(bufferPoolSize, bufferSize),
+                Logger = new WebSocketLogger(Logger, Trace),
+                PingTimeout = TimeSpan.FromSeconds(10), // FIXME make configurable.
+                SendBufferSize = bufferSize,
+                SubProtocols = new[] {"text"}
+            };
+            options.Standards.RegisterRfc6455();
+
+            options.Transports.ConfigureTcp(tcp =>
+            {
+                tcp.BacklogSize = 32;
+                tcp.ReceiveBufferSize = bufferSize;
+                tcp.SendBufferSize = bufferSize;
+                tcp.NoDelay = true;
+                tcp.DualMode = true;
+            });
+
+            _client = new WebSocketClient(options);
             Logger = logger;
             OnChannelMessage = message =>
             {
@@ -176,28 +202,6 @@ namespace Nakama
         /// <inheritdoc />
         public async Task<ISession> ConnectAsync(ISession session, bool appearOnline, CancellationToken ct)
         {
-            // FIXME make configurable.
-            const int bufferSize = 1024 * 8; // 8KiB
-            const int bufferPoolSize = 100 * bufferSize; // 800KiB pool
-
-            var options = new WebSocketListenerOptions
-            {
-                SendBufferSize = bufferSize,
-                BufferManager = BufferManager.CreateBufferManager(bufferPoolSize, bufferSize),
-                Logger = new WebSocketLogger(Logger, Trace)
-            };
-            options.Standards.RegisterRfc6455();
-
-            options.Transports.ConfigureTcp(tcp =>
-            {
-                tcp.BacklogSize = 32;
-                tcp.ReceiveBufferSize = bufferSize;
-                tcp.SendBufferSize = bufferSize;
-                tcp.NoDelay = true;
-                tcp.DualMode = true;
-            });
-
-            var client = new WebSocketClient(options);
             var addr = new UriBuilder(_baseUri)
             {
                 Path = "/ws",
@@ -207,9 +211,12 @@ namespace Nakama
             if (_listener != null)
             {
                 await _listener.CloseAsync();
+                _listener.Dispose();
                 _listener = null;
             }
-            _listener = await client.ConnectAsync(addr.Uri, ct);
+
+            _listener = await _client.ConnectAsync(addr.Uri, ct);
+            OnConnect.Invoke();
 
             return session;
         }
@@ -217,10 +224,24 @@ namespace Nakama
         /// <inheritdoc />
         public async Task DisconnectAsync(bool dispatch = true)
         {
-            await _listener.CloseAsync().ContinueWith((task, o) =>
+            if (_listener != null)
             {
-                if (dispatch) OnDisconnect.Invoke();
-            }, null);
+                await _listener.CloseAsync().ContinueWith((task, o) =>
+                {
+                    if (dispatch) OnDisconnect.Invoke();
+                }, null);
+            }
+        }
+
+        /// <inheritdoc />
+        public async Task<T> SendAsync<T>(ISocketMessage<T> message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            _listener?.Dispose();
         }
     }
 }
