@@ -16,6 +16,8 @@
 
 namespace Nakama
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// An object which represents a connected user in the server.
     /// </summary>
@@ -49,5 +51,29 @@ namespace Nakama
         /// The id of the user.
         /// </summary>
         string UserId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class UserPresence : IUserPresence
+    {
+        [DataMember(Name = "persistence")]
+        public bool Persistence { get; set; }
+
+        [DataMember(Name = "session_id")]
+        public string SessionId { get; set; }
+
+        [DataMember(Name = "status")]
+        public string Status { get; set; }
+
+        [DataMember(Name = "username")]
+        public string Username { get; set; }
+
+        [DataMember(Name = "user_id")]
+        public string UserId { get; set; }
+
+        public override string ToString()
+        {
+            return $"UserPresence[Persistence={Persistence}, SessionId={SessionId}, Status={Status}, Username={Username}, UserId={UserId}]";
+        }
     }
 }

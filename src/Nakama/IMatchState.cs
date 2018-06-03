@@ -16,6 +16,11 @@
 
 namespace Nakama
 {
+    using System.Runtime.Serialization;
+
+    /// <summary>
+    /// Some game state update in a match.
+    /// </summary>
     public interface IMatchState
     {
         /// <summary>
@@ -40,5 +45,23 @@ namespace Nakama
         /// Information on the user who sent the state change.
         /// </summary>
         IUserPresence UserPresence { get; }
+    }
+
+    /// <inheritdoc />
+    internal class MatchState : IMatchState
+    {
+        [DataMember(Name="match_id")]
+        public string MatchId { get; set; }
+
+        public long OpCode => System.Convert.ToInt64(_opCode);
+        [DataMember(Name="op_code")]
+        public string _opCode { get; set; }
+
+        [DataMember(Name="data")]
+        public byte[] State { get; set; }
+
+        public IUserPresence UserPresence => _userPresence;
+        [DataMember(Name="presence")]
+        public UserPresence _userPresence { get; set; }
     }
 }

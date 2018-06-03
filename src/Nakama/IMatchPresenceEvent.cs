@@ -17,6 +17,7 @@
 namespace Nakama
 {
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// A batch of join and leave presences for a match.
@@ -37,5 +38,20 @@ namespace Nakama
         /// The unique match identifier.
         /// </summary>
         string MatchId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class MatchPresenceEvent : IMatchPresenceEvent
+    {
+        public IEnumerable<IUserPresence> Joins => _joins ?? new List<UserPresence>(0);
+        [DataMember(Name="joins")]
+        public List<UserPresence> _joins { get; set; }
+
+        public IEnumerable<IUserPresence> Leaves => _leaves ?? new List<UserPresence>(0);
+        [DataMember(Name="leaves")]
+        public List<UserPresence> _leaves { get; set; }
+
+        [DataMember(Name="match_id")]
+        public string MatchId { get; set; }
     }
 }

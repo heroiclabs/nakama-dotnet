@@ -17,15 +17,24 @@
 namespace Nakama
 {
     /// <summary>
-    /// A message which can be sent over the socket.
+    /// Send an RPC message to execute a function on the server.
     /// </summary>
-    /// <seealso cref="ISocket" />
-    public interface ISocketMessage<T>
+    public class RpcMessage
     {
-        /// <summary>
-        /// Write the message object as JSON.
-        /// </summary>
-        /// <returns>A string of JSON content.</returns>
-        string ToJson();
+        public string Id { get; }
+
+        public string Payload { get; }
+
+        public RpcMessage(string id, string payload)
+        {
+            Id = id;
+            Payload = payload;
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"RpcMessage[Id={Id}, Payload={Payload}]";
+        }
     }
 }

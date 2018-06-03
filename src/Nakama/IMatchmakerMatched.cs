@@ -17,6 +17,7 @@
 namespace Nakama
 {
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// The result of a successful matchmaker operation sent to the server.
@@ -53,9 +54,9 @@ namespace Nakama
     public interface IMatchmakerUser
     {
         /// <summary>
-        /// The double properties which this user asked to matchmake with.
+        /// The numeric properties which this user asked to matchmake with.
         /// </summary>
-        IDictionary<string, double> DoubleProperties { get; }
+        IDictionary<string, double> NumericProperties { get; }
 
         /// <summary>
         /// The presence of the user.
@@ -66,5 +67,39 @@ namespace Nakama
         /// The string properties which this user asked to matchmake with.
         /// </summary>
         IDictionary<string, string> StringProperties { get; }
+    }
+
+    /// <inheritdoc />
+    internal class MatchmakerMatched : IMatchmakerMatched
+    {
+        [DataMember(Name="id")]
+        public string Id { get; set; }
+
+        [DataMember(Name="ticket")]
+        public string Ticket { get; set; }
+
+        public IEnumerable<IMatchmakerUser> Users => _users ?? new List<MatchmakerUser>(0);
+        [DataMember(Name="users")]
+        public List<MatchmakerUser> _users { get; set; }
+
+        public IMatchmakerUser Self => _self;
+        [DataMember(Name="self")]
+        public MatchmakerUser _self { get; set; }
+    }
+
+    /// <inheritdoc />
+    internal class MatchmakerUser : IMatchmakerUser
+    {
+        public IDictionary<string, double> NumericProperties => _numericProperties ?? new Dictionary<string, double>();
+        [DataMember(Name="numeric_properties")]
+        public Dictionary<string, double> _numericProperties { get; set; }
+
+        public IUserPresence Presence => _presence;
+        [DataMember(Name="presence")]
+        public UserPresence _presence { get; set; }
+
+        public IDictionary<string, string> StringProperties => _stringProperties ?? new Dictionary<string, string>();
+        [DataMember(Name="string_properties")]
+        public Dictionary<string, string> _stringProperties { get; set; }
     }
 }

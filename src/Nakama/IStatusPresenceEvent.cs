@@ -17,7 +17,11 @@
 namespace Nakama
 {
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
+    /// <summary>
+    /// A status update event about other users who've come online or gone offline.
+    /// </summary>
     public interface IStatusPresenceEvent
     {
         /// <summary>
@@ -35,5 +39,17 @@ namespace Nakama
         /// This join information is in response to a subscription made to be notified when a user comes online.
         /// </remarks>
         IEnumerable<IUserPresence> Joins { get; }
+    }
+
+    /// <inheritdoc />
+    internal class StatusPresenceEvent : IStatusPresenceEvent
+    {
+        public IEnumerable<IUserPresence> Leaves => _leaves ?? new List<UserPresence>(0);
+        [DataMember(Name="leaves")]
+        public List<UserPresence> _leaves { get; set; }
+
+        public IEnumerable<IUserPresence> Joins => _joins ?? new List<UserPresence>(0);
+        [DataMember(Name="joins")]
+        public List<UserPresence> _joins { get; set; }
     }
 }

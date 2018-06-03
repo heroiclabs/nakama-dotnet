@@ -17,6 +17,7 @@
 namespace Nakama
 {
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// A batch of join and leave presences on a chat channel.
@@ -29,13 +30,36 @@ namespace Nakama
         string ChannelId { get; }
 
         /// <summary>
-        /// Presences of users who left the channel.
-        /// </summary>
-        IEnumerable<IUserPresence> Leaves { get; }
-
-        /// <summary>
         /// Presences of the users who joined the channel.
         /// </summary>
         IEnumerable<IUserPresence> Joins { get; }
+
+        /// <summary>
+        /// Presences of users who left the channel.
+        /// </summary>
+        IEnumerable<IUserPresence> Leaves { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ChannelPresenceEvent : IChannelPresenceEvent
+    {
+        [DataMember(Name="channel_id")]
+        public string ChannelId { get; set; }
+
+        public IEnumerable<IUserPresence> Joins => _joins ?? new List<UserPresence>(0);
+        [DataMember(Name="joins")]
+        public List<UserPresence> _joins { get; set; }
+
+        public IEnumerable<IUserPresence> Leaves => _leaves ?? new List<UserPresence>(0);
+        [DataMember(Name="leaves")]
+        public List<UserPresence> _leaves { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var joins = string.Join(",", Joins);
+            var leaves = string.Join(",", Leaves);
+            return $"ChannelPresenceEvent[ChannelId={ChannelId}, Joins=({joins}), Leaves=({leaves})]";
+        }
     }
 }

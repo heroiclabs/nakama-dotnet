@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-using System;
-
 namespace Nakama.Tests.Socket
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using NUnit.Framework;
@@ -54,7 +53,7 @@ namespace Nakama.Tests.Socket
 
             var evt = new AutoResetEvent(false);
             _socket.OnConnect = () => { evt.Set(); };
-            await _socket.ConnectAsync(session);
+            await _socket.Connect(session);
 
             Assert.NotNull(evt);
             Assert.IsTrue(evt.WaitOne(TimeSpan.FromSeconds(2)));
@@ -67,7 +66,7 @@ namespace Nakama.Tests.Socket
 
             var evt = new AutoResetEvent(false);
             _socket.OnDisconnect = () => { evt.Set(); };
-            await _socket.ConnectAsync(session);
+            await _socket.Connect(session);
             await _socket.DisconnectAsync();
 
             Assert.NotNull(evt);
@@ -81,7 +80,7 @@ namespace Nakama.Tests.Socket
 
             var evt = new AutoResetEvent(false);
             _socket.OnDisconnect = () => { evt.Set(); };
-            await _socket.ConnectAsync(session);
+            await _socket.Connect(session);
             await _socket.DisconnectAsync(false);
 
             Assert.NotNull(evt);

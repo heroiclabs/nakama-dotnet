@@ -48,7 +48,7 @@ namespace Nakama
         /// <summary>
         /// Receive chat channel messages.
         /// </summary>
-        Action<IApiChannelMessage> OnChannelMessage { get; set; }
+        Action<IApiChannelMessage> OnChannelMessage { set; }
 
         /// <summary>
         /// Receive chat channel presences for when users join and leave.
@@ -68,7 +68,12 @@ namespace Nakama
         /// <summary>
         /// Receive an event when the socket has an error.
         /// </summary>
-        Action OnError { get; set; }
+        Action<Exception> OnError { get; set; }
+
+        /// <summary>
+        /// Receive an event when the player gets matched by the matchmaker.
+        /// </summary>
+        Action<IMatchmakerMatched> OnMatchmakerMatched { get; set; }
 
         /// <summary>
         /// Receive state messages from a realtime match.
@@ -79,11 +84,6 @@ namespace Nakama
         /// Receive match presences for when users join and leave.
         /// </summary>
         Action<IMatchPresenceEvent> OnMatchPresence { get; set; }
-
-        /// <summary>
-        /// Receive an event when the player gets matched by the matchmaker.
-        /// </summary>
-        Action<IMatchmakerMatched> OnMatchmakerMatched { get; set; }
 
         /// <summary>
         /// Receive realtime notifications.
@@ -109,18 +109,12 @@ namespace Nakama
         /// Connect to the server.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="appearOnline">True if the socket should show the user as online to others.</param>
-        /// <returns>A task to resolve the session object as valid.</returns>
-        Task<ISession> ConnectAsync(ISession session, bool appearOnline = false);
-
-        /// <summary>
-        /// Connect to the server.
-        /// </summary>
-        /// <param name="session">The session of the user.</param>
-        /// <param name="appearOnline">True if the socket should show the user as online to others.</param>
         /// <param name="ct">A cancellation token for the asynchronous operation.</param>
-        /// <returns>A task to resolve the session object as valid.</returns>
-        Task<ISession> ConnectAsync(ISession session, bool appearOnline, CancellationToken ct);
+        /// <param name="appearOnline">True if the socket should show the user as online to others.</param>
+        /// <param name="connectTimeout">Time in millisecs before the connection attempt is considered failed.</param>
+        /// <returns>A task.</returns>
+        Task Connect(ISession session, CancellationToken ct = default(CancellationToken), bool appearOnline = false,
+            int connectTimeout = 5000);
 
         /// <summary>
         /// Close the connection with the server.
@@ -128,6 +122,30 @@ namespace Nakama
         /// <param name="dispatch">True if the disconnect should dispatch an on disconnect event.</param>
         /// <returns>A close task.</returns>
         Task DisconnectAsync(bool dispatch = true);
+
+        /// <summary>
+        /// Send a channel join message to the server.
+        /// </summary>
+        /// <param name="message">The channel join message.</param>
+        /// <param name="sendTimeout">Time in milliseconds before the send attempt is considered failed.</param>
+        /// <returns>A task which resolves to a Channel response.</returns>
+        Task<IChannel> SendAsync(ChannelJoinMessage message, int sendTimeout = 5000);
+
+        /// <summary>
+        /// Send a chat message to a channel on the server.
+        /// </summary>
+        /// <param name="message">The chat message.</param>
+        /// <param name="sendTimeout">Time in milliseconds before the send attempt is considered failed.</param>
+        /// <returns>A task which resolves to a Channel Ack response.</returns>
+        Task<IChannelMessageAck> SendAsync(ChannelSendMessage message, int sendTimeout = 5000);
+
+        /// <summary>
+        /// Send an RPC message to the server.
+        /// </summary>
+        /// <param name="message">The RPC message.</param>
+        /// <param name="sendTimeout">Time in milliseconds before the send attempt is considered failed.</param>
+        /// <returns>A task which resolves to an RPC response.</returns>
+        Task<IApiRpc> SendAsync(RpcMessage message, int sendTimeout = 5000);
     }
 
     /// <summary>

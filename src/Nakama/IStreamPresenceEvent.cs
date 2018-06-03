@@ -17,6 +17,7 @@
 namespace Nakama
 {
     using System.Collections.Generic;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// A batch of joins and leaves on the low level stream.
@@ -88,5 +89,52 @@ namespace Nakama
         /// The subject of the stream. This is usually a user id.
         /// </summary>
         string Subject { get; }
+    }
+
+    /// <inheritdoc />
+    internal class StreamPresenceEvent : IStreamPresenceEvent
+    {
+        public IEnumerable<IUserPresence> Leaves => _leaves ?? new List<UserPresence>(0);
+        [DataMember(Name="leaves")]
+        public List<UserPresence> _leaves { get; set; }
+
+        public IEnumerable<IUserPresence> Joins => _joins ?? new List<UserPresence>(0);
+        [DataMember(Name="joins")]
+        public List<UserPresence> _joins { get; set; }
+
+        public IStream Stream => _stream;
+        [DataMember(Name="stream")]
+        public Stream _stream { get; set; }
+    }
+
+    /// <inheritdoc />
+    internal class StreamState : IStreamState
+    {
+        public IUserPresence Sender => _sender;
+        [DataMember(Name="sender")]
+        public UserPresence _sender { get; set; }
+
+        [DataMember(Name="data")]
+        public byte[] State { get; set; }
+
+        public IStream Stream => _stream;
+        [DataMember(Name="stream")]
+        public Stream _stream { get; set; }
+    }
+
+    /// <inheritdoc />
+    internal class Stream : IStream
+    {
+        [DataMember(Name="descriptor")]
+        public string Descriptor { get; set; }
+
+        [DataMember(Name="label")]
+        public string Label { get; set; }
+
+        [DataMember(Name="mode")]
+        public int Mode { get; set; }
+
+        [DataMember(Name="subject")]
+        public string Subject { get; set; }
     }
 }

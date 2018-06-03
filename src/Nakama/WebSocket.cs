@@ -17,10 +17,15 @@
 namespace Nakama
 {
     using System;
+    using System.Collections.Concurrent;
+    using System.IO;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Threading.Tasks.Dataflow;
     using vtortola.WebSockets;
     using vtortola.WebSockets.Rfc6455;
+    using TinyJson;
 
     /// <summary>
     /// A socket which uses the WebSocket protocol to interact with Nakama server.
@@ -40,7 +45,7 @@ namespace Nakama
         public bool Trace { get; set; }
 
         /// <inheritdoc />
-        public Action<IApiChannelMessage> OnChannelMessage { get; set; }
+        public Action<IApiChannelMessage> OnChannelMessage { private get; set; }
 
         /// <inheritdoc />
         public Action<IChannelPresenceEvent> OnChannelPresence { get; set; }
@@ -52,16 +57,16 @@ namespace Nakama
         public Action OnDisconnect { get; set; }
 
         /// <inheritdoc />
-        public Action OnError { get; set; }
+        public Action<Exception> OnError { get; set; }
+
+        /// <inheritdoc />
+        public Action<IMatchmakerMatched> OnMatchmakerMatched { get; set; }
 
         /// <inheritdoc />
         public Action<IMatchState> OnMatchState { get; set; }
 
         /// <inheritdoc />
         public Action<IMatchPresenceEvent> OnMatchPresence { get; set; }
-
-        /// <inheritdoc />
-        public Action<IMatchmakerMatched> OnMatchmakerMatched { get; set; }
 
         /// <inheritdoc />
         public Action<IApiNotification> OnNotification { get; set; }
@@ -76,9 +81,10 @@ namespace Nakama
         public Action<IStreamState> OnStreamState { get; set; }
 
         private readonly Uri _baseUri;
-
         private readonly WebSocketClient _client;
         private vtortola.WebSockets.WebSocket _listener;
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _messageReplies;
+        private readonly BufferBlock<string> _sendBuffer;
 
         public WebSocket(Uri baseUri, int reconnect, ILogger logger, bool trace)
         {
@@ -92,8 +98,10 @@ namespace Nakama
             {
                 BufferManager = BufferManager.CreateBufferManager(bufferPoolSize, bufferSize),
                 Logger = new WebSocketLogger(Logger, Trace),
-                PingTimeout = TimeSpan.FromSeconds(10), // FIXME make configurable.
-                SendBufferSize = bufferSize
+                // FIXME make configurable.
+                PingTimeout = TimeSpan.FromSeconds(10),
+                SendBufferSize = bufferSize,
+                PingMode = PingMode.BandwidthSaving
             };
             options.Standards.RegisterRfc6455();
 
@@ -103,10 +111,17 @@ namespace Nakama
                 tcp.ReceiveBufferSize = bufferSize;
                 tcp.SendBufferSize = bufferSize;
                 tcp.NoDelay = true;
+                // Dual mode needed for IPv6 support.
                 tcp.DualMode = true;
             });
 
             _client = new WebSocketClient(options);
+            _messageReplies = new ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
+            _sendBuffer = new BufferBlock<string>(new DataflowBlockOptions
+            {
+                // FIXME make configurable.
+                BoundedCapacity = 16
+            });
             Logger = logger;
             OnChannelMessage = message =>
             {
@@ -136,8 +151,7 @@ namespace Nakama
                     Logger.Debug("Socket disconnected.");
                 }
             };
-            // FIXME needs error reason.
-            OnError = () => Logger.Error("Socket error.");
+            OnError = e => Logger.ErrorFormat("Socket error: {0}", e.Message);
             OnMatchmakerMatched = matched =>
             {
                 if (Trace)
@@ -193,20 +207,10 @@ namespace Nakama
         }
 
         /// <inheritdoc />
-        public async Task<ISession> ConnectAsync(ISession session, bool appearOnline = false)
+        public async Task Connect(ISession session, CancellationToken ct = default(CancellationToken),
+            bool appearOnline = false,
+            int connectTimeout = 5000)
         {
-            return await ConnectAsync(session, appearOnline, CancellationToken.None);
-        }
-
-        /// <inheritdoc />
-        public async Task<ISession> ConnectAsync(ISession session, bool appearOnline, CancellationToken ct)
-        {
-            var addr = new UriBuilder(_baseUri)
-            {
-                Path = "/ws",
-                Query = string.Concat("lang=en&status=", appearOnline, "&token=", session.AuthToken)
-            };
-
             if (_listener != null)
             {
                 await _listener.CloseAsync();
@@ -214,10 +218,30 @@ namespace Nakama
                 _listener = null;
             }
 
-            _listener = await _client.ConnectAsync(addr.Uri, ct);
-            OnConnect.Invoke();
+            var addr = new UriBuilder(_baseUri)
+            {
+                Path = "/ws",
+                Query = string.Concat("lang=en&status=", appearOnline, "&token=", session.AuthToken)
+            };
 
-            return session;
+            var timeoutTask = Task.Delay(TimeSpan.FromMilliseconds(connectTimeout), ct);
+            var connectTask = _client.ConnectAsync(addr.Uri, ct);
+
+            // Limit time (msec) allowed for connect attempts.
+            if (await Task.WhenAny(connectTask, timeoutTask).ConfigureAwait(false) == timeoutTask)
+            {
+                throw new TimeoutException($"Socket connect timed out after '{connectTimeout}' milliseconds.");
+            }
+
+            _listener = await connectTask.ConfigureAwait(false);
+            OnConnect();
+
+            var t = new Thread(() =>
+            {
+                ReadSocketAsync(ct);
+                WriteSocketAsync(ct);
+            });
+            t.Start();
         }
 
         /// <inheritdoc />
@@ -225,20 +249,191 @@ namespace Nakama
         {
             if (_listener != null)
             {
-                await _listener.CloseAsync().ContinueWith((task, o) =>
-                {
-                    if (dispatch) OnDisconnect.Invoke();
-                }, null);
+                await _listener.CloseAsync();
             }
-            else
-            {
-                if (dispatch) OnDisconnect.Invoke();
-            }
+            if (dispatch) OnDisconnect();
         }
 
         public void Dispose()
         {
             _listener?.Dispose();
+            OnDisconnect();
+        }
+
+        /// <inheritdoc />
+        public async Task<IChannel> SendAsync(ChannelJoinMessage message, int sendTimeout = 5000)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                ChannelJoin = message
+            };
+            var response = await SendAsync(envelope, sendTimeout);
+            return response.Channel;
+        }
+
+        /// <inheritdoc />
+        public async Task<IChannelMessageAck> SendAsync(ChannelSendMessage message, int sendTimeout = 5000)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                ChannelSend = message
+            };
+            var response = await SendAsync(envelope, sendTimeout);
+            return response.ChannelMessageAck;
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiRpc> SendAsync(RpcMessage message, int sendTimeout = 5000)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Rpc = new ApiRpc
+                {
+                    Id = message.Id,
+                    Payload = message.Payload
+                }
+            };
+            var response = await SendAsync(envelope, sendTimeout);
+            return response.Rpc;
+        }
+
+        private async Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope message, int sendTimeout = 5000)
+        {
+            if (_listener == null || !_listener.IsConnected)
+            {
+                throw new InvalidOperationException("Socket is not connected.");
+            }
+
+            var cid = Guid.NewGuid().ToString();
+            message.Cid = cid;
+            await _sendBuffer.SendAsync(message.ToJson()).ConfigureAwait(false);
+
+            var timeoutTask = Task.Delay(TimeSpan.FromMilliseconds(sendTimeout));
+            var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
+            _messageReplies[cid] = completer;
+            var resultTask = completer.Task;
+
+            if (await Task.WhenAny(resultTask, timeoutTask).ConfigureAwait(false) == timeoutTask)
+            {
+                throw new TimeoutException($"Socket send timed out after '{sendTimeout}' milliseconds.");
+            }
+
+            return await resultTask.ConfigureAwait(false);
+        }
+
+        private async void ReadSocketAsync(CancellationToken ct)
+        {
+            try
+            {
+                while (!ct.IsCancellationRequested && _listener.IsConnected)
+                {
+                    var readStream = await _listener.ReadMessageAsync(ct).ConfigureAwait(false);
+                    if (readStream == null)
+                    {
+                        continue; // NOTE does stream need to be consumed?
+                    }
+
+                    using (var reader = new StreamReader(readStream, Encoding.UTF8))
+                    {
+                        var message = await reader.ReadToEndAsync().ConfigureAwait(false);
+                        Console.WriteLine(message);
+                        var envelope = message.FromJson<WebSocketMessageEnvelope>();
+                        Console.WriteLine("ENVELOPE - " + envelope);
+                        if (envelope.Cid != null)
+                        {
+                            // Handle message response.
+                            var cid = envelope.Cid;
+                            TaskCompletionSource<WebSocketMessageEnvelope> completer;
+                            _messageReplies.TryRemove(cid, out completer);
+                            if (completer == null)
+                            {
+                                if (Trace) Logger.InfoFormat("No task completer for message: '{0}'", cid);
+                                continue;
+                            }
+                            completer.SetResult(envelope);
+                        }
+                        else if (envelope.ChannelMessage != null)
+                        {
+                            Console.WriteLine("CHANNEL MESSAGE - " + envelope.ChannelMessage);
+                            Console.WriteLine("EVENT HANDLER - " + OnChannelMessage);
+                            OnChannelMessage(envelope.ChannelMessage);
+                            Console.WriteLine("EVENT HANDLER ENDED");
+                        }
+                        else if (envelope.ChannelPresenceEvent != null)
+                        {
+                            Console.WriteLine("CHANNEL PRESENCE EVENT - " + envelope.ChannelPresenceEvent);
+                            OnChannelPresence(envelope.ChannelPresenceEvent);
+                        }
+                        else if (envelope.MatchmakerMatched != null)
+                        {
+                            OnMatchmakerMatched(envelope.MatchmakerMatched);
+                        }
+                        else if (envelope.MatchPresenceEvent != null)
+                        {
+                            OnMatchPresence(envelope.MatchPresenceEvent);
+                        }
+                        else if (envelope.MatchState != null)
+                        {
+                            OnMatchState(envelope.MatchState);
+                        }
+                        else if (envelope.Notifications != null)
+                        {
+                            foreach (var notification in envelope.Notifications)
+                            {
+                                OnNotification(notification);
+                            }
+                        }
+                        else if (envelope.StatusPresenceEvent != null)
+                        {
+                            OnStatusPresence(envelope.StatusPresenceEvent);
+                        }
+                        else if (envelope.StreamPresenceEvent != null)
+                        {
+                            OnStreamPresence(envelope.StreamPresenceEvent);
+                        }
+                        else if (envelope.StreamState != null)
+                        {
+                            OnStreamState(envelope.StreamState);
+                        }
+                        else
+                        {
+                            if (Trace) Logger.InfoFormat("Socket received unrecognised message: '{0}'", message);
+                        }
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                _listener.Dispose();
+                _listener = null;
+            }
+        }
+
+        private async void WriteSocketAsync(CancellationToken ct)
+        {
+            try
+            {
+                while (!ct.IsCancellationRequested && _listener.IsConnected)
+                {
+                    var message = await _sendBuffer.ReceiveAsync(ct).ConfigureAwait(false);
+                    using (var output = _listener.CreateMessageWriter(WebSocketMessageType.Text))
+                    using (var writer = new StreamWriter(output, Encoding.ASCII)) // FIXME do we need ASCII encoded?
+                    {
+                        if (Trace)
+                        {
+                            Logger.DebugFormat("Socket write message: '{0}'", message);
+                        }
+                        await writer.WriteAsync(message).ConfigureAwait(false);
+                    }
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception e)
+            {
+                OnError(e);
+            }
         }
     }
 }
