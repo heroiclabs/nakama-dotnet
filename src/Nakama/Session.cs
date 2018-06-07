@@ -66,7 +66,7 @@ namespace Nakama
 
         public override string ToString()
         {
-            return $"ExpireTime: {ExpireTime}, IsExpired: {IsExpired}, Username: {Username}, UserId: {UserId}";
+            return $"Session[ExpireTime={ExpireTime}, IsExpired={IsExpired}, Username={Username}, UserId={UserId}]";
         }
 
         /// <summary>

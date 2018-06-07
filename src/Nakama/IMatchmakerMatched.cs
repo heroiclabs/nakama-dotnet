@@ -28,14 +28,19 @@ namespace Nakama
         /// The id used to join the match.
         /// </summary>
         /// <remarks>
-        /// May be either a match id or a token used to join the match.
+        /// A match ID used to join the match.
         /// </remarks>
-        string Id { get; }
+        string MatchId { get; }
 
         /// <summary>
         /// The ticket sent by the server when the user requested to matchmake for other players.
         /// </summary>
         string Ticket { get; }
+
+        /// <summary>
+        /// The token used to join a match.
+        /// </summary>
+        string Token { get; }
 
         /// <summary>
         /// The other users matched with this user and the parameters they sent.
@@ -72,11 +77,14 @@ namespace Nakama
     /// <inheritdoc />
     internal class MatchmakerMatched : IMatchmakerMatched
     {
-        [DataMember(Name="id")]
-        public string Id { get; set; }
+        [DataMember(Name="match_id")]
+        public string MatchId { get; set; }
 
         [DataMember(Name="ticket")]
         public string Ticket { get; set; }
+
+        [DataMember(Name="token")]
+        public string Token { get; set; }
 
         public IEnumerable<IMatchmakerUser> Users => _users ?? new List<MatchmakerUser>(0);
         [DataMember(Name="users")]

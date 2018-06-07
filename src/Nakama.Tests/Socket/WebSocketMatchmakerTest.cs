@@ -17,13 +17,11 @@
 namespace Nakama.Tests.Socket
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using NUnit.Framework;
-    using TinyJson;
 
     [TestFixture]
-    public class WebSocketChannelTest
+    public class WebSocketMatchmakerTest
     {
         private IClient _client;
         private ISocket _socket;
@@ -43,38 +41,26 @@ namespace Nakama.Tests.Socket
         }
 
         [Test]
-        public async Task ShouldCreateRoomChannel()
+        public async Task ShouldJoinMatchmaker()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             await _socket.ConnectAsync(session);
-            var channel = await _socket.JoinChatAsync("myroom", ChannelType.Room);
+            var matchmakerTicket = await _socket.AddMatchmakerAsync("*");
 
-            Assert.NotNull(channel);
-            Assert.NotNull(channel.Id);
-            Assert.AreEqual(channel.Self.UserId, session.UserId);
-            Assert.AreEqual(channel.Self.Username, session.Username);
+            Assert.NotNull(matchmakerTicket);
+            Assert.IsNotEmpty(matchmakerTicket.Ticket);
         }
 
         [Test]
-        public async Task ShouldSendMessageRoomChannel()
+        public async Task ShouldJoinAndLeaveMatchmaker()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-
-            var completer = new TaskCompletionSource<IApiChannelMessage>();
-            _socket.OnChannelMessage = chatMessage => completer.SetResult(chatMessage);
             await _socket.ConnectAsync(session);
-            var channel = await _socket.JoinChatAsync("myroom", ChannelType.Room);
+            var matchmakerTicket = await _socket.AddMatchmakerAsync("*");
 
-            // Send chat message.
-            var content = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
-            var sendAck = await _socket.WriteChatMessageAsync(channel, content);
-            var message = await completer.Task.ConfigureAwait(false);
-
-            Assert.NotNull(sendAck);
-            Assert.NotNull(message);
-            Assert.AreEqual(sendAck.ChannelId, message.ChannelId);
-            Assert.AreEqual(sendAck.MessageId, message.MessageId);
-            Assert.AreEqual(sendAck.Username, message.Username);
+            Assert.NotNull(matchmakerTicket);
+            Assert.IsNotEmpty(matchmakerTicket.Ticket);
+            Assert.DoesNotThrowAsync(() => _socket.RemoveMatchmakerAsync(matchmakerTicket));
         }
     }
 }

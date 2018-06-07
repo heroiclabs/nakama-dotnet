@@ -707,7 +707,7 @@ namespace Nakama
         {
             var scheme = Secure ? "wss" : "ws";
             var baseUri = new UriBuilder(scheme, Host, Port);
-            return new WebSocket(baseUri.Uri, reconnect, Logger, Trace);
+            return new WebSocket(baseUri.Uri, Timeout, reconnect, Logger, Trace);
         }
     }
 }

@@ -17,6 +17,7 @@
 namespace Nakama
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -25,6 +26,11 @@ namespace Nakama
     /// </summary>
     public interface ISocket : IDisposable
     {
+        /// <summary>
+        /// A logger which can write log messages. Defaults to <c>NullLogger</c>.
+        /// </summary>
+        ILogger Logger { get; set; }
+
         /// <summary>
         /// The protocol in use with this socket.
         /// </summary>
@@ -36,9 +42,9 @@ namespace Nakama
         int Reconnect { get; set; }
 
         /// <summary>
-        /// A logger which can write log messages. Defaults to <c>NullLogger</c>.
+        /// The time in seconds before the send message attempt is considered failed.
         /// </summary>
-        ILogger Logger { get; set; }
+        int TimeoutMs { get; set; }
 
         /// <summary>
         /// Trace all actions performed by the socket. Defaults to false.
@@ -106,6 +112,18 @@ namespace Nakama
         Action<IStreamState> OnStreamState { get; set; }
 
         /// <summary>
+        /// Join the matchmaker pool and search for opponents on the server.
+        /// </summary>
+        /// <param name="query">A matchmaker query to search for opponents.</param>
+        /// <param name="minCount">The minimum number of players to compete against.</param>
+        /// <param name="maxCount">The maximum number of players to compete against.</param>
+        /// <param name="stringProperties">A set of k/v properties to provide in searches.</param>
+        /// <param name="numericProperties">A set of k/v numeric properties to provide in searches.</param>
+        /// <returns>A task which resolves to a matchmaker ticket object.</returns>
+        Task<IMatchmakerTicket> AddMatchmakerAsync(string query = "*", int minCount = 2, int maxCount = 8,
+            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null);
+
+        /// <summary>
         /// Connect to the server.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -113,8 +131,14 @@ namespace Nakama
         /// <param name="appearOnline">True if the socket should show the user as online to others.</param>
         /// <param name="connectTimeout">Time in millisecs before the connection attempt is considered failed.</param>
         /// <returns>A task.</returns>
-        Task Connect(ISession session, CancellationToken ct = default(CancellationToken), bool appearOnline = false,
-            int connectTimeout = 5000);
+        Task ConnectAsync(ISession session, CancellationToken ct = default(CancellationToken),
+            bool appearOnline = false, int connectTimeout = 5000);
+
+        /// <summary>
+        /// Create a multiplayer match on the server.
+        /// </summary>
+        /// <returns>A task.</returns>
+        Task<IMatch> CreateMatchAsync();
 
         /// <summary>
         /// Close the connection with the server.
@@ -124,28 +148,131 @@ namespace Nakama
         Task DisconnectAsync(bool dispatch = true);
 
         /// <summary>
-        /// Send a channel join message to the server.
+        /// Join a chat channel on the server.
         /// </summary>
-        /// <param name="message">The channel join message.</param>
-        /// <param name="sendTimeout">Time in milliseconds before the send attempt is considered failed.</param>
+        /// <param name="target">The target channel to join.</param>
+        /// <param name="type">The type of channel to join.</param>
+        /// <param name="persistence">True if chat messages should be stored.</param>
+        /// <param name="hidden">True if the user should be hidden on the channel.</param>
         /// <returns>A task which resolves to a Channel response.</returns>
-        Task<IChannel> SendAsync(ChannelJoinMessage message, int sendTimeout = 5000);
+        Task<IChannel> JoinChatAsync(string target, ChannelType type, bool persistence = false, bool hidden = false);
 
         /// <summary>
-        /// Send a chat message to a channel on the server.
+        /// Join a multiplayer match with a matchmaker.
         /// </summary>
-        /// <param name="message">The chat message.</param>
-        /// <param name="sendTimeout">Time in milliseconds before the send attempt is considered failed.</param>
-        /// <returns>A task which resolves to a Channel Ack response.</returns>
-        Task<IChannelMessageAck> SendAsync(ChannelSendMessage message, int sendTimeout = 5000);
+        /// <param name="matched">A matchmaker result object.</param>
+        /// <returns>A task which resolves to the match joined.</returns>
+        Task<IMatch> JoinMatchAsync(IMatchmakerMatched matched);
+
+        /// <summary>
+        /// Join a multiplayer match by ID.
+        /// </summary>
+        /// <param name="matchId">A match ID.</param>
+        /// <returns>A task which resolves to the match joined.</returns>
+        Task<IMatch> JoinMatchAsync(string matchId);
+
+        /// <summary>
+        /// Leave a chat channel on the server.
+        /// </summary>
+        /// <param name="channel">The channel to leave.</param>
+        /// <returns>A task.</returns>
+        Task LeaveChatAsync(IChannel channel);
+
+        /// <summary>
+        /// Leave a chat channel on the server.
+        /// </summary>
+        /// <param name="channelId">The ID of the channel to leave.</param>
+        /// <returns>A task.</returns>
+        Task LeaveChatAsync(string channelId);
+
+        /// <summary>
+        /// Leave a match on the server.
+        /// </summary>
+        /// <param name="matchId">The ID of the match to leave.</param>
+        /// <returns>A task.</returns>
+        Task LeaveMatchAsync(string matchId);
+
+        /// <summary>
+        /// Remove a chat message from a channel on the server.
+        /// </summary>
+        /// <param name="channel">The chat channel with the message.</param>
+        /// <param name="messageId">The ID of a chat message to update.</param>
+        /// <returns>A task.</returns>
+        Task<IChannelMessageAck> RemoveChatMessageAsync(IChannel channel, string messageId);
+
+        /// <summary>
+        /// Remove a chat message from a channel on the server.
+        /// </summary>
+        /// <param name="channelId">The ID of the chat channel with the message.</param>
+        /// <param name="messageId">The ID of a chat message to update.</param>
+        /// <returns>A task.</returns>
+        Task<IChannelMessageAck> RemoveChatMessageAsync(string channelId, string messageId);
+
+        /// <summary>
+        /// Leave the matchmaker pool by ticket.
+        /// </summary>
+        /// <param name="ticket">The ticket returned by the matchmaker on join.</param>
+        /// <returns>A task.</returns>
+        Task RemoveMatchmakerAsync(IMatchmakerTicket ticket);
+
+        /// <summary>
+        /// Leave the matchmaker pool by ticket.
+        /// </summary>
+        /// <param name="ticket">The ticket returned by the matchmaker on join. See <c>IMatchmakerTicket.Ticket</c>.</param>
+        /// <returns>A task.</returns>
+        Task RemoveMatchmakerAsync(string ticket);
 
         /// <summary>
         /// Send an RPC message to the server.
         /// </summary>
-        /// <param name="message">The RPC message.</param>
-        /// <param name="sendTimeout">Time in milliseconds before the send attempt is considered failed.</param>
+        /// <param name="id">The ID of the function to execute.</param>
+        /// <param name="payload">The string content to send to the server.</param>
         /// <returns>A task which resolves to an RPC response.</returns>
-        Task<IApiRpc> SendAsync(RpcMessage message, int sendTimeout = 5000);
+        Task<IApiRpc> RpcAsync(string id, string payload);
+
+        /// <summary>
+        /// Send a state change to a match on the server.
+        /// </summary>
+        /// <param name="matchId">The match ID.</param>
+        /// <param name="opCode">An operation code for the match state.</param>
+        /// <param name="state">The state change to send to the match.</param>
+        /// <param name="presences">The presences in the match to send the state.</param>
+        /// <returns>A task.</returns>
+        Task SendMatchStateAsync(string matchId, long opCode, byte[] state, IEnumerable<IUserPresence> presences);
+
+        /// <summary>
+        /// Update a chat message to a channel on the server.
+        /// </summary>
+        /// <param name="channel">The channel with the message to update.</param>
+        /// <param name="messageId">The ID of the message to update.</param>
+        /// <param name="content">The content update for the message.</param>
+        /// <returns>A task.</returns>
+        Task<IChannelMessageAck> UpdateChatMessageAsync(IChannel channel, string messageId, string content);
+
+        /// <summary>
+        /// Update a chat message to a channel on the server.
+        /// </summary>
+        /// <param name="channelId">The ID of the chat channel with the message.</param>
+        /// <param name="messageId">The ID of the message to update.</param>
+        /// <param name="content">The content update for the message.</param>
+        /// <returns>A task.</returns>
+        Task<IChannelMessageAck> UpdateChatMessageAsync(string channelId, string messageId, string content);
+
+        /// <summary>
+        /// Send a chat message to a channel on the server.
+        /// </summary>
+        /// <param name="channel">The channel to send on.</param>
+        /// <param name="content">The content of the chat message.</param>
+        /// <returns>A task which resolves to a Channel Ack response.</returns>
+        Task<IChannelMessageAck> WriteChatMessageAsync(IChannel channel, string content);
+
+        /// <summary>
+        /// Send a chat message to a channel on the server.
+        /// </summary>
+        /// <param name="channelId">The ID of the channel as the destination for the message.</param>
+        /// <param name="content">The content of the chat message.</param>
+        /// <returns>A task which resolves to a Channel Ack response.</returns>
+        Task<IChannelMessageAck> WriteChatMessageAsync(string channelId, string content);
     }
 
     /// <summary>

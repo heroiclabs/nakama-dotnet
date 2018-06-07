@@ -19,19 +19,16 @@ namespace Nakama
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Send a chat message to a channel on the server.
+    /// Remove the user from the matchmaker pool by ticket.
     /// </summary>
-    internal class ChannelSendMessage
+    internal class MatchmakerRemoveMessage
     {
-        [DataMember(Name="channel_id")]
-        public string ChannelId { get; set; }
-
-        [DataMember(Name="content")]
-        public string Content { get; set; }
+        [DataMember(Name="ticket")]
+        public string Ticket { get; set; }
 
         public override string ToString()
         {
-            return $"ChannelSendMessage[ChannelId={ChannelId}, Content={Content}]";
+            return $"MatchmakerRemoveMessage[Ticket={Ticket}]";
         }
     }
 }

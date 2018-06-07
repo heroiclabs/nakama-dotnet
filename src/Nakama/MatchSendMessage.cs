@@ -16,22 +16,31 @@
 
 namespace Nakama
 {
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Send a chat message to a channel on the server.
+    /// Send new state to a match on the server.
     /// </summary>
-    internal class ChannelSendMessage
+    internal class MatchSendMessage
     {
-        [DataMember(Name="channel_id")]
-        public string ChannelId { get; set; }
+        [DataMember(Name="match_id")]
+        public string MatchId { get; set; }
 
-        [DataMember(Name="content")]
-        public string Content { get; set; }
+        [DataMember(Name="op_code")]
+        public string OpCode { get; set; }
 
+        [DataMember(Name="presences")]
+        public List<UserPresence> Presences { get; set; }
+
+        [DataMember(Name="data")]
+        public string State { get; set; }
+
+        /// <inheritdoc />
         public override string ToString()
         {
-            return $"ChannelSendMessage[ChannelId={ChannelId}, Content={Content}]";
+            var presences = string.Join(",", Presences);
+            return $"MatchSendMessage[MatchId={MatchId}, OpCode={OpCode}, Presences=[{presences}], State={State}]";
         }
     }
 }

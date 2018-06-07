@@ -21,27 +21,19 @@ namespace Nakama
     /// <summary>
     /// Send a channel join message to the server.
     /// </summary>
-    public class ChannelJoinMessage
+    internal class ChannelJoinMessage
     {
         [DataMember(Name="hidden")]
-        public bool Hidden { get; }
+        public bool Hidden { get; set; }
 
         [DataMember(Name="persistence")]
-        public bool Persistence { get; }
+        public bool Persistence { get; set; }
 
         [DataMember(Name="target")]
-        public string Target { get; }
+        public string Target { get; set; }
 
         [DataMember(Name="type")]
-        public int Type { get; }
-
-        public ChannelJoinMessage(string target, ChannelType type, bool persistence = false, bool hidden = false)
-        {
-            Hidden = hidden;
-            Persistence = persistence;
-            Target = target;
-            Type = (int) type;
-        }
+        public int Type { get; set; }
 
         /// <inheritdoc />
         public override string ToString()

@@ -16,25 +16,17 @@
 
 namespace Nakama
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
-    /// Send an RPC message to execute a function on the server.
+    /// A remove message for a chat channel.
     /// </summary>
-    public class RpcMessage
+    internal class ChannelRemoveMessage
     {
-        public string Id { get; }
+        [DataMember(Name="channel_id")]
+        public string ChannelId { get; set; }
 
-        public string Payload { get; }
-
-        public RpcMessage(string id, string payload)
-        {
-            Id = id;
-            Payload = payload;
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return $"RpcMessage[Id={Id}, Payload={Payload}]";
-        }
+        [DataMember(Name="message_id")]
+        public string MessageId { get; set; }
     }
 }

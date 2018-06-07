@@ -16,22 +16,27 @@
 
 namespace Nakama
 {
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Send a chat message to a channel on the server.
+    /// An error received on the WebSocket connection.
     /// </summary>
-    internal class ChannelSendMessage
+    internal class WebSocketErrorMessage
     {
-        [DataMember(Name="channel_id")]
-        public string ChannelId { get; set; }
+        [DataMember(Name="code")]
+        public int Code { get; set; }
 
-        [DataMember(Name="content")]
-        public string Content { get; set; }
+        [DataMember(Name="message")]
+        public string Message { get; set; }
 
+        [DataMember(Name="context")]
+        public Dictionary<string, string> Context { get; set; }
+
+        /// <inheritdoc />
         public override string ToString()
         {
-            return $"ChannelSendMessage[ChannelId={ChannelId}, Content={Content}]";
+            return $"WebSocketErrorMessage[Code={Code}, Message={Message}, Context={Context}]";
         }
     }
 }

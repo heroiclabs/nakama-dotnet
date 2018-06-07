@@ -16,22 +16,15 @@
 
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
-    /// Send a chat message to a channel on the server.
+    /// A create message for a match on the server.
     /// </summary>
-    internal class ChannelSendMessage
+    internal class MatchCreateMessage
     {
-        [DataMember(Name="channel_id")]
-        public string ChannelId { get; set; }
-
-        [DataMember(Name="content")]
-        public string Content { get; set; }
-
+        /// <inheritdoc />
         public override string ToString()
         {
-            return $"ChannelSendMessage[ChannelId={ChannelId}, Content={Content}]";
+            return "MatchCreateMessage[]";
         }
     }
 }

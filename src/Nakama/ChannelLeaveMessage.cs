@@ -19,19 +19,17 @@ namespace Nakama
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Send a chat message to a channel on the server.
+    /// A leave message to a chat channel.
     /// </summary>
-    internal class ChannelSendMessage
+    internal class ChannelLeaveMessage
     {
         [DataMember(Name="channel_id")]
         public string ChannelId { get; set; }
 
-        [DataMember(Name="content")]
-        public string Content { get; set; }
-
+        /// <inheritdoc />
         public override string ToString()
         {
-            return $"ChannelSendMessage[ChannelId={ChannelId}, Content={Content}]";
+            return $"ChannelLeaveMessage[ChannelId={ChannelId}]";
         }
     }
 }

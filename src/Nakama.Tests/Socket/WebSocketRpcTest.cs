@@ -46,12 +46,11 @@ namespace Nakama.Tests.Socket
         public async Task ShouldSendRpcRoundtrip()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            await _socket.Connect(session);
+            await _socket.ConnectAsync(session);
 
             const string funcid = "clientrpc.rpc";
             var payload = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
-            var message = new RpcMessage(funcid, payload);
-            var response = await _socket.SendAsync(message);
+            var response = await _socket.RpcAsync(funcid, payload);
 
             Assert.NotNull(response);
             Assert.AreEqual(funcid, response.Id);

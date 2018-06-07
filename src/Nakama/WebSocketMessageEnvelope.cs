@@ -33,11 +33,20 @@ namespace Nakama
         [DataMember(Name="channel_join")]
         public ChannelJoinMessage ChannelJoin { get; set; }
 
+        [DataMember(Name="channel_leave")]
+        public ChannelLeaveMessage ChannelLeave { get; set; }
+
         [DataMember(Name="channel_message")]
         public ApiChannelMessage ChannelMessage { get; set; }
 
         [DataMember(Name="channel_message_ack")]
         public ChannelMessageAck ChannelMessageAck { get; set; }
+
+        [DataMember(Name="channel_message_remove")]
+        public ChannelRemoveMessage ChannelMessageRemove { get; set; }
+
+        [DataMember(Name="channel_message_update")]
+        public ChannelUpdateMessage ChannelMessageUpdate { get; set; }
 
         [DataMember(Name="channel_presence_event")]
         public ChannelPresenceEvent ChannelPresenceEvent { get; set; }
@@ -45,14 +54,41 @@ namespace Nakama
         [DataMember(Name="channel_message_send")]
         public ChannelSendMessage ChannelSend { get; set; }
 
+        [DataMember(Name="error")]
+        public WebSocketErrorMessage Error { get; set; }
+
+        [DataMember(Name="matchmaker_add")]
+        public MatchmakerAddMessage MatchmakerAdd { get; set; }
+
         [DataMember(Name="matchmaker_matched")]
         public MatchmakerMatched MatchmakerMatched { get; set; }
+
+        [DataMember(Name="matchmaker_remove")]
+        public MatchmakerRemoveMessage MatchmakerRemove { get; set; }
+
+        [DataMember(Name="matchmaker_ticket")]
+        public MatchmakerTicket MatchmakerTicket { get; set; }
+
+        [DataMember(Name="match")]
+        public Match Match { get; set; }
+
+        [DataMember(Name="match_create")]
+        public MatchCreateMessage MatchCreate { get; set; }
+
+        [DataMember(Name="match_join")]
+        public MatchJoinMessage MatchJoin { get; set; }
+
+        [DataMember(Name="match_leave")]
+        public MatchLeaveMessage MatchLeave { get; set; }
 
         [DataMember(Name="match_presence_event")]
         public MatchPresenceEvent MatchPresenceEvent { get; set; }
 
         [DataMember(Name="match_data")]
         public MatchState MatchState { get; set; }
+
+        [DataMember(Name="match_data_send")]
+        public MatchSendMessage MatchStateSend { get; set; }
 
         [DataMember(Name="notifications")]
         public List<ApiNotification> Notifications { get; set; }
@@ -68,5 +104,11 @@ namespace Nakama
 
         [DataMember(Name="stream_data")]
         public StreamState StreamState { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return "WebSocketMessageEnvelope[]";
+        }
     }
 }

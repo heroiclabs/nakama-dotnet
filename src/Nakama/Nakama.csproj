@@ -38,15 +38,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiClient.gen.cs" />
+    <Compile Include="AsyncQueue.cs" />
     <Compile Include="ChannelJoinMessage.cs" />
+    <Compile Include="ChannelLeaveMessage.cs" />
+    <Compile Include="ChannelRemoveMessage.cs" />
     <Compile Include="ChannelSendMessage.cs" />
+    <Compile Include="ChannelUpdateMessage.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="IChannel.cs" />
     <Compile Include="IChannelMessageAck.cs" />
     <Compile Include="IChannelPresenceEvent.cs" />
     <Compile Include="IClient.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="IMatch.cs" />
     <Compile Include="IMatchmakerMatched.cs" />
+    <Compile Include="IMatchmakerTicket.cs" />
     <Compile Include="IMatchPresenceEvent.cs" />
     <Compile Include="IMatchState.cs" />
     <Compile Include="ISession.cs" />
@@ -54,9 +60,15 @@
     <Compile Include="IStatusPresenceEvent.cs" />
     <Compile Include="IStreamPresenceEvent.cs" />
     <Compile Include="IUserPresence.cs" />
+    <Compile Include="MatchCreateMessage.cs" />
+    <Compile Include="MatchJoinMessage.cs" />
+    <Compile Include="MatchLeaveMessage.cs" />
+    <Compile Include="MatchmakerAddMessage.cs" />
+    <Compile Include="MatchmakerRemoveMessage.cs" />
+    <Compile Include="MatchSendMessage.cs" />
+    <Compile Include="WebSocketErrorMessage.cs" />
     <Compile Include="WebSocketMessageEnvelope.cs" />
     <Compile Include="NullLogger.cs" />
-    <Compile Include="RpcMessage.cs" />
     <Compile Include="StorageObjectId.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="WriteStorageObject.cs" />
