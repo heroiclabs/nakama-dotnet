@@ -46,6 +46,7 @@
     <Compile Include="Api\StorageTest.cs" />
     <Compile Include="Api\UserTest.cs" />
     <Compile Include="ClientTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Socket\WebSocketChannelTest.cs" />
     <Compile Include="Socket\WebSocketMatchmakerTest.cs" />
     <Compile Include="Socket\WebSocketMatchTest.cs" />

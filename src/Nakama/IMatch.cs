@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Runtime.Serialization;
 
 namespace Nakama
@@ -62,7 +63,7 @@ namespace Nakama
         [DataMember(Name="authoritative")]
         public bool Authoritative { get; set; }
 
-        [DataMember(Name="id")]
+        [DataMember(Name="match_id")]
         public string Id { get; set; }
 
         [DataMember(Name="label")]
@@ -78,5 +79,12 @@ namespace Nakama
         public IUserPresence Self => _self;
         [DataMember(Name="self")]
         public UserPresence _self { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var presences = string.Join(", ", Presences);
+            return $"Match[Authoritative={Authoritative}, Id={Id}, Label={Label}, Presences={presences}, Size={Size}, Self={Self}]";
+        }
     }
 }

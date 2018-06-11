@@ -61,7 +61,7 @@ namespace Nakama.Tests.Socket
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var completer = new TaskCompletionSource<IApiChannelMessage>();
-            _socket.OnChannelMessage = chatMessage => completer.SetResult(chatMessage);
+            _socket.OnChannelMessage += (sender, chatMessage) => completer.SetResult(chatMessage);
             await _socket.ConnectAsync(session);
             var channel = await _socket.JoinChatAsync("myroom", ChannelType.Room);
 

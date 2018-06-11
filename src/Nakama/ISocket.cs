@@ -54,62 +54,62 @@ namespace Nakama
         /// <summary>
         /// Receive chat channel messages.
         /// </summary>
-        Action<IApiChannelMessage> OnChannelMessage { set; }
+        event EventHandler<IApiChannelMessage> OnChannelMessage;
 
         /// <summary>
         /// Receive chat channel presences for when users join and leave.
         /// </summary>
-        Action<IChannelPresenceEvent> OnChannelPresence { get; set; }
+        event EventHandler<IChannelPresenceEvent> OnChannelPresence;
 
         /// <summary>
         /// Receive an event when the socket connects.
         /// </summary>
-        Action OnConnect { get; set; }
+        event EventHandler OnConnect;
 
         /// <summary>
         /// Receive an event when the socket disconnects.
         /// </summary>
-        Action OnDisconnect { get; set; }
+        event EventHandler OnDisconnect;
 
         /// <summary>
         /// Receive an event when the socket has an error.
         /// </summary>
-        Action<Exception> OnError { get; set; }
+        event EventHandler<Exception> OnError;
 
         /// <summary>
         /// Receive an event when the player gets matched by the matchmaker.
         /// </summary>
-        Action<IMatchmakerMatched> OnMatchmakerMatched { get; set; }
+        event EventHandler<IMatchmakerMatched> OnMatchmakerMatched;
 
         /// <summary>
         /// Receive state messages from a realtime match.
         /// </summary>
-        Action<IMatchState> OnMatchState { get; set; }
+        event EventHandler<IMatchState> OnMatchState;
 
         /// <summary>
         /// Receive match presences for when users join and leave.
         /// </summary>
-        Action<IMatchPresenceEvent> OnMatchPresence { get; set; }
+        event EventHandler<IMatchPresenceEvent> OnMatchPresence;
 
         /// <summary>
         /// Receive realtime notifications.
         /// </summary>
-        Action<IApiNotification> OnNotification { get; set; }
+        event EventHandler<IApiNotification> OnNotification;
 
         /// <summary>
         /// Receive presence events for when a user updates their status.
         /// </summary>
-        Action<IStatusPresenceEvent> OnStatusPresence { get; set; }
+        event EventHandler<IStatusPresenceEvent> OnStatusPresence;
 
         /// <summary>
         /// Receive low level presence events from a realtime stream.
         /// </summary>
-        Action<IStreamPresenceEvent> OnStreamPresence { get; set; }
+        event EventHandler<IStreamPresenceEvent> OnStreamPresence;
 
         /// <summary>
         /// Receive state messages from a realtime stream.
         /// </summary>
-        Action<IStreamState> OnStreamState { get; set; }
+        event EventHandler<IStreamState> OnStreamState;
 
         /// <summary>
         /// Join the matchmaker pool and search for opponents on the server.
@@ -184,6 +184,13 @@ namespace Nakama
         /// <param name="channelId">The ID of the channel to leave.</param>
         /// <returns>A task.</returns>
         Task LeaveChatAsync(string channelId);
+
+        /// <summary>
+        /// Leave a match on the server.
+        /// </summary>
+        /// <param name="match">The match to leave.</param>
+        /// <returns>A task.</returns>
+        Task LeaveMatchAsync(IMatch match);
 
         /// <summary>
         /// Leave a match on the server.
@@ -283,10 +290,6 @@ namespace Nakama
         /// <summary>
         /// Use the WebSocket protocol with the <c>ISocket</c>.
         /// </summary>
-        WebSocket = 0,
-        /// <summary>
-        /// Use the rUDP protocol with the <c>ISocket</c>.
-        /// </summary>
-        //Udp = 1
+        WebSocket = 0
     }
 }

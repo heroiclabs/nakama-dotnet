@@ -48,40 +48,40 @@ namespace Nakama
         public bool Trace { get; set; }
 
         /// <inheritdoc />
-        public Action<IApiChannelMessage> OnChannelMessage { private get; set; }
+        public event EventHandler<IApiChannelMessage> OnChannelMessage;
 
         /// <inheritdoc />
-        public Action<IChannelPresenceEvent> OnChannelPresence { get; set; }
+        public event EventHandler<IChannelPresenceEvent> OnChannelPresence;
 
         /// <inheritdoc />
-        public Action OnConnect { get; set; }
+        public event EventHandler OnConnect;
 
         /// <inheritdoc />
-        public Action OnDisconnect { get; set; }
+        public event EventHandler OnDisconnect;
 
         /// <inheritdoc />
-        public Action<Exception> OnError { get; set; }
+        public event EventHandler<Exception> OnError;
 
         /// <inheritdoc />
-        public Action<IMatchmakerMatched> OnMatchmakerMatched { get; set; }
+        public event EventHandler<IMatchmakerMatched> OnMatchmakerMatched;
 
         /// <inheritdoc />
-        public Action<IMatchState> OnMatchState { get; set; }
+        public event EventHandler<IMatchState> OnMatchState;
 
         /// <inheritdoc />
-        public Action<IMatchPresenceEvent> OnMatchPresence { get; set; }
+        public event EventHandler<IMatchPresenceEvent> OnMatchPresence;
 
         /// <inheritdoc />
-        public Action<IApiNotification> OnNotification { get; set; }
+        public event EventHandler<IApiNotification> OnNotification;
 
         /// <inheritdoc />
-        public Action<IStatusPresenceEvent> OnStatusPresence { get; set; }
+        public event EventHandler<IStatusPresenceEvent> OnStatusPresence;
 
         /// <inheritdoc />
-        public Action<IStreamPresenceEvent> OnStreamPresence { get; set; }
+        public event EventHandler<IStreamPresenceEvent> OnStreamPresence;
 
         /// <inheritdoc />
-        public Action<IStreamState> OnStreamState { get; set; }
+        public event EventHandler<IStreamState> OnStreamState;
 
         private readonly Uri _baseUri;
         private readonly WebSocketClient _client;
@@ -89,7 +89,6 @@ namespace Nakama
         private readonly ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _messageReplies;
 
         private readonly AsyncQueue<string> _sendBuffer;
-//        private readonly BufferBlock<string> _sendBuffer;
 
         public WebSocket(Uri baseUri, int timeoutMs, int reconnect, ILogger logger, bool trace)
         {
@@ -104,9 +103,9 @@ namespace Nakama
                 BufferManager = BufferManager.CreateBufferManager(bufferPoolSize, bufferSize),
                 Logger = new WebSocketLogger(Logger, Trace),
                 // FIXME make configurable.
-                PingTimeout = TimeSpan.FromSeconds(10),
+                PingTimeout = Timeout.InfiniteTimeSpan,
                 SendBufferSize = bufferSize,
-                PingMode = PingMode.BandwidthSaving
+                PingMode = PingMode.Manual
             };
             options.Standards.RegisterRfc6455();
 
@@ -123,90 +122,22 @@ namespace Nakama
             _client = new WebSocketClient(options);
             _messageReplies = new ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
             _sendBuffer = new AsyncQueue<string>();
-//            _sendBuffer = new BufferBlock<string>(new DataflowBlockOptions
-//            {
-//                // FIXME make configurable.
-//                BoundedCapacity = 16
-//            });
             Logger = logger;
-            OnChannelMessage = message =>
+            OnError += (_, exception) => Logger.ErrorFormat("Socket error: {0}", exception.Message);
+            if (Trace)
             {
-                if (Trace)
-                {
-                    Logger.DebugFormat("Channel message received: {0}", message);
-                }
-            };
-            OnChannelPresence = _event =>
-            {
-                if (Trace)
-                {
-                    Logger.DebugFormat("Channel presence received: {0}", _event);
-                }
-            };
-            OnConnect = () =>
-            {
-                if (Trace)
-                {
-                    Logger.Debug("Socket connected.");
-                }
-            };
-            OnDisconnect = () =>
-            {
-                if (Trace)
-                {
-                    Logger.Debug("Socket disconnected.");
-                }
-            };
-            OnError = e => Logger.ErrorFormat("Socket error: {0}", e.Message);
-            OnMatchmakerMatched = matched =>
-            {
-                if (Trace)
-                {
-                    Logger.DebugFormat("Matchmaker matched received: {0}", matched);
-                }
-            };
-            OnMatchPresence = _event =>
-            {
-                if (Trace)
-                {
-                    Logger.DebugFormat("Match presence received: {0}", _event);
-                }
-            };
-            OnMatchState = state =>
-            {
-                if (Trace)
-                {
-                    Logger.DebugFormat("Match state received: {0}", state);
-                }
-            };
-            OnNotification = notification =>
-            {
-                if (Trace)
-                {
-                    Logger.DebugFormat("Notification received: {0}", notification);
-                }
-            };
-            OnStatusPresence = _event =>
-            {
-                if (Trace)
-                {
-                    Logger.DebugFormat("Status presence received: {0}", _event);
-                }
-            };
-            OnStreamPresence = _event =>
-            {
-                if (Trace)
-                {
-                    Logger.DebugFormat("Stream presence received: {0}", _event);
-                }
-            };
-            OnStreamState = state =>
-            {
-                if (Trace)
-                {
-                    Logger.DebugFormat("Stream state received: {0}", state);
-                }
-            };
+                OnChannelMessage += (_, message) => Logger.DebugFormat("Channel message received: {0}", message);
+                OnChannelPresence += (_, presence) => Logger.DebugFormat("Channel presence received: {0}", presence);
+                OnConnect += (_, args) => Logger.Debug("Socket connected.");
+                OnDisconnect += (_, args) => Logger.Debug("Socket disconnected.");
+                OnMatchmakerMatched += (_, matched) => Logger.DebugFormat("Matchmaker matched received: {0}", matched);
+                OnMatchPresence += (_, presence) => Logger.DebugFormat("Match presence received: {0}", presence);
+                OnMatchState += (_, state) => Logger.DebugFormat("Match state received: {0}", state);
+                OnNotification += (_, notification) => Logger.DebugFormat("Notification received: {0}", notification);
+                OnStatusPresence += (_, presence) => Logger.DebugFormat("Status presence received: {0}", presence);
+                OnStreamPresence += (_, presence) => Logger.DebugFormat("Stream presence received: {0}", presence);
+                OnStreamState += (_, state) => Logger.DebugFormat("Stream state received: {0}", state);
+            }
             Protocol = SocketProtocol.WebSocket;
             Reconnect = reconnect;
             TimeoutMs = timeoutMs;
@@ -229,7 +160,7 @@ namespace Nakama
                     Query = query
                 }
             };
-            var response = await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.MatchmakerTicket;
         }
 
@@ -261,7 +192,7 @@ namespace Nakama
             }
 
             _listener = await connectTask.ConfigureAwait(false);
-            OnConnect();
+            OnConnect?.Invoke(this, EventArgs.Empty);
 
             ReadSocketAsync(ct);
             WriteSocketAsync(ct);
@@ -272,17 +203,20 @@ namespace Nakama
         {
             if (_listener != null)
             {
-                await _listener.CloseAsync();
+                await _listener.CloseAsync().ConfigureAwait(false);
             }
 
-            if (dispatch) OnDisconnect();
+            if (dispatch)
+            {
+                OnDisconnect?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void Dispose()
         {
             _messageReplies.Clear();
             _listener?.Dispose();
-            OnDisconnect();
+            OnDisconnect?.Invoke(this, EventArgs.Empty);
         }
 
         /// <inheritdoc />
@@ -293,7 +227,7 @@ namespace Nakama
                 Cid = Guid.NewGuid().ToString(),
                 MatchCreate = new MatchCreateMessage()
             };
-            var response = await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.Match;
         }
 
@@ -312,7 +246,7 @@ namespace Nakama
                     Type = (int) type
                 }
             };
-            var response = await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.Channel;
         }
 
@@ -334,7 +268,7 @@ namespace Nakama
                 Cid = Guid.NewGuid().ToString(),
                 MatchJoin = message
             };
-            var response = await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.Match;
         }
 
@@ -349,7 +283,7 @@ namespace Nakama
                     MatchId = matchId
                 }
             };
-            var response = await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.Match;
         }
 
@@ -366,8 +300,11 @@ namespace Nakama
                     ChannelId = channelId
                 }
             };
-            await SendAsync(envelope);
+            await SendAsync(envelope).ConfigureAwait(false);
         }
+
+        /// <inheritdoc />
+        public async Task LeaveMatchAsync(IMatch match) => await LeaveMatchAsync(match.Id);
 
         /// <inheritdoc />
         public async Task LeaveMatchAsync(string matchId)
@@ -379,7 +316,7 @@ namespace Nakama
                     MatchId = matchId
                 }
             };
-            await SendAsync(envelope);
+            await SendAsync(envelope).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -398,7 +335,7 @@ namespace Nakama
                     MessageId = messageId
                 }
             };
-            var response = await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.ChannelMessageAck;
         }
 
@@ -416,7 +353,8 @@ namespace Nakama
                     Ticket = ticket
                 }
             };
-            await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
+            Console.WriteLine("Response cid: " + response.Cid);
         }
 
         /// <inheritdoc />
@@ -431,7 +369,7 @@ namespace Nakama
                     Payload = content
                 }
             };
-            var response = await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.Rpc;
         }
 
@@ -452,14 +390,15 @@ namespace Nakama
                     MatchId = matchId,
                     OpCode = Convert.ToString(opCode),
                     Presences = converted,
-                    State = Convert.ToString(state)
+                    State = Convert.ToBase64String(state)
                 }
             };
-            await SendAsync(envelope);
+            await SendAsync(envelope).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public async Task<IChannelMessageAck> UpdateChatMessageAsync(IChannel channel, string messageId, string content) =>
+        public async Task<IChannelMessageAck>
+            UpdateChatMessageAsync(IChannel channel, string messageId, string content) =>
             await UpdateChatMessageAsync(channel.Id, messageId, content);
 
         /// <inheritdoc />
@@ -475,7 +414,7 @@ namespace Nakama
                     Content = content
                 }
             };
-            var response = await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.ChannelMessageAck;
         }
 
@@ -495,7 +434,7 @@ namespace Nakama
                     Content = content
                 }
             };
-            var response = await SendAsync(envelope);
+            var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.ChannelMessageAck;
         }
 
@@ -507,7 +446,6 @@ namespace Nakama
             }
 
             _sendBuffer.Enqueue(message.ToJson());
-//            await _sendBuffer.SendAsync(message.ToJson()).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(message.Cid))
             {
@@ -520,10 +458,12 @@ namespace Nakama
             var resultTask = completer.Task;
 
             var timeoutTask = Task.Delay(TimeSpan.FromMilliseconds(TimeoutMs));
-            if (await Task.WhenAny(resultTask, timeoutTask).ConfigureAwait(false) == timeoutTask)
+            var outcome = await Task.WhenAny(resultTask, timeoutTask).ConfigureAwait(false);
+            if (outcome == timeoutTask)
             {
                 throw new TimeoutException($"Socket send timed out after '{TimeoutMs}' milliseconds.");
             }
+
             return await resultTask.ConfigureAwait(false);
         }
 
@@ -542,78 +482,13 @@ namespace Nakama
                     using (var reader = new StreamReader(readStream, Encoding.UTF8))
                     {
                         var message = await reader.ReadToEndAsync().ConfigureAwait(false);
-                        if (Trace) Logger.DebugFormat("Socket read message: '{0}'", message);
+                        if (Trace)
+                        {
+                            Logger.DebugFormat("Socket read message: '{0}'", message);
+                        }
 
                         var envelope = message.FromJson<WebSocketMessageEnvelope>();
-                        if (!string.IsNullOrEmpty(envelope.Cid))
-                        {
-                            // Handle message response.
-                            TaskCompletionSource<WebSocketMessageEnvelope> completer;
-                            var cid = envelope.Cid;
-                            _messageReplies.TryRemove(cid, out completer);
-                            if (completer == null)
-                            {
-                                if (Trace) Logger.InfoFormat("No task completer for message: '{0}'", cid);
-                                continue;
-                            }
-
-                            if (envelope.Error != null)
-                            {
-                                // FIXME use a dedicated exception type.
-                                completer.SetException(new WebSocketException(envelope.Error.Message));
-                            }
-                            else
-                            {
-                                completer.SetResult(envelope);
-                            }
-                        }
-                        else if (envelope.Error != null)
-                        {
-                            OnError(new WebSocketException(envelope.Error.Message));
-                        }
-                        else if (envelope.ChannelMessage != null)
-                        {
-                            OnChannelMessage(envelope.ChannelMessage);
-                        }
-                        else if (envelope.ChannelPresenceEvent != null)
-                        {
-                            OnChannelPresence(envelope.ChannelPresenceEvent);
-                        }
-                        else if (envelope.MatchmakerMatched != null)
-                        {
-                            OnMatchmakerMatched(envelope.MatchmakerMatched);
-                        }
-                        else if (envelope.MatchPresenceEvent != null)
-                        {
-                            OnMatchPresence(envelope.MatchPresenceEvent);
-                        }
-                        else if (envelope.MatchState != null)
-                        {
-                            OnMatchState(envelope.MatchState);
-                        }
-                        else if (envelope.Notifications != null)
-                        {
-                            foreach (var notification in envelope.Notifications)
-                            {
-                                OnNotification(notification);
-                            }
-                        }
-                        else if (envelope.StatusPresenceEvent != null)
-                        {
-                            OnStatusPresence(envelope.StatusPresenceEvent);
-                        }
-                        else if (envelope.StreamPresenceEvent != null)
-                        {
-                            OnStreamPresence(envelope.StreamPresenceEvent);
-                        }
-                        else if (envelope.StreamState != null)
-                        {
-                            OnStreamState(envelope.StreamState);
-                        }
-                        else
-                        {
-                            if (Trace) Logger.InfoFormat("Socket received unrecognised message: '{0}'", message);
-                        }
+                        ProcessMessageAsync(envelope, message);
                     }
                 }
             }
@@ -632,7 +507,6 @@ namespace Nakama
                 while (!ct.IsCancellationRequested && _listener.IsConnected)
                 {
                     var message = await _sendBuffer.DequeueAsync(ct).ConfigureAwait(false);
-//                    var message = await _sendBuffer.ReceiveAsync(ct).ConfigureAwait(false);
                     using (var output = _listener.CreateMessageWriter(WebSocketMessageType.Text))
                     using (var writer = new StreamWriter(output, Encoding.ASCII)) // FIXME do we need ASCII encoded?
                     {
@@ -640,6 +514,7 @@ namespace Nakama
                         {
                             Logger.DebugFormat("Socket write message: '{0}'", message);
                         }
+
                         await writer.WriteAsync(message).ConfigureAwait(false);
                     }
                 }
@@ -650,8 +525,85 @@ namespace Nakama
             }
             catch (Exception e)
             {
-                OnError(e);
+                OnError?.Invoke(this, e);
             }
         }
+
+#pragma warning disable 1998
+
+        private async void ProcessMessageAsync(WebSocketMessageEnvelope envelope, string message)
+        {
+            if (!string.IsNullOrEmpty(envelope.Cid))
+            {
+                // Handle message response.
+                TaskCompletionSource<WebSocketMessageEnvelope> completer;
+                var cid = envelope.Cid;
+                _messageReplies.TryRemove(cid, out completer);
+                if (completer == null)
+                {
+                    if (Trace) Logger.InfoFormat("No task completer for message: '{0}'", cid);
+                    return;
+                }
+
+                if (envelope.Error != null)
+                {
+                    // FIXME use a dedicated exception type.
+                    completer.SetException(new WebSocketException(envelope.Error.Message));
+                }
+                else
+                {
+                    completer.SetResult(envelope);
+                }
+            }
+            else if (envelope.Error != null)
+            {
+                OnError?.Invoke(this, new WebSocketException(envelope.Error.Message));
+            }
+            else if (envelope.ChannelMessage != null)
+            {
+                OnChannelMessage?.Invoke(this, envelope.ChannelMessage);
+            }
+            else if (envelope.ChannelPresenceEvent != null)
+            {
+                OnChannelPresence?.Invoke(this, envelope.ChannelPresenceEvent);
+            }
+            else if (envelope.MatchmakerMatched != null)
+            {
+                OnMatchmakerMatched?.Invoke(this, envelope.MatchmakerMatched);
+            }
+            else if (envelope.MatchPresenceEvent != null)
+            {
+                OnMatchPresence?.Invoke(this, envelope.MatchPresenceEvent);
+            }
+            else if (envelope.MatchState != null)
+            {
+                OnMatchState?.Invoke(this, envelope.MatchState);
+            }
+            else if (envelope.Notifications != null)
+            {
+                foreach (var notification in envelope.Notifications)
+                {
+                    OnNotification?.Invoke(this, notification);
+                }
+            }
+            else if (envelope.StatusPresenceEvent != null)
+            {
+                OnStatusPresence?.Invoke(this, envelope.StatusPresenceEvent);
+            }
+            else if (envelope.StreamPresenceEvent != null)
+            {
+                OnStreamPresence?.Invoke(this, envelope.StreamPresenceEvent);
+            }
+            else if (envelope.StreamState != null)
+            {
+                OnStreamState?.Invoke(this, envelope.StreamState);
+            }
+            else
+            {
+                if (Trace) Logger.InfoFormat("Socket received unrecognised message: '{0}'", message);
+            }
+        }
+
+#pragma warning restore 1998
     }
 }

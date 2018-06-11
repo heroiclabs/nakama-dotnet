@@ -52,7 +52,7 @@ namespace Nakama.Tests.Socket
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var evt = new AutoResetEvent(false);
-            _socket.OnConnect = () => { evt.Set(); };
+            _socket.OnConnect += (_, args) => evt.Set();
             await _socket.ConnectAsync(session);
 
             Assert.NotNull(evt);
@@ -65,7 +65,7 @@ namespace Nakama.Tests.Socket
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var evt = new AutoResetEvent(false);
-            _socket.OnDisconnect = () => { evt.Set(); };
+            _socket.OnDisconnect += (_, args) => evt.Set();
             await _socket.ConnectAsync(session);
             await _socket.DisconnectAsync();
 
@@ -79,7 +79,7 @@ namespace Nakama.Tests.Socket
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var evt = new AutoResetEvent(false);
-            _socket.OnDisconnect = () => { evt.Set(); };
+            _socket.OnDisconnect += (_, args) => evt.Set();
             await _socket.ConnectAsync(session);
             await _socket.DisconnectAsync(false);
 
@@ -91,7 +91,7 @@ namespace Nakama.Tests.Socket
         public async Task ShouldCreateSocketAndDisconnectNoConnect()
         {
             var evt = new AutoResetEvent(false);
-            _socket.OnDisconnect = () => { evt.Set(); };
+            _socket.OnDisconnect += (_, args) => evt.Set();
             await _socket.DisconnectAsync();
 
             Assert.DoesNotThrowAsync(() => _socket.DisconnectAsync());

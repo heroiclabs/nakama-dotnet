@@ -53,5 +53,13 @@ namespace Nakama
 
         [DataMember(Name="match_id")]
         public string MatchId { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var joins = string.Join(", ", Joins);
+            var leaves = string.Join(", ", Leaves);
+            return $"MatchPresenceEvent[Joins={joins}, Leaves={leaves}, MatchId={MatchId}]";
+        }
     }
 }
