@@ -82,13 +82,13 @@ System.Console.WriteLine(account.Wallet);
 The client can create one or more sockets with the server. Each socket can have it's own event listeners registered for responses received from the server.
 
 ```csharp
-var appearOnline = false;
 var reconnects = 5; // set reconnect attempts (default is 3).
 var socket = client.CreateWebSocket(reconnects);
-socket.OnConnect = () => {
+socket.OnConnect += (sender, args) =>
+{
     System.Console.WriteLine("Socket connected.");
 };
-var session = await socket.ConnectAsync(session, appearOnline);
+await socket.ConnectAsync(session);
 ```
 
 ## Contribute
@@ -101,6 +101,12 @@ The codebase can be built with [Cake](https://cakebuild.net). All dependencies a
 
 ```shell
 ./build.sh --target=Build
+```
+
+With Windows use the PowerShell script instead.
+
+```shell
+.\build.ps1 --target=Build
 ```
 
 ### Run Tests
