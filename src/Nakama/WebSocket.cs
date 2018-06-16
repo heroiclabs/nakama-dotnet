@@ -138,6 +138,7 @@ namespace Nakama
                 OnStreamPresence += (_, presence) => Logger.DebugFormat("Stream presence received: {0}", presence);
                 OnStreamState += (_, state) => Logger.DebugFormat("Stream state received: {0}", state);
             }
+
             Protocol = SocketProtocol.WebSocket;
             Reconnect = reconnect;
             TimeoutMs = timeoutMs;
@@ -192,8 +193,6 @@ namespace Nakama
             }
 
             _listener = await connectTask.ConfigureAwait(false);
-            OnConnect?.Invoke(this, EventArgs.Empty);
-
             ReadSocketAsync(ct);
             WriteSocketAsync(ct);
         }
@@ -210,6 +209,8 @@ namespace Nakama
             {
                 OnDisconnect?.Invoke(this, EventArgs.Empty);
             }
+
+            _messageReplies.Clear();
         }
 
         public void Dispose()
@@ -248,6 +249,21 @@ namespace Nakama
             };
             var response = await SendAsync(envelope).ConfigureAwait(false);
             return response.Channel;
+        }
+
+        /// <inheritdoc />
+        public async Task<IStatus> FollowUsersAsync(IEnumerable<string> userIds)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = Guid.NewGuid().ToString(),
+                StatusFollow = new StatusFollowMessage
+                {
+                    UserIds = new List<string>(userIds)
+                }
+            };
+            var response = await SendAsync(envelope);
+            return response.Status;
         }
 
         /// <inheritdoc />
@@ -311,6 +327,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
+                Cid = Guid.NewGuid().ToString(),
                 MatchLeave = new MatchLeaveMessage
                 {
                     MatchId = matchId
@@ -348,13 +365,13 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
+                Cid = Guid.NewGuid().ToString(),
                 MatchmakerRemove = new MatchmakerRemoveMessage
                 {
                     Ticket = ticket
                 }
             };
-            var response = await SendAsync(envelope).ConfigureAwait(false);
-            Console.WriteLine("Response cid: " + response.Cid);
+            await SendAsync(envelope).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -374,26 +391,39 @@ namespace Nakama
         }
 
         /// <inheritdoc />
-        public async Task SendMatchStateAsync(string matchId, long opCode, byte[] state,
-            IEnumerable<IUserPresence> presences)
-        {
-            var converted = new List<UserPresence>(10);
-            foreach (var presence in presences)
-            {
-                converted.Add(presence as UserPresence);
-            }
+        public void SendMatchState(string matchId, long opCode, string state,
+            IEnumerable<IUserPresence> presences = null) =>
+            SendMatchState(matchId, opCode, Encoding.UTF8.GetBytes(state), presences);
 
+        /// <inheritdoc />
+        public async void SendMatchState(string matchId, long opCode, byte[] state,
+            IEnumerable<IUserPresence> presences = null)
+        {
             var envelope = new WebSocketMessageEnvelope
             {
                 MatchStateSend = new MatchSendMessage
                 {
                     MatchId = matchId,
                     OpCode = Convert.ToString(opCode),
-                    Presences = converted,
+                    Presences = presences as List<UserPresence>,
                     State = Convert.ToBase64String(state)
                 }
             };
             await SendAsync(envelope).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task UnfollowUsersAsync(IEnumerable<string> userIds)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = Guid.NewGuid().ToString(),
+                StatusUnfollow = new StatusUnfollowMessage
+                {
+                    UserIds = new List<string>(userIds)
+                }
+            };
+            await SendAsync(envelope);
         }
 
         /// <inheritdoc />
@@ -419,6 +449,20 @@ namespace Nakama
         }
 
         /// <inheritdoc />
+        public async Task UpdateStatusAsync(string status)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = Guid.NewGuid().ToString(),
+                StatusUpdate = new StatusUpdateMessage
+                {
+                    Status = status
+                }
+            };
+            await SendAsync(envelope);
+        }
+
+        /// <inheritdoc />
         public async Task<IChannelMessageAck> WriteChatMessageAsync(IChannel channel, string content) =>
             await WriteChatMessageAsync(channel.Id, content);
 
@@ -428,7 +472,7 @@ namespace Nakama
             var envelope = new WebSocketMessageEnvelope
             {
                 Cid = Guid.NewGuid().ToString(),
-                ChannelSend = new ChannelSendMessage
+                ChannelMessageSend = new ChannelSendMessage
                 {
                     ChannelId = channelId,
                     Content = content
@@ -471,6 +515,8 @@ namespace Nakama
         {
             try
             {
+                OnConnect?.Invoke(this, EventArgs.Empty);
+
                 while (!ct.IsCancellationRequested && _listener.IsConnected)
                 {
                     var readStream = await _listener.ReadMessageAsync(ct).ConfigureAwait(false);
@@ -491,6 +537,8 @@ namespace Nakama
                         ProcessMessageAsync(envelope, message);
                     }
                 }
+
+                OnDisconnect?.Invoke(this, EventArgs.Empty);
             }
             catch (OperationCanceledException e)
             {
@@ -530,8 +578,8 @@ namespace Nakama
         }
 
 #pragma warning disable 1998
-
         private async void ProcessMessageAsync(WebSocketMessageEnvelope envelope, string message)
+#pragma warning restore 1998
         {
             if (!string.IsNullOrEmpty(envelope.Cid))
             {
@@ -579,9 +627,9 @@ namespace Nakama
             {
                 OnMatchState?.Invoke(this, envelope.MatchState);
             }
-            else if (envelope.Notifications != null)
+            else if (envelope.NotificationList != null)
             {
-                foreach (var notification in envelope.Notifications)
+                foreach (var notification in envelope.NotificationList.Notifications)
                 {
                     OnNotification?.Invoke(this, notification);
                 }
@@ -603,7 +651,5 @@ namespace Nakama
                 if (Trace) Logger.InfoFormat("Socket received unrecognised message: '{0}'", message);
             }
         }
-
-#pragma warning restore 1998
     }
 }

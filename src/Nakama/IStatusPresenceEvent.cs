@@ -51,5 +51,13 @@ namespace Nakama
         public IEnumerable<IUserPresence> Joins => _joins ?? new List<UserPresence>(0);
         [DataMember(Name="joins")]
         public List<UserPresence> _joins { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var joins = string.Join(", ", Joins);
+            var leaves = string.Join(", ", Leaves);
+            return $"StatusPresenceEvent(Leaves=[{leaves}], Joins=[{joins}])";
+        }
     }
 }

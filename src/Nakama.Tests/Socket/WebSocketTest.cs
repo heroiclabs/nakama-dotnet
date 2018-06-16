@@ -17,7 +17,6 @@
 namespace Nakama.Tests.Socket
 {
     using System;
-    using System.Threading;
     using System.Threading.Tasks;
     using NUnit.Framework;
 
@@ -51,12 +50,13 @@ namespace Nakama.Tests.Socket
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var evt = new AutoResetEvent(false);
-            _socket.OnConnect += (_, args) => evt.Set();
+            var completer = new TaskCompletionSource<bool>();
+            _socket.OnConnect += (_, args) => completer.SetResult(true);
             await _socket.ConnectAsync(session);
 
-            Assert.NotNull(evt);
-            Assert.IsTrue(evt.WaitOne(TimeSpan.FromSeconds(2)));
+            Assert.IsTrue(await completer.Task);
+
+            await _socket.DisconnectAsync();
         }
 
         [Test]
@@ -64,13 +64,12 @@ namespace Nakama.Tests.Socket
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var evt = new AutoResetEvent(false);
-            _socket.OnDisconnect += (_, args) => evt.Set();
+            var completer = new TaskCompletionSource<bool>();
+            _socket.OnDisconnect += (_, args) => completer.SetResult(true);
             await _socket.ConnectAsync(session);
-            await _socket.DisconnectAsync();
+            await _socket.DisconnectAsync(false);
 
-            Assert.NotNull(evt);
-            Assert.IsTrue(evt.WaitOne(TimeSpan.FromSeconds(2)));
+            Assert.IsTrue(await completer.Task);
         }
 
         [Test]
@@ -78,24 +77,23 @@ namespace Nakama.Tests.Socket
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var evt = new AutoResetEvent(false);
-            _socket.OnDisconnect += (_, args) => evt.Set();
+            var completer = new TaskCompletionSource<bool>();
+            _socket.OnDisconnect += (_, args) => completer.SetResult(true);
             await _socket.ConnectAsync(session);
+            completer.SetResult(false);
             await _socket.DisconnectAsync(false);
 
-            Assert.NotNull(evt);
-            Assert.IsFalse(evt.WaitOne(TimeSpan.FromSeconds(2)));
+            Assert.IsFalse(await completer.Task);
         }
 
         [Test]
         public async Task ShouldCreateSocketAndDisconnectNoConnect()
         {
-            var evt = new AutoResetEvent(false);
-            _socket.OnDisconnect += (_, args) => evt.Set();
-            await _socket.DisconnectAsync();
+            var completer = new TaskCompletionSource<bool>();
+            _socket.OnDisconnect += (_, args) => completer.SetResult(true);
 
             Assert.DoesNotThrowAsync(() => _socket.DisconnectAsync());
-            Assert.IsTrue(evt.WaitOne(TimeSpan.FromSeconds(2)));
+            Assert.IsTrue(await completer.Task);
         }
     }
 }

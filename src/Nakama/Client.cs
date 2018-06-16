@@ -493,6 +493,13 @@ namespace Nakama
         }
 
         /// <inheritdoc />
+        public async Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit,
+            string cursor)
+        {
+            return await _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, "", limit, cursor);
+        }
+
+        /// <inheritdoc />
         public async Task<IApiUserGroupList> ListUserGroupsAsync(ISession session)
         {
             return await ListUserGroupsAsync(session, session.UserId);
@@ -502,6 +509,13 @@ namespace Nakama
         public async Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId)
         {
             return await _apiClient.ListUserGroupsAsync(session.AuthToken, userId);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection,
+            string userId, int limit, string cursor)
+        {
+            return await _apiClient.ListStorageObjects2Async(session.AuthToken, collection, userId, limit, cursor);
         }
 
         /// <inheritdoc />

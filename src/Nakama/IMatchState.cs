@@ -16,6 +16,7 @@
 
 namespace Nakama
 {
+    using System;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -57,11 +58,19 @@ namespace Nakama
         [DataMember(Name="op_code")]
         public string _opCode { get; set; }
 
+        public byte[] State => Convert.FromBase64String(_state);
         [DataMember(Name="data")]
-        public byte[] State { get; set; }
+        public string _state { get; set; }
 
         public IUserPresence UserPresence => _userPresence;
         [DataMember(Name="presence")]
         public UserPresence _userPresence { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var presences = string.Join(", ", UserPresence);
+            return $"MatchState(MatchId={MatchId}, OpCode={OpCode}, State={State}, UserPresence={presences})";
+        }
     }
 }

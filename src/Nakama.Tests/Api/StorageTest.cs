@@ -334,5 +334,30 @@ namespace Nakama.Tests.Api
                 }));
             Assert.AreEqual("400 (Bad Request)", ex.Message);
         }
+
+        [Test]
+        public async Task ShouldListStorageObjects()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var collection = $"{Guid.NewGuid()}";
+
+            await _client.WriteStorageObjectsAsync(session, new WriteStorageObject
+            {
+                Collection = collection,
+                Key = "a",
+                Value = "{}",
+                PermissionRead = 2
+            }, new WriteStorageObject
+            {
+                Collection = collection,
+                Key = "b",
+                Value = "{}",
+                PermissionRead = 2
+            });
+
+            var list = await _client.ListStorageObjects(session, collection, 10);
+            Assert.NotNull(list);
+            Assert.That(list.Objects, Has.Count.EqualTo(2));
+        }
     }
 }

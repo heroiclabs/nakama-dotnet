@@ -67,6 +67,10 @@
     <Compile Include="MatchmakerAddMessage.cs" />
     <Compile Include="MatchmakerRemoveMessage.cs" />
     <Compile Include="MatchSendMessage.cs" />
+    <Compile Include="IStatus.cs" />
+    <Compile Include="StatusFollowMessage.cs" />
+    <Compile Include="StatusUnfollowMessage.cs" />
+    <Compile Include="StatusUpdateMessage.cs" />
     <Compile Include="WebSocketErrorMessage.cs" />
     <Compile Include="WebSocketMessageEnvelope.cs" />
     <Compile Include="NullLogger.cs" />

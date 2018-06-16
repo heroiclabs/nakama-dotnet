@@ -31,7 +31,7 @@ namespace Nakama.Tests
             Assert.AreEqual(AuthToken, session.AuthToken);
             Assert.IsTrue(session.IsExpired);
             Assert.AreEqual(1516910973, session.ExpireTime);
-            Assert.AreNotEqual(0, session.CreateTime);
+            Assert.NotZero(session.CreateTime);
         }
 
         [Test]

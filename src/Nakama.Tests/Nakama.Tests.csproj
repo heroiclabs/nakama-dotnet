@@ -50,9 +50,11 @@
     <Compile Include="Socket\WebSocketChannelTest.cs" />
     <Compile Include="Socket\WebSocketMatchmakerTest.cs" />
     <Compile Include="Socket\WebSocketMatchTest.cs" />
+    <Compile Include="Socket\WebSocketNotificationTest.cs" />
     <Compile Include="Socket\WebSocketRpcTest.cs" />
     <Compile Include="Socket\WebSocketTest.cs" />
     <Compile Include="SessionTest.cs" />
+    <Compile Include="Socket\WebSocketUserStatusTest.cs" />
     <Compile Include="SystemConsoleLogger.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -398,6 +398,17 @@ namespace Nakama
             string cacheableCursor = null);
 
         /// <summary>
+        /// List storage objects in a collection which have public read access.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="collection">The collection to list over.</param>
+        /// <param name="limit">The number of objects to list.</param>
+        /// <param name="cursor">A cursor to paginate over the collection.</param>
+        /// <returns>A task which resolves to a storage object list.</returns>
+        Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit = 1,
+            string cursor = null);
+
+        /// <summary>
         /// List of groups the current user is a member of.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -411,6 +422,18 @@ namespace Nakama
         /// <param name="userId">The id of the user whose groups to list.</param>
         /// <returns>A task which resolves to group objects.</returns>
         Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId);
+
+        /// <summary>
+        /// List storage objects in a collection which belong to a specific user and have public read access.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="collection">The collection to list over.</param>
+        /// <param name="userId">The user ID of the user to list objects for.</param>
+        /// <param name="limit">The number of objects to list.</param>
+        /// <param name="cursor">A cursor to paginate over the collection.</param>
+        /// <returns>A task which resolves to a storage object list.</returns>
+        Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
+            int limit, string cursor);
 
         /// <summary>
         /// Promote one or more users in the group.

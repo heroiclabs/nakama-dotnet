@@ -17,8 +17,10 @@
 namespace Nakama.Tests.Socket
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using NUnit.Framework;
+    using TinyJson;
 
     public class WebSocketMatchTest
     {
@@ -70,8 +72,8 @@ namespace Nakama.Tests.Socket
             Assert.NotNull(match2);
             Assert.AreEqual(match1.Id, match2.Id);
             Assert.AreEqual(match1.Label, match2.Label);
-            Assert.That(match1.Presences, Is.EqualTo(1));
-            Assert.That(match2.Presences, Is.EqualTo(2));
+            Assert.That(match1.Presences, Has.Count.EqualTo(1));
+            Assert.That(match2.Presences, Has.Count.EqualTo(2));
 
             await socket2.DisconnectAsync(false);
         }
@@ -86,6 +88,31 @@ namespace Nakama.Tests.Socket
             Assert.NotNull(match);
             Assert.NotNull(match.Id);
             Assert.DoesNotThrowAsync(() => _socket.LeaveMatchAsync(match.Id));
+        }
+
+        [Test]
+        public async Task ShouldCreateMatchAndSendState()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            _socket = _client.CreateWebSocket();
+            await _socket.ConnectAsync(session1);
+
+            var socket2 = _client.CreateWebSocket();
+            var completer = new TaskCompletionSource<IMatchState>();
+            socket2.OnMatchState += (_, state) => completer.SetResult(state);
+            await socket2.ConnectAsync(session2);
+
+            var match = await _socket.CreateMatchAsync();
+            await socket2.JoinMatchAsync(match.Id);
+
+            var newState = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
+            _socket.SendMatchState(match.Id, 0, newState);
+
+            var result = await completer.Task;
+            Assert.NotNull(result);
+            Assert.AreEqual(newState, result.State);
         }
     }
 }

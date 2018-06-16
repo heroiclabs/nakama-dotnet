@@ -16,7 +16,6 @@
 
 namespace Nakama
 {
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -45,14 +44,14 @@ namespace Nakama
         [DataMember(Name="channel_message_remove")]
         public ChannelRemoveMessage ChannelMessageRemove { get; set; }
 
+        [DataMember(Name="channel_message_send")]
+        public ChannelSendMessage ChannelMessageSend { get; set; }
+
         [DataMember(Name="channel_message_update")]
         public ChannelUpdateMessage ChannelMessageUpdate { get; set; }
 
         [DataMember(Name="channel_presence_event")]
         public ChannelPresenceEvent ChannelPresenceEvent { get; set; }
-
-        [DataMember(Name="channel_message_send")]
-        public ChannelSendMessage ChannelSend { get; set; }
 
         [DataMember(Name="error")]
         public WebSocketErrorMessage Error { get; set; }
@@ -91,13 +90,25 @@ namespace Nakama
         public MatchSendMessage MatchStateSend { get; set; }
 
         [DataMember(Name="notifications")]
-        public List<ApiNotification> Notifications { get; set; }
+        public ApiNotificationList NotificationList { get; set; }
 
         [DataMember(Name="rpc")]
         public ApiRpc Rpc { get; set; }
 
+        [DataMember(Name="status")]
+        public Status Status { get; set; }
+
+        [DataMember(Name="status_follow")]
+        public StatusFollowMessage StatusFollow { get; set; }
+
         [DataMember(Name="status_presence_event")]
         public StatusPresenceEvent StatusPresenceEvent { get; set; }
+
+        [DataMember(Name="status_unfollow")]
+        public StatusUnfollowMessage StatusUnfollow { get; set; }
+
+        [DataMember(Name="status_update")]
+        public StatusUpdateMessage StatusUpdate { get; set; }
 
         [DataMember(Name="stream_presence_event")]
         public StreamPresenceEvent StreamPresenceEvent { get; set; }

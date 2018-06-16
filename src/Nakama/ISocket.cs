@@ -148,6 +148,13 @@ namespace Nakama
         Task DisconnectAsync(bool dispatch = true);
 
         /// <summary>
+        /// Follow one or more users for status updates.
+        /// </summary>
+        /// <param name="userIds">The user Ids to follow.</param>
+        /// <returns>A task.</returns>
+        Task<IStatus> FollowUsersAsync(IEnumerable<string> userIds);
+
+        /// <summary>
         /// Join a chat channel on the server.
         /// </summary>
         /// <param name="target">The target channel to join.</param>
@@ -238,14 +245,32 @@ namespace Nakama
         Task<IApiRpc> RpcAsync(string id, string payload);
 
         /// <summary>
+        /// Send new state to a match on the server.
+        /// </summary>
+        /// <param name="matchId">The Id of the match.</param>
+        /// <param name="opCode">An operation code for the match state.</param>
+        /// <param name="state">The new state to send to the match.</param>
+        /// <param name="presences">The presences in the match to send the state.</param>
+        void SendMatchState(string matchId, long opCode, string state, IEnumerable<IUserPresence> presences = null);
+
+        /// <summary>
         /// Send a state change to a match on the server.
         /// </summary>
-        /// <param name="matchId">The match ID.</param>
+        /// <remarks>
+        /// When no presences are supplied the new match state will be sent to all presences.
+        /// </remarks>
+        /// <param name="matchId">The Id of the match.</param>
         /// <param name="opCode">An operation code for the match state.</param>
-        /// <param name="state">The state change to send to the match.</param>
+        /// <param name="state">The new state to send to the match.</param>
         /// <param name="presences">The presences in the match to send the state.</param>
+        void SendMatchState(string matchId, long opCode, byte[] state, IEnumerable<IUserPresence> presences = null);
+
+        /// <summary>
+        /// Unfollow status updates for one or more users.
+        /// </summary>
+        /// <param name="userIds">The ids of users to unfollow.</param>
         /// <returns>A task.</returns>
-        Task SendMatchStateAsync(string matchId, long opCode, byte[] state, IEnumerable<IUserPresence> presences);
+        Task UnfollowUsersAsync(IEnumerable<string> userIds);
 
         /// <summary>
         /// Update a chat message to a channel on the server.
@@ -264,6 +289,13 @@ namespace Nakama
         /// <param name="content">The content update for the message.</param>
         /// <returns>A task.</returns>
         Task<IChannelMessageAck> UpdateChatMessageAsync(string channelId, string messageId, string content);
+
+        /// <summary>
+        /// Update the user's status online.
+        /// </summary>
+        /// <param name="status">The new status of the user.</param>
+        /// <returns>A task.</returns>
+        Task UpdateStatusAsync(string status);
 
         /// <summary>
         /// Send a chat message to a channel on the server.
