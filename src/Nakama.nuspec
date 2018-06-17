@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Nakama</id>
+        <version>$version$</version>
+        <description>.NET client for Nakama server written in C#.</description>
+    </metadata>
+
+    <files>
+        <!-- .NET 45 -->
+        <file src="..\..\build\msbuild\bin\Release\Nakama.dll" target="lib/net45" />
+        <file src="..\..\build\msbuild\bin\Release\deniszykov.WebSocketListener.dll" target="lib/net45" />
+        <!-- Source -->
+        <file src="..\..\README.md" target="" />
+    </files>
+</package>

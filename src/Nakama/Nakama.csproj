@@ -35,7 +35,6 @@
     <Reference Include="System" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Threading.Tasks.Dataflow" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiClient.gen.cs" />
@@ -84,10 +83,7 @@
     <Compile Include="WebSocketLogger.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Nakama.nuspec" />
     <Content Include="TinyJson\LICENSE" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

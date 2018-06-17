@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+#tool "nuget:?package=GitVersion.CommandLine"
 #tool "nuget:?package=NUnit.ConsoleRunner&version=3.8.0"
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
-var buildDir = Directory("./src/Nakama/bin") + Directory(configuration);
+var buildDir = Directory("./build/msbuild/bin") + Directory(configuration);
+var artifactDir = "./artifacts/";
 
 Task("Build")
     .IsDependentOn("Restore-NuGet-Packages")
@@ -44,12 +46,30 @@ Task("Clean")
 });
 
 Task("Package")
-    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Update-AssemblyInfo")
+    .IsDependentOn("Build")
+//    .IsDependentOn("Run-Unit-Tests")
     .Does(() =>
 {
-    NuGetPack("./src/Nakama/Nakama.nuspec", new NuGetPackSettings {
-        Properties = new Dictionary<string, string> {{ "Configuration", configuration }}
-        });
+    NuGetPack("./src/Nakama.nuspec", new NuGetPackSettings {
+        Authors                  = new [] { "Heroic Labs" },
+        Owners                   = new [] { "heroiclabs" },
+
+        ProjectUrl               = new Uri("https://github.com/heroiclabs/nakama-dotnet"),
+        LicenseUrl               = new Uri("https://github.com/heroiclabs/nakama-dotnet/blob/master/LICENSE"),
+        Copyright                = "Copyright (c) Heroic Labs",
+        RequireLicenseAcceptance = false,
+
+        Version                  = GitVersion().SemVer,
+        Tags                     = new [] { "Nakama", "Game server", "client", "realtime" },
+        ReleaseNotes             = new List<string>(),
+        Properties = new Dictionary<string, string> {{ "Configuration", configuration }},
+
+        Symbols                  = false,
+        Verbosity                = NuGetVerbosity.Detailed,
+        OutputDirectory          = artifactDir,
+        BasePath                 = "./src/Nakama"
+    });
 });
 
 Task("Restore-NuGet-Packages")
@@ -63,9 +83,17 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    NUnit3("./build/msbuild/bin/" + configuration + "/*.Tests.dll", new NUnit3Settings {
+    NUnit3("./build/**/bin/" + configuration + "/*.Tests.dll", new NUnit3Settings {
         NoResults = true
-        });
+    });
+});
+
+Task("Update-AssemblyInfo")
+    .Does(() =>
+{
+    GitVersion(new GitVersionSettings {
+        UpdateAssemblyInfo = true
+    });
 });
 
 Task("Default").IsDependentOn("Run-Unit-Tests");
