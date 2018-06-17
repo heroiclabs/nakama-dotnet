@@ -43,6 +43,15 @@ Task("Clean")
     CleanDirectory(buildDir);
 });
 
+Task("Package")
+    .IsDependentOn("Run-Unit-Tests")
+    .Does(() =>
+{
+    NuGetPack("./src/Nakama/Nakama.nuspec", new NuGetPackSettings {
+        Properties = new Dictionary<string, string> {{ "Configuration", configuration }}
+        });
+});
+
 Task("Restore-NuGet-Packages")
     .IsDependentOn("Clean")
     .Does(() =>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>$id$</id>
+        <version>$version$</version>
+        <title>$title$</title>
+        <authors>$author$</authors>
+        <owners>Heroic Labs</owners>
+        <licenseUrl>https://github.com/heroiclabs/nakama-dotnet/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/heroiclabs/nakama-dotnet</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>$description$</description>
+        <releaseNotes>
+        </releaseNotes>
+        <copyright>$copyright$</copyright>
+        <tags>Nakama</tags>
+        <dependencies />
+    </metadata>
+
+    <files>
+        <file src="..\..\README.md" target=""/>
+    </files>
+</package>

@@ -21,9 +21,11 @@ You'll need to setup the server and database before you can connect with the cli
 
     ```csharp
     // using Nakama;
-    var client = new Client("defaultkey", "127.0.0.1", 7350, false);
-    client.Timeout = 10000; // set timeout on requests (default is 5000).
-    client.Retries = 5;     // set retries on requests (default is 3).
+    var client = new Client("defaultkey", "127.0.0.1", 7350, false)
+    {
+        Timeout = 10000, // set timeout on requests (default is 5000).
+        Retries = 5      // set retries on requests (default is 3).
+    };
     ```
 
 ## Usage

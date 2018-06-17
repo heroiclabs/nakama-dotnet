@@ -68,6 +68,7 @@
     <Compile Include="MatchmakerRemoveMessage.cs" />
     <Compile Include="MatchSendMessage.cs" />
     <Compile Include="IStatus.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatusFollowMessage.cs" />
     <Compile Include="StatusUnfollowMessage.cs" />
     <Compile Include="StatusUpdateMessage.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="WebSocketLogger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Nakama.nuspec" />
     <Content Include="TinyJson\LICENSE" />
   </ItemGroup>
   <ItemGroup>

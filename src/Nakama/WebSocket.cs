@@ -490,7 +490,6 @@ namespace Nakama
             }
 
             _sendBuffer.Enqueue(message.ToJson());
-
             if (string.IsNullOrEmpty(message.Cid))
             {
                 // No response required.
@@ -502,8 +501,7 @@ namespace Nakama
             var resultTask = completer.Task;
 
             var timeoutTask = Task.Delay(TimeSpan.FromMilliseconds(TimeoutMs));
-            var outcome = await Task.WhenAny(resultTask, timeoutTask).ConfigureAwait(false);
-            if (outcome == timeoutTask)
+            if (await Task.WhenAny(resultTask, timeoutTask).ConfigureAwait(false) == timeoutTask)
             {
                 throw new TimeoutException($"Socket send timed out after '{TimeoutMs}' milliseconds.");
             }
