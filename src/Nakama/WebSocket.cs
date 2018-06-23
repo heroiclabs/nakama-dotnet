@@ -523,7 +523,7 @@ namespace Nakama
                         continue; // NOTE does stream need to be consumed?
                     }
 
-                    using (var reader = new StreamReader(readStream, Encoding.UTF8))
+                    using (var reader = new StreamReader(readStream, true))
                     {
                         var message = await reader.ReadToEndAsync().ConfigureAwait(false);
                         if (Trace)
@@ -554,7 +554,7 @@ namespace Nakama
                 {
                     var message = await _sendBuffer.DequeueAsync(ct).ConfigureAwait(false);
                     using (var output = _listener.CreateMessageWriter(WebSocketMessageType.Text))
-                    using (var writer = new StreamWriter(output, Encoding.ASCII)) // FIXME do we need ASCII encoded?
+                    using (var writer = new StreamWriter(output)) // FIXME do we need ASCII encoded?
                     {
                         if (Trace)
                         {
