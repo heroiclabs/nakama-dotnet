@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -554,7 +554,7 @@ namespace Nakama
                 {
                     var message = await _sendBuffer.DequeueAsync(ct).ConfigureAwait(false);
                     using (var output = _listener.CreateMessageWriter(WebSocketMessageType.Text))
-                    using (var writer = new StreamWriter(output)) // FIXME do we need ASCII encoded?
+                    using (var writer = new StreamWriter(output))
                     {
                         if (Trace)
                         {
