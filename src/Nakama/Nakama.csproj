@@ -29,8 +29,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="deniszykov.WebSocketListener, Version=4.2.2.0, Culture=neutral, PublicKeyToken=7f78616efb4a208d">
-      <HintPath>..\packages\deniszykov.WebSocketListener.4.2.2\lib\net45\deniszykov.WebSocketListener.dll</HintPath>
+    <Reference Include="deniszykov.WebSocketListener, Version=4.2.4.0, Culture=neutral, PublicKeyToken=7f78616efb4a208d">
+      <HintPath>..\packages\deniszykov.WebSocketListener.4.2.4\lib\net45\deniszykov.WebSocketListener.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net.Http" />
