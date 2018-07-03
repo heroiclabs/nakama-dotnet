@@ -76,5 +76,34 @@ namespace Nakama.Tests.Socket
             Assert.AreEqual(sendAck.MessageId, message.MessageId);
             Assert.AreEqual(sendAck.Username, message.Username);
         }
+
+        [Test]
+        public async Task ShouldSendMessageDirectChannel()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            await _client.AddFriendsAsync(session1, new[] {session2.UserId});
+            await _client.AddFriendsAsync(session2, new[] {session1.UserId});
+
+            var completer = new TaskCompletionSource<IApiChannelMessage>();
+            _socket.OnChannelMessage += (sender, chatMessage) => completer.SetResult(chatMessage);
+            await _socket.ConnectAsync(session1);
+
+            var socket2 = _client.CreateWebSocket();
+            await socket2.ConnectAsync(session2);
+            var channel = await _socket.JoinChatAsync(session2.UserId, ChannelType.DirectMessage, false, false);
+
+            // Send chat message.
+            var content = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
+            var sendAck = await _socket.WriteChatMessageAsync(channel, content);
+            var message = await completer.Task.ConfigureAwait(false);
+
+            Assert.NotNull(sendAck);
+            Assert.NotNull(message);
+            Assert.AreEqual(sendAck.ChannelId, message.ChannelId);
+            Assert.AreEqual(sendAck.MessageId, message.MessageId);
+            Assert.AreEqual(sendAck.Username, message.Username);
+        }
     }
 }
