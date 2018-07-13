@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Net.Http;
+
 namespace Nakama
 {
     using System;
@@ -77,82 +79,20 @@ namespace Nakama
             Timeout = 5000;
 
             var scheme = Secure ? "https" : "http";
-            _apiClient = new ApiClient(null, new UriBuilder(scheme, Host, Port).Uri);
+            _apiClient = new ApiClient(new UriBuilder(scheme, Host, Port).Uri, new HttpClient());
         }
 
         /// <inheritdoc />
         public async Task AddFriendsAsync(ISession session, IEnumerable<string> ids,
             IEnumerable<string> usernames = null)
         {
-            // TODO
-            //await _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames);
-
-            var client = new System.Net.Http.HttpClient(); // FIXME
-
-            var urlpath = "/v2/friend?";
-            foreach (var elem in ids ?? new string[0])
-            {
-                urlpath = string.Concat(urlpath, "ids=", elem, "&");
-            }
-
-            foreach (var elem in usernames ?? new string[0])
-            {
-                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
-            }
-
-            var request = new System.Net.Http.HttpRequestMessage
-            {
-                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
-                Method = new System.Net.Http.HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", session.AuthToken);
-            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
-
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            await response.Content.ReadAsStringAsync();
-            client.Dispose();
+            await _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames);
         }
 
         /// <inheritdoc />
         public async Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
         {
-            // TODO
-            //await _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids);
-
-            var client = new System.Net.Http.HttpClient(); // FIXME
-            if (groupId == null)
-            {
-                throw new ArgumentException("'groupId' is required but was null.");
-            }
-
-            var urlpath = "/v2/group/{group_id}/add?";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
-            foreach (var elem in ids ?? new string[0])
-            {
-                urlpath = string.Concat(urlpath, "ids=", elem, "&");
-            }
-
-            var request = new System.Net.Http.HttpRequestMessage
-            {
-                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
-                Method = new System.Net.Http.HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", session.AuthToken);
-            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
-
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            await response.Content.ReadAsStringAsync();
-            client.Dispose();
+            await _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids);
         }
 
         /// <inheritdoc />
@@ -224,38 +164,7 @@ namespace Nakama
         public async Task BlockFriendsAsync(ISession session, IEnumerable<string> ids,
             IEnumerable<string> usernames = null)
         {
-            // TODO
-            //await _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames);
-
-            var client = new System.Net.Http.HttpClient(); // FIXME
-
-            var urlpath = "/v2/friend/block?";
-            foreach (var id in ids ?? new string[0])
-            {
-                urlpath = string.Concat(urlpath, "ids=", id, "&");
-            }
-
-            foreach (var username in usernames ?? new string[0])
-            {
-                urlpath = string.Concat(urlpath, "usernames=", username, "&");
-            }
-
-            var request = new System.Net.Http.HttpRequestMessage
-            {
-                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
-                Method = new System.Net.Http.HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", session.AuthToken);
-            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
-
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            await response.Content.ReadAsStringAsync();
-            client.Dispose();
+            await _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames);
         }
 
         /// <inheritdoc />
@@ -345,38 +254,7 @@ namespace Nakama
         /// <inheritdoc />
         public async Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
         {
-            // TODO
-            //await _apiClient.KickGroupUsersAsync(session.AuthToken, groupId);
-
-            var client = new System.Net.Http.HttpClient(); // FIXME
-            if (groupId == null)
-            {
-                throw new ArgumentException("'groupId' is required but was null.");
-            }
-
-            var urlpath = "/v2/group/{group_id}/kick?";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
-            foreach (var id in ids ?? new string[0])
-            {
-                urlpath = string.Concat(urlpath, "ids=", id, "&");
-            }
-
-            var request = new System.Net.Http.HttpRequestMessage
-            {
-                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
-                Method = new System.Net.Http.HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", session.AuthToken);
-            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
-
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            await response.Content.ReadAsStringAsync();
-            client.Dispose();
+            await _apiClient.KickGroupUsersAsync(session.AuthToken, groupId, ids);
         }
 
         /// <inheritdoc />
@@ -521,38 +399,7 @@ namespace Nakama
         /// <inheritdoc />
         public async Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
         {
-            // TODO
-            //await _apiClient.PromoteGroupUsersAsync(session.AuthToken, groupId, ids);
-
-            var client = new System.Net.Http.HttpClient(); // FIXME
-            if (groupId == null)
-            {
-                throw new ArgumentException("'groupId' is required but was null.");
-            }
-
-            var urlpath = "/v2/group/{group_id}/promote?";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
-            foreach (var id in ids ?? new string[0])
-            {
-                urlpath = string.Concat(urlpath, "ids=", id, "&");
-            }
-
-            var request = new System.Net.Http.HttpRequestMessage
-            {
-                RequestUri = new Uri(new UriBuilder(Secure ? "https" : "http", Host, Port).Uri, urlpath),
-                Method = new System.Net.Http.HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", session.AuthToken);
-            request.Headers.Authorization = System.Net.Http.Headers.AuthenticationHeaderValue.Parse(header);
-
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            await response.Content.ReadAsStringAsync();
-            client.Dispose();
+            await _apiClient.PromoteGroupUsersAsync(session.AuthToken, groupId, ids);
         }
 
         /// <inheritdoc />

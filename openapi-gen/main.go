@@ -128,22 +128,17 @@ namespace Nakama
     {{- end }}
 
     /// <summary>
-    /// </summary>
-    public interface IRequestDispatcher {
-    }
-
-    /// <summary>
     /// The low level client for the Nakama API.
     /// </summary>
     internal class ApiClient
     {
-        private readonly IRequestDispatcher _dispatcher;
         private readonly Uri _baseUri;
+        private readonly HttpClient _httpClient;
 
-        public ApiClient(IRequestDispatcher dispatcher, Uri baseUri)
+        public ApiClient(Uri baseUri, HttpClient httpClient)
         {
-        	_dispatcher = dispatcher;
-        	_baseUri = baseUri;
+            _baseUri = baseUri;
+            _httpClient = httpClient;
         }
 
         {{- range $url, $path := .Paths }}
@@ -189,7 +184,6 @@ namespace Nakama
         {{- end }}
         {{- end }})
         {
-        	HttpClient client = new HttpClient(); // FIXME
             {{- range $parameter := $operation.Parameters }}
             {{- $camelcase := $parameter.Name | camelCase }}
             {{- if $parameter.Required }}
@@ -266,10 +260,9 @@ namespace Nakama
             {{- end }}
             {{- end }}
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>();
         }
         {{- end }}

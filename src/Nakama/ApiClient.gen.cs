@@ -2405,22 +2405,17 @@ namespace Nakama
     }
 
     /// <summary>
-    /// </summary>
-    public interface IRequestDispatcher {
-    }
-
-    /// <summary>
     /// The low level client for the Nakama API.
     /// </summary>
     internal class ApiClient
     {
-        private readonly IRequestDispatcher _dispatcher;
         private readonly Uri _baseUri;
+        private readonly HttpClient _httpClient;
 
-        public ApiClient(IRequestDispatcher dispatcher, Uri baseUri)
+        public ApiClient(Uri baseUri, HttpClient httpClient)
         {
-        	_dispatcher = dispatcher;
-        	_baseUri = baseUri;
+            _baseUri = baseUri;
+            _httpClient = httpClient;
         }
 
         /// <summary>
@@ -2429,7 +2424,6 @@ namespace Nakama
         public async Task<IProtobufEmpty> HealthcheckAsync(
             string bearerToken)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/healthcheck?";
 
@@ -2445,10 +2439,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2458,7 +2451,6 @@ namespace Nakama
         public async Task<IApiAccount> GetAccountAsync(
             string bearerToken)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/account?";
 
@@ -2474,10 +2466,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiAccount>();
         }
 
@@ -2488,7 +2479,6 @@ namespace Nakama
             string bearerToken
             , ApiUpdateAccountRequest body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2509,10 +2499,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2524,7 +2513,6 @@ namespace Nakama
             , string password
             , ApiAccountCustom body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2546,10 +2534,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2561,7 +2548,6 @@ namespace Nakama
             , string password
             , ApiAccountDevice body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2583,10 +2569,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2598,7 +2583,6 @@ namespace Nakama
             , string password
             , ApiAccountEmail body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2620,10 +2604,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2635,7 +2618,6 @@ namespace Nakama
             , string password
             , ApiAccountFacebook body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2657,10 +2639,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2672,7 +2653,6 @@ namespace Nakama
             , string password
             , ApiAccountGameCenter body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2694,10 +2674,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2709,7 +2688,6 @@ namespace Nakama
             , string password
             , ApiAccountGoogle body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2731,10 +2709,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2746,7 +2723,6 @@ namespace Nakama
             , string password
             , ApiAccountSteam body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2768,10 +2744,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiSession>();
         }
 
@@ -2782,7 +2757,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountCustom body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2803,10 +2777,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2817,7 +2790,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountDevice body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2838,10 +2810,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2852,7 +2823,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountEmail body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2873,10 +2843,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2887,7 +2856,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountFacebook body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2908,10 +2876,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2922,7 +2889,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountGameCenter body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2943,10 +2909,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2957,7 +2922,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountGoogle body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -2978,10 +2942,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -2992,7 +2955,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountSteam body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3013,10 +2975,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3027,7 +2988,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountCustom body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3048,10 +3008,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3062,7 +3021,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountDevice body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3083,10 +3041,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3097,7 +3054,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountEmail body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3118,10 +3074,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3132,7 +3087,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountFacebook body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3153,10 +3107,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3167,7 +3120,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountGameCenter body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3188,10 +3140,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3202,7 +3153,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountGoogle body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3223,10 +3173,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3237,7 +3186,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountSteam body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3258,10 +3206,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3275,7 +3222,6 @@ namespace Nakama
             , bool forward
             , string cursor)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (channelId == null)
             {
                 throw new ArgumentException("'channelId' is required but was null.");
@@ -3299,10 +3245,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiChannelMessageList>();
         }
 
@@ -3314,7 +3259,6 @@ namespace Nakama
             , IEnumerable<string> ids
             , IEnumerable<string> usernames)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/friend?";
             foreach (var elem in ids ?? new string[0])
@@ -3338,10 +3282,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3351,7 +3294,6 @@ namespace Nakama
         public async Task<IApiFriends> ListFriendsAsync(
             string bearerToken)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/friend?";
 
@@ -3367,10 +3309,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiFriends>();
         }
 
@@ -3378,11 +3319,20 @@ namespace Nakama
         /// Add friends by ID or username to a user's account.
         /// </summary>
         public async Task<IProtobufEmpty> AddFriendsAsync(
-            string bearerToken)
+            string bearerToken
+            , IEnumerable<string> ids
+            , IEnumerable<string> usernames)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/friend?";
+            foreach (var elem in ids ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+            }
+            foreach (var elem in usernames ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -3396,10 +3346,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3407,11 +3356,20 @@ namespace Nakama
         /// Block one or more users by ID or username.
         /// </summary>
         public async Task<IProtobufEmpty> BlockFriendsAsync(
-            string bearerToken)
+            string bearerToken
+            , IEnumerable<string> ids
+            , IEnumerable<string> usernames)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/friend/block?";
+            foreach (var elem in ids ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+            }
+            foreach (var elem in usernames ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -3425,10 +3383,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3439,7 +3396,6 @@ namespace Nakama
             string bearerToken
             , ApiAccountFacebook body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3460,10 +3416,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3476,7 +3431,6 @@ namespace Nakama
             , string cursor
             , int limit)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/group?";
             urlpath = string.Concat(urlpath, "name=", Uri.EscapeDataString(name ?? ""), "&");
@@ -3495,10 +3449,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiGroupList>();
         }
 
@@ -3509,7 +3462,6 @@ namespace Nakama
             string bearerToken
             , ApiCreateGroupRequest body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -3530,21 +3482,19 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiGroup>();
         }
 
         /// <summary>
-        /// Delete one or more groups by ID.
+        /// Delete a group by ID.
         /// </summary>
         public async Task<IProtobufEmpty> DeleteGroupAsync(
             string bearerToken
             , string groupId)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
@@ -3565,10 +3515,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3580,7 +3529,6 @@ namespace Nakama
             , string groupId
             , ApiUpdateGroupRequest body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
@@ -3606,10 +3554,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3618,9 +3565,9 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> AddGroupUsersAsync(
             string bearerToken
-            , string groupId)
+            , string groupId
+            , IEnumerable<string> userIds)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
@@ -3628,6 +3575,10 @@ namespace Nakama
 
             var urlpath = "/v2/group/{group_id}/add?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            foreach (var elem in userIds ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "user_ids=", elem, "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -3641,10 +3592,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3655,7 +3605,6 @@ namespace Nakama
             string bearerToken
             , string groupId)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
@@ -3676,10 +3625,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3688,9 +3636,9 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> KickGroupUsersAsync(
             string bearerToken
-            , string groupId)
+            , string groupId
+            , IEnumerable<string> userIds)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
@@ -3698,6 +3646,10 @@ namespace Nakama
 
             var urlpath = "/v2/group/{group_id}/kick?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            foreach (var elem in userIds ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "user_ids=", elem, "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -3711,10 +3663,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3725,7 +3676,6 @@ namespace Nakama
             string bearerToken
             , string groupId)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
@@ -3746,10 +3696,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3758,9 +3707,9 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> PromoteGroupUsersAsync(
             string bearerToken
-            , string groupId)
+            , string groupId
+            , IEnumerable<string> userIds)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
@@ -3768,6 +3717,10 @@ namespace Nakama
 
             var urlpath = "/v2/group/{group_id}/promote?";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            foreach (var elem in userIds ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "user_ids=", elem, "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -3781,10 +3734,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3795,7 +3747,6 @@ namespace Nakama
             string bearerToken
             , string groupId)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
@@ -3816,10 +3767,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiGroupUserList>();
         }
 
@@ -3830,7 +3780,6 @@ namespace Nakama
             string bearerToken
             , string leaderboardId)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (leaderboardId == null)
             {
                 throw new ArgumentException("'leaderboardId' is required but was null.");
@@ -3851,10 +3800,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -3868,7 +3816,6 @@ namespace Nakama
             , int limit
             , string cursor)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (leaderboardId == null)
             {
                 throw new ArgumentException("'leaderboardId' is required but was null.");
@@ -3895,10 +3842,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiLeaderboardRecordList>();
         }
 
@@ -3910,7 +3856,6 @@ namespace Nakama
             , string leaderboardId
             , WriteLeaderboardRecordRequestLeaderboardRecordWrite body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (leaderboardId == null)
             {
                 throw new ArgumentException("'leaderboardId' is required but was null.");
@@ -3936,10 +3881,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiLeaderboardRecord>();
         }
 
@@ -3954,7 +3898,6 @@ namespace Nakama
             , int minSize
             , int maxSize)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/match?";
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
@@ -3975,10 +3918,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiMatchList>();
         }
 
@@ -3989,7 +3931,6 @@ namespace Nakama
             string bearerToken
             , IEnumerable<string> ids)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/notification?";
             foreach (var elem in ids ?? new string[0])
@@ -4009,10 +3950,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -4024,7 +3964,6 @@ namespace Nakama
             , int limit
             , string cacheableCursor)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/notification?";
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
@@ -4042,10 +3981,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiNotificationList>();
         }
 
@@ -4058,7 +3996,6 @@ namespace Nakama
             , string payload
             , string httpKey)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (id == null)
             {
                 throw new ArgumentException("'id' is required but was null.");
@@ -4084,10 +4021,9 @@ namespace Nakama
                 request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             }
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiRpc>();
         }
 
@@ -4099,7 +4035,6 @@ namespace Nakama
             , string id
             , string body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (id == null)
             {
                 throw new ArgumentException("'id' is required but was null.");
@@ -4128,10 +4063,9 @@ namespace Nakama
             }
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiRpc>();
         }
 
@@ -4142,7 +4076,6 @@ namespace Nakama
             string bearerToken
             , ApiReadStorageObjectsRequest body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -4163,10 +4096,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiStorageObjects>();
         }
 
@@ -4177,7 +4109,6 @@ namespace Nakama
             string bearerToken
             , ApiWriteStorageObjectsRequest body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -4198,10 +4129,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiStorageObjectAcks>();
         }
 
@@ -4212,7 +4142,6 @@ namespace Nakama
             string bearerToken
             , ApiDeleteStorageObjectsRequest body)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (body == null)
             {
                 throw new ArgumentException("'body' is required but was null.");
@@ -4233,10 +4162,9 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ProtobufEmpty>();
         }
 
@@ -4250,7 +4178,6 @@ namespace Nakama
             , int limit
             , string cursor)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (collection == null)
             {
                 throw new ArgumentException("'collection' is required but was null.");
@@ -4274,10 +4201,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiStorageObjectList>();
         }
 
@@ -4291,7 +4217,6 @@ namespace Nakama
             , int limit
             , string cursor)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (collection == null)
             {
                 throw new ArgumentException("'collection' is required but was null.");
@@ -4319,10 +4244,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiStorageObjectList>();
         }
 
@@ -4335,7 +4259,6 @@ namespace Nakama
             , IEnumerable<string> usernames
             , IEnumerable<string> facebookIds)
         {
-        	HttpClient client = new HttpClient(); // FIXME
 
             var urlpath = "/v2/user?";
             foreach (var elem in ids ?? new string[0])
@@ -4363,10 +4286,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiUsers>();
         }
 
@@ -4377,7 +4299,6 @@ namespace Nakama
             string bearerToken
             , string userId)
         {
-        	HttpClient client = new HttpClient(); // FIXME
             if (userId == null)
             {
                 throw new ArgumentException("'userId' is required but was null.");
@@ -4398,10 +4319,9 @@ namespace Nakama
             var header = string.Concat("Bearer ", bearerToken);
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            client.Dispose();
             return contents.FromJson<ApiUserGroupList>();
         }
     }
