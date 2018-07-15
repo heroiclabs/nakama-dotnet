@@ -99,7 +99,7 @@ namespace Nakama
         {
             var request = new ApiAccountCustom {Id = id};
             var resp = await _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty, request, create, username);
-            return Session.Restore(resp.Token);
+            return Session.Restore(resp.Token, resp.Created);
         }
 
         /// <inheritdoc />
@@ -107,7 +107,7 @@ namespace Nakama
         {
             var request = new ApiAccountDevice {Id = id};
             var resp = await _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty, request, create, username);
-            return Session.Restore(resp.Token);
+            return Session.Restore(resp.Token, resp.Created);
         }
 
         /// <inheritdoc />
@@ -116,7 +116,7 @@ namespace Nakama
         {
             var request = new ApiAccountEmail {Email = email, Password = password};
             var resp = await _apiClient.AuthenticateEmailAsync(ServerKey, string.Empty, request, create, username);
-            return Session.Restore(resp.Token);
+            return Session.Restore(resp.Token, resp.Created);
         }
 
         /// <inheritdoc />
@@ -126,7 +126,7 @@ namespace Nakama
             var request = new ApiAccountFacebook {Token = token};
             var resp = await _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty, request, create, username,
                 import);
-            return Session.Restore(resp.Token);
+            return Session.Restore(resp.Token, resp.Created);
         }
 
         /// <inheritdoc />
@@ -143,7 +143,7 @@ namespace Nakama
                 TimestampSeconds = timestampSeconds
             };
             var resp = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty, request, create, username);
-            return Session.Restore(resp.Token);
+            return Session.Restore(resp.Token, resp.Created);
         }
 
         /// <inheritdoc />
@@ -151,7 +151,7 @@ namespace Nakama
         {
             var request = new ApiAccountGoogle {Token = token};
             var resp = await _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty, request, create, username);
-            return Session.Restore(resp.Token);
+            return Session.Restore(resp.Token, resp.Created);
         }
 
         /// <inheritdoc />
@@ -159,7 +159,7 @@ namespace Nakama
         {
             var request = new ApiAccountSteam {Token = token};
             var resp = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty, request, create, username);
-            return Session.Restore(resp.Token);
+            return Session.Restore(resp.Token, resp.Created);
         }
 
         /// <inheritdoc />

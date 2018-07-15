@@ -30,6 +30,9 @@ namespace Nakama
         public string AuthToken { get; }
 
         /// <inheritdoc />
+        public bool Created { get; }
+
+        /// <inheritdoc />
         public long CreateTime { get; }
 
         /// <inheritdoc />
@@ -51,9 +54,10 @@ namespace Nakama
             return dateTime > expireDatetime;
         }
 
-        private Session(string authToken)
+        private Session(string authToken, bool created)
         {
             var span = DateTime.UtcNow - Epoch;
+            Created = created;
             CreateTime = span.Seconds;
             AuthToken = authToken;
 
@@ -66,7 +70,7 @@ namespace Nakama
 
         public override string ToString()
         {
-            return $"Session[ExpireTime={ExpireTime}, IsExpired={IsExpired}, Username={Username}, UserId={UserId}]";
+            return $"Session(Created={Created}, ExpireTime={ExpireTime}, IsExpired={IsExpired}, Username={Username}, UserId={UserId})";
         }
 
         /// <summary>
@@ -76,7 +80,12 @@ namespace Nakama
         /// <returns>A session restored from the authentication token.</returns>
         public static ISession Restore(string authToken)
         {
-            return new Session(authToken);
+            return Restore(authToken, false);
+        }
+
+        internal static ISession Restore(string authToken, bool created)
+        {
+            return new Session(authToken, created);
         }
 
         private static string JwtUnpack(string jwt)

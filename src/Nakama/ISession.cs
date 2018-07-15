@@ -29,6 +29,11 @@ namespace Nakama
         string AuthToken { get; }
 
         /// <summary>
+        /// <c>True</c> if the user account for this session was just created.
+        /// </summary>
+        bool Created { get; }
+
+        /// <summary>
         /// The timestamp in seconds when this session object was created.
         /// </summary>
         long CreateTime { get; }
