@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-using System.Net.Http;
-
 namespace Nakama
 {
     using System;
     using System.Collections.Generic;
+    using System.Net.Http;
     using System.Threading.Tasks;
 
     /// <inheritdoc />
@@ -96,40 +95,43 @@ namespace Nakama
         }
 
         /// <inheritdoc />
-        public async Task<ISession> AuthenticateCustomAsync(string id)
+        public async Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true)
         {
             var request = new ApiAccountCustom {Id = id};
-            var resp = await _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty, request);
+            var resp = await _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty, request, create, username);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
-        public async Task<ISession> AuthenticateDeviceAsync(string id)
+        public async Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true)
         {
             var request = new ApiAccountDevice {Id = id};
-            var resp = await _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty, request);
+            var resp = await _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty, request, create, username);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
-        public async Task<ISession> AuthenticateEmailAsync(string email, string password)
+        public async Task<ISession> AuthenticateEmailAsync(string email, string password, string username = null,
+            bool create = true)
         {
             var request = new ApiAccountEmail {Email = email, Password = password};
-            var resp = await _apiClient.AuthenticateEmailAsync(ServerKey, string.Empty, request);
+            var resp = await _apiClient.AuthenticateEmailAsync(ServerKey, string.Empty, request, create, username);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
-        public async Task<ISession> AuthenticateFacebookAsync(string token)
+        public async Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
+            bool import = true)
         {
             var request = new ApiAccountFacebook {Token = token};
-            var resp = await _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty, request);
+            var resp = await _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty, request, create, username,
+                import);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
         public async Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestampSeconds)
+            string salt, string signature, string timestampSeconds, string username = null, bool create = true)
         {
             var request = new ApiAccountGameCenter
             {
@@ -140,23 +142,23 @@ namespace Nakama
                 Signature = signature,
                 TimestampSeconds = timestampSeconds
             };
-            var resp = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty, request);
+            var resp = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty, request, create, username);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
-        public async Task<ISession> AuthenticateGoogleAsync(string token)
+        public async Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true)
         {
             var request = new ApiAccountGoogle {Token = token};
-            var resp = await _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty, request);
+            var resp = await _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty, request, create, username);
             return Session.Restore(resp.Token);
         }
 
         /// <inheritdoc />
-        public async Task<ISession> AuthenticateSteamAsync(string token)
+        public async Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true)
         {
             var request = new ApiAccountSteam {Token = token};
-            var resp = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty, request);
+            var resp = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty, request, create, username);
             return Session.Restore(resp.Token);
         }
 
@@ -239,10 +241,10 @@ namespace Nakama
         }
 
         /// <inheritdoc />
-        public async Task ImportFacebookFriendsAsync(ISession session, string token)
+        public async Task ImportFacebookFriendsAsync(ISession session, string token, bool reset = false)
         {
             var request = new ApiAccountFacebook {Token = token};
-            await _apiClient.ImportFacebookFriendsAsync(session.AuthToken, request);
+            await _apiClient.ImportFacebookFriendsAsync(session.AuthToken, request, reset);
         }
 
         /// <inheritdoc />
@@ -285,10 +287,10 @@ namespace Nakama
         }
 
         /// <inheritdoc />
-        public async Task LinkFacebookAsync(ISession session, string token)
+        public async Task LinkFacebookAsync(ISession session, string token, bool import = true)
         {
             var request = new ApiAccountFacebook {Token = token};
-            await _apiClient.LinkFacebookAsync(session.AuthToken, request);
+            await _apiClient.LinkFacebookAsync(session.AuthToken, request, import);
         }
 
         /// <inheritdoc />

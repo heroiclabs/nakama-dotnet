@@ -152,8 +152,8 @@ namespace Nakama
         {{- with (index $operation.Security 0) }}
             {{- range $key, $value := . }}
                 {{- if eq $key "BasicAuth" }}
-            string username
-            , string password
+            string basicAuthUsername
+            , string basicAuthPassword
                 {{- else if eq $key "HttpKeyAuth" }}
             string bearerToken
                 {{- end }}
@@ -236,7 +236,7 @@ namespace Nakama
             {{- with (index $operation.Security 0) }}
                 {{- range $key, $value := . }}
                     {{- if eq $key "BasicAuth" }}
-            var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
+            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
                     {{- else if eq $key "HttpKeyAuth" }}

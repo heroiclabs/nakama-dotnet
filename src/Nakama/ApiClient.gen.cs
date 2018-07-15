@@ -2509,9 +2509,11 @@ namespace Nakama
         /// Authenticate a user with a custom id against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateCustomAsync(
-            string username
-            , string password
-            , ApiAccountCustom body)
+            string basicAuthUsername
+            , string basicAuthPassword
+            , ApiAccountCustom body
+            , bool create
+            , string username)
         {
             if (body == null)
             {
@@ -2519,6 +2521,8 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/authenticate/custom?";
+            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -2529,7 +2533,7 @@ namespace Nakama
                     Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
-            var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
+            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
@@ -2544,9 +2548,11 @@ namespace Nakama
         /// Authenticate a user with a device id against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateDeviceAsync(
-            string username
-            , string password
-            , ApiAccountDevice body)
+            string basicAuthUsername
+            , string basicAuthPassword
+            , ApiAccountDevice body
+            , bool create
+            , string username)
         {
             if (body == null)
             {
@@ -2554,6 +2560,8 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/authenticate/device?";
+            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -2564,7 +2572,7 @@ namespace Nakama
                     Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
-            var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
+            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
@@ -2579,9 +2587,11 @@ namespace Nakama
         /// Authenticate a user with an email+password against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateEmailAsync(
-            string username
-            , string password
-            , ApiAccountEmail body)
+            string basicAuthUsername
+            , string basicAuthPassword
+            , ApiAccountEmail body
+            , bool create
+            , string username)
         {
             if (body == null)
             {
@@ -2589,6 +2599,8 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/authenticate/email?";
+            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -2599,7 +2611,7 @@ namespace Nakama
                     Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
-            var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
+            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
@@ -2614,9 +2626,12 @@ namespace Nakama
         /// Authenticate a user with a Facebook OAuth token against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateFacebookAsync(
-            string username
-            , string password
-            , ApiAccountFacebook body)
+            string basicAuthUsername
+            , string basicAuthPassword
+            , ApiAccountFacebook body
+            , bool create
+            , string username
+            , bool import)
         {
             if (body == null)
             {
@@ -2624,6 +2639,9 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/authenticate/facebook?";
+            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
+            urlpath = string.Concat(urlpath, "import=", import.ToString().ToLower(), "&");
 
             var request = new HttpRequestMessage
             {
@@ -2634,7 +2652,7 @@ namespace Nakama
                     Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
-            var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
+            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
@@ -2649,9 +2667,11 @@ namespace Nakama
         /// Authenticate a user with Apple's GameCenter against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateGameCenterAsync(
-            string username
-            , string password
-            , ApiAccountGameCenter body)
+            string basicAuthUsername
+            , string basicAuthPassword
+            , ApiAccountGameCenter body
+            , bool create
+            , string username)
         {
             if (body == null)
             {
@@ -2659,6 +2679,8 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/authenticate/gamecenter?";
+            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -2669,7 +2691,7 @@ namespace Nakama
                     Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
-            var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
+            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
@@ -2684,9 +2706,11 @@ namespace Nakama
         /// Authenticate a user with Google against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateGoogleAsync(
-            string username
-            , string password
-            , ApiAccountGoogle body)
+            string basicAuthUsername
+            , string basicAuthPassword
+            , ApiAccountGoogle body
+            , bool create
+            , string username)
         {
             if (body == null)
             {
@@ -2694,6 +2718,8 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/authenticate/google?";
+            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -2704,7 +2730,7 @@ namespace Nakama
                     Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
-            var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
+            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
@@ -2719,9 +2745,11 @@ namespace Nakama
         /// Authenticate a user with Steam against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateSteamAsync(
-            string username
-            , string password
-            , ApiAccountSteam body)
+            string basicAuthUsername
+            , string basicAuthPassword
+            , ApiAccountSteam body
+            , bool create
+            , string username)
         {
             if (body == null)
             {
@@ -2729,6 +2757,8 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/authenticate/steam?";
+            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
 
             var request = new HttpRequestMessage
             {
@@ -2739,7 +2769,7 @@ namespace Nakama
                     Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
                 }
             };
-            var credentials = Encoding.UTF8.GetBytes(username + ":" + password);
+            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
             request.Content = new StringContent(body.ToJson());
@@ -2854,7 +2884,8 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> LinkFacebookAsync(
             string bearerToken
-            , ApiAccountFacebook body)
+            , ApiAccountFacebook body
+            , bool import)
         {
             if (body == null)
             {
@@ -2862,6 +2893,7 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/link/facebook?";
+            urlpath = string.Concat(urlpath, "import=", import.ToString().ToLower(), "&");
 
             var request = new HttpRequestMessage
             {
@@ -3394,7 +3426,8 @@ namespace Nakama
         /// </summary>
         public async Task<IProtobufEmpty> ImportFacebookFriendsAsync(
             string bearerToken
-            , ApiAccountFacebook body)
+            , ApiAccountFacebook body
+            , bool reset)
         {
             if (body == null)
             {
@@ -3402,6 +3435,7 @@ namespace Nakama
             }
 
             var urlpath = "/v2/friend/facebook?";
+            urlpath = string.Concat(urlpath, "reset=", reset.ToString().ToLower(), "&");
 
             var request = new HttpRequestMessage
             {

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Detect socket message encodings.
+- All authenticate methods can now pass in username and create options.
 
 ### Changed
 - Update the code generator to handle POST/DELETE query params.

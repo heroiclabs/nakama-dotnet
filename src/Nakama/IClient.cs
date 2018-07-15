@@ -92,30 +92,41 @@ namespace Nakama
         /// Authenticate a user with a custom id.
         /// </summary>
         /// <param name="id">A custom identifier usually obtained from an external authentication service.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">True if the user should be created when authenticated.</param>
         /// <returns>A task to resolve a session object.</returns>
-        Task<ISession> AuthenticateCustomAsync(string id);
+        Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true);
 
         /// <summary>
         /// Authenticate a user with a device id.
         /// </summary>
         /// <param name="id">A device identifier usually obtained from a platform API.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">True if the user should be created when authenticated.</param>
         /// <returns>A task to resolve a session object.</returns>
-        Task<ISession> AuthenticateDeviceAsync(string id);
+        Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true);
 
         /// <summary>
         /// Authenticate a user with an email and password.
         /// </summary>
         /// <param name="email">The email address of the user.</param>
         /// <param name="password">The password for the user.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">True if the user should be created when authenticated.</param>
         /// <returns>A task to resolve a session object.</returns>
-        Task<ISession> AuthenticateEmailAsync(string email, string password);
+        Task<ISession> AuthenticateEmailAsync(string email, string password, string username = null,
+            bool create = true);
 
         /// <summary>
         /// Authenticate a user with a Facebook auth token.
         /// </summary>
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">True if the user should be created when authenticated.</param>
+        /// <param name="import">True if the Facebook friends should be imported.</param>
         /// <returns>A task to resolve a session object.</returns>
-        Task<ISession> AuthenticateFacebookAsync(string token);
+        Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
+            bool import = true);
 
         /// <summary>
         /// Authenticate a user with Apple Game Center.
@@ -126,23 +137,29 @@ namespace Nakama
         /// <param name="salt">A random <c>NSString</c> used to compute the hash and keep it randomized.</param>
         /// <param name="signature">The verification signature data generated.</param>
         /// <param name="timestampSeconds">The date and time that the signature was created.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">True if the user should be created when authenticated.</param>
         /// <returns></returns>
         Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestampSeconds);
+            string signature, string timestampSeconds, string username = null, bool create = true);
 
         /// <summary>
         /// Authenticate a user with a Google auth token.
         /// </summary>
         /// <param name="token">An OAuth access token from the Google SDK.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">True if the user should be created when authenticated.</param>
         /// <returns>A task to resolve a session object.</returns>
-        Task<ISession> AuthenticateGoogleAsync(string token);
+        Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true);
 
         /// <summary>
         /// Authenticate a user with a Steam auth token.
         /// </summary>
         /// <param name="token">An authentication token from the Steam network.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">True if the user should be created when authenticated.</param>
         /// <returns>A task to resolve a session object.</returns>
-        Task<ISession> AuthenticateSteamAsync(string token);
+        Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true);
 
         /// <summary>
         /// Block one or more friends by id or username.
@@ -234,8 +251,9 @@ namespace Nakama
         /// </remarks>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
+        /// <param name="reset">True if the Facebook friend import for the user should be reset.</param>
         /// <returns>A task.</returns>
-        Task ImportFacebookFriendsAsync(ISession session, string token);
+        Task ImportFacebookFriendsAsync(ISession session, string token, bool reset = false);
 
         /// <summary>
         /// Join a group if it has open membership or request to join it.
@@ -292,8 +310,9 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
+        /// <param name="import">True if the Facebook friends should be imported.</param>
         /// <returns>A task.</returns>
-        Task LinkFacebookAsync(ISession session, string token);
+        Task LinkFacebookAsync(ISession session, string token, bool import = true);
 
         /// <summary>
         /// Link a Game Center profile to a user account.
