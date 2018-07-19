@@ -391,6 +391,27 @@ namespace Nakama
         }
 
         /// <inheritdoc />
+        public async Task SendMatchStateAsync(string matchId, long opCode, string state,
+            IEnumerable<IUserPresence> presences = null) =>
+            await SendMatchStateAsync(matchId, opCode, Encoding.UTF8.GetBytes(state), presences);
+        /// <inheritdoc />
+        public async Task SendMatchStateAsync(string matchId, long opCode, byte[] state,
+            IEnumerable<IUserPresence> presences = null)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                MatchStateSend = new MatchSendMessage
+                {
+                    MatchId = matchId,
+                    OpCode = Convert.ToString(opCode),
+                    Presences = presences as List<UserPresence>,
+                    State = Convert.ToBase64String(state)
+                }
+            };
+            await SendAsync(envelope).ConfigureAwait(false);
+        }
+
+         /// <inheritdoc />
         public void SendMatchState(string matchId, long opCode, string state,
             IEnumerable<IUserPresence> presences = null) =>
             SendMatchState(matchId, opCode, Encoding.UTF8.GetBytes(state), presences);
@@ -409,7 +430,11 @@ namespace Nakama
                     State = Convert.ToBase64String(state)
                 }
             };
-            await SendAsync(envelope).ConfigureAwait(false);
+            try{
+                await SendAsync(envelope).ConfigureAwait(false);
+            } catch (Exception e) {
+                OnError?.Invoke(this, e);
+            }
         }
 
         /// <inheritdoc />
