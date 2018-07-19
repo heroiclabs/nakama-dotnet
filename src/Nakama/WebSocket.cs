@@ -394,6 +394,7 @@ namespace Nakama
         public async Task SendMatchStateAsync(string matchId, long opCode, string state,
             IEnumerable<IUserPresence> presences = null) =>
             await SendMatchStateAsync(matchId, opCode, Encoding.UTF8.GetBytes(state), presences);
+
         /// <inheritdoc />
         public async Task SendMatchStateAsync(string matchId, long opCode, byte[] state,
             IEnumerable<IUserPresence> presences = null)
@@ -411,7 +412,7 @@ namespace Nakama
             await SendAsync(envelope).ConfigureAwait(false);
         }
 
-         /// <inheritdoc />
+        /// <inheritdoc />
         public void SendMatchState(string matchId, long opCode, string state,
             IEnumerable<IUserPresence> presences = null) =>
             SendMatchState(matchId, opCode, Encoding.UTF8.GetBytes(state), presences);
@@ -430,9 +431,12 @@ namespace Nakama
                     State = Convert.ToBase64String(state)
                 }
             };
-            try{
+            try
+            {
                 await SendAsync(envelope).ConfigureAwait(false);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 OnError?.Invoke(this, e);
             }
         }

@@ -253,7 +253,6 @@ namespace Nakama
         /// <param name="presences">The presences in the match to send the state.</param>
         Task SendMatchStateAsync(string matchId, long opCode, string state, IEnumerable<IUserPresence> presences = null);
 
-
         /// <summary>
         /// Send a state change to a match on the server.
         /// </summary>
@@ -265,7 +264,6 @@ namespace Nakama
         /// <param name="state">The new state to send to the match.</param>
         /// <param name="presences">The presences in the match to send the state.</param>
         Task SendMatchStateAsync(string matchId, long opCode, byte[] state, IEnumerable<IUserPresence> presences = null);
-
 
         /// <summary>
         /// Send new state to a match on the server.
