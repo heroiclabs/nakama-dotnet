@@ -19,6 +19,7 @@ namespace Nakama.Tests.Api
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using NUnit.Framework;
@@ -70,9 +71,9 @@ namespace Nakama.Tests.Api
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.WriteLeaderboardRecordAsync(session, "invalid", 0L));
-            Assert.AreEqual("404 (Not Found)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.NotFound, ex.StatusCode);
         }
 
         [Test]
@@ -145,10 +146,7 @@ namespace Nakama.Tests.Api
         public async Task ShouldDeleteLeaderboardRecordNotExists()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
-                _client.DeleteLeaderboardRecordAsync(session, "invalid"));
-            Assert.AreEqual("404 (Not Found)", ex.Message);
+            Assert.DoesNotThrowAsync(() => _client.DeleteLeaderboardRecordAsync(session, "invalid"));
         }
     }
 }

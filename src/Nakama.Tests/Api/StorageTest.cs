@@ -18,6 +18,7 @@ namespace Nakama.Tests.Api
 {
     using System;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using NUnit.Framework;
@@ -111,7 +112,7 @@ namespace Nakama.Tests.Api
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.WriteStorageObjectsAsync(session,
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.WriteStorageObjectsAsync(session,
                 new WriteStorageObject
                 {
                     Collection = "collection",
@@ -119,7 +120,7 @@ namespace Nakama.Tests.Api
                     Value = "invalid"
                 }));
             Assert.NotNull(ex);
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
@@ -136,8 +137,9 @@ namespace Nakama.Tests.Api
             };
             await _client.WriteStorageObjectsAsync(session, aobject);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.WriteStorageObjectsAsync(session, aobject));
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.WriteStorageObjectsAsync(session, aobject));
+            Assert.NotNull(ex);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
@@ -157,8 +159,8 @@ namespace Nakama.Tests.Api
 
             aobject.Version = "*";
             aobject.Value = "{\"some\":\"newvalue\"}";
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.WriteStorageObjectsAsync(session, aobject));
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.WriteStorageObjectsAsync(session, aobject));
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
@@ -325,14 +327,14 @@ namespace Nakama.Tests.Api
             Assert.NotNull(result);
             Assert.IsNotEmpty(result.Acks);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.DeleteStorageObjectsAsync(session,
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.DeleteStorageObjectsAsync(session,
                 new StorageObjectId
                 {
                     Collection = collection,
                     Key = key,
                     Version = "invalid"
                 }));
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]

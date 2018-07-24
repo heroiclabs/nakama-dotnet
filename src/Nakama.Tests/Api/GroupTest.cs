@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-using System.Linq;
-
 namespace Nakama.Tests.Api
 {
     using System;
-    using System.Net.Http;
+    using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
     using NUnit.Framework;
 
@@ -86,8 +85,8 @@ namespace Nakama.Tests.Api
             var name = $"{Guid.NewGuid()}";
             await _client.CreateGroupAsync(session, name);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.CreateGroupAsync(session, name));
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.CreateGroupAsync(session, name));
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
@@ -174,7 +173,10 @@ namespace Nakama.Tests.Api
         public async Task ShouldDeleteGroupInvalid()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            Assert.DoesNotThrowAsync(() => _client.DeleteGroupAsync(session, $"{Guid.NewGuid()}"));
+
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
+                _client.DeleteGroupAsync(session, $"{Guid.NewGuid()}"));
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
@@ -184,10 +186,10 @@ namespace Nakama.Tests.Api
             var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var group = await _client.CreateGroupAsync(session1, $"{Guid.NewGuid()}");
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.DeleteGroupAsync(session2, group.Id));
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.DeleteGroupAsync(session2, group.Id));
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        
+
     }
 }

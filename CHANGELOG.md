@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Update the code generator to handle POST/DELETE query params.
+- Match listings can now pass through `null` to indicate no filters.
+- ApiClient exceptions now contain HTTP status codes.
 
 ### Fixed
 - Reuse the HTTP client across all methods.

@@ -31,12 +31,34 @@ namespace Nakama
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
     using TinyJson;
+
+    /// <summary>
+    /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
+    /// </summary>
+    public sealed class ApiResponseException : Exception
+    {
+        public HttpStatusCode StatusCode { get; }
+
+        public int GrpcStatusCode { get; }
+
+        public ApiResponseException(HttpStatusCode statusCode, string content, int grpcCode) : base(content)
+        {
+            StatusCode = statusCode;
+            GrpcStatusCode = grpcCode;
+        }
+
+        public override string ToString()
+        {
+            return $"ApiResponseException(StatusCode={StatusCode}, Message='{Message}', GrpcStatusCode={GrpcStatusCode})";
+        }
+    }
 
     {{- range $defname, $definition := .Definitions }}
     {{- $classname := $defname | title }}
@@ -208,7 +230,10 @@ namespace Nakama
                 {{- if eq $parameter.Type "integer" }}
             urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
                 {{- else if eq $parameter.Type "string" }}
-            urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }} ?? ""), "&");
+            if ({{ $camelcase }} != null)
+            {
+                urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }}), "&");
+            }
                 {{- else if eq $parameter.Type "boolean" }}
             urlpath = string.Concat(urlpath, "{{- $parameter.Name }}=", {{ $camelcase }}.ToString().ToLower(), "&");
                 {{- else if eq $parameter.Type "array" }}
@@ -261,9 +286,14 @@ namespace Nakama
             {{- end }}
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
         {{- end }}
         {{- end }}

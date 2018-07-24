@@ -4,12 +4,34 @@ namespace Nakama
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
     using TinyJson;
+
+    /// <summary>
+    /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
+    /// </summary>
+    public sealed class ApiResponseException : Exception
+    {
+        public HttpStatusCode StatusCode { get; }
+
+        public int GrpcStatusCode { get; }
+
+        public ApiResponseException(HttpStatusCode statusCode, string content, int grpcCode) : base(content)
+        {
+            StatusCode = statusCode;
+            GrpcStatusCode = grpcCode;
+        }
+
+        public override string ToString()
+        {
+            return $"ApiResponseException(StatusCode={StatusCode}, Message='{Message}', GrpcStatusCode={GrpcStatusCode})";
+        }
+    }
 
     /// <summary>
     /// A single user-role pair.
@@ -2440,9 +2462,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2467,9 +2494,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiAccount>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiAccount>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2500,9 +2532,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2522,7 +2559,10 @@ namespace Nakama
 
             var urlpath = "/v2/account/authenticate/custom?";
             urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
+            if (username != null)
+            {
+                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -2539,9 +2579,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiSession>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiSession>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2561,7 +2606,10 @@ namespace Nakama
 
             var urlpath = "/v2/account/authenticate/device?";
             urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
+            if (username != null)
+            {
+                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -2578,9 +2626,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiSession>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiSession>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2600,7 +2653,10 @@ namespace Nakama
 
             var urlpath = "/v2/account/authenticate/email?";
             urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
+            if (username != null)
+            {
+                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -2617,9 +2673,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiSession>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiSession>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2640,7 +2701,10 @@ namespace Nakama
 
             var urlpath = "/v2/account/authenticate/facebook?";
             urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
+            if (username != null)
+            {
+                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+            }
             urlpath = string.Concat(urlpath, "import=", import.ToString().ToLower(), "&");
 
             var request = new HttpRequestMessage
@@ -2658,9 +2722,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiSession>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiSession>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2680,7 +2749,10 @@ namespace Nakama
 
             var urlpath = "/v2/account/authenticate/gamecenter?";
             urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
+            if (username != null)
+            {
+                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -2697,9 +2769,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiSession>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiSession>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2719,7 +2796,10 @@ namespace Nakama
 
             var urlpath = "/v2/account/authenticate/google?";
             urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
+            if (username != null)
+            {
+                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -2736,9 +2816,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiSession>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiSession>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2758,7 +2843,10 @@ namespace Nakama
 
             var urlpath = "/v2/account/authenticate/steam?";
             urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username ?? ""), "&");
+            if (username != null)
+            {
+                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -2775,9 +2863,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiSession>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiSession>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2808,9 +2901,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2841,9 +2939,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2874,9 +2977,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2909,9 +3017,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2942,9 +3055,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -2975,9 +3093,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3008,9 +3131,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3041,9 +3169,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3074,9 +3207,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3107,9 +3245,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3140,9 +3283,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3173,9 +3321,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3206,9 +3359,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3239,9 +3397,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3263,7 +3426,10 @@ namespace Nakama
             urlpath = urlpath.Replace("{channel_id}", Uri.EscapeDataString(channelId));
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
             urlpath = string.Concat(urlpath, "forward=", forward.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
+            if (cursor != null)
+            {
+                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -3278,9 +3444,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiChannelMessageList>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiChannelMessageList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3315,9 +3486,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3342,9 +3518,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiFriends>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiFriends>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3379,9 +3560,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3416,9 +3602,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3451,9 +3642,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3467,8 +3663,14 @@ namespace Nakama
         {
 
             var urlpath = "/v2/group?";
-            urlpath = string.Concat(urlpath, "name=", Uri.EscapeDataString(name ?? ""), "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
+            if (name != null)
+            {
+                urlpath = string.Concat(urlpath, "name=", Uri.EscapeDataString(name), "&");
+            }
+            if (cursor != null)
+            {
+                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
 
             var request = new HttpRequestMessage
@@ -3484,9 +3686,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiGroupList>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiGroupList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3517,9 +3724,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiGroup>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiGroup>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3550,9 +3762,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3589,9 +3806,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3627,9 +3849,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3660,9 +3887,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3698,9 +3930,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3731,9 +3968,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3769,9 +4011,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3802,9 +4049,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiGroupUserList>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiGroupUserList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3835,9 +4087,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3862,7 +4119,10 @@ namespace Nakama
                 urlpath = string.Concat(urlpath, "owner_ids=", elem, "&");
             }
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
+            if (cursor != null)
+            {
+                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -3877,9 +4137,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiLeaderboardRecordList>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiLeaderboardRecordList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3916,9 +4181,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiLeaderboardRecord>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiLeaderboardRecord>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3936,7 +4206,10 @@ namespace Nakama
             var urlpath = "/v2/match?";
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
             urlpath = string.Concat(urlpath, "authoritative=", authoritative.ToString().ToLower(), "&");
-            urlpath = string.Concat(urlpath, "label=", Uri.EscapeDataString(label ?? ""), "&");
+            if (label != null)
+            {
+                urlpath = string.Concat(urlpath, "label=", Uri.EscapeDataString(label), "&");
+            }
             urlpath = string.Concat(urlpath, "min_size=", minSize, "&");
             urlpath = string.Concat(urlpath, "max_size=", maxSize, "&");
 
@@ -3953,9 +4226,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiMatchList>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiMatchList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -3985,9 +4263,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4001,7 +4284,10 @@ namespace Nakama
 
             var urlpath = "/v2/notification?";
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor ?? ""), "&");
+            if (cacheableCursor != null)
+            {
+                urlpath = string.Concat(urlpath, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -4016,9 +4302,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiNotificationList>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiNotificationList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4037,8 +4328,14 @@ namespace Nakama
 
             var urlpath = "/v2/rpc/{id}?";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
-            urlpath = string.Concat(urlpath, "payload=", Uri.EscapeDataString(payload ?? ""), "&");
-            urlpath = string.Concat(urlpath, "http_key=", Uri.EscapeDataString(httpKey ?? ""), "&");
+            if (payload != null)
+            {
+                urlpath = string.Concat(urlpath, "payload=", Uri.EscapeDataString(payload), "&");
+            }
+            if (httpKey != null)
+            {
+                urlpath = string.Concat(urlpath, "http_key=", Uri.EscapeDataString(httpKey), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -4056,9 +4353,14 @@ namespace Nakama
             }
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiRpc>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiRpc>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4098,9 +4400,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiRpc>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiRpc>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4131,9 +4438,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiStorageObjects>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiStorageObjects>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4164,9 +4476,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiStorageObjectAcks>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiStorageObjectAcks>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4197,9 +4514,14 @@ namespace Nakama
             request.Content = new StringContent(body.ToJson());
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ProtobufEmpty>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4219,9 +4541,15 @@ namespace Nakama
 
             var urlpath = "/v2/storage/{collection}?";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
-            urlpath = string.Concat(urlpath, "user_id=", Uri.EscapeDataString(userId ?? ""), "&");
+            if (userId != null)
+            {
+                urlpath = string.Concat(urlpath, "user_id=", Uri.EscapeDataString(userId), "&");
+            }
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
+            if (cursor != null)
+            {
+                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -4236,9 +4564,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiStorageObjectList>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiStorageObjectList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4264,7 +4597,10 @@ namespace Nakama
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
             urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
             urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor ?? ""), "&");
+            if (cursor != null)
+            {
+                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -4279,9 +4615,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiStorageObjectList>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiStorageObjectList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4321,9 +4662,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiUsers>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiUsers>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
 
         /// <summary>
@@ -4354,9 +4700,14 @@ namespace Nakama
             request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
 
             var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
             var contents = await response.Content.ReadAsStringAsync();
-            return contents.FromJson<ApiUserGroupList>();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiUserGroupList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
         }
     }
 }

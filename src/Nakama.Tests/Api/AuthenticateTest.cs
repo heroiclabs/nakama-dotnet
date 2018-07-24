@@ -18,6 +18,7 @@ namespace Nakama.Tests.Api
 {
     using System;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using NUnit.Framework;
@@ -77,9 +78,8 @@ namespace Nakama.Tests.Api
         [Test]
         public void ShouldNotAuthenticateFacebook()
         {
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.AuthenticateFacebookAsync("invalid"));
-
-            Assert.AreEqual("401 (Unauthorized)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateFacebookAsync("invalid"));
+            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
         [Test]
@@ -92,27 +92,24 @@ namespace Nakama.Tests.Api
             var signature = string.Empty;
             var timestamp = string.Empty;
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.AuthenticateGameCenterAsync(bundleId, playerId, publicKeyUrl, salt, signature, timestamp));
-
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
         public void ShouldNotAuthenticateGoogle()
         {
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.AuthenticateGoogleAsync("invalid"));
-
-            Assert.AreEqual("401 (Unauthorized)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateGoogleAsync("invalid"));
+            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
         [Test]
         public void ShouldNotAuthenticateSteam()
         {
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.AuthenticateSteamAsync("invalid"));
-
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateSteamAsync("invalid"));
             // Precondition failed because Steam requires special configuration with the server.
-            Assert.AreEqual("412 (Precondition Failed)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.PreconditionFailed, ex.StatusCode);
         }
     }
 }

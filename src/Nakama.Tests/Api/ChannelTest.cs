@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-using System.Net.Http;
-
 namespace Nakama.Tests.Api
 {
     using System;
+    using System.Net;
     using System.Threading.Tasks;
     using NUnit.Framework;
 
@@ -39,9 +38,9 @@ namespace Nakama.Tests.Api
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.ListChannelMessagesAsync(session, "roomname", 100, true));
-            Assert.NotNull("400 (Bad Request)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
     }
 }

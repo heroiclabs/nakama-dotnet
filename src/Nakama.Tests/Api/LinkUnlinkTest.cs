@@ -18,6 +18,7 @@ namespace Nakama.Tests.Api
 {
     using System;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using NUnit.Framework;
@@ -99,8 +100,8 @@ namespace Nakama.Tests.Api
             var deviceid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateDeviceAsync(deviceid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.LinkCustomAsync(session, customid));
-            Assert.AreEqual("409 (Conflict)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkCustomAsync(session, customid));
+            Assert.AreEqual(HttpStatusCode.Conflict, ex.StatusCode);
         }
 
         [Test]
@@ -109,8 +110,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.UnlinkCustomAsync(session, customid));
-            Assert.AreEqual("403 (Forbidden)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkCustomAsync(session, customid));
+            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
         [Test]
@@ -121,8 +122,8 @@ namespace Nakama.Tests.Api
             var deviceid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateDeviceAsync(deviceid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.UnlinkCustomAsync(session, customid));
-            Assert.AreEqual("403 (Forbidden)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkCustomAsync(session, customid));
+            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
         [Test]
@@ -161,8 +162,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.LinkDeviceAsync(session, deviceid));
-            Assert.AreEqual("409 (Conflict)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkDeviceAsync(session, deviceid));
+            Assert.AreEqual(HttpStatusCode.Conflict, ex.StatusCode);
         }
 
         [Test]
@@ -184,8 +185,8 @@ namespace Nakama.Tests.Api
             var deviceid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateDeviceAsync(deviceid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.UnlinkDeviceAsync(session, deviceid));
-            Assert.AreEqual("403 (Forbidden)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkDeviceAsync(session, deviceid));
+            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
         [Test]
@@ -196,8 +197,8 @@ namespace Nakama.Tests.Api
             var deviceid2 = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateDeviceAsync(deviceid2);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.UnlinkDeviceAsync(session, deviceid1));
-            Assert.AreEqual("403 (Forbidden)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkDeviceAsync(session, deviceid1));
+            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
         [Test]
@@ -239,8 +240,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.LinkEmailAsync(session, email, password));
-            Assert.AreEqual("409 (Conflict)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkEmailAsync(session, email, password));
+            Assert.AreEqual(HttpStatusCode.Conflict, ex.StatusCode);
         }
 
         [Test]
@@ -265,8 +266,8 @@ namespace Nakama.Tests.Api
             const string password = "newpassword";
             var session = await _client.AuthenticateEmailAsync(email, password);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.UnlinkEmailAsync(session, email, password));
-            Assert.AreEqual("403 (Forbidden)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkEmailAsync(session, email, password));
+            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
         [Test]
@@ -278,8 +279,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.UnlinkEmailAsync(session, email, password));
-            Assert.AreEqual("403 (Forbidden)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkEmailAsync(session, email, password));
+            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
         [Test]
@@ -288,8 +289,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.LinkFacebookAsync(session, "invalid"));
-            Assert.AreEqual("401 (Unauthorized)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkFacebookAsync(session, "invalid"));
+            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
         [Test]
@@ -298,8 +299,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.UnlinkFacebookAsync(session, "invalid"));
-            Assert.AreEqual("401 (Unauthorized)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkFacebookAsync(session, "invalid"));
+            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
         [Test]
@@ -315,9 +316,9 @@ namespace Nakama.Tests.Api
             const string signature = "e";
             const string timestamp = "f";
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.LinkGameCenterAsync(session, bundleId, playerId, publicKeyUrl, salt, signature, timestamp));
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
@@ -333,9 +334,9 @@ namespace Nakama.Tests.Api
             var signature = string.Empty;
             var timestamp = string.Empty;
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.LinkGameCenterAsync(session, bundleId, playerId, publicKeyUrl, salt, signature, timestamp));
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
@@ -351,9 +352,9 @@ namespace Nakama.Tests.Api
             var signature = string.Empty;
             var timestamp = string.Empty;
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.UnlinkGameCenterAsync(session, bundleId, playerId, publicKeyUrl, salt, signature, timestamp));
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
@@ -362,8 +363,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.LinkGoogleAsync(session, "invalid"));
-            Assert.AreEqual("401 (Unauthorized)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkGoogleAsync(session, "invalid"));
+            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
         [Test]
@@ -372,8 +373,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.UnlinkGoogleAsync(session, "invalid"));
-            Assert.AreEqual("401 (Unauthorized)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkGoogleAsync(session, "invalid"));
+            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
         [Test]
@@ -382,8 +383,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.LinkSteamAsync(session, "invalid"));
-            Assert.AreEqual("412 (Precondition Failed)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkSteamAsync(session, "invalid"));
+            Assert.AreEqual(HttpStatusCode.PreconditionFailed, ex.StatusCode);
         }
 
         [Test]
@@ -392,8 +393,8 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() => _client.UnlinkSteamAsync(session, "invalid"));
-            Assert.AreEqual("412 (Precondition Failed)", ex.Message);
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkSteamAsync(session, "invalid"));
+            Assert.AreEqual(HttpStatusCode.PreconditionFailed, ex.StatusCode);
         }
     }
 }

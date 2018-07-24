@@ -18,7 +18,7 @@ namespace Nakama.Tests.Api
 {
     using System;
     using System.Linq;
-    using System.Net.Http;
+    using System.Net;
     using System.Threading.Tasks;
     using NUnit.Framework;
 
@@ -39,9 +39,9 @@ namespace Nakama.Tests.Api
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.ImportFacebookFriendsAsync(session, "invalid"));
-            Assert.AreEqual("401 (Unauthorized)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
         [Test]
@@ -125,9 +125,9 @@ namespace Nakama.Tests.Api
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var ex = Assert.ThrowsAsync<HttpRequestException>(() =>
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.AddFriendsAsync(session, new[] {session.UserId}));
-            Assert.AreEqual("400 (Bad Request)", ex.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
@@ -155,7 +155,11 @@ namespace Nakama.Tests.Api
         public async Task ShouldDeleteFriendsInvalid()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            Assert.DoesNotThrowAsync(() => _client.DeleteFriendsAsync(session, new []{"invalid"}));
+
+            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
+                _client.DeleteFriendsAsync(session, new[] {"invalid"}));
+            Assert.NotNull(ex);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
