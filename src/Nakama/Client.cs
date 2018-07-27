@@ -18,44 +18,30 @@ namespace Nakama
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
 
     /// <inheritdoc />
     public class Client : IClient
     {
-        /// <summary>
-        /// The default host address used by the client.
-        /// </summary>
-        private const string DefaultHost = "127.0.0.1";
-
-        /// <summary>
-        /// The default port used by the client.
-        /// </summary>
-        private const int DefaultPort = 7350;
-
-        /// <summary>
-        /// The default server key used to authenticate with the server.
-        /// </summary>
-        private const string DefaultServerKey = "defaultkey";
-
         /// <inheritdoc />
-        public string Host { get; }
+        public string Host => _options.Host;
 
         /// <inheritdoc />
         public ILogger Logger { get; set; }
 
         /// <inheritdoc />
-        public int Port { get; }
+        public int Port => _options.Port;
 
         /// <inheritdoc />
         public int Retries { get; set; }
 
         /// <inheritdoc />
-        public string ServerKey { get; }
+        public string ServerKey => _options.ServerKey;
 
         /// <inheritdoc />
-        public bool Secure { get; }
+        public bool Secure => _options.EnableSsl;
 
         /// <inheritdoc />
         public bool Trace { get; set; }
@@ -63,22 +49,50 @@ namespace Nakama
         /// <inheritdoc />
         public int Timeout { get; set; }
 
+        private readonly ClientOptions _options;
+
         private readonly ApiClient _apiClient;
 
-        public Client(string serverKey = DefaultServerKey, string host = DefaultHost, int port = DefaultPort,
-            bool secure = false)
+        public Client(string serverKey = ClientOptions.DefaultServerKey, string host = ClientOptions.DefaultHost,
+            int port = ClientOptions.DefaultPort,
+            bool secure = false) : this(new ClientOptions
         {
-            ServerKey = serverKey;
-            Host = host;
+            EnableSsl = secure,
+            Host = host,
+            Port = port,
+            ServerKey = serverKey
+        })
+        {
+        }
+
+        public Client(ClientOptions options)
+        {
+            // FIXME move into ClientOptions object.
             Logger = NullLogger.Instance; // dont log by default.
-            Port = port;
             Retries = 3;
-            Secure = secure;
             Trace = false;
             Timeout = 5000;
 
-            var scheme = Secure ? "https" : "http";
-            _apiClient = new ApiClient(new UriBuilder(scheme, Host, Port).Uri, new HttpClient());
+            options.ValidateOptions();
+            _options = options.Clone();
+
+            ServicePointManager.ServerCertificateValidationCallback = _options.ServerCertificateValidationCallback;
+
+            // Use GZip compression with request/responses.
+            var handler = new HttpClientHandler();
+            if (handler.SupportsAutomaticDecompression && _options.AutomaticDecompression)
+            {
+                handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            }
+
+            var httpClient = new HttpClient(handler);
+            if (_options.AutomaticCompression)
+            {
+                httpClient = new HttpClient(new GZipHttpClientHandler(handler));
+            }
+
+            var scheme = _options.EnableSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
+            _apiClient = new ApiClient(new UriBuilder(scheme, _options.Host, _options.Port).Uri, httpClient);
         }
 
         /// <inheritdoc />

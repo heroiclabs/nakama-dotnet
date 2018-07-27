@@ -139,7 +139,7 @@ namespace Nakama
         /// <param name="timestampSeconds">The date and time that the signature was created.</param>
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
         /// <param name="create">True if the user should be created when authenticated.</param>
-        /// <returns></returns>
+        /// <returns>A task to resolve a session object.</returns>
         Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
             string signature, string timestampSeconds, string username = null, bool create = true);
 
