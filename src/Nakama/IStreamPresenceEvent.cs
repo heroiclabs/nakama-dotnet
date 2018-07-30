@@ -105,6 +105,13 @@ namespace Nakama
         public IStream Stream => _stream;
         [DataMember(Name="stream")]
         public Stream _stream { get; set; }
+
+        public override string ToString()
+        {
+            var leaves = string.Join(", ", Leaves);
+            var joins = string.Join(", ", Joins);
+            return $"StreamPresenceEvent(Leaves={leaves}, Joins={joins}, Stream={Stream})";
+        }
     }
 
     /// <inheritdoc />
@@ -120,6 +127,12 @@ namespace Nakama
         public IStream Stream => _stream;
         [DataMember(Name="stream")]
         public Stream _stream { get; set; }
+
+        public override string ToString()
+        {
+            var state = System.Text.Encoding.UTF8.GetString(State);
+            return $"StreamState(Sender={Sender}, State={state}, Stream={Stream})";
+        }
     }
 
     /// <inheritdoc />
@@ -136,5 +149,10 @@ namespace Nakama
 
         [DataMember(Name="subject")]
         public string Subject { get; set; }
+
+        public override string ToString()
+        {
+            return $"Stream(Descriptor={Descriptor}, Label={Label}, Mode={Mode}, Subject={Subject})";
+        }
     }
 }
