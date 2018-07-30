@@ -41,8 +41,6 @@ namespace Nakama.Tests.Socket
             var socket = client.CreateWebSocket(5);
 
             Assert.NotNull(socket);
-            Assert.AreSame(client.Logger, socket.Logger);
-            Assert.AreEqual(5, socket.Reconnect);
         }
 
         [Test]

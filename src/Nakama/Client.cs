@@ -582,9 +582,10 @@ namespace Nakama
         /// <inheritdoc />
         public ISocket CreateWebSocket(int reconnect = 3)
         {
-            var scheme = Secure ? "wss" : "ws";
+            var scheme = _options.EnableSsl ? "wss" : "ws";
             var baseUri = new UriBuilder(scheme, Host, Port);
-            return new WebSocket(baseUri.Uri, Timeout, reconnect, Logger, Trace);
+            // FIXME implement reconnect events?
+            return new WebSocketWrapper(baseUri.Uri, Logger);
         }
     }
 }

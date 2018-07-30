@@ -27,31 +27,6 @@ namespace Nakama
     public interface ISocket : IDisposable
     {
         /// <summary>
-        /// A logger which can write log messages. Defaults to <c>NullLogger</c>.
-        /// </summary>
-        ILogger Logger { get; set; }
-
-        /// <summary>
-        /// The protocol in use with this socket.
-        /// </summary>
-        SocketProtocol Protocol { get; }
-
-        /// <summary>
-        /// The number of reconnects to attempt when the socket is closed with the server.
-        /// </summary>
-        int Reconnect { get; set; }
-
-        /// <summary>
-        /// The time in seconds before the send message attempt is considered failed.
-        /// </summary>
-        int TimeoutMs { get; set; }
-
-        /// <summary>
-        /// Trace all actions performed by the socket. Defaults to false.
-        /// </summary>
-        bool Trace { get; set; }
-
-        /// <summary>
         /// Receive chat channel messages.
         /// </summary>
         event EventHandler<IApiChannelMessage> OnChannelMessage;
@@ -333,16 +308,5 @@ namespace Nakama
         /// <param name="content">The content of the chat message.</param>
         /// <returns>A task which resolves to a Channel Ack response.</returns>
         Task<IChannelMessageAck> WriteChatMessageAsync(string channelId, string content);
-    }
-
-    /// <summary>
-    /// Enumerates the socket protocols which can be used with Nakama server.
-    /// </summary>
-    public enum SocketProtocol
-    {
-        /// <summary>
-        /// Use the WebSocket protocol with the <c>ISocket</c>.
-        /// </summary>
-        WebSocket = 0
     }
 }

@@ -36,7 +36,7 @@ namespace Nakama
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"WebSocketErrorMessage[Code={Code}, Message={Message}, Context={Context}]";
+            return $"WebSocketErrorMessage(Code={Code}, Message='{Message}', Context={Context})";
         }
     }
 }

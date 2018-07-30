@@ -29,10 +29,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="deniszykov.WebSocketListener, Version=4.2.4.0, Culture=neutral, PublicKeyToken=7f78616efb4a208d">
-      <HintPath>..\packages\deniszykov.WebSocketListener.4.2.4\lib\net45\deniszykov.WebSocketListener.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="DotNetProjects.websocket-sharp, Version=2.0.10.0, Culture=neutral, PublicKeyToken=5660b08a1845a91e">
       <HintPath>..\packages\DotNetProjects.websocket-sharp.2.0.10\lib\net45\DotNetProjects.websocket-sharp.dll</HintPath>
       <Private>True</Private>
@@ -45,7 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiClient.gen.cs" />
-    <Compile Include="AsyncQueue.cs" />
     <Compile Include="ChannelJoinMessage.cs" />
     <Compile Include="ChannelLeaveMessage.cs" />
     <Compile Include="ChannelRemoveMessage.cs" />
@@ -86,10 +81,10 @@
     <Compile Include="StorageObjectId.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="WriteStorageObject.cs" />
+    <Compile Include="WebSocketOptions.cs" />
     <Compile Include="TinyJson\JsonParser.cs" />
     <Compile Include="TinyJson\JsonWriter.cs" />
-    <Compile Include="WebSocket.cs" />
-    <Compile Include="WebSocketLogger.cs" />
+    <Compile Include="WebSocketWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TinyJson\LICENSE" />
