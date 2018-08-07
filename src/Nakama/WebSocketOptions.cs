@@ -17,16 +17,27 @@
 namespace Nakama
 {
     using System;
+    using System.Net.Security;
 
     /// <summary>
-    /// A group of options used to configure the <c>ClientWebSocketListener</c>.
+    /// A group of options used to configure the <c>WebSocketWrapper</c>.
     /// </summary>
     public sealed class WebSocketOptions
     {
         /// <summary>
+        /// The validation handler to use with SSL certificates.
+        /// </summary>
+        public RemoteCertificateValidationCallback CertificateValidationHandler { get; set; }
+
+        /// <summary>
         /// The time to wait for the WebSocket close event. Defaults to 5 seconds.
         /// </summary>
-        public TimeSpan CloseTimeout { get; set; }
+        public TimeSpan ConnectTimeout { get; set; }
+
+        /// <summary>
+        /// Support both IPv4 and IPv6 addresses over the socket. Does not work with some versions of Mono.
+        /// </summary>
+        public bool DualMode { get; set; }
 
         /// <summary>
         /// A logger which can output log messages. Defaults to <c>NullLogger</c>.
@@ -35,15 +46,17 @@ namespace Nakama
 
         public WebSocketOptions()
         {
-            CloseTimeout = TimeSpan.FromSeconds(5);
+            CertificateValidationHandler = delegate { return true; };
+            ConnectTimeout = TimeSpan.FromSeconds(5);
+            DualMode = false;
             Logger = NullLogger.Instance; // dont log by default.
         }
 
         internal void ValidateOptions()
         {
-            if (CloseTimeout <= TimeSpan.Zero)
+            if (ConnectTimeout <= TimeSpan.Zero)
             {
-                throw new ArgumentException("CloseTimeout must be greater than 0.");
+                throw new ArgumentException("ConnectTimeout must be greater than 0.");
             }
         }
 
@@ -51,7 +64,9 @@ namespace Nakama
         {
             return new WebSocketOptions
             {
-                CloseTimeout = CloseTimeout,
+                CertificateValidationHandler = CertificateValidationHandler,
+                ConnectTimeout = ConnectTimeout,
+                DualMode = DualMode,
                 Logger = Logger
             };
         }

@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-using WebSocketSharp.Net;
-
 namespace Nakama
 {
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Net.WebSockets;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using TinyJson;
-    using WebSocketSharp;
 
     /// <summary>
     /// A socket which uses the WebSocket protocol to interact with Nakama server.
     /// </summary>
-    internal class WebSocketWrapper : ISocket
+    internal class WebSocketWrapper : WebSocketEventListener, ISocket
     {
         /// <inheritdoc />
-        public event EventHandler<IApiChannelMessage> OnChannelMessage;
+        public event EventHandler<IApiChannelMessage> OnChannelMessage = (sender, message) => { };
 
         /// <inheritdoc />
-        public event EventHandler<IChannelPresenceEvent> OnChannelPresence;
+        public event EventHandler<IChannelPresenceEvent> OnChannelPresence = (sender, _event) => { };
 
         /// <inheritdoc />
         public event EventHandler OnConnect = (sender, args) => { };
@@ -60,7 +58,7 @@ namespace Nakama
         public event EventHandler<IApiNotification> OnNotification = (sender, notification) => { };
 
         /// <inheritdoc />
-        public event EventHandler<IStatusPresenceEvent> OnStatusPresence;
+        public event EventHandler<IStatusPresenceEvent> OnStatusPresence = (sender, _event) => { };
 
         /// <inheritdoc />
         public event EventHandler<IStreamPresenceEvent> OnStreamPresence;
@@ -70,7 +68,6 @@ namespace Nakama
 
         private readonly Uri _baseUri;
         private readonly WebSocketOptions _options;
-        private WebSocket _webSocket;
         private readonly ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _messageReplies;
 
         private bool IsTrace => _options.Logger != null && _options.Logger == NullLogger.Instance;
@@ -82,7 +79,7 @@ namespace Nakama
         {
         }
 
-        internal WebSocketWrapper(Uri baseUri, WebSocketOptions options)
+        internal WebSocketWrapper(Uri baseUri, WebSocketOptions options) : base(options)
         {
             _baseUri = baseUri;
             _messageReplies = new ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
@@ -134,36 +131,25 @@ namespace Nakama
         }
 
         /// <inheritdoc />
-        public Task ConnectAsync(ISession session, CancellationToken ct = default(CancellationToken),
+        public async Task ConnectAsync(ISession session, CancellationToken ct = default(CancellationToken),
             bool appearOnline = false, int connectTimeout = 5000)
         {
-            if (_webSocket != null)
-            {
-                _webSocket.Close(CloseStatusCode.Normal);
-                _webSocket = null;
-            }
-
             var addr = new UriBuilder(_baseUri)
             {
                 Path = "/ws",
                 Query = string.Concat("lang=en&status=", appearOnline, "&token=", session.AuthToken)
             };
 
-            _webSocket = new WebSocket(addr.Uri.ToString())
+            Connected += (sender, args) => OnConnect.Invoke(this, EventArgs.Empty);
+            Disconnected += (sender, args) => OnDisconnect.Invoke(this, EventArgs.Empty);
+            ErrorReceived += (sender, exception) => OnError?.Invoke(this, exception);
+            MessageReceived += (sender, message) =>
             {
-                EmitOnPing = false,
-                WaitTime = TimeSpan.FromSeconds(connectTimeout)
-            };
-
-            _webSocket.OnOpen += (sender, args) => OnConnect.Invoke(this, EventArgs.Empty);
-            _webSocket.OnClose += (sender, args) => OnDisconnect.Invoke(this, EventArgs.Empty);
-            _webSocket.OnMessage += (sender, args) =>
-            {
-                var message = args.Data;
                 if (IsTrace)
                 {
                     _options.Logger.DebugFormat("Socket read message: '{0}'", message);
                 }
+
                 var envelope = message.FromJson<WebSocketMessageEnvelope>();
                 if (!string.IsNullOrEmpty(envelope.Cid))
                 {
@@ -180,7 +166,7 @@ namespace Nakama
                     if (envelope.Error != null)
                     {
                         // FIXME use a dedicated exception type.
-                        completer.SetException(new System.Net.WebSockets.WebSocketException(envelope.Error.Message));
+                        completer.SetException(new WebSocketException(envelope.Error.Message));
                     }
                     else
                     {
@@ -189,7 +175,7 @@ namespace Nakama
                 }
                 else if (envelope.Error != null)
                 {
-                    OnError?.Invoke(this, new System.Net.WebSockets.WebSocketException(envelope.Error.Message));
+                    OnError?.Invoke(this, new WebSocketException(envelope.Error.Message));
                 }
                 else if (envelope.ChannelMessage != null)
                 {
@@ -239,27 +225,24 @@ namespace Nakama
                 }
             };
 
-            _webSocket.Connect();
-            _webSocket.TcpClient.NoDelay = true;
-            return Task.CompletedTask;
+            await base.ConnectAsync(addr.Uri, ct);
         }
 
         /// <inheritdoc />
-        public Task DisconnectAsync(bool dispatch = true)
+        public async Task DisconnectAsync(bool dispatch = true)
         {
-            _webSocket?.Close(CloseStatusCode.Normal);
+            await CloseAsync();
 
             if (dispatch)
             {
                 OnDisconnect?.Invoke(this, EventArgs.Empty);
             }
-
             _messageReplies.Clear();
-            return Task.CompletedTask;
         }
 
-        public void Dispose()
+        public new void Dispose()
         {
+            base.Dispose();
             _messageReplies.Clear();
             OnDisconnect?.Invoke(this, EventArgs.Empty);
         }
@@ -557,12 +540,12 @@ namespace Nakama
 
         private async Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope message)
         {
-            if (!_webSocket.IsAlive)
+            if (!IsConnected)
             {
                 throw new InvalidOperationException("Socket is not connected.");
             }
 
-            _webSocket.Send(message.ToJson());
+            await base.SendAsync(message.ToJson());
             if (string.IsNullOrEmpty(message.Cid))
             {
                 // No response required.

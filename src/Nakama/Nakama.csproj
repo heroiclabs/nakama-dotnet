@@ -29,8 +29,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetProjects.websocket-sharp, Version=2.0.10.0, Culture=neutral, PublicKeyToken=5660b08a1845a91e">
-      <HintPath>..\packages\DotNetProjects.websocket-sharp.2.0.10\lib\net45\DotNetProjects.websocket-sharp.dll</HintPath>
+    <Reference Include="deniszykov.WebSocketListener, Version=4.2.4.0, Culture=neutral, PublicKeyToken=7f78616efb4a208d">
+      <HintPath>..\packages\deniszykov.WebSocketListener.4.2.4\lib\net45\deniszykov.WebSocketListener.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
@@ -76,6 +76,7 @@
     <Compile Include="StatusUnfollowMessage.cs" />
     <Compile Include="StatusUpdateMessage.cs" />
     <Compile Include="WebSocketErrorMessage.cs" />
+    <Compile Include="WebSocketEventListener.cs" />
     <Compile Include="WebSocketMessageEnvelope.cs" />
     <Compile Include="NullLogger.cs" />
     <Compile Include="StorageObjectId.cs" />
