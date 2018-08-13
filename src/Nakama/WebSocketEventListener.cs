@@ -109,7 +109,7 @@ namespace Nakama
         {
             if (_socket != null && _socket.IsConnected)
             {
-                await _client.CloseAsync().ConfigureAwait(false);
+                await _socket.CloseAsync().ConfigureAwait(false);
             }
         }
 
