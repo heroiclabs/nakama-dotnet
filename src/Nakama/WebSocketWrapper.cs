@@ -108,37 +108,6 @@ namespace Nakama
             OnStreamPresence = (sender, _event) =>
                 _options.Logger.DebugFormat("Received stream presence '{0}'", _event);
             OnStreamState = (sender, state) => _options.Logger.DebugFormat("Received stream state '{0}'", state);
-        }
-
-        /// <inheritdoc />
-        public async Task<IMatchmakerTicket> AddMatchmakerAsync(string query = "*", int minCount = 2, int maxCount = 8,
-            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null)
-        {
-            var envelope = new WebSocketMessageEnvelope
-            {
-                Cid = Guid.NewGuid().ToString(),
-                MatchmakerAdd = new MatchmakerAddMessage
-                {
-                    MaxCount = maxCount,
-                    MinCount = minCount,
-                    NumericProperties = numericProperties ?? new Dictionary<string, double>(),
-                    StringProperties = stringProperties ?? new Dictionary<string, string>(),
-                    Query = query
-                }
-            };
-            var response = await SendAsync(envelope).ConfigureAwait(false);
-            return response.MatchmakerTicket;
-        }
-
-        /// <inheritdoc />
-        public async Task ConnectAsync(ISession session, CancellationToken ct = default(CancellationToken),
-            bool appearOnline = false, int connectTimeout = 5000)
-        {
-            var addr = new UriBuilder(_baseUri)
-            {
-                Path = "/ws",
-                Query = string.Concat("lang=en&status=", appearOnline, "&token=", session.AuthToken)
-            };
 
             Connected += (sender, args) => OnConnect.Invoke(this, EventArgs.Empty);
             Disconnected += (sender, args) => OnDisconnect.Invoke(this, EventArgs.Empty);
@@ -224,7 +193,37 @@ namespace Nakama
                     }
                 }
             };
+        }
 
+        /// <inheritdoc />
+        public async Task<IMatchmakerTicket> AddMatchmakerAsync(string query = "*", int minCount = 2, int maxCount = 8,
+            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = Guid.NewGuid().ToString(),
+                MatchmakerAdd = new MatchmakerAddMessage
+                {
+                    MaxCount = maxCount,
+                    MinCount = minCount,
+                    NumericProperties = numericProperties ?? new Dictionary<string, double>(),
+                    StringProperties = stringProperties ?? new Dictionary<string, string>(),
+                    Query = query
+                }
+            };
+            var response = await SendAsync(envelope).ConfigureAwait(false);
+            return response.MatchmakerTicket;
+        }
+
+        /// <inheritdoc />
+        public async Task ConnectAsync(ISession session, CancellationToken ct = default(CancellationToken),
+            bool appearOnline = false, int connectTimeout = 5000)
+        {
+            var addr = new UriBuilder(_baseUri)
+            {
+                Path = "/ws",
+                Query = string.Concat("lang=en&status=", appearOnline, "&token=", session.AuthToken)
+            };            
             await base.ConnectAsync(addr.Uri, ct);
         }
 
