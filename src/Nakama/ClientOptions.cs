@@ -39,34 +39,61 @@ namespace Nakama
         /// </summary>
         public const string DefaultServerKey = "defaultkey";
 
+        /// <summary>
+        /// Enable automatic compression with requests in the client.
+        /// </summary>
         public bool AutomaticCompression { get; set; }
 
+        /// <summary>
+        /// Enable automatic decompression with responses in the client.
+        /// </summary>
         public bool AutomaticDecompression { get; set; }
 
+        /// <summary>
+        /// Enable SSL scheme with the client.
+        /// </summary>
         public bool EnableSsl { get; set; }
 
+        /// <summary>
+        /// The host address of the server the client will connect.
+        /// </summary>
         public string Host { get; set; }
 
+        /// <summary>
+        /// The port number of the server the client will connect.
+        /// </summary>
         public int Port { get; set; }
 
+        /// <summary>
+        /// Verifies the remote Secure Sockets Layer (SSL) certificate used for authentication.
+        /// </summary>
         public RemoteCertificateValidationCallback ServerCertificateValidationCallback { get; set; }
 
+        /// <summary>
+        /// The number of retries the client will use with each request.
+        /// </summary>
         public int Retries { get; set; }
 
+        /// <summary>
+        /// The default timeout for each request attempt to the server.
+        /// </summary>
         public TimeSpan Timeout { get; set; }
 
+        /// <summary>
+        /// The server key which should be used to authenticate with the server.
+        /// </summary>
         public string ServerKey { get; set; }
 
         public ClientOptions()
         {
             AutomaticCompression = false;
-            AutomaticDecompression = true;
+            AutomaticDecompression = false; // Does not work with Mono AOT on Android.
             EnableSsl = false;
             Host = DefaultHost;
             Port = DefaultPort;
             Retries = 3;
             Timeout = TimeSpan.FromSeconds(5);
-            ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+            ServerCertificateValidationCallback = delegate { return true; };
             ServerKey = DefaultServerKey;
         }
 
