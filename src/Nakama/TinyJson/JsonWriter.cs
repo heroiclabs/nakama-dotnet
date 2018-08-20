@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Linq;
+
 namespace Nakama.TinyJson
 {
     using System.Collections;
@@ -34,9 +37,10 @@ namespace Nakama.TinyJson
     // - Will only output public fields and property getters on objects
     public static class JsonWriter
     {
+        private static StringBuilder stringBuilder = new StringBuilder();
         public static string ToJson(this object item)
         {
-            var stringBuilder = new StringBuilder();
+            stringBuilder.Clear();
             AppendValue(stringBuilder, item);
             return stringBuilder.ToString();
         }
@@ -134,41 +138,31 @@ namespace Nakama.TinyJson
                 stringBuilder.Append('{');
 
                 var isFirst = true;
-                var fieldInfos =
-                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-                foreach (var t in fieldInfos)
-                {
-                    if (t.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
-                        continue;
 
-                    var value = t.GetValue(item);
+                foreach (var fieldInfo in ReflectionCacher.GetCachedFieldInfosForType(type))
+                {
+                    var value = fieldInfo.GetValue(item);
                     if (value == null) continue;
                     if (isFirst)
                         isFirst = false;
                     else
                         stringBuilder.Append(',');
                     stringBuilder.Append('\"');
-                    stringBuilder.Append(GetMemberName(t));
+                    stringBuilder.Append(ReflectionCacher.GetCachedMemberInfoName(fieldInfo));
                     stringBuilder.Append("\":");
                     AppendValue(stringBuilder, value);
                 }
 
-                var propertyInfo =
-                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-                foreach (var t in propertyInfo)
+                foreach (var propertyInfo in ReflectionCacher.GetCachedPropertInfosForType(type))
                 {
-                    if (!t.CanRead ||
-                        t.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
-                        continue;
-
-                    var value = t.GetValue(item, null);
+                    var value = propertyInfo.GetValue(item);
                     if (value == null) continue;
                     if (isFirst)
                         isFirst = false;
                     else
                         stringBuilder.Append(',');
                     stringBuilder.Append('\"');
-                    stringBuilder.Append(GetMemberName(t));
+                    stringBuilder.Append(ReflectionCacher.GetCachedMemberInfoName(propertyInfo));
                     stringBuilder.Append("\":");
                     AppendValue(stringBuilder, value);
                 }
@@ -183,6 +177,66 @@ namespace Nakama.TinyJson
             if (dataMemberAttribute != null && dataMemberAttribute.IsNameSetExplicitly)
                 return dataMemberAttribute.Name;
             return member.Name;
+        }
+
+        private static class ReflectionCacher
+        {
+            private static Dictionary<Type, List<FieldInfo>> _cachedFieldInfo = new Dictionary<Type, List<FieldInfo>>();
+            private static Dictionary<Type, List<PropertyInfo>> _cachedPropertyInfo = new Dictionary<Type, List<PropertyInfo>>();
+            private static Dictionary<MemberInfo, string> _cachedMemberNames = new Dictionary<MemberInfo, string>();
+
+            public static List<FieldInfo> GetCachedFieldInfosForType(Type t)
+            {
+                if (_cachedFieldInfo.ContainsKey(t))
+                {
+                    return _cachedFieldInfo[t];
+                }
+                else
+                {
+                    List<FieldInfo> fieldInfo = new List<FieldInfo>();
+
+                    fieldInfo.AddRange(t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy).Where(a => a.GetCustomAttribute<IgnoreDataMemberAttribute>() == null));
+
+                    _cachedFieldInfo.Add(t, fieldInfo);
+
+                    foreach (var memberInfo in fieldInfo) _cachedMemberNames.Add(memberInfo, GetMemberName(memberInfo));
+
+                    return fieldInfo;
+                }
+            }
+
+            public static List<PropertyInfo> GetCachedPropertInfosForType(Type t)
+            {
+                if (_cachedPropertyInfo.ContainsKey(t))
+                {
+                    return _cachedPropertyInfo[t];
+                }
+                else
+                {
+                    List<PropertyInfo> propertyInfo = new List<PropertyInfo>();
+
+                    propertyInfo.AddRange(t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy).Where(a => a.CanRead && a.GetCustomAttribute<IgnoreDataMemberAttribute>() == null));
+
+                    _cachedPropertyInfo.Add(t, propertyInfo);
+
+                    foreach (var memberInfo in propertyInfo) _cachedMemberNames.Add(memberInfo, GetMemberName(memberInfo));
+
+                    return propertyInfo;
+                }
+            }
+
+            public static string GetCachedMemberInfoName(MemberInfo member)
+            {
+                return _cachedMemberNames[member];
+            }
+
+            private static string GetMemberName(MemberInfo member)
+            {
+                var dataMemberAttribute = member.GetCustomAttribute<DataMemberAttribute>();
+                if (dataMemberAttribute != null && dataMemberAttribute.IsNameSetExplicitly)
+                    return dataMemberAttribute.Name;
+                return member.Name;
+            }
         }
     }
 }
