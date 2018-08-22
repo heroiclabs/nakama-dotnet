@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
 
 namespace Nakama.TinyJson
@@ -37,10 +38,9 @@ namespace Nakama.TinyJson
     // - Will only output public fields and property getters on objects
     public static class JsonWriter
     {
-        private static StringBuilder stringBuilder = new StringBuilder();
         public static string ToJson(this object item)
         {
-            stringBuilder.Clear();
+            var stringBuilder = new StringBuilder();
             AppendValue(stringBuilder, item);
             return stringBuilder.ToString();
         }
@@ -181,45 +181,46 @@ namespace Nakama.TinyJson
 
         private static class ReflectionCacher
         {
-            private static Dictionary<Type, List<FieldInfo>> _cachedFieldInfo = new Dictionary<Type, List<FieldInfo>>();
-            private static Dictionary<Type, List<PropertyInfo>> _cachedPropertyInfo = new Dictionary<Type, List<PropertyInfo>>();
-            private static Dictionary<MemberInfo, string> _cachedMemberNames = new Dictionary<MemberInfo, string>();
+            private static ConcurrentDictionary<Type, ConcurrentBag<FieldInfo>> _cachedFieldInfo = new ConcurrentDictionary<Type, ConcurrentBag<FieldInfo>>();
+            private static ConcurrentDictionary<Type, ConcurrentBag<PropertyInfo>> _cachedPropertyInfo = new ConcurrentDictionary<Type, ConcurrentBag<PropertyInfo>>();
+            private static ConcurrentDictionary<MemberInfo, string> _cachedMemberNames = new ConcurrentDictionary<MemberInfo, string>();
 
-            public static List<FieldInfo> GetCachedFieldInfosForType(Type t)
+            public static ConcurrentBag<FieldInfo> GetCachedFieldInfosForType(Type t)
             {
-                if (_cachedFieldInfo.ContainsKey(t))
+                ConcurrentBag<FieldInfo> output;
+                if (_cachedFieldInfo.TryGetValue(t, out output))
                 {
-                    return _cachedFieldInfo[t];
+                    return output;
                 }
                 else
                 {
-                    List<FieldInfo> fieldInfo = new List<FieldInfo>();
+                    ConcurrentBag<FieldInfo> fieldInfo = new ConcurrentBag<FieldInfo>(t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy).Where(a => a.GetCustomAttribute<IgnoreDataMemberAttribute>() == null));
 
-                    fieldInfo.AddRange(t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy).Where(a => a.GetCustomAttribute<IgnoreDataMemberAttribute>() == null));
+                    _cachedFieldInfo.TryAdd(t, fieldInfo);
 
-                    _cachedFieldInfo.Add(t, fieldInfo);
-
-                    foreach (var memberInfo in fieldInfo) _cachedMemberNames.Add(memberInfo, GetMemberName(memberInfo));
+                    foreach (var memberInfo in fieldInfo)
+                        _cachedMemberNames.TryAdd(memberInfo, GetMemberName(memberInfo));
 
                     return fieldInfo;
                 }
             }
 
-            public static List<PropertyInfo> GetCachedPropertInfosForType(Type t)
+            public static ConcurrentBag<PropertyInfo> GetCachedPropertInfosForType(Type t)
             {
-                if (_cachedPropertyInfo.ContainsKey(t))
+                ConcurrentBag<PropertyInfo> output;
+
+                if (_cachedPropertyInfo.TryGetValue(t, out output))
                 {
-                    return _cachedPropertyInfo[t];
+                    return output;
                 }
                 else
                 {
-                    List<PropertyInfo> propertyInfo = new List<PropertyInfo>();
+                    ConcurrentBag<PropertyInfo> propertyInfo = new ConcurrentBag<PropertyInfo>(t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy).Where(a => a.CanRead && a.GetCustomAttribute<IgnoreDataMemberAttribute>() == null));
 
-                    propertyInfo.AddRange(t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy).Where(a => a.CanRead && a.GetCustomAttribute<IgnoreDataMemberAttribute>() == null));
+                    _cachedPropertyInfo.TryAdd(t, propertyInfo);
 
-                    _cachedPropertyInfo.Add(t, propertyInfo);
-
-                    foreach (var memberInfo in propertyInfo) _cachedMemberNames.Add(memberInfo, GetMemberName(memberInfo));
+                    foreach (var memberInfo in propertyInfo)
+                        _cachedMemberNames.TryAdd(memberInfo, GetMemberName(memberInfo));
 
                     return propertyInfo;
                 }
