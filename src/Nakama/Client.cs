@@ -585,7 +585,7 @@ namespace Nakama
             var scheme = _options.EnableSsl ? "wss" : "ws";
             var baseUri = new UriBuilder(scheme, Host, Port);
             // FIXME implement reconnect events?
-            return new WebSocketWrapper(baseUri.Uri, Logger);
+            return new WebSocketWrapper(baseUri.Uri, Logger, Timeout);
         }
     }
 }
