@@ -47,7 +47,7 @@ namespace Nakama
         public WebSocketOptions()
         {
             CertificateValidationHandler = delegate { return true; };
-            ConnectTimeout = TimeSpan.FromSeconds(5);
+            ConnectTimeout = TimeSpan.FromMilliseconds(5000);
             DualMode = false;
             Logger = NullLogger.Instance; // dont log by default.
         }

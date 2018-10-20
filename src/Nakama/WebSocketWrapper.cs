@@ -72,9 +72,10 @@ namespace Nakama
 
         private bool IsTrace => _options.Logger != null && _options.Logger == NullLogger.Instance;
 
-        internal WebSocketWrapper(Uri baseUri, ILogger logger) : this(baseUri, new WebSocketOptions
+        internal WebSocketWrapper(Uri baseUri, ILogger logger, int timeout) : this(baseUri, new WebSocketOptions
         {
-            Logger = logger
+            Logger = logger,
+            ConnectTimeout = TimeSpan.FromMilliseconds(timeout)
         })
         {
         }
@@ -555,10 +556,10 @@ namespace Nakama
             _messageReplies[message.Cid] = completer;
             var resultTask = completer.Task;
 
-            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(5));
+            var timeoutTask = Task.Delay(_options.ConnectTimeout);
             if (await Task.WhenAny(resultTask, timeoutTask).ConfigureAwait(false) == timeoutTask)
             {
-                throw new TimeoutException($"Socket send timed out after 5 seconds.");
+                throw new TimeoutException(string.Format("Socket send timed out after {0} time.", _options.ConnectTimeout.ToString()));
             }
 
             return await resultTask.ConfigureAwait(false);
