@@ -70,7 +70,7 @@ namespace Nakama
         private readonly WebSocketOptions _options;
         private readonly ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _messageReplies;
 
-        private bool IsTrace => _options.Logger != null && _options.Logger == NullLogger.Instance;
+        private bool IsTrace => _options.Logger != null;
 
         internal WebSocketWrapper(Uri baseUri, ILogger logger, int timeout) : this(baseUri, new WebSocketOptions
         {
@@ -87,9 +87,9 @@ namespace Nakama
             options.ValidateOptions();
             _options = options.Clone();
 
-            OnError = (sender, exception) => _options.Logger.Error(exception);
+            if (!IsTrace) _options.Logger = new NullLogger();
 
-            if (!IsTrace) return;
+            OnError = (sender, exception) => _options.Logger.Error(exception);
 
             OnChannelMessage = (sender, message) =>
                 _options.Logger.DebugFormat("Received channel message '{0}'", message);
