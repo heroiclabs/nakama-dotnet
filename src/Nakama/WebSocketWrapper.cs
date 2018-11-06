@@ -545,7 +545,7 @@ namespace Nakama
                 throw new InvalidOperationException("Socket is not connected.");
             }
 
-            await base.SendAsync(message.ToJson());
+            Send(message.ToJson());
             if (string.IsNullOrEmpty(message.Cid))
             {
                 // No response required.
