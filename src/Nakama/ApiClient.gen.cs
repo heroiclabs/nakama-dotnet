@@ -160,6 +160,54 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Record values to write.
+    /// </summary>
+    public interface IWriteTournamentRecordRequestTournamentRecordWrite
+    {
+
+        /// <summary>
+        /// A JSON object of additional properties (optional).
+        /// </summary>
+        string Metadata { get; }
+
+        /// <summary>
+        /// The score value to submit.
+        /// </summary>
+        string Score { get; }
+
+        /// <summary>
+        /// An optional secondary value.
+        /// </summary>
+        string Subscore { get; }
+    }
+
+    /// <inheritdoc />
+    internal class WriteTournamentRecordRequestTournamentRecordWrite : IWriteTournamentRecordRequestTournamentRecordWrite
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="metadata")]
+        public string Metadata { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="score")]
+        public string Score { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="subscore")]
+        public string Subscore { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Metadata: ", Metadata, ", ");
+            output = string.Concat(output, "Score: ", Score, ", ");
+            output = string.Concat(output, "Subscore: ", Subscore, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A user with additional account details. Always the current user.
     /// </summary>
     public interface IApiAccount
@@ -1093,6 +1141,11 @@ namespace Nakama
         string LeaderboardId { get; }
 
         /// <summary>
+        /// The maximum number of score updates allowed by the owner.
+        /// </summary>
+        int MaxNumScore { get; }
+
+        /// <summary>
         /// Metadata.
         /// </summary>
         string Metadata { get; }
@@ -1150,6 +1203,10 @@ namespace Nakama
         public string LeaderboardId { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="max_num_score")]
+        public int MaxNumScore { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="metadata")]
         public string Metadata { get; set; }
 
@@ -1187,6 +1244,7 @@ namespace Nakama
             output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
             output = string.Concat(output, "ExpiryTime: ", ExpiryTime, ", ");
             output = string.Concat(output, "LeaderboardId: ", LeaderboardId, ", ");
+            output = string.Concat(output, "MaxNumScore: ", MaxNumScore, ", ");
             output = string.Concat(output, "Metadata: ", Metadata, ", ");
             output = string.Concat(output, "NumScore: ", NumScore, ", ");
             output = string.Concat(output, "OwnerId: ", OwnerId, ", ");
@@ -1905,6 +1963,283 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "Objects: [", string.Join(", ", Objects), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A tournament on the server.
+    /// </summary>
+    public interface IApiTournament
+    {
+
+        /// <summary>
+        /// True if the tournament is active and can enter. A computed value.
+        /// </summary>
+        bool CanEnter { get; }
+
+        /// <summary>
+        /// The category of the tournament. e.g. "vip" could be category 1.
+        /// </summary>
+        int Category { get; }
+
+        /// <summary>
+        /// The UNIX time when the tournament was created.
+        /// </summary>
+        string CreateTime { get; }
+
+        /// <summary>
+        /// The description of the tournament. May be blank.
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
+        /// The UNIX timestamp for duration of a tournament.
+        /// </summary>
+        int Duration { get; }
+
+        /// <summary>
+        /// The UNIX timestamp when the tournament stops being active until next reset. A computed value.
+        /// </summary>
+        int EndActive { get; }
+
+        /// <summary>
+        /// The UNIX time when the tournament will be stopped.
+        /// </summary>
+        string EndTime { get; }
+
+        /// <summary>
+        /// The ID of the tournament.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// The maximum score updates allowed per player for the current tournament.
+        /// </summary>
+        int MaxNumScore { get; }
+
+        /// <summary>
+        /// The maximum number of players for the tournament.
+        /// </summary>
+        int MaxSize { get; }
+
+        /// <summary>
+        /// Additional information stored as a JSON object.
+        /// </summary>
+        string Metadata { get; }
+
+        /// <summary>
+        /// The UNIX timestamp when the tournament is next playable. A computed value.
+        /// </summary>
+        int NextReset { get; }
+
+        /// <summary>
+        /// The current number of players in the tournament.
+        /// </summary>
+        int Size { get; }
+
+        /// <summary>
+        /// ASC or DESC sort mode of scores in the tournament.
+        /// </summary>
+        int SortOrder { get; }
+
+        /// <summary>
+        /// The UNIX time when the tournament will start.
+        /// </summary>
+        string StartTime { get; }
+
+        /// <summary>
+        /// The title for the tournament.
+        /// </summary>
+        string Title { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiTournament : IApiTournament
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="can_enter")]
+        public bool CanEnter { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="category")]
+        public int Category { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time")]
+        public string CreateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="description")]
+        public string Description { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="duration")]
+        public int Duration { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="end_active")]
+        public int EndActive { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="end_time")]
+        public string EndTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id")]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="max_num_score")]
+        public int MaxNumScore { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="max_size")]
+        public int MaxSize { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="metadata")]
+        public string Metadata { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="next_reset")]
+        public int NextReset { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="size")]
+        public int Size { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="sort_order")]
+        public int SortOrder { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="start_time")]
+        public string StartTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="title")]
+        public string Title { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "CanEnter: ", CanEnter, ", ");
+            output = string.Concat(output, "Category: ", Category, ", ");
+            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
+            output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "Duration: ", Duration, ", ");
+            output = string.Concat(output, "EndActive: ", EndActive, ", ");
+            output = string.Concat(output, "EndTime: ", EndTime, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "MaxNumScore: ", MaxNumScore, ", ");
+            output = string.Concat(output, "MaxSize: ", MaxSize, ", ");
+            output = string.Concat(output, "Metadata: ", Metadata, ", ");
+            output = string.Concat(output, "NextReset: ", NextReset, ", ");
+            output = string.Concat(output, "Size: ", Size, ", ");
+            output = string.Concat(output, "SortOrder: ", SortOrder, ", ");
+            output = string.Concat(output, "StartTime: ", StartTime, ", ");
+            output = string.Concat(output, "Title: ", Title, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A list of tournaments.
+    /// </summary>
+    public interface IApiTournamentList
+    {
+
+        /// <summary>
+        /// A pagination cursor (optional).
+        /// </summary>
+        string Cursor { get; }
+
+        /// <summary>
+        /// The list of tournaments returned.
+        /// </summary>
+        IEnumerable<IApiTournament> Tournaments { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiTournamentList : IApiTournamentList
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cursor")]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<IApiTournament> Tournaments => _tournaments ?? new List<ApiTournament>(0);
+        [DataMember(Name="tournaments")]
+        public List<ApiTournament> _tournaments { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Cursor: ", Cursor, ", ");
+            output = string.Concat(output, "Tournaments: [", string.Join(", ", Tournaments), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A set of tournament records which may be part of a tournament records page or a batch of individual records.
+    /// </summary>
+    public interface IApiTournamentRecordList
+    {
+
+        /// <summary>
+        /// The cursor to send when retireving the next page (optional).
+        /// </summary>
+        string NextCursor { get; }
+
+        /// <summary>
+        /// A batched set of tournament records belonging to specified owners.
+        /// </summary>
+        IEnumerable<IApiLeaderboardRecord> OwnerRecords { get; }
+
+        /// <summary>
+        /// The cursor to send when retrieving the previous page (optional).
+        /// </summary>
+        string PrevCursor { get; }
+
+        /// <summary>
+        /// A list of tournament records.
+        /// </summary>
+        IEnumerable<IApiLeaderboardRecord> Records { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiTournamentRecordList : IApiTournamentRecordList
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor")]
+        public string NextCursor { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<IApiLeaderboardRecord> OwnerRecords => _ownerRecords ?? new List<ApiLeaderboardRecord>(0);
+        [DataMember(Name="owner_records")]
+        public List<ApiLeaderboardRecord> _ownerRecords { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor")]
+        public string PrevCursor { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<IApiLeaderboardRecord> Records => _records ?? new List<ApiLeaderboardRecord>(0);
+        [DataMember(Name="records")]
+        public List<ApiLeaderboardRecord> _records { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "NextCursor: ", NextCursor, ", ");
+            output = string.Concat(output, "OwnerRecords: [", string.Join(", ", OwnerRecords), "], ");
+            output = string.Concat(output, "PrevCursor: ", PrevCursor, ", ");
+            output = string.Concat(output, "Records: [", string.Join(", ", Records), "], ");
             return output;
         }
     }
@@ -4192,6 +4527,52 @@ namespace Nakama
         }
 
         /// <summary>
+        /// List leaderboard records that belong to a user.
+        /// </summary>
+        public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(
+            string bearerToken
+            , string leaderboardId
+            , string ownerId
+            , int limit)
+        {
+            if (leaderboardId == null)
+            {
+                throw new ArgumentException("'leaderboardId' is required but was null.");
+            }
+            if (ownerId == null)
+            {
+                throw new ArgumentException("'ownerId' is required but was null.");
+            }
+
+            var urlpath = "/v2/leaderboard/{leaderboard_id}/owner/{owner_id}?";
+            urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
+            urlpath = urlpath.Replace("{owner_id}", Uri.EscapeDataString(ownerId));
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(_baseUri, urlpath),
+                Method = new HttpMethod("GET"),
+                Headers =
+                {
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", bearerToken);
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+
+            var response = await _httpClient.SendAsync(request);
+            var contents = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiLeaderboardRecordList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+        }
+
+        /// <summary>
         /// Fetch list of running matches.
         /// </summary>
         public async Task<IApiMatchList> ListMatchesAsync(
@@ -4200,7 +4581,8 @@ namespace Nakama
             , bool authoritative
             , string label
             , int minSize
-            , int maxSize)
+            , int maxSize
+            , string query)
         {
 
             var urlpath = "/v2/match?";
@@ -4212,6 +4594,10 @@ namespace Nakama
             }
             urlpath = string.Concat(urlpath, "min_size=", minSize, "&");
             urlpath = string.Concat(urlpath, "max_size=", maxSize, "&");
+            if (query != null)
+            {
+                urlpath = string.Concat(urlpath, "query=", Uri.EscapeDataString(query), "&");
+            }
 
             var request = new HttpRequestMessage
             {
@@ -4619,6 +5005,231 @@ namespace Nakama
             if (response.IsSuccessStatusCode)
             {
                 return contents.FromJson<ApiStorageObjectList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+        }
+
+        /// <summary>
+        /// List current or upcoming tournaments.
+        /// </summary>
+        public async Task<IApiTournamentList> ListTournamentsAsync(
+            string bearerToken
+            , int categoryStart
+            , int categoryEnd
+            , int startTime
+            , int endTime
+            , int limit
+            , string cursor)
+        {
+
+            var urlpath = "/v2/tournament?";
+            urlpath = string.Concat(urlpath, "category_start=", categoryStart, "&");
+            urlpath = string.Concat(urlpath, "category_end=", categoryEnd, "&");
+            urlpath = string.Concat(urlpath, "start_time=", startTime, "&");
+            urlpath = string.Concat(urlpath, "end_time=", endTime, "&");
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            if (cursor != null)
+            {
+                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(_baseUri, urlpath),
+                Method = new HttpMethod("GET"),
+                Headers =
+                {
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", bearerToken);
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+
+            var response = await _httpClient.SendAsync(request);
+            var contents = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiTournamentList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+        }
+
+        /// <summary>
+        /// List tournament records.
+        /// </summary>
+        public async Task<IApiTournamentRecordList> ListTournamentRecordsAsync(
+            string bearerToken
+            , string tournamentId
+            , IEnumerable<string> ownerIds
+            , int limit
+            , string cursor)
+        {
+            if (tournamentId == null)
+            {
+                throw new ArgumentException("'tournamentId' is required but was null.");
+            }
+
+            var urlpath = "/v2/tournament/{tournament_id}?";
+            urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
+            foreach (var elem in ownerIds ?? new string[0])
+            {
+                urlpath = string.Concat(urlpath, "owner_ids=", elem, "&");
+            }
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            if (cursor != null)
+            {
+                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(_baseUri, urlpath),
+                Method = new HttpMethod("GET"),
+                Headers =
+                {
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", bearerToken);
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+
+            var response = await _httpClient.SendAsync(request);
+            var contents = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiTournamentRecordList>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+        }
+
+        /// <summary>
+        /// Write a record to a tournament.
+        /// </summary>
+        public async Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(
+            string bearerToken
+            , string tournamentId
+            , WriteTournamentRecordRequestTournamentRecordWrite body)
+        {
+            if (tournamentId == null)
+            {
+                throw new ArgumentException("'tournamentId' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/tournament/{tournament_id}?";
+            urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(_baseUri, urlpath),
+                Method = new HttpMethod("PUT"),
+                Headers =
+                {
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", bearerToken);
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            request.Content = new StringContent(body.ToJson());
+
+            var response = await _httpClient.SendAsync(request);
+            var contents = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiLeaderboardRecord>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+        }
+
+        /// <summary>
+        /// Attempt to join an open and running tournament.
+        /// </summary>
+        public async Task<IProtobufEmpty> JoinTournamentAsync(
+            string bearerToken
+            , string tournamentId)
+        {
+            if (tournamentId == null)
+            {
+                throw new ArgumentException("'tournamentId' is required but was null.");
+            }
+
+            var urlpath = "/v2/tournament/{tournament_id}/join?";
+            urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(_baseUri, urlpath),
+                Method = new HttpMethod("POST"),
+                Headers =
+                {
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", bearerToken);
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+
+            var response = await _httpClient.SendAsync(request);
+            var contents = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ProtobufEmpty>();
+            }
+            response.Content?.Dispose();
+            var decoded = contents.FromJson<Dictionary<string, object>>();
+            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+        }
+
+        /// <summary>
+        /// List tournament records for a given owner.
+        /// </summary>
+        public async Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(
+            string bearerToken
+            , string tournamentId
+            , string ownerId
+            , int limit)
+        {
+            if (tournamentId == null)
+            {
+                throw new ArgumentException("'tournamentId' is required but was null.");
+            }
+            if (ownerId == null)
+            {
+                throw new ArgumentException("'ownerId' is required but was null.");
+            }
+
+            var urlpath = "/v2/tournament/{tournament_id}/owner/{owner_id}?";
+            urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
+            urlpath = urlpath.Replace("{owner_id}", Uri.EscapeDataString(ownerId));
+            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(_baseUri, urlpath),
+                Method = new HttpMethod("GET"),
+                Headers =
+                {
+                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
+                }
+            };
+            var header = string.Concat("Bearer ", bearerToken);
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+
+            var response = await _httpClient.SendAsync(request);
+            var contents = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return contents.FromJson<ApiTournamentRecordList>();
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();

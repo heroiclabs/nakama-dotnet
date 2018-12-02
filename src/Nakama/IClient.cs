@@ -264,6 +264,14 @@ namespace Nakama
         Task JoinGroupAsync(ISession session, string groupId);
 
         /// <summary>
+        /// Join a tournament by ID.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="tournamentId">The ID of the tournament to join.</param>
+        /// <returns>A task.</returns>
+        Task JoinTournamentAsync(ISession session, string tournamentId);
+
+        /// <summary>
         /// Kick one or more users from the group.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -394,6 +402,17 @@ namespace Nakama
             IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null);
 
         /// <summary>
+        /// List leaderboard records that belong to a user.
+        /// </summary>
+        /// <param name="session">The session for the user.</param>
+        /// <param name="leaderboardId">The id of the leaderboard to list.</param>
+        /// <param name="ownerId">The id of the user to list around.</param>
+        /// <param name="limit">The limit of the listings.</param>
+        /// <returns>A task.</returns>
+        Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session, string leaderboardId,
+            string ownerId, int limit = 1);
+
+        /// <summary>
         /// Fetch a list of matches active on the server.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -402,9 +421,10 @@ namespace Nakama
         /// <param name="limit">The number of matches to list.</param>
         /// <param name="authoritative"><c>True</c> to include authoritative matches.</param>
         /// <param name="label">The label to filter the match list on.</param>
+        /// <param name="query">A query for the matches to filter.</param>
         /// <returns></returns>
         Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
-            string label);
+            string label, string query);
 
         /// <summary>
         /// List notifications for the user with an optional cursor.
@@ -426,6 +446,43 @@ namespace Nakama
         /// <returns>A task which resolves to a storage object list.</returns>
         Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit = 1,
             string cursor = null);
+
+        /// <summary>
+        /// List tournament records around the owner.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="tournamentId">The ID of the tournament.</param>
+        /// <param name="ownerId"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session, string tournamentId,
+            string ownerId, int limit = 1);
+
+        /// <summary>
+        /// List records from a tournament.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="tournamentId">The ID of the tournament.</param>
+        /// <param name="ownerIds">The IDs of the record owners to return in the result.</param>
+        /// <param name="limit">The number of records to list.</param>
+        /// <param name="cursor">An optional cursor for the next page of tournament records.</param>
+        /// <returns>A task which resolves to a list of tournament records.</returns>
+        Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
+            IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null);
+
+        /// <summary>
+        /// List current or upcoming tournaments.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="categoryStart">The start of the category of tournaments to include.</param>
+        /// <param name="categoryEnd">The end of the category of tournaments to include.</param>
+        /// <param name="startTime">The start time of the tournaments. (UNIX timestamp)</param>
+        /// <param name="endTime">The end time of the tournaments. (UNIX timestamp)</param>
+        /// <param name="limit">The number of tournaments to list.</param>
+        /// <param name="cursor">An optional cursor for the next page of tournaments.</param>
+        /// <returns>A task which resolves to a list of tournament objects.</returns>
+        Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
+            int startTime, int endTime, int limit = 1, string cursor = null);
 
         /// <summary>
         /// List of groups the current user is a member of.
@@ -610,6 +667,18 @@ namespace Nakama
         /// <param name="objects">The objects to write.</param>
         /// <returns>A task to resolve the acknowledgements with writes.</returns>
         Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session, params IApiWriteStorageObject[] objects);
+
+        /// <summary>
+        /// Write a record to a tournament.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="tournamentId">The id of the tournament to write.</param>
+        /// <param name="score">The score of the tournament record.</param>
+        /// <param name="subscore">The subscore for the tournament record.</param>
+        /// <param name="metadata">The metadata for the tournament record.</param>
+        /// <returns>A task to complete the tournament record write.</returns>
+        Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
+            long subscore = 0L, string metadata = null);
 
         /// <summary>
         /// Create a new WebSocket from the client.

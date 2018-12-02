@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,44 +14,20 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+
 namespace Nakama
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-
     /// <inheritdoc />
     public class Client : IClient
     {
-        /// <inheritdoc />
-        public string Host => _options.Host;
-
-        /// <inheritdoc />
-        public ILogger Logger { get; set; }
-
-        /// <inheritdoc />
-        public int Port => _options.Port;
-
-        /// <inheritdoc />
-        public int Retries { get; set; }
-
-        /// <inheritdoc />
-        public string ServerKey => _options.ServerKey;
-
-        /// <inheritdoc />
-        public bool Secure => _options.EnableSsl;
-
-        /// <inheritdoc />
-        public bool Trace { get; set; }
-
-        /// <inheritdoc />
-        public int Timeout { get; set; }
+        private readonly ApiClient _apiClient;
 
         private readonly ClientOptions _options;
-
-        private readonly ApiClient _apiClient;
 
         public Client(string serverKey = ClientOptions.DefaultServerKey, string host = ClientOptions.DefaultHost,
             int port = ClientOptions.DefaultPort,
@@ -81,19 +57,38 @@ namespace Nakama
             // Use GZip compression with request/responses.
             var handler = new HttpClientHandler();
             if (handler.SupportsAutomaticDecompression && _options.AutomaticDecompression)
-            {
                 handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            }
 
             var httpClient = new HttpClient(handler);
-            if (_options.AutomaticCompression)
-            {
-                httpClient = new HttpClient(new GZipHttpClientHandler(handler));
-            }
+            if (_options.AutomaticCompression) httpClient = new HttpClient(new GZipHttpClientHandler(handler));
 
             var scheme = _options.EnableSsl ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
             _apiClient = new ApiClient(new UriBuilder(scheme, _options.Host, _options.Port).Uri, httpClient);
         }
+
+        /// <inheritdoc />
+        public string Host => _options.Host;
+
+        /// <inheritdoc />
+        public ILogger Logger { get; set; }
+
+        /// <inheritdoc />
+        public int Port => _options.Port;
+
+        /// <inheritdoc />
+        public int Retries { get; set; }
+
+        /// <inheritdoc />
+        public string ServerKey => _options.ServerKey;
+
+        /// <inheritdoc />
+        public bool Secure => _options.EnableSsl;
+
+        /// <inheritdoc />
+        public bool Trace { get; set; }
+
+        /// <inheritdoc />
+        public int Timeout { get; set; }
 
         /// <inheritdoc />
         public async Task AddFriendsAsync(ISession session, IEnumerable<string> ids,
@@ -228,14 +223,12 @@ namespace Nakama
         {
             var objects = new List<ApiDeleteStorageObjectId>(ids.Length);
             foreach (var id in ids)
-            {
                 objects.Add(new ApiDeleteStorageObjectId
                 {
                     Collection = id.Collection,
                     Key = id.Key,
                     Version = id.Version
                 });
-            }
 
             var request = new ApiDeleteStorageObjectsRequest {_objectIds = objects};
             await _apiClient.DeleteStorageObjectsAsync(session.AuthToken, request);
@@ -265,6 +258,12 @@ namespace Nakama
         public async Task JoinGroupAsync(ISession session, string groupId)
         {
             await _apiClient.JoinGroupAsync(session.AuthToken, groupId);
+        }
+
+        /// <inheritdoc />
+        public async Task JoinTournamentAsync(ISession session, string tournamentId)
+        {
+            await _apiClient.JoinTournamentAsync(session.AuthToken, tournamentId);
         }
 
         /// <inheritdoc />
@@ -372,11 +371,19 @@ namespace Nakama
         }
 
         /// <inheritdoc />
+        public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session,
+            string leaderboardId, string ownerId, int limit = 1)
+        {
+            return await _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId,
+                limit);
+        }
+
+        /// <inheritdoc />
         public async Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit,
-            bool authoritative, string label)
+            bool authoritative, string label, string query = null)
         {
             // Arguments are re-ordered for more natural usage than is code generated.
-            return await _apiClient.ListMatchesAsync(session.AuthToken, limit, authoritative, label, min, max);
+            return await _apiClient.ListMatchesAsync(session.AuthToken, limit, authoritative, label, min, max, query);
         }
 
         /// <inheritdoc />
@@ -391,6 +398,30 @@ namespace Nakama
             string cursor)
         {
             return await _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, "", limit, cursor);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session,
+            string tournamentId, string ownerId, int limit = 1)
+        {
+            return await _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId,
+                limit);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
+            IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null)
+        {
+            return await _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit,
+                cursor);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
+            int startTime, int endTime, int limit = 1, string cursor = null)
+        {
+            return await _apiClient.ListTournamentsAsync(session.AuthToken, categoryStart, categoryEnd, startTime,
+                endTime, limit, cursor);
         }
 
         /// <inheritdoc />
@@ -424,14 +455,12 @@ namespace Nakama
         {
             var wrapper = new List<ApiReadStorageObjectId>(ids.Length);
             foreach (var id in ids)
-            {
                 wrapper.Add(new ApiReadStorageObjectId
                 {
                     Collection = id.Collection,
                     Key = id.Key,
                     UserId = id.UserId
                 });
-            }
 
             var request = new ApiReadStorageObjectsRequest {_objectIds = wrapper};
             return await _apiClient.ReadStorageObjectsAsync(session.AuthToken, request);
@@ -563,7 +592,6 @@ namespace Nakama
         {
             var wrapper = new List<ApiWriteStorageObject>(objects.Length);
             foreach (var o in objects)
-            {
                 wrapper.Add(new ApiWriteStorageObject
                 {
                     Collection = o.Collection,
@@ -573,10 +601,22 @@ namespace Nakama
                     Value = o.Value,
                     Version = o.Version
                 });
-            }
 
             var request = new ApiWriteStorageObjectsRequest {_objects = wrapper};
             return await _apiClient.WriteStorageObjectsAsync(session.AuthToken, request);
+        }
+
+        /// <inheritdoc />
+        public async Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId,
+            long score, long subscore = 0L, string metadata = null)
+        {
+            var request = new WriteTournamentRecordRequestTournamentRecordWrite
+            {
+                Metadata = metadata,
+                Score = score.ToString(),
+                Subscore = subscore.ToString()
+            };
+            return await _apiClient.WriteTournamentRecordAsync(session.AuthToken, tournamentId, request);
         }
 
         /// <inheritdoc />
