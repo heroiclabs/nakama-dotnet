@@ -16,6 +16,7 @@
 
 namespace Nakama
 {
+    using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
 
@@ -121,8 +122,9 @@ namespace Nakama
         [DataMember(Name="sender")]
         public UserPresence _sender { get; set; }
 
+        public byte[] State => Convert.FromBase64String(_state);
         [DataMember(Name="data")]
-        public byte[] State { get; set; }
+        public string _state { get; set; }
 
         public IStream Stream => _stream;
         [DataMember(Name="stream")]
