@@ -58,7 +58,7 @@ namespace Nakama
         /// <summary>
         /// The contents of the state change.
         /// </summary>
-        byte[] State { get; }
+        string State { get; }
 
         /// <summary>
         /// The identifier for the stream.
@@ -122,7 +122,7 @@ namespace Nakama
         [DataMember(Name="sender")]
         public UserPresence _sender { get; set; }
 
-        public byte[] State => Convert.FromBase64String(_state);
+        public string State => _state;
         [DataMember(Name="data")]
         public string _state { get; set; }
 
@@ -132,8 +132,8 @@ namespace Nakama
 
         public override string ToString()
         {
-            var state = System.Text.Encoding.UTF8.GetString(State);
-            return $"StreamState(Sender={Sender}, State={state}, Stream={Stream})";
+            //var state = System.Text.Encoding.UTF8.GetString(State);
+            return $"StreamState(Sender={Sender}, State={State}, Stream={Stream})";
         }
     }
 
