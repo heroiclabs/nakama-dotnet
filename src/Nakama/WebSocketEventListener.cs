@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Collections.Concurrent;
+
 namespace Nakama
 {
     using System;
@@ -32,13 +34,15 @@ namespace Nakama
 
         private readonly WebSocketClient _client;
         private readonly WebSocketOptions _options;
-
+        
+        private BlockingCollection<string> _sendQueue;
         protected WebSocket _socket;
 
         public bool IsConnected => _socket != null && _socket.IsConnected;
 
         public WebSocketEventListener(WebSocketOptions options)
         {
+            _sendQueue = new BlockingCollection<string>(256);
             options.ValidateOptions();
             _options = options.Clone();
 
@@ -99,10 +103,38 @@ namespace Nakama
                 finally
                 {
                     Disconnected.Invoke(this, EventArgs.Empty);
+                    _sendQueue.CompleteAdding();
                 }
             }, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
-            await recvTask.ConfigureAwait(false);
+            var cts2 = new CancellationTokenSource();
+            var sendTask = Task.Factory.StartNew(async () =>
+            {
+                try
+                {
+                    foreach (var item in _sendQueue.GetConsumingEnumerable(cts2.Token))
+                    {
+                        using (var output = _socket.CreateMessageWriter(WebSocketMessageType.Text))
+                        using (var writer = new StreamWriter(output))
+                        {
+                            writer.Write(item);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    ErrorReceived?.Invoke(this, e);
+                }
+                finally
+                {
+                    // Setup a new send queue.
+                    _sendQueue = new BlockingCollection<string>(256);
+                }
+            }, cts2.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            
+#pragma warning disable 4014            
+            Task.WhenAll(recvTask, sendTask);
+#pragma warning restore 4014        
         }
 
         public async Task CloseAsync()
@@ -118,13 +150,9 @@ namespace Nakama
             _socket?.Dispose();
         }
 
-        public async Task SendAsync(string message)
+        public void Send(string message)
         {
-            using (var output = _socket.CreateMessageWriter(WebSocketMessageType.Text))
-            using (var writer = new StreamWriter(output))
-            {
-                await writer.WriteAsync(message).ConfigureAwait(false);
-            }
+            _sendQueue.TryAdd(message);
         }
     }
 }
