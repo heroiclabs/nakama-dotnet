@@ -56,13 +56,13 @@ namespace Nakama.TinyJson
         public static T FromJson<T>(this string json)
         {
             // Initialize, if needed, the ThreadStatic variables
-            if (null == _propertyInfoCache)
+            if (_propertyInfoCache == null)
                 _propertyInfoCache = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
-            if (null == _fieldInfoCache) _fieldInfoCache = new Dictionary<Type, Dictionary<string, FieldInfo>>();
-            if (null == _stringBuilder) _stringBuilder = new StringBuilder();
-            if (null == _splitArrayPool) _splitArrayPool = new Stack<List<string>>();
+            if (_fieldInfoCache == null) _fieldInfoCache = new Dictionary<Type, Dictionary<string, FieldInfo>>();
+            if (_stringBuilder == null) _stringBuilder = new StringBuilder();
+            if (_splitArrayPool == null) _splitArrayPool = new Stack<List<string>>();
 
-            //Remove all whitespace not within strings to make parsing simpler
+            // Remove all whitespace not within strings to make parsing simpler
             _stringBuilder.Length = 0;
             for (var i = 0; i < json.Length; i++)
             {
@@ -101,7 +101,9 @@ namespace Nakama.TinyJson
                     return i;
                 }
                 else
+                {
                     _stringBuilder.Append(json[i]);
+                }
             }
 
             return json.Length - 1;
@@ -155,7 +157,7 @@ namespace Nakama.TinyJson
             {
                 if (json.Length <= 2)
                     return string.Empty;
-                var stringBuilder = new StringBuilder();
+                var parseStringBuilder = new StringBuilder(json.Length);
                 for (var i = 1; i < json.Length - 1; ++i)
                 {
                     if (json[i] == '\\' && i + 1 < json.Length - 1)
@@ -163,68 +165,61 @@ namespace Nakama.TinyJson
                         var j = "\"\\nrtbf/".IndexOf(json[i + 1]);
                         if (j >= 0)
                         {
-                            stringBuilder.Append("\"\\\n\r\t\b\f/"[j]);
+                            parseStringBuilder.Append("\"\\\n\r\t\b\f/"[j]);
                             ++i;
                             continue;
                         }
 
                         if (json[i + 1] == 'u' && i + 5 < json.Length - 1)
                         {
-                            uint c;
+                            uint c = 0;
                             if (uint.TryParse(json.Substring(i + 2, 4),
                                 System.Globalization.NumberStyles.AllowHexSpecifier, null, out c))
                             {
-                                stringBuilder.Append((char) c);
+                                parseStringBuilder.Append((char) c);
                                 i += 5;
                                 continue;
                             }
                         }
                     }
 
-                    stringBuilder.Append(json[i]);
+                    parseStringBuilder.Append(json[i]);
                 }
 
-                return stringBuilder.ToString();
+                return parseStringBuilder.ToString();
             }
 
-            if (type == typeof(int))
+            if (type.IsPrimitive)
             {
-                int result;
-                int.TryParse(json, out result);
+                var result = Convert.ChangeType(json, type, System.Globalization.CultureInfo.InvariantCulture);
                 return result;
             }
 
-            if (type == typeof(byte))
+            if (type == typeof(decimal))
             {
-                byte result;
-                byte.TryParse(json, out result);
-                return result;
-            }
-
-            if (type == typeof(float))
-            {
-                float result;
-                float.TryParse(json, System.Globalization.NumberStyles.Float,
+                decimal result;
+                decimal.TryParse(json, System.Globalization.NumberStyles.Float,
                     System.Globalization.CultureInfo.InvariantCulture, out result);
                 return result;
-            }
-
-            if (type == typeof(double))
-            {
-                double result;
-                double.TryParse(json, System.Globalization.NumberStyles.Float,
-                    System.Globalization.CultureInfo.InvariantCulture, out result);
-                return result;
-            }
-
-            if (type == typeof(bool))
-            {
-                return json.ToLower() == "true";
             }
 
             if (json == "null")
             {
                 return null;
+            }
+
+            if (type.IsEnum)
+            {
+                if (json[0] == '"')
+                    json = json.Substring(1, json.Length - 2);
+                try
+                {
+                    return Enum.Parse(type, json, false);
+                }
+                catch
+                {
+                    return 0;
+                }
             }
 
             if (type.IsArray)
@@ -359,20 +354,22 @@ namespace Nakama.TinyJson
             return null;
         }
 
-        private static Dictionary<string, T> CreateMemberNameDictionary<T>(IEnumerable<T> members) where T : MemberInfo
+        private static Dictionary<string, T> CreateMemberNameDictionary<T>(IReadOnlyList<T> members) where T : MemberInfo
         {
-            var nameToMember = new Dictionary<string, T>();
+            var nameToMember = new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase);
             foreach (var member in members)
             {
-                if (member.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
+                if (member.IsDefined(typeof(IgnoreDataMemberAttribute), true))
                     continue;
 
-                string name;
-                var dataMemberAttribute = member.GetCustomAttribute<DataMemberAttribute>();
-                if (dataMemberAttribute != null && dataMemberAttribute.IsNameSetExplicitly)
-                    name = dataMemberAttribute.Name;
-                else
-                    name = member.Name;
+                var name = member.Name;
+                if (member.IsDefined(typeof(DataMemberAttribute), true))
+                {
+                    var dataMemberAttribute =
+                        (DataMemberAttribute) Attribute.GetCustomAttribute(member, typeof(DataMemberAttribute), true);
+                    if (!string.IsNullOrEmpty(dataMemberAttribute.Name))
+                        name = dataMemberAttribute.Name;
+                }
 
                 nameToMember.Add(name, member);
             }
@@ -384,7 +381,7 @@ namespace Nakama.TinyJson
         {
             var instance = FormatterServices.GetUninitializedObject(type);
 
-            //The list is split into key/value pairs only, this means the split must be divisible by 2 to be valid JSON
+            // The list is split into key/value pairs only, this means the split must be divisible by 2 to be valid JSON
             var elems = Split(json);
             if (elems.Count % 2 != 0)
                 return instance;
@@ -393,17 +390,15 @@ namespace Nakama.TinyJson
             Dictionary<string, PropertyInfo> nameToProperty;
             if (!_fieldInfoCache.TryGetValue(type, out nameToField))
             {
-                var fields =
-                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-                nameToField = CreateMemberNameDictionary(fields);
+                nameToField = CreateMemberNameDictionary(
+                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy));
                 _fieldInfoCache.Add(type, nameToField);
             }
 
             if (!_propertyInfoCache.TryGetValue(type, out nameToProperty))
             {
-                var properties =
-                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-                nameToProperty = CreateMemberNameDictionary(properties);
+                nameToProperty = CreateMemberNameDictionary(
+                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy));
                 _propertyInfoCache.Add(type, nameToProperty);
             }
 

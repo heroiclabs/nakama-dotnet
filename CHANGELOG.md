@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add tournaments API.
 - Add leaderboards around owner API.
 
+### Changed
+- Update TinyJson packaged dependency to latest version.
+
 ## [2.1.0] - 2018-08-17
 ### Added
 - Detect socket message encodings.

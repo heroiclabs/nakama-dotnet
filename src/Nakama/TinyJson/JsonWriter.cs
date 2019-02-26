@@ -22,6 +22,7 @@
 
 namespace Nakama.TinyJson
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
@@ -83,7 +84,13 @@ namespace Nakama.TinyJson
             }
             else if (type == typeof(bool))
             {
-                stringBuilder.Append((bool) item ? "true" : "false");
+                stringBuilder.Append(((bool) item) ? "true" : "false");
+            }
+            else if (type.IsEnum)
+            {
+                stringBuilder.Append('"');
+                stringBuilder.Append(item);
+                stringBuilder.Append('"');
             }
             else if (item is IList)
             {
@@ -138,7 +145,7 @@ namespace Nakama.TinyJson
                     type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
                 foreach (var t in fieldInfos)
                 {
-                    if (t.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
+                    if (t.IsDefined(typeof(IgnoreDataMemberAttribute), true))
                         continue;
 
                     var value = t.GetValue(item);
@@ -157,8 +164,7 @@ namespace Nakama.TinyJson
                     type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
                 foreach (var t in propertyInfo)
                 {
-                    if (!t.CanRead ||
-                        t.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
+                    if (!t.CanRead || t.IsDefined(typeof(IgnoreDataMemberAttribute), true))
                         continue;
 
                     var value = t.GetValue(item, null);
@@ -179,10 +185,10 @@ namespace Nakama.TinyJson
 
         private static string GetMemberName(MemberInfo member)
         {
-            var dataMemberAttribute = member.GetCustomAttribute<DataMemberAttribute>();
-            if (dataMemberAttribute != null && dataMemberAttribute.IsNameSetExplicitly)
-                return dataMemberAttribute.Name;
-            return member.Name;
+            if (!member.IsDefined(typeof(DataMemberAttribute), true)) return member.Name;
+            var dataMemberAttribute =
+                (DataMemberAttribute) Attribute.GetCustomAttribute(member, typeof(DataMemberAttribute), true);
+            return !string.IsNullOrEmpty(dataMemberAttribute.Name) ? dataMemberAttribute.Name : member.Name;
         }
     }
 }
