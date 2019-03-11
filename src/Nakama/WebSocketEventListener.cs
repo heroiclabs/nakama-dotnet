@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,11 +36,11 @@ namespace Nakama
         private readonly WebSocketOptions _options;
         
         private BlockingCollection<string> _sendQueue;
-        protected WebSocket _socket;
+        private WebSocket _socket;
 
-        public bool IsConnected => _socket != null && _socket.IsConnected;
+        protected bool IsConnected => _socket != null && _socket.IsConnected;
 
-        public WebSocketEventListener(WebSocketOptions options)
+        protected WebSocketEventListener(WebSocketOptions options)
         {
             _sendQueue = new BlockingCollection<string>(256);
             options.ValidateOptions();
@@ -64,7 +64,7 @@ namespace Nakama
             _client = new WebSocketClient(opts);
         }
 
-        public async Task ConnectAsync(Uri uri, CancellationToken cancellationToken)
+        protected async Task ConnectAsync(Uri uri, CancellationToken cancellationToken)
         {
             if (IsConnected)
             {
@@ -77,7 +77,7 @@ namespace Nakama
                 Connected.Invoke(this, EventArgs.Empty);
             }
 
-            var recvTask = Task.Factory.StartNew(async () =>
+            var _ = Task.Factory.StartNew(async () =>
             {
                 try
                 {
@@ -108,7 +108,7 @@ namespace Nakama
             }, cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default);
 
             var cts2 = new CancellationTokenSource();
-            var sendTask = Task.Factory.StartNew(async () =>
+            _ = Task.Factory.StartNew(async () =>
             {
                 try
                 {
@@ -117,7 +117,7 @@ namespace Nakama
                         using (var output = _socket.CreateMessageWriter(WebSocketMessageType.Text))
                         using (var writer = new StreamWriter(output))
                         {
-                            writer.Write(item);
+                            await writer.WriteAsync(item);
                         }
                     }
                 }
@@ -131,13 +131,9 @@ namespace Nakama
                     _sendQueue = new BlockingCollection<string>(256);
                 }
             }, cts2.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
-            
-#pragma warning disable 4014            
-            Task.WhenAll(recvTask, sendTask);
-#pragma warning restore 4014        
         }
 
-        public async Task CloseAsync()
+        protected async Task CloseAsync()
         {
             if (_socket != null && _socket.IsConnected)
             {
@@ -150,7 +146,7 @@ namespace Nakama
             _socket?.Dispose();
         }
 
-        public void Send(string message)
+        protected void Send(string message)
         {
             _sendQueue.TryAdd(message);
         }

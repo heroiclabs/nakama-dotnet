@@ -31,34 +31,34 @@ namespace Nakama
     internal class WebSocketWrapper : WebSocketEventListener, ISocket
     {
         /// <inheritdoc />
-        public event EventHandler<IApiChannelMessage> OnChannelMessage = (sender, message) => { };
+        public event EventHandler<IApiChannelMessage> OnChannelMessage;
 
         /// <inheritdoc />
-        public event EventHandler<IChannelPresenceEvent> OnChannelPresence = (sender, _event) => { };
+        public event EventHandler<IChannelPresenceEvent> OnChannelPresence;
 
         /// <inheritdoc />
-        public event EventHandler OnConnect = (sender, args) => { };
+        public event EventHandler OnConnect;
 
         /// <inheritdoc />
-        public event EventHandler OnDisconnect = (sender, args) => { };
+        public event EventHandler OnDisconnect;
 
         /// <inheritdoc />
         public event EventHandler<Exception> OnError;
 
         /// <inheritdoc />
-        public event EventHandler<IMatchmakerMatched> OnMatchmakerMatched = (sender, matched) => { };
+        public event EventHandler<IMatchmakerMatched> OnMatchmakerMatched;
 
         /// <inheritdoc />
-        public event EventHandler<IMatchState> OnMatchState = (sender, state) => { };
+        public event EventHandler<IMatchState> OnMatchState;
 
         /// <inheritdoc />
-        public event EventHandler<IMatchPresenceEvent> OnMatchPresence = (sender, _event) => { };
+        public event EventHandler<IMatchPresenceEvent> OnMatchPresence;
 
         /// <inheritdoc />
-        public event EventHandler<IApiNotification> OnNotification = (sender, notification) => { };
+        public event EventHandler<IApiNotification> OnNotification;
 
         /// <inheritdoc />
-        public event EventHandler<IStatusPresenceEvent> OnStatusPresence = (sender, _event) => { };
+        public event EventHandler<IStatusPresenceEvent> OnStatusPresence;
 
         /// <inheritdoc />
         public event EventHandler<IStreamPresenceEvent> OnStreamPresence;
@@ -559,7 +559,7 @@ namespace Nakama
             var timeoutTask = Task.Delay(_options.ConnectTimeout);
             if (await Task.WhenAny(resultTask, timeoutTask).ConfigureAwait(false) == timeoutTask)
             {
-                throw new TimeoutException(string.Format("Socket send timed out after {0} time.", _options.ConnectTimeout.ToString()));
+                throw new TimeoutException($"Socket send timed out after {_options.ConnectTimeout.ToString()} time.");
             }
 
             return await resultTask.ConfigureAwait(false);

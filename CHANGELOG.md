@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Update TinyJson packaged dependency to latest version.
+- A send queue is used with socket messages to prevent stalls on bad disconnects.
+
+### Fixed
+- Logger is now initialized correctly with socket debugging.
+- Stream data state is correctly deserialized from socket messages.
 
 ## [2.1.0] - 2018-08-17
 ### Added
