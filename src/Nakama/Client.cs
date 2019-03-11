@@ -44,7 +44,7 @@ namespace Nakama
         public Client(ClientOptions options)
         {
             // FIXME move into ClientOptions object.
-            Logger = NullLogger.Instance; // dont log by default.
+            Logger = NullLogger.Instance; // don't log by default.
             Retries = 3;
             Trace = false;
             Timeout = 5000;
