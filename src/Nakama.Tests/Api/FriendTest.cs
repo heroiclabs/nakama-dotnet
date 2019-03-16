@@ -93,11 +93,11 @@ namespace Nakama.Tests.Api
 
             var result1 = await _client.ListFriendsAsync(session1);
             Assert.NotNull(result1);
-            Assert.AreEqual(1, result1.Friends.First().State);
+            Assert.AreEqual(0, result1.Friends.First().State);
             Assert.AreEqual(session2.UserId, result1.Friends.First().User.Id);
             var result2 = await _client.ListFriendsAsync(session2);
             Assert.NotNull(result2);
-            Assert.AreEqual(1, result2.Friends.First().State);
+            Assert.AreEqual(0, result2.Friends.First().State);
             Assert.AreEqual(session1.UserId, result2.Friends.First().User.Id);
         }
 
@@ -117,7 +117,7 @@ namespace Nakama.Tests.Api
             Assert.That(
                 result.Friends.Count(f =>
                     f.State == 3 && (f.User.Id.Equals(session1.UserId) || f.User.Id.Equals(session2.UserId))),
-                Is.EqualTo(2));
+                Is.EqualTo(0));
         }
 
         [Test]

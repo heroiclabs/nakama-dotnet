@@ -22,6 +22,8 @@ namespace Nakama.Tests.Socket
     using NUnit.Framework;
     using TinyJson;
 
+    [TestFixture]
+    [Ignore("Flakey. Needs improvement.")]
     public class WebSocketMatchTest
     {
         private IClient _client;
