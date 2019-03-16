@@ -34,6 +34,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\AuthenticateTest.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="SessionTest.cs" />
     <Compile Include="Socket\WebSocketUserStatusTest.cs" />
     <Compile Include="SystemConsoleLogger.cs" />
+    <Compile Include="TinyJsonParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nakama\Nakama.csproj">

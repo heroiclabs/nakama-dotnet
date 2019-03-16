@@ -84,7 +84,7 @@ namespace Nakama.TinyJson
             }
             else if (type == typeof(bool))
             {
-                stringBuilder.Append(((bool) item) ? "true" : "false");
+                stringBuilder.Append((bool) item ? "true" : "false");
             }
             else if (type.IsEnum)
             {

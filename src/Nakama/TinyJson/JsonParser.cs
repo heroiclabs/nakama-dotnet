@@ -57,10 +57,21 @@ namespace Nakama.TinyJson
         {
             // Initialize, if needed, the ThreadStatic variables
             if (_propertyInfoCache == null)
+            {
                 _propertyInfoCache = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
-            if (_fieldInfoCache == null) _fieldInfoCache = new Dictionary<Type, Dictionary<string, FieldInfo>>();
-            if (_stringBuilder == null) _stringBuilder = new StringBuilder();
-            if (_splitArrayPool == null) _splitArrayPool = new Stack<List<string>>();
+            }
+            if (_fieldInfoCache == null)
+            {
+                _fieldInfoCache = new Dictionary<Type, Dictionary<string, FieldInfo>>();
+            }
+            if (_stringBuilder == null)
+            {
+                _stringBuilder = new StringBuilder();
+            }
+            if (_splitArrayPool == null)
+            {
+                _splitArrayPool = new Stack<List<string>>();
+            }
 
             // Remove all whitespace not within strings to make parsing simpler
             _stringBuilder.Length = 0;
@@ -172,7 +183,7 @@ namespace Nakama.TinyJson
 
                         if (json[i + 1] == 'u' && i + 5 < json.Length - 1)
                         {
-                            uint c = 0;
+                            uint c;
                             if (uint.TryParse(json.Substring(i + 2, 4),
                                 System.Globalization.NumberStyles.AllowHexSpecifier, null, out c))
                             {
@@ -354,9 +365,11 @@ namespace Nakama.TinyJson
             return null;
         }
 
-        private static Dictionary<string, T> CreateMemberNameDictionary<T>(IReadOnlyList<T> members) where T : MemberInfo
+        private static Dictionary<string, T> CreateMemberNameDictionary<T>(IEnumerable<T> members) where T : MemberInfo
         {
-            var nameToMember = new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase);
+            // NOTE The StringComparer is disabled intentionally because of how our generated code.
+//            var nameToMember = new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase);
+            var nameToMember = new Dictionary<string, T>();
             foreach (var member in members)
             {
                 if (member.IsDefined(typeof(IgnoreDataMemberAttribute), true))
