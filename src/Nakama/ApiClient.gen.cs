@@ -2744,24 +2744,6 @@ namespace Nakama
     }
 
     /// <summary>
-    /// service Foo {       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);     }  The JSON representation for `Empty` is empty JSON object `{}`.
-    /// </summary>
-    public interface IProtobufEmpty
-    {
-    }
-
-    /// <inheritdoc />
-    internal class ProtobufEmpty : IProtobufEmpty
-    {
-
-        public override string ToString()
-        {
-            var output = "";
-            return output;
-        }
-    }
-
-    /// <summary>
     /// The low level client for the Nakama API.
     /// </summary>
     internal class ApiClient
@@ -2778,7 +2760,7 @@ namespace Nakama
         /// <summary>
         /// A healthcheck which load balancers can use to check the service.
         /// </summary>
-        public async Task<IProtobufEmpty> HealthcheckAsync(
+        public async Task HealthcheckAsync(
             string bearerToken)
         {
 
@@ -2800,7 +2782,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -2842,7 +2824,7 @@ namespace Nakama
         /// <summary>
         /// Update fields in the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> UpdateAccountAsync(
+        public async Task UpdateAccountAsync(
             string bearerToken
             , ApiUpdateAccountRequest body)
         {
@@ -2870,7 +2852,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3027,7 +3009,7 @@ namespace Nakama
             , ApiAccountFacebook body
             , bool create
             , string username
-            , bool import)
+            , bool sync)
         {
             if (body == null)
             {
@@ -3040,7 +3022,7 @@ namespace Nakama
             {
                 urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
             }
-            urlpath = string.Concat(urlpath, "import=", import.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "sync=", sync.ToString().ToLower(), "&");
 
             var request = new HttpRequestMessage
             {
@@ -3211,7 +3193,7 @@ namespace Nakama
         /// <summary>
         /// Add a custom ID to the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> LinkCustomAsync(
+        public async Task LinkCustomAsync(
             string bearerToken
             , ApiAccountCustom body)
         {
@@ -3239,7 +3221,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3249,7 +3231,7 @@ namespace Nakama
         /// <summary>
         /// Add a device ID to the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> LinkDeviceAsync(
+        public async Task LinkDeviceAsync(
             string bearerToken
             , ApiAccountDevice body)
         {
@@ -3277,7 +3259,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3287,7 +3269,7 @@ namespace Nakama
         /// <summary>
         /// Add an email+password to the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> LinkEmailAsync(
+        public async Task LinkEmailAsync(
             string bearerToken
             , ApiAccountEmail body)
         {
@@ -3315,7 +3297,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3325,10 +3307,10 @@ namespace Nakama
         /// <summary>
         /// Add Facebook to the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> LinkFacebookAsync(
+        public async Task LinkFacebookAsync(
             string bearerToken
             , ApiAccountFacebook body
-            , bool import)
+            , bool sync)
         {
             if (body == null)
             {
@@ -3336,7 +3318,7 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/link/facebook?";
-            urlpath = string.Concat(urlpath, "import=", import.ToString().ToLower(), "&");
+            urlpath = string.Concat(urlpath, "sync=", sync.ToString().ToLower(), "&");
 
             var request = new HttpRequestMessage
             {
@@ -3355,7 +3337,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3365,7 +3347,7 @@ namespace Nakama
         /// <summary>
         /// Add Apple's GameCenter to the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> LinkGameCenterAsync(
+        public async Task LinkGameCenterAsync(
             string bearerToken
             , ApiAccountGameCenter body)
         {
@@ -3393,7 +3375,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3403,7 +3385,7 @@ namespace Nakama
         /// <summary>
         /// Add Google to the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> LinkGoogleAsync(
+        public async Task LinkGoogleAsync(
             string bearerToken
             , ApiAccountGoogle body)
         {
@@ -3431,7 +3413,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3441,7 +3423,7 @@ namespace Nakama
         /// <summary>
         /// Add Steam to the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> LinkSteamAsync(
+        public async Task LinkSteamAsync(
             string bearerToken
             , ApiAccountSteam body)
         {
@@ -3469,7 +3451,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3479,7 +3461,7 @@ namespace Nakama
         /// <summary>
         /// Remove the custom ID from the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> UnlinkCustomAsync(
+        public async Task UnlinkCustomAsync(
             string bearerToken
             , ApiAccountCustom body)
         {
@@ -3507,7 +3489,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3517,7 +3499,7 @@ namespace Nakama
         /// <summary>
         /// Remove the device ID from the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> UnlinkDeviceAsync(
+        public async Task UnlinkDeviceAsync(
             string bearerToken
             , ApiAccountDevice body)
         {
@@ -3545,7 +3527,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3555,7 +3537,7 @@ namespace Nakama
         /// <summary>
         /// Remove the email+password from the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> UnlinkEmailAsync(
+        public async Task UnlinkEmailAsync(
             string bearerToken
             , ApiAccountEmail body)
         {
@@ -3583,7 +3565,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3593,7 +3575,7 @@ namespace Nakama
         /// <summary>
         /// Remove Facebook from the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> UnlinkFacebookAsync(
+        public async Task UnlinkFacebookAsync(
             string bearerToken
             , ApiAccountFacebook body)
         {
@@ -3621,7 +3603,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3631,7 +3613,7 @@ namespace Nakama
         /// <summary>
         /// Remove Apple's GameCenter from the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> UnlinkGameCenterAsync(
+        public async Task UnlinkGameCenterAsync(
             string bearerToken
             , ApiAccountGameCenter body)
         {
@@ -3659,7 +3641,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3669,7 +3651,7 @@ namespace Nakama
         /// <summary>
         /// Remove Google from the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> UnlinkGoogleAsync(
+        public async Task UnlinkGoogleAsync(
             string bearerToken
             , ApiAccountGoogle body)
         {
@@ -3697,7 +3679,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3707,7 +3689,7 @@ namespace Nakama
         /// <summary>
         /// Remove Steam from the social profiles on the current user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> UnlinkSteamAsync(
+        public async Task UnlinkSteamAsync(
             string bearerToken
             , ApiAccountSteam body)
         {
@@ -3735,7 +3717,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3792,7 +3774,7 @@ namespace Nakama
         /// <summary>
         /// Delete one or more users by ID or username.
         /// </summary>
-        public async Task<IProtobufEmpty> DeleteFriendsAsync(
+        public async Task DeleteFriendsAsync(
             string bearerToken
             , IEnumerable<string> ids
             , IEnumerable<string> usernames)
@@ -3824,7 +3806,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3866,7 +3848,7 @@ namespace Nakama
         /// <summary>
         /// Add friends by ID or username to a user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> AddFriendsAsync(
+        public async Task AddFriendsAsync(
             string bearerToken
             , IEnumerable<string> ids
             , IEnumerable<string> usernames)
@@ -3898,7 +3880,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3908,7 +3890,7 @@ namespace Nakama
         /// <summary>
         /// Block one or more users by ID or username.
         /// </summary>
-        public async Task<IProtobufEmpty> BlockFriendsAsync(
+        public async Task BlockFriendsAsync(
             string bearerToken
             , IEnumerable<string> ids
             , IEnumerable<string> usernames)
@@ -3940,7 +3922,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -3950,7 +3932,7 @@ namespace Nakama
         /// <summary>
         /// Import Facebook friends and add them to a user's account.
         /// </summary>
-        public async Task<IProtobufEmpty> ImportFacebookFriendsAsync(
+        public async Task ImportFacebookFriendsAsync(
             string bearerToken
             , ApiAccountFacebook body
             , bool reset)
@@ -3980,7 +3962,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4072,7 +4054,7 @@ namespace Nakama
         /// <summary>
         /// Delete a group by ID.
         /// </summary>
-        public async Task<IProtobufEmpty> DeleteGroupAsync(
+        public async Task DeleteGroupAsync(
             string bearerToken
             , string groupId)
         {
@@ -4100,7 +4082,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4110,7 +4092,7 @@ namespace Nakama
         /// <summary>
         /// Update fields in a given group.
         /// </summary>
-        public async Task<IProtobufEmpty> UpdateGroupAsync(
+        public async Task UpdateGroupAsync(
             string bearerToken
             , string groupId
             , ApiUpdateGroupRequest body)
@@ -4144,7 +4126,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4154,7 +4136,7 @@ namespace Nakama
         /// <summary>
         /// Add users to a group.
         /// </summary>
-        public async Task<IProtobufEmpty> AddGroupUsersAsync(
+        public async Task AddGroupUsersAsync(
             string bearerToken
             , string groupId
             , IEnumerable<string> userIds)
@@ -4187,7 +4169,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4197,7 +4179,7 @@ namespace Nakama
         /// <summary>
         /// Immediately join an open group, or request to join a closed one.
         /// </summary>
-        public async Task<IProtobufEmpty> JoinGroupAsync(
+        public async Task JoinGroupAsync(
             string bearerToken
             , string groupId)
         {
@@ -4225,7 +4207,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4235,7 +4217,7 @@ namespace Nakama
         /// <summary>
         /// Kick a set of users from a group.
         /// </summary>
-        public async Task<IProtobufEmpty> KickGroupUsersAsync(
+        public async Task KickGroupUsersAsync(
             string bearerToken
             , string groupId
             , IEnumerable<string> userIds)
@@ -4268,7 +4250,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4278,7 +4260,7 @@ namespace Nakama
         /// <summary>
         /// Leave a group the user is a member of.
         /// </summary>
-        public async Task<IProtobufEmpty> LeaveGroupAsync(
+        public async Task LeaveGroupAsync(
             string bearerToken
             , string groupId)
         {
@@ -4306,7 +4288,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4316,7 +4298,7 @@ namespace Nakama
         /// <summary>
         /// Promote a set of users in a group to the next role up.
         /// </summary>
-        public async Task<IProtobufEmpty> PromoteGroupUsersAsync(
+        public async Task PromoteGroupUsersAsync(
             string bearerToken
             , string groupId
             , IEnumerable<string> userIds)
@@ -4349,7 +4331,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4397,7 +4379,7 @@ namespace Nakama
         /// <summary>
         /// Delete a leaderboard record.
         /// </summary>
-        public async Task<IProtobufEmpty> DeleteLeaderboardRecordAsync(
+        public async Task DeleteLeaderboardRecordAsync(
             string bearerToken
             , string leaderboardId)
         {
@@ -4425,7 +4407,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4433,7 +4415,7 @@ namespace Nakama
         }
 
         /// <summary>
-        /// List leaderboard records
+        /// List leaderboard records.
         /// </summary>
         public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(
             string bearerToken
@@ -4625,7 +4607,7 @@ namespace Nakama
         /// <summary>
         /// Delete one or more notifications for the current user.
         /// </summary>
-        public async Task<IProtobufEmpty> DeleteNotificationsAsync(
+        public async Task DeleteNotificationsAsync(
             string bearerToken
             , IEnumerable<string> ids)
         {
@@ -4652,7 +4634,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -4875,7 +4857,7 @@ namespace Nakama
         /// <summary>
         /// Delete one or more objects by ID or username.
         /// </summary>
-        public async Task<IProtobufEmpty> DeleteStorageObjectsAsync(
+        public async Task DeleteStorageObjectsAsync(
             string bearerToken
             , ApiDeleteStorageObjectsRequest body)
         {
@@ -4903,7 +4885,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();
@@ -5155,7 +5137,7 @@ namespace Nakama
         /// <summary>
         /// Attempt to join an open and running tournament.
         /// </summary>
-        public async Task<IProtobufEmpty> JoinTournamentAsync(
+        public async Task JoinTournamentAsync(
             string bearerToken
             , string tournamentId)
         {
@@ -5183,7 +5165,7 @@ namespace Nakama
             var contents = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return contents.FromJson<ProtobufEmpty>();
+                return;
             }
             response.Content?.Dispose();
             var decoded = contents.FromJson<Dictionary<string, object>>();

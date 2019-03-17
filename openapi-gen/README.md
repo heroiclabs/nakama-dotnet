@@ -6,7 +6,7 @@ openapi-gen
 ## Usage
 
 ```shell
-go run main.go $GOPATH/src/github.com/heroiclabs/nakama/api/api.swagger.json > ../src/Nakama/ApiClient.gen.cs
+go run main.go $GOPATH/src/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger.json > ../src/Nakama/ApiClient.gen.cs
 ```
 
 ### Rationale
