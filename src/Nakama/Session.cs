@@ -94,7 +94,7 @@ namespace Nakama
             var payload = jwt.Split('.')[1];
 
             var padLength = Math.Ceiling(payload.Length / 4.0) * 4;
-            payload = payload.PadRight(Convert.ToInt32(padLength), '=');
+            payload = payload.PadRight(Convert.ToInt32(padLength), '=').Replace('-', '+').Replace('_', '/');
 
             return Encoding.UTF8.GetString(Convert.FromBase64String(payload));
         }
