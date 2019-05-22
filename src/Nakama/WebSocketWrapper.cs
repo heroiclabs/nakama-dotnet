@@ -66,6 +66,8 @@ namespace Nakama
         /// <inheritdoc />
         public event EventHandler<IStreamState> OnStreamState;
 
+        private static readonly IReadOnlyList<UserPresence> NoPresences = new List<UserPresence>(0);
+
         private readonly Uri _baseUri;
         private readonly WebSocketOptions _options;
         private readonly ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _messageReplies;
@@ -432,7 +434,7 @@ namespace Nakama
                 {
                     MatchId = matchId,
                     OpCode = Convert.ToString(opCode),
-                    Presences = presences as List<UserPresence>,
+                    Presences = BuildPresenceList(presences),
                     State = Convert.ToBase64String(state)
                 }
             };
@@ -454,7 +456,7 @@ namespace Nakama
                 {
                     MatchId = matchId,
                     OpCode = Convert.ToString(opCode),
-                    Presences = presences as List<UserPresence>,
+                    Presences = BuildPresenceList(presences),
                     State = Convert.ToBase64String(state)
                 }
             };
@@ -563,6 +565,27 @@ namespace Nakama
             }
 
             return await resultTask.ConfigureAwait(false);
+        }
+
+        private static List<UserPresence> BuildPresenceList(IEnumerable<IUserPresence> presences)
+        {
+            if(presences == null)
+            {
+                return (List<UserPresence>) NoPresences;
+            }
+
+            List<UserPresence> presenceList = presences as List<UserPresence>;
+            if (presenceList != null)
+            {
+                return presenceList;
+            }
+
+            presenceList =  new List<UserPresence>();
+            foreach(UserPresence concretePresence in presences)
+            {
+                presenceList.Add(concretePresence);
+            }
+            return presenceList;
         }
     }
 }
