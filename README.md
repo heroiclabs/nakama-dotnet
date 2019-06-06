@@ -21,11 +21,11 @@ You'll need to setup the server and database before you can connect with the cli
 
     ```csharp
     // using Nakama;
-    var client = new Client("defaultkey", "127.0.0.1", 7350, false)
-    {
-        Timeout = 10000, // set timeout on requests (default is 5000).
-        Retries = 5      // set retries on requests (default is 3).
-    };
+    const string scheme = "http";
+    const string host = "127.0.0.1";
+    const int port = 7350;
+    const string serverKey = "defaultkey";
+    var client = new Client(scheme, host, port, serverKey);
     ```
 
 ## Usage
@@ -66,9 +66,11 @@ if (session.IsExpired)
 }
 ```
 
+NOTE: The length of the lifetime of a session can be changed on the server with the "--session.token_expiry_sec" command flag argument.
+
 ### Requests
 
-The client includes lots of builtin APIs for various features of the game server. These can be accessed with the async methods. It can also call custom logic as RPC functions on the server. These can also be executed with a socket object.
+The client includes lots of builtin APIs for various features of the game server. These can be accessed with the async methods. It can also call custom logic in RPC functions on the server. These can also be executed with a socket object.
 
 All requests are sent with a session object which authorizes the client.
 
@@ -84,31 +86,35 @@ System.Console.WriteLine(account.Wallet);
 The client can create one or more sockets with the server. Each socket can have it's own event listeners registered for responses received from the server.
 
 ```csharp
-var reconnects = 5; // set reconnect attempts (default is 3).
-var socket = client.CreateWebSocket(reconnects);
-socket.OnConnect += (sender, args) =>
+var socket = Socket.From(client);
+socket.Connected += () =>
 {
     System.Console.WriteLine("Socket connected.");
 };
+socket.Closed += () =>
+{
+    System.Console.WriteLine("Socket closed.");
+};
+socket.ReceivedError += e => System.Console.WriteLine(e);
 await socket.ConnectAsync(session);
 ```
 
 ## Contribute
 
-The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to enhance the code please open an issue to discuss the changes or drop in and discuss it in the [community chat](https://gitter.im/heroiclabs/nakama).
+The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to improve the code please open an issue to discuss the changes or drop in and discuss it in the [community chat](https://gitter.im/heroiclabs/nakama).
 
 ### Source Builds
 
-The codebase can be built with [Cake](https://cakebuild.net). All dependencies are downloaded at build time with Nuget.
+The codebase can be built with the [Dotnet CLI](https://docs.microsoft.com/en-us/dotnet/core/tools). All dependencies are downloaded at build time with Nuget.
 
 ```shell
-./build.sh --target=Build
+dotnet build src/Nakama/Nakama.csproj
 ```
 
-With Windows use the PowerShell script instead.
+For release builds use:
 
 ```shell
-.\build.ps1 --target=Build
+dotnet build -c Release /p:AssemblyVersion=2.0.0.0 src/Nakama/Nakama.csproj
 ```
 
 ### Run Tests
@@ -116,8 +122,8 @@ With Windows use the PowerShell script instead.
 To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the [documentation](https://heroiclabs.com/docs/install-docker-quickstart).
 
 ```shell
-docker-compose -f ./docker-compose.yml up
-./build.sh --target=Run-Unit-Tests
+docker-compose -f ./docker-compose-postgres.yml up
+dotnet test tests/Nakama.Tests/Nakama.Tests.csproj
 ```
 
 ### License
@@ -126,4 +132,4 @@ This project is licensed under the [Apache-2 License](https://github.com/heroicl
 
 ### Special Thanks
 
-Thanks to Alex Parker (@zanders3) for the excellent [json](https://github.com/zanders3/json) library.
+Thanks to Alex Parker (@zanders3) for the excellent [json](https://github.com/zanders3/json) library and David Haig (@ninjasource) for [Ninja.WebSockets](https://github.com/ninjasource/Ninja.WebSockets).
