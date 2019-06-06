@@ -1,12 +1,12 @@
-openapi-gen
-===========
+codegen
+=======
 
-> A util command to generate a client from the Swagger spec of Nakama's server API.
+> A util tool to generate a client from the Swagger spec of Nakama's server API.
 
 ## Usage
 
 ```shell
-go run main.go $GOPATH/src/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger.json > ../src/Nakama/ApiClient.gen.cs
+go run "$GOPATHsrc/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger.json" > ../src/Nakama/ApiClient.gen.cs
 ```
 
 ### Rationale
