@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
     /// <summary>
-    /// A client to interact with Nakama server.
+    /// A client for the API in Nakama server.
     /// </summary>
     public interface IClient
     {
@@ -30,19 +30,14 @@ namespace Nakama
         string Host { get; }
 
         /// <summary>
-        /// A logger which can write log messages. Defaults to <c>NullLogger</c>.
-        /// </summary>
-        ILogger Logger { get; set; }
-
-        /// <summary>
         /// The port number of the server. Defaults to 7350.
         /// </summary>
         int Port { get; }
 
         /// <summary>
-        /// The number of retries to attempt with each request with the server.
+        /// The protocol scheme used to connect with the server. Must be either "http" or "https".
         /// </summary>
-        int Retries { get; set; }
+        string Scheme { get; }
 
         /// <summary>
         /// The key used to authenticate with the server without a session. Defaults to "defaultkey".
@@ -50,23 +45,7 @@ namespace Nakama
         string ServerKey { get; }
 
         /// <summary>
-        /// Set connection strings to use the secure mode with the server. Defaults to false.
-        /// <remarks>
-        /// The server must be configured to make use of this option. With HTTP, GRPC, and WebSockets the server must
-        /// be configured with an SSL certificate or use a load balancer which performs SSL termination. For rUDP you
-        /// must configure the server to expose it's IP address so it can be bundled within session tokens. See the
-        /// server documentation for more information.
-        /// </remarks>
-        /// </summary>
-        bool Secure { get; }
-
-        /// <summary>
-        /// Trace all actions performed by the client. Defaults to false.
-        /// </summary>
-        bool Trace { get; set; }
-
-        /// <summary>
-        /// Set the timeout on requests sent to the server.
+        /// Set the timeout in seconds on requests sent to the server.
         /// </summary>
         int Timeout { get; set; }
 
@@ -76,7 +55,7 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The ids of the users to add or invite as friends.</param>
         /// <param name="usernames">The usernames of the users to add as friends.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null);
 
         /// <summary>
@@ -85,7 +64,7 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="groupId">The id of the group to add users into.</param>
         /// <param name="ids">The ids of the users to add or invite to the group.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids);
 
         /// <summary>
@@ -93,8 +72,8 @@ namespace Nakama
         /// </summary>
         /// <param name="id">A custom identifier usually obtained from an external authentication service.</param>
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
-        /// <param name="create">True if the user should be created when authenticated.</param>
-        /// <returns>A task to resolve a session object.</returns>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true);
 
         /// <summary>
@@ -102,8 +81,8 @@ namespace Nakama
         /// </summary>
         /// <param name="id">A device identifier usually obtained from a platform API.</param>
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
-        /// <param name="create">True if the user should be created when authenticated.</param>
-        /// <returns>A task to resolve a session object.</returns>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true);
 
         /// <summary>
@@ -112,8 +91,8 @@ namespace Nakama
         /// <param name="email">The email address of the user.</param>
         /// <param name="password">The password for the user.</param>
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
-        /// <param name="create">True if the user should be created when authenticated.</param>
-        /// <returns>A task to resolve a session object.</returns>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateEmailAsync(string email, string password, string username = null,
             bool create = true);
 
@@ -122,9 +101,9 @@ namespace Nakama
         /// </summary>
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
-        /// <param name="create">True if the user should be created when authenticated.</param>
-        /// <param name="import">True if the Facebook friends should be imported.</param>
-        /// <returns>A task to resolve a session object.</returns>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <param name="import">If the Facebook friends should be imported.</param>
+        /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
             bool import = true);
 
@@ -138,8 +117,8 @@ namespace Nakama
         /// <param name="signature">The verification signature data generated.</param>
         /// <param name="timestampSeconds">The date and time that the signature was created.</param>
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
-        /// <param name="create">True if the user should be created when authenticated.</param>
-        /// <returns>A task to resolve a session object.</returns>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
             string signature, string timestampSeconds, string username = null, bool create = true);
 
@@ -148,8 +127,8 @@ namespace Nakama
         /// </summary>
         /// <param name="token">An OAuth access token from the Google SDK.</param>
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
-        /// <param name="create">True if the user should be created when authenticated.</param>
-        /// <returns>A task to resolve a session object.</returns>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true);
 
         /// <summary>
@@ -157,8 +136,8 @@ namespace Nakama
         /// </summary>
         /// <param name="token">An authentication token from the Steam network.</param>
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
-        /// <param name="create">True if the user should be created when authenticated.</param>
-        /// <returns>A task to resolve a session object.</returns>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true);
 
         /// <summary>
@@ -167,7 +146,7 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The ids of the users to block.</param>
         /// <param name="usernames">The usernames of the users to block.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null);
 
         /// <summary>
@@ -178,8 +157,8 @@ namespace Nakama
         /// <param name="description">A description for the group.</param>
         /// <param name="avatarUrl">An avatar url for the group.</param>
         /// <param name="langTag">A language tag in BCP-47 format for the group.</param>
-        /// <param name="open">True if the group should have open membership.</param>
-        /// <returns>A task to resolve a new group object.</returns>
+        /// <param name="open">If the group should have open membership.</param>
+        /// <returns>A task which resolves to a new group object.</returns>
         Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description = "",
             string avatarUrl = null, string langTag = null, bool open = true);
 
@@ -189,7 +168,7 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The user ids to remove as friends.</param>
         /// <param name="usernames">The usernames to remove as friends.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null);
 
         /// <summary>
@@ -197,7 +176,7 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="groupId">The group id to to remove.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task DeleteGroupAsync(ISession session, string groupId);
 
         /// <summary>
@@ -205,7 +184,7 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="leaderboardId">The id of the leaderboard with the record to be deleted.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId);
 
         /// <summary>
@@ -213,7 +192,7 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The notification ids to remove.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids);
 
         /// <summary>
@@ -221,24 +200,24 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The ids of the objects to delete.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task DeleteStorageObjectsAsync(ISession session, params StorageObjectId[] ids);
 
         /// <summary>
         /// Fetch the user account owned by the session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <returns>A task to resolve an account object.</returns>
+        /// <returns>A task which resolves to the account object.</returns>
         Task<IApiAccount> GetAccountAsync(ISession session);
 
         /// <summary>
         /// Fetch one or more users by id, usernames, and Facebook ids.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="ids"></param>
-        /// <param name="usernames"></param>
-        /// <param name="facebookIds"></param>
-        /// <returns>A task to resolve user objects.</returns>
+        /// <param name="ids">The IDs of the users to retrieve.</param>
+        /// <param name="usernames">The usernames of the users to retrieve.</param>
+        /// <param name="facebookIds">The facebook IDs of the users to retrieve.</param>
+        /// <returns>A task which resolves to a collection of user objects.</returns>
         Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null,
             IEnumerable<string> facebookIds = null);
 
@@ -251,16 +230,16 @@ namespace Nakama
         /// </remarks>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
-        /// <param name="reset">True if the Facebook friend import for the user should be reset.</param>
-        /// <returns>A task.</returns>
+        /// <param name="reset">If the Facebook friend import for the user should be reset.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task ImportFacebookFriendsAsync(ISession session, string token, bool reset = false);
 
         /// <summary>
         /// Join a group if it has open membership or request to join it.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="groupId">The id of the group to join.</param>
-        /// <returns>A task.</returns>
+        /// <param name="groupId">The ID of the group to join.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task JoinGroupAsync(ISession session, string groupId);
 
         /// <summary>
@@ -268,40 +247,40 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="tournamentId">The ID of the tournament to join.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task JoinTournamentAsync(ISession session, string tournamentId);
 
         /// <summary>
         /// Kick one or more users from the group.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="groupId">The id of the group.</param>
-        /// <param name="ids">The ids of the users to kick.</param>
-        /// <returns>A task.</returns>
+        /// <param name="groupId">The ID of the group.</param>
+        /// <param name="ids">The IDs of the users to kick.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids);
 
         /// <summary>
-        /// Leave a group by id.
+        /// Leave a group by ID.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="groupId">The id of the group to leave.</param>
-        /// <returns>A task.</returns>
+        /// <param name="groupId">The ID of the group to leave.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LeaveGroupAsync(ISession session, string groupId);
 
         /// <summary>
-        /// Link a custom id to the user account owned by the session.
+        /// Link a custom ID to the user account owned by the session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="id">A custom identifier usually obtained from an external authentication service.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkCustomAsync(ISession session, string id);
 
         /// <summary>
-        /// Link a device id to the user account owned by the session.
+        /// Link a device ID to the user account owned by the session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="id">A device identifier usually obtained from a platform API.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkDeviceAsync(ISession session, string id);
 
         /// <summary>
@@ -310,7 +289,7 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="email">The email address of the user.</param>
         /// <param name="password">The password for the user.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkEmailAsync(ISession session, string email, string password);
 
         /// <summary>
@@ -318,21 +297,21 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
-        /// <param name="import">True if the Facebook friends should be imported.</param>
-        /// <returns>A task.</returns>
+        /// <param name="import">If the Facebook friends should be imported.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkFacebookAsync(ISession session, string token, bool import = true);
 
         /// <summary>
         /// Link a Game Center profile to a user account.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="bundleId">The bundle id of the Game Center application.</param>
-        /// <param name="playerId">The player id of the user in Game Center.</param>
+        /// <param name="bundleId">The bundle ID of the Game Center application.</param>
+        /// <param name="playerId">The player ID of the user in Game Center.</param>
         /// <param name="publicKeyUrl">The URL for the public encryption key.</param>
         /// <param name="salt">A random <c>NSString</c> used to compute the hash and keep it randomized.</param>
         /// <param name="signature">The verification signature data generated.</param>
         /// <param name="timestampSeconds">The date and time that the signature was created.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
             string signature, string timestampSeconds);
 
@@ -341,7 +320,7 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An OAuth access token from the Google SDK.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkGoogleAsync(ISession session, string token);
 
         /// <summary>
@@ -349,8 +328,20 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An authentication token from the Steam network.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkSteamAsync(ISession session, string token);
+
+        /// <summary>
+        /// List messages from a chat channel.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="channel">The chat channel object.</param>
+        /// <param name="limit">The number of chat messages to list.</param>
+        /// <param name="forward">Fetch messages forward from the current cursor (or the start).</param>
+        /// <param name="cursor">A cursor for the current position in the messages history to list.</param>
+        /// <returns>A task which resolves to the channel message list object.</returns>
+        Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, IChannel channel, int limit = 1,
+            bool forward = true, string cursor = null);
 
         /// <summary>
         /// List messages from a chat channel.
@@ -360,7 +351,7 @@ namespace Nakama
         /// <param name="limit">The number of chat messages to list.</param>
         /// <param name="forward">Fetch messages forward from the current cursor (or the start).</param>
         /// <param name="cursor">A cursor for the current position in the messages history to list.</param>
-        /// <returns>A task to resolve channel message objects.</returns>
+        /// <returns>A task which resolves to the channel message list object.</returns>
         Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit = 1,
             bool forward = true, string cursor = null);
 
@@ -368,15 +359,15 @@ namespace Nakama
         /// List of friends of the current user.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <returns>A task to resolve friend objects.</returns>
+        /// <returns>A task which resolves to the friend objects.</returns>
         Task<IApiFriends> ListFriendsAsync(ISession session);
 
         /// <summary>
         /// List all users part of the group.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="groupId">The id of the group.</param>
-        /// <returns>A task to resolve group user objects.</returns>
+        /// <param name="groupId">The ID of the group.</param>
+        /// <returns>A task which resolves to the group user objects.</returns>
         Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId);
 
         /// <summary>
@@ -393,11 +384,11 @@ namespace Nakama
         /// List records from a leaderboard.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="leaderboardId">The id of the leaderboard to list.</param>
+        /// <param name="leaderboardId">The ID of the leaderboard to list.</param>
         /// <param name="ownerIds">Record owners to fetch with the list of records.</param>
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">A cursor for the current position in the leaderboard records to list.</param>
-        /// <returns>A task to resolve leaderboard record objects.</returns>
+        /// <returns>A task which resolves to the leaderboard record objects.</returns>
         Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
             IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null);
 
@@ -405,10 +396,10 @@ namespace Nakama
         /// List leaderboard records that belong to a user.
         /// </summary>
         /// <param name="session">The session for the user.</param>
-        /// <param name="leaderboardId">The id of the leaderboard to list.</param>
-        /// <param name="ownerId">The id of the user to list around.</param>
+        /// <param name="leaderboardId">The ID of the leaderboard to list.</param>
+        /// <param name="ownerId">The ID of the user to list around.</param>
         /// <param name="limit">The limit of the listings.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which resolves to the leaderboard record objects.</returns>
         Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session, string leaderboardId,
             string ownerId, int limit = 1);
 
@@ -419,10 +410,10 @@ namespace Nakama
         /// <param name="min">The minimum number of match participants.</param>
         /// <param name="max">The maximum number of match participants.</param>
         /// <param name="limit">The number of matches to list.</param>
-        /// <param name="authoritative"><c>True</c> to include authoritative matches.</param>
+        /// <param name="authoritative">If authoritative matches should be included.</param>
         /// <param name="label">The label to filter the match list on.</param>
         /// <param name="query">A query for the matches to filter.</param>
-        /// <returns></returns>
+        /// <returns>A task which resolves to the match list object.</returns>
         Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
             string label, string query);
 
@@ -443,7 +434,7 @@ namespace Nakama
         /// <param name="collection">The collection to list over.</param>
         /// <param name="limit">The number of objects to list.</param>
         /// <param name="cursor">A cursor to paginate over the collection.</param>
-        /// <returns>A task which resolves to a storage object list.</returns>
+        /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit = 1,
             string cursor = null);
 
@@ -452,9 +443,9 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="tournamentId">The ID of the tournament.</param>
-        /// <param name="ownerId"></param>
-        /// <param name="limit"></param>
-        /// <returns></returns>
+        /// <param name="ownerId">The ID of the owner to pivot around.</param>
+        /// <param name="limit">The number of records to list.</param>
+        /// <returns>A task which resolves to the tournament record list object.</returns>
         Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session, string tournamentId,
             string ownerId, int limit = 1);
 
@@ -466,7 +457,7 @@ namespace Nakama
         /// <param name="ownerIds">The IDs of the record owners to return in the result.</param>
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">An optional cursor for the next page of tournament records.</param>
-        /// <returns>A task which resolves to a list of tournament records.</returns>
+        /// <returns>A task which resolves to the list of tournament records.</returns>
         Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
             IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null);
 
@@ -480,7 +471,7 @@ namespace Nakama
         /// <param name="endTime">The end time of the tournaments. (UNIX timestamp)</param>
         /// <param name="limit">The number of tournaments to list.</param>
         /// <param name="cursor">An optional cursor for the next page of tournaments.</param>
-        /// <returns>A task which resolves to a list of tournament objects.</returns>
+        /// <returns>A task which resolves to the list of tournament objects.</returns>
         Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
             int startTime, int endTime, int limit = 1, string cursor = null);
 
@@ -488,15 +479,15 @@ namespace Nakama
         /// List of groups the current user is a member of.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <returns>A task which resolves to group objects.</returns>
+        /// <returns>A task which resolves to the group list object.</returns>
         Task<IApiUserGroupList> ListUserGroupsAsync(ISession session);
 
         /// <summary>
         /// List groups a user is a member of.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="userId">The id of the user whose groups to list.</param>
-        /// <returns>A task which resolves to group objects.</returns>
+        /// <param name="userId">The ID of the user whose groups to list.</param>
+        /// <returns>A task which resolves to the group list object.</returns>
         Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId);
 
         /// <summary>
@@ -507,7 +498,7 @@ namespace Nakama
         /// <param name="userId">The user ID of the user to list objects for.</param>
         /// <param name="limit">The number of objects to list.</param>
         /// <param name="cursor">A cursor to paginate over the collection.</param>
-        /// <returns>A task which resolves to a storage object list.</returns>
+        /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
             int limit, string cursor);
 
@@ -515,9 +506,9 @@ namespace Nakama
         /// Promote one or more users in the group.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="groupId">The id of the group to promote users into.</param>
-        /// <param name="ids">The ids of the users to promote.</param>
-        /// <returns>A task.</returns>
+        /// <param name="groupId">The ID of the group to promote users into.</param>
+        /// <param name="ids">The IDs of the users to promote.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids);
 
         /// <summary>
@@ -525,29 +516,32 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The objects to read.</param>
-        /// <returns>A task to resolve storage objects.</returns>
+        /// <returns>A task which resolves to the storage batch object.</returns>
         Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session, params IApiReadStorageObjectId[] ids);
 
         /// <summary>
-        /// Execute a Lua function with an input payload on the server.
+        /// Execute a function with an input payload on the server.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="id">The id of the function to execute on the server.</param>
+        /// <param name="id">The ID of the function to execute on the server.</param>
         /// <param name="payload">The payload to send with the function call.</param>
-        /// <returns>A task to resolve an RPC response.</returns>
+        /// <returns>A task which resolves to the RPC response.</returns>
         Task<IApiRpc> RpcAsync(ISession session, string id, string payload);
 
         /// <summary>
-        /// Execute a Lua function on the server.
+        /// Execute a function on the server.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="id">The id of the function to execute on the server.</param>
-        /// <returns>A task to resolve an RPC response.</returns>
+        /// <param name="id">The ID of the function to execute on the server.</param>
+        /// <returns>A task which resolves to the RPC response.</returns>
         Task<IApiRpc> RpcAsync(ISession session, string id);
 
         /// <summary>
-        /// Execute a Lua function on the server without a session.
+        /// Execute a function on the server without a session.
         /// </summary>
+        /// <remarks>
+        /// This function is usually used with server side code. DO NOT USE client side.
+        /// </remarks>
         /// <param name="httpkey">The secure HTTP key used to authenticate.</param>
         /// <param name="id">The id of the function to execute on the server.</param>
         /// <param name="payload">A payload to send with the function call.</param>
@@ -555,19 +549,19 @@ namespace Nakama
         Task<IApiRpc> RpcAsync(string httpkey, string id, string payload = null);
 
         /// <summary>
-        /// Unlink a custom id from the user account owned by the session.
+        /// Unlink a custom ID from the user account owned by the session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="id">A custom identifier usually obtained from an external authentication service.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkCustomAsync(ISession session, string id);
 
         /// <summary>
-        /// Unlink a device id from the user account owned by the session.
+        /// Unlink a device ID from the user account owned by the session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="id">A device identifier usually obtained from a platform API.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkDeviceAsync(ISession session, string id);
 
         /// <summary>
@@ -576,7 +570,7 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="email">The email address of the user.</param>
         /// <param name="password">The password for the user.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkEmailAsync(ISession session, string email, string password);
 
         /// <summary>
@@ -584,20 +578,20 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkFacebookAsync(ISession session, string token);
 
         /// <summary>
         /// Unlink a Game Center profile from the user account owned by the session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="bundleId">The bundle id of the Game Center application.</param>
-        /// <param name="playerId">The player id of the user in Game Center.</param>
+        /// <param name="bundleId">The bundle ID of the Game Center application.</param>
+        /// <param name="playerId">The player ID of the user in Game Center.</param>
         /// <param name="publicKeyUrl">The URL for the public encryption key.</param>
         /// <param name="salt">A random <c>NSString</c> used to compute the hash and keep it randomized.</param>
         /// <param name="signature">The verification signature data generated.</param>
         /// <param name="timestampSeconds">The date and time that the signature was created.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
             string signature, string timestampSeconds);
 
@@ -606,7 +600,7 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An OAuth access token from the Google SDK.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkGoogleAsync(ISession session, string token);
 
         /// <summary>
@@ -614,7 +608,7 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An authentication token from the Steam network.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkSteamAsync(ISession session, string token);
 
         /// <summary>
@@ -627,7 +621,7 @@ namespace Nakama
         /// <param name="langTag">A new language tag in BCP-47 format for the user.</param>
         /// <param name="location">A new location for the user.</param>
         /// <param name="timezone">New timezone information for the user.</param>
-        /// <returns>A task to complete the account update.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UpdateAccountAsync(ISession session, string username, string displayName = null,
             string avatarUrl = null, string langTag = null, string location = null, string timezone = null);
 
@@ -638,13 +632,13 @@ namespace Nakama
         /// The user must have the correct access permissions for the group.
         /// </remarks>
         /// <param name="session">The session of the user.</param>
-        /// <param name="groupId">The id of the group to update.</param>
+        /// <param name="groupId">The ID of the group to update.</param>
         /// <param name="name">A new name for the group.</param>
         /// <param name="description">A new description for the group.</param>
         /// <param name="avatarUrl">A new avatar url for the group.</param>
         /// <param name="langTag">A new language tag in BCP-47 format for the group.</param>
-        /// <param name="open">True if the group should have open membership.</param>
-        /// <returns>A task.</returns>
+        /// <param name="open">If the group should have open membership.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UpdateGroupAsync(ISession session, string groupId, string name, string description = null,
             string avatarUrl = null, string langTag = null, bool open = false);
 
@@ -652,11 +646,11 @@ namespace Nakama
         /// Write a record to a leaderboard.
         /// </summary>
         /// <param name="session">The session for the user.</param>
-        /// <param name="leaderboardId">The id of the leaderboard to write.</param>
+        /// <param name="leaderboardId">The ID of the leaderboard to write.</param>
         /// <param name="score">The score for the leaderboard record.</param>
         /// <param name="subscore">The subscore for the leaderboard record.</param>
         /// <param name="metadata">The metadata for the leaderboard record.</param>
-        /// <returns>A task to complete the leaderboard record write.</returns>
+        /// <returns>A task which resolves to the leaderboard record object written.</returns>
         Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
             long subscore = 0L, string metadata = null);
 
@@ -665,26 +659,19 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="objects">The objects to write.</param>
-        /// <returns>A task to resolve the acknowledgements with writes.</returns>
+        /// <returns>A task which resolves to the storage write acknowledgements.</returns>
         Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session, params IApiWriteStorageObject[] objects);
 
         /// <summary>
         /// Write a record to a tournament.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="tournamentId">The id of the tournament to write.</param>
+        /// <param name="tournamentId">The ID of the tournament to write.</param>
         /// <param name="score">The score of the tournament record.</param>
         /// <param name="subscore">The subscore for the tournament record.</param>
         /// <param name="metadata">The metadata for the tournament record.</param>
-        /// <returns>A task to complete the tournament record write.</returns>
+        /// <returns>A task which resolves to the tournament record object written.</returns>
         Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
             long subscore = 0L, string metadata = null);
-
-        /// <summary>
-        /// Create a new WebSocket from the client.
-        /// </summary>
-        /// <param name="reconnect">Set the number of retries to attempt after a disconnect.</param>
-        /// <returns>A socket object.</returns>
-        ISocket CreateWebSocket(int reconnect = 3);
     }
 }

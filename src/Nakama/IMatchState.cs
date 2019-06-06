@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using System;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Some game state update in a match.
     /// </summary>
@@ -48,29 +48,25 @@ namespace Nakama
         IUserPresence UserPresence { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IMatchState"/>
     internal class MatchState : IMatchState
     {
-        [DataMember(Name="match_id")]
-        public string MatchId { get; set; }
+        private static readonly byte[] NoBytes = new byte[0];
 
-        public long OpCode => System.Convert.ToInt64(_opCode);
-        [DataMember(Name="op_code")]
-        public string _opCode { get; set; }
+        [DataMember(Name = "match_id")] public string MatchId { get; set; }
 
-        public byte[] State => Convert.FromBase64String(_state);
-        [DataMember(Name="data")]
-        public string _state { get; set; }
+        public long OpCode => Convert.ToInt64(_opCode);
+        [DataMember(Name = "op_code")] public string _opCode { get; set; }
+
+        public byte[] State => _state == null ? NoBytes :  Convert.FromBase64String(_state);
+        [DataMember(Name = "data")] public string _state { get; set; }
 
         public IUserPresence UserPresence => _userPresence;
-        [DataMember(Name="presence")]
-        public UserPresence _userPresence { get; set; }
+        [DataMember(Name = "presence")] public UserPresence _userPresence { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            var presences = string.Join(", ", UserPresence);
-            return $"MatchState(MatchId={MatchId}, OpCode={OpCode}, State={State}, UserPresence={presences})";
+            return $"MatchState(MatchId='{MatchId}', OpCode={OpCode}, State='{_state}', UserPresence={UserPresence})";
         }
     }
 }

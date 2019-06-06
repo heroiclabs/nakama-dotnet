@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@ namespace Nakama
     /// <summary>
     /// An identifier for a storage object.
     /// </summary>
-    /// <inheritdoc cref="IApiReadStorageObjectId" />
+    /// <inheritdoc cref="IApiReadStorageObjectId"/>
     public class StorageObjectId : IApiReadStorageObjectId, IApiDeleteStorageObjectId
     {
         /// <inheritdoc cref="IApiReadStorageObjectId" />
@@ -33,5 +33,10 @@ namespace Nakama
 
         /// <inheritdoc />
         public string UserId { get; set; }
+
+        public override string ToString()
+        {
+            return $"StorageObjectId(Collection='{Collection}', Key='{Key}', Version='{Version}', UserId='{UserId}')";
+        }
     }
 }

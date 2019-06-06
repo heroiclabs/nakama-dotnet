@@ -1,5 +1,5 @@
-﻿/**
- * Copyright 2018 The Nakama Authors
+/**
+ * Copyright 2019 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,52 +14,61 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+using Nakama.TinyJson;
+
 namespace Nakama
 {
-    using System;
-    using System.Text;
-    using System.Collections.Generic;
-    using TinyJson;
-
-    /// <inheritdoc />
+    /// <inheritdoc cref="ISession"/>
     public class Session : ISession
     {
         private static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISession.AuthToken"/>
         public string AuthToken { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISession.Created"/>
         public bool Created { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISession.CreateTime"/>
         public long CreateTime { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISession.ExpireTime"/>
         public long ExpireTime { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISession.IsExpired"/>
         public bool IsExpired => HasExpired(DateTime.UtcNow);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISession.Properties"/>
+        public IDictionary<string, string> Properties { get; }
+
+        /// <inheritdoc cref="ISession.Username"/>
         public string Username { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ISession.UserId"/>
         public string UserId { get; }
 
-        /// <inheritdoc />
-        public bool HasExpired(DateTime dateTime)
+        /// <inheritdoc cref="ISession.HasExpired"/>
+        public bool HasExpired(DateTime offset)
         {
             var expireDatetime = Epoch + TimeSpan.FromSeconds(ExpireTime);
-            return dateTime > expireDatetime;
+            return offset > expireDatetime;
         }
 
-        private Session(string authToken, bool created)
+        public override string ToString()
         {
-            var span = DateTime.UtcNow - Epoch;
-            Created = created;
-            CreateTime = span.Seconds;
+            return
+                $"Session(AuthToken='{AuthToken}', Created={Created}, CreateTime={CreateTime}, ExpireTime={ExpireTime}, Username='{Username}', UserId='{UserId}')";
+        }
+
+        internal Session(string authToken, bool created)
+        {
             AuthToken = authToken;
+            Created = created;
+            var span = DateTime.UtcNow - Epoch;
+            CreateTime = span.Seconds;
+            Properties = new Dictionary<string, string>(); // TODO
 
             var json = JwtUnpack(authToken);
             var decoded = json.FromJson<Dictionary<string, object>>();
@@ -68,35 +77,23 @@ namespace Nakama
             UserId = decoded["uid"].ToString();
         }
 
-        public override string ToString()
-        {
-            return $"Session(Created={Created}, ExpireTime={ExpireTime}, IsExpired={IsExpired}, Username={Username}, UserId={UserId})";
-        }
-
         /// <summary>
-        /// Restore a session from an authentication token.
+        /// Restore a session from the auth token.
         /// </summary>
-        /// <param name="authToken">The authentication token from a <c>Session</c>.</param>
-        /// <returns>A session restored from the authentication token.</returns>
+        /// <param name="authToken">The authentication token to restore as a session.</param>
+        /// <returns>A session.</returns>
         public static ISession Restore(string authToken)
         {
-            return Restore(authToken, false);
-        }
-
-        internal static ISession Restore(string authToken, bool created)
-        {
-            return new Session(authToken, created);
+            return new Session(authToken, false);
         }
 
         private static string JwtUnpack(string jwt)
         {
             // Hack decode JSON payload from JWT.
             var payload = jwt.Split('.')[1];
-
             var padLength = Math.Ceiling(payload.Length / 4.0) * 4;
             payload = payload.PadRight(Convert.ToInt32(padLength), '=').Replace('-', '+').Replace('_', '/');
-
-            return Encoding.UTF8.GetString(Convert.FromBase64String(payload));
+            return System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(payload));
         }
     }
 }

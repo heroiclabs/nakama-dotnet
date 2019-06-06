@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Receive status updates for users.
     /// </summary>
@@ -30,17 +30,17 @@ namespace Nakama
         IEnumerable<IUserPresence> Presences { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IStatus"/>
     internal class Status : IStatus
     {
-        public IEnumerable<IUserPresence> Presences => _presences ?? new List<UserPresence>(0);
+        public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
         [DataMember(Name="presences")]
         public List<UserPresence> _presences { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return $"Status(Presences={string.Join(", ", Presences)})";
+            var presences = string.Join(", ", Presences);
+            return $"Status(Presences=[{presences}])";
         }
     }
 }

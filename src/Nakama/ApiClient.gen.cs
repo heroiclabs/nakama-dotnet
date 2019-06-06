@@ -4,9 +4,6 @@ namespace Nakama
 {
     using System;
     using System.Collections.Generic;
-    using System.Net;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
     using System.Runtime.Serialization;
     using System.Text;
     using System.Threading.Tasks;
@@ -17,14 +14,24 @@ namespace Nakama
     /// </summary>
     public sealed class ApiResponseException : Exception
     {
-        public HttpStatusCode StatusCode { get; }
+        public long StatusCode { get; }
 
         public int GrpcStatusCode { get; }
 
-        public ApiResponseException(HttpStatusCode statusCode, string content, int grpcCode) : base(content)
+        public ApiResponseException(long statusCode, string content, int grpcCode) : base(content)
         {
             StatusCode = statusCode;
             GrpcStatusCode = grpcCode;
+        }
+
+        public ApiResponseException(string message, Exception e) : base(message, e)
+        {
+            StatusCode = -1L;
+            GrpcStatusCode = -1;
+        }
+
+        public ApiResponseException(string content) : this(-1L, content, -1)
+        {
         }
 
         public override string ToString()
@@ -2748,13 +2755,20 @@ namespace Nakama
     /// </summary>
     internal class ApiClient
     {
-        private readonly Uri _baseUri;
-        private readonly HttpClient _httpClient;
+        private readonly string _scheme;
+        private readonly string _host;
+        private readonly int _port;
+        private readonly int _timeout;
 
-        public ApiClient(Uri baseUri, HttpClient httpClient)
+        public readonly IHttpAdapter HttpAdapter;
+
+        public ApiClient(string scheme, string host, int port, int timeout, IHttpAdapter httpAdapter)
         {
-            _baseUri = baseUri;
-            _httpClient = httpClient;
+            _scheme = scheme;
+            _host = host;
+            _port = port;
+            _timeout = timeout;
+            HttpAdapter = httpAdapter;
         }
 
         /// <summary>
@@ -2764,29 +2778,25 @@ namespace Nakama
             string bearerToken)
         {
 
-            var urlpath = "/healthcheck?";
+            var urlpath = "/healthcheck";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -2796,29 +2806,26 @@ namespace Nakama
             string bearerToken)
         {
 
-            var urlpath = "/v2/account?";
+            var urlpath = "/v2/account";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiAccount>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiAccount>();
         }
 
         /// <summary>
@@ -2833,30 +2840,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account?";
+            var urlpath = "/v2/account";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("PUT"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "PUT";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -2874,36 +2878,34 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/custom?";
-            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            var urlpath = "/v2/account/authenticate/custom";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
             if (username != null)
             {
-                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiSession>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -2921,36 +2923,34 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/device?";
-            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            var urlpath = "/v2/account/authenticate/device";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
             if (username != null)
             {
-                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiSession>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -2968,36 +2968,34 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/email?";
-            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            var urlpath = "/v2/account/authenticate/email";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
             if (username != null)
             {
-                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiSession>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -3016,37 +3014,35 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/facebook?";
-            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            var urlpath = "/v2/account/authenticate/facebook";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
             if (username != null)
             {
-                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
-            urlpath = string.Concat(urlpath, "sync=", sync.ToString().ToLower(), "&");
+            queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiSession>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -3064,36 +3060,34 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/gamecenter?";
-            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            var urlpath = "/v2/account/authenticate/gamecenter";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
             if (username != null)
             {
-                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiSession>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -3111,36 +3105,34 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/google?";
-            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            var urlpath = "/v2/account/authenticate/google";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
             if (username != null)
             {
-                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiSession>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -3158,36 +3150,34 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/authenticate/steam?";
-            urlpath = string.Concat(urlpath, "create=", create.ToString().ToLower(), "&");
+            var urlpath = "/v2/account/authenticate/steam";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
             if (username != null)
             {
-                urlpath = string.Concat(urlpath, "username=", Uri.EscapeDataString(username), "&");
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
             var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiSession>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -3202,30 +3192,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/custom?";
+            var urlpath = "/v2/account/link/custom";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3240,30 +3227,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/device?";
+            var urlpath = "/v2/account/link/device";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3278,30 +3262,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/email?";
+            var urlpath = "/v2/account/link/email";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3317,31 +3298,28 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/facebook?";
-            urlpath = string.Concat(urlpath, "sync=", sync.ToString().ToLower(), "&");
+            var urlpath = "/v2/account/link/facebook";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3356,30 +3334,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/gamecenter?";
+            var urlpath = "/v2/account/link/gamecenter";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3394,30 +3369,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/google?";
+            var urlpath = "/v2/account/link/google";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3432,30 +3404,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/link/steam?";
+            var urlpath = "/v2/account/link/steam";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3470,30 +3439,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/custom?";
+            var urlpath = "/v2/account/unlink/custom";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3508,30 +3474,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/device?";
+            var urlpath = "/v2/account/unlink/device";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3546,30 +3509,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/email?";
+            var urlpath = "/v2/account/unlink/email";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3584,30 +3544,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/facebook?";
+            var urlpath = "/v2/account/unlink/facebook";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3622,30 +3579,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/gamecenter?";
+            var urlpath = "/v2/account/unlink/gamecenter";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3660,30 +3614,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/google?";
+            var urlpath = "/v2/account/unlink/google";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3698,30 +3649,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/account/unlink/steam?";
+            var urlpath = "/v2/account/unlink/steam";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3739,36 +3687,33 @@ namespace Nakama
                 throw new ArgumentException("'channelId' is required but was null.");
             }
 
-            var urlpath = "/v2/channel/{channel_id}?";
+            var urlpath = "/v2/channel/{channel_id}";
             urlpath = urlpath.Replace("{channel_id}", Uri.EscapeDataString(channelId));
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "forward=", forward.ToString().ToLower(), "&");
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            queryParams = string.Concat(queryParams, "forward=", forward.ToString().ToLower(), "&");
             if (cursor != null)
             {
-                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiChannelMessageList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiChannelMessageList>();
         }
 
         /// <summary>
@@ -3780,37 +3725,33 @@ namespace Nakama
             , IEnumerable<string> usernames)
         {
 
-            var urlpath = "/v2/friend?";
+            var urlpath = "/v2/friend";
+
+            var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("DELETE"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "DELETE";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3820,29 +3761,26 @@ namespace Nakama
             string bearerToken)
         {
 
-            var urlpath = "/v2/friend?";
+            var urlpath = "/v2/friend";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiFriends>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiFriends>();
         }
 
         /// <summary>
@@ -3854,37 +3792,33 @@ namespace Nakama
             , IEnumerable<string> usernames)
         {
 
-            var urlpath = "/v2/friend?";
+            var urlpath = "/v2/friend";
+
+            var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3896,37 +3830,33 @@ namespace Nakama
             , IEnumerable<string> usernames)
         {
 
-            var urlpath = "/v2/friend/block?";
+            var urlpath = "/v2/friend/block";
+
+            var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3942,31 +3872,28 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/friend/facebook?";
-            urlpath = string.Concat(urlpath, "reset=", reset.ToString().ToLower(), "&");
+            var urlpath = "/v2/friend/facebook";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "reset=", reset.ToString().ToLower(), "&");
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -3979,38 +3906,35 @@ namespace Nakama
             , int limit)
         {
 
-            var urlpath = "/v2/group?";
+            var urlpath = "/v2/group";
+
+            var queryParams = "";
             if (name != null)
             {
-                urlpath = string.Concat(urlpath, "name=", Uri.EscapeDataString(name), "&");
+                queryParams = string.Concat(queryParams, "name=", Uri.EscapeDataString(name), "&");
             }
             if (cursor != null)
             {
-                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiGroupList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiGroupList>();
         }
 
         /// <summary>
@@ -4025,30 +3949,28 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group?";
+            var urlpath = "/v2/group";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiGroup>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiGroup>();
         }
 
         /// <summary>
@@ -4063,30 +3985,26 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}?";
+            var urlpath = "/v2/group/{group_id}";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("DELETE"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "DELETE";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4106,31 +4024,28 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}?";
+            var urlpath = "/v2/group/{group_id}";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("PUT"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "PUT";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4146,34 +4061,30 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/add?";
+            var urlpath = "/v2/group/{group_id}/add";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+
+            var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4188,30 +4099,26 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/join?";
+            var urlpath = "/v2/group/{group_id}/join";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4227,34 +4134,30 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/kick?";
+            var urlpath = "/v2/group/{group_id}/kick";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+
+            var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4269,30 +4172,26 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/leave?";
+            var urlpath = "/v2/group/{group_id}/leave";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4308,34 +4207,30 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/promote?";
+            var urlpath = "/v2/group/{group_id}/promote";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+
+            var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4350,30 +4245,27 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/user?";
+            var urlpath = "/v2/group/{group_id}/user";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiGroupUserList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiGroupUserList>();
         }
 
         /// <summary>
@@ -4388,30 +4280,26 @@ namespace Nakama
                 throw new ArgumentException("'leaderboardId' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}?";
+            var urlpath = "/v2/leaderboard/{leaderboard_id}";
             urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("DELETE"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "DELETE";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4429,39 +4317,36 @@ namespace Nakama
                 throw new ArgumentException("'leaderboardId' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}?";
+            var urlpath = "/v2/leaderboard/{leaderboard_id}";
             urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
+
+            var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "owner_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
             }
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
             if (cursor != null)
             {
-                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiLeaderboardRecordList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiLeaderboardRecordList>();
         }
 
         /// <summary>
@@ -4481,31 +4366,29 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}?";
+            var urlpath = "/v2/leaderboard/{leaderboard_id}";
             urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiLeaderboardRecord>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiLeaderboardRecord>();
         }
 
         /// <summary>
@@ -4526,32 +4409,29 @@ namespace Nakama
                 throw new ArgumentException("'ownerId' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}/owner/{owner_id}?";
+            var urlpath = "/v2/leaderboard/{leaderboard_id}/owner/{owner_id}";
             urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
             urlpath = urlpath.Replace("{owner_id}", Uri.EscapeDataString(ownerId));
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiLeaderboardRecordList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiLeaderboardRecordList>();
         }
 
         /// <summary>
@@ -4567,41 +4447,38 @@ namespace Nakama
             , string query)
         {
 
-            var urlpath = "/v2/match?";
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
-            urlpath = string.Concat(urlpath, "authoritative=", authoritative.ToString().ToLower(), "&");
+            var urlpath = "/v2/match";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            queryParams = string.Concat(queryParams, "authoritative=", authoritative.ToString().ToLower(), "&");
             if (label != null)
             {
-                urlpath = string.Concat(urlpath, "label=", Uri.EscapeDataString(label), "&");
+                queryParams = string.Concat(queryParams, "label=", Uri.EscapeDataString(label), "&");
             }
-            urlpath = string.Concat(urlpath, "min_size=", minSize, "&");
-            urlpath = string.Concat(urlpath, "max_size=", maxSize, "&");
+            queryParams = string.Concat(queryParams, "min_size=", minSize, "&");
+            queryParams = string.Concat(queryParams, "max_size=", maxSize, "&");
             if (query != null)
             {
-                urlpath = string.Concat(urlpath, "query=", Uri.EscapeDataString(query), "&");
+                queryParams = string.Concat(queryParams, "query=", Uri.EscapeDataString(query), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiMatchList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiMatchList>();
         }
 
         /// <summary>
@@ -4612,33 +4489,29 @@ namespace Nakama
             , IEnumerable<string> ids)
         {
 
-            var urlpath = "/v2/notification?";
+            var urlpath = "/v2/notification";
+
+            var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("DELETE"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "DELETE";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4650,34 +4523,31 @@ namespace Nakama
             , string cacheableCursor)
         {
 
-            var urlpath = "/v2/notification?";
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            var urlpath = "/v2/notification";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
             if (cacheableCursor != null)
             {
-                urlpath = string.Concat(urlpath, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor), "&");
+                queryParams = string.Concat(queryParams, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiNotificationList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiNotificationList>();
         }
 
         /// <summary>
@@ -4694,41 +4564,38 @@ namespace Nakama
                 throw new ArgumentException("'id' is required but was null.");
             }
 
-            var urlpath = "/v2/rpc/{id}?";
+            var urlpath = "/v2/rpc/{id}";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+
+            var queryParams = "";
             if (payload != null)
             {
-                urlpath = string.Concat(urlpath, "payload=", Uri.EscapeDataString(payload), "&");
+                queryParams = string.Concat(queryParams, "payload=", Uri.EscapeDataString(payload), "&");
             }
             if (httpKey != null)
             {
-                urlpath = string.Concat(urlpath, "http_key=", Uri.EscapeDataString(httpKey), "&");
+                queryParams = string.Concat(queryParams, "http_key=", Uri.EscapeDataString(httpKey), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(bearerToken))
             {
                 var header = string.Concat("Bearer ", bearerToken);
-                request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+                headers.Add("Authorization", header);
             }
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiRpc>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiRpc>();
         }
 
         /// <summary>
@@ -4748,34 +4615,32 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/rpc/{id}?";
+            var urlpath = "/v2/rpc/{id}";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(bearerToken))
             {
                 var header = string.Concat("Bearer ", bearerToken);
-                request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+                headers.Add("Authorization", header);
             }
-            request.Content = new StringContent(body.ToJson());
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiRpc>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiRpc>();
         }
 
         /// <summary>
@@ -4790,30 +4655,28 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/storage?";
+            var urlpath = "/v2/storage";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiStorageObjects>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiStorageObjects>();
         }
 
         /// <summary>
@@ -4828,30 +4691,28 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/storage?";
+            var urlpath = "/v2/storage";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("PUT"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "PUT";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiStorageObjectAcks>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiStorageObjectAcks>();
         }
 
         /// <summary>
@@ -4866,30 +4727,27 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/storage/delete?";
+            var urlpath = "/v2/storage/delete";
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("PUT"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "PUT";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -4907,39 +4765,36 @@ namespace Nakama
                 throw new ArgumentException("'collection' is required but was null.");
             }
 
-            var urlpath = "/v2/storage/{collection}?";
+            var urlpath = "/v2/storage/{collection}";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
+
+            var queryParams = "";
             if (userId != null)
             {
-                urlpath = string.Concat(urlpath, "user_id=", Uri.EscapeDataString(userId), "&");
+                queryParams = string.Concat(queryParams, "user_id=", Uri.EscapeDataString(userId), "&");
             }
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
             if (cursor != null)
             {
-                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiStorageObjectList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiStorageObjectList>();
         }
 
         /// <summary>
@@ -4961,36 +4816,33 @@ namespace Nakama
                 throw new ArgumentException("'userId' is required but was null.");
             }
 
-            var urlpath = "/v2/storage/{collection}/{user_id}?";
+            var urlpath = "/v2/storage/{collection}/{user_id}";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
             urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
             if (cursor != null)
             {
-                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiStorageObjectList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiStorageObjectList>();
         }
 
         /// <summary>
@@ -5006,38 +4858,35 @@ namespace Nakama
             , string cursor)
         {
 
-            var urlpath = "/v2/tournament?";
-            urlpath = string.Concat(urlpath, "category_start=", categoryStart, "&");
-            urlpath = string.Concat(urlpath, "category_end=", categoryEnd, "&");
-            urlpath = string.Concat(urlpath, "start_time=", startTime, "&");
-            urlpath = string.Concat(urlpath, "end_time=", endTime, "&");
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            var urlpath = "/v2/tournament";
+
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "category_start=", categoryStart, "&");
+            queryParams = string.Concat(queryParams, "category_end=", categoryEnd, "&");
+            queryParams = string.Concat(queryParams, "start_time=", startTime, "&");
+            queryParams = string.Concat(queryParams, "end_time=", endTime, "&");
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
             if (cursor != null)
             {
-                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiTournamentList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiTournamentList>();
         }
 
         /// <summary>
@@ -5055,39 +4904,36 @@ namespace Nakama
                 throw new ArgumentException("'tournamentId' is required but was null.");
             }
 
-            var urlpath = "/v2/tournament/{tournament_id}?";
+            var urlpath = "/v2/tournament/{tournament_id}";
             urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
+
+            var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "owner_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
             }
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
             if (cursor != null)
             {
-                urlpath = string.Concat(urlpath, "cursor=", Uri.EscapeDataString(cursor), "&");
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiTournamentRecordList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiTournamentRecordList>();
         }
 
         /// <summary>
@@ -5107,31 +4953,29 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/tournament/{tournament_id}?";
+            var urlpath = "/v2/tournament/{tournament_id}";
             urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("PUT"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
-            request.Content = new StringContent(body.ToJson());
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiLeaderboardRecord>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "PUT";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiLeaderboardRecord>();
         }
 
         /// <summary>
@@ -5146,30 +4990,26 @@ namespace Nakama
                 throw new ArgumentException("'tournamentId' is required but was null.");
             }
 
-            var urlpath = "/v2/tournament/{tournament_id}/join?";
+            var urlpath = "/v2/tournament/{tournament_id}/join";
             urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("POST"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return;
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
         }
 
         /// <summary>
@@ -5190,32 +5030,29 @@ namespace Nakama
                 throw new ArgumentException("'ownerId' is required but was null.");
             }
 
-            var urlpath = "/v2/tournament/{tournament_id}/owner/{owner_id}?";
+            var urlpath = "/v2/tournament/{tournament_id}/owner/{owner_id}";
             urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
             urlpath = urlpath.Replace("{owner_id}", Uri.EscapeDataString(ownerId));
-            urlpath = string.Concat(urlpath, "limit=", limit, "&");
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var queryParams = "";
+            queryParams = string.Concat(queryParams, "limit=", limit, "&");
+
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiTournamentRecordList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiTournamentRecordList>();
         }
 
         /// <summary>
@@ -5228,41 +5065,38 @@ namespace Nakama
             , IEnumerable<string> facebookIds)
         {
 
-            var urlpath = "/v2/user?";
+            var urlpath = "/v2/user";
+
+            var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
             }
             foreach (var elem in facebookIds ?? new string[0])
             {
-                urlpath = string.Concat(urlpath, "facebook_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "facebook_ids=", elem, "&");
             }
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            headers.Add("Authorization", header);
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiUsers>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiUsers>();
         }
 
         /// <summary>
@@ -5277,30 +5111,27 @@ namespace Nakama
                 throw new ArgumentException("'userId' is required but was null.");
             }
 
-            var urlpath = "/v2/user/{user_id}/group?";
+            var urlpath = "/v2/user/{user_id}/group";
             urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
 
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(_baseUri, urlpath),
-                Method = new HttpMethod("GET"),
-                Headers =
-                {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
-                }
-            };
-            var header = string.Concat("Bearer ", bearerToken);
-            request.Headers.Authorization = AuthenticationHeaderValue.Parse(header);
+            var queryParams = "";
 
-            var response = await _httpClient.SendAsync(request);
-            var contents = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode)
-            {
-                return contents.FromJson<ApiUserGroupList>();
-            }
-            response.Content?.Dispose();
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException(response.StatusCode, decoded["error"].ToString(), (int) decoded["code"]);
+            var uri = new UriBuilder {
+                Scheme = _scheme,
+                Host = _host,
+                Port = _port,
+                Path = urlpath,
+                Query= queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiUserGroupList>();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Update a chat message which has been sent to a channel.
     /// </summary>
@@ -32,10 +32,9 @@ namespace Nakama
         [DataMember(Name="content")]
         public string Content { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return $"ChannelUpdateMessage[ChannelId={ChannelId}, MessageId={MessageId}, Content={Content}]";
+            return $"ChannelUpdateMessage(ChannelId='{ChannelId}', MessageId='{MessageId}', Content='{Content}')";
         }
     }
 }

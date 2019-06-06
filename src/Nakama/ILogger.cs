@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,28 +17,16 @@
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes log messages from the client.
+    /// A simple logger to write log messages to an output sink.
     /// </summary>
     public interface ILogger
     {
         /// <summary>
-        /// Log a message object with the DEBUG level.
-        /// </summary>
-        /// <param name="message">The message object to log.</param>
-        void Debug(object message);
-
-        /// <summary>
-        /// Logs a formatted string with the DEBUG level.
+        /// Logs a formatted string with the ERROR level.
         /// </summary>
         /// <param name="format">A string with zero or more format items.</param>
         /// <param name="args">An object array with zero or more objects to format.</param>
-        void DebugFormat(string format, params object[] args);
-
-        /// <summary>
-        /// Log a message object with the INFO level.
-        /// </summary>
-        /// <param name="message">The message object to log.</param>
-        void Info(object message);
+        void ErrorFormat(string format, params object[] args);
 
         /// <summary>
         /// Logs a formatted string with the INFO level.
@@ -46,31 +34,5 @@ namespace Nakama
         /// <param name="format">A string with zero or more format items.</param>
         /// <param name="args">An object array with zero or more objects to format.</param>
         void InfoFormat(string format, params object[] args);
-
-        /// <summary>
-        /// Log a message object with the WARN level.
-        /// </summary>
-        /// <param name="message">The message object to log.</param>
-        void Warn(object message);
-
-        /// <summary>
-        /// Logs a formatted string with the WARN level.
-        /// </summary>
-        /// <param name="format">A string with zero or more format items.</param>
-        /// <param name="args">An object array with zero or more objects to format.</param>
-        void WarnFormat(string format, params object[] args);
-
-        /// <summary>
-        /// Log a message object with the ERROR level.
-        /// </summary>
-        /// <param name="message">The message object to log.</param>
-        void Error(object message);
-
-        /// <summary>
-        /// Logs a formatted string with the ERROR level.
-        /// </summary>
-        /// <param name="format">A string with zero or more format items.</param>
-        /// <param name="args">An object array with zero or more objects to format.</param>
-        void ErrorFormat(string format, params object[] args);
     }
 }

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// An acknowledgement from the server when a chat message is delivered to a channel.
     /// </summary>
@@ -59,33 +59,27 @@ namespace Nakama
         string Username { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IChannelMessageAck"/>
     internal class ChannelMessageAck : IChannelMessageAck
     {
-        [DataMember(Name="channel_id")]
-        public string ChannelId { get; set; }
+        [DataMember(Name = "channel_id")] public string ChannelId { get; set; }
 
-        [DataMember(Name="code")]
-        public int Code { get; set; }
+        [DataMember(Name = "code")] public int Code { get; set; }
 
-        [DataMember(Name="create_time")]
-        public string CreateTime { get; set; }
+        [DataMember(Name = "create_time")] public string CreateTime { get; set; }
 
-        [DataMember(Name="message_id")]
-        public string MessageId { get; set; }
+        [DataMember(Name = "message_id")] public string MessageId { get; set; }
 
-        [DataMember(Name="persistent")]
-        public bool Persistent { get; set; }
+        [DataMember(Name = "persistent")] public bool Persistent { get; set; }
 
-        [DataMember(Name="update_time")]
-        public string UpdateTime { get; set; }
+        [DataMember(Name = "update_time")] public string UpdateTime { get; set; }
 
-        [DataMember(Name="username")]
-        public string Username { get; set; }
+        [DataMember(Name = "username")] public string Username { get; set; }
 
         public override string ToString()
         {
-            return $"ChannelMessageAck[ChannelId={ChannelId}, Code={Code}, CreateTime={CreateTime}, MessageId={MessageId}, Persistent={Persistent}, UpdateTime={UpdateTime}, Username={Username}]";
+            return
+                $"ChannelMessageAck(ChannelId='{ChannelId}', Code={Code}, CreateTime={CreateTime}, MessageId='{MessageId}', Persistent={Persistent}, UpdateTime={UpdateTime}, Username='{Username}')";
         }
     }
 }

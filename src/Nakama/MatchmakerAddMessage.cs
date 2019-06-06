@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,35 +14,32 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Add the user to the matchmaker pool with properties.
     /// </summary>
     internal class MatchmakerAddMessage
     {
-        [DataMember(Name="numeric_properties")]
+        [DataMember(Name = "max_count")] public int MaxCount { get; set; }
+
+        [DataMember(Name = "min_count")] public int MinCount { get; set; }
+
+        [DataMember(Name = "numeric_properties")]
         public Dictionary<string, double> NumericProperties { get; set; }
 
-        [DataMember(Name="max_count")]
-        public int MaxCount { get; set; }
+        [DataMember(Name = "query")] public string Query { get; set; }
 
-        [DataMember(Name="min_count")]
-        public int MinCount { get; set; }
-
-        [DataMember(Name="query")]
-        public string Query { get; set; }
-
-        [DataMember(Name="string_properties")]
+        [DataMember(Name = "string_properties")]
         public Dictionary<string, string> StringProperties { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return $"MatchmakerAddMessage[NumericProperties={NumericProperties}, MaxCount={MaxCount}, MinCount={MinCount}, Query={Query}, StringProperties={StringProperties}]";
+            return
+                $"MatchmakerAddMessage(MaxCount={MaxCount}, MinCount={MinCount}, NumericProperties={NumericProperties}, Query='{Query}', StringProperties={StringProperties})";
         }
     }
 }

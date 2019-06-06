@@ -20,15 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text;
+
 namespace Nakama.TinyJson
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Text;
-
     // Really simple JSON parser in ~300 lines
     // - Attempts to parse JSON files with minimal GC allocation
     // - Nice and simple "[1,2,3]".FromJson<List<int>>() API
@@ -60,14 +60,17 @@ namespace Nakama.TinyJson
             {
                 _propertyInfoCache = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
             }
+
             if (_fieldInfoCache == null)
             {
                 _fieldInfoCache = new Dictionary<Type, Dictionary<string, FieldInfo>>();
             }
+
             if (_stringBuilder == null)
             {
                 _stringBuilder = new StringBuilder();
             }
+
             if (_splitArrayPool == null)
             {
                 _splitArrayPool = new Stack<List<string>>();

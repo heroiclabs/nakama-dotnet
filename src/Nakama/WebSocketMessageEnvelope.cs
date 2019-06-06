@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// An envelope for messages received or sent on a <c>WebSocket</c>.
     /// </summary>
@@ -37,7 +37,7 @@ namespace Nakama
 
         [DataMember(Name="channel_message")]
         public ApiChannelMessage ChannelMessage { get; set; }
-
+        
         [DataMember(Name="channel_message_ack")]
         public ChannelMessageAck ChannelMessageAck { get; set; }
 
@@ -116,10 +116,9 @@ namespace Nakama
         [DataMember(Name="stream_data")]
         public StreamState StreamState { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return "WebSocketMessageEnvelope[]";
+            return "WebSocketMessageEnvelope";
         }
     }
 }

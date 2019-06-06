@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// A chat channel on the server.
     /// </summary>
@@ -40,13 +40,13 @@ namespace Nakama
         IUserPresence Self { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IChannel"/>
     internal class Channel : IChannel
     {
         [DataMember(Name="id")]
         public string Id { get; set; }
 
-        public IEnumerable<IUserPresence> Presences => _presences ?? new List<UserPresence>(0);
+        public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
         [DataMember(Name="presences")]
         public List<UserPresence> _presences { get; set; }
 
@@ -54,11 +54,10 @@ namespace Nakama
         [DataMember(Name="self")]
         public UserPresence _self { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            var presences = string.Join(",", Presences);
-            return $"Channel[Id={Id}, Presences=({presences}), Self={Self}]";
+            var presences = string.Join(", ", Presences);
+            return $"Channel(Id='{Id}', Presences=[{presences}], Self={Self})";
         }
     }
 }

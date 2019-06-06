@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// The result of a successful matchmaker operation sent to the server.
     /// </summary>
@@ -74,40 +74,49 @@ namespace Nakama
         IDictionary<string, string> StringProperties { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IMatchmakerMatched"/>
     internal class MatchmakerMatched : IMatchmakerMatched
     {
-        [DataMember(Name="match_id")]
-        public string MatchId { get; set; }
+        [DataMember(Name = "match_id")] public string MatchId { get; set; }
 
-        [DataMember(Name="ticket")]
-        public string Ticket { get; set; }
+        [DataMember(Name = "ticket")] public string Ticket { get; set; }
 
-        [DataMember(Name="token")]
-        public string Token { get; set; }
+        [DataMember(Name = "token")] public string Token { get; set; }
 
         public IEnumerable<IMatchmakerUser> Users => _users ?? new List<MatchmakerUser>(0);
-        [DataMember(Name="users")]
-        public List<MatchmakerUser> _users { get; set; }
+        [DataMember(Name = "users")] public List<MatchmakerUser> _users { get; set; }
 
         public IMatchmakerUser Self => _self;
-        [DataMember(Name="self")]
-        public MatchmakerUser _self { get; set; }
+        [DataMember(Name = "self")] public MatchmakerUser _self { get; set; }
+
+        public override string ToString()
+        {
+            var users = string.Join(", ", Users);
+            return
+                $"MatchmakerMatched(MatchId='{MatchId}', Ticket='{Ticket}', Token='{Token}', Users=[{users}], Self={Self})";
+        }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IMatchmakerUser"/>
     internal class MatchmakerUser : IMatchmakerUser
     {
         public IDictionary<string, double> NumericProperties => _numericProperties ?? new Dictionary<string, double>();
-        [DataMember(Name="numeric_properties")]
+
+        [DataMember(Name = "numeric_properties")]
         public Dictionary<string, double> _numericProperties { get; set; }
 
         public IUserPresence Presence => _presence;
-        [DataMember(Name="presence")]
-        public UserPresence _presence { get; set; }
+        [DataMember(Name = "presence")] public UserPresence _presence { get; set; }
 
         public IDictionary<string, string> StringProperties => _stringProperties ?? new Dictionary<string, string>();
-        [DataMember(Name="string_properties")]
+
+        [DataMember(Name = "string_properties")]
         public Dictionary<string, string> _stringProperties { get; set; }
+
+        public override string ToString()
+        {
+            return
+                $"MatchmakerUser(NumericProperties={NumericProperties}, Presence={Presence}, StringProperties={StringProperties})";
+        }
     }
 }

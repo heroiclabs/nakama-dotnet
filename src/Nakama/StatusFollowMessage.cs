@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Follow one or more other users for status updates.
     /// </summary>
@@ -27,10 +27,10 @@ namespace Nakama
         [DataMember(Name="user_ids")]
         public List<string> UserIds { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return $"StatusFollowMessage(UserIds={string.Join(", ", UserIds)})";
+            var userIds = string.Join(", ", UserIds);
+            return $"StatusFollowMessage(UserIds=[{userIds}])";
         }
     }
 }

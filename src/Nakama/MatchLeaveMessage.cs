@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// A leave message for a match on the server.
     /// </summary>
@@ -26,10 +26,9 @@ namespace Nakama
         [DataMember(Name="match_id")]
         public string MatchId { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return $"MatchLeaveMessage[MatchId={MatchId}]";
+            return $"MatchLeaveMessage(MatchId='{MatchId}')";
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
-    /// A remove message for a chat channel.
+    /// Remove a message from a chat channel.
     /// </summary>
     internal class ChannelRemoveMessage
     {
@@ -28,5 +28,10 @@ namespace Nakama
 
         [DataMember(Name="message_id")]
         public string MessageId { get; set; }
+
+        public override string ToString()
+        {
+            return $"ChannelRemoveMessage(ChannelId='{ChannelId}', MessageId='{MessageId}')";
+        }
     }
 }

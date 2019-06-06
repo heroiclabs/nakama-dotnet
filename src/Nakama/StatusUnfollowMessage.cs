@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
-    public class StatusUnfollowMessage
+    /// <summary>
+    /// Unfollow one or more users on the server.
+    /// </summary>
+    internal class StatusUnfollowMessage
     {
         [DataMember(Name="user_ids")]
         public List<string> UserIds { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return $"StatusUnfollowMessage(UserIds={string.Join(", ", UserIds)})";
+            var userIds = string.Join(", ", UserIds);
+            return $"StatusUnfollowMessage(UserIds=[{userIds}])";
         }
     }
 }

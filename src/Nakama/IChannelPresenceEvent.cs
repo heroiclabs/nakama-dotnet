@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// A batch of join and leave presences on a chat channel.
     /// </summary>
@@ -40,7 +40,7 @@ namespace Nakama
         IEnumerable<IUserPresence> Leaves { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IChannelPresenceEvent"/>
     internal class ChannelPresenceEvent : IChannelPresenceEvent
     {
         [DataMember(Name="channel_id")]
@@ -54,12 +54,11 @@ namespace Nakama
         [DataMember(Name="leaves")]
         public List<UserPresence> _leaves { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
             var joins = string.Join(",", Joins);
             var leaves = string.Join(",", Leaves);
-            return $"ChannelPresenceEvent[ChannelId={ChannelId}, Joins=({joins}), Leaves=({leaves})]";
+            return $"ChannelPresenceEvent(ChannelId='{ChannelId}', Joins=[{joins}], Leaves=[{leaves}])";
         }
     }
 }

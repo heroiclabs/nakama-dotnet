@@ -1,5 +1,5 @@
-﻿/**
- * Copyright 2018 The Nakama Authors
+/**
+ * Copyright 2019 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,299 +14,305 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace Nakama
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// A socket to interact with Nakama server.
     /// </summary>
     public interface ISocket : IDisposable
     {
         /// <summary>
-        /// Receive chat channel messages.
+        /// Received when a socket is closed.
         /// </summary>
-        event EventHandler<IApiChannelMessage> OnChannelMessage;
+        event Action Closed;
 
         /// <summary>
-        /// Receive chat channel presences for when users join and leave.
+        /// Received when a socket is connected.
         /// </summary>
-        event EventHandler<IChannelPresenceEvent> OnChannelPresence;
+        event Action Connected;
 
         /// <summary>
-        /// Receive an event when the socket connects.
+        /// Received a chat channel message.
         /// </summary>
-        event EventHandler OnConnect;
+        event Action<IApiChannelMessage> ReceivedChannelMessage;
 
         /// <summary>
-        /// Receive an event when the socket disconnects.
+        /// Received a presence change for joins and leaves with users in a chat channel.
         /// </summary>
-        event EventHandler OnDisconnect;
+        event Action<IChannelPresenceEvent> ReceivedChannelPresence;
 
         /// <summary>
-        /// Receive an event when the socket has an error.
+        /// Received when an error occurs on the socket.
         /// </summary>
-        event EventHandler<Exception> OnError;
+        event Action<Exception> ReceivedError;
 
         /// <summary>
-        /// Receive an event when the player gets matched by the matchmaker.
+        /// Received a matchmaker matched message.
         /// </summary>
-        event EventHandler<IMatchmakerMatched> OnMatchmakerMatched;
+        event Action<IMatchmakerMatched> ReceivedMatchmakerMatched;
 
         /// <summary>
-        /// Receive state messages from a realtime match.
+        /// Received a message from a multiplayer match.
         /// </summary>
-        event EventHandler<IMatchState> OnMatchState;
+        event Action<IMatchState> ReceivedMatchState;
 
         /// <summary>
-        /// Receive match presences for when users join and leave.
+        /// Received a presence change for joins and leaves of users in a multiplayer match.
         /// </summary>
-        event EventHandler<IMatchPresenceEvent> OnMatchPresence;
+        event Action<IMatchPresenceEvent> ReceivedMatchPresence;
 
         /// <summary>
-        /// Receive realtime notifications.
+        /// Received a notification for the current user.
         /// </summary>
-        event EventHandler<IApiNotification> OnNotification;
+        event Action<IApiNotification> ReceivedNotification;
 
         /// <summary>
-        /// Receive presence events for when a user updates their status.
+        /// Received a presence change for when a user updated their online status.
         /// </summary>
-        event EventHandler<IStatusPresenceEvent> OnStatusPresence;
+        event Action<IStatusPresenceEvent> ReceivedStatusPresence;
 
         /// <summary>
-        /// Receive low level presence events from a realtime stream.
+        /// Received a presence change for joins and leaves on a realtime stream.
         /// </summary>
-        event EventHandler<IStreamPresenceEvent> OnStreamPresence;
+        event Action<IStreamPresenceEvent> ReceivedStreamPresence;
 
         /// <summary>
-        /// Receive state messages from a realtime stream.
+        /// Received a message from a realtime stream.
         /// </summary>
-        event EventHandler<IStreamState> OnStreamState;
+        event Action<IStreamState> ReceivedStreamState;
+
+        /// <summary>
+        /// If the socket is connected.
+        /// </summary>
+        bool IsConnected { get; }
+
+        /// <summary>
+        /// If the socket is connecting.
+        /// </summary>
+        bool IsConnecting { get; }
 
         /// <summary>
         /// Join the matchmaker pool and search for opponents on the server.
         /// </summary>
-        /// <param name="query">A matchmaker query to search for opponents.</param>
-        /// <param name="minCount">The minimum number of players to compete against.</param>
-        /// <param name="maxCount">The maximum number of players to compete against.</param>
-        /// <param name="stringProperties">A set of k/v properties to provide in searches.</param>
-        /// <param name="numericProperties">A set of k/v numeric properties to provide in searches.</param>
+        /// <param name="query">The matchmaker query to search for opponents.</param>
+        /// <param name="minCount">The minimum number of players to compete against in a match.</param>
+        /// <param name="maxCount">The maximum number of players to compete against in a match.</param>
+        /// <param name="stringProperties">A set of key/value properties to provide to searches.</param>
+        /// <param name="numericProperties">A set of key/value numeric properties to provide to searches.</param>
         /// <returns>A task which resolves to a matchmaker ticket object.</returns>
         Task<IMatchmakerTicket> AddMatchmakerAsync(string query = "*", int minCount = 2, int maxCount = 8,
             Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null);
 
         /// <summary>
+        /// Close the socket connection to the server.
+        /// </summary>
+        /// <returns>A task to represent the asynchronous operation.</returns>
+        Task CloseAsync();
+
+        /// <summary>
         /// Connect to the server.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="ct">A cancellation token for the asynchronous operation.</param>
-        /// <param name="appearOnline">True if the socket should show the user as online to others.</param>
-        /// <param name="connectTimeout">Time in millisecs before the connection attempt is considered failed.</param>
-        /// <returns>A task.</returns>
-        Task ConnectAsync(ISession session, CancellationToken ct = default(CancellationToken),
-            bool appearOnline = false, int connectTimeout = 5000);
+        /// <param name="appearOnline">If the user who appear online to other users.</param>
+        /// <param name="connectTimeout">The time allowed for the socket connection to be established.</param>
+        /// <returns>A task to represent the asynchronous operation.</returns>
+        Task ConnectAsync(ISession session, bool appearOnline = false, int connectTimeout = Socket.DefaultConnectTimeout);
 
         /// <summary>
         /// Create a multiplayer match on the server.
         /// </summary>
-        /// <returns>A task.</returns>
+        /// <returns>A task to represent the asynchronous operation.</returns>
         Task<IMatch> CreateMatchAsync();
 
         /// <summary>
-        /// Close the connection with the server.
+        /// Subscribe to one or more users for their status updates.
         /// </summary>
-        /// <param name="dispatch">True if the disconnect should dispatch an on disconnect event.</param>
-        /// <returns>A close task.</returns>
-        Task DisconnectAsync(bool dispatch = true);
+        /// <param name="users">The users.</param>
+        /// <returns>A task which resolves to the current statuses for the users.</returns>
+        Task<IStatus> FollowUsersAsync(IEnumerable<IApiUser> users);
 
         /// <summary>
-        /// Follow one or more users for status updates.
+        /// Subscribe to one or more users for their status updates.
         /// </summary>
-        /// <param name="userIds">The user Ids to follow.</param>
-        /// <returns>A task.</returns>
-        Task<IStatus> FollowUsersAsync(IEnumerable<string> userIds);
+        /// <param name="userIDs">The IDs of users.</param>
+        /// <returns>A task which resolves to the current statuses for the users.</returns>
+        Task<IStatus> FollowUsersAsync(IEnumerable<string> userIDs);
 
         /// <summary>
         /// Join a chat channel on the server.
         /// </summary>
         /// <param name="target">The target channel to join.</param>
         /// <param name="type">The type of channel to join.</param>
-        /// <param name="persistence">True if chat messages should be stored.</param>
-        /// <param name="hidden">True if the user should be hidden on the channel.</param>
-        /// <returns>A task which resolves to a Channel response.</returns>
+        /// <param name="persistence">If chat messages should be stored.</param>
+        /// <param name="hidden">If the current user should be hidden on the channel.</param>
+        /// <returns>A task which resolves to a chat channel object.</returns>
         Task<IChannel> JoinChatAsync(string target, ChannelType type, bool persistence = false, bool hidden = false);
 
         /// <summary>
-        /// Join a multiplayer match with a matchmaker.
+        /// Join a multiplayer match with the matchmaker matched object.
         /// </summary>
-        /// <param name="matched">A matchmaker result object.</param>
-        /// <returns>A task which resolves to the match joined.</returns>
+        /// <param name="matched">A matchmaker matched object.</param>
+        /// <returns>A task which resolves to a multiplayer match.</returns>
         Task<IMatch> JoinMatchAsync(IMatchmakerMatched matched);
 
         /// <summary>
         /// Join a multiplayer match by ID.
         /// </summary>
-        /// <param name="matchId">A match ID.</param>
-        /// <returns>A task which resolves to the match joined.</returns>
+        /// <param name="matchId">The ID of the match to attempt to join.</param>
+        /// <returns>A task which resolves to a multiplayer match.</returns>
         Task<IMatch> JoinMatchAsync(string matchId);
 
         /// <summary>
         /// Leave a chat channel on the server.
         /// </summary>
-        /// <param name="channel">The channel to leave.</param>
-        /// <returns>A task.</returns>
+        /// <param name="channel">The chat channel to leave.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LeaveChatAsync(IChannel channel);
 
         /// <summary>
         /// Leave a chat channel on the server.
         /// </summary>
-        /// <param name="channelId">The ID of the channel to leave.</param>
-        /// <returns>A task.</returns>
+        /// <param name="channelId">The ID of the chat channel to leave.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LeaveChatAsync(string channelId);
 
         /// <summary>
-        /// Leave a match on the server.
+        /// Leave a multiplayer match on the server.
         /// </summary>
-        /// <param name="match">The match to leave.</param>
-        /// <returns>A task.</returns>
+        /// <param name="match">The multiplayer match to leave.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LeaveMatchAsync(IMatch match);
 
         /// <summary>
-        /// Leave a match on the server.
+        /// Leave a multiplayer match on the server.
         /// </summary>
-        /// <param name="matchId">The ID of the match to leave.</param>
-        /// <returns>A task.</returns>
+        /// <param name="matchId">The multiplayer match to leave.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task LeaveMatchAsync(string matchId);
 
         /// <summary>
-        /// Remove a chat message from a channel on the server.
+        /// Remove a chat message from a chat channel on the server.
         /// </summary>
-        /// <param name="channel">The chat channel with the message.</param>
-        /// <param name="messageId">The ID of a chat message to update.</param>
-        /// <returns>A task.</returns>
+        /// <param name="channel">The chat channel with the message to remove.</param>
+        /// <param name="messageId">The ID of the chat message to remove.</param>
+        /// <returns>A task which resolves to an acknowledgement of the removed message.</returns>
         Task<IChannelMessageAck> RemoveChatMessageAsync(IChannel channel, string messageId);
 
         /// <summary>
-        /// Remove a chat message from a channel on the server.
+        /// Remove a chat message from a chat channel on the server.
         /// </summary>
-        /// <param name="channelId">The ID of the chat channel with the message.</param>
-        /// <param name="messageId">The ID of a chat message to update.</param>
-        /// <returns>A task.</returns>
+        /// <param name="channelId">The ID of the chat channel with the message to remove.</param>
+        /// <param name="messageId">The ID of the chat message to remove.</param>
+        /// <returns>A task which resolves to an acknowledgement of the removed message.</returns>
         Task<IChannelMessageAck> RemoveChatMessageAsync(string channelId, string messageId);
 
         /// <summary>
-        /// Leave the matchmaker pool by ticket.
+        /// Leave the matchmaker pool with the ticket.
         /// </summary>
         /// <param name="ticket">The ticket returned by the matchmaker on join.</param>
-        /// <returns>A task.</returns>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task RemoveMatchmakerAsync(IMatchmakerTicket ticket);
 
         /// <summary>
-        /// Leave the matchmaker pool by ticket.
+        /// Leave the matchmaker pool with the ticket contents.
         /// </summary>
-        /// <param name="ticket">The ticket returned by the matchmaker on join. See <c>IMatchmakerTicket.Ticket</c>.</param>
-        /// <returns>A task.</returns>
+        /// <param name="ticket">The contents of the ticket returned by the matchmaker on join.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task RemoveMatchmakerAsync(string ticket);
 
         /// <summary>
-        /// Send an RPC message to the server.
+        /// Execute an RPC function to the server.
         /// </summary>
-        /// <param name="id">The ID of the function to execute.</param>
-        /// <param name="payload">The string content to send to the server.</param>
-        /// <returns>A task which resolves to an RPC response.</returns>
-        Task<IApiRpc> RpcAsync(string id, string payload);
+        /// <param name="funcId">The ID of the function to execute.</param>
+        /// <param name="payload">An (optional) payload to send to the server.</param>
+        /// <returns>A task which resolves to the RPC function response object.</returns>
+        Task<IApiRpc> RpcAsync(string funcId, string payload = null);
 
         /// <summary>
-        /// Send new state to a match on the server.
+        /// Send input to a multiplayer match on the server.
         /// </summary>
-        /// <param name="matchId">The Id of the match.</param>
-        /// <param name="opCode">An operation code for the match state.</param>
-        /// <param name="state">The new state to send to the match.</param>
-        /// <param name="presences">The presences in the match to send the state.</param>
-        Task SendMatchStateAsync(string matchId, long opCode, string state, IEnumerable<IUserPresence> presences = null);
-
-        /// <summary>
-        /// Send a state change to a match on the server.
-        /// </summary>
-        /// <remarks>
+        /// /// <remarks>
         /// When no presences are supplied the new match state will be sent to all presences.
         /// </remarks>
-        /// <param name="matchId">The Id of the match.</param>
-        /// <param name="opCode">An operation code for the match state.</param>
-        /// <param name="state">The new state to send to the match.</param>
-        /// <param name="presences">The presences in the match to send the state.</param>
-        Task SendMatchStateAsync(string matchId, long opCode, byte[] state, IEnumerable<IUserPresence> presences = null);
+        /// <param name="matchId">The ID of the match.</param>
+        /// <param name="opCode">An operation code for the input.</param>
+        /// <param name="state">The input data to send.</param>
+        /// <param name="presences">The presences in the match who should receive the input.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task SendMatchStateAsync(string matchId, long opCode, string state,
+            IEnumerable<IUserPresence> presences = null);
 
         /// <summary>
-        /// Send new state to a match on the server.
+        /// Send input to a multiplayer match on the server.
         /// </summary>
-        /// <param name="matchId">The Id of the match.</param>
-        /// <param name="opCode">An operation code for the match state.</param>
-        /// <param name="state">The new state to send to the match.</param>
-        /// <param name="presences">The presences in the match to send the state.</param>
-        void SendMatchState(string matchId, long opCode, string state, IEnumerable<IUserPresence> presences = null);
-
-        /// <summary>
-        /// Send a state change to a match on the server.
-        /// </summary>
-        /// <remarks>
+        /// /// <remarks>
         /// When no presences are supplied the new match state will be sent to all presences.
         /// </remarks>
-        /// <param name="matchId">The Id of the match.</param>
-        /// <param name="opCode">An operation code for the match state.</param>
-        /// <param name="state">The new state to send to the match.</param>
-        /// <param name="presences">The presences in the match to send the state.</param>
-        void SendMatchState(string matchId, long opCode, byte[] state, IEnumerable<IUserPresence> presences = null);
+        /// <param name="matchId">The ID of the match.</param>
+        /// <param name="opCode">An operation code for the input.</param>
+        /// <param name="state">The input data to send.</param>
+        /// <param name="presences">The presences in the match who should receive the input.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task SendMatchStateAsync(string matchId, long opCode, byte[] state,
+            IEnumerable<IUserPresence> presences = null);
 
         /// <summary>
-        /// Unfollow status updates for one or more users.
+        /// Unfollow one or more users from their status updates.
         /// </summary>
-        /// <param name="userIds">The ids of users to unfollow.</param>
-        /// <returns>A task.</returns>
-        Task UnfollowUsersAsync(IEnumerable<string> userIds);
+        /// <param name="users">The users to unfollow.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task UnfollowUsersAsync(IEnumerable<IApiUser> users);
+        
+        /// <summary>
+        /// Unfollow one or more users from their status updates.
+        /// </summary>
+        /// <param name="userIDs">The IDs of the users to unfollow.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task UnfollowUsersAsync(IEnumerable<string> userIDs);
 
         /// <summary>
-        /// Update a chat message to a channel on the server.
+        /// Update a chat message on a chat channel in the server.
         /// </summary>
-        /// <param name="channel">The channel with the message to update.</param>
+        /// <param name="channel">The chat channel with the message to update.</param>
         /// <param name="messageId">The ID of the message to update.</param>
-        /// <param name="content">The content update for the message.</param>
-        /// <returns>A task.</returns>
+        /// <param name="content">The new contents of the chat message.</param>
+        /// <returns>A task which resolves to an acknowledgement of the updated message.</returns>
         Task<IChannelMessageAck> UpdateChatMessageAsync(IChannel channel, string messageId, string content);
 
         /// <summary>
-        /// Update a chat message to a channel on the server.
+        /// Update a chat message on a chat channel in the server.
         /// </summary>
-        /// <param name="channelId">The ID of the chat channel with the message.</param>
+        /// <param name="channelId">The ID of the chat channel with the message to update.</param>
         /// <param name="messageId">The ID of the message to update.</param>
-        /// <param name="content">The content update for the message.</param>
-        /// <returns>A task.</returns>
+        /// <param name="content">The new contents of the chat message.</param>
+        /// <returns>A task which resolves to an acknowledgement of the updated message.</returns>
         Task<IChannelMessageAck> UpdateChatMessageAsync(string channelId, string messageId, string content);
 
         /// <summary>
-        /// Update the user's status online.
+        /// Update the status for the current user online.
         /// </summary>
-        /// <param name="status">The new status of the user.</param>
-        /// <returns>A task.</returns>
+        /// <param name="status">The new status for the user.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
         Task UpdateStatusAsync(string status);
 
         /// <summary>
-        /// Send a chat message to a channel on the server.
+        /// Send a chat message to a chat channel on the server.
         /// </summary>
-        /// <param name="channel">The channel to send on.</param>
-        /// <param name="content">The content of the chat message.</param>
-        /// <returns>A task which resolves to a Channel Ack response.</returns>
+        /// <param name="channel">The chat channel to send onto.</param>
+        /// <param name="content">The contents of the message to send.</param>
+        /// <returns>A task which resolves to the acknowledgement of the chat message write.</returns>
         Task<IChannelMessageAck> WriteChatMessageAsync(IChannel channel, string content);
 
         /// <summary>
-        /// Send a chat message to a channel on the server.
+        /// Send a chat message to a chat channel on the server.
         /// </summary>
-        /// <param name="channelId">The ID of the channel as the destination for the message.</param>
-        /// <param name="content">The content of the chat message.</param>
-        /// <returns>A task which resolves to a Channel Ack response.</returns>
+        /// <param name="channelId">The ID of the chat channel to send onto.</param>
+        /// <param name="content">The contents of the message to send.</param>
+        /// <returns>A task which resolves to the acknowledgement of the chat message write.</returns>
         Task<IChannelMessageAck> WriteChatMessageAsync(string channelId, string content);
     }
 }

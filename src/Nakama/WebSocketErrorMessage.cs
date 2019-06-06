@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,29 +14,25 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
-    /// An error received on the WebSocket connection.
+    /// A logical error received on the WebSocket connection.
     /// </summary>
     internal class WebSocketErrorMessage
     {
-        [DataMember(Name="code")]
-        public int Code { get; set; }
+        [DataMember(Name = "code")] public int Code { get; set; }
 
-        [DataMember(Name="message")]
-        public string Message { get; set; }
+        [DataMember(Name = "context")] public Dictionary<string, string> Context { get; set; }
 
-        [DataMember(Name="context")]
-        public Dictionary<string, string> Context { get; set; }
+        [DataMember(Name = "message")] public string Message { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return $"WebSocketErrorMessage(Code={Code}, Message='{Message}', Context={Context})";
+            return $"WebSocketErrorMessage(Code={Code}, Context={Context}, Message='{Message}')";
         }
     }
 }

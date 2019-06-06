@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Send new state to a match on the server.
     /// </summary>
@@ -36,11 +36,10 @@ namespace Nakama
         [DataMember(Name="data")]
         public string State { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            var presences = string.Join(",", Presences);
-            return $"MatchSendMessage[MatchId={MatchId}, OpCode={OpCode}, Presences=[{presences}], State={State}]";
+            var presences = string.Join(", ", Presences);
+            return $"MatchSendMessage(MatchId='{MatchId}', OpCode={OpCode}, Presences=[{presences}], State='{State}')";
         }
     }
 }

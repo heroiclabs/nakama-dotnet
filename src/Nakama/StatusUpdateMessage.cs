@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Update the status of the current user.
     /// </summary>
@@ -26,7 +26,6 @@ namespace Nakama
         [DataMember(Name="status")]
         public string Status { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
             return $"StatusUpdateMessage(Status='{Status}')";

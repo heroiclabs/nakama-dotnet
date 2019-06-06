@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+using System.IO.Compression;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Nakama
 {
-    using System.IO.Compression;
-    using System.Net;
-    using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     internal class GZipHttpClientHandler : DelegatingHandler
     {
         public GZipHttpClientHandler(HttpMessageHandler innerHandler)
@@ -52,7 +52,6 @@ namespace Nakama
             {
                 Headers.TryAddWithoutValidation(header.Key, header.Value);
             }
-
             Headers.ContentEncoding.Add("gzip");
         }
 

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// An object which represents a connected user in the server.
     /// </summary>
     /// <remarks>
     /// The server allows the same user to be connected with multiple sessions. To uniquely identify them a tuple of
-    /// <c>{ user_id, session_id }</c> is used which is exposed as this object.
+    /// <c>{ node_id, user_id, session_id }</c> is used which is exposed as this object.
     /// </remarks>
     public interface IUserPresence
     {
         /// <summary>
-        /// True if this presence generates stored events like persistent chat messages or notifications.
+        /// If this presence generates stored events like persistent chat messages or notifications.
         /// </summary>
         bool Persistence { get; }
 
@@ -53,27 +54,25 @@ namespace Nakama
         string UserId { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IUserPresence"/>
     internal class UserPresence : IUserPresence
     {
-        [DataMember(Name = "persistence")]
-        public bool Persistence { get; set; }
+        internal static readonly IReadOnlyList<UserPresence> NoPresences = new List<UserPresence>(0);
 
-        [DataMember(Name = "session_id")]
-        public string SessionId { get; set; }
+        [DataMember(Name = "persistence")] public bool Persistence { get; set; }
 
-        [DataMember(Name = "status")]
-        public string Status { get; set; }
+        [DataMember(Name = "session_id")] public string SessionId { get; set; }
 
-        [DataMember(Name = "username")]
-        public string Username { get; set; }
+        [DataMember(Name = "status")] public string Status { get; set; }
 
-        [DataMember(Name = "user_id")]
-        public string UserId { get; set; }
+        [DataMember(Name = "username")] public string Username { get; set; }
+
+        [DataMember(Name = "user_id")] public string UserId { get; set; }
 
         public override string ToString()
         {
-            return $"UserPresence(Persistence={Persistence}, SessionId={SessionId}, Status={Status}, Username={Username}, UserId={UserId})";
+            return
+                $"UserPresence(Persistence={Persistence}, SessionId='{SessionId}', Status='{Status}', Username='{Username}', UserId='{UserId}')";
         }
     }
 }

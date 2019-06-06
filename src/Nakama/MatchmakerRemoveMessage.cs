@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Remove the user from the matchmaker pool by ticket.
     /// </summary>
@@ -28,7 +28,7 @@ namespace Nakama
 
         public override string ToString()
         {
-            return $"MatchmakerRemoveMessage[Ticket={Ticket}]";
+            return $"MatchmakerRemoveMessage(Ticket='{Ticket}')";
         }
     }
 }

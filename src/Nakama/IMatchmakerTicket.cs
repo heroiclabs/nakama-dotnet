@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// The matchmaker ticket received from the server.
     /// </summary>
@@ -29,16 +29,15 @@ namespace Nakama
         string Ticket { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IMatchmakerMatched"/>
     internal class MatchmakerTicket : IMatchmakerTicket
     {
         [DataMember(Name="ticket")]
         public string Ticket { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return $"MatchmakerTicket[Ticket={Ticket}]";
+            return $"MatchmakerTicket(Ticket='{Ticket}')";
         }
     }
 }

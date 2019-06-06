@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Collections.Generic;
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// A status update event about other users who've come online or gone offline.
     /// </summary>
@@ -41,18 +41,15 @@ namespace Nakama
         IEnumerable<IUserPresence> Joins { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IStatusPresenceEvent"/>
     internal class StatusPresenceEvent : IStatusPresenceEvent
     {
-        public IEnumerable<IUserPresence> Leaves => _leaves ?? new List<UserPresence>(0);
-        [DataMember(Name="leaves")]
-        public List<UserPresence> _leaves { get; set; }
+        public IEnumerable<IUserPresence> Leaves => _leaves ?? UserPresence.NoPresences;
+        [DataMember(Name = "leaves")] public List<UserPresence> _leaves { get; set; }
 
-        public IEnumerable<IUserPresence> Joins => _joins ?? new List<UserPresence>(0);
-        [DataMember(Name="joins")]
-        public List<UserPresence> _joins { get; set; }
+        public IEnumerable<IUserPresence> Joins => _joins ?? UserPresence.NoPresences;
+        [DataMember(Name = "joins")] public List<UserPresence> _joins { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
             var joins = string.Join(", ", Joins);

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// A leave message to a chat channel.
     /// </summary>
@@ -26,10 +26,9 @@ namespace Nakama
         [DataMember(Name="channel_id")]
         public string ChannelId { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
-            return $"ChannelLeaveMessage[ChannelId={ChannelId}]";
+            return $"ChannelLeaveMessage(ChannelId='{ChannelId}')";
         }
     }
 }

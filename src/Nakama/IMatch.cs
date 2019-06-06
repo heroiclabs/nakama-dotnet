@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Nakama
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// A multiplayer match.
     /// </summary>
     public interface IMatch
     {
         /// <summary>
-        /// True if this match has an authoritative handler on the server.
+        /// If this match has an authoritative handler on the server.
         /// </summary>
         bool Authoritative { get; }
 
@@ -57,34 +55,28 @@ namespace Nakama
         IUserPresence Self { get; }
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IMatch"/>
     internal class Match : IMatch
     {
-        [DataMember(Name="authoritative")]
-        public bool Authoritative { get; set; }
+        [DataMember(Name = "authoritative")] public bool Authoritative { get; set; }
 
-        [DataMember(Name="match_id")]
-        public string Id { get; set; }
+        [DataMember(Name = "match_id")] public string Id { get; set; }
 
-        [DataMember(Name="label")]
-        public string Label { get; set; }
+        [DataMember(Name = "label")] public string Label { get; set; }
 
-        public IEnumerable<IUserPresence> Presences => _presences ?? new List<UserPresence>();
-        [DataMember(Name="presences")]
-        public List<UserPresence> _presences { get; set; }
+        public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
+        [DataMember(Name = "presences")] public List<UserPresence> _presences { get; set; }
 
-        [DataMember(Name="size")]
-        public int Size { get; set; }
+        [DataMember(Name = "size")] public int Size { get; set; }
 
         public IUserPresence Self => _self;
-        [DataMember(Name="self")]
-        public UserPresence _self { get; set; }
+        [DataMember(Name = "self")] public UserPresence _self { get; set; }
 
-        /// <inheritdoc />
         public override string ToString()
         {
             var presences = string.Join(", ", Presences);
-            return $"Match[Authoritative={Authoritative}, Id={Id}, Label={Label}, Presences={presences}, Size={Size}, Self={Self}]";
+            return
+                $"Match(Authoritative={Authoritative}, Id='{Id}', Label='{Label}', Presences=[{presences}], Size={Size}, Self={Self})";
         }
     }
 }

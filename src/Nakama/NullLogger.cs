@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright 2018 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,49 +17,23 @@
 namespace Nakama
 {
     /// <summary>
-    /// A logger which performs no operation (no-op).
+    /// A logger which writes to nowhere.
     /// </summary>
     internal class NullLogger : ILogger
     {
         public static readonly ILogger Instance = new NullLogger();
 
-        /// <inheritdoc />
-        public void Debug(object message)
+        private NullLogger()
         {
         }
 
-        /// <inheritdoc />
-        public void DebugFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc />
-        public void Info(object message)
-        {
-        }
-
-        /// <inheritdoc />
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc />
-        public void Warn(object message)
-        {
-        }
-
-        /// <inheritdoc />
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc />
-        public void Error(object message)
-        {
-        }
-
-        /// <inheritdoc />
+        /// <inheritdoc cref="ILogger.ErrorFormat"/>
         public void ErrorFormat(string format, params object[] args)
+        {
+        }
+
+        /// <inheritdoc cref="ILogger.InfoFormat"/>
+        public void InfoFormat(string format, params object[] args)
         {
         }
     }

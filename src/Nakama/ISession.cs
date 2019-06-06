@@ -1,5 +1,5 @@
-﻿/**
- * Copyright 2018 The Nakama Authors
+/**
+ * Copyright 2019 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
+
 namespace Nakama
 {
-    using System;
-
     /// <summary>
-    /// A session used with requests sent to Nakama server.
+    /// A session authenticated for a user with Nakama server.
     /// </summary>
     public interface ISession
     {
@@ -29,24 +30,29 @@ namespace Nakama
         string AuthToken { get; }
 
         /// <summary>
-        /// <c>True</c> if the user account for this session was just created.
+        /// If the user account for this session was just created.
         /// </summary>
         bool Created { get; }
 
         /// <summary>
-        /// The timestamp in seconds when this session object was created.
+        /// The UNIX timestamp when this session was created.
         /// </summary>
         long CreateTime { get; }
 
         /// <summary>
-        /// The timestamp in seconds when this session will expire.
+        /// The UNIX timestamp when this session will expire.
         /// </summary>
         long ExpireTime { get; }
 
         /// <summary>
-        /// <c>True</c> if the session has expired against the current time.
+        /// If the session has expired.
         /// </summary>
         bool IsExpired { get; }
+
+        /// <summary>
+        /// Any custom properties associated with this session.
+        /// </summary>
+        IDictionary<string, string> Properties { get; }
 
         /// <summary>
         /// The username of the user who owns this session.
@@ -59,10 +65,10 @@ namespace Nakama
         string UserId { get; }
 
         /// <summary>
-        /// Check if the session has expired against the input time.
+        /// Check the session has expired against the offset time.
         /// </summary>
-        /// <param name="dateTime">The time to compare against the session.</param>
-        /// <returns><c>true</c> if the session has expired.</returns>
-        bool HasExpired(DateTime dateTime);
+        /// <param name="offset">The datetime to compare against this session.</param>
+        /// <returns>If the session has expired.</returns>
+        bool HasExpired(DateTime offset);
     }
 }
