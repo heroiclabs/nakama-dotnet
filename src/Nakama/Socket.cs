@@ -119,7 +119,15 @@ namespace Nakama
             _responses = new ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
 
             _adapter.Connected += () => Connected?.Invoke();
-            _adapter.Closed += () => Closed?.Invoke();
+            _adapter.Closed += () =>
+            {
+                foreach (var response in _responses)
+                {
+                    response.Value.TrySetCanceled();
+                }
+                _responses.Clear();
+                Closed?.Invoke();
+            };
             _adapter.ReceivedError += e => ReceivedError?.Invoke(e);
             _adapter.Received += ReceivedMessage;
         }
