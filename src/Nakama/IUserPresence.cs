@@ -69,6 +69,29 @@ namespace Nakama
 
         [DataMember(Name = "user_id")] public string UserId { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is UserPresence item))
+            {
+                return false;
+            }
+            return Equals(item);
+        }
+
+        private bool Equals(IUserPresence other)
+        {
+            return string.Equals(SessionId, other.SessionId) && string.Equals(UserId, other.UserId);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                // ReSharper disable twice NonReadonlyMemberInGetHashCode
+                return ((SessionId?.GetHashCode() ?? 0) * 397) ^ (UserId?.GetHashCode() ?? 0);
+            }
+        }
+
         public override string ToString()
         {
             return
