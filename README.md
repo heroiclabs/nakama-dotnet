@@ -115,6 +115,8 @@ For release builds use:
 
 ```shell
 dotnet build -c Release /p:AssemblyVersion=2.0.0.0 src/Nakama/Nakama.csproj
+// For Nuget packaging
+dotnet pack -p:AssemblyVersion=2.0.0.0 -p:PackageVersion=2.0.0 -c Release src/Nakama/Nakama.csproj
 ```
 
 ### Run Tests
