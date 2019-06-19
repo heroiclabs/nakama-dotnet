@@ -80,11 +80,14 @@ namespace Nakama
         /// <summary>
         /// Restore a session from the auth token.
         /// </summary>
+        /// <remarks>
+        /// A <c>null</c> or empty authentication token will return null.
+        /// </remarks>
         /// <param name="authToken">The authentication token to restore as a session.</param>
         /// <returns>A session.</returns>
         public static ISession Restore(string authToken)
         {
-            return new Session(authToken, false);
+            return string.IsNullOrEmpty(authToken) ? null : new Session(authToken, false);
         }
 
         private static string JwtUnpack(string jwt)

@@ -25,17 +25,6 @@ namespace Nakama.Tests
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwifQ.gzLaMQPaj5wEKoskOSALIeJLOYXEVFoPx3KY0Jm1EVU";
 
         [Fact]
-        public void IsExpired_ExpiredField_True()
-        {
-            var session = Session.Restore(AuthToken);
-            Assert.NotNull(session.AuthToken);
-            Assert.Equal(AuthToken, session.AuthToken);
-            Assert.Equal(1516910973, session.ExpireTime);
-            Assert.NotInRange(session.CreateTime, 0, 0);
-            Assert.True(session.IsExpired);
-        }
-
-        [Fact]
         public void GetUsername_UsernameField_NotNull()
         {
             var session = Session.Restore(AuthToken);
@@ -53,6 +42,24 @@ namespace Nakama.Tests
             Assert.Equal(AuthToken, session.AuthToken);
             Assert.NotNull(session.UserId);
             Assert.Equal("f4158f2b-80f3-4926-946b-a8ccfc165490", session.UserId);
+        }
+
+        [Fact]
+        public void IsExpired_ExpiredField_True()
+        {
+            var session = Session.Restore(AuthToken);
+            Assert.NotNull(session.AuthToken);
+            Assert.Equal(AuthToken, session.AuthToken);
+            Assert.Equal(1516910973, session.ExpireTime);
+            Assert.NotInRange(session.CreateTime, 0, 0);
+            Assert.True(session.IsExpired);
+        }
+
+        [Fact]
+        public void Restore_EmptyString_Null()
+        {
+            var session = Session.Restore("");
+            Assert.Null(session);
         }
     }
 }

@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - New comparison methods on some domain types.
 
+### Changed
+- When the session is decoded but null or empty return null.
+
 ### Fixed
 - Awaited socket callback tasks are now canceled when the socket adapter is closed and cleared.
 - Awaited socket callback tasks are now canceled when the socket adapter sends while disconnected.
