@@ -78,10 +78,7 @@ namespace Nakama
             return Equals(item);
         }
 
-        private bool Equals(IUserPresence other)
-        {
-            return string.Equals(SessionId, other.SessionId) && string.Equals(UserId, other.UserId);
-        }
+        private bool Equals(IUserPresence other) => string.Equals(SessionId, other.SessionId) && string.Equals(UserId, other.UserId);
 
         public override int GetHashCode()
         {

@@ -54,6 +54,19 @@ namespace Nakama
         [DataMember(Name="self")]
         public UserPresence _self { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Channel item))
+            {
+                return false;
+            }
+            return Equals(item);
+        }
+
+        private bool Equals(IChannel other) => string.Equals(Id, other.Id);
+
+        public override int GetHashCode() => Id != null ? Id.GetHashCode() : 0;
+
         public override string ToString()
         {
             var presences = string.Join(", ", Presences);
