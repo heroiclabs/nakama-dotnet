@@ -128,7 +128,18 @@ namespace Nakama
                 _responses.Clear();
                 Closed?.Invoke();
             };
-            _adapter.ReceivedError += e => ReceivedError?.Invoke(e);
+            _adapter.ReceivedError += e =>
+            {
+                if (!_adapter.IsConnected)
+                {
+                    foreach (var response in _responses)
+                    {
+                        response.Value.TrySetCanceled();
+                    }
+                    _responses.Clear();
+                }
+                ReceivedError?.Invoke(e);
+            };
             _adapter.Received += ReceivedMessage;
         }
 
@@ -488,7 +499,8 @@ namespace Nakama
         public static ISocket From(IClient client, ISocketAdapter adapter)
         {
             var scheme = client.Scheme.ToLower().Equals("http") ? "ws" : "wss";
-            return new Socket(scheme, client.Host, client.Port, adapter);
+            // TODO improve how logger is passed into socket object.
+            return new Socket(scheme, client.Host, client.Port, adapter) {Logger = (client as Client)?.Logger};
         }
 
         private void ReceivedMessage(ArraySegment<byte> buffer)
@@ -505,7 +517,7 @@ namespace Nakama
                     _responses.TryRemove(cid, out completer);
                     if (completer == null)
                     {
-                        Logger.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
+                        Logger?.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
                         return;
                     }
 
@@ -564,7 +576,7 @@ namespace Nakama
                 }
                 else
                 {
-                    Logger.ErrorFormat("Received unrecognised message: '{0}'", contents);
+                    Logger?.ErrorFormat("Received unrecognised message: '{0}'", contents);
                 }
             }
             catch (Exception e)

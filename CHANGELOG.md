@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Fixed
 - Awaited socket callback tasks are now canceled when the socket adapter is closed and cleared.
+- Awaited socket callback tasks are now canceled when the socket adapter sends while disconnected.
 
 ## [2.2.0] - 2019-06-06
 ### Added

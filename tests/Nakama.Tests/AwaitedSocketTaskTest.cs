@@ -38,7 +38,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void Socket_AwaitedTasks_AreCompleted()
+        public async void Socket_AwaitedTasks_AreCanceled()
         {
             var id = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(id);
@@ -49,6 +49,19 @@ namespace Nakama.Tests
             await _socket.CloseAsync();
 
             await Assert.ThrowsAsync<TaskCanceledException>(() => Task.WhenAll(matchmakerTask1, matchmakerTask2));
+        }
+
+        [Fact]
+        public async void Socket_AwaitedTasksAfterDisconnect_AreCanceled()
+        {
+            var id = Guid.NewGuid().ToString();
+            var session = await _client.AuthenticateCustomAsync(id);
+            await _socket.ConnectAsync(session);
+
+            await _socket.CloseAsync();
+            var statusTask = _socket.FollowUsersAsync(new[] {session.UserId});
+
+            await Assert.ThrowsAsync<TaskCanceledException>(() => Task.WhenAll(statusTask));
         }
     }
 }
