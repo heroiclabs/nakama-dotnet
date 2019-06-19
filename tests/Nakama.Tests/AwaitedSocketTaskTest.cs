@@ -59,9 +59,10 @@ namespace Nakama.Tests
             await _socket.ConnectAsync(session);
 
             await _socket.CloseAsync();
-            var statusTask = _socket.FollowUsersAsync(new[] {session.UserId});
+            var statusTask1 = _socket.FollowUsersAsync(new[] {session.UserId});
+            var statusTask2 = _socket.FollowUsersAsync(new[] {session.UserId});
 
-            await Assert.ThrowsAsync<TaskCanceledException>(() => Task.WhenAll(statusTask));
+            await Assert.ThrowsAsync<TaskCanceledException>(() => Task.WhenAll(statusTask1, statusTask2));
         }
     }
 }
