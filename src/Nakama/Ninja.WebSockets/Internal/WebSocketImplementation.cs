@@ -315,7 +315,7 @@ namespace Nakama.Ninja.WebSockets.Internal
                     WebSocketFrameWriter.Write(WebSocketOpCode.ConnectionClose, buffer, stream, true, _isClient);
                     Events.Log.CloseOutputNoHandshake(_guid, closeStatus, statusDescription);
                     Events.Log.SendingFrame(_guid, WebSocketOpCode.ConnectionClose, true, buffer.Count, true);
-                    await WriteStreamToNetwork(stream, cancellationToken);
+                    await WriteStreamToNetwork(stream, cancellationToken).ConfigureAwait(false);
                 }
             }
             else
@@ -341,7 +341,7 @@ namespace Nakama.Ninja.WebSockets.Internal
                     CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                     try
                     {
-                        CloseOutputAsync(WebSocketCloseStatus.EndpointUnavailable, "Service is Disposed", cts.Token).Wait();
+                        CloseOutputAsync(WebSocketCloseStatus.EndpointUnavailable, "Service is Disposed", cts.Token).Wait(cts.Token);
                     }
                     catch (OperationCanceledException)
                     {
