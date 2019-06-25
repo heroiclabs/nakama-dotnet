@@ -165,7 +165,7 @@ namespace Nakama
             var buffer = new byte[MaxMessageSize];
             while (true)
             {
-                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
+                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken).ConfigureAwait(false);
                 if (result == null)
                 {
                     break;

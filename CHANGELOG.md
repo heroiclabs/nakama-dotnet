@@ -6,7 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Don't synchronize the socket receive with the current thread context.
 
+### Fixed
+- Resolve deadlock in socket dispose with synchronization context.
 
 ## [2.2.1] - 2019-06-19
 ### Added
