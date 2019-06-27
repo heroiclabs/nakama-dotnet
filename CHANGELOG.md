@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Changed
 - Don't synchronize the socket receive with the current thread context.
+- Remove workaround for Mono runtime usage with newer TLS negotation.
 
 ### Fixed
 - Resolve deadlock in socket dispose with synchronization context.

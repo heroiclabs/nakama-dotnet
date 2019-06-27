@@ -92,9 +92,6 @@ namespace Nakama
             ServerKey = serverKey;
             Timeout = 15;
 
-            // NOTE Disable certificate checks by default due to Unity engine problems.
-            ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
-
             _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, Timeout);
             Logger = NullLogger.Instance; // must set logger last.
         }
