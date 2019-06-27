@@ -210,7 +210,7 @@ namespace Nakama
                 }
 
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, count, MaxMessageSize - count),
-                    CancellationToken.None);
+                    CancellationToken.None).ConfigureAwait(false);
                 count += result.Count;
             }
 
