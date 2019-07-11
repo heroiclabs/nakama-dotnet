@@ -85,7 +85,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.Connect"/>
-        public async void Connect(Uri uri)
+        public async void Connect(Uri uri, int timeout)
         {
             if (_webSocket != null)
             {
@@ -100,7 +100,8 @@ namespace Nakama
             var clientFactory = new WebSocketClientFactory();
             try
             {
-                using (_webSocket = await clientFactory.ConnectAsync(_uri, _options, _cancellationSource.Token))
+                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
+                using (_webSocket = await clientFactory.ConnectAsync(_uri, _options, cts.Token))
                 {
                     IsConnected = true;
                     IsConnecting = false;

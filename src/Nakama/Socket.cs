@@ -35,7 +35,7 @@ namespace Nakama
         /// <summary>
         /// The default timeout for when the socket connects.
         /// </summary>
-        public const int DefaultConnectTimeout = 10;
+        public const int DefaultConnectTimeout = 30;
 
         /// <inheritdoc cref="Closed"/>
         public event Action Closed;
@@ -190,10 +190,8 @@ namespace Nakama
                 _adapter.Connected -= callback;
                 _adapter.ReceivedError -= errback;
             });
-            _adapter.Connect(uri);
-            // NOTE Task.Delay does not work with Unity WebGL builds.
+            _adapter.Connect(uri, connectTimeoutSec);
             return tcs.Task;
-            //return Task.WhenAny(tcs.Task, Task.Delay(DefaultConnectTimeout));
         }
 
         /// <inheritdoc cref="CreateMatchAsync"/>

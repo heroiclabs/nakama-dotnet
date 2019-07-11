@@ -63,7 +63,8 @@ namespace Nakama
         /// Connect to the server with an asynchronous operation.
         /// </summary>
         /// <param name="uri">The URI of the server.</param>
-        void Connect(Uri uri);
+        /// <param name="timeout">The timeout for the connect attempt on the socket.</param>
+        void Connect(Uri uri, int timeout);
 
         /// <summary>
         /// Send data to the server with an asynchronous operation.
