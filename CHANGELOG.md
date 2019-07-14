@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Use the connect timeout value in native socket connect attempts.
+- Link the token source across socket connect and close tasks.
 
 ## [2.2.2] - 2019-07-02
 ### Changed

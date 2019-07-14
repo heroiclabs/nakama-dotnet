@@ -101,7 +101,8 @@ namespace Nakama
             try
             {
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
-                using (_webSocket = await clientFactory.ConnectAsync(_uri, _options, cts.Token))
+                var lcts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
+                using (_webSocket = await clientFactory.ConnectAsync(_uri, _options, lcts.Token))
                 {
                     IsConnected = true;
                     IsConnecting = false;

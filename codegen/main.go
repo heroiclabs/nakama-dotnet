@@ -165,10 +165,10 @@ namespace Nakama
         private readonly int _timeout;
         public readonly IHttpAdapter HttpAdapter;
 
-        public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 3)
+        public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
         {
             _baseUri = baseUri;
-            _timeout = 3;
+            _timeout = timeout;
             HttpAdapter = httpAdapter;
         }
 
