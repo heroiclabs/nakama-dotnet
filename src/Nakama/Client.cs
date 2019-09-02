@@ -176,14 +176,15 @@ namespace Nakama
 
         /// <inheritdoc cref="CreateGroupAsync"/>
         public Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description = "",
-            string avatarUrl = null, string langTag = null, bool open = true) =>
+            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100) =>
             _apiClient.CreateGroupAsync(session.AuthToken, new ApiCreateGroupRequest
             {
                 Name = name,
                 Description = description,
                 AvatarUrl = avatarUrl,
                 LangTag = langTag,
-                Open = open
+                Open = open,
+                MaxCount = maxCount
             });
 
         /// <inheritdoc cref="DeleteFriendsAsync"/>
@@ -229,7 +230,7 @@ namespace Nakama
             _apiClient.GetUsersAsync(session.AuthToken, ids, usernames, facebookIds);
 
         /// <inheritdoc cref="ImportFacebookFriendsAsync"/>
-        public Task ImportFacebookFriendsAsync(ISession session, string token, bool reset = false) =>
+        public Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null) =>
             _apiClient.ImportFacebookFriendsAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, reset);
 
         /// <inheritdoc cref="JoinGroupAsync"/>
@@ -261,7 +262,7 @@ namespace Nakama
             _apiClient.LinkEmailAsync(session.AuthToken, new ApiAccountEmail {Email = email, Password = password});
 
         /// <inheritdoc cref="LinkFacebookAsync"/>
-        public Task LinkFacebookAsync(ISession session, string token, bool import = true) =>
+        public Task LinkFacebookAsync(ISession session, string token, bool? import = true) =>
             _apiClient.LinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, import);
 
         /// <inheritdoc cref="LinkGameCenterAsync"/>
@@ -453,16 +454,16 @@ namespace Nakama
                 });
 
         /// <inheritdoc cref="UpdateGroupAsync"/>
-        public Task UpdateGroupAsync(ISession session, string groupId, string name, string description = null,
-            string avatarUrl = null, string langTag = null, bool open = false) => _apiClient.UpdateGroupAsync(
+        public Task UpdateGroupAsync(ISession session, string groupId, string name, bool open, string description = null,
+            string avatarUrl = null, string langTag = null) => _apiClient.UpdateGroupAsync(
             session.AuthToken, groupId,
             new ApiUpdateGroupRequest
             {
+                Name = name,
+                Open = open,
                 AvatarUrl = avatarUrl,
                 Description = description,
-                LangTag = langTag,
-                Name = name,
-                Open = open
+                LangTag = langTag
             });
 
         /// <inheritdoc cref="WriteLeaderboardRecordAsync"/>

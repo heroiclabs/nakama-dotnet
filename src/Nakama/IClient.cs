@@ -158,9 +158,10 @@ namespace Nakama
         /// <param name="avatarUrl">An avatar url for the group.</param>
         /// <param name="langTag">A language tag in BCP-47 format for the group.</param>
         /// <param name="open">If the group should have open membership.</param>
+        /// <param name="maxCount">The maximum number of members allowed.</param>
         /// <returns>A task which resolves to a new group object.</returns>
         Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description = "",
-            string avatarUrl = null, string langTag = null, bool open = true);
+            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100);
 
         /// <summary>
         /// Delete one more or users by id or username from friends.
@@ -232,7 +233,7 @@ namespace Nakama
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
         /// <param name="reset">If the Facebook friend import for the user should be reset.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task ImportFacebookFriendsAsync(ISession session, string token, bool reset = false);
+        Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null);
 
         /// <summary>
         /// Join a group if it has open membership or request to join it.
@@ -299,7 +300,7 @@ namespace Nakama
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
         /// <param name="import">If the Facebook friends should be imported.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkFacebookAsync(ISession session, string token, bool import = true);
+        Task LinkFacebookAsync(ISession session, string token, bool? import = true);
 
         /// <summary>
         /// Link a Game Center profile to a user account.
@@ -493,7 +494,8 @@ namespace Nakama
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">A cursor for the current position in the listing.</param>
         /// <returns>A task which resolves to the group list object.</returns>
-        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state = null, int limit = 1, string cursor = null);
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state = null, int limit = 1, 
+            string cursor = null);
 
         /// <summary>
         /// List groups a user is a member of.
@@ -504,7 +506,8 @@ namespace Nakama
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">A cursor for the current position in the listing.</param>
         /// <returns>A task which resolves to the group list object.</returns>
-        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state = null, int limit = 1, string cursor = null);
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state = null, int limit = 1, 
+            string cursor = null);
 
         /// <summary>
         /// List storage objects in a collection which belong to a specific user and have public read access.
@@ -650,13 +653,13 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="groupId">The ID of the group to update.</param>
         /// <param name="name">A new name for the group.</param>
+        /// <param name="open">If the group should have open membership.</param>
         /// <param name="description">A new description for the group.</param>
         /// <param name="avatarUrl">A new avatar url for the group.</param>
         /// <param name="langTag">A new language tag in BCP-47 format for the group.</param>
-        /// <param name="open">If the group should have open membership.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UpdateGroupAsync(ISession session, string groupId, string name, string description = null,
-            string avatarUrl = null, string langTag = null, bool open = false);
+        Task UpdateGroupAsync(ISession session, string groupId, string name, bool open, string description = null,
+            string avatarUrl = null, string langTag = null);
 
         /// <summary>
         /// Write a record to a leaderboard.
