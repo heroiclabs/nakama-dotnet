@@ -240,6 +240,16 @@ namespace Nakama
             {{- end }}
         {{- else if eq $parameter.Type "array"}}
             , IEnumerable<{{ $parameter.Items.Type }}> {{ $camelcase }}
+        {{- else if eq $parameter.Type "object"}}
+            {{- if eq $parameter.AdditionalProperties.Type "string"}}
+        IDictionary<string, string> {{ $camelcase }}
+            {{- else if eq $parameter.Items.Type "integer"}}
+        IDictionary<string, int> {{ $camelcase }}
+            {{- else if eq $parameter.Items.Type "boolean"}}
+        IDictionary<string, int> {{ $camelcase }}
+            {{- else}}
+        IDictionary<string, {{ $parameter.Items.Type }}> {{ $camelcase }}
+            {{- end}}
         {{- else if eq $parameter.Type "integer" }}
             , int? {{ $camelcase }}
         {{- else if eq $parameter.Type "boolean" }}

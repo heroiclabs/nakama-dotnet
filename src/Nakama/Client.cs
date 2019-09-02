@@ -104,42 +104,45 @@ namespace Nakama
             _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids);
 
         /// <inheritdoc cref="AuthenticateCustomAsync"/>
-        public async Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true)
+        public async Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true, 
+            IDictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty,
-                new ApiAccountCustom {Id = id}, create, username);
+                new ApiAccountCustom {Id = id, Vars = vars}, create, username);
             return new Session(response.Token, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateDeviceAsync"/>
-        public async Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true)
+        public async Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true,
+            IDictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty,
-                new ApiAccountDevice {Id = id}, create, username);
+                new ApiAccountDevice {Id = id, Vars = vars}, create, username);
             return new Session(response.Token, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateEmailAsync"/>
         public async Task<ISession> AuthenticateEmailAsync(string email, string password, string username = null,
-            bool create = true)
+            bool create = true, IDictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateEmailAsync(ServerKey, string.Empty,
-                new ApiAccountEmail {Email = email, Password = password}, create, username);
+                new ApiAccountEmail {Email = email, Password = password, Vars = vars}, create, username);
             return new Session(response.Token, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateFacebookAsync"/>
         public async Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
-            bool import = true)
+            bool import = true, IDictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty,
-                new ApiAccountFacebook {Token = token}, create, username, import);
+                new ApiAccountFacebook {Token = token, Vars = vars}, create, username, import);
             return new Session(response.Token, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateGameCenterAsync"/>
         public async Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, long timestampSeconds, string username = null, bool create = true)
+            string salt, string signature, long timestampSeconds, string username = null, bool create = true, 
+            IDictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty,
                 new ApiAccountGameCenter
@@ -149,24 +152,27 @@ namespace Nakama
                     PublicKeyUrl = publicKeyUrl,
                     Salt = salt,
                     Signature = signature,
-                    TimestampSeconds = timestampSeconds
+                    TimestampSeconds = timestampSeconds,
+                    Vars = vars
                 }, create, username);
             return new Session(response.Token, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateGoogleAsync"/>
-        public async Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true)
+        public async Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true, 
+            IDictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty,
-                new ApiAccountGoogle {Token = token}, create, username);
+                new ApiAccountGoogle {Token = token, Vars = vars}, create, username);
             return new Session(response.Token, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateSteamAsync"/>
-        public async Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true)
+        public async Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true, 
+            IDictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty,
-                new ApiAccountSteam {Token = token}, create, username);
+                new ApiAccountSteam {Token = token, Vars = vars}, create, username);
             return new Session(response.Token, response.Created);
         }
 
