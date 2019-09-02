@@ -86,7 +86,11 @@ namespace Nakama
         {{- else if eq $property.Type "boolean" }}
         bool {{ $fieldname }} { get; }
         {{- else if eq $property.Type "string"}}
+        {{- if eq $property.Format "int64" }}
+        long {{ $fieldname }} { get; }
+            {{- else }}
         string {{ $fieldname }} { get; }
+            {{- end }}
         {{- else if eq $property.Type "array"}}
             {{- if eq $property.Items.Type "string"}}
         List<string> {{ $fieldname }} { get; }
@@ -97,6 +101,16 @@ namespace Nakama
             {{- else}}
         IEnumerable<I{{ $property.Items.Ref | cleanRef }}> {{ $fieldname }} { get; }
             {{- end }}
+        {{- else if eq $property.Type "object"}}
+            {{- if eq $property.AdditionalProperties.Type "string"}}
+        IDictionary<string, string> {{$fieldname}} { get; }
+            {{- else if eq $property.AdditionalProperties.Type "integer"}}
+        IDictionary<string, int> {{$fieldname}} { get; }
+            {{- else if eq $property.AdditionalProperties.Type "boolean"}}
+        IDictionary<string, bool> {{$fieldname}} { get; }
+            {{- else}}
+        IDictionary<string, {{$property.AdditionalProperties | cleanRef}}> {{$fieldname}} { get; }
+            {{- end}}
         {{- else }}
         I{{ $property.Ref | cleanRef }} {{ $fieldname }} { get; }
         {{- end }}
@@ -110,33 +124,40 @@ namespace Nakama
         {{- $fieldname := $propname | pascalCase }}
 
         /// <inheritdoc />
-        {{- if eq $property.Type "integer" }}
         [DataMember(Name="{{ $propname }}")]
+        {{- if eq $property.Type "integer" }}
         public int {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "boolean" }}
-        [DataMember(Name="{{ $propname }}")]
         public bool {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "string" }}
-        [DataMember(Name="{{ $propname }}")]
+            {{- if eq $property.Format "int64" }}
+        public long {{ $fieldname }} { get; set; }
+            {{- else }}
         public string {{ $fieldname }} { get; set; }
+            {{- end }}
         {{- else if eq $property.Type "array" }}
             {{- if eq $property.Items.Type "string" }}
-        [DataMember(Name="{{ $propname }}")]
         public List<string> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "integer" }}
-        [DataMember(Name="{{ $propname }}")]
         public List<int> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "boolean" }}
-        [DataMember(Name="{{ $propname }}")]
         public List<bool> {{ $fieldname }} { get; set; }
             {{- else}}
         public IEnumerable<I{{ $property.Items.Ref | cleanRef }}> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new List<{{ $property.Items.Ref | cleanRef }}>(0);
-        [DataMember(Name="{{ $propname }}")]
         public List<{{ $property.Items.Ref | cleanRef }}> _{{ $propname | camelCase }} { get; set; }
             {{- end }}
+        {{- else if eq $property.Type "object"}}
+            {{- if eq $property.AdditionalProperties.Type "string"}}
+        public IDictionary<string, string> {{ $fieldname }} { get; set; }
+            {{- else if eq $property.Items.Type "integer"}}
+        public IDictionary<string, int> {{ $fieldname }} { get; set; }
+            {{- else if eq $property.Items.Type "boolean"}}
+        public IDictionary<string, bool> {{ $fieldname }} { get; set; }
+            {{- else}}
+        public IDictionary<string, {{$property.AdditionalProperties | cleanRef}}> {{ $fieldname }} { get; set; }
+            {{- end}}
         {{- else }}
         public I{{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | camelCase }};
-        [DataMember(Name="{{ $propname }}")]
         public {{ $property.Ref | cleanRef }} _{{ $propname | camelCase }} { get; set; }
         {{- end }}
         {{- end }}
@@ -147,6 +168,14 @@ namespace Nakama
             {{- range $fieldname, $property := $definition.Properties }}
             {{- if eq $property.Type "array" }}
             output = string.Concat(output, "{{ $fieldname | pascalCase }}: [", string.Join(", ", {{ $fieldname | pascalCase }}), "], ");
+            {{- else if eq $property.Type "object" }}
+
+            var mapString = "";
+            foreach (var kvp in {{ $fieldname | pascalCase }})
+            {
+                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "{{ $fieldname | pascalCase }}: [" + mapString + "]");
             {{- else }}
             output = string.Concat(output, "{{ $fieldname | pascalCase }}: ", {{ $fieldname | pascalCase }}, ", ");
             {{- end }}
@@ -212,9 +241,15 @@ namespace Nakama
         {{- else if eq $parameter.Type "array"}}
             , IEnumerable<{{ $parameter.Items.Type }}> {{ $camelcase }}
         {{- else if eq $parameter.Type "integer" }}
-            , int {{ $camelcase }}
+            , int? {{ $camelcase }}
         {{- else if eq $parameter.Type "boolean" }}
-            , bool {{ $camelcase }}
+            , bool? {{ $camelcase }}
+        {{- else if eq $parameter.Type "string" }}
+            {{- if eq $parameter.Format "int64" }}
+            , long? {{ $camelcase }}
+            {{- else }}
+            , string {{ $camelcase }}
+            {{- end }}
         {{- else }}
             , {{ $parameter.Type }} {{ $camelcase }}
         {{- end }}
@@ -242,23 +277,26 @@ namespace Nakama
             {{- range $parameter := $operation.Parameters }}
             {{- $camelcase := $parameter.Name | camelCase }}
             {{- if eq $parameter.In "query"}}
-                {{- if eq $parameter.Type "integer" }}
-            queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
-                {{- else if eq $parameter.Type "string" }}
-            if ({{ $camelcase }} != null)
-            {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }}), "&");
-            }
-                {{- else if eq $parameter.Type "boolean" }}
-            queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}.ToString().ToLower(), "&");
-                {{- else if eq $parameter.Type "array" }}
-            foreach (var elem in {{ $camelcase }} ?? new {{ $parameter.Items.Type }}[0])
-            {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", elem, "&");
-            }
-                {{- else }}
-            {{ $parameter }} // ERROR
-                {{- end }}
+                if ({{ $camelcase }} != null) {
+                        {{- if eq $parameter.Type "integer" }}
+                    queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
+                        {{- else if eq $parameter.Type "string" }}
+                            {{- if eq $parameter.Format "int64" }}
+                    queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
+                            {{- else }}
+                    queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }}), "&");
+                            {{- end }}
+                        {{- else if eq $parameter.Type "boolean" }}
+                    queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}.ToString().ToLower(), "&");
+                        {{- else if eq $parameter.Type "array" }}
+                    foreach (var elem in {{ $camelcase }} ?? new {{ $parameter.Items.Type }}[0])
+                    {
+                        queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", elem, "&");
+                    }
+                        {{- else }}
+                    {{ $parameter }} // ERROR
+                        {{- end }}
+                }
             {{- end }}
             {{- end }}
 
@@ -316,7 +354,7 @@ namespace Nakama
 `
 
 func convertRefToClassName(input string) (className string) {
-	cleanRef := strings.TrimLeft(input, "#/definitions/")
+	cleanRef := strings.TrimPrefix(input, "#/definitions/")
 	className = strings.Title(cleanRef)
 	return
 }
@@ -412,6 +450,7 @@ func main() {
 					Type string
 					Ref  string `json:"$ref"`
 				}
+                Format   string // used with type "boolean" or int64
 			}
 			Security []map[string][]struct {
 			}
@@ -424,7 +463,10 @@ func main() {
 					Type string
 					Ref  string `json:"$ref"`
 				}
-				Format      string // used with type "boolean"
+                AdditionalProperties struct {
+                    Type string // used with type "map"
+                }
+				Format      string // used with type "boolean" or int64
 				Description string
 			}
 			Description string

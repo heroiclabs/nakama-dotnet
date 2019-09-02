@@ -120,7 +120,7 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestampSeconds, string username = null, bool create = true);
+            string signature, long timestampSeconds, string username = null, bool create = true);
 
         /// <summary>
         /// Authenticate a user with a Google auth token.
@@ -313,7 +313,7 @@ namespace Nakama
         /// <param name="timestampSeconds">The date and time that the signature was created.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestampSeconds);
+            string signature, long timestampSeconds);
 
         /// <summary>
         /// Link a Google profile to a user account.
@@ -354,21 +354,27 @@ namespace Nakama
         /// <returns>A task which resolves to the channel message list object.</returns>
         Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit = 1,
             bool forward = true, string cursor = null);
-
+        
         /// <summary>
         /// List of friends of the current user.
         /// </summary>
         /// <param name="session">The session of the user.</param>
+        /// <param name="state">Filter by friendship state.</param>
+        /// <param name="limit">The number of friends to list.</param>
+        /// <param name="cursor">A cursor for the current position in the friends list.</param>
         /// <returns>A task which resolves to the friend objects.</returns>
-        Task<IApiFriends> ListFriendsAsync(ISession session);
+        Task<IApiFriendList> ListFriendsAsync(ISession session, int? state = null, int limit = 1, string cursor = null);
 
         /// <summary>
         /// List all users part of the group.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="groupId">The ID of the group.</param>
+        /// <param name="state">Filter by group membership state.</param>
+        /// <param name="limit">The number of groups to list.</param>
+        /// <param name="cursor">A cursor for the current position in the group listing.</param>
         /// <returns>A task which resolves to the group user objects.</returns>
-        Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId);
+        Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state = null, int limit = 1, string cursor = null);
 
         /// <summary>
         /// List groups on the server.
@@ -386,11 +392,12 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="leaderboardId">The ID of the leaderboard to list.</param>
         /// <param name="ownerIds">Record owners to fetch with the list of records.</param>
+        /// <param name="expiry">Expiry in seconds (since epoch) to begin fetching records from. Optional. 0 means from current time.</param>
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">A cursor for the current position in the leaderboard records to list.</param>
         /// <returns>A task which resolves to the leaderboard record objects.</returns>
         Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
-            IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null);
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null);
 
         /// <summary>
         /// List leaderboard records that belong to a user.
@@ -398,10 +405,11 @@ namespace Nakama
         /// <param name="session">The session for the user.</param>
         /// <param name="leaderboardId">The ID of the leaderboard to list.</param>
         /// <param name="ownerId">The ID of the user to list around.</param>
+        /// <param name="expiry">Expiry in seconds (since epoch) to begin fetching records from. Optional. 0 means from current time.</param>
         /// <param name="limit">The limit of the listings.</param>
         /// <returns>A task which resolves to the leaderboard record objects.</returns>
         Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session, string leaderboardId,
-            string ownerId, int limit = 1);
+            string ownerId, long? expiry = null, int limit = 1);
 
         /// <summary>
         /// Fetch a list of matches active on the server.
@@ -444,10 +452,11 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="tournamentId">The ID of the tournament.</param>
         /// <param name="ownerId">The ID of the owner to pivot around.</param>
+        /// <param name="expiry">Expiry in seconds (since epoch) to begin fetching records from.</param>
         /// <param name="limit">The number of records to list.</param>
         /// <returns>A task which resolves to the tournament record list object.</returns>
         Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session, string tournamentId,
-            string ownerId, int limit = 1);
+            string ownerId, long? expiry = null, int limit = 1);
 
         /// <summary>
         /// List records from a tournament.
@@ -455,11 +464,12 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="tournamentId">The ID of the tournament.</param>
         /// <param name="ownerIds">The IDs of the record owners to return in the result.</param>
+        /// <param name="expiry">Expiry in seconds (since epoch) to begin fetching records from.</param>
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">An optional cursor for the next page of tournament records.</param>
         /// <returns>A task which resolves to the list of tournament records.</returns>
         Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
-            IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null);
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null);
 
         /// <summary>
         /// List current or upcoming tournaments.
@@ -479,16 +489,22 @@ namespace Nakama
         /// List of groups the current user is a member of.
         /// </summary>
         /// <param name="session">The session of the user.</param>
+        /// <param name="state">Filter by group membership state.</param>
+        /// <param name="limit">The number of records to list.</param>
+        /// <param name="cursor">A cursor for the current position in the listing.</param>
         /// <returns>A task which resolves to the group list object.</returns>
-        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session);
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state = null, int limit = 1, string cursor = null);
 
         /// <summary>
         /// List groups a user is a member of.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="userId">The ID of the user whose groups to list.</param>
+        /// <param name="state">Filter by group membership state.</param>
+        /// <param name="limit">The number of records to list.</param>
+        /// <param name="cursor">A cursor for the current position in the listing.</param>
         /// <returns>A task which resolves to the group list object.</returns>
-        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId);
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state = null, int limit = 1, string cursor = null);
 
         /// <summary>
         /// List storage objects in a collection which belong to a specific user and have public read access.
@@ -593,7 +609,7 @@ namespace Nakama
         /// <param name="timestampSeconds">The date and time that the signature was created.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestampSeconds);
+            string signature, long timestampSeconds);
 
         /// <summary>
         /// Unlink a Google profile from the user account owned by the session.

@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -140,7 +139,7 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateGameCenterAsync"/>
         public async Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestampSeconds, string username = null, bool create = true)
+            string salt, string signature, long timestampSeconds, string username = null, bool create = true)
         {
             var response = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty,
                 new ApiAccountGameCenter
@@ -267,7 +266,7 @@ namespace Nakama
 
         /// <inheritdoc cref="LinkGameCenterAsync"/>
         public Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestampSeconds) => _apiClient.LinkGameCenterAsync(session.AuthToken,
+            string salt, string signature, long timestampSeconds) => _apiClient.LinkGameCenterAsync(session.AuthToken,
             new ApiAccountGameCenter
             {
                 BundleId = bundleId,
@@ -295,13 +294,14 @@ namespace Nakama
         public Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit = 1,
             bool forward = true, string cursor = null) =>
             _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor);
-
+        
         /// <inheritdoc cref="ListFriendsAsync"/>
-        public Task<IApiFriends> ListFriendsAsync(ISession session) => _apiClient.ListFriendsAsync(session.AuthToken);
+        public Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor) => 
+            _apiClient.ListFriendsAsync(session.AuthToken, limit, state, cursor);
 
         /// <inheritdoc cref="ListGroupUsersAsync"/>
-        public Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId) =>
-            _apiClient.ListGroupUsersAsync(session.AuthToken, groupId);
+        public Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state, int limit, string cursor) =>
+            _apiClient.ListGroupUsersAsync(session.AuthToken, groupId, limit, state, cursor);
 
         /// <inheritdoc cref="ListGroupsAsync"/>
         public Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1,
@@ -309,13 +309,13 @@ namespace Nakama
 
         /// <inheritdoc cref="ListLeaderboardRecordsAsync"/>
         public Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
-            IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null) =>
-            _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit, cursor);
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null) =>
+            _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit, cursor, expiry);
 
         /// <inheritdoc cref="ListLeaderboardRecordsAroundOwnerAsync"/>
         public Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session,
-            string leaderboardId, string ownerId, int limit = 1) =>
-            _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId, limit);
+            string leaderboardId, string ownerId, long? expiry = null, int limit = 1) =>
+            _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId, limit, expiry);
 
         /// <inheritdoc cref="ListMatchesAsync"/>
         public Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
@@ -334,13 +334,13 @@ namespace Nakama
 
         /// <inheritdoc cref="ListTournamentRecordsAroundOwnerAsync"/>
         public Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session,
-            string tournamentId, string ownerId, int limit = 1) =>
-            _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId, limit);
+            string tournamentId, string ownerId, long? expiry = null, int limit = 1) =>
+            _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId, limit, expiry);
 
         /// <inheritdoc cref="ListTournamentRecordsAsync"/>
         public Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
-            IEnumerable<string> ownerIds = null, int limit = 1, string cursor = null) =>
-            _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit, cursor);
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null) =>
+            _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit, cursor, expiry);
 
         /// <inheritdoc cref="ListTournamentsAsync"/>
         public Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
@@ -348,13 +348,13 @@ namespace Nakama
             _apiClient.ListTournamentsAsync(session.AuthToken, categoryStart, categoryEnd, startTime, endTime, limit,
                 cursor);
 
-        /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession)"/>
-        public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session) =>
-            ListUserGroupsAsync(session, session.UserId);
+        /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession,int?,int,string)"/>
+        public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state, int limit, string cursor) =>
+            ListUserGroupsAsync(session, session.UserId, state, limit, cursor);
 
-        /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession,string)"/>
-        public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId) =>
-            _apiClient.ListUserGroupsAsync(session.AuthToken, userId);
+        /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession,string,int?,int,string)"/>
+        public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state, int limit, string cursor) =>
+            _apiClient.ListUserGroupsAsync(session.AuthToken, userId, limit, state, cursor);
 
         /// <inheritdoc cref="ListUsersStorageObjectsAsync"/>
         public Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection,
@@ -418,7 +418,7 @@ namespace Nakama
 
         /// <inheritdoc cref="UnlinkGameCenterAsync"/>
         public Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestampSeconds) => _apiClient.UnlinkGameCenterAsync(
+            string salt, string signature, long timestampSeconds) => _apiClient.UnlinkGameCenterAsync(
             session.AuthToken,
             new ApiAccountGameCenter
             {
@@ -472,8 +472,8 @@ namespace Nakama
             new WriteLeaderboardRecordRequestLeaderboardRecordWrite
             {
                 Metadata = metadata,
-                Score = score.ToString(),
-                Subscore = subscore.ToString()
+                Score = score,
+                Subscore = subscore
             });
 
         /// <inheritdoc cref="WriteStorageObjectsAsync"/>
@@ -505,8 +505,8 @@ namespace Nakama
             new WriteTournamentRecordRequestTournamentRecordWrite
             {
                 Metadata = metadata,
-                Score = score.ToString(),
-                Subscore = subscore.ToString()
+                Score = score,
+                Subscore = subscore
             });
     }
 }
