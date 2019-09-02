@@ -320,8 +320,9 @@ namespace Nakama
         public string Id { get; set; }
 
         /// <inheritdoc />
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars")]
-        public IDictionary<string, string> Vars { get; set; }
+        public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
         {
@@ -364,8 +365,9 @@ namespace Nakama
         public string Id { get; set; }
 
         /// <inheritdoc />
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars")]
-        public IDictionary<string, string> Vars { get; set; }
+        public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
         {
@@ -417,8 +419,9 @@ namespace Nakama
         public string Password { get; set; }
 
         /// <inheritdoc />
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars")]
-        public IDictionary<string, string> Vars { get; set; }
+        public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
         {
@@ -462,8 +465,9 @@ namespace Nakama
         public string Token { get; set; }
 
         /// <inheritdoc />
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars")]
-        public IDictionary<string, string> Vars { get; set; }
+        public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
         {
@@ -551,8 +555,9 @@ namespace Nakama
         public string TimestampSeconds { get; set; }
 
         /// <inheritdoc />
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars")]
-        public IDictionary<string, string> Vars { get; set; }
+        public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
         {
@@ -600,8 +605,9 @@ namespace Nakama
         public string Token { get; set; }
 
         /// <inheritdoc />
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars")]
-        public IDictionary<string, string> Vars { get; set; }
+        public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
         {
@@ -644,8 +650,9 @@ namespace Nakama
         public string Token { get; set; }
 
         /// <inheritdoc />
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars")]
-        public IDictionary<string, string> Vars { get; set; }
+        public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
         {

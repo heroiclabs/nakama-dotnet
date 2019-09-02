@@ -146,17 +146,21 @@ namespace Nakama
             {{- end }}
         {{- else if eq $property.Type "object"}}
             {{- if eq $property.AdditionalProperties.Type "string"}}
+        public IDictionary<string, string> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, string>();
         [DataMember(Name="{{ $propname }}")]
-        public IDictionary<string, string> {{ $fieldname }} { get; set; }
+        public Dictionary<string, string> _{{ $propname | camelCase }} { get; set; }
             {{- else if eq $property.Items.Type "integer"}}
+        public IDictionary<string, int> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, int>();
         [DataMember(Name="{{ $propname }}")]
-        public IDictionary<string, int> {{ $fieldname }} { get; set; }
+        public Dictionary<string, int> _{{ $propname | camelCase }} { get; set; }
             {{- else if eq $property.Items.Type "boolean"}}
+        public IDictionary<string, bool> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, bool>();
         [DataMember(Name="{{ $propname }}")]
-        public IDictionary<string, bool> {{ $fieldname }} { get; set; }
+        public Dictionary<string, bool> _{{ $propname | camelCase }} { get; set; }
             {{- else}}
+        public IDictionary<string, {{$property.AdditionalProperties | cleanRef}}> {{ $fieldname }}  => _{{ $propname | camelCase }} ?? new Dictionary<string, {{$property.AdditionalProperties | cleanRef}}>();
         [DataMember(Name="{{ $propname }}")]
-        public IDictionary<string, {{$property.AdditionalProperties | cleanRef}}> {{ $fieldname }} { get; set; }
+        public Dictionary<string, {{$property.AdditionalProperties | cleanRef}}> _{{ $propname | camelCase }} { get; set; }
             {{- end}}
         {{- else }}
         public I{{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | camelCase }};
