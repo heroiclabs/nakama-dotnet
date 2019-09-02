@@ -1,22 +1,22 @@
 ﻿// ---------------------------------------------------------------------
 // Copyright 2018 David Haig
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy 
-// of this software and associated documentation files (the "Software"), to deal 
-// in the Software without restriction, including without limitation the rights 
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
-// copies of the Software, and to permit persons to whom the Software is 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in 
+//
+// The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // ---------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ namespace Nakama.Ninja.WebSockets.Internal
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         public event EventHandler<PongEventArgs> Pong;
-        
+
         internal WebSocketImplementation(Guid guid, Func<MemoryStream> recycledStreamFactory, System.IO.Stream stream, TimeSpan keepAliveInterval, string secWebSocketExtensions, bool includeExceptionInCloseResponse, bool isClient, string subProtocol)
         {
             _guid = guid;
@@ -108,7 +108,7 @@ namespace Nakama.Ninja.WebSockets.Internal
         public override string SubProtocol => _subProtocol;
 
         public TimeSpan KeepAliveInterval { get; private set; }
-        
+
         /// <summary>
         /// Receive web socket result
         /// </summary>
@@ -357,7 +357,7 @@ namespace Nakama.Ninja.WebSockets.Internal
             catch (Exception ex)
             {
                 // log dont throw
-                Events.Log.WebSocketDisposeError(_guid, _state, ex.ToString());             
+                Events.Log.WebSocketDisposeError(_guid, _state, ex.ToString());
             }
         }
 
@@ -443,7 +443,7 @@ namespace Nakama.Ninja.WebSockets.Internal
             }
             else if (_state == WebSocketState.Open)
             {
-                // do not echo the close payload back to the client, there is no requirement for it in the spec. 
+                // do not echo the close payload back to the client, there is no requirement for it in the spec.
                 // However, the same CloseStatus as recieved should be sent back.
                 ArraySegment<byte> closePayload = new ArraySegment<byte>(new byte[0], 0, 0);
                 _state = WebSocketState.CloseReceived;
@@ -467,7 +467,7 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// <summary>
         /// Note that the way in which the stream buffer is accessed can lead to significant performance problems
         /// You want to avoid a call to stream.ToArray to avoid extra memory allocation
-        /// MemoryStream can be configured to have its internal buffer accessible. 
+        /// MemoryStream can be configured to have its internal buffer accessible.
         /// </summary>
         private ArraySegment<byte> GetBuffer(MemoryStream stream)
         {
