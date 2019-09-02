@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Follow users by username for status updates.
 - Decode session variables from the auth token.
+- Paginate friends, groups, and user's group listings.
+- Filter friends, groups, and user's group listings.
+- Send session variables with authenticate requests.
 
 ### Changed
 - Increase the default socket timeout to 30 seconds.
