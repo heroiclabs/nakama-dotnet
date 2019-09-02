@@ -76,7 +76,7 @@ namespace Nakama
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true, 
-            IDictionary<string, string> vars = null);
+            Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Authenticate a user with a device id.
@@ -87,7 +87,7 @@ namespace Nakama
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true, 
-            IDictionary<string, string> vars = null);
+            Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Authenticate a user with an email and password.
@@ -99,7 +99,7 @@ namespace Nakama
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateEmailAsync(string email, string password, string username = null,
-            bool create = true, IDictionary<string, string> vars = null);
+            bool create = true, Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Authenticate a user with a Facebook auth token.
@@ -111,7 +111,7 @@ namespace Nakama
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
-            bool import = true, IDictionary<string, string> vars = null);
+            bool import = true, Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Authenticate a user with Apple Game Center.
@@ -128,7 +128,7 @@ namespace Nakama
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
             string signature, string timestampSeconds, string username = null, bool create = true, 
-            IDictionary<string, string> vars = null);
+            Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Authenticate a user with a Google auth token.
@@ -139,7 +139,7 @@ namespace Nakama
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true, 
-            IDictionary<string, string> vars = null);
+            Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Authenticate a user with a Steam auth token.
@@ -150,7 +150,7 @@ namespace Nakama
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true, 
-            IDictionary<string, string> vars = null);
+            Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Block one or more friends by id or username.

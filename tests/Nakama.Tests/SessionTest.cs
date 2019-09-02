@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Nakama.Tests
@@ -48,6 +50,18 @@ namespace Nakama.Tests
             Assert.Equal("f4158f2b-80f3-4926-946b-a8ccfc165490", session.UserId);
             Assert.NotNull(session.Vars);
             Assert.Contains(session.Vars, pair => pair.Key.Equals("k1") || pair.Key.Equals("k2"));
+        }
+
+        [Fact]
+        public async void GetVariables_VariablesField_FromAuthenticate()
+        {
+            var client = ClientUtil.FromSettingsFile();
+            var id = Guid.NewGuid().ToString();
+            var vars = new Dictionary<string, string> {{"k1", "v1"}};
+            var session = await client.AuthenticateDeviceAsync(id, null, true, vars);
+            Assert.NotNull(session);
+            Assert.NotNull(session.Vars);
+            Assert.Equal(vars, session.Vars);
         }
 
         [Fact]
