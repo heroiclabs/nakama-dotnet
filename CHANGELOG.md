@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Paginate friends, groups, and user's group listings.
 - Filter friends, groups, and user's group listings.
 - Send session variables with authenticate requests.
+- Socket messages now use a send timeout of 15 seconds to write to the buffer.
 
 ### Changed
 - Increase the default socket timeout to 30 seconds.

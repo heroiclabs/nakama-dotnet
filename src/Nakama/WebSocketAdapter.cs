@@ -30,6 +30,7 @@ namespace Nakama
     {
         private const int KeepAliveIntervalSec = 15;
         private const int MaxMessageSize = 1024 * 256;
+        private const int SendTimeoutSec = 10;
 
         /// <inheritdoc cref="ISocketAdapter.Connected"/>
         public event Action Connected;
@@ -54,22 +55,25 @@ namespace Nakama
         public bool IsConnecting { get; private set; }
 
         private readonly WebSocketClientOptions _options;
+        private readonly TimeSpan _sendTimeoutSec;
         private CancellationTokenSource _cancellationSource;
         private WebSocket _webSocket;
         private Uri _uri;
 
-        public WebSocketAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec) : this(new WebSocketClientOptions
-        {
-            IncludeExceptionInCloseResponse = true,
-            KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec),
-            NoDelay = true
-        })
+        public WebSocketAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec, int sendTimeoutSec = SendTimeoutSec) :
+            this(new WebSocketClientOptions
+            {
+                IncludeExceptionInCloseResponse = true,
+                KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec),
+                NoDelay = true
+            }, sendTimeoutSec)
         {
         }
 
-        public WebSocketAdapter(WebSocketClientOptions options)
+        public WebSocketAdapter(WebSocketClientOptions options, int sendTimeoutSec)
         {
             _options = options;
+            _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
         }
 
         /// <inheritdoc cref="ISocketAdapter.Close"/>
@@ -147,7 +151,8 @@ namespace Nakama
 
             try
             {
-                await _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, cancellationToken);
+                var sendTask = _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, cancellationToken);
+                await Task.WhenAny(sendTask, Task.Delay(_sendTimeoutSec, cancellationToken));
             }
             catch (Exception e)
             {
@@ -167,7 +172,8 @@ namespace Nakama
             var buffer = new byte[MaxMessageSize];
             while (true)
             {
-                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken).ConfigureAwait(false);
+                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken)
+                    .ConfigureAwait(false);
                 if (result == null)
                 {
                     break;
