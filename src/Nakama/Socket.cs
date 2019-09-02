@@ -125,6 +125,7 @@ namespace Nakama
                 {
                     response.Value.TrySetCanceled();
                 }
+
                 _responses.Clear();
                 Closed?.Invoke();
             };
@@ -136,8 +137,10 @@ namespace Nakama
                     {
                         response.Value.TrySetCanceled();
                     }
+
                     _responses.Clear();
                 }
+
                 ReceivedError?.Invoke(e);
             };
             _adapter.Received += ReceivedMessage;
@@ -222,15 +225,16 @@ namespace Nakama
         public Task<IStatus> FollowUsersAsync(IEnumerable<IApiUser> users) =>
             FollowUsersAsync(users.Select(user => user.Id));
 
-        /// <inheritdoc cref="FollowUsersAsync(System.Collections.Generic.IEnumerable{string})"/>
-        public async Task<IStatus> FollowUsersAsync(IEnumerable<string> userIDs)
+        /// <inheritdoc cref="FollowUsersAsync(System.Collections.Generic.IEnumerable{string},System.Collections.Generic.IEnumerable{string})"/>
+        public async Task<IStatus> FollowUsersAsync(IEnumerable<string> userIDs, IEnumerable<string> usernames = null)
         {
             var envelope = new WebSocketMessageEnvelope
             {
                 Cid = $"{_cid++}",
                 StatusFollow = new StatusFollowMessage
                 {
-                    UserIds = new List<string>(userIDs)
+                    UserIds = new List<string>(userIDs),
+                    Usernames = usernames != null ? new List<string>(usernames) : new List<string>()
                 }
             };
             var response = await SendAsync(envelope);
@@ -405,7 +409,8 @@ namespace Nakama
 
         public override string ToString()
         {
-            return $"Socket(_baseUri='{_baseUri}', _cid={_cid}, IsConnected={IsConnected}, IsConnecting={IsConnecting})";
+            return
+                $"Socket(_baseUri='{_baseUri}', _cid={_cid}, IsConnected={IsConnected}, IsConnecting={IsConnecting})";
         }
 
         /// <inheritdoc cref="UnfollowUsersAsync(System.Collections.Generic.IEnumerable{Nakama.IApiUser})"/>

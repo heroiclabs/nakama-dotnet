@@ -24,13 +24,15 @@ namespace Nakama
     /// </summary>
     internal class StatusFollowMessage
     {
-        [DataMember(Name="user_ids")]
-        public List<string> UserIds { get; set; }
+        [DataMember(Name = "user_ids")] public List<string> UserIds { get; set; }
+
+        [DataMember(Name = "usernames")] public List<string> Usernames { get; set; }
 
         public override string ToString()
         {
             var userIds = string.Join(", ", UserIds);
-            return $"StatusFollowMessage(UserIds=[{userIds}])";
+            var usernames = string.Join(", ", Usernames);
+            return $"StatusFollowMessage(UserIds=[{userIds}],Usernames=[{usernames}])";
         }
     }
 }

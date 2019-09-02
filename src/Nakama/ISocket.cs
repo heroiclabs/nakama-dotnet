@@ -139,8 +139,9 @@ namespace Nakama
         /// Subscribe to one or more users for their status updates.
         /// </summary>
         /// <param name="userIDs">The IDs of users.</param>
+        /// <param name="usernames">The usernames of the users.</param>
         /// <returns>A task which resolves to the current statuses for the users.</returns>
-        Task<IStatus> FollowUsersAsync(IEnumerable<string> userIDs);
+        Task<IStatus> FollowUsersAsync(IEnumerable<string> userIDs, IEnumerable<string> usernames = null);
 
         /// <summary>
         /// Join a chat channel on the server.
