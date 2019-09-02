@@ -24,6 +24,32 @@ namespace Nakama.Tests
         private const string AuthToken =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwifQ.gzLaMQPaj5wEKoskOSALIeJLOYXEVFoPx3KY0Jm1EVU";
 
+        private const string AuthTokenVariables =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwiLCJ2cnMiOnsiazEiOiJ2MSIsImsyIjoidjIifX0.Hs9ltsNmtrTJXi2U21jjuXcd-3DMsyv4W6u1vyDBMTo";
+
+        [Fact]
+        public void GetVariables_VariablesField_Empty()
+        {
+            var session = Session.Restore(AuthToken);
+            Assert.NotNull(session.AuthToken);
+            Assert.Equal(AuthToken, session.AuthToken);
+            Assert.NotNull(session.Variables);
+            Assert.Empty(session.Variables);
+        }
+
+        [Fact]
+        public void GetVariables_VariablesField_Values()
+        {
+            var session = Session.Restore(AuthTokenVariables);
+            Assert.NotNull(session.AuthToken);
+            Assert.NotNull(session.Username);
+            Assert.Equal("vTGdGHyxvl", session.Username);
+            Assert.NotNull(session.UserId);
+            Assert.Equal("f4158f2b-80f3-4926-946b-a8ccfc165490", session.UserId);
+            Assert.NotNull(session.Variables);
+            Assert.Contains(session.Variables, pair => pair.Key.Equals("k1") || pair.Key.Equals("k2"));
+        }
+
         [Fact]
         public void GetUsername_UsernameField_NotNull()
         {

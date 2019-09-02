@@ -52,7 +52,7 @@ namespace Nakama
         /// <summary>
         /// Any custom properties associated with this session.
         /// </summary>
-        IDictionary<string, string> Properties { get; }
+        IDictionary<string, string> Variables { get; }
 
         /// <summary>
         /// The username of the user who owns this session.

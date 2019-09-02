@@ -40,8 +40,8 @@ namespace Nakama
         /// <inheritdoc cref="ISession.IsExpired"/>
         public bool IsExpired => HasExpired(DateTime.UtcNow);
 
-        /// <inheritdoc cref="ISession.Properties"/>
-        public IDictionary<string, string> Properties { get; }
+        /// <inheritdoc cref="ISession.Variables"/>
+        public IDictionary<string, string> Variables { get; }
 
         /// <inheritdoc cref="ISession.Username"/>
         public string Username { get; }
@@ -58,8 +58,14 @@ namespace Nakama
 
         public override string ToString()
         {
+            var variables = "{";
+            foreach (var variable in Variables)
+            {
+                variables = string.Concat(variables, " '", variable.Key, "': '", variable.Value, "', ");
+            }
+            variables = string.Concat(variables, "}");
             return
-                $"Session(AuthToken='{AuthToken}', Created={Created}, CreateTime={CreateTime}, ExpireTime={ExpireTime}, Username='{Username}', UserId='{UserId}')";
+                $"Session(AuthToken='{AuthToken}', Created={Created}, CreateTime={CreateTime}, ExpireTime={ExpireTime}, Variables={variables}, Username='{Username}', UserId='{UserId}')";
         }
 
         internal Session(string authToken, bool created)
@@ -68,13 +74,20 @@ namespace Nakama
             Created = created;
             var span = DateTime.UtcNow - Epoch;
             CreateTime = span.Seconds;
-            Properties = new Dictionary<string, string>(); // TODO
+            Variables = new Dictionary<string, string>();
 
             var json = JwtUnpack(authToken);
             var decoded = json.FromJson<Dictionary<string, object>>();
             ExpireTime = Convert.ToInt64(decoded["exp"]);
             Username = decoded["usn"].ToString();
             UserId = decoded["uid"].ToString();
+            if (decoded.ContainsKey("vrs") && decoded["vrs"] is Dictionary<string, object> dictionary)
+            {
+                foreach (var variable in dictionary)
+                {
+                    Variables.Add(variable.Key, variable.Value.ToString());
+                }
+            }
         }
 
         /// <summary>
