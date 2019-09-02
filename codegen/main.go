@@ -124,40 +124,52 @@ namespace Nakama
         {{- $fieldname := $propname | pascalCase }}
 
         /// <inheritdoc />
-        [DataMember(Name="{{ $propname }}")]
         {{- if eq $property.Type "integer" }}
+        [DataMember(Name="{{ $propname }}")]
         public int {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "boolean" }}
+        [DataMember(Name="{{ $propname }}")]
         public bool {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "string" }}
             {{- if eq $property.Format "int64" }}
+        [DataMember(Name="{{ $propname }}")]
         public long {{ $fieldname }} { get; set; }
             {{- else }}
+        [DataMember(Name="{{ $propname }}")]
         public string {{ $fieldname }} { get; set; }
             {{- end }}
         {{- else if eq $property.Type "array" }}
             {{- if eq $property.Items.Type "string" }}
+        [DataMember(Name="{{ $propname }}")]
         public List<string> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "integer" }}
+        [DataMember(Name="{{ $propname }}")]
         public List<int> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "boolean" }}
+        [DataMember(Name="{{ $propname }}")]
         public List<bool> {{ $fieldname }} { get; set; }
             {{- else}}
         public IEnumerable<I{{ $property.Items.Ref | cleanRef }}> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new List<{{ $property.Items.Ref | cleanRef }}>(0);
+        [DataMember(Name="{{ $propname }}")]
         public List<{{ $property.Items.Ref | cleanRef }}> _{{ $propname | camelCase }} { get; set; }
             {{- end }}
         {{- else if eq $property.Type "object"}}
             {{- if eq $property.AdditionalProperties.Type "string"}}
+        [DataMember(Name="{{ $propname }}")]
         public IDictionary<string, string> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "integer"}}
+        [DataMember(Name="{{ $propname }}")]
         public IDictionary<string, int> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "boolean"}}
+        [DataMember(Name="{{ $propname }}")]
         public IDictionary<string, bool> {{ $fieldname }} { get; set; }
             {{- else}}
+        [DataMember(Name="{{ $propname }}")]
         public IDictionary<string, {{$property.AdditionalProperties | cleanRef}}> {{ $fieldname }} { get; set; }
             {{- end}}
         {{- else }}
         public I{{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | camelCase }};
+        [DataMember(Name="{{ $propname }}")]
         public {{ $property.Ref | cleanRef }} _{{ $propname | camelCase }} { get; set; }
         {{- end }}
         {{- end }}

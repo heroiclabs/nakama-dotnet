@@ -66,8 +66,8 @@ namespace Nakama
         public int State { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user")]
         public IApiUser User => _user;
+        [DataMember(Name="user")]
         public ApiUser _user { get; set; }
 
         public override string ToString()
@@ -101,8 +101,8 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="group")]
         public IApiGroup Group => _group;
+        [DataMember(Name="group")]
         public ApiGroup _group { get; set; }
 
         /// <inheritdoc />
@@ -260,8 +260,8 @@ namespace Nakama
         public string CustomId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="devices")]
         public IEnumerable<IApiAccountDevice> Devices => _devices ?? new List<ApiAccountDevice>(0);
+        [DataMember(Name="devices")]
         public List<ApiAccountDevice> _devices { get; set; }
 
         /// <inheritdoc />
@@ -269,8 +269,8 @@ namespace Nakama
         public string Email { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user")]
         public IApiUser User => _user;
+        [DataMember(Name="user")]
         public ApiUser _user { get; set; }
 
         /// <inheritdoc />
@@ -837,8 +837,8 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="messages")]
         public IEnumerable<IApiChannelMessage> Messages => _messages ?? new List<ApiChannelMessage>(0);
+        [DataMember(Name="messages")]
         public List<ApiChannelMessage> _messages { get; set; }
 
         /// <inheritdoc />
@@ -1002,8 +1002,8 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="object_ids")]
         public IEnumerable<IApiDeleteStorageObjectId> ObjectIds => _objectIds ?? new List<ApiDeleteStorageObjectId>(0);
+        [DataMember(Name="object_ids")]
         public List<ApiDeleteStorageObjectId> _objectIds { get; set; }
 
         public override string ToString()
@@ -1040,8 +1040,8 @@ namespace Nakama
         public int State { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user")]
         public IApiUser User => _user;
+        [DataMember(Name="user")]
         public ApiUser _user { get; set; }
 
         public override string ToString()
@@ -1079,8 +1079,8 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="friends")]
         public IEnumerable<IApiFriend> Friends => _friends ?? new List<ApiFriend>(0);
+        [DataMember(Name="friends")]
         public List<ApiFriend> _friends { get; set; }
 
         public override string ToString()
@@ -1256,8 +1256,8 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="groups")]
         public IEnumerable<IApiGroup> Groups => _groups ?? new List<ApiGroup>(0);
+        [DataMember(Name="groups")]
         public List<ApiGroup> _groups { get; set; }
 
         public override string ToString()
@@ -1295,8 +1295,8 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="group_users")]
         public IEnumerable<IGroupUserListGroupUser> GroupUsers => _groupUsers ?? new List<GroupUserListGroupUser>(0);
+        [DataMember(Name="group_users")]
         public List<GroupUserListGroupUser> _groupUsers { get; set; }
 
         public override string ToString()
@@ -1482,8 +1482,8 @@ namespace Nakama
         public string NextCursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="owner_records")]
         public IEnumerable<IApiLeaderboardRecord> OwnerRecords => _ownerRecords ?? new List<ApiLeaderboardRecord>(0);
+        [DataMember(Name="owner_records")]
         public List<ApiLeaderboardRecord> _ownerRecords { get; set; }
 
         /// <inheritdoc />
@@ -1491,8 +1491,8 @@ namespace Nakama
         public string PrevCursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="records")]
         public IEnumerable<IApiLeaderboardRecord> Records => _records ?? new List<ApiLeaderboardRecord>(0);
+        [DataMember(Name="records")]
         public List<ApiLeaderboardRecord> _records { get; set; }
 
         public override string ToString()
@@ -1581,8 +1581,8 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="matches")]
         public IEnumerable<IApiMatch> Matches => _matches ?? new List<ApiMatch>(0);
+        [DataMember(Name="matches")]
         public List<ApiMatch> _matches { get; set; }
 
         public override string ToString()
@@ -1707,8 +1707,8 @@ namespace Nakama
         public string CacheableCursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="notifications")]
         public IEnumerable<IApiNotification> Notifications => _notifications ?? new List<ApiNotification>(0);
+        [DataMember(Name="notifications")]
         public List<ApiNotification> _notifications { get; set; }
 
         public override string ToString()
@@ -1785,8 +1785,8 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="object_ids")]
         public IEnumerable<IApiReadStorageObjectId> ObjectIds => _objectIds ?? new List<ApiReadStorageObjectId>(0);
+        [DataMember(Name="object_ids")]
         public List<ApiReadStorageObjectId> _objectIds { get; set; }
 
         public override string ToString()
@@ -2066,8 +2066,8 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="acks")]
         public IEnumerable<IApiStorageObjectAck> Acks => _acks ?? new List<ApiStorageObjectAck>(0);
+        [DataMember(Name="acks")]
         public List<ApiStorageObjectAck> _acks { get; set; }
 
         public override string ToString()
@@ -2104,8 +2104,8 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="objects")]
         public IEnumerable<IApiStorageObject> Objects => _objects ?? new List<ApiStorageObject>(0);
+        [DataMember(Name="objects")]
         public List<ApiStorageObject> _objects { get; set; }
 
         public override string ToString()
@@ -2134,8 +2134,8 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="objects")]
         public IEnumerable<IApiStorageObject> Objects => _objects ?? new List<ApiStorageObject>(0);
+        [DataMember(Name="objects")]
         public List<ApiStorageObject> _objects { get; set; }
 
         public override string ToString()
@@ -2360,8 +2360,8 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="tournaments")]
         public IEnumerable<IApiTournament> Tournaments => _tournaments ?? new List<ApiTournament>(0);
+        [DataMember(Name="tournaments")]
         public List<ApiTournament> _tournaments { get; set; }
 
         public override string ToString()
@@ -2409,8 +2409,8 @@ namespace Nakama
         public string NextCursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="owner_records")]
         public IEnumerable<IApiLeaderboardRecord> OwnerRecords => _ownerRecords ?? new List<ApiLeaderboardRecord>(0);
+        [DataMember(Name="owner_records")]
         public List<ApiLeaderboardRecord> _ownerRecords { get; set; }
 
         /// <inheritdoc />
@@ -2418,8 +2418,8 @@ namespace Nakama
         public string PrevCursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="records")]
         public IEnumerable<IApiLeaderboardRecord> Records => _records ?? new List<ApiLeaderboardRecord>(0);
+        [DataMember(Name="records")]
         public List<ApiLeaderboardRecord> _records { get; set; }
 
         public override string ToString()
@@ -2793,8 +2793,8 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user_groups")]
         public IEnumerable<IUserGroupListUserGroup> UserGroups => _userGroups ?? new List<UserGroupListUserGroup>(0);
+        [DataMember(Name="user_groups")]
         public List<UserGroupListUserGroup> _userGroups { get; set; }
 
         public override string ToString()
@@ -2823,8 +2823,8 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="users")]
         public IEnumerable<IApiUser> Users => _users ?? new List<ApiUser>(0);
+        [DataMember(Name="users")]
         public List<ApiUser> _users { get; set; }
 
         public override string ToString()
@@ -2930,8 +2930,8 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="objects")]
         public IEnumerable<IApiWriteStorageObject> Objects => _objects ?? new List<ApiWriteStorageObject>(0);
+        [DataMember(Name="objects")]
         public List<ApiWriteStorageObject> _objects { get; set; }
 
         public override string ToString()
