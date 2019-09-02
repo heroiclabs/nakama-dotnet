@@ -141,7 +141,7 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateGameCenterAsync"/>
         public async Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, long timestampSeconds, string username = null, bool create = true, 
+            string salt, string signature, string timestampSeconds, string username = null, bool create = true, 
             IDictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty,
@@ -273,7 +273,7 @@ namespace Nakama
 
         /// <inheritdoc cref="LinkGameCenterAsync"/>
         public Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, long timestampSeconds) => _apiClient.LinkGameCenterAsync(session.AuthToken,
+            string salt, string signature, string timestampSeconds) => _apiClient.LinkGameCenterAsync(session.AuthToken,
             new ApiAccountGameCenter
             {
                 BundleId = bundleId,
@@ -317,12 +317,12 @@ namespace Nakama
         /// <inheritdoc cref="ListLeaderboardRecordsAsync"/>
         public Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
             IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null) =>
-            _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit, cursor, expiry);
+            _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit, cursor, expiry?.ToString());
 
         /// <inheritdoc cref="ListLeaderboardRecordsAroundOwnerAsync"/>
         public Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session,
             string leaderboardId, string ownerId, long? expiry = null, int limit = 1) =>
-            _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId, limit, expiry);
+            _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId, limit, expiry?.ToString());
 
         /// <inheritdoc cref="ListMatchesAsync"/>
         public Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
@@ -342,12 +342,12 @@ namespace Nakama
         /// <inheritdoc cref="ListTournamentRecordsAroundOwnerAsync"/>
         public Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session,
             string tournamentId, string ownerId, long? expiry = null, int limit = 1) =>
-            _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId, limit, expiry);
+            _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId, limit, expiry?.ToString());
 
         /// <inheritdoc cref="ListTournamentRecordsAsync"/>
         public Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
             IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null) =>
-            _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit, cursor, expiry);
+            _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit, cursor, expiry?.ToString());
 
         /// <inheritdoc cref="ListTournamentsAsync"/>
         public Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
@@ -425,7 +425,7 @@ namespace Nakama
 
         /// <inheritdoc cref="UnlinkGameCenterAsync"/>
         public Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, long timestampSeconds) => _apiClient.UnlinkGameCenterAsync(
+            string salt, string signature, string timestampSeconds) => _apiClient.UnlinkGameCenterAsync(
             session.AuthToken,
             new ApiAccountGameCenter
             {
@@ -479,8 +479,8 @@ namespace Nakama
             new WriteLeaderboardRecordRequestLeaderboardRecordWrite
             {
                 Metadata = metadata,
-                Score = score,
-                Subscore = subscore
+                Score = score.ToString(),
+                Subscore = subscore.ToString()
             });
 
         /// <inheritdoc cref="WriteStorageObjectsAsync"/>
@@ -512,8 +512,8 @@ namespace Nakama
             new WriteTournamentRecordRequestTournamentRecordWrite
             {
                 Metadata = metadata,
-                Score = score,
-                Subscore = subscore
+                Score = score.ToString(),
+                Subscore = subscore.ToString()
             });
     }
 }

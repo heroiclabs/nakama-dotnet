@@ -86,11 +86,7 @@ namespace Nakama
         {{- else if eq $property.Type "boolean" }}
         bool {{ $fieldname }} { get; }
         {{- else if eq $property.Type "string"}}
-        {{- if eq $property.Format "int64" }}
-        long {{ $fieldname }} { get; }
-            {{- else }}
         string {{ $fieldname }} { get; }
-            {{- end }}
         {{- else if eq $property.Type "array"}}
             {{- if eq $property.Items.Type "string"}}
         List<string> {{ $fieldname }} { get; }
@@ -131,13 +127,8 @@ namespace Nakama
         [DataMember(Name="{{ $propname }}")]
         public bool {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "string" }}
-            {{- if eq $property.Format "int64" }}
-        [DataMember(Name="{{ $propname }}")]
-        public long {{ $fieldname }} { get; set; }
-            {{- else }}
         [DataMember(Name="{{ $propname }}")]
         public string {{ $fieldname }} { get; set; }
-            {{- end }}
         {{- else if eq $property.Type "array" }}
             {{- if eq $property.Items.Type "string" }}
         [DataMember(Name="{{ $propname }}")]
@@ -267,11 +258,7 @@ namespace Nakama
         {{- else if eq $parameter.Type "boolean" }}
             , bool? {{ $camelcase }}
         {{- else if eq $parameter.Type "string" }}
-            {{- if eq $parameter.Format "int64" }}
-            , long? {{ $camelcase }}
-            {{- else }}
             , string {{ $camelcase }}
-            {{- end }}
         {{- else }}
             , {{ $parameter.Type }} {{ $camelcase }}
         {{- end }}
@@ -299,26 +286,26 @@ namespace Nakama
             {{- range $parameter := $operation.Parameters }}
             {{- $camelcase := $parameter.Name | camelCase }}
             {{- if eq $parameter.In "query"}}
-                if ({{ $camelcase }} != null) {
-                        {{- if eq $parameter.Type "integer" }}
-                    queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
-                        {{- else if eq $parameter.Type "string" }}
-                            {{- if eq $parameter.Format "int64" }}
-                    queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
-                            {{- else }}
-                    queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }}), "&");
-                            {{- end }}
-                        {{- else if eq $parameter.Type "boolean" }}
-                    queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}.ToString().ToLower(), "&");
-                        {{- else if eq $parameter.Type "array" }}
-                    foreach (var elem in {{ $camelcase }} ?? new {{ $parameter.Items.Type }}[0])
-                    {
-                        queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", elem, "&");
-                    }
-                        {{- else }}
-                    {{ $parameter }} // ERROR
-                        {{- end }}
-                }
+                {{- if eq $parameter.Type "integer" }}
+            if ({{ $camelcase }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
+            }
+                {{- else if eq $parameter.Type "string" }}
+            if ({{ $camelcase }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }}), "&");
+            }
+                {{- else if eq $parameter.Type "boolean" }}
+            if ({{ $camelcase }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}.ToString().ToLower(), "&");
+            }
+                {{- else if eq $parameter.Type "array" }}
+            foreach (var elem in {{ $camelcase }} ?? new {{ $parameter.Items.Type }}[0])
+            {
+                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", elem, "&");
+            }
+                {{- else }}
+            {{ $parameter }} // ERROR
+                {{- end }}
             {{- end }}
             {{- end }}
 
@@ -472,7 +459,7 @@ func main() {
 					Type string
 					Ref  string `json:"$ref"`
 				}
-                Format   string // used with type "boolean" or int64
+                Format   string // used with type "boolean"
 			}
 			Security []map[string][]struct {
 			}
@@ -488,7 +475,7 @@ func main() {
                 AdditionalProperties struct {
                     Type string // used with type "map"
                 }
-				Format      string // used with type "boolean" or int64
+				Format      string // used with type "boolean"
 				Description string
 			}
 			Description string

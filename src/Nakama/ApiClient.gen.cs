@@ -132,12 +132,12 @@ namespace Nakama
         /// <summary>
         /// The score value to submit.
         /// </summary>
-        long Score { get; }
+        string Score { get; }
 
         /// <summary>
         /// An optional secondary value.
         /// </summary>
-        long Subscore { get; }
+        string Subscore { get; }
     }
 
     /// <inheritdoc />
@@ -150,11 +150,11 @@ namespace Nakama
 
         /// <inheritdoc />
         [DataMember(Name="score")]
-        public long Score { get; set; }
+        public string Score { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="subscore")]
-        public long Subscore { get; set; }
+        public string Subscore { get; set; }
 
         public override string ToString()
         {
@@ -180,12 +180,12 @@ namespace Nakama
         /// <summary>
         /// The score value to submit.
         /// </summary>
-        long Score { get; }
+        string Score { get; }
 
         /// <summary>
         /// An optional secondary value.
         /// </summary>
-        long Subscore { get; }
+        string Subscore { get; }
     }
 
     /// <inheritdoc />
@@ -198,11 +198,11 @@ namespace Nakama
 
         /// <inheritdoc />
         [DataMember(Name="score")]
-        public long Score { get; set; }
+        public string Score { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="subscore")]
-        public long Subscore { get; set; }
+        public string Subscore { get; set; }
 
         public override string ToString()
         {
@@ -514,7 +514,7 @@ namespace Nakama
         /// <summary>
         /// Time since UNIX epoch when the signature was created.
         /// </summary>
-        long TimestampSeconds { get; }
+        string TimestampSeconds { get; }
 
         /// <summary>
         /// Extra information that will be bundled in the session token.
@@ -548,7 +548,7 @@ namespace Nakama
 
         /// <inheritdoc />
         [DataMember(Name="timestamp_seconds")]
-        public long TimestampSeconds { get; set; }
+        public string TimestampSeconds { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="vars")]
@@ -1352,17 +1352,17 @@ namespace Nakama
         /// <summary>
         /// The rank of this record.
         /// </summary>
-        long Rank { get; }
+        string Rank { get; }
 
         /// <summary>
         /// The score value.
         /// </summary>
-        long Score { get; }
+        string Score { get; }
 
         /// <summary>
         /// An optional subscore value.
         /// </summary>
-        long Subscore { get; }
+        string Subscore { get; }
 
         /// <summary>
         /// The UNIX time when the leaderboard record was updated.
@@ -1409,15 +1409,15 @@ namespace Nakama
 
         /// <inheritdoc />
         [DataMember(Name="rank")]
-        public long Rank { get; set; }
+        public string Rank { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="score")]
-        public long Score { get; set; }
+        public string Score { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="subscore")]
-        public long Subscore { get; set; }
+        public string Subscore { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="update_time")]
@@ -3062,12 +3062,12 @@ namespace Nakama
             var urlpath = "/v2/account/authenticate/custom";
 
             var queryParams = "";
-                if (create != null) {
-                    queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
-                }
-                if (username != null) {
-                    queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
-                }
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3106,12 +3106,12 @@ namespace Nakama
             var urlpath = "/v2/account/authenticate/device";
 
             var queryParams = "";
-                if (create != null) {
-                    queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
-                }
-                if (username != null) {
-                    queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
-                }
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3150,12 +3150,12 @@ namespace Nakama
             var urlpath = "/v2/account/authenticate/email";
 
             var queryParams = "";
-                if (create != null) {
-                    queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
-                }
-                if (username != null) {
-                    queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
-                }
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3195,15 +3195,15 @@ namespace Nakama
             var urlpath = "/v2/account/authenticate/facebook";
 
             var queryParams = "";
-                if (create != null) {
-                    queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
-                }
-                if (username != null) {
-                    queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
-                }
-                if (sync != null) {
-                    queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
-                }
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
+            if (sync != null) {
+                queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3242,12 +3242,12 @@ namespace Nakama
             var urlpath = "/v2/account/authenticate/gamecenter";
 
             var queryParams = "";
-                if (create != null) {
-                    queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
-                }
-                if (username != null) {
-                    queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
-                }
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3286,12 +3286,12 @@ namespace Nakama
             var urlpath = "/v2/account/authenticate/google";
 
             var queryParams = "";
-                if (create != null) {
-                    queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
-                }
-                if (username != null) {
-                    queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
-                }
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3330,12 +3330,12 @@ namespace Nakama
             var urlpath = "/v2/account/authenticate/steam";
 
             var queryParams = "";
-                if (create != null) {
-                    queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
-                }
-                if (username != null) {
-                    queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
-                }
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3471,9 +3471,9 @@ namespace Nakama
             var urlpath = "/v2/account/link/facebook";
 
             var queryParams = "";
-                if (sync != null) {
-                    queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
-                }
+            if (sync != null) {
+                queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3841,15 +3841,15 @@ namespace Nakama
             urlpath = urlpath.Replace("{channel_id}", Uri.EscapeDataString(channelId));
 
             var queryParams = "";
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (forward != null) {
-                    queryParams = string.Concat(queryParams, "forward=", forward.ToString().ToLower(), "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (forward != null) {
+                queryParams = string.Concat(queryParams, "forward=", forward.ToString().ToLower(), "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3879,18 +3879,14 @@ namespace Nakama
             var urlpath = "/v2/friend";
 
             var queryParams = "";
-                if (ids != null) {
-                    foreach (var elem in ids ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "ids=", elem, "&");
-                    }
-                }
-                if (usernames != null) {
-                    foreach (var elem in usernames ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "usernames=", elem, "&");
-                    }
-                }
+            foreach (var elem in ids ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+            }
+            foreach (var elem in usernames ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3920,15 +3916,15 @@ namespace Nakama
             var urlpath = "/v2/friend";
 
             var queryParams = "";
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (state != null) {
-                    queryParams = string.Concat(queryParams, "state=", state, "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (state != null) {
+                queryParams = string.Concat(queryParams, "state=", state, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3958,18 +3954,14 @@ namespace Nakama
             var urlpath = "/v2/friend";
 
             var queryParams = "";
-                if (ids != null) {
-                    foreach (var elem in ids ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "ids=", elem, "&");
-                    }
-                }
-                if (usernames != null) {
-                    foreach (var elem in usernames ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "usernames=", elem, "&");
-                    }
-                }
+            foreach (var elem in ids ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+            }
+            foreach (var elem in usernames ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -3998,18 +3990,14 @@ namespace Nakama
             var urlpath = "/v2/friend/block";
 
             var queryParams = "";
-                if (ids != null) {
-                    foreach (var elem in ids ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "ids=", elem, "&");
-                    }
-                }
-                if (usernames != null) {
-                    foreach (var elem in usernames ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "usernames=", elem, "&");
-                    }
-                }
+            foreach (var elem in ids ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+            }
+            foreach (var elem in usernames ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4042,9 +4030,9 @@ namespace Nakama
             var urlpath = "/v2/friend/facebook";
 
             var queryParams = "";
-                if (reset != null) {
-                    queryParams = string.Concat(queryParams, "reset=", reset.ToString().ToLower(), "&");
-                }
+            if (reset != null) {
+                queryParams = string.Concat(queryParams, "reset=", reset.ToString().ToLower(), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4076,15 +4064,15 @@ namespace Nakama
             var urlpath = "/v2/group";
 
             var queryParams = "";
-                if (name != null) {
-                    queryParams = string.Concat(queryParams, "name=", Uri.EscapeDataString(name), "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
+            if (name != null) {
+                queryParams = string.Concat(queryParams, "name=", Uri.EscapeDataString(name), "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4224,12 +4212,10 @@ namespace Nakama
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
-                if (userIds != null) {
-                    foreach (var elem in userIds ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
-                    }
-                }
+            foreach (var elem in userIds ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4295,12 +4281,10 @@ namespace Nakama
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
-                if (userIds != null) {
-                    foreach (var elem in userIds ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
-                    }
-                }
+            foreach (var elem in userIds ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4366,12 +4350,10 @@ namespace Nakama
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
-                if (userIds != null) {
-                    foreach (var elem in userIds ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
-                    }
-                }
+            foreach (var elem in userIds ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4407,15 +4389,15 @@ namespace Nakama
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (state != null) {
-                    queryParams = string.Concat(queryParams, "state=", state, "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (state != null) {
+                queryParams = string.Concat(queryParams, "state=", state, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4474,7 +4456,7 @@ namespace Nakama
             , IEnumerable<string> ownerIds
             , int? limit
             , string cursor
-            , long? expiry)
+            , string expiry)
         {
             if (leaderboardId == null)
             {
@@ -4485,21 +4467,19 @@ namespace Nakama
             urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
 
             var queryParams = "";
-                if (ownerIds != null) {
-                    foreach (var elem in ownerIds ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
-                    }
-                }
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
-                if (expiry != null) {
-                    queryParams = string.Concat(queryParams, "expiry=", expiry, "&");
-                }
+            foreach (var elem in ownerIds ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
+            }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+            if (expiry != null) {
+                queryParams = string.Concat(queryParams, "expiry=", Uri.EscapeDataString(expiry), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4565,7 +4545,7 @@ namespace Nakama
             , string leaderboardId
             , string ownerId
             , int? limit
-            , long? expiry)
+            , string expiry)
         {
             if (leaderboardId == null)
             {
@@ -4581,12 +4561,12 @@ namespace Nakama
             urlpath = urlpath.Replace("{owner_id}", Uri.EscapeDataString(ownerId));
 
             var queryParams = "";
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (expiry != null) {
-                    queryParams = string.Concat(queryParams, "expiry=", expiry, "&");
-                }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (expiry != null) {
+                queryParams = string.Concat(queryParams, "expiry=", Uri.EscapeDataString(expiry), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4620,24 +4600,24 @@ namespace Nakama
             var urlpath = "/v2/match";
 
             var queryParams = "";
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (authoritative != null) {
-                    queryParams = string.Concat(queryParams, "authoritative=", authoritative.ToString().ToLower(), "&");
-                }
-                if (label != null) {
-                    queryParams = string.Concat(queryParams, "label=", Uri.EscapeDataString(label), "&");
-                }
-                if (minSize != null) {
-                    queryParams = string.Concat(queryParams, "min_size=", minSize, "&");
-                }
-                if (maxSize != null) {
-                    queryParams = string.Concat(queryParams, "max_size=", maxSize, "&");
-                }
-                if (query != null) {
-                    queryParams = string.Concat(queryParams, "query=", Uri.EscapeDataString(query), "&");
-                }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (authoritative != null) {
+                queryParams = string.Concat(queryParams, "authoritative=", authoritative.ToString().ToLower(), "&");
+            }
+            if (label != null) {
+                queryParams = string.Concat(queryParams, "label=", Uri.EscapeDataString(label), "&");
+            }
+            if (minSize != null) {
+                queryParams = string.Concat(queryParams, "min_size=", minSize, "&");
+            }
+            if (maxSize != null) {
+                queryParams = string.Concat(queryParams, "max_size=", maxSize, "&");
+            }
+            if (query != null) {
+                queryParams = string.Concat(queryParams, "query=", Uri.EscapeDataString(query), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4666,12 +4646,10 @@ namespace Nakama
             var urlpath = "/v2/notification";
 
             var queryParams = "";
-                if (ids != null) {
-                    foreach (var elem in ids ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "ids=", elem, "&");
-                    }
-                }
+            foreach (var elem in ids ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4700,12 +4678,12 @@ namespace Nakama
             var urlpath = "/v2/notification";
 
             var queryParams = "";
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (cacheableCursor != null) {
-                    queryParams = string.Concat(queryParams, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor), "&");
-                }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (cacheableCursor != null) {
+                queryParams = string.Concat(queryParams, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4741,12 +4719,12 @@ namespace Nakama
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
 
             var queryParams = "";
-                if (payload != null) {
-                    queryParams = string.Concat(queryParams, "payload=", Uri.EscapeDataString(payload), "&");
-                }
-                if (httpKey != null) {
-                    queryParams = string.Concat(queryParams, "http_key=", Uri.EscapeDataString(httpKey), "&");
-                }
+            if (payload != null) {
+                queryParams = string.Concat(queryParams, "payload=", Uri.EscapeDataString(payload), "&");
+            }
+            if (httpKey != null) {
+                queryParams = string.Concat(queryParams, "http_key=", Uri.EscapeDataString(httpKey), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4930,15 +4908,15 @@ namespace Nakama
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
 
             var queryParams = "";
-                if (userId != null) {
-                    queryParams = string.Concat(queryParams, "user_id=", Uri.EscapeDataString(userId), "&");
-                }
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
+            if (userId != null) {
+                queryParams = string.Concat(queryParams, "user_id=", Uri.EscapeDataString(userId), "&");
+            }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4980,12 +4958,12 @@ namespace Nakama
             urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
 
             var queryParams = "";
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -5019,24 +4997,24 @@ namespace Nakama
             var urlpath = "/v2/tournament";
 
             var queryParams = "";
-                if (categoryStart != null) {
-                    queryParams = string.Concat(queryParams, "category_start=", categoryStart, "&");
-                }
-                if (categoryEnd != null) {
-                    queryParams = string.Concat(queryParams, "category_end=", categoryEnd, "&");
-                }
-                if (startTime != null) {
-                    queryParams = string.Concat(queryParams, "start_time=", startTime, "&");
-                }
-                if (endTime != null) {
-                    queryParams = string.Concat(queryParams, "end_time=", endTime, "&");
-                }
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
+            if (categoryStart != null) {
+                queryParams = string.Concat(queryParams, "category_start=", categoryStart, "&");
+            }
+            if (categoryEnd != null) {
+                queryParams = string.Concat(queryParams, "category_end=", categoryEnd, "&");
+            }
+            if (startTime != null) {
+                queryParams = string.Concat(queryParams, "start_time=", startTime, "&");
+            }
+            if (endTime != null) {
+                queryParams = string.Concat(queryParams, "end_time=", endTime, "&");
+            }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -5063,7 +5041,7 @@ namespace Nakama
             , IEnumerable<string> ownerIds
             , int? limit
             , string cursor
-            , long? expiry)
+            , string expiry)
         {
             if (tournamentId == null)
             {
@@ -5074,21 +5052,19 @@ namespace Nakama
             urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
 
             var queryParams = "";
-                if (ownerIds != null) {
-                    foreach (var elem in ownerIds ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
-                    }
-                }
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
-                if (expiry != null) {
-                    queryParams = string.Concat(queryParams, "expiry=", expiry, "&");
-                }
+            foreach (var elem in ownerIds ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
+            }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+            if (expiry != null) {
+                queryParams = string.Concat(queryParams, "expiry=", Uri.EscapeDataString(expiry), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -5186,7 +5162,7 @@ namespace Nakama
             , string tournamentId
             , string ownerId
             , int? limit
-            , long? expiry)
+            , string expiry)
         {
             if (tournamentId == null)
             {
@@ -5202,12 +5178,12 @@ namespace Nakama
             urlpath = urlpath.Replace("{owner_id}", Uri.EscapeDataString(ownerId));
 
             var queryParams = "";
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (expiry != null) {
-                    queryParams = string.Concat(queryParams, "expiry=", expiry, "&");
-                }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (expiry != null) {
+                queryParams = string.Concat(queryParams, "expiry=", Uri.EscapeDataString(expiry), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -5238,24 +5214,18 @@ namespace Nakama
             var urlpath = "/v2/user";
 
             var queryParams = "";
-                if (ids != null) {
-                    foreach (var elem in ids ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "ids=", elem, "&");
-                    }
-                }
-                if (usernames != null) {
-                    foreach (var elem in usernames ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "usernames=", elem, "&");
-                    }
-                }
-                if (facebookIds != null) {
-                    foreach (var elem in facebookIds ?? new string[0])
-                    {
-                        queryParams = string.Concat(queryParams, "facebook_ids=", elem, "&");
-                    }
-                }
+            foreach (var elem in ids ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+            }
+            foreach (var elem in usernames ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+            }
+            foreach (var elem in facebookIds ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "facebook_ids=", elem, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -5292,15 +5262,15 @@ namespace Nakama
             urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
 
             var queryParams = "";
-                if (limit != null) {
-                    queryParams = string.Concat(queryParams, "limit=", limit, "&");
-                }
-                if (state != null) {
-                    queryParams = string.Concat(queryParams, "state=", state, "&");
-                }
-                if (cursor != null) {
-                    queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-                }
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (state != null) {
+                queryParams = string.Concat(queryParams, "state=", state, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {

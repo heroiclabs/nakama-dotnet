@@ -127,7 +127,7 @@ namespace Nakama
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, long timestampSeconds, string username = null, bool create = true, 
+            string signature, string timestampSeconds, string username = null, bool create = true, 
             IDictionary<string, string> vars = null);
 
         /// <summary>
@@ -326,7 +326,7 @@ namespace Nakama
         /// <param name="timestampSeconds">The date and time that the signature was created.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, long timestampSeconds);
+            string signature, string timestampSeconds);
 
         /// <summary>
         /// Link a Google profile to a user account.
@@ -624,7 +624,7 @@ namespace Nakama
         /// <param name="timestampSeconds">The date and time that the signature was created.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, long timestampSeconds);
+            string signature, string timestampSeconds);
 
         /// <summary>
         /// Unlink a Google profile from the user account owned by the session.
