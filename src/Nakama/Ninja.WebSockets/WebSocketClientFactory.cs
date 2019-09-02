@@ -1,22 +1,22 @@
 ﻿// ---------------------------------------------------------------------
 // Copyright 2018 David Haig
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy 
-// of this software and associated documentation files (the "Software"), to deal 
-// in the Software without restriction, including without limitation the rights 
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
-// copies of the Software, and to permit persons to whom the Software is 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in 
+//
+// The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // ---------------------------------------------------------------------
 
@@ -143,13 +143,13 @@ namespace Nakama.Ninja.WebSockets
                 return match.Groups[1].Value.Trim();
             }
 
-            return null;            
+            return null;
         }
 
         private void ThrowIfInvalidAcceptString(Guid guid, string response, string secWebSocketKey)
         {
             // make sure we escape the accept string which could contain special regex characters
-            string regexPattern = "Sec-WebSocket-Accept: (.*)";            
+            string regexPattern = "Sec-WebSocket-Accept: (.*)";
             Regex regex = new Regex(regexPattern, RegexOptions.IgnoreCase);
             string actualAcceptString = regex.Match(response).Groups[1].Value.Trim();
 
@@ -212,8 +212,7 @@ namespace Nakama.Ninja.WebSockets
         /// <returns>A connected and open stream</returns>
         protected virtual async Task<System.IO.Stream> GetStream(Guid loggingGuid, bool isSecure, bool noDelay, string host, int port, CancellationToken cancellationToken)
         {
-            var tcpClient = new TcpClient();
-            tcpClient.NoDelay = noDelay;
+            var tcpClient = new TcpClient {NoDelay = noDelay};
             IPAddress ipAddress;
             if (IPAddress.TryParse(host, out ipAddress))
             {
@@ -223,7 +222,25 @@ namespace Nakama.Ninja.WebSockets
             else
             {
                 Events.Log.ClientConnectingToHost(loggingGuid, host, port);
-                await tcpClient.ConnectAsync(host, port);
+                // NOTE Workaround for Mono runtime issue #8692
+                // https://github.com/mono/mono/issues/8692
+                var hostAddresses = Dns.GetHostAddresses(host);
+                IPAddress ipv4Address = null;
+                foreach (var address in hostAddresses)
+                {
+                    if (address.AddressFamily != AddressFamily.InterNetwork) continue;
+                    ipv4Address = address;
+                    break;
+                }
+
+                if (ipv4Address != null)
+                {
+                    await tcpClient.ConnectAsync(ipv4Address, port);
+                }
+                else
+                {
+                    await tcpClient.ConnectAsync(host, port);
+                }
             }
 
             cancellationToken.ThrowIfCancellationRequested();
