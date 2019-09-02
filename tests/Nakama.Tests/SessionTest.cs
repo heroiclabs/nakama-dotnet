@@ -33,8 +33,8 @@ namespace Nakama.Tests
             var session = Session.Restore(AuthToken);
             Assert.NotNull(session.AuthToken);
             Assert.Equal(AuthToken, session.AuthToken);
-            Assert.NotNull(session.Variables);
-            Assert.Empty(session.Variables);
+            Assert.NotNull(session.Vars);
+            Assert.Empty(session.Vars);
         }
 
         [Fact]
@@ -46,8 +46,8 @@ namespace Nakama.Tests
             Assert.Equal("vTGdGHyxvl", session.Username);
             Assert.NotNull(session.UserId);
             Assert.Equal("f4158f2b-80f3-4926-946b-a8ccfc165490", session.UserId);
-            Assert.NotNull(session.Variables);
-            Assert.Contains(session.Variables, pair => pair.Key.Equals("k1") || pair.Key.Equals("k2"));
+            Assert.NotNull(session.Vars);
+            Assert.Contains(session.Vars, pair => pair.Key.Equals("k1") || pair.Key.Equals("k2"));
         }
 
         [Fact]

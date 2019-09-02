@@ -40,8 +40,8 @@ namespace Nakama
         /// <inheritdoc cref="ISession.IsExpired"/>
         public bool IsExpired => HasExpired(DateTime.UtcNow);
 
-        /// <inheritdoc cref="ISession.Variables"/>
-        public IDictionary<string, string> Variables { get; }
+        /// <inheritdoc cref="ISession.Vars"/>
+        public IDictionary<string, string> Vars { get; }
 
         /// <inheritdoc cref="ISession.Username"/>
         public string Username { get; }
@@ -59,7 +59,7 @@ namespace Nakama
         public override string ToString()
         {
             var variables = "{";
-            foreach (var variable in Variables)
+            foreach (var variable in Vars)
             {
                 variables = string.Concat(variables, " '", variable.Key, "': '", variable.Value, "', ");
             }
@@ -74,7 +74,7 @@ namespace Nakama
             Created = created;
             var span = DateTime.UtcNow - Epoch;
             CreateTime = span.Seconds;
-            Variables = new Dictionary<string, string>();
+            Vars = new Dictionary<string, string>();
 
             var json = JwtUnpack(authToken);
             var decoded = json.FromJson<Dictionary<string, object>>();
@@ -85,7 +85,7 @@ namespace Nakama
             {
                 foreach (var variable in dictionary)
                 {
-                    Variables.Add(variable.Key, variable.Value.ToString());
+                    Vars.Add(variable.Key, variable.Value.ToString());
                 }
             }
         }
