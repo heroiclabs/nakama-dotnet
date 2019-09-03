@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Nakama
@@ -28,10 +29,13 @@ namespace Nakama
 
         [DataMember(Name="token")]
         public string Token { get; set; }
+        
+        [DataMember(Name="metadata")]
+        public IDictionary<string, string> Metadata { get; set; }
 
         public override string ToString()
         {
-            return $"MatchJoinMessage(MatchId='{MatchId}', Token='{Token}')";
+            return $"MatchJoinMessage(MatchId='{MatchId}', Token='{Token}, Metadata='{Metadata}')";
         }
     }
 }

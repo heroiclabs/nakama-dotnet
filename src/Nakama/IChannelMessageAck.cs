@@ -57,6 +57,26 @@ namespace Nakama
         /// The username of the sender of the message.
         /// </summary>
         string Username { get; }
+        
+        /// <summary>
+        /// The name of the chat room, or an empty string if this message was not sent through a chat room.
+        /// </summary>
+        string RoomName { get; }
+        
+        /// <summary>
+        /// The ID of the group, or an empty string if this message was not sent through a group channel.
+        /// </summary>
+        string GroupId { get; }
+        
+        /// <summary>
+        /// The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+        /// </summary>
+        string UserIdOne { get; }
+        
+        /// <summary>
+        /// The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+        /// </summary>
+        string UserIdTwo { get; }
     }
 
     /// <inheritdoc cref="IChannelMessageAck"/>
@@ -75,11 +95,19 @@ namespace Nakama
         [DataMember(Name = "update_time")] public string UpdateTime { get; set; }
 
         [DataMember(Name = "username")] public string Username { get; set; }
+        
+        [DataMember(Name="room_name")] public string RoomName { get; set; }
+        
+        [DataMember(Name="group_id")] public string GroupId { get; set; }
+        
+        [DataMember(Name="user_id_one")] public string UserIdOne { get; set; }
+        
+        [DataMember(Name="user_id_two")] public string UserIdTwo { get; set; }
 
         public override string ToString()
         {
             return
-                $"ChannelMessageAck(ChannelId='{ChannelId}', Code={Code}, CreateTime={CreateTime}, MessageId='{MessageId}', Persistent={Persistent}, UpdateTime={UpdateTime}, Username='{Username}')";
+                $"ChannelMessageAck(ChannelId='{ChannelId}', Code={Code}, CreateTime={CreateTime}, MessageId='{MessageId}', Persistent={Persistent}, UpdateTime={UpdateTime}, Username='{Username}', RoomName='{RoomName}', GroupId='{GroupId}', UserIdOne='{UserIdOne}', UserIdTwo='{UserIdTwo}')";
         }
     }
 }

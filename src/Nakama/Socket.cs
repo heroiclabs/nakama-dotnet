@@ -282,15 +282,16 @@ namespace Nakama
             return response.Match;
         }
 
-        /// <inheritdoc cref="JoinMatchAsync(string)"/>
-        public async Task<IMatch> JoinMatchAsync(string matchId)
+        /// <inheritdoc cref="JoinMatchAsync(string,IDictionary{string, string})"/>
+        public async Task<IMatch> JoinMatchAsync(string matchId, IDictionary<string, string> metadata = null)
         {
             var envelope = new WebSocketMessageEnvelope
             {
                 Cid = $"{_cid++}",
                 MatchJoin = new MatchJoinMessage
                 {
-                    MatchId = matchId
+                    MatchId = matchId,
+                    Metadata = metadata
                 }
             };
             var response = await SendAsync(envelope);

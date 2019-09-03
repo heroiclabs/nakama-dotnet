@@ -38,6 +38,26 @@ namespace Nakama
         /// The presence of the current user. i.e. Your self.
         /// </summary>
         IUserPresence Self { get; }
+        
+        /// <summary>
+        /// The name of the chat room, or an empty string if this message was not sent through a chat room.
+        /// </summary>
+        string RoomName { get; }
+        
+        /// <summary>
+        /// The ID of the group, or an empty string if this message was not sent through a group channel.
+        /// </summary>
+        string GroupId { get; }
+        
+        /// <summary>
+        /// The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+        /// </summary>
+        string UserIdOne { get; }
+        
+        /// <summary>
+        /// The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+        /// </summary>
+        string UserIdTwo { get; }
     }
 
     /// <inheritdoc cref="IChannel"/>
@@ -53,6 +73,18 @@ namespace Nakama
         public IUserPresence Self => _self;
         [DataMember(Name="self")]
         public UserPresence _self { get; set; }
+        
+        [DataMember(Name="room_name")]
+        public string RoomName { get; set; }
+        
+        [DataMember(Name="group_id")]
+        public string GroupId { get; set; }
+        
+        [DataMember(Name="user_id_one")]
+        public string UserIdOne { get; set; }
+        
+        [DataMember(Name="user_id_two")]
+        public string UserIdTwo { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -70,7 +102,7 @@ namespace Nakama
         public override string ToString()
         {
             var presences = string.Join(", ", Presences);
-            return $"Channel(Id='{Id}', Presences=[{presences}], Self={Self})";
+            return $"Channel(Id='{Id}', Presences=[{presences}], Self={Self}, RoomName='{RoomName}', GroupId='{GroupId}', UserIdOne='{UserIdOne}', UserIdTwo='{UserIdTwo}')";
         }
     }
 }

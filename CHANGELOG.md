@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed 
 - Use workaround for IPv6 bug in TcpClient with Mono runtime used with Unity engine.
 
+### Fixed
+- Add missing metadata to match join message.
+- Add discrete channel identifier in all channel related messages.
+
 ## [2.3.0] - 2019-09-02
 ### Added
 - Follow users by username for status updates.

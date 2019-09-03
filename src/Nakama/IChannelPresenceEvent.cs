@@ -38,6 +38,26 @@ namespace Nakama
         /// Presences of users who left the channel.
         /// </summary>
         IEnumerable<IUserPresence> Leaves { get; }
+        
+        /// <summary>
+        /// The name of the chat room, or an empty string if this message was not sent through a chat room.
+        /// </summary>
+        string RoomName { get; }
+        
+        /// <summary>
+        /// The ID of the group, or an empty string if this message was not sent through a group channel.
+        /// </summary>
+        string GroupId { get; }
+        
+        /// <summary>
+        /// The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+        /// </summary>
+        string UserIdOne { get; }
+        
+        /// <summary>
+        /// The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+        /// </summary>
+        string UserIdTwo { get; }
     }
 
     /// <inheritdoc cref="IChannelPresenceEvent"/>
@@ -53,12 +73,24 @@ namespace Nakama
         public IEnumerable<IUserPresence> Leaves => _leaves ?? new List<UserPresence>(0);
         [DataMember(Name="leaves")]
         public List<UserPresence> _leaves { get; set; }
+        
+        [DataMember(Name="room_name")]
+        public string RoomName { get; set; }
+        
+        [DataMember(Name="group_id")]
+        public string GroupId { get; set; }
+        
+        [DataMember(Name="user_id_one")]
+        public string UserIdOne { get; set; }
+        
+        [DataMember(Name="user_id_two")]
+        public string UserIdTwo { get; set; }
 
         public override string ToString()
         {
             var joins = string.Join(",", Joins);
             var leaves = string.Join(",", Leaves);
-            return $"ChannelPresenceEvent(ChannelId='{ChannelId}', Joins=[{joins}], Leaves=[{leaves}])";
+            return $"ChannelPresenceEvent(ChannelId='{ChannelId}', Joins=[{joins}], Leaves=[{leaves}], RoomName='{RoomName}', GroupId='{GroupId}', UserIdOne='{UserIdOne}', UserIdTwo='{UserIdTwo}')";
         }
     }
 }

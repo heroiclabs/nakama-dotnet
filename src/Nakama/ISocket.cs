@@ -164,8 +164,9 @@ namespace Nakama
         /// Join a multiplayer match by ID.
         /// </summary>
         /// <param name="matchId">The ID of the match to attempt to join.</param>
+        /// <param name="metadata">An optional set of key-value metadata pairs to be passed to the match handler.</param>
         /// <returns>A task which resolves to a multiplayer match.</returns>
-        Task<IMatch> JoinMatchAsync(string matchId);
+        Task<IMatch> JoinMatchAsync(string matchId, IDictionary<string, string> metadata = null);
 
         /// <summary>
         /// Leave a chat channel on the server.
