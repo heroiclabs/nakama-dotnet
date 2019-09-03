@@ -28,10 +28,22 @@ namespace Nakama
 
         [DataMember(Name="message_id")]
         public string MessageId { get; set; }
+        
+        [DataMember(Name="room_name")]
+        public string RoomName { get; set; }
+        
+        [DataMember(Name="group_id")]
+        public string GroupId { get; set; }
+        
+        [DataMember(Name="user_id_one")]
+        public string UserIdOne { get; set; }
+        
+        [DataMember(Name="user_id_two")]
+        public string UserIdTwo { get; set; }
 
         public override string ToString()
         {
-            return $"ChannelRemoveMessage(ChannelId='{ChannelId}', MessageId='{MessageId}')";
+            return $"ChannelRemoveMessage(ChannelId='{ChannelId}', MessageId='{MessageId}', RoomName='{RoomName}', GroupId='{GroupId}', UserIdOne='{UserIdOne}', UserIdTwo='{UserIdTwo}')";
         }
     }
 }

@@ -164,8 +164,9 @@ namespace Nakama
         /// Join a multiplayer match by ID.
         /// </summary>
         /// <param name="matchId">The ID of the match to attempt to join.</param>
+        /// <param name="metadata">An optional set of key-value metadata pairs to be passed to the match handler.</param>
         /// <returns>A task which resolves to a multiplayer match.</returns>
-        Task<IMatch> JoinMatchAsync(string matchId);
+        Task<IMatch> JoinMatchAsync(string matchId, IDictionary<string, string> metadata = null);
 
         /// <summary>
         /// Leave a chat channel on the server.
@@ -200,16 +201,26 @@ namespace Nakama
         /// </summary>
         /// <param name="channel">The chat channel with the message to remove.</param>
         /// <param name="messageId">The ID of the chat message to remove.</param>
+        /// <param name="roomName">The name of the chat room, or an empty string if this message was not sent through a chat room.</param>
+        /// <param name="groupId">The ID of the group, or an empty string if this message was not sent through a group channel.</param>
+        /// <param name="userIdOne">The ID of the first DM user, or an empty string if this message was not sent through a DM chat.</param>
+        /// <param name="userIdTwo">The ID of the second DM user, or an empty string if this message was not sent through a DM chat.</param>
         /// <returns>A task which resolves to an acknowledgement of the removed message.</returns>
-        Task<IChannelMessageAck> RemoveChatMessageAsync(IChannel channel, string messageId);
+        Task<IChannelMessageAck> RemoveChatMessageAsync(IChannel channel, string messageId,
+            string roomName = null, string groupId = null, string userIdOne = null, string userIdTwo = null);
 
         /// <summary>
         /// Remove a chat message from a chat channel on the server.
         /// </summary>
         /// <param name="channelId">The ID of the chat channel with the message to remove.</param>
         /// <param name="messageId">The ID of the chat message to remove.</param>
+        /// <param name="roomName">The name of the chat room, or an empty string if this message was not sent through a chat room.</param>
+        /// <param name="groupId">The ID of the group, or an empty string if this message was not sent through a group channel.</param>
+        /// <param name="userIdOne">The ID of the first DM user, or an empty string if this message was not sent through a DM chat.</param>
+        /// <param name="userIdTwo">The ID of the second DM user, or an empty string if this message was not sent through a DM chat.</param>
         /// <returns>A task which resolves to an acknowledgement of the removed message.</returns>
-        Task<IChannelMessageAck> RemoveChatMessageAsync(string channelId, string messageId);
+        Task<IChannelMessageAck> RemoveChatMessageAsync(string channelId, string messageId,
+            string roomName = null, string groupId = null, string userIdOne = null, string userIdTwo = null);
 
         /// <summary>
         /// Leave the matchmaker pool with the ticket.
@@ -281,8 +292,13 @@ namespace Nakama
         /// <param name="channel">The chat channel with the message to update.</param>
         /// <param name="messageId">The ID of the message to update.</param>
         /// <param name="content">The new contents of the chat message.</param>
+        /// <param name="roomName">The name of the chat room, or an empty string if this message was not sent through a chat room.</param>
+        /// <param name="groupId">The ID of the group, or an empty string if this message was not sent through a group channel.</param>
+        /// <param name="userIdOne">The ID of the first DM user, or an empty string if this message was not sent through a DM chat.</param>
+        /// <param name="userIdTwo">The ID of the second DM user, or an empty string if this message was not sent through a DM chat.</param>
         /// <returns>A task which resolves to an acknowledgement of the updated message.</returns>
-        Task<IChannelMessageAck> UpdateChatMessageAsync(IChannel channel, string messageId, string content);
+        Task<IChannelMessageAck> UpdateChatMessageAsync(IChannel channel, string messageId, string content,
+            string roomName = null, string groupId = null, string userIdOne = null, string userIdTwo = null);
 
         /// <summary>
         /// Update a chat message on a chat channel in the server.
@@ -290,8 +306,13 @@ namespace Nakama
         /// <param name="channelId">The ID of the chat channel with the message to update.</param>
         /// <param name="messageId">The ID of the message to update.</param>
         /// <param name="content">The new contents of the chat message.</param>
+        /// <param name="roomName">The name of the chat room, or an empty string if this message was not sent through a chat room.</param>
+        /// <param name="groupId">The ID of the group, or an empty string if this message was not sent through a group channel.</param>
+        /// <param name="userIdOne">The ID of the first DM user, or an empty string if this message was not sent through a DM chat.</param>
+        /// <param name="userIdTwo">The ID of the second DM user, or an empty string if this message was not sent through a DM chat.</param>
         /// <returns>A task which resolves to an acknowledgement of the updated message.</returns>
-        Task<IChannelMessageAck> UpdateChatMessageAsync(string channelId, string messageId, string content);
+        Task<IChannelMessageAck> UpdateChatMessageAsync(string channelId, string messageId, string content, 
+            string roomName = null, string groupId = null, string userIdOne = null, string userIdTwo = null);
 
         /// <summary>
         /// Update the status for the current user online.
