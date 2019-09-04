@@ -332,14 +332,12 @@ namespace Nakama
             return SendAsync(envelope);
         }
 
-        /// <inheritdoc cref="RemoveChatMessageAsync(Nakama.IChannel,string,string,string,string,string)"/>
-        public Task<IChannelMessageAck> RemoveChatMessageAsync(IChannel channel, string messageId, 
-            string roomName = null, string groupId = null, string userIdOne = null, string userIdTwo = null) =>
-            RemoveChatMessageAsync(channel.Id, messageId, roomName, groupId, userIdOne, userIdTwo);
+        /// <inheritdoc cref="RemoveChatMessageAsync(Nakama.IChannel,string)"/>
+        public Task<IChannelMessageAck> RemoveChatMessageAsync(IChannel channel, string messageId) =>
+            RemoveChatMessageAsync(channel.Id, messageId);
 
-        /// <inheritdoc cref="RemoveChatMessageAsync(string,string,string,string,string,string)"/>
-        public async Task<IChannelMessageAck> RemoveChatMessageAsync(string channelId, string messageId,
-            string roomName = null, string groupId = null, string userIdOne = null, string userIdTwo = null)
+        /// <inheritdoc cref="RemoveChatMessageAsync(string,string)"/>
+        public async Task<IChannelMessageAck> RemoveChatMessageAsync(string channelId, string messageId)
         {
             var envelope = new WebSocketMessageEnvelope
             {
@@ -347,11 +345,7 @@ namespace Nakama
                 ChannelMessageRemove = new ChannelRemoveMessage
                 {
                     ChannelId = channelId,
-                    MessageId = messageId,
-                    RoomName = roomName,
-                    GroupId = groupId,
-                    UserIdOne = userIdOne,
-                    UserIdTwo = userIdTwo
+                    MessageId = messageId
                 }
             };
             var response = await SendAsync(envelope);
@@ -438,14 +432,12 @@ namespace Nakama
             return SendAsync(envelope);
         }
 
-        /// <inheritdoc cref="UpdateChatMessageAsync(Nakama.IChannel,string,string,string,string,string,string)"/>
-        public Task<IChannelMessageAck> UpdateChatMessageAsync(IChannel channel, string messageId, string content,
-            string roomName = null, string groupId = null, string userIdOne = null, string userIdTwo = null) =>
-            UpdateChatMessageAsync(channel.Id, messageId, content, roomName, groupId, userIdOne, userIdTwo);
+        /// <inheritdoc cref="UpdateChatMessageAsync(Nakama.IChannel,string,string)"/>
+        public Task<IChannelMessageAck> UpdateChatMessageAsync(IChannel channel, string messageId, string content) =>
+            UpdateChatMessageAsync(channel.Id, messageId, content);
 
-        /// <inheritdoc cref="UpdateChatMessageAsync(string,string,string,string,string,string,string)"/>
-        public async Task<IChannelMessageAck> UpdateChatMessageAsync(string channelId, string messageId, string content,
-            string roomName = null, string groupId = null, string userIdOne = null, string userIdTwo = null)
+        /// <inheritdoc cref="UpdateChatMessageAsync(string,string,string)"/>
+        public async Task<IChannelMessageAck> UpdateChatMessageAsync(string channelId, string messageId, string content)
         {
             var envelope = new WebSocketMessageEnvelope
             {
@@ -454,11 +446,7 @@ namespace Nakama
                 {
                     ChannelId = channelId,
                     MessageId = messageId,
-                    Content = content,
-                    RoomName = roomName,
-                    GroupId = groupId,
-                    UserIdOne = userIdOne,
-                    UserIdTwo = userIdTwo
+                    Content = content
                 }
             };
             var response = await SendAsync(envelope);
