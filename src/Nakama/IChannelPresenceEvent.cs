@@ -38,7 +38,7 @@ namespace Nakama
         /// Presences of users who left the channel.
         /// </summary>
         IEnumerable<IUserPresence> Leaves { get; }
-        
+
         /// <summary>
         /// The name of the chat room, or an empty string if this message was not sent through a chat room.
         /// </summary>

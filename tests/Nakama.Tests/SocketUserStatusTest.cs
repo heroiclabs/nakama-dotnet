@@ -141,6 +141,44 @@ namespace Nakama.Tests
         }
 
         [Fact]
+        public async void FollowUsers_TwoUsers_ThirdUserFollowsBoth()
+        {
+            var id1 = Guid.NewGuid().ToString();
+            var socket1 = Socket.From(_client);
+            //socket1.ReceivedError
+            var session1 = await _client.AuthenticateCustomAsync(id1);
+
+            var id2 = Guid.NewGuid().ToString();
+            var socket2 = Socket.From(_client);
+            //socket2.ReceivedError
+            var session2 = await _client.AuthenticateCustomAsync(id2);
+
+            var id3 = Guid.NewGuid().ToString();
+            var socket3 = Socket.From(_client);
+            //socket3.ReceivedError
+            var session3 = await _client.AuthenticateCustomAsync(id3);
+
+            // Two users come online. Each publishes a status.
+            await socket1.ConnectAsync(session1);
+            await socket1.UpdateStatusAsync("user 1 status.");
+            await socket2.ConnectAsync(session2);
+            await socket2.UpdateStatusAsync("user 2 status.");
+
+            // Third user comes online and follows both users.
+            await socket3.ConnectAsync(session3);
+            var statuses = await socket3.FollowUsersAsync(new[] {session1.UserId, session2.UserId});
+            Assert.NotNull(statuses);
+            Assert.NotEmpty(statuses.Presences);
+            Assert.Contains(statuses.Presences,
+                presence => presence.UserId.Equals(session1.UserId) || presence.UserId.Equals(session2.UserId));
+
+            // Dispose
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
+            await socket3.CloseAsync();
+        }
+
+        [Fact]
         public async void UpdateStatus_NoStatus_HasStatus()
         {
             var id = Guid.NewGuid().ToString();
