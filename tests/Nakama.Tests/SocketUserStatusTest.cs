@@ -141,6 +141,36 @@ namespace Nakama.Tests
         }
 
         [Fact]
+        public async void FollowUsers_TwoSessions_HasTwoStatuses()
+        {
+            var id1 = Guid.NewGuid().ToString();
+            var session1 = await _client.AuthenticateCustomAsync(id1);
+            await _socket.ConnectAsync(session1);
+
+            var id2 = Guid.NewGuid().ToString();
+            var session2 = await _client.AuthenticateCustomAsync(id2);
+            var socket1 = Socket.From(_client);
+            //socket1.ReceivedError
+            await socket1.ConnectAsync(session2);
+            var socket2 = Socket.From(_client);
+            //socket2.ReceivedError
+            await socket2.ConnectAsync(session2);
+
+            // Both sockets for single user set statuses.
+            const string status1 = "user 2 socket 1 status.";
+            await socket1.UpdateStatusAsync(status1);
+            const string status2 = "user 2 socket 2 status.";
+            await socket2.UpdateStatusAsync(status2);
+
+            var statuses = await _socket.FollowUsersAsync(new[] {session2.UserId});
+            Assert.NotNull(statuses);
+            Assert.Contains(statuses.Presences,
+                presence => presence.Status.Equals(status1) || presence.Status.Equals(status2));
+
+            await socket2.CloseAsync();
+        }
+
+        [Fact]
         public async void FollowUsers_TwoUsers_ThirdUserFollowsBoth()
         {
             var id1 = Guid.NewGuid().ToString();
