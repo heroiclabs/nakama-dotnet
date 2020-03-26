@@ -75,7 +75,7 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
-        Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true, 
+        Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true,
             Dictionary<string, string> vars = null);
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
-        Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true, 
+        Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true,
             Dictionary<string, string> vars = null);
 
         /// <summary>
@@ -121,13 +121,13 @@ namespace Nakama
         /// <param name="publicKeyUrl">The URL for the public encryption key.</param>
         /// <param name="salt">A random <c>NSString</c> used to compute the hash and keep it randomized.</param>
         /// <param name="signature">The verification signature data generated.</param>
-        /// <param name="timestampSeconds">The date and time that the signature was created.</param>
+        /// <param name="timestamp">The date and time that the signature was created.</param>
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestampSeconds, string username = null, bool create = true, 
+            string signature, string timestamp, string username = null, bool create = true,
             Dictionary<string, string> vars = null);
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
-        Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true, 
+        Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true,
             Dictionary<string, string> vars = null);
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
-        Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true, 
+        Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true,
             Dictionary<string, string> vars = null);
 
         /// <summary>
@@ -323,10 +323,10 @@ namespace Nakama
         /// <param name="publicKeyUrl">The URL for the public encryption key.</param>
         /// <param name="salt">A random <c>NSString</c> used to compute the hash and keep it randomized.</param>
         /// <param name="signature">The verification signature data generated.</param>
-        /// <param name="timestampSeconds">The date and time that the signature was created.</param>
+        /// <param name="timestamp">The date and time that the signature was created.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestampSeconds);
+            string signature, string timestamp);
 
         /// <summary>
         /// Link a Google profile to a user account.
@@ -367,7 +367,7 @@ namespace Nakama
         /// <returns>A task which resolves to the channel message list object.</returns>
         Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit = 1,
             bool forward = true, string cursor = null);
-        
+
         /// <summary>
         /// List of friends of the current user.
         /// </summary>
@@ -506,7 +506,7 @@ namespace Nakama
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">A cursor for the current position in the listing.</param>
         /// <returns>A task which resolves to the group list object.</returns>
-        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state = null, int limit = 1, 
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state = null, int limit = 1,
             string cursor = null);
 
         /// <summary>
@@ -518,7 +518,7 @@ namespace Nakama
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">A cursor for the current position in the listing.</param>
         /// <returns>A task which resolves to the group list object.</returns>
-        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state = null, int limit = 1, 
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state = null, int limit = 1,
             string cursor = null);
 
         /// <summary>
@@ -621,10 +621,10 @@ namespace Nakama
         /// <param name="publicKeyUrl">The URL for the public encryption key.</param>
         /// <param name="salt">A random <c>NSString</c> used to compute the hash and keep it randomized.</param>
         /// <param name="signature">The verification signature data generated.</param>
-        /// <param name="timestampSeconds">The date and time that the signature was created.</param>
+        /// <param name="timestamp">The date and time that the signature was created.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestampSeconds);
+            string signature, string timestamp);
 
         /// <summary>
         /// Unlink a Google profile from the user account owned by the session.

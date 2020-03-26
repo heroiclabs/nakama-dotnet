@@ -104,7 +104,7 @@ namespace Nakama
             _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids);
 
         /// <inheritdoc cref="AuthenticateCustomAsync"/>
-        public async Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true, 
+        public async Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true,
             Dictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty,
@@ -141,7 +141,7 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateGameCenterAsync"/>
         public async Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestampSeconds, string username = null, bool create = true, 
+            string salt, string signature, string timestamp, string username = null, bool create = true,
             Dictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty,
@@ -152,14 +152,14 @@ namespace Nakama
                     PublicKeyUrl = publicKeyUrl,
                     Salt = salt,
                     Signature = signature,
-                    TimestampSeconds = timestampSeconds,
+                    TimestampSeconds = timestamp,
                     _vars = vars
                 }, create, username);
             return new Session(response.Token, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateGoogleAsync"/>
-        public async Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true, 
+        public async Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true,
             Dictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty,
@@ -168,7 +168,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="AuthenticateSteamAsync"/>
-        public async Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true, 
+        public async Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true,
             Dictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty,
@@ -273,7 +273,7 @@ namespace Nakama
 
         /// <inheritdoc cref="LinkGameCenterAsync"/>
         public Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestampSeconds) => _apiClient.LinkGameCenterAsync(session.AuthToken,
+            string salt, string signature, string timestamp) => _apiClient.LinkGameCenterAsync(session.AuthToken,
             new ApiAccountGameCenter
             {
                 BundleId = bundleId,
@@ -281,7 +281,7 @@ namespace Nakama
                 PublicKeyUrl = publicKeyUrl,
                 Salt = salt,
                 Signature = signature,
-                TimestampSeconds = timestampSeconds
+                TimestampSeconds = timestamp
             });
 
         /// <inheritdoc cref="LinkGoogleAsync"/>
@@ -301,9 +301,9 @@ namespace Nakama
         public Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit = 1,
             bool forward = true, string cursor = null) =>
             _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor);
-        
+
         /// <inheritdoc cref="ListFriendsAsync"/>
-        public Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor) => 
+        public Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor) =>
             _apiClient.ListFriendsAsync(session.AuthToken, limit, state, cursor);
 
         /// <inheritdoc cref="ListGroupUsersAsync"/>
@@ -425,7 +425,7 @@ namespace Nakama
 
         /// <inheritdoc cref="UnlinkGameCenterAsync"/>
         public Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestampSeconds) => _apiClient.UnlinkGameCenterAsync(
+            string salt, string signature, string timestamp) => _apiClient.UnlinkGameCenterAsync(
             session.AuthToken,
             new ApiAccountGameCenter
             {
@@ -434,7 +434,7 @@ namespace Nakama
                 PublicKeyUrl = publicKeyUrl,
                 Salt = salt,
                 Signature = signature,
-                TimestampSeconds = timestampSeconds
+                TimestampSeconds = timestamp
             });
 
         /// <inheritdoc cref="UnlinkGoogleAsync"/>
