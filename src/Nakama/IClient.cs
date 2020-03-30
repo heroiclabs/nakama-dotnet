@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -448,15 +449,19 @@ namespace Nakama
         Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
             string cacheableCursor = null);
 
+        [Obsolete("ListStorageObjects is obsolete, please use ListStorageObjectsAsync instead.", false)]
+        Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit = 1,
+            string cursor = null);
+
         /// <summary>
         /// List storage objects in a collection which have public read access.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="collection">The collection to list over.</param>
-        /// <param name="limit">The number of objects to list.</param>
-        /// <param name="cursor">A cursor to paginate over the collection.</param>
+        /// <param name="limit">The number of objects to list. Maximum 100.</param>
+        /// <param name="cursor">A cursor to paginate over the collection. May be null.</param>
         /// <returns>A task which resolves to the storage object list.</returns>
-        Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit = 1,
+        Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection, int limit = 1,
             string cursor = null);
 
         /// <summary>
@@ -531,7 +536,7 @@ namespace Nakama
         /// <param name="cursor">A cursor to paginate over the collection.</param>
         /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
-            int limit, string cursor);
+            int limit = 1, string cursor = null);
 
         /// <summary>
         /// Promote one or more users in the group.
@@ -573,11 +578,11 @@ namespace Nakama
         /// <remarks>
         /// This function is usually used with server side code. DO NOT USE client side.
         /// </remarks>
-        /// <param name="httpkey">The secure HTTP key used to authenticate.</param>
+        /// <param name="httpKey">The secure HTTP key used to authenticate.</param>
         /// <param name="id">The id of the function to execute on the server.</param>
         /// <param name="payload">A payload to send with the function call.</param>
         /// <returns>A task to resolve an RPC response.</returns>
-        Task<IApiRpc> RpcAsync(string httpkey, string id, string payload = null);
+        Task<IApiRpc> RpcAsync(string httpKey, string id, string payload = null);
 
         /// <summary>
         /// Unlink a custom ID from the user account owned by the session.
@@ -679,11 +684,11 @@ namespace Nakama
         /// <param name="session">The session for the user.</param>
         /// <param name="leaderboardId">The ID of the leaderboard to write.</param>
         /// <param name="score">The score for the leaderboard record.</param>
-        /// <param name="subscore">The subscore for the leaderboard record.</param>
+        /// <param name="subScore">The sub score for the leaderboard record.</param>
         /// <param name="metadata">The metadata for the leaderboard record.</param>
         /// <returns>A task which resolves to the leaderboard record object written.</returns>
         Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
-            long subscore = 0L, string metadata = null);
+            long subScore = 0L, string metadata = null);
 
         /// <summary>
         /// Write objects to the storage engine.
@@ -699,10 +704,10 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="tournamentId">The ID of the tournament to write.</param>
         /// <param name="score">The score of the tournament record.</param>
-        /// <param name="subscore">The subscore for the tournament record.</param>
+        /// <param name="subScore">The sub score for the tournament record.</param>
         /// <param name="metadata">The metadata for the tournament record.</param>
         /// <returns>A task which resolves to the tournament record object written.</returns>
         Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
-            long subscore = 0L, string metadata = null);
+            long subScore = 0L, string metadata = null);
     }
 }
