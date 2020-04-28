@@ -179,7 +179,7 @@ namespace Nakama
         {
             var tcs = new TaskCompletionSource<bool>();
             Action callback = () => tcs.SetResult(true);
-            Action<Exception> errback = e => tcs.SetException(e);
+            Action<Exception> errback = e => tcs.TrySetException(e);
             _adapter.Connected += callback;
             _adapter.ReceivedError += errback;
             var uri = new UriBuilder(_baseUri)

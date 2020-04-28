@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - ListUsersStorageObjectsAsync now uses default arguments for optional inputs.
 
+### Fixed
+- Prevent InvalidOperationException caused when socket connect task is already completed.
+
 ## [2.3.1] - 2019-09-21
 ### Changed 
 - Use workaround for IPv6 bug in TcpClient with Mono runtime used with Unity engine.
