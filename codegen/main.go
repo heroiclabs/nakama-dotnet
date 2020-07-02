@@ -79,7 +79,7 @@ namespace Nakama
         {{- $fieldname := $propname | pascalCase }}
 
         /// <summary>
-        /// {{ $property.Description | stripNewlines}}
+        /// {{ $property.Description | stripNewlines }}
         /// </summary>
         {{- if eq $property.Type "integer"}}
         int {{ $fieldname }} { get; }
