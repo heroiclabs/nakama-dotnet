@@ -478,7 +478,7 @@ func main() {
 					Type string
 					Ref  string `json:"$ref"`
 				}
-                Format   string // used with type "boolean"
+				Format string // used with type "boolean"
 			}
 			Security []map[string][]struct {
 			}
@@ -491,9 +491,9 @@ func main() {
 					Type string
 					Ref  string `json:"$ref"`
 				}
-                AdditionalProperties struct {
-                    Type string // used with type "map"
-                }
+				AdditionalProperties struct {
+					Type string // used with type "map"
+				}
 				Format      string // used with type "boolean"
 				Description string
 			}
