@@ -83,6 +83,8 @@ namespace Nakama
         /// </summary>
         {{- if eq $property.Type "integer"}}
         int {{ $fieldname }} { get; }
+        {{- else if eq $property.Type "number" }}
+        double {{ $fieldname }} { get; }
         {{- else if eq $property.Type "boolean" }}
         bool {{ $fieldname }} { get; }
         {{- else if eq $property.Type "string"}}
@@ -92,6 +94,8 @@ namespace Nakama
         List<string> {{ $fieldname }} { get; }
             {{- else if eq $property.Items.Type "integer"}}
         List<int> {{ $fieldname }} { get; }
+            {{- else if eq $property.Items.Type "number"}}
+        List<double> {{ $fieldname }} { get; }
             {{- else if eq $property.Items.Type "boolean"}}
         List<bool> {{ $fieldname }} { get; }
             {{- else}}
@@ -102,6 +106,8 @@ namespace Nakama
         IDictionary<string, string> {{$fieldname}} { get; }
             {{- else if eq $property.AdditionalProperties.Type "integer"}}
         IDictionary<string, int> {{$fieldname}} { get; }
+            {{- else if eq $property.AdditionalProperties.Type "number"}}
+        IDictionary<string, double> {{$fieldname}} { get; }
             {{- else if eq $property.AdditionalProperties.Type "boolean"}}
         IDictionary<string, bool> {{$fieldname}} { get; }
             {{- else}}
@@ -123,6 +129,9 @@ namespace Nakama
         {{- if eq $property.Type "integer" }}
         [DataMember(Name="{{ $propname }}")]
         public int {{ $fieldname }} { get; set; }
+        {{- else if eq $property.Type "number" }}
+        [DataMember(Name="{{ $propname }}")]
+        public double {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "boolean" }}
         [DataMember(Name="{{ $propname }}")]
         public bool {{ $fieldname }} { get; set; }
@@ -136,6 +145,9 @@ namespace Nakama
             {{- else if eq $property.Items.Type "integer" }}
         [DataMember(Name="{{ $propname }}")]
         public List<int> {{ $fieldname }} { get; set; }
+            {{- else if eq $property.Items.Type "number" }}
+        [DataMember(Name="{{ $propname }}")]
+        public List<double> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "boolean" }}
         [DataMember(Name="{{ $propname }}")]
         public List<bool> {{ $fieldname }} { get; set; }
@@ -151,6 +163,9 @@ namespace Nakama
         public Dictionary<string, string> _{{ $propname | camelCase }} { get; set; }
             {{- else if eq $property.Items.Type "integer"}}
         public IDictionary<string, int> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, int>();
+        [DataMember(Name="{{ $propname }}")]
+           {{- else if eq $property.Items.Type "number"}}
+        public IDictionary<string, double> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, double>();
         [DataMember(Name="{{ $propname }}")]
         public Dictionary<string, int> _{{ $propname | camelCase }} { get; set; }
             {{- else if eq $property.Items.Type "boolean"}}
