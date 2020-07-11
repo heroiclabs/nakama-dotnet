@@ -13,7 +13,7 @@ go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger
 
 To generate a client for the Nakama Console, run the following:
 ```shell
-go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/console/console.swagger.json" > ../src/Nakama/ConsoleClient.gen.cs
+go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/console/console.swagger.json" "Console" > ../src/Nakama/ConsoleClient.gen.cs
 ```
 
 ### Rationale
