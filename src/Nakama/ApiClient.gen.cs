@@ -3184,8 +3184,8 @@ namespace Nakama
         /// Authenticate a user with a custom id against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateCustomAsync(
-            string basicAuthUsername
-            , string basicAuthPassword,
+            string basicAuthUsername,
+            string basicAuthPassword,
             ApiAccountCustom body,
             bool? create,
             string username)
@@ -3228,8 +3228,8 @@ namespace Nakama
         /// Authenticate a user with a device id against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateDeviceAsync(
-            string basicAuthUsername
-            , string basicAuthPassword,
+            string basicAuthUsername,
+            string basicAuthPassword,
             ApiAccountDevice body,
             bool? create,
             string username)
@@ -3272,8 +3272,8 @@ namespace Nakama
         /// Authenticate a user with an email+password against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateEmailAsync(
-            string basicAuthUsername
-            , string basicAuthPassword,
+            string basicAuthUsername,
+            string basicAuthPassword,
             ApiAccountEmail body,
             bool? create,
             string username)
@@ -3316,8 +3316,8 @@ namespace Nakama
         /// Authenticate a user with a Facebook OAuth token against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateFacebookAsync(
-            string basicAuthUsername
-            , string basicAuthPassword,
+            string basicAuthUsername,
+            string basicAuthPassword,
             ApiAccountFacebook body,
             bool? create,
             string username,
@@ -3364,8 +3364,8 @@ namespace Nakama
         /// Authenticate a user with a Facebook Instant Game token against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateFacebookInstantGameAsync(
-            string basicAuthUsername
-            , string basicAuthPassword,
+            string basicAuthUsername,
+            string basicAuthPassword,
             ApiAccountFacebookInstantGame body,
             bool? create,
             string username)
@@ -3408,8 +3408,8 @@ namespace Nakama
         /// Authenticate a user with Apple's GameCenter against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateGameCenterAsync(
-            string basicAuthUsername
-            , string basicAuthPassword,
+            string basicAuthUsername,
+            string basicAuthPassword,
             ApiAccountGameCenter body,
             bool? create,
             string username)
@@ -3452,8 +3452,8 @@ namespace Nakama
         /// Authenticate a user with Google against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateGoogleAsync(
-            string basicAuthUsername
-            , string basicAuthPassword,
+            string basicAuthUsername,
+            string basicAuthPassword,
             ApiAccountGoogle body,
             bool? create,
             string username)
@@ -3496,8 +3496,8 @@ namespace Nakama
         /// Authenticate a user with Steam against the server.
         /// </summary>
         public async Task<IApiSession> AuthenticateSteamAsync(
-            string basicAuthUsername
-            , string basicAuthPassword,
+            string basicAuthUsername,
+            string basicAuthPassword,
             ApiAccountSteam body,
             bool? create,
             string username)
