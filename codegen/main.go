@@ -239,33 +239,41 @@ namespace Nakama
         public async Task {{ $operation.OperationId | pascalCase }}Async(
         {{- end}}
 
+        {{- $isPreviousParam := false}}
+
         {{- if $operation.Security }}
         {{- with (index $operation.Security 0) }}
             {{- range $key, $value := . }}
                 {{- if eq $key "BasicAuth" }}
-            string basicAuthUsername
-            , string basicAuthPassword
+            string basicAuthUsername,
+            string basicAuthPassword
+            {{- $isPreviousParam = true}}
                 {{- else if eq $key "HttpKeyAuth" }}
+            {{- $isPreviousParam = true}}
             string bearerToken
                 {{- end }}
             {{- end }}
         {{- end }}
         {{- else }}
+           {{- $isPreviousParam = true}}
             string bearerToken
         {{- end }}
 
+
         {{- range $parameter := $operation.Parameters }}
+
+        {{- if eq $isPreviousParam true}},{{- end}}
         {{- $camelcase := $parameter.Name | camelCase }}
         {{- if eq $parameter.In "path" }}
-            , {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
+            {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
         {{- else if eq $parameter.In "body" }}
             {{- if eq $parameter.Schema.Type "string" }}
-            , string{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
+            string{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
             {{- else }}
-            , {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
+            {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
             {{- end }}
         {{- else if eq $parameter.Type "array"}}
-            , IEnumerable<{{ $parameter.Items.Type }}> {{ $camelcase }}
+            IEnumerable<{{ $parameter.Items.Type }}> {{ $camelcase }}
         {{- else if eq $parameter.Type "object"}}
             {{- if eq $parameter.AdditionalProperties.Type "string"}}
         IDictionary<string, string> {{ $camelcase }}
@@ -277,14 +285,15 @@ namespace Nakama
         IDictionary<string, {{ $parameter.Items.Type }}> {{ $camelcase }}
             {{- end}}
         {{- else if eq $parameter.Type "integer" }}
-            , int? {{ $camelcase }}
+            int? {{ $camelcase }}
         {{- else if eq $parameter.Type "boolean" }}
-            , bool? {{ $camelcase }}
+            bool? {{ $camelcase }}
         {{- else if eq $parameter.Type "string" }}
-            , string {{ $camelcase }}
+            string {{ $camelcase }}
         {{- else }}
-            , {{ $parameter.Type }} {{ $camelcase }}
+            {{ $parameter.Type }} {{ $camelcase }}
         {{- end }}
+        {{- $isPreviousParam = true}}
         {{- end }})
         {
             {{- range $parameter := $operation.Parameters }}
