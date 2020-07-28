@@ -274,13 +274,13 @@ namespace Nakama.TinyJson
                     valueType = args[1];
                 }
 
-                //Refuse to parse dictionary keys that aren't of type string
+                // Refuse to parse dictionary keys that aren't of type string
                 if (keyType != typeof(string))
                     return null;
-                //Must be a valid dictionary element
+                // Must be a valid dictionary element
                 if (json[0] != '{' || json[json.Length - 1] != '}')
                     return null;
-                //The list is split into key/value pairs only, this means the split must be divisible by 2 to be valid JSON
+                // The list is split into key/value pairs only, this means the split must be divisible by 2 to be valid JSON
                 var elems = Split(json);
                 if (elems.Count % 2 != 0)
                     return null;

@@ -51,7 +51,7 @@ namespace Nakama.TinyJson
             }
 
             var type = item.GetType();
-            if (type == typeof(string))
+            if (type == typeof(string) || type == typeof(char))
             {
                 stringBuilder.Append('"');
                 var str = (string) item;
@@ -70,9 +70,21 @@ namespace Nakama.TinyJson
 
                 stringBuilder.Append('"');
             }
-            else if (type == typeof(byte) || type == typeof(int))
+            else if (type == typeof(byte) || type == typeof(sbyte))
             {
-                stringBuilder.Append(item.ToString());
+                stringBuilder.Append(item);
+            }
+            else if (type == typeof(short) || type == typeof(ushort))
+            {
+                stringBuilder.Append(item);
+            }
+            else if (type == typeof(int) || type == typeof(uint))
+            {
+                stringBuilder.Append(item);
+            }
+            else if (type == typeof(long) || type == typeof(ulong))
+            {
+                stringBuilder.Append(item);
             }
             else if (type == typeof(float))
             {
@@ -81,6 +93,9 @@ namespace Nakama.TinyJson
             else if (type == typeof(double))
             {
                 stringBuilder.Append(((double) item).ToString(System.Globalization.CultureInfo.InvariantCulture));
+            }
+            else if (type == typeof (decimal)) {
+                stringBuilder.Append (((decimal) item).ToString (System.Globalization.CultureInfo.InvariantCulture));
             }
             else if (type == typeof(bool))
             {
@@ -105,7 +120,6 @@ namespace Nakama.TinyJson
                         stringBuilder.Append(',');
                     AppendValue(stringBuilder, t);
                 }
-
                 stringBuilder.Append(']');
             }
             else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
@@ -133,7 +147,6 @@ namespace Nakama.TinyJson
                     stringBuilder.Append("\":");
                     AppendValue(stringBuilder, dict[key]);
                 }
-
                 stringBuilder.Append('}');
             }
             else
