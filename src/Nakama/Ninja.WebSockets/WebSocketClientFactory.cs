@@ -113,7 +113,6 @@ namespace Nakama.Ninja.WebSockets
 
         private async Task<WebSocket> ConnectAsync(Guid guid, System.IO.Stream responseStream, string secWebSocketKey, TimeSpan keepAliveInterval, string secWebSocketExtensions, bool includeExceptionInCloseResponse, CancellationToken token)
         {
-            Events.Log.ReadingHttpResponse(guid);
             string response = string.Empty;
 
             try
@@ -122,7 +121,6 @@ namespace Nakama.Ninja.WebSockets
             }
             catch (Exception ex)
             {
-                Events.Log.ReadHttpResponseError(guid, ex.ToString());
                 throw new WebSocketHandshakeFailedException("Handshake unexpected failure", ex);
             }
 
@@ -158,12 +156,7 @@ namespace Nakama.Ninja.WebSockets
             if (expectedAcceptString != actualAcceptString)
             {
                 string warning = string.Format($"Handshake failed because the accept string from the server '{expectedAcceptString}' was not the expected string '{actualAcceptString}'");
-                Events.Log.HandshakeFailure(guid, warning);
                 throw new WebSocketHandshakeFailedException(warning);
-            }
-            else
-            {
-                Events.Log.ClientHandshakeSuccess(guid);
             }
         }
 
@@ -216,12 +209,10 @@ namespace Nakama.Ninja.WebSockets
             IPAddress ipAddress;
             if (IPAddress.TryParse(host, out ipAddress))
             {
-                Events.Log.ClientConnectingToIpAddress(loggingGuid, ipAddress.ToString(), port);
                 await tcpClient.ConnectAsync(ipAddress, port);
             }
             else
             {
-                Events.Log.ClientConnectingToHost(loggingGuid, host, port);
                 // NOTE Workaround for Mono runtime issue #8692
                 // https://github.com/mono/mono/issues/8692
                 var hostAddresses = Dns.GetHostAddresses(host);
@@ -249,16 +240,13 @@ namespace Nakama.Ninja.WebSockets
             if (isSecure)
             {
                 SslStream sslStream = new SslStream(stream, false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
-                Events.Log.AttemtingToSecureSslConnection(loggingGuid);
 
                 // This will throw an AuthenticationException if the certificate is not valid
                 TlsAuthenticateAsClient(sslStream, host);
-                Events.Log.ConnectionSecured(loggingGuid);
                 return sslStream;
             }
             else
             {
-                Events.Log.ConnectionNotSecure(loggingGuid);
                 return stream;
             }
         }
@@ -273,8 +261,6 @@ namespace Nakama.Ninja.WebSockets
             {
                 return true;
             }
-
-            Events.Log.SslCertificateError(sslPolicyErrors);
 
             // Do not allow this client to communicate with unauthenticated servers.
             return false;
@@ -317,7 +303,6 @@ namespace Nakama.Ninja.WebSockets
 
             byte[] httpRequest = Encoding.UTF8.GetBytes(handshakeHttpRequest);
             stream.Write(httpRequest, 0, httpRequest.Length);
-            Events.Log.HandshakeSent(guid, handshakeHttpRequest);
             return await ConnectAsync(stream, secWebSocketKey, options, token);
         }
     }
