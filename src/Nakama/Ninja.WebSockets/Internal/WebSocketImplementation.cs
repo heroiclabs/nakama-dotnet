@@ -75,11 +75,6 @@ namespace Nakama.Ninja.WebSockets.Internal
             if (secWebSocketExtensions?.IndexOf("permessage-deflate") >= 0)
             {
                 _usePerMessageDeflate = true;
-                Events.Log.UsePerMessageDeflate(guid);
-            }
-            else
-            {
-                Events.Log.NoMessageCompression(guid);
             }
 
             KeepAliveInterval = keepAliveInterval;
@@ -89,11 +84,7 @@ namespace Nakama.Ninja.WebSockets.Internal
                 throw new InvalidOperationException("KeepAliveInterval must be Zero or positive");
             }
 
-            if (keepAliveInterval == TimeSpan.Zero)
-            {
-                Events.Log.KeepAliveIntervalZero(guid);
-            }
-            else
+            if (keepAliveInterval != TimeSpan.Zero)
             {
                 _pingPongManager = new PingPongManager(guid, this, keepAliveInterval, _internalReadCts.Token);
             }
@@ -129,7 +120,6 @@ namespace Nakama.Ninja.WebSockets.Internal
                         try
                         {
                             frame = await WebSocketFrameReader.ReadAsync(_stream, buffer, linkedCts.Token);
-                            Events.Log.ReceivedFrame(_guid, frame.OpCode, frame.IsFinBitSet, frame.Count);
                         }
                         catch (InternalBufferOverflowException ex)
                         {
@@ -232,13 +222,11 @@ namespace Nakama.Ninja.WebSockets.Internal
                         deflateStream.Flush();
                         var compressedBuffer = new ArraySegment<byte>(temp.ToArray());
                         WebSocketFrameWriter.Write(opCode, compressedBuffer, stream, endOfMessage, _isClient);
-                        Events.Log.SendingFrame(_guid, opCode, endOfMessage, compressedBuffer.Count, true);
                     }
                 }
                 else
                 {
                     WebSocketFrameWriter.Write(opCode, buffer, stream, endOfMessage, _isClient);
-                    Events.Log.SendingFrame(_guid, opCode, endOfMessage, buffer.Count, false);
                 }
 
                 await WriteStreamToNetwork(stream, cancellationToken);
@@ -262,7 +250,6 @@ namespace Nakama.Ninja.WebSockets.Internal
                 using (MemoryStream stream = _recycledStreamFactory())
                 {
                     WebSocketFrameWriter.Write(WebSocketOpCode.Ping, payload, stream, true, _isClient);
-                    Events.Log.SendingFrame(_guid, WebSocketOpCode.Ping, true, payload.Count, false);
                     await WriteStreamToNetwork(stream, cancellationToken);
                 }
             }
@@ -288,15 +275,9 @@ namespace Nakama.Ninja.WebSockets.Internal
                 {
                     ArraySegment<byte> buffer = BuildClosePayload(closeStatus, statusDescription);
                     WebSocketFrameWriter.Write(WebSocketOpCode.ConnectionClose, buffer, stream, true, _isClient);
-                    Events.Log.CloseHandshakeStarted(_guid, closeStatus, statusDescription);
-                    Events.Log.SendingFrame(_guid, WebSocketOpCode.ConnectionClose, true, buffer.Count, true);
                     await WriteStreamToNetwork(stream, cancellationToken);
                     _state = WebSocketState.CloseSent;
                 }
-            }
-            else
-            {
-                Events.Log.InvalidStateBeforeClose(_guid, _state);
             }
         }
 
@@ -313,14 +294,8 @@ namespace Nakama.Ninja.WebSockets.Internal
                 {
                     ArraySegment<byte> buffer = BuildClosePayload(closeStatus, statusDescription);
                     WebSocketFrameWriter.Write(WebSocketOpCode.ConnectionClose, buffer, stream, true, _isClient);
-                    Events.Log.CloseOutputNoHandshake(_guid, closeStatus, statusDescription);
-                    Events.Log.SendingFrame(_guid, WebSocketOpCode.ConnectionClose, true, buffer.Count, true);
                     await WriteStreamToNetwork(stream, cancellationToken).ConfigureAwait(false);
                 }
-            }
-            else
-            {
-                Events.Log.InvalidStateBeforeCloseOutput(_guid, _state);
             }
 
             // cancel pending reads
@@ -332,8 +307,6 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// </summary>
         public override void Dispose()
         {
-            Events.Log.WebSocketDispose(_guid, _state);
-
             try
             {
                 if (_state == WebSocketState.Open)
@@ -343,22 +316,14 @@ namespace Nakama.Ninja.WebSockets.Internal
                     {
                         CloseOutputAsync(WebSocketCloseStatus.EndpointUnavailable, "Service is Disposed", cts.Token).Wait(cts.Token);
                     }
-                    catch (OperationCanceledException)
-                    {
-                        // log don't throw
-                        Events.Log.WebSocketDisposeCloseTimeout(_guid, _state);
-                    }
+                    catch (OperationCanceledException) {}
                 }
 
                 // cancel pending reads - usually does nothing
                 _internalReadCts.Cancel();
                 _stream.Close();
             }
-            catch (Exception ex)
-            {
-                // log dont throw
-                Events.Log.WebSocketDisposeError(_guid, _state, ex.ToString());
-            }
+            catch {}
         }
 
         /// <summary>
@@ -414,7 +379,6 @@ namespace Nakama.Ninja.WebSockets.Internal
                     using (MemoryStream stream = _recycledStreamFactory())
                     {
                         WebSocketFrameWriter.Write(WebSocketOpCode.Pong, payload, stream, true, _isClient);
-                        Events.Log.SendingFrame(_guid, WebSocketOpCode.Pong, true, payload.Count, false);
                         await WriteStreamToNetwork(stream, cancellationToken);
                     }
                 }
@@ -439,7 +403,6 @@ namespace Nakama.Ninja.WebSockets.Internal
             {
                 // this is a response to close handshake initiated by this instance
                 _state = WebSocketState.Closed;
-                Events.Log.CloseHandshakeComplete(_guid);
             }
             else if (_state == WebSocketState.Open)
             {
@@ -447,18 +410,12 @@ namespace Nakama.Ninja.WebSockets.Internal
                 // However, the same CloseStatus as recieved should be sent back.
                 ArraySegment<byte> closePayload = new ArraySegment<byte>(new byte[0], 0, 0);
                 _state = WebSocketState.CloseReceived;
-                Events.Log.CloseHandshakeRespond(_guid, frame.CloseStatus, frame.CloseStatusDescription);
 
                 using (MemoryStream stream = _recycledStreamFactory())
                 {
                     WebSocketFrameWriter.Write(WebSocketOpCode.ConnectionClose, closePayload, stream, true, _isClient);
-                    Events.Log.SendingFrame(_guid, WebSocketOpCode.ConnectionClose, true, closePayload.Count, false);
                     await WriteStreamToNetwork(stream, token);
                 }
-            }
-            else
-            {
-                Events.Log.CloseFrameReceivedInUnexpectedState(_guid, _state, frame.CloseStatus, frame.CloseStatusDescription);
             }
 
             return new WebSocketReceiveResult(frame.Count, WebSocketMessageType.Close, frame.IsFinBitSet, frame.CloseStatus, frame.CloseStatusDescription);
@@ -485,7 +442,6 @@ namespace Nakama.Ninja.WebSockets.Internal
             }
             catch (UnauthorizedAccessException)
             {
-                Events.Log.TryGetBufferNotSupported(_guid, stream?.GetType()?.ToString());
                 _tryGetBufferFailureLogged = true;
                 return new ArraySegment<byte>(stream.ToArray(), 0, (int)stream.Position);
             }
@@ -498,7 +454,6 @@ namespace Nakama.Ninja.WebSockets.Internal
             {
                 if (!_tryGetBufferFailureLogged)
                 {
-                    Events.Log.TryGetBufferNotSupported(_guid, stream?.GetType()?.ToString());
                     _tryGetBufferFailureLogged = true;
                 }
 
@@ -563,7 +518,6 @@ namespace Nakama.Ninja.WebSockets.Internal
         private async Task CloseOutputAutoTimeoutAsync(WebSocketCloseStatus closeStatus, string statusDescription, Exception ex)
         {
             TimeSpan timeSpan = TimeSpan.FromSeconds(5);
-            Events.Log.CloseOutputAutoTimeout(_guid, closeStatus, statusDescription, ex.ToString());
 
             try
             {
@@ -579,12 +533,10 @@ namespace Nakama.Ninja.WebSockets.Internal
             catch (OperationCanceledException)
             {
                 // do not throw an exception because that will mask the original exception
-                Events.Log.CloseOutputAutoTimeoutCancelled(_guid, (int)timeSpan.TotalSeconds, closeStatus, statusDescription, ex.ToString());
             }
-            catch (Exception closeException)
+            catch
             {
                 // do not throw an exception because that will mask the original exception
-                Events.Log.CloseOutputAutoTimeoutError(_guid, closeException.ToString(), closeStatus, statusDescription, ex.ToString());
             }
         }
     }
