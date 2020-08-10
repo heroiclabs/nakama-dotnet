@@ -1,5 +1,5 @@
 ﻿/**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,20 @@ namespace Nakama.Tests.Api
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
     public class GroupTest
     {
         private IClient _client;
+        private ISocket _socket;
 
-        // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+        public GroupTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
+            _client = ClientUtil.FromSettingsFile();
+            _socket = Socket.From(_client);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateGroup()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -50,15 +49,15 @@ namespace Nakama.Tests.Api
             Assert.NotNull(group.Id);
             Assert.NotNull(group.CreateTime);
             Assert.NotNull(group.UpdateTime);
-            Assert.AreEqual(1, group.EdgeCount);
-            Assert.AreEqual(name, group.Name);
-            Assert.AreEqual(desc, group.Description);
-            Assert.AreEqual(avatarUrl, group.AvatarUrl);
-            Assert.AreEqual(langTag, group.LangTag);
-            Assert.AreEqual(open, group.Open);
+            Assert.Equal(1, group.EdgeCount);
+            Assert.Equal(name, group.Name);
+            Assert.Equal(desc, group.Description);
+            Assert.Equal(avatarUrl, group.AvatarUrl);
+            Assert.Equal(langTag, group.LangTag);
+            Assert.Equal(open, group.Open);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateGroupDefault()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -72,12 +71,12 @@ namespace Nakama.Tests.Api
             Assert.NotNull(group.UpdateTime);
             Assert.Null(group.AvatarUrl);
             Assert.Null(group.Description);
-            Assert.AreEqual(1, group.EdgeCount);
-            Assert.AreEqual(true, group.Open);
-            Assert.AreEqual(name, group.Name);
+            Assert.Equal(1, group.EdgeCount);
+            Assert.Equal(true, group.Open);
+            Assert.Equal(name, group.Name);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotCreateGroup()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -85,11 +84,11 @@ namespace Nakama.Tests.Api
             var name = $"{Guid.NewGuid()}";
             await _client.CreateGroupAsync(session, name);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.CreateGroupAsync(session, name));
-            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.CreateGroupAsync(session, name));
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldListGroups()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -99,10 +98,10 @@ namespace Nakama.Tests.Api
             var result = await _client.ListGroupsAsync(session);
 
             Assert.NotNull(result);
-            Assert.IsNotEmpty(result.Groups);
+            Assert.NotEmpty(result.Groups);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldListGroupsNameFilter()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -112,11 +111,11 @@ namespace Nakama.Tests.Api
             var result = await _client.ListGroupsAsync(session, name, 1);
 
             Assert.NotNull(result);
-            Assert.That(result.Groups, Has.Count.EqualTo(1));
-            Assert.That(result.Groups.Count(g => name.Equals(g.Name)), Is.EqualTo(1));
+            Assert.True(result.Groups.Count() == 1);
+            Assert.True(result.Groups.Count(g => name.Equals(g.Name)) == 1);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldListGroupsFilterTwo()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -130,11 +129,11 @@ namespace Nakama.Tests.Api
             var result = await _client.ListGroupsAsync(session, string.Concat(basename, "%"), 2);
 
             Assert.NotNull(result);
-            Assert.That(result.Groups, Has.Count.EqualTo(2));
-            Assert.That(result.Groups.Count(g => name1.Equals(g.Name) || name2.Equals(g.Name)), Is.EqualTo(2));
+            Assert.True(result.Groups.Count() == 2);
+            Assert.True(result.Groups.Count(g => name1.Equals(g.Name) || name2.Equals(g.Name)) == 2);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldListGroupsCursor()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -148,10 +147,10 @@ namespace Nakama.Tests.Api
             result = await _client.ListGroupsAsync(session, null, 10, result.Cursor);
 
             Assert.NotNull(result);
-            Assert.That(result.Groups, Has.Count.GreaterThanOrEqualTo(1));
+            Assert.True(result.Groups.Count() >= 1);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldDeleteGroup()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -162,34 +161,32 @@ namespace Nakama.Tests.Api
 
             var result1 = await _client.ListGroupsAsync(session, name);
             Assert.NotNull(result1);
-            Assert.IsEmpty(result1.Groups);
+            Assert.Empty(result1.Groups);
 
             var result2 = await _client.ListUserGroupsAsync(session);
             Assert.NotNull(result2);
-            Assert.IsEmpty(result2.UserGroups);
+            Assert.Empty(result2.UserGroups);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldDeleteGroupInvalid()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.DeleteGroupAsync(session, $"{Guid.NewGuid()}"));
-            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotDeleteGroupNotSuperAdmin()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var group = await _client.CreateGroupAsync(session1, $"{Guid.NewGuid()}");
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.DeleteGroupAsync(session2, group.Id));
-            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.DeleteGroupAsync(session2, group.Id));
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
-
-
     }
 }
