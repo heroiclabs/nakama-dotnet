@@ -4817,17 +4817,26 @@ namespace Nakama
         /// </summary>
         public async Task DemoteGroupUsersAsync(
             string bearerToken,
-            string groupId)
+            string groupId,
+            IEnumerable<string> userIds)
         {
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
+            }
+            if (userIds == null)
+            {
+                throw new ArgumentException("'userIds' is required but was null.");
             }
 
             var urlpath = "/v2/group/{group_id}/demote";
             urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
+            foreach (var elem in userIds ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
