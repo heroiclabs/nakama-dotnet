@@ -304,6 +304,51 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Send a Apple Sign In token to the server. Used with authenticate/link/unlink.
+    /// </summary>
+    public interface IApiAccountApple
+    {
+
+        /// <summary>
+        /// The ID token received from Apple to validate.
+        /// </summary>
+        string Token { get; }
+
+        /// <summary>
+        /// Extra information that will be bundled in the session token.
+        /// </summary>
+        IDictionary<string, string> Vars { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiAccountApple : IApiAccountApple
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="token")]
+        public string Token { get; set; }
+
+        /// <inheritdoc />
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
+        [DataMember(Name="vars")]
+        public Dictionary<string, string> _vars { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Token: ", Token, ", ");
+
+            var mapString = "";
+            foreach (var kvp in Vars)
+            {
+                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Vars: [" + mapString + "]");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Send a custom ID to the server. Used with authenticate/link/unlink.
     /// </summary>
     public interface IApiAccountCustom
@@ -1152,6 +1197,11 @@ namespace Nakama
         int State { get; }
 
         /// <summary>
+        /// Time of the latest relationship update.
+        /// </summary>
+        string UpdateTime { get; }
+
+        /// <summary>
         /// The user object.
         /// </summary>
         IApiUser User { get; }
@@ -1166,6 +1216,10 @@ namespace Nakama
         public int State { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="update_time")]
+        public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
         public IApiUser User => _user;
         [DataMember(Name="user")]
         public ApiUser _user { get; set; }
@@ -1174,6 +1228,7 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "State: ", State, ", ");
+            output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
             output = string.Concat(output, "User: ", User, ", ");
             return output;
         }
@@ -2722,6 +2777,11 @@ namespace Nakama
     {
 
         /// <summary>
+        /// The Apple Sign In ID in the user's account.
+        /// </summary>
+        string AppleId { get; }
+
+        /// <summary>
         /// A URL for an avatar image.
         /// </summary>
         string AvatarUrl { get; }
@@ -2747,7 +2807,7 @@ namespace Nakama
         string FacebookId { get; }
 
         /// <summary>
-        /// The Facebook Instant Game id in the user's account.
+        /// The Facebook Instant Game ID in the user's account.
         /// </summary>
         string FacebookInstantGameId { get; }
 
@@ -2810,6 +2870,10 @@ namespace Nakama
     /// <inheritdoc />
     internal class ApiUser : IApiUser
     {
+
+        /// <inheritdoc />
+        [DataMember(Name="apple_id")]
+        public string AppleId { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="avatar_url")]
@@ -2882,6 +2946,7 @@ namespace Nakama
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "AppleId: ", AppleId, ", ");
             output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
             output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
             output = string.Concat(output, "DisplayName: ", DisplayName, ", ");
@@ -3079,6 +3144,103 @@ namespace Nakama
     }
 
     /// <summary>
+    /// `Any` contains an arbitrary serialized protocol buffer message along with a URL that describes the type of the serialized message.  Protobuf library provides support to pack/unpack Any values in the form of utility functions or additional generated methods of the Any type.  Example 1: Pack and unpack a message in C++.      Foo foo = ...;     Any any;     any.PackFrom(foo);     ...     if (any.UnpackTo(&foo)) {       ...     }  Example 2: Pack and unpack a message in Java.      Foo foo = ...;     Any any = Any.pack(foo);     ...     if (any.is(Foo.class)) {       foo = any.unpack(Foo.class);     }   Example 3: Pack and unpack a message in Python.      foo = Foo(...)     any = Any()     any.Pack(foo)     ...     if any.Is(Foo.DESCRIPTOR):       any.Unpack(foo)       ...   Example 4: Pack and unpack a message in Go       foo := &pb.Foo{...}      any, err := ptypes.MarshalAny(foo)      ...      foo := &pb.Foo{}      if err := ptypes.UnmarshalAny(any, foo); err != nil {        ...      }  The pack methods provided by protobuf library will by default use 'type.googleapis.com/full.type.name' as the type URL and the unpack methods only use the fully qualified type name after the last '/' in the type URL, for example "foo.bar.com/x/y.z" will yield type name "y.z".   JSON ==== The JSON representation of an `Any` value uses the regular representation of the deserialized, embedded message, with an additional field `@type` which contains the type URL. Example:      package google.profile;     message Person {       string first_name = 1;       string last_name = 2;     }      {       "@type": "type.googleapis.com/google.profile.Person",       "firstName": <string>,       "lastName": <string>     }  If the embedded message type is well-known and has a custom JSON representation, that representation will be embedded adding a field `value` which holds the custom JSON in addition to the `@type` field. Example (for message [google.protobuf.Duration][]):      {       "@type": "type.googleapis.com/google.protobuf.Duration",       "value": "1.212s"     }
+    /// </summary>
+    public interface IProtobufAny
+    {
+
+        /// <summary>
+        /// A URL/resource name that uniquely identifies the type of the serialized protocol buffer message. This string must contain at least one "/" character. The last segment of the URL's path must represent the fully qualified name of the type (as in `path/google.protobuf.Duration`). The name should be in a canonical form (e.g., leading "." is not accepted).  In practice, teams usually precompile into the binary all types that they expect it to use in the context of Any. However, for URLs which use the scheme `http`, `https`, or no scheme, one can optionally set up a type server that maps type URLs to message definitions as follows:  * If no scheme is provided, `https` is assumed. * An HTTP GET on the URL must yield a [google.protobuf.Type][]   value in binary format, or produce an error. * Applications are allowed to cache lookup results based on the   URL, or have them precompiled into a binary to avoid any   lookup. Therefore, binary compatibility needs to be preserved   on changes to types. (Use versioned type names to manage   breaking changes.)  Note: this functionality is not currently available in the official protobuf release, and it is not used for type URLs beginning with type.googleapis.com.  Schemes other than `http`, `https` (or the empty scheme) might be used with implementation specific semantics.
+        /// </summary>
+        string TypeUrl { get; }
+
+        /// <summary>
+        /// Must be a valid serialized protocol buffer of the above specified type.
+        /// </summary>
+        string Value { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ProtobufAny : IProtobufAny
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="type_url")]
+        public string TypeUrl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="value")]
+        public string Value { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "TypeUrl: ", TypeUrl, ", ");
+            output = string.Concat(output, "Value: ", Value, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IRuntimeError
+    {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int Code { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IEnumerable<IProtobufAny> Details { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string Error { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string Message { get; }
+    }
+
+    /// <inheritdoc />
+    internal class RuntimeError : IRuntimeError
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="code")]
+        public int Code { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<IProtobufAny> Details => _details ?? new List<ProtobufAny>(0);
+        [DataMember(Name="details")]
+        public List<ProtobufAny> _details { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="error")]
+        public string Error { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="message")]
+        public string Message { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Code: ", Code, ", ");
+            output = string.Concat(output, "Details: [", string.Join(", ", Details), "], ");
+            output = string.Concat(output, "Error: ", Error, ", ");
+            output = string.Concat(output, "Message: ", Message, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// The low level client for the Nakama API.
     /// </summary>
     internal class ApiClient
@@ -3178,6 +3340,42 @@ namespace Nakama
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+        }
+
+        /// <summary>
+        /// Authenticate a user with an Apple ID against the server.
+        /// </summary>
+        public async Task<IApiSession> AuthenticateAppleAsync(
+            string basicAuthUsername,
+            string basicAuthPassword,
+            ApiAccountApple body)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/account/authenticate/apple";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -3537,6 +3735,39 @@ namespace Nakama
         }
 
         /// <summary>
+        /// Add an Apple ID to the social profiles on the current user's account.
+        /// </summary>
+        public async Task LinkAppleAsync(
+            string bearerToken,
+            ApiAccountApple body)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/account/link/apple";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+        }
+
+        /// <summary>
         /// Add a custom ID to the social profiles on the current user's account.
         /// </summary>
         public async Task LinkCustomAsync(
@@ -3784,6 +4015,39 @@ namespace Nakama
             }
 
             var urlpath = "/v2/account/link/steam";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+        }
+
+        /// <summary>
+        /// Remove the Apple ID from the social profiles on the current user's account.
+        /// </summary>
+        public async Task UnlinkAppleAsync(
+            string bearerToken,
+            ApiAccountApple body)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/account/unlink/apple";
 
             var queryParams = "";
 
@@ -4532,6 +4796,38 @@ namespace Nakama
             {
                 queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
             }
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+        }
+
+        /// <summary>
+        /// Demote a set of users in a group to the next role down.
+        /// </summary>
+        public async Task DemoteGroupUsersAsync(
+            string bearerToken,
+            string groupId)
+        {
+            if (groupId == null)
+            {
+                throw new ArgumentException("'groupId' is required but was null.");
+            }
+
+            var urlpath = "/v2/group/{group_id}/demote";
+            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+
+            var queryParams = "";
 
             var uri = new UriBuilder(_baseUri)
             {
