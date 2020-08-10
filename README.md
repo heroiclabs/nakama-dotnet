@@ -128,6 +128,12 @@ docker-compose -f ./docker-compose-postgres.yml up
 dotnet test tests/Nakama.Tests/Nakama.Tests.csproj
 ```
 
+To run a specific test, pass the fully qualified name of the method to `dotnet test --filter`:
+
+```shell
+dotnet test --filter "Nakama.Tests.Api.GroupTest.ShouldPromoteAndDemoteUsers"
+```
+
 ### License
 
 This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/nakama-dotnet/blob/master/LICENSE).

@@ -188,5 +188,30 @@ namespace Nakama.Tests.Api
             var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.DeleteGroupAsync(session2, group.Id));
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldPromoteAndDemoteUsers()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session3 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var group = await _client.CreateGroupAsync(session1, $"{Guid.NewGuid()}");
+
+            await _client.AddGroupUsersAsync(session1, group.Id, new string[]{session2.UserId, session3.UserId});
+            await _client.PromoteGroupUsersAsync(session1, group.Id, new string[]{session2.UserId, session3.UserId});
+
+            var admins = await _client.ListGroupUsersAsync(session1, group.Id, state: 1, limit: 2);
+
+            Assert.Equal(admins.GroupUsers.Count(), 2);
+
+            await _client.DemoteGroupUsersAsync(session1, group.Id, new string[]{session2.UserId, session3.UserId});
+
+            admins = await _client.ListGroupUsersAsync(session1, group.Id, state: 1, limit: 2);
+            Assert.Equal(admins.GroupUsers.Count(), 0);
+
+            var members = await _client.ListGroupUsersAsync(session1, group.Id, state: 2, limit: 2);
+            Assert.Equal(members.GroupUsers.Count(), 2);
+        }
     }
 }
