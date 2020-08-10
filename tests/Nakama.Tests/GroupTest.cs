@@ -72,7 +72,7 @@ namespace Nakama.Tests.Api
             Assert.Null(group.AvatarUrl);
             Assert.Null(group.Description);
             Assert.Equal(1, group.EdgeCount);
-            Assert.Equal(true, group.Open);
+            Assert.True(group.Open);
             Assert.Equal(name, group.Name);
         }
 
@@ -85,7 +85,7 @@ namespace Nakama.Tests.Api
             await _client.CreateGroupAsync(session, name);
 
             var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.CreateGroupAsync(session, name));
-            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
+            Assert.Equal((int) HttpStatusCode.Conflict, ex.StatusCode);
         }
 
         [Fact]
