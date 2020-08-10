@@ -213,5 +213,22 @@ namespace Nakama.Tests.Api
             var members = await _client.ListGroupUsersAsync(session1, group.Id, state: 2, limit: 2);
             Assert.Equal(members.GroupUsers.Count(), 2);
         }
+
+        [Fact]
+        public async Task ShouldBanUsers()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session3 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var group = await _client.CreateGroupAsync(session1, $"{Guid.NewGuid()}");
+
+            await _client.AddGroupUsersAsync(session1, group.Id, new string[]{session2.UserId, session3.UserId});
+            await _client.BanGroupUsersAsync(session1, group.Id, new []{session2.UserId, session3.UserId});
+
+            var remainingMembers = await _client.ListGroupUsersAsync(session1, group.Id, state: null, limit: 100);
+            Assert.Equal(remainingMembers.GroupUsers.Count(), 1);
+        }
+
     }
 }
