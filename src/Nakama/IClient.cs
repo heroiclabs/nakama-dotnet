@@ -224,7 +224,7 @@ namespace Nakama
         /// <param name="name">The name of the event.</param>
         /// <param name="properties">The properties of the event.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task EmitEvent(ISession session, string name, Dictionary<string, string> properties);
+        Task EventAsync(ISession session, string name, Dictionary<string, string> properties);
 
         /// <summary>
         /// Fetch the user account owned by the session.

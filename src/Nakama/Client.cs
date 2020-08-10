@@ -227,8 +227,8 @@ namespace Nakama
                 new ApiDeleteStorageObjectsRequest {_objectIds = objects});
         }
 
-         /// <inheritdoc cref="EmitEvent"/>
-        public Task EmitEvent(ISession session, string name, Dictionary<string, string> properties) => _apiClient.EventAsync(session.AuthToken, new ApiEvent{
+         /// <inheritdoc cref="EventAsync"/>
+        public Task EventAsync(ISession session, string name, Dictionary<string, string> properties) => _apiClient.EventAsync(session.AuthToken, new ApiEvent{
             External = true,
             Name = name,
             _properties = properties
