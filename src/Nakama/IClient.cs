@@ -218,6 +218,15 @@ namespace Nakama
         Task DeleteStorageObjectsAsync(ISession session, params StorageObjectId[] ids);
 
         /// <summary>
+        /// Submit an event for processing in the server's registered runtime custom events handler.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="name">The name of the event.</param>
+        /// <param name="properties">The properties of the event.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task EventAsync(ISession session, string name, Dictionary<string, string> properties);
+
+        /// <summary>
         /// Fetch the user account owned by the session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
