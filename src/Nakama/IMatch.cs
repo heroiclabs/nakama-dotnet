@@ -58,19 +58,19 @@ namespace Nakama
     /// <inheritdoc cref="IMatch"/>
     internal class Match : IMatch
     {
-        [DataMember(Name = "authoritative")] public bool Authoritative { get; set; }
+        [DataMember(Name = "authoritative"), Preserve] public bool Authoritative { get; set; }
 
-        [DataMember(Name = "match_id")] public string Id { get; set; }
+        [DataMember(Name = "match_id"), Preserve] public string Id { get; set; }
 
-        [DataMember(Name = "label")] public string Label { get; set; }
+        [DataMember(Name = "label"), Preserve] public string Label { get; set; }
 
         public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
-        [DataMember(Name = "presences")] public List<UserPresence> _presences { get; set; }
+        [DataMember(Name = "presences"), Preserve] public List<UserPresence> _presences { get; set; }
 
-        [DataMember(Name = "size")] public int Size { get; set; }
+        [DataMember(Name = "size"), Preserve] public int Size { get; set; }
 
         public IUserPresence Self => _self;
-        [DataMember(Name = "self")] public UserPresence _self { get; set; }
+        [DataMember(Name = "self"), Preserve] public UserPresence _self { get; set; }
 
         public override string ToString()
         {

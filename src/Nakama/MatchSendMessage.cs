@@ -24,16 +24,16 @@ namespace Nakama
     /// </summary>
     internal class MatchSendMessage
     {
-        [DataMember(Name="match_id")]
+        [DataMember(Name="match_id"), Preserve]
         public string MatchId { get; set; }
 
-        [DataMember(Name="op_code")]
+        [DataMember(Name="op_code"), Preserve]
         public string OpCode { get; set; }
 
-        [DataMember(Name="presences")]
+        [DataMember(Name="presences"), Preserve]
         public List<UserPresence> Presences { get; set; }
 
-        [DataMember(Name="data")]
+        [DataMember(Name="data"), Preserve]
         public string State { get; set; }
 
         public override string ToString()

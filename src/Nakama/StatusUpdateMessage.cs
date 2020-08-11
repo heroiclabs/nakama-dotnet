@@ -23,7 +23,7 @@ namespace Nakama
     /// </summary>
     internal class StatusUpdateMessage
     {
-        [DataMember(Name="status")]
+        [DataMember(Name="status"), Preserve]
         public string Status { get; set; }
 
         public override string ToString()

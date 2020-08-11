@@ -23,7 +23,7 @@ namespace Nakama
     /// </summary>
     internal class ChannelLeaveMessage
     {
-        [DataMember(Name="channel_id")]
+        [DataMember(Name="channel_id"), Preserve]
         public string ChannelId { get; set; }
 
         public override string ToString()

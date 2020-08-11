@@ -53,16 +53,16 @@ namespace Nakama
     {
         private static readonly byte[] NoBytes = new byte[0];
 
-        [DataMember(Name = "match_id")] public string MatchId { get; set; }
+        [DataMember(Name = "match_id"), Preserve] public string MatchId { get; set; }
 
         public long OpCode => Convert.ToInt64(_opCode);
-        [DataMember(Name = "op_code")] public string _opCode { get; set; }
+        [DataMember(Name = "op_code"), Preserve] public string _opCode { get; set; }
 
         public byte[] State => _state == null ? NoBytes :  Convert.FromBase64String(_state);
-        [DataMember(Name = "data")] public string _state { get; set; }
+        [DataMember(Name = "data"), Preserve] public string _state { get; set; }
 
         public IUserPresence UserPresence => _userPresence;
-        [DataMember(Name = "presence")] public UserPresence _userPresence { get; set; }
+        [DataMember(Name = "presence"), Preserve] public UserPresence _userPresence { get; set; }
 
         public override string ToString()
         {

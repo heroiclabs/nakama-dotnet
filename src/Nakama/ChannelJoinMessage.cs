@@ -23,16 +23,16 @@ namespace Nakama
     /// </summary>
     internal class ChannelJoinMessage
     {
-        [DataMember(Name="hidden")]
+        [DataMember(Name="hidden"), Preserve]
         public bool Hidden { get; set; }
-        
-        [DataMember(Name="persistence")]
+
+        [DataMember(Name="persistence"), Preserve]
         public bool Persistence { get; set; }
-        
-        [DataMember(Name="target")]
+
+        [DataMember(Name="target"), Preserve]
         public string Target { get; set; }
-        
-        [DataMember(Name="type")]
+
+        [DataMember(Name="type"), Preserve]
         public int Type { get; set; }
 
         public override string ToString()

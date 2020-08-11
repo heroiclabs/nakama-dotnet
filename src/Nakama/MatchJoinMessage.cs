@@ -24,13 +24,13 @@ namespace Nakama
     /// </summary>
     internal class MatchJoinMessage
     {
-        [DataMember(Name="match_id")]
+        [DataMember(Name="match_id"), Preserve]
         public string MatchId { get; set; }
 
-        [DataMember(Name="token")]
+        [DataMember(Name="token"), Preserve]
         public string Token { get; set; }
-        
-        [DataMember(Name="metadata")]
+
+        [DataMember(Name="metadata"), Preserve]
         public IDictionary<string, string> Metadata { get; set; }
 
         public override string ToString()
