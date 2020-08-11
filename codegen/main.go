@@ -131,59 +131,59 @@ namespace Nakama
 
         /// <inheritdoc />
         {{- if eq $property.Type "integer" }}
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public int {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "number" }}
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public double {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "boolean" }}
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public bool {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "string" }}
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public string {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "array" }}
             {{- if eq $property.Items.Type "string" }}
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public List<string> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "integer" }}
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public List<int> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "number" }}
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public List<double> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "boolean" }}
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public List<bool> {{ $fieldname }} { get; set; }
             {{- else}}
         public IEnumerable<I{{ $property.Items.Ref | cleanRef }}> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new List<{{ $property.Items.Ref | cleanRef }}>(0);
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public List<{{ $property.Items.Ref | cleanRef }}> _{{ $propname | camelCase }} { get; set; }
             {{- end }}
         {{- else if eq $property.Type "object"}}
             {{- if eq $property.AdditionalProperties.Type "string"}}
         public IDictionary<string, string> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, string>();
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public Dictionary<string, string> _{{ $propname | camelCase }} { get; set; }
             {{- else if eq $property.Items.Type "integer"}}
         public IDictionary<string, int> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, int>();
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
            {{- else if eq $property.Items.Type "number"}}
         public IDictionary<string, double> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, double>();
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public Dictionary<string, int> _{{ $propname | camelCase }} { get; set; }
             {{- else if eq $property.Items.Type "boolean"}}
         public IDictionary<string, bool> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, bool>();
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public Dictionary<string, bool> _{{ $propname | camelCase }} { get; set; }
             {{- else}}
         public IDictionary<string, {{$property.AdditionalProperties | cleanRef}}> {{ $fieldname }}  => _{{ $propname | camelCase }} ?? new Dictionary<string, {{$property.AdditionalProperties | cleanRef}}>();
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public Dictionary<string, {{$property.AdditionalProperties | cleanRef}}> _{{ $propname | camelCase }} { get; set; }
             {{- end}}
         {{- else }}
         public I{{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | camelCase }};
-        [DataMember(Name="{{ $propname }}")]
+        [DataMember(Name="{{ $propname }}"), Preserve]
         public {{ $property.Ref | cleanRef }} _{{ $propname | camelCase }} { get; set; }
         {{- end }}
         {{- end }}
