@@ -154,6 +154,15 @@ namespace Nakama
             Dictionary<string, string> vars = null);
 
         /// <summary>
+        /// Ban a set of users from a group.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="ids">The group to ban the users from.</param>
+        /// <param name="usernames">The usernames of the users to ban.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames);
+
+        /// <summary>
         /// Block one or more friends by id or username.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -216,6 +225,14 @@ namespace Nakama
         /// <param name="ids">The ids of the objects to delete.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task DeleteStorageObjectsAsync(ISession session, params StorageObjectId[] ids);
+
+        /// <summary>
+        /// Demote a set of users in a group to the next role down.
+        /// <param name="groupId">The group to demote users in.</param>
+        /// <param name="userIds">The users to demote.</param>
+        /// <remarks>Members who are already at the lowest rank will be skipped.</remarks>
+        /// </summary>
+        Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> userIds);
 
         /// <summary>
         /// Submit an event for processing in the server's registered runtime custom events handler.

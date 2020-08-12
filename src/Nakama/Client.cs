@@ -176,6 +176,10 @@ namespace Nakama
             return new Session(response.Token, response.Created);
         }
 
+        /// <inheritdoc cref="BanGroupUsersAsync"/>
+        public Task BanGroupUsersAsync(ISession session, string groupId,
+            IEnumerable<string> usernames) => _apiClient.BanGroupUsersAsync(session.AuthToken, groupId, usernames);
+
         /// <inheritdoc cref="BlockFriendsAsync"/>
         public Task BlockFriendsAsync(ISession session, IEnumerable<string> ids,
             IEnumerable<string> usernames = null) => _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames);
@@ -226,6 +230,10 @@ namespace Nakama
             return _apiClient.DeleteStorageObjectsAsync(session.AuthToken,
                 new ApiDeleteStorageObjectsRequest {_objectIds = objects});
         }
+
+        /// <inheritdoc cref="DemoteGroupUsersAsync"/>
+        public Task DemoteGroupUsersAsync(ISession session, string groupId,
+            IEnumerable<string> usernames) => _apiClient.DemoteGroupUsersAsync(session.AuthToken, groupId, usernames);
 
          /// <inheritdoc cref="EventAsync"/>
         public Task EventAsync(ISession session, string name, Dictionary<string, string> properties) => _apiClient.EventAsync(session.AuthToken, new ApiEvent{
