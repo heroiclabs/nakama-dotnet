@@ -1,5 +1,5 @@
-/**
- * Copyright 2018 The Nakama Authors
+/*
+ * Copyright 2020 Heroic Labs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-using System.Runtime.Serialization;
 
-namespace Nakama
-{
-    /// <summary>
-    /// Remove the user from the matchmaker pool by ticket.
-    /// </summary>
-    internal class MatchmakerRemoveMessage
-    {
-        [DataMember(Name="ticket"), Preserve]
-        public string Ticket { get; set; }
-
-        public override string ToString()
-        {
-            return $"MatchmakerRemoveMessage(Ticket='{Ticket}')";
-        }
-    }
-}
+/// <summary>
+/// A custom attribute recognized by Unity3D. When added to a class member, it prevents
+/// the Unity linker from stripping the code it is associated with. This is used in addition
+/// to the link.xml file because the Unity Package Manager does not recognize link.xml files
+/// inside Unity packages.
+/// https://docs.unity3d.com/2018.3/Documentation/Manual/ManagedCodeStripping.html
+/// </summary>
+internal class PreserveAttribute : System.Attribute {}

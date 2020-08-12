@@ -32,7 +32,7 @@ namespace Nakama
     /// <inheritdoc cref="IMatchmakerMatched"/>
     internal class MatchmakerTicket : IMatchmakerTicket
     {
-        [DataMember(Name="ticket")]
+        [DataMember(Name="ticket"), Preserve]
         public string Ticket { get; set; }
 
         public override string ToString()

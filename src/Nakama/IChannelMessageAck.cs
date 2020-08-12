@@ -57,22 +57,22 @@ namespace Nakama
         /// The username of the sender of the message.
         /// </summary>
         string Username { get; }
-        
+
         /// <summary>
         /// The name of the chat room, or an empty string if this message was not sent through a chat room.
         /// </summary>
         string RoomName { get; }
-        
+
         /// <summary>
         /// The ID of the group, or an empty string if this message was not sent through a group channel.
         /// </summary>
         string GroupId { get; }
-        
+
         /// <summary>
         /// The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
         /// </summary>
         string UserIdOne { get; }
-        
+
         /// <summary>
         /// The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
         /// </summary>
@@ -82,27 +82,27 @@ namespace Nakama
     /// <inheritdoc cref="IChannelMessageAck"/>
     internal class ChannelMessageAck : IChannelMessageAck
     {
-        [DataMember(Name = "channel_id")] public string ChannelId { get; set; }
+        [DataMember(Name = "channel_id"), Preserve] public string ChannelId { get; set; }
 
-        [DataMember(Name = "code")] public int Code { get; set; }
+        [DataMember(Name = "code"), Preserve] public int Code { get; set; }
 
-        [DataMember(Name = "create_time")] public string CreateTime { get; set; }
+        [DataMember(Name = "create_time"), Preserve] public string CreateTime { get; set; }
 
-        [DataMember(Name = "message_id")] public string MessageId { get; set; }
+        [DataMember(Name = "message_id"), Preserve] public string MessageId { get; set; }
 
-        [DataMember(Name = "persistent")] public bool Persistent { get; set; }
+        [DataMember(Name = "persistent"), Preserve] public bool Persistent { get; set; }
 
-        [DataMember(Name = "update_time")] public string UpdateTime { get; set; }
+        [DataMember(Name = "update_time"), Preserve] public string UpdateTime { get; set; }
 
-        [DataMember(Name = "username")] public string Username { get; set; }
-        
-        [DataMember(Name="room_name")] public string RoomName { get; set; }
-        
-        [DataMember(Name="group_id")] public string GroupId { get; set; }
-        
-        [DataMember(Name="user_id_one")] public string UserIdOne { get; set; }
-        
-        [DataMember(Name="user_id_two")] public string UserIdTwo { get; set; }
+        [DataMember(Name = "username"), Preserve] public string Username { get; set; }
+
+        [DataMember(Name="room_name"), Preserve] public string RoomName { get; set; }
+
+        [DataMember(Name="group_id"), Preserve] public string GroupId { get; set; }
+
+        [DataMember(Name="user_id_one"), Preserve] public string UserIdOne { get; set; }
+
+        [DataMember(Name="user_id_two"), Preserve] public string UserIdTwo { get; set; }
 
         public override string ToString()
         {

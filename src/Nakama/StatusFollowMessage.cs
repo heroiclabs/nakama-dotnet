@@ -24,9 +24,9 @@ namespace Nakama
     /// </summary>
     internal class StatusFollowMessage
     {
-        [DataMember(Name = "user_ids")] public List<string> UserIds { get; set; }
+        [DataMember(Name = "user_ids"), Preserve] public List<string> UserIds { get; set; }
 
-        [DataMember(Name = "usernames")] public List<string> Usernames { get; set; }
+        [DataMember(Name = "usernames"), Preserve] public List<string> Usernames { get; set; }
 
         public override string ToString()
         {

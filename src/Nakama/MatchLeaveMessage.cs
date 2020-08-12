@@ -23,7 +23,7 @@ namespace Nakama
     /// </summary>
     internal class MatchLeaveMessage
     {
-        [DataMember(Name="match_id")]
+        [DataMember(Name="match_id"), Preserve]
         public string MatchId { get; set; }
 
         public override string ToString()

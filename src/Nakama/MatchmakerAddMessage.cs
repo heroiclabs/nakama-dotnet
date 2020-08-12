@@ -24,16 +24,16 @@ namespace Nakama
     /// </summary>
     internal class MatchmakerAddMessage
     {
-        [DataMember(Name = "max_count")] public int MaxCount { get; set; }
+        [DataMember(Name = "max_count"), Preserve] public int MaxCount { get; set; }
 
-        [DataMember(Name = "min_count")] public int MinCount { get; set; }
+        [DataMember(Name = "min_count"), Preserve] public int MinCount { get; set; }
 
-        [DataMember(Name = "numeric_properties")]
+        [DataMember(Name = "numeric_properties"), Preserve]
         public Dictionary<string, double> NumericProperties { get; set; }
 
-        [DataMember(Name = "query")] public string Query { get; set; }
+        [DataMember(Name = "query"), Preserve] public string Query { get; set; }
 
-        [DataMember(Name = "string_properties")]
+        [DataMember(Name = "string_properties"), Preserve]
         public Dictionary<string, string> StringProperties { get; set; }
 
         public override string ToString()
