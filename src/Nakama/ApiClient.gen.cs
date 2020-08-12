@@ -61,12 +61,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="state")]
+        [DataMember(Name="state"), Preserve]
         public int State { get; set; }
 
         /// <inheritdoc />
         public IApiUser User => _user;
-        [DataMember(Name="user")]
+        [DataMember(Name="user"), Preserve]
         public ApiUser _user { get; set; }
 
         public override string ToString()
@@ -101,11 +101,11 @@ namespace Nakama
 
         /// <inheritdoc />
         public IApiGroup Group => _group;
-        [DataMember(Name="group")]
+        [DataMember(Name="group"), Preserve]
         public ApiGroup _group { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="state")]
+        [DataMember(Name="state"), Preserve]
         public int State { get; set; }
 
         public override string ToString()
@@ -144,15 +144,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="metadata")]
+        [DataMember(Name="metadata"), Preserve]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="score")]
+        [DataMember(Name="score"), Preserve]
         public string Score { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="subscore")]
+        [DataMember(Name="subscore"), Preserve]
         public string Subscore { get; set; }
 
         public override string ToString()
@@ -192,15 +192,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="metadata")]
+        [DataMember(Name="metadata"), Preserve]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="score")]
+        [DataMember(Name="score"), Preserve]
         public string Score { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="subscore")]
+        [DataMember(Name="subscore"), Preserve]
         public string Subscore { get; set; }
 
         public override string ToString()
@@ -260,33 +260,33 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="custom_id")]
+        [DataMember(Name="custom_id"), Preserve]
         public string CustomId { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiAccountDevice> Devices => _devices ?? new List<ApiAccountDevice>(0);
-        [DataMember(Name="devices")]
+        [DataMember(Name="devices"), Preserve]
         public List<ApiAccountDevice> _devices { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="disable_time")]
+        [DataMember(Name="disable_time"), Preserve]
         public string DisableTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="email")]
+        [DataMember(Name="email"), Preserve]
         public string Email { get; set; }
 
         /// <inheritdoc />
         public IApiUser User => _user;
-        [DataMember(Name="user")]
+        [DataMember(Name="user"), Preserve]
         public ApiUser _user { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="verify_time")]
+        [DataMember(Name="verify_time"), Preserve]
         public string VerifyTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="wallet")]
+        [DataMember(Name="wallet"), Preserve]
         public string Wallet { get; set; }
 
         public override string ToString()
@@ -325,12 +325,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="token")]
+        [DataMember(Name="token"), Preserve]
         public string Token { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-        [DataMember(Name="vars")]
+        [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
@@ -370,12 +370,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="id")]
+        [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-        [DataMember(Name="vars")]
+        [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
@@ -415,12 +415,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="id")]
+        [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-        [DataMember(Name="vars")]
+        [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
@@ -465,16 +465,16 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="email")]
+        [DataMember(Name="email"), Preserve]
         public string Email { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="password")]
+        [DataMember(Name="password"), Preserve]
         public string Password { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-        [DataMember(Name="vars")]
+        [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
@@ -515,12 +515,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="token")]
+        [DataMember(Name="token"), Preserve]
         public string Token { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-        [DataMember(Name="vars")]
+        [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
@@ -560,12 +560,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="signed_player_info")]
+        [DataMember(Name="signed_player_info"), Preserve]
         public string SignedPlayerInfo { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-        [DataMember(Name="vars")]
+        [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
@@ -630,32 +630,32 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="bundle_id")]
+        [DataMember(Name="bundle_id"), Preserve]
         public string BundleId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="player_id")]
+        [DataMember(Name="player_id"), Preserve]
         public string PlayerId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="public_key_url")]
+        [DataMember(Name="public_key_url"), Preserve]
         public string PublicKeyUrl { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="salt")]
+        [DataMember(Name="salt"), Preserve]
         public string Salt { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="signature")]
+        [DataMember(Name="signature"), Preserve]
         public string Signature { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="timestamp_seconds")]
+        [DataMember(Name="timestamp_seconds"), Preserve]
         public string TimestampSeconds { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-        [DataMember(Name="vars")]
+        [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
@@ -700,12 +700,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="token")]
+        [DataMember(Name="token"), Preserve]
         public string Token { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-        [DataMember(Name="vars")]
+        [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
@@ -745,12 +745,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="token")]
+        [DataMember(Name="token"), Preserve]
         public string Token { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-        [DataMember(Name="vars")]
+        [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
 
         public override string ToString()
@@ -845,55 +845,55 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="channel_id")]
+        [DataMember(Name="channel_id"), Preserve]
         public string ChannelId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="code")]
+        [DataMember(Name="code"), Preserve]
         public int Code { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="content")]
+        [DataMember(Name="content"), Preserve]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time")]
+        [DataMember(Name="create_time"), Preserve]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="group_id")]
+        [DataMember(Name="group_id"), Preserve]
         public string GroupId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="message_id")]
+        [DataMember(Name="message_id"), Preserve]
         public string MessageId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="persistent")]
+        [DataMember(Name="persistent"), Preserve]
         public bool Persistent { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="room_name")]
+        [DataMember(Name="room_name"), Preserve]
         public string RoomName { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="sender_id")]
+        [DataMember(Name="sender_id"), Preserve]
         public string SenderId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="update_time")]
+        [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user_id_one")]
+        [DataMember(Name="user_id_one"), Preserve]
         public string UserIdOne { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user_id_two")]
+        [DataMember(Name="user_id_two"), Preserve]
         public string UserIdTwo { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="username")]
+        [DataMember(Name="username"), Preserve]
         public string Username { get; set; }
 
         public override string ToString()
@@ -944,15 +944,15 @@ namespace Nakama
 
         /// <inheritdoc />
         public IEnumerable<IApiChannelMessage> Messages => _messages ?? new List<ApiChannelMessage>(0);
-        [DataMember(Name="messages")]
+        [DataMember(Name="messages"), Preserve]
         public List<ApiChannelMessage> _messages { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="next_cursor")]
+        [DataMember(Name="next_cursor"), Preserve]
         public string NextCursor { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="prev_cursor")]
+        [DataMember(Name="prev_cursor"), Preserve]
         public string PrevCursor { get; set; }
 
         public override string ToString()
@@ -1007,27 +1007,27 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="avatar_url")]
+        [DataMember(Name="avatar_url"), Preserve]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="description")]
+        [DataMember(Name="description"), Preserve]
         public string Description { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="lang_tag")]
+        [DataMember(Name="lang_tag"), Preserve]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="max_count")]
+        [DataMember(Name="max_count"), Preserve]
         public int MaxCount { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="name")]
+        [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="open")]
+        [DataMember(Name="open"), Preserve]
         public bool Open { get; set; }
 
         public override string ToString()
@@ -1070,15 +1070,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="collection")]
+        [DataMember(Name="collection"), Preserve]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="key")]
+        [DataMember(Name="key"), Preserve]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="version")]
+        [DataMember(Name="version"), Preserve]
         public string Version { get; set; }
 
         public override string ToString()
@@ -1109,7 +1109,7 @@ namespace Nakama
 
         /// <inheritdoc />
         public IEnumerable<IApiDeleteStorageObjectId> ObjectIds => _objectIds ?? new List<ApiDeleteStorageObjectId>(0);
-        [DataMember(Name="object_ids")]
+        [DataMember(Name="object_ids"), Preserve]
         public List<ApiDeleteStorageObjectId> _objectIds { get; set; }
 
         public override string ToString()
@@ -1152,20 +1152,20 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="external")]
+        [DataMember(Name="external"), Preserve]
         public bool External { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="name")]
+        [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
         /// <inheritdoc />
         public IDictionary<string, string> Properties => _properties ?? new Dictionary<string, string>();
-        [DataMember(Name="properties")]
+        [DataMember(Name="properties"), Preserve]
         public Dictionary<string, string> _properties { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="timestamp")]
+        [DataMember(Name="timestamp"), Preserve]
         public string Timestamp { get; set; }
 
         public override string ToString()
@@ -1212,16 +1212,16 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="state")]
+        [DataMember(Name="state"), Preserve]
         public int State { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="update_time")]
+        [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
         public IApiUser User => _user;
-        [DataMember(Name="user")]
+        [DataMember(Name="user"), Preserve]
         public ApiUser _user { get; set; }
 
         public override string ToString()
@@ -1256,12 +1256,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="cursor")]
+        [DataMember(Name="cursor"), Preserve]
         public string Cursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiFriend> Friends => _friends ?? new List<ApiFriend>(0);
-        [DataMember(Name="friends")]
+        [DataMember(Name="friends"), Preserve]
         public List<ApiFriend> _friends { get; set; }
 
         public override string ToString()
@@ -1345,51 +1345,51 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="avatar_url")]
+        [DataMember(Name="avatar_url"), Preserve]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time")]
+        [DataMember(Name="create_time"), Preserve]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="creator_id")]
+        [DataMember(Name="creator_id"), Preserve]
         public string CreatorId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="description")]
+        [DataMember(Name="description"), Preserve]
         public string Description { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="edge_count")]
+        [DataMember(Name="edge_count"), Preserve]
         public int EdgeCount { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="id")]
+        [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="lang_tag")]
+        [DataMember(Name="lang_tag"), Preserve]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="max_count")]
+        [DataMember(Name="max_count"), Preserve]
         public int MaxCount { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="metadata")]
+        [DataMember(Name="metadata"), Preserve]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="name")]
+        [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="open")]
+        [DataMember(Name="open"), Preserve]
         public bool Open { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="update_time")]
+        [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
 
         public override string ToString()
@@ -1433,12 +1433,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="cursor")]
+        [DataMember(Name="cursor"), Preserve]
         public string Cursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiGroup> Groups => _groups ?? new List<ApiGroup>(0);
-        [DataMember(Name="groups")]
+        [DataMember(Name="groups"), Preserve]
         public List<ApiGroup> _groups { get; set; }
 
         public override string ToString()
@@ -1472,12 +1472,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="cursor")]
+        [DataMember(Name="cursor"), Preserve]
         public string Cursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IGroupUserListGroupUser> GroupUsers => _groupUsers ?? new List<GroupUserListGroupUser>(0);
-        [DataMember(Name="group_users")]
+        [DataMember(Name="group_users"), Preserve]
         public List<GroupUserListGroupUser> _groupUsers { get; set; }
 
         public override string ToString()
@@ -1561,51 +1561,51 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="create_time")]
+        [DataMember(Name="create_time"), Preserve]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="expiry_time")]
+        [DataMember(Name="expiry_time"), Preserve]
         public string ExpiryTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="leaderboard_id")]
+        [DataMember(Name="leaderboard_id"), Preserve]
         public string LeaderboardId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="max_num_score")]
+        [DataMember(Name="max_num_score"), Preserve]
         public int MaxNumScore { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="metadata")]
+        [DataMember(Name="metadata"), Preserve]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="num_score")]
+        [DataMember(Name="num_score"), Preserve]
         public int NumScore { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="owner_id")]
+        [DataMember(Name="owner_id"), Preserve]
         public string OwnerId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="rank")]
+        [DataMember(Name="rank"), Preserve]
         public string Rank { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="score")]
+        [DataMember(Name="score"), Preserve]
         public string Score { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="subscore")]
+        [DataMember(Name="subscore"), Preserve]
         public string Subscore { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="update_time")]
+        [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="username")]
+        [DataMember(Name="username"), Preserve]
         public string Username { get; set; }
 
         public override string ToString()
@@ -1659,21 +1659,21 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="next_cursor")]
+        [DataMember(Name="next_cursor"), Preserve]
         public string NextCursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiLeaderboardRecord> OwnerRecords => _ownerRecords ?? new List<ApiLeaderboardRecord>(0);
-        [DataMember(Name="owner_records")]
+        [DataMember(Name="owner_records"), Preserve]
         public List<ApiLeaderboardRecord> _ownerRecords { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="prev_cursor")]
+        [DataMember(Name="prev_cursor"), Preserve]
         public string PrevCursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiLeaderboardRecord> Records => _records ?? new List<ApiLeaderboardRecord>(0);
-        [DataMember(Name="records")]
+        [DataMember(Name="records"), Preserve]
         public List<ApiLeaderboardRecord> _records { get; set; }
 
         public override string ToString()
@@ -1719,19 +1719,19 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="authoritative")]
+        [DataMember(Name="authoritative"), Preserve]
         public bool Authoritative { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="label")]
+        [DataMember(Name="label"), Preserve]
         public string Label { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="match_id")]
+        [DataMember(Name="match_id"), Preserve]
         public string MatchId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="size")]
+        [DataMember(Name="size"), Preserve]
         public int Size { get; set; }
 
         public override string ToString()
@@ -1763,7 +1763,7 @@ namespace Nakama
 
         /// <inheritdoc />
         public IEnumerable<IApiMatch> Matches => _matches ?? new List<ApiMatch>(0);
-        [DataMember(Name="matches")]
+        [DataMember(Name="matches"), Preserve]
         public List<ApiMatch> _matches { get; set; }
 
         public override string ToString()
@@ -1821,31 +1821,31 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="code")]
+        [DataMember(Name="code"), Preserve]
         public int Code { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="content")]
+        [DataMember(Name="content"), Preserve]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time")]
+        [DataMember(Name="create_time"), Preserve]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="id")]
+        [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="persistent")]
+        [DataMember(Name="persistent"), Preserve]
         public bool Persistent { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="sender_id")]
+        [DataMember(Name="sender_id"), Preserve]
         public string SenderId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="subject")]
+        [DataMember(Name="subject"), Preserve]
         public string Subject { get; set; }
 
         public override string ToString()
@@ -1884,12 +1884,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="cacheable_cursor")]
+        [DataMember(Name="cacheable_cursor"), Preserve]
         public string CacheableCursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiNotification> Notifications => _notifications ?? new List<ApiNotification>(0);
-        [DataMember(Name="notifications")]
+        [DataMember(Name="notifications"), Preserve]
         public List<ApiNotification> _notifications { get; set; }
 
         public override string ToString()
@@ -1928,15 +1928,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="collection")]
+        [DataMember(Name="collection"), Preserve]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="key")]
+        [DataMember(Name="key"), Preserve]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user_id")]
+        [DataMember(Name="user_id"), Preserve]
         public string UserId { get; set; }
 
         public override string ToString()
@@ -1967,7 +1967,7 @@ namespace Nakama
 
         /// <inheritdoc />
         public IEnumerable<IApiReadStorageObjectId> ObjectIds => _objectIds ?? new List<ApiReadStorageObjectId>(0);
-        [DataMember(Name="object_ids")]
+        [DataMember(Name="object_ids"), Preserve]
         public List<ApiReadStorageObjectId> _objectIds { get; set; }
 
         public override string ToString()
@@ -2005,15 +2005,15 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="http_key")]
+        [DataMember(Name="http_key"), Preserve]
         public string HttpKey { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="id")]
+        [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="payload")]
+        [DataMember(Name="payload"), Preserve]
         public string Payload { get; set; }
 
         public override string ToString()
@@ -2048,11 +2048,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="created")]
+        [DataMember(Name="created"), Preserve]
         public bool Created { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="token")]
+        [DataMember(Name="token"), Preserve]
         public string Token { get; set; }
 
         public override string ToString()
@@ -2121,39 +2121,39 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="collection")]
+        [DataMember(Name="collection"), Preserve]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time")]
+        [DataMember(Name="create_time"), Preserve]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="key")]
+        [DataMember(Name="key"), Preserve]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="permission_read")]
+        [DataMember(Name="permission_read"), Preserve]
         public int PermissionRead { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="permission_write")]
+        [DataMember(Name="permission_write"), Preserve]
         public int PermissionWrite { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="update_time")]
+        [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user_id")]
+        [DataMember(Name="user_id"), Preserve]
         public string UserId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="value")]
+        [DataMember(Name="value"), Preserve]
         public string Value { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="version")]
+        [DataMember(Name="version"), Preserve]
         public string Version { get; set; }
 
         public override string ToString()
@@ -2204,19 +2204,19 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="collection")]
+        [DataMember(Name="collection"), Preserve]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="key")]
+        [DataMember(Name="key"), Preserve]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user_id")]
+        [DataMember(Name="user_id"), Preserve]
         public string UserId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="version")]
+        [DataMember(Name="version"), Preserve]
         public string Version { get; set; }
 
         public override string ToString()
@@ -2248,7 +2248,7 @@ namespace Nakama
 
         /// <inheritdoc />
         public IEnumerable<IApiStorageObjectAck> Acks => _acks ?? new List<ApiStorageObjectAck>(0);
-        [DataMember(Name="acks")]
+        [DataMember(Name="acks"), Preserve]
         public List<ApiStorageObjectAck> _acks { get; set; }
 
         public override string ToString()
@@ -2281,12 +2281,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="cursor")]
+        [DataMember(Name="cursor"), Preserve]
         public string Cursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiStorageObject> Objects => _objects ?? new List<ApiStorageObject>(0);
-        [DataMember(Name="objects")]
+        [DataMember(Name="objects"), Preserve]
         public List<ApiStorageObject> _objects { get; set; }
 
         public override string ToString()
@@ -2316,7 +2316,7 @@ namespace Nakama
 
         /// <inheritdoc />
         public IEnumerable<IApiStorageObject> Objects => _objects ?? new List<ApiStorageObject>(0);
-        [DataMember(Name="objects")]
+        [DataMember(Name="objects"), Preserve]
         public List<ApiStorageObject> _objects { get; set; }
 
         public override string ToString()
@@ -2424,71 +2424,71 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="can_enter")]
+        [DataMember(Name="can_enter"), Preserve]
         public bool CanEnter { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="category")]
+        [DataMember(Name="category"), Preserve]
         public int Category { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time")]
+        [DataMember(Name="create_time"), Preserve]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="description")]
+        [DataMember(Name="description"), Preserve]
         public string Description { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="duration")]
+        [DataMember(Name="duration"), Preserve]
         public int Duration { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="end_active")]
+        [DataMember(Name="end_active"), Preserve]
         public int EndActive { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="end_time")]
+        [DataMember(Name="end_time"), Preserve]
         public string EndTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="id")]
+        [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="max_num_score")]
+        [DataMember(Name="max_num_score"), Preserve]
         public int MaxNumScore { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="max_size")]
+        [DataMember(Name="max_size"), Preserve]
         public int MaxSize { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="metadata")]
+        [DataMember(Name="metadata"), Preserve]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="next_reset")]
+        [DataMember(Name="next_reset"), Preserve]
         public int NextReset { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="size")]
+        [DataMember(Name="size"), Preserve]
         public int Size { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="sort_order")]
+        [DataMember(Name="sort_order"), Preserve]
         public int SortOrder { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="start_active")]
+        [DataMember(Name="start_active"), Preserve]
         public int StartActive { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="start_time")]
+        [DataMember(Name="start_time"), Preserve]
         public string StartTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="title")]
+        [DataMember(Name="title"), Preserve]
         public string Title { get; set; }
 
         public override string ToString()
@@ -2537,12 +2537,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="cursor")]
+        [DataMember(Name="cursor"), Preserve]
         public string Cursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiTournament> Tournaments => _tournaments ?? new List<ApiTournament>(0);
-        [DataMember(Name="tournaments")]
+        [DataMember(Name="tournaments"), Preserve]
         public List<ApiTournament> _tournaments { get; set; }
 
         public override string ToString()
@@ -2586,21 +2586,21 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="next_cursor")]
+        [DataMember(Name="next_cursor"), Preserve]
         public string NextCursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiLeaderboardRecord> OwnerRecords => _ownerRecords ?? new List<ApiLeaderboardRecord>(0);
-        [DataMember(Name="owner_records")]
+        [DataMember(Name="owner_records"), Preserve]
         public List<ApiLeaderboardRecord> _ownerRecords { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="prev_cursor")]
+        [DataMember(Name="prev_cursor"), Preserve]
         public string PrevCursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiLeaderboardRecord> Records => _records ?? new List<ApiLeaderboardRecord>(0);
-        [DataMember(Name="records")]
+        [DataMember(Name="records"), Preserve]
         public List<ApiLeaderboardRecord> _records { get; set; }
 
         public override string ToString()
@@ -2656,27 +2656,27 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="avatar_url")]
+        [DataMember(Name="avatar_url"), Preserve]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="display_name")]
+        [DataMember(Name="display_name"), Preserve]
         public string DisplayName { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="lang_tag")]
+        [DataMember(Name="lang_tag"), Preserve]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="location")]
+        [DataMember(Name="location"), Preserve]
         public string Location { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="timezone")]
+        [DataMember(Name="timezone"), Preserve]
         public string Timezone { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="username")]
+        [DataMember(Name="username"), Preserve]
         public string Username { get; set; }
 
         public override string ToString()
@@ -2734,27 +2734,27 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="avatar_url")]
+        [DataMember(Name="avatar_url"), Preserve]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="description")]
+        [DataMember(Name="description"), Preserve]
         public string Description { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="group_id")]
+        [DataMember(Name="group_id"), Preserve]
         public string GroupId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="lang_tag")]
+        [DataMember(Name="lang_tag"), Preserve]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="name")]
+        [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="open")]
+        [DataMember(Name="open"), Preserve]
         public bool Open { get; set; }
 
         public override string ToString()
@@ -2872,75 +2872,75 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="apple_id")]
+        [DataMember(Name="apple_id"), Preserve]
         public string AppleId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="avatar_url")]
+        [DataMember(Name="avatar_url"), Preserve]
         public string AvatarUrl { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time")]
+        [DataMember(Name="create_time"), Preserve]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="display_name")]
+        [DataMember(Name="display_name"), Preserve]
         public string DisplayName { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="edge_count")]
+        [DataMember(Name="edge_count"), Preserve]
         public int EdgeCount { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="facebook_id")]
+        [DataMember(Name="facebook_id"), Preserve]
         public string FacebookId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="facebook_instant_game_id")]
+        [DataMember(Name="facebook_instant_game_id"), Preserve]
         public string FacebookInstantGameId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="gamecenter_id")]
+        [DataMember(Name="gamecenter_id"), Preserve]
         public string GamecenterId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="google_id")]
+        [DataMember(Name="google_id"), Preserve]
         public string GoogleId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="id")]
+        [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="lang_tag")]
+        [DataMember(Name="lang_tag"), Preserve]
         public string LangTag { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="location")]
+        [DataMember(Name="location"), Preserve]
         public string Location { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="metadata")]
+        [DataMember(Name="metadata"), Preserve]
         public string Metadata { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="online")]
+        [DataMember(Name="online"), Preserve]
         public bool Online { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="steam_id")]
+        [DataMember(Name="steam_id"), Preserve]
         public string SteamId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="timezone")]
+        [DataMember(Name="timezone"), Preserve]
         public string Timezone { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="update_time")]
+        [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="username")]
+        [DataMember(Name="username"), Preserve]
         public string Username { get; set; }
 
         public override string ToString()
@@ -2990,12 +2990,12 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="cursor")]
+        [DataMember(Name="cursor"), Preserve]
         public string Cursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IUserGroupListUserGroup> UserGroups => _userGroups ?? new List<UserGroupListUserGroup>(0);
-        [DataMember(Name="user_groups")]
+        [DataMember(Name="user_groups"), Preserve]
         public List<UserGroupListUserGroup> _userGroups { get; set; }
 
         public override string ToString()
@@ -3025,7 +3025,7 @@ namespace Nakama
 
         /// <inheritdoc />
         public IEnumerable<IApiUser> Users => _users ?? new List<ApiUser>(0);
-        [DataMember(Name="users")]
+        [DataMember(Name="users"), Preserve]
         public List<ApiUser> _users { get; set; }
 
         public override string ToString()
@@ -3078,27 +3078,27 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="collection")]
+        [DataMember(Name="collection"), Preserve]
         public string Collection { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="key")]
+        [DataMember(Name="key"), Preserve]
         public string Key { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="permission_read")]
+        [DataMember(Name="permission_read"), Preserve]
         public int PermissionRead { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="permission_write")]
+        [DataMember(Name="permission_write"), Preserve]
         public int PermissionWrite { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="value")]
+        [DataMember(Name="value"), Preserve]
         public string Value { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="version")]
+        [DataMember(Name="version"), Preserve]
         public string Version { get; set; }
 
         public override string ToString()
@@ -3132,7 +3132,7 @@ namespace Nakama
 
         /// <inheritdoc />
         public IEnumerable<IApiWriteStorageObject> Objects => _objects ?? new List<ApiWriteStorageObject>(0);
-        [DataMember(Name="objects")]
+        [DataMember(Name="objects"), Preserve]
         public List<ApiWriteStorageObject> _objects { get; set; }
 
         public override string ToString()
@@ -3165,11 +3165,11 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="type_url")]
+        [DataMember(Name="type_url"), Preserve]
         public string TypeUrl { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="value")]
+        [DataMember(Name="value"), Preserve]
         public string Value { get; set; }
 
         public override string ToString()
@@ -3213,20 +3213,20 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="code")]
+        [DataMember(Name="code"), Preserve]
         public int Code { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IProtobufAny> Details => _details ?? new List<ProtobufAny>(0);
-        [DataMember(Name="details")]
+        [DataMember(Name="details"), Preserve]
         public List<ProtobufAny> _details { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="error")]
+        [DataMember(Name="error"), Preserve]
         public string Error { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="message")]
+        [DataMember(Name="message"), Preserve]
         public string Message { get; set; }
 
         public override string ToString()

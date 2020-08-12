@@ -59,15 +59,15 @@ namespace Nakama
     {
         internal static readonly IReadOnlyList<UserPresence> NoPresences = new List<UserPresence>(0);
 
-        [DataMember(Name = "persistence")] public bool Persistence { get; set; }
+        [DataMember(Name = "persistence"), Preserve] public bool Persistence { get; set; }
 
-        [DataMember(Name = "session_id")] public string SessionId { get; set; }
+        [DataMember(Name = "session_id"), Preserve] public string SessionId { get; set; }
 
-        [DataMember(Name = "status")] public string Status { get; set; }
+        [DataMember(Name = "status"), Preserve] public string Status { get; set; }
 
-        [DataMember(Name = "username")] public string Username { get; set; }
+        [DataMember(Name = "username"), Preserve] public string Username { get; set; }
 
-        [DataMember(Name = "user_id")] public string UserId { get; set; }
+        [DataMember(Name = "user_id"), Preserve] public string UserId { get; set; }
 
         public override bool Equals(object obj)
         {

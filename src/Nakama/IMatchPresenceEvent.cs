@@ -44,12 +44,12 @@ namespace Nakama
     internal class MatchPresenceEvent : IMatchPresenceEvent
     {
         public IEnumerable<IUserPresence> Joins => _joins ?? UserPresence.NoPresences;
-        [DataMember(Name = "joins")] public List<UserPresence> _joins { get; set; }
+        [DataMember(Name = "joins"), Preserve] public List<UserPresence> _joins { get; set; }
 
         public IEnumerable<IUserPresence> Leaves => _leaves ?? UserPresence.NoPresences;
-        [DataMember(Name = "leaves")] public List<UserPresence> _leaves { get; set; }
+        [DataMember(Name = "leaves"), Preserve] public List<UserPresence> _leaves { get; set; }
 
-        [DataMember(Name = "match_id")] public string MatchId { get; set; }
+        [DataMember(Name = "match_id"), Preserve] public string MatchId { get; set; }
 
         public override string ToString()
         {

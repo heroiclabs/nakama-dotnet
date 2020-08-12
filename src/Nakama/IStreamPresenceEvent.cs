@@ -95,13 +95,13 @@ namespace Nakama
     internal class StreamPresenceEvent : IStreamPresenceEvent
     {
         public IEnumerable<IUserPresence> Leaves => _leaves ?? UserPresence.NoPresences;
-        [DataMember(Name = "leaves")] public List<UserPresence> _leaves { get; set; }
+        [DataMember(Name = "leaves"), Preserve] public List<UserPresence> _leaves { get; set; }
 
         public IEnumerable<IUserPresence> Joins => _joins ?? UserPresence.NoPresences;
-        [DataMember(Name = "joins")] public List<UserPresence> _joins { get; set; }
+        [DataMember(Name = "joins"), Preserve] public List<UserPresence> _joins { get; set; }
 
         public IStream Stream => _stream;
-        [DataMember(Name = "stream")] public Stream _stream { get; set; }
+        [DataMember(Name = "stream"), Preserve] public Stream _stream { get; set; }
 
         public override string ToString()
         {
@@ -115,13 +115,13 @@ namespace Nakama
     internal class StreamState : IStreamState
     {
         public IUserPresence Sender => _sender;
-        [DataMember(Name = "sender")] public UserPresence _sender { get; set; }
+        [DataMember(Name = "sender"), Preserve] public UserPresence _sender { get; set; }
 
         public string State => _state;
-        [DataMember(Name = "data")] public string _state { get; set; }
+        [DataMember(Name = "data"), Preserve] public string _state { get; set; }
 
         public IStream Stream => _stream;
-        [DataMember(Name = "stream")] public Stream _stream { get; set; }
+        [DataMember(Name = "stream"), Preserve] public Stream _stream { get; set; }
 
         public override string ToString()
         {
@@ -132,13 +132,13 @@ namespace Nakama
     /// <inheritdoc cref="IStream"/>
     internal class Stream : IStream
     {
-        [DataMember(Name = "descriptor")] public string Descriptor { get; set; }
+        [DataMember(Name = "descriptor"), Preserve] public string Descriptor { get; set; }
 
-        [DataMember(Name = "label")] public string Label { get; set; }
+        [DataMember(Name = "label"), Preserve] public string Label { get; set; }
 
-        [DataMember(Name = "mode")] public int Mode { get; set; }
+        [DataMember(Name = "mode"), Preserve] public int Mode { get; set; }
 
-        [DataMember(Name = "subject")] public string Subject { get; set; }
+        [DataMember(Name = "subject"), Preserve] public string Subject { get; set; }
 
         public override string ToString()
         {

@@ -23,10 +23,10 @@ namespace Nakama
     /// </summary>
     internal class ChannelRemoveMessage
     {
-        [DataMember(Name="channel_id")]
+        [DataMember(Name="channel_id"), Preserve]
         public string ChannelId { get; set; }
 
-        [DataMember(Name="message_id")]
+        [DataMember(Name="message_id"), Preserve]
         public string MessageId { get; set; }
 
         public override string ToString()

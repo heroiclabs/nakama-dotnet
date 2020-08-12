@@ -43,17 +43,17 @@ namespace Nakama
         /// The name of the chat room, or an empty string if this message was not sent through a chat room.
         /// </summary>
         string RoomName { get; }
-        
+
         /// <summary>
         /// The ID of the group, or an empty string if this message was not sent through a group channel.
         /// </summary>
         string GroupId { get; }
-        
+
         /// <summary>
         /// The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
         /// </summary>
         string UserIdOne { get; }
-        
+
         /// <summary>
         /// The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
         /// </summary>
@@ -63,27 +63,27 @@ namespace Nakama
     /// <inheritdoc cref="IChannelPresenceEvent"/>
     internal class ChannelPresenceEvent : IChannelPresenceEvent
     {
-        [DataMember(Name="channel_id")]
+        [DataMember(Name="channel_id"), Preserve]
         public string ChannelId { get; set; }
 
         public IEnumerable<IUserPresence> Joins => _joins ?? new List<UserPresence>(0);
-        [DataMember(Name="joins")]
+        [DataMember(Name="joins"), Preserve]
         public List<UserPresence> _joins { get; set; }
 
         public IEnumerable<IUserPresence> Leaves => _leaves ?? new List<UserPresence>(0);
-        [DataMember(Name="leaves")]
+        [DataMember(Name="leaves"), Preserve]
         public List<UserPresence> _leaves { get; set; }
-        
-        [DataMember(Name="room_name")]
+
+        [DataMember(Name="room_name"), Preserve]
         public string RoomName { get; set; }
-        
-        [DataMember(Name="group_id")]
+
+        [DataMember(Name="group_id"), Preserve]
         public string GroupId { get; set; }
-        
-        [DataMember(Name="user_id_one")]
+
+        [DataMember(Name="user_id_one"), Preserve]
         public string UserIdOne { get; set; }
-        
-        [DataMember(Name="user_id_two")]
+
+        [DataMember(Name="user_id_two"), Preserve]
         public string UserIdTwo { get; set; }
 
         public override string ToString()

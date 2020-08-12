@@ -24,11 +24,11 @@ namespace Nakama
     /// </summary>
     internal class WebSocketErrorMessage
     {
-        [DataMember(Name = "code")] public int Code { get; set; }
+        [DataMember(Name = "code"), Preserve] public int Code { get; set; }
 
-        [DataMember(Name = "context")] public Dictionary<string, string> Context { get; set; }
+        [DataMember(Name = "context"), Preserve] public Dictionary<string, string> Context { get; set; }
 
-        [DataMember(Name = "message")] public string Message { get; set; }
+        [DataMember(Name = "message"), Preserve] public string Message { get; set; }
 
         public override string ToString()
         {

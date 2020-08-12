@@ -24,7 +24,7 @@ namespace Nakama
     /// </summary>
     internal class StatusUnfollowMessage
     {
-        [DataMember(Name="user_ids")]
+        [DataMember(Name="user_ids"), Preserve]
         public List<string> UserIds { get; set; }
 
         public override string ToString()

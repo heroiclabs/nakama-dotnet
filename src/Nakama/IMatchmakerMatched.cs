@@ -77,17 +77,17 @@ namespace Nakama
     /// <inheritdoc cref="IMatchmakerMatched"/>
     internal class MatchmakerMatched : IMatchmakerMatched
     {
-        [DataMember(Name = "match_id")] public string MatchId { get; set; }
+        [DataMember(Name = "match_id"), Preserve] public string MatchId { get; set; }
 
-        [DataMember(Name = "ticket")] public string Ticket { get; set; }
+        [DataMember(Name = "ticket"), Preserve] public string Ticket { get; set; }
 
-        [DataMember(Name = "token")] public string Token { get; set; }
+        [DataMember(Name = "token"), Preserve] public string Token { get; set; }
 
         public IEnumerable<IMatchmakerUser> Users => _users ?? new List<MatchmakerUser>(0);
-        [DataMember(Name = "users")] public List<MatchmakerUser> _users { get; set; }
+        [DataMember(Name = "users"), Preserve] public List<MatchmakerUser> _users { get; set; }
 
         public IMatchmakerUser Self => _self;
-        [DataMember(Name = "self")] public MatchmakerUser _self { get; set; }
+        [DataMember(Name = "self"), Preserve] public MatchmakerUser _self { get; set; }
 
         public override string ToString()
         {
@@ -102,15 +102,15 @@ namespace Nakama
     {
         public IDictionary<string, double> NumericProperties => _numericProperties ?? new Dictionary<string, double>();
 
-        [DataMember(Name = "numeric_properties")]
+        [DataMember(Name = "numeric_properties"), Preserve]
         public Dictionary<string, double> _numericProperties { get; set; }
 
         public IUserPresence Presence => _presence;
-        [DataMember(Name = "presence")] public UserPresence _presence { get; set; }
+        [DataMember(Name = "presence"), Preserve] public UserPresence _presence { get; set; }
 
         public IDictionary<string, string> StringProperties => _stringProperties ?? new Dictionary<string, string>();
 
-        [DataMember(Name = "string_properties")]
+        [DataMember(Name = "string_properties"), Preserve]
         public Dictionary<string, string> _stringProperties { get; set; }
 
         public override string ToString()
