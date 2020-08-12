@@ -5,13 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.5.0] - 2020-08-12
+## [Unreleased]
 
+
+## [2.5.0] - 2020-08-12
+### Added
 - Add parsing support for the Nakama Console API to the code generator.
 - Add support for emitting custom events to the Nakama server.
+- Add ban and demote API to the client.
 
 ### Changed
-
 - Update TinyJson packaged dependency to the '01c586d' commit.
 - Remove usage of "System.Diagnostic.Tracing" from the codebase. This improves compatibility with Unity engine.
 - Use a Preserve annotation to mark fields which should not be code stripped at build time. This improves compatibility with Unity engine.
