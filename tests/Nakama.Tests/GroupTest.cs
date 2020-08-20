@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Xunit;
+
 namespace Nakama.Tests.Api
 {
-    using System;
-    using System.Linq;
-    using System.Net;
-    using System.Threading.Tasks;
-    using Xunit;
-
     public class GroupTest
     {
         private IClient _client;

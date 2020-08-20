@@ -95,6 +95,12 @@ namespace Nakama
             Logger = NullLogger.Instance; // must set logger last.
         }
 
+        /// <inheritdoc cref="AuthenticateAppleAsync"/>
+        public async Task<ISession> AuthenticateAppleAsync(string username, string token, Dictionary<string, string> vars) {
+            var response = await _apiClient.AuthenticateAppleAsync(username, string.Empty, new ApiAccountApple {Token = token, _vars = vars});
+            return new Session(response.Token, response.Created);
+        }
+
         /// <inheritdoc cref="AddFriendsAsync"/>
         public Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null) =>
             _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames);
@@ -270,6 +276,10 @@ namespace Nakama
         public Task LeaveGroupAsync(ISession session, string groupId) =>
             _apiClient.LeaveGroupAsync(session.AuthToken, groupId);
 
+        /// <inheritdoc cref="LinkAppleAsync"/>
+        public Task LinkAppleAsync(ISession session, string token) =>
+            _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token});
+
         /// <inheritdoc cref="LinkCustomAsync"/>
         public Task LinkCustomAsync(ISession session, string id) =>
             _apiClient.LinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id});
@@ -432,6 +442,10 @@ namespace Nakama
         {
             return $"Client(Host='{Host}', Port={Port}, Scheme='{Scheme}', ServerKey='{ServerKey}', Timeout={Timeout})";
         }
+
+        /// <inheritdoc cref="UnlinkAppleAsync"/>
+        public Task UnlinkAppleAsync(ISession session, string token) =>
+            _apiClient.UnlinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token});
 
         /// <inheritdoc cref="UnlinkCustomAsync"/>
         public Task UnlinkCustomAsync(ISession session, string id) =>
