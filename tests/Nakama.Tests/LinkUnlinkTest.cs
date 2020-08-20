@@ -1,5 +1,5 @@
 ﻿/**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,19 @@ namespace Nakama.Tests.Api
     using System;
     using System.Linq;
     using System.Net;
-    using System.Net.Http;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
     public class LinkUnlinkTest
     {
         private IClient _client;
 
-        // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+        public LinkUnlinkTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
+            _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldLinkCustomId()
         {
             var customid1 = Guid.NewGuid().ToString();
@@ -46,11 +42,11 @@ namespace Nakama.Tests.Api
 
             Assert.NotNull(original);
             Assert.NotNull(updated);
-            Assert.AreEqual(original.UserId, updated.UserId);
-            Assert.AreEqual(original.Username, updated.Username);
+            Assert.Equal(original.UserId, updated.UserId);
+            Assert.Equal(original.Username, updated.Username);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldLinkCustomIdSame()
         {
             var customid = Guid.NewGuid().ToString();
@@ -59,11 +55,11 @@ namespace Nakama.Tests.Api
             var account = await _client.GetAccountAsync(session);
 
             Assert.NotNull(account);
-            Assert.AreEqual(session.UserId, account.User.Id);
-            Assert.AreEqual(session.Username, account.User.Username);
+            Assert.Equal(session.UserId, account.User.Id);
+            Assert.Equal(session.Username, account.User.Username);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldLinkCustomIdFieldEmpty()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -73,11 +69,11 @@ namespace Nakama.Tests.Api
             var account = await _client.GetAccountAsync(session);
 
             Assert.NotNull(account);
-            Assert.That(account.Devices.Count(d => d.Id == deviceid), Is.EqualTo(1));
-            Assert.AreEqual(customid, account.CustomId);
+            Assert.Equal(account.Devices.Count(d => d.Id == deviceid), 1);
+            Assert.Equal(customid, account.CustomId);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldUnlinkCustomId()
         {
             var customid = Guid.NewGuid().ToString();
@@ -88,11 +84,11 @@ namespace Nakama.Tests.Api
             var account = await _client.GetAccountAsync(session);
 
             Assert.NotNull(account);
-            Assert.That(account.Devices.Count(d => d.Id == deviceid), Is.EqualTo(1));
-            Assert.IsNull(account.CustomId);
+            Assert.Equal(account.Devices.Count(d => d.Id == deviceid), 1);
+            Assert.Null(account.CustomId);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotLinkCustomIdInuse()
         {
             var customid = Guid.NewGuid().ToString();
@@ -100,21 +96,21 @@ namespace Nakama.Tests.Api
             var deviceid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateDeviceAsync(deviceid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkCustomAsync(session, customid));
-            Assert.AreEqual(HttpStatusCode.Conflict, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkCustomAsync(session, customid));
+            Assert.Equal((int) HttpStatusCode.Conflict, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkCustomId()
         {
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkCustomAsync(session, customid));
-            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkCustomAsync(session, customid));
+            Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkCustomIdNotOwned()
         {
             var customid = Guid.NewGuid().ToString();
@@ -122,11 +118,11 @@ namespace Nakama.Tests.Api
             var deviceid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateDeviceAsync(deviceid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkCustomAsync(session, customid));
-            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkCustomAsync(session, customid));
+            Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldLinkDeviceId()
         {
             var deviceid1 = Guid.NewGuid().ToString();
@@ -137,11 +133,11 @@ namespace Nakama.Tests.Api
 
             Assert.NotNull(original);
             Assert.NotNull(updated);
-            Assert.AreEqual(original.UserId, updated.UserId);
-            Assert.AreEqual(original.Username, updated.Username);
+            Assert.Equal(original.UserId, updated.UserId);
+            Assert.Equal(original.Username, updated.Username);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldLinkDeviceIdSame()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -150,11 +146,11 @@ namespace Nakama.Tests.Api
             var account = await _client.GetAccountAsync(session);
 
             Assert.NotNull(account);
-            Assert.AreEqual(session.UserId, account.User.Id);
-            Assert.AreEqual(session.Username, account.User.Username);
+            Assert.Equal(session.UserId, account.User.Id);
+            Assert.Equal(session.Username, account.User.Username);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotLinkDeviceIdInuse()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -162,11 +158,11 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkDeviceAsync(session, deviceid));
-            Assert.AreEqual(HttpStatusCode.Conflict, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkDeviceAsync(session, deviceid));
+            Assert.Equal((int) HttpStatusCode.Conflict, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldUnlinkDeviceId()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -176,20 +172,20 @@ namespace Nakama.Tests.Api
             var account = await _client.GetAccountAsync(session);
 
             Assert.NotNull(account);
-            Assert.That(account.Devices.Count(d => d.Id == deviceid), Is.EqualTo(0));
+            Assert.Equal(account.Devices.Count(d => d.Id == deviceid), 0);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkDeviceId()
         {
             var deviceid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateDeviceAsync(deviceid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkDeviceAsync(session, deviceid));
-            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkDeviceAsync(session, deviceid));
+            Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkDeviceIdNotOwned()
         {
             var deviceid1 = Guid.NewGuid().ToString();
@@ -197,11 +193,11 @@ namespace Nakama.Tests.Api
             var deviceid2 = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateDeviceAsync(deviceid2);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkDeviceAsync(session, deviceid1));
-            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkDeviceAsync(session, deviceid1));
+            Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldLinkEmail()
         {
             var customid = Guid.NewGuid().ToString();
@@ -213,11 +209,11 @@ namespace Nakama.Tests.Api
 
             Assert.NotNull(original);
             Assert.NotNull(updated);
-            Assert.AreEqual(original.UserId, updated.UserId);
-            Assert.AreEqual(original.Username, updated.Username);
+            Assert.Equal(original.UserId, updated.UserId);
+            Assert.Equal(original.Username, updated.Username);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldLinkEmailSame()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
@@ -227,11 +223,11 @@ namespace Nakama.Tests.Api
             var account = await _client.GetAccountAsync(session);
 
             Assert.NotNull(account);
-            Assert.AreEqual(session.UserId, account.User.Id);
-            Assert.AreEqual(session.Username, account.User.Username);
+            Assert.Equal(session.UserId, account.User.Id);
+            Assert.Equal(session.Username, account.User.Username);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotLinkEmailInuse()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
@@ -240,11 +236,11 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkEmailAsync(session, email, password));
-            Assert.AreEqual(HttpStatusCode.Conflict, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkEmailAsync(session, email, password));
+            Assert.Equal((int) HttpStatusCode.Conflict, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldUnlinkEmail()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
@@ -256,21 +252,21 @@ namespace Nakama.Tests.Api
             var account = await _client.GetAccountAsync(session);
 
             Assert.NotNull(account);
-            Assert.AreNotEqual(email, account.Email);
+            Assert.NotEqual(email, account.Email);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkEmail()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
             const string password = "newpassword";
             var session = await _client.AuthenticateEmailAsync(email, password);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkEmailAsync(session, email, password));
-            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkEmailAsync(session, email, password));
+            Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkEmailNotOwned()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
@@ -279,31 +275,31 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkEmailAsync(session, email, password));
-            Assert.AreEqual(HttpStatusCode.Forbidden, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkEmailAsync(session, email, password));
+            Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotLinkFacebook()
         {
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkFacebookAsync(session, "invalid"));
-            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkFacebookAsync(session, "invalid"));
+            Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkFacebook()
         {
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkFacebookAsync(session, "invalid"));
-            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkFacebookAsync(session, "invalid"));
+            Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotLinkGameCenter()
         {
             var customid = Guid.NewGuid().ToString();
@@ -316,12 +312,12 @@ namespace Nakama.Tests.Api
             const string signature = "e";
             const string timestamp = "f";
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.LinkGameCenterAsync(session, bundleId, playerId, publicKeyUrl, salt, signature, timestamp));
-            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotLinkGameCenterBadInput()
         {
             var customid = Guid.NewGuid().ToString();
@@ -334,12 +330,12 @@ namespace Nakama.Tests.Api
             var signature = string.Empty;
             var timestamp = string.Empty;
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.LinkGameCenterAsync(session, bundleId, playerId, publicKeyUrl, salt, signature, timestamp));
-            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkGameCenterBadInput()
         {
             var customid = Guid.NewGuid().ToString();
@@ -352,49 +348,49 @@ namespace Nakama.Tests.Api
             var signature = string.Empty;
             var timestamp = string.Empty;
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() =>
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() =>
                 _client.UnlinkGameCenterAsync(session, bundleId, playerId, publicKeyUrl, salt, signature, timestamp));
-            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotLinkGoogle()
         {
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkGoogleAsync(session, "invalid"));
-            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkGoogleAsync(session, "invalid"));
+            Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkGoogle()
         {
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkGoogleAsync(session, "invalid"));
-            Assert.AreEqual(HttpStatusCode.Unauthorized, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkGoogleAsync(session, "invalid"));
+            Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotLinkSteam()
         {
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkSteamAsync(session, "invalid"));
-            Assert.AreEqual(HttpStatusCode.PreconditionFailed, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkSteamAsync(session, "invalid"));
+            Assert.Equal((int) HttpStatusCode.PreconditionFailed, ex.StatusCode);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldNotUnlinkSteam()
         {
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkSteamAsync(session, "invalid"));
-            Assert.AreEqual(HttpStatusCode.PreconditionFailed, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkSteamAsync(session, "invalid"));
+            Assert.Equal((int) HttpStatusCode.PreconditionFailed, ex.StatusCode);
         }
     }
 }
