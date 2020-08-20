@@ -71,9 +71,9 @@ namespace Nakama
         /// <summary>
         /// Authenticate a user with an Apple ID against the server.
         /// </summary>
-        /// <param name="token">A username used to create the user.</param>
+        /// <param name="username">A username used to create the user.</param>
         /// <param name="token">The ID token received from Apple to validate.</param>
-        /// <param name="vars">Extra information that will be bundled in the session token. </param>
+        /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateAppleAsync(string username, string token, Dictionary<string, string> vars);
 
@@ -315,6 +315,15 @@ namespace Nakama
         /// <param name="groupId">The ID of the group to leave.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task LeaveGroupAsync(ISession session, string groupId);
+
+        /// <summary>
+        /// Link an Apple ID to the social profiles on the current user's account.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="token">The ID token received from Apple to validate.</param>
+        /// <param name="vars">Extra information that will be bundled in the session token.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task LinkAppleAsync(ISession session, string token, Dictionary<string, string> vars);
 
         /// <summary>
         /// Link a custom ID to the user account owned by the session.
@@ -618,6 +627,14 @@ namespace Nakama
         /// <param name="payload">A payload to send with the function call.</param>
         /// <returns>A task to resolve an RPC response.</returns>
         Task<IApiRpc> RpcAsync(string httpKey, string id, string payload = null);
+
+        /// <summary>
+        /// Remove the Apple ID from the social profiles on the current user's account.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="token">The ID token received from Apple.</param>
+        /// <param name="vars">Extra information that will be bundled in the session token.</param>        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task UnlinkAppleAsync(ISession session, string token, Dictionary<string, string> vars);
 
         /// <summary>
         /// Unlink a custom ID from the user account owned by the session.
