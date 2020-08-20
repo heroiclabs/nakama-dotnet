@@ -277,8 +277,8 @@ namespace Nakama
             _apiClient.LeaveGroupAsync(session.AuthToken, groupId);
 
         /// <inheritdoc cref="LinkAppleAsync"/>
-        public Task LinkAppleAsync(ISession session, string token, Dictionary<string, string> vars) =>
-            _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token, _vars = vars});
+        public Task LinkAppleAsync(ISession session, string token) =>
+            _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token});
 
         /// <inheritdoc cref="LinkCustomAsync"/>
         public Task LinkCustomAsync(ISession session, string id) =>
@@ -444,8 +444,8 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="UnlinkAppleAsync"/>
-        public Task UnlinkAppleAsync(ISession session, string token, Dictionary<string, string> vars) =>
-            _apiClient.UnlinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token, _vars = vars});
+        public Task UnlinkAppleAsync(ISession session, string token) =>
+            _apiClient.UnlinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token});
 
         /// <inheritdoc cref="UnlinkCustomAsync"/>
         public Task UnlinkCustomAsync(ISession session, string id) =>

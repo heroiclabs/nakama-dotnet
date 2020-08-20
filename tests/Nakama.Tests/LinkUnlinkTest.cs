@@ -17,6 +17,7 @@
 namespace Nakama.Tests.Api
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
@@ -390,6 +391,26 @@ namespace Nakama.Tests.Api
             var session = await _client.AuthenticateCustomAsync(customid);
 
             var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkSteamAsync(session, "invalid"));
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldNotLinkApple()
+        {
+            var customid = Guid.NewGuid().ToString();
+            var session = await _client.AuthenticateCustomAsync(customid);
+
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkAppleAsync(session, "invalid"));
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldNotUnlinkApple()
+        {
+            var customid = Guid.NewGuid().ToString();
+            var session = await _client.AuthenticateCustomAsync(customid);
+
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkAppleAsync(session, "invalid"));
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
     }
