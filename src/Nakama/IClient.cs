@@ -69,6 +69,15 @@ namespace Nakama
         Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids);
 
         /// <summary>
+        /// Authenticate a user with an Apple ID against the server.
+        /// </summary>
+        /// <param name="token">A usernamed used to create the user.</param>
+        /// <param name="token">The ID token received from Apple to validate.</param>
+        /// <param name="vars">Extra information that will be bundled in the session token. </param>
+        /// <returns>A task which resolves to a session object.</returns>
+        Task<ISession> AuthenticateAppleAsync(string username, string token, Dictionary<string, string> vars);
+
+        /// <summary>
         /// Authenticate a user with a custom id.
         /// </summary>
         /// <param name="id">A custom identifier usually obtained from an external authentication service.</param>

@@ -95,6 +95,12 @@ namespace Nakama
             Logger = NullLogger.Instance; // must set logger last.
         }
 
+        /// <inheritdoc cref="AuthenticateAppleAsync"/>
+        public async Task<ISession> AuthenticateAppleAsync(string username, string token, Dictionary<string, string> vars) {
+            var response = await _apiClient.AuthenticateAppleAsync(username, string.Empty, new ApiAccountApple {Token = token, _vars = vars});
+            return new Session(response.Token, response.Created);
+        }
+
         /// <inheritdoc cref="AddFriendsAsync"/>
         public Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null) =>
             _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames);
