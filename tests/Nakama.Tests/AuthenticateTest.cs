@@ -73,16 +73,6 @@ namespace Nakama.Tests.Api
         }
 
         [Fact]
-        public async Task ShouldAuthenticateApple()
-        {
-            var session = await _client.AuthenticateAppleAsync("user", "sometoken", new Dictionary<string, string>{{"var1", "value1"}});
-            Assert.NotNull(session);
-            Assert.NotNull(session.UserId);
-            Assert.NotNull(session.Username);
-            Assert.False(session.IsExpired);
-        }
-
-        [Fact]
         public async void ShouldNotAuthenticateFacebook()
         {
             var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateFacebookAsync("invalid"));
@@ -120,6 +110,14 @@ namespace Nakama.Tests.Api
             // Precondition failed because Steam requires special configuration with the server.
             // Maps to 400, because gRPC precondition failed != HTTP precondition failed.
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
+        }
+
+        [Fact]
+        public async void ShouldNotAuthenticateApple()
+        {
+            // Fails because Apple requires special configuration with the server.
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateAppleAsync("some_username", "some_token", new Dictionary<string, string>()));
+            Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
     }
 }

@@ -71,7 +71,7 @@ namespace Nakama
         /// <summary>
         /// Authenticate a user with an Apple ID against the server.
         /// </summary>
-        /// <param name="token">A usernamed used to create the user.</param>
+        /// <param name="token">A username used to create the user.</param>
         /// <param name="token">The ID token received from Apple to validate.</param>
         /// <param name="vars">Extra information that will be bundled in the session token. </param>
         /// <returns>A task which resolves to a session object.</returns>
