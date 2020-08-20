@@ -380,7 +380,7 @@ namespace Nakama.Tests.Api
             var session = await _client.AuthenticateCustomAsync(customid);
 
             var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkSteamAsync(session, "invalid"));
-            Assert.Equal((int) HttpStatusCode.PreconditionFailed, ex.StatusCode);
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Fact]
@@ -390,7 +390,7 @@ namespace Nakama.Tests.Api
             var session = await _client.AuthenticateCustomAsync(customid);
 
             var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.UnlinkSteamAsync(session, "invalid"));
-            Assert.Equal((int) HttpStatusCode.PreconditionFailed, ex.StatusCode);
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
     }
 }
