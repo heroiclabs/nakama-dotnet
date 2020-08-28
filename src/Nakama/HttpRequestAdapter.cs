@@ -80,7 +80,7 @@ namespace Nakama
             }
 
             var decoded = contents.FromJson<Dictionary<string, object>>();
-            throw new ApiResponseException((int) response.StatusCode, decoded["error"].ToString(),
+            throw new ApiResponseException((int) response.StatusCode, decoded["message"].ToString(),
                 (int) decoded["code"]);
         }
 
