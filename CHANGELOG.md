@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Added Apple single sign-on support.
+- Added Steam single sign-on support.
+- Fixed serialization of HTTP API error messages.
 
 ## [2.5.0] - 2020-08-12
 ### Added
@@ -30,7 +33,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Prevent InvalidOperationException caused when socket connect task is already completed.
 
 ## [2.3.1] - 2019-09-21
-### Changed 
+### Changed
 - Use workaround for IPv6 bug in TcpClient with Mono runtime used with Unity engine.
 
 ### Fixed
