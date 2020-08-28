@@ -84,7 +84,7 @@ namespace Nakama
             var exception = new ApiResponseException((int) response.StatusCode, decoded["message"].ToString(),
                 (int) decoded["code"]);
 
-            CopyErrorDictionary(decoded, exception);
+            this.CopyErrorDictionary(decoded, exception);
             throw exception;
         }
 
@@ -108,20 +108,6 @@ namespace Nakama
             var client =
                 new HttpClient(compression ? (HttpMessageHandler) new GZipHttpClientHandler(handler) : handler);
             return new HttpRequestAdapter(client);
-        }
-
-        /// <summary>
-        /// Copies in-place the keys and values of additional error information from the API Response into
-        /// the provided APIResponseException.
-        /// </summary>
-        private static void CopyErrorDictionary(Dictionary<string, object> decodedResponse, ApiResponseException e)
-        {
-            var errDict = decodedResponse["error"] as Dictionary<string, object>;
-
-            foreach (KeyValuePair<string, object> keyVal in errDict)
-            {
-                e.Data[keyVal.Key] = keyVal.Value;
-            }
         }
     }
 }
