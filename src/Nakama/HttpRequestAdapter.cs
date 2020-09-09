@@ -84,7 +84,11 @@ namespace Nakama
             var exception = new ApiResponseException((int) response.StatusCode, decoded["message"].ToString(),
                 (int) decoded["code"]);
 
-            this.CopyErrorDictionary(decoded, exception);
+            if (decoded.ContainsKey("error"))
+            {
+                this.CopyResponseError(decoded["error"], exception);
+            }
+
             throw exception;
         }
 
