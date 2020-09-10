@@ -52,5 +52,17 @@ namespace Nakama.Tests.Api
             Assert.True(exception.Data.Contains("StackTrace"));
             Assert.True(exception.Data.Contains("Cause"));
         }
+
+        [Fact]
+        public async Task BadGoRpcReturnsErrorMessage()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            const string funcid = "clientrpc.rpc_error_go";
+
+            var exception = await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
+            await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
+            Assert.NotNull(exception.Message);
+            Assert.NotEmpty(exception.Message);
+        }
     }
 }
