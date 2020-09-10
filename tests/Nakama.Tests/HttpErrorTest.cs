@@ -54,7 +54,7 @@ namespace Nakama.Tests.Api
         }
 
         [Fact]
-        public async Task BadGoRpcReturnsErrorMessage()
+        public async Task BadGoRpcReturnsErrorMessageAndEmptyDict()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             const string funcid = "clientrpc.rpc_error_go";
@@ -63,6 +63,7 @@ namespace Nakama.Tests.Api
             await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
             Assert.NotNull(exception.Message);
             Assert.NotEmpty(exception.Message);
+            Assert.Empty(exception.Data);
         }
 
         /*
@@ -84,7 +85,7 @@ namespace Nakama.Tests.Api
         }
 
         [Fact]
-        public async Task BadLuaStorageRpcReturnsErrorMessage()
+        public async Task BadLuaStorageRpcReturnsErrorMessageAndStringNotDict()
         {
             var session = await _client.AuthenticateCustomAsync("user_rpc_error_storage_lua");
             const string funcid = "clientrpc.rpc_error_storage_lua";
