@@ -64,5 +64,40 @@ namespace Nakama.Tests.Api
             Assert.NotNull(exception.Message);
             Assert.NotEmpty(exception.Message);
         }
+
+        /*
+        Make RPC calls to storage API as an example to test error format in Lua and Go runtimes.
+        */
+
+        [Fact]
+        public async Task BadGoStorageRpcReturnsErrorMessageAndEmptyDict()
+        {
+            var session = await _client.AuthenticateCustomAsync("user_rpc_error_storage_go");
+            const string funcid = "clientrpc.rpc_error_storage_go";
+
+            var exception = await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid, session.UserId));
+            await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
+            Assert.NotNull(exception.Message);
+            Assert.NotEmpty(exception.Message);
+            // go runtime returns an empty object
+            Assert.Empty(exception.Data);
+        }
+
+        [Fact]
+        public async Task BadLuaStorageRpcReturnsErrorMessage()
+        {
+            var session = await _client.AuthenticateCustomAsync("user_rpc_error_storage_lua");
+            const string funcid = "clientrpc.rpc_error_storage_lua";
+
+            var exception = await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid, session.UserId));
+            await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
+            Assert.NotNull(exception.Message);
+            Assert.NotEmpty(exception.Message);
+             //lua runtime differs from go runtime in returning error as string.
+            Assert.True(exception.Data.Contains("error"));
+            Assert.NotNull(exception.Data["error"] as string);
+            Assert.NotEmpty(exception.Data["error"] as string);
+
+        }
     }
 }
