@@ -1,0 +1,24 @@
+version: '3'
+services:
+  cockroachdb:
+    image: cockroachdb/cockroach:v19.2.2
+    command: start --insecure --store=attrs=ssd,path=/var/lib/cockroach/
+    restart: "no"
+  nakama:
+    image: heroiclabs/nakama-clientsdk-test:latest
+    entrypoint:
+      - "/bin/sh"
+      - "-ecx"
+      - >
+          /nakama/nakama migrate up --database.address root@cockroachdb:26257 &&
+          exec /nakama/nakama --name nakama1 --database.address root@cockroachdb:26257 --logger.level DEBUG --session.token_expiry_sec 7200 --metrics.prometheus_port 9100
+    restart: "no"
+    links:
+      - "cockroachdb:db"
+    depends_on:
+      - cockroachdb
+  nakama-dotnet:
+    image: heroiclabs/nakama-dotnet:latest
+    depends_on:
+      - nakama
+

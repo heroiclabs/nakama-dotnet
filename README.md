@@ -121,17 +121,28 @@ dotnet pack -p:AssemblyVersion=2.0.0.0 -p:PackageVersion=2.0.0 -c Release src/Na
 
 ### Run Tests
 
-To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the [documentation](https://heroiclabs.com/docs/install-docker-quickstart).
+With Docker Compose:
+
+We use Docker to automate our tests using the following steps:
+
+(1) Pull a test image of the Nakama server with test runtime code loaded.
+(2) Pull a CockroachDB image.
+(3) Build a test image of the SDK and run integration tests between these three images.
+
+To run these steps, build the SDK image and run Docker Compose:
+`docker image build --tag=heroiclabs/nakama-dotnet:latest . && docker-compose up`
+
+With Host Machine:
+
+Some contributors may want to either contribute to the (Nakama runtime)[https://heroiclabs.com/docs/runtime-code-basics/] test suite or run tests directly on their host machine. To do so, you will need to install the Nakama server test image locally and modify its RPC suite. See
+https://github.com/heroiclabs/nakama-clientsdk-test for details on how to do this.
+
+Then run `dotnet test` inside this repository to test the SDK on your host machine.
+
+If you want to isolate a specific test, pass the name of the test method (with the option of being fully qualified) to `dotnet test --filter`:
 
 ```shell
-docker-compose -f ./docker-compose-postgres.yml up
-dotnet test tests/Nakama.Tests/Nakama.Tests.csproj
-```
-
-To run a specific test, pass the fully qualified name of the method to `dotnet test --filter`:
-
-```shell
-dotnet test --filter "Nakama.Tests.Api.GroupTest.ShouldPromoteAndDemoteUsers"
+dotnet test --filter "ShouldPromoteAndDemoteUsers"
 ```
 
 ### License
