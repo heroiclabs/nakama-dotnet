@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Nakama.Tests
+namespace Nakama.Tests.Socket
 {
     // NOTE Test name patterns are: MethodName_StateUnderTest_ExpectedBehavior
-    public class SocketUserStatusTest : IDisposable
+    public class WebSocketUserStatusTest : IDisposable
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(2);
 
         private IClient _client;
         private readonly ISocket _socket;
 
-        public SocketUserStatusTest()
+        public WebSocketUserStatusTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Socket.From(_client);
+            _socket = Nakama.Socket.From(_client);
         }
 
         public void Dispose()
@@ -57,7 +57,7 @@ namespace Nakama.Tests
             await _socket.ConnectAsync(session1);
             await _socket.FollowUsersAsync(new[] {session2.UserId});
 
-            var socket = Socket.From(_client);
+            var socket = Nakama.Socket.From(_client);
             await socket.ConnectAsync(session2);
             await socket.UpdateStatusAsync("new status change");
 
@@ -82,7 +82,7 @@ namespace Nakama.Tests
             await _socket.ConnectAsync(session1);
             await _socket.FollowUsersAsync(new string[] { }, new[] {session2.Username});
 
-            var socket = Socket.From(_client);
+            var socket = Nakama.Socket.From(_client);
             await socket.ConnectAsync(session2);
             await socket.UpdateStatusAsync("new status change");
 
@@ -120,7 +120,7 @@ namespace Nakama.Tests
             await _socket.FollowUsersAsync(new[] {session2.UserId});
 
             // Second user comes online and sets status.
-            var socket = Socket.From(_client);
+            var socket = Nakama.Socket.From(_client);
             await socket.ConnectAsync(session2);
             await socket.UpdateStatusAsync("new status change");
 
@@ -149,10 +149,10 @@ namespace Nakama.Tests
 
             var id2 = Guid.NewGuid().ToString();
             var session2 = await _client.AuthenticateCustomAsync(id2);
-            var socket1 = Socket.From(_client);
+            var socket1 = Nakama.Socket.From(_client);
             //socket1.ReceivedError
             await socket1.ConnectAsync(session2);
-            var socket2 = Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
             //socket2.ReceivedError
             await socket2.ConnectAsync(session2);
 
@@ -174,17 +174,17 @@ namespace Nakama.Tests
         public async void FollowUsers_TwoUsers_ThirdUserFollowsBoth()
         {
             var id1 = Guid.NewGuid().ToString();
-            var socket1 = Socket.From(_client);
+            var socket1 = Nakama.Socket.From(_client);
             //socket1.ReceivedError
             var session1 = await _client.AuthenticateCustomAsync(id1);
 
             var id2 = Guid.NewGuid().ToString();
-            var socket2 = Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
             //socket2.ReceivedError
             var session2 = await _client.AuthenticateCustomAsync(id2);
 
             var id3 = Guid.NewGuid().ToString();
-            var socket3 = Socket.From(_client);
+            var socket3 = Nakama.Socket.From(_client);
             //socket3.ReceivedError
             var session3 = await _client.AuthenticateCustomAsync(id3);
 

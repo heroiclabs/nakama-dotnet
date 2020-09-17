@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,29 +18,21 @@ namespace Nakama.Tests.Socket
 {
     using System;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
-    public class WebSocketMatchmakerTest
+    public class WebSocketMatchmakerTest : IAsyncLifetime
     {
         private IClient _client;
         private ISocket _socket;
 
-        // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+
+        public WebSocketMatchmakerTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
-            _socket = _client.CreateWebSocket();
+            ClientUtil.FromSettingsFile();
+            _socket = Nakama.Socket.From(_client);
         }
 
-        [TearDown]
-        public async Task TearDown()
-        {
-            await _socket.DisconnectAsync(false);
-        }
-
-        [Test]
+        [Fact]
         public async Task ShouldJoinMatchmaker()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -48,11 +40,11 @@ namespace Nakama.Tests.Socket
             var matchmakerTicket = await _socket.AddMatchmakerAsync("*");
 
             Assert.NotNull(matchmakerTicket);
-            Assert.IsNotEmpty(matchmakerTicket.Ticket);
+            Assert.Empty(matchmakerTicket.Ticket);
         }
 
-        [Test]
-        [Ignore("Flakey. Needs improvement.")]
+        // "Flakey. Needs improvement."
+        [Fact]
         public async Task ShouldJoinAndLeaveMatchmaker()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -60,8 +52,18 @@ namespace Nakama.Tests.Socket
             var matchmakerTicket = await _socket.AddMatchmakerAsync("*");
 
             Assert.NotNull(matchmakerTicket);
-            Assert.IsNotEmpty(matchmakerTicket.Ticket);
-            Assert.DoesNotThrowAsync(() => _socket.RemoveMatchmakerAsync(matchmakerTicket));
+            Assert.Empty(matchmakerTicket.Ticket);
+            await _socket.RemoveMatchmakerAsync(matchmakerTicket);
+        }
+
+        Task IAsyncLifetime.InitializeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IAsyncLifetime.DisposeAsync()
+        {
+            return _socket.CloseAsync();
         }
     }
 }

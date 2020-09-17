@@ -28,7 +28,7 @@ namespace Nakama.Tests
         public AwaitedSocketTaskTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Socket.From(_client);
+            _socket = Nakama.Socket.From(_client);
         }
 
         public void Dispose()

@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,30 +19,21 @@ namespace Nakama.Tests.Socket
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
     using TinyJson;
 
-    [TestFixture]
-    public class WebSocketRpcTest
+    public class WebSocketRpcTest : IAsyncLifetime
     {
         private IClient _client;
         private ISocket _socket;
 
-        // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+        public WebSocketRpcTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
-            _socket = _client.CreateWebSocket();
+            _client = ClientUtil.FromSettingsFile();
+            _socket = Nakama.Socket.From(_client);
         }
 
-        [TearDown]
-        public async Task TearDown()
-        {
-            await _socket.DisconnectAsync(false);
-        }
-
-        [Test]
+        [Fact]
         public async Task ShouldSendRpcRoundtrip()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -53,8 +44,18 @@ namespace Nakama.Tests.Socket
             var response = await _socket.RpcAsync(funcid, payload);
 
             Assert.NotNull(response);
-            Assert.AreEqual(funcid, response.Id);
-            Assert.AreEqual(payload, response.Payload);
+            Assert.Equal(funcid, response.Id);
+            Assert.Equal(payload, response.Payload);
+        }
+
+        Task IAsyncLifetime.InitializeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        Task IAsyncLifetime.DisposeAsync()
+        {
+            return _socket.CloseAsync();
         }
     }
 }

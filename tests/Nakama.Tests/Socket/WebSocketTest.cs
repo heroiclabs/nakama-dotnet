@@ -18,80 +18,77 @@ namespace Nakama.Tests.Socket
 {
     using System;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
     public class WebSocketTest
     {
         private IClient _client;
         private ISocket _socket;
 
         // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+
+        public WebSocketTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
-            _socket = _client.CreateWebSocket();
+            _client = ClientUtil.FromSettingsFile();
+            _socket = Nakama.Socket.From(_client);
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateSocket()
         {
-            var client = new Client();
-            var socket = client.CreateWebSocket(5);
-
+            var client = ClientUtil.FromSettingsFile();
+            var socket = Nakama.Socket.From(client);
             Assert.NotNull(socket);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateSocketAndConnect()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-
             var completer = new TaskCompletionSource<bool>();
-            _socket.OnConnect += (_, args) => completer.SetResult(true);
+            _socket.Connected += () => completer.SetResult(true);
+
             await _socket.ConnectAsync(session);
 
-            Assert.IsTrue(await completer.Task);
-
-            await _socket.DisconnectAsync();
+            Assert.True(await completer.Task);
+            await _socket.CloseAsync();
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateSocketAndDisconnect()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-
             var completer = new TaskCompletionSource<bool>();
-            _socket.OnDisconnect += (_, args) => completer.SetResult(true);
-            await _socket.ConnectAsync(session);
-            await _socket.DisconnectAsync(false);
+            _socket.Closed += () => completer.SetResult(true);
 
-            Assert.IsTrue(await completer.Task);
+            await _socket.ConnectAsync(session);
+            await _socket.CloseAsync();
+
+            Assert.True(await completer.Task);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateSocketAndDisconnectSilent()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-
             var completer = new TaskCompletionSource<bool>();
-            _socket.OnDisconnect += (_, args) => completer.SetResult(true);
+            _socket.Closed += () => completer.SetResult(true);
+
             await _socket.ConnectAsync(session);
             completer.SetResult(false);
-            await _socket.DisconnectAsync(false);
+            await _socket.CloseAsync();
 
-            Assert.IsFalse(await completer.Task);
+            Assert.False(await completer.Task);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateSocketAndDisconnectNoConnect()
         {
             var completer = new TaskCompletionSource<bool>();
-            _socket.OnDisconnect += (_, args) => completer.SetResult(true);
+            _socket.Closed += () => completer.SetResult(true);
+            await  _socket.CloseAsync();
 
-            Assert.DoesNotThrowAsync(() => _socket.DisconnectAsync());
-            Assert.IsTrue(await completer.Task);
+            Assert.True(await completer.Task);
         }
     }
 }
