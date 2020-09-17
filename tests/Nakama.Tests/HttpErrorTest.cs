@@ -88,7 +88,7 @@ namespace Nakama.Tests.Api
         public async Task BadLuaStorageRpcReturnsErrorMessageAndStringNotDict()
         {
             var session = await _client.AuthenticateCustomAsync("user_rpc_error_storage_lua");
-            const string funcid = "clientrpc.rpc_error_storage_lua";
+            const string funcid = "clientrpc.rpc_storage_error";
 
             var exception = await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid, session.UserId));
             await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
