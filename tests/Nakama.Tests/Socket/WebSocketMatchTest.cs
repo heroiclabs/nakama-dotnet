@@ -67,8 +67,9 @@ namespace Nakama.Tests.Socket
             Assert.NotNull(match2);
             Assert.Equal(match1.Id, match2.Id);
             Assert.Equal(match1.Label, match2.Label);
-            Assert.True(match1.Presences.Count() ==  1);
-            Assert.True(match2.Presences.Count() == 2);
+
+            Assert.True(match1.Presences.Count() == 0 && match1.Self.UserId == session1.UserId);
+            Assert.True(match2.Presences.Count() == 1);
 
             await socket2.CloseAsync();
         }
