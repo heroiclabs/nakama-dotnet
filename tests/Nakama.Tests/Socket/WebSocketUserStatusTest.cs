@@ -22,7 +22,7 @@ using Xunit;
 namespace Nakama.Tests.Socket
 {
     // NOTE Test name patterns are: MethodName_StateUnderTest_ExpectedBehavior
-    public class WebSocketUserStatusTest : IDisposable
+    public class WebSocketUserStatusTest : IAsyncLifetime
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(2);
 
@@ -33,12 +33,6 @@ namespace Nakama.Tests.Socket
         {
             _client = ClientUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
-        }
-
-        public void Dispose()
-        {
-            _socket.Dispose();
-            _client = null;
         }
 
         [Fact]
@@ -226,6 +220,16 @@ namespace Nakama.Tests.Socket
             var result = await completer.Task;
             Assert.NotNull(result);
             Assert.Contains(result.Joins, joined => joined.UserId.Equals(session.UserId));
+        }
+
+        Task IAsyncLifetime.InitializeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        Task IAsyncLifetime.DisposeAsync()
+        {
+            return _socket.CloseAsync();
         }
     }
 }
