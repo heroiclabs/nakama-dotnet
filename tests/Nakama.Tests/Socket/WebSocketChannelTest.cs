@@ -29,7 +29,7 @@ namespace Nakama.Tests.Socket
 
         public WebSocketChannelTest()
         {
-            _client = new Client("http", "defaultkey", 7350, "127.0.0.1");
+            _client = ClientUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
         }
 
