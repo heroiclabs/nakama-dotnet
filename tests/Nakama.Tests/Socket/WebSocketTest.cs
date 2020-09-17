@@ -71,24 +71,12 @@ namespace Nakama.Tests.Socket
         public async Task ShouldCreateSocketAndDisconnectSilent()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            var completer = new TaskCompletionSource<bool>();
-            _socket.Closed += () => completer.SetResult(true);
 
             await _socket.ConnectAsync(session);
-            completer.SetResult(false);
+            Assert.True(_socket.IsConnected);
+
             await _socket.CloseAsync();
-
-            Assert.False(await completer.Task);
-        }
-
-        [Fact]
-        public async Task ShouldCreateSocketAndDisconnectNoConnect()
-        {
-            var completer = new TaskCompletionSource<bool>();
-            _socket.Closed += () => completer.SetResult(true);
-            await  _socket.CloseAsync();
-
-            Assert.True(await completer.Task);
+            Assert.False(_socket.IsConnected);
         }
     }
 }
