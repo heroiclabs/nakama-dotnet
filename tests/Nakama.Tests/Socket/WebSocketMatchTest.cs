@@ -18,8 +18,9 @@ namespace Nakama.Tests.Socket
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
     using Xunit;
     using TinyJson;
 
@@ -106,7 +107,7 @@ namespace Nakama.Tests.Socket
 
             var result = await completer.Task;
             Assert.NotNull(result);
-            Assert.Equal(newState, result.ToJson());
+            Assert.Equal(newState, Encoding.UTF8.GetString(result.State));
         }
 
         Task IAsyncLifetime.InitializeAsync()

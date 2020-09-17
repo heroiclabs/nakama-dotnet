@@ -27,8 +27,6 @@ namespace Nakama.Tests.Socket
         private IClient _client;
         private ISocket _socket;
 
-        // ReSharper disable RedundantArgumentDefaultValue
-
         public WebSocketChannelTest()
         {
             _client = new Client("http", "defaultkey", 7350, "127.0.0.1");
