@@ -1,5 +1,5 @@
 ﻿/**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,23 +18,22 @@ namespace Nakama.Tests.Api
 {
     using System;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
 
     // NOTE: Requires Lua modules from server repo.
 
-    [TestFixture]
     public class RpcTest
     {
         private IClient _client;
 
         // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+
+        public RpcTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
+            _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldRpcRoundtrip()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -43,10 +42,10 @@ namespace Nakama.Tests.Api
             var rpc = await _client.RpcAsync(session, funcid, payload);
 
             Assert.NotNull(rpc);
-            Assert.AreEqual(payload, rpc.Payload);
+            Assert.Equal(payload, rpc.Payload);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldRpcGet()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -54,10 +53,10 @@ namespace Nakama.Tests.Api
             var rpc = await _client.RpcAsync(session, funcid);
 
             Assert.NotNull(rpc);
-            Assert.AreEqual("{\"message\":\"PONG\"}", rpc.Payload);
+            Assert.Equal("{\"message\":\"PONG\"}", rpc.Payload);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldRpcGetRoundtrip()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -66,19 +65,19 @@ namespace Nakama.Tests.Api
             var rpc = await _client.RpcAsync(session, funcid, payload);
 
             Assert.NotNull(rpc);
-            Assert.AreEqual(payload, rpc.Payload);
+            Assert.Equal(payload, rpc.Payload);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldRpcWithoutSession()
         {
             // Http Key is used often for server to server function calls
-            const string httpkey = "defaultkey";
+            const string httpkey = "defaulthttpkey";
             const string funcid = "clientrpc.rpc_get";
             var rpc = await _client.RpcAsync(httpkey, funcid);
 
             Assert.NotNull(rpc);
-            Assert.AreEqual("{\"message\":\"PONG\"}", rpc.Payload);
+            Assert.Equal("{\"message\":\"PONG\"}", rpc.Payload);
         }
     }
 }
