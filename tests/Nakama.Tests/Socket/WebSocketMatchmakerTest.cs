@@ -25,10 +25,9 @@ namespace Nakama.Tests.Socket
         private IClient _client;
         private ISocket _socket;
 
-
         public WebSocketMatchmakerTest()
         {
-            ClientUtil.FromSettingsFile();
+            _client = ClientUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
         }
 
@@ -40,7 +39,7 @@ namespace Nakama.Tests.Socket
             var matchmakerTicket = await _socket.AddMatchmakerAsync("*");
 
             Assert.NotNull(matchmakerTicket);
-            Assert.Empty(matchmakerTicket.Ticket);
+            Assert.NotEmpty(matchmakerTicket.Ticket);
         }
 
         // "Flakey. Needs improvement."
@@ -52,13 +51,13 @@ namespace Nakama.Tests.Socket
             var matchmakerTicket = await _socket.AddMatchmakerAsync("*");
 
             Assert.NotNull(matchmakerTicket);
-            Assert.Empty(matchmakerTicket.Ticket);
+            Assert.NotEmpty(matchmakerTicket.Ticket);
             await _socket.RemoveMatchmakerAsync(matchmakerTicket);
         }
 
         Task IAsyncLifetime.InitializeAsync()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         Task IAsyncLifetime.DisposeAsync()
