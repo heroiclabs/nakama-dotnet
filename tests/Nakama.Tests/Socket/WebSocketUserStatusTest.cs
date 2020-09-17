@@ -44,7 +44,7 @@ namespace Nakama.Tests.Socket
 
             var completer = new TaskCompletionSource<IStatusPresenceEvent>();
             var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer.SetCanceled());
+            canceller.Token.Register(() => completer.TrySetCanceled());
             canceller.CancelAfter(Timeout);
             _socket.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
             _socket.ReceivedError += e => completer.TrySetException(e);
@@ -69,7 +69,7 @@ namespace Nakama.Tests.Socket
 
             var completer = new TaskCompletionSource<IStatusPresenceEvent>();
             var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer.SetCanceled());
+            canceller.Token.Register(() => completer.TrySetCanceled());
             canceller.CancelAfter(Timeout);
             _socket.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
             _socket.ReceivedError += e => completer.TrySetException(e);
@@ -106,7 +106,7 @@ namespace Nakama.Tests.Socket
 
             var completer1 = new TaskCompletionSource<IStatusPresenceEvent>();
             var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer1.SetCanceled());
+            canceller.Token.Register(() => completer1.TrySetCanceled());
             canceller.CancelAfter(Timeout);
             _socket.ReceivedStatusPresence += statuses => completer1.TrySetResult(statuses);
             _socket.ReceivedError += e => completer1.TrySetException(e);
@@ -210,7 +210,7 @@ namespace Nakama.Tests.Socket
 
             var completer = new TaskCompletionSource<IStatusPresenceEvent>();
             var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer.SetCanceled());
+            canceller.Token.Register(() => completer.TrySetCanceled());
             canceller.CancelAfter(Timeout);
             _socket.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
             _socket.ReceivedError += e => completer.TrySetException(e);
