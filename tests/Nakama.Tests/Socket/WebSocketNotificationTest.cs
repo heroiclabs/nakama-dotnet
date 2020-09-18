@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,32 @@
  * limitations under the License.
  */
 
-
-
 namespace Nakama.Tests.Socket
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
     using TinyJson;
 
-    [TestFixture]
-    public class WebSocketNotificationTest
+    public class WebSocketNotificationTest : IAsyncLifetime
     {
         private IClient _client;
         private ISocket _socket;
 
-        // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+        public WebSocketNotificationTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
-            _socket = _client.CreateWebSocket();
+            _client = ClientUtil.FromSettingsFile();
+            _socket = Nakama.Socket.From(_client);
         }
 
-        [TearDown]
-        public async Task TearDown()
-        {
-            await _socket.DisconnectAsync(false);
-        }
-
-        [Test]
+        [Fact]
         public async Task ShouldReceiveNotification()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var completer = new TaskCompletionSource<IApiNotification>();
-            _socket.OnNotification += (sender, notification) => completer.SetResult(notification);
+            _socket.ReceivedNotification += (notification) => completer.SetResult(notification);
             await _socket.ConnectAsync(session);
 
             var payload = new Dictionary<string, string> {{"user_id", session.UserId}};
@@ -58,7 +47,17 @@ namespace Nakama.Tests.Socket
 
             var result = await completer.Task;
             Assert.NotNull(result);
-            Assert.AreEqual(session.UserId, result.SenderId);
+            Assert.Equal(session.UserId, result.SenderId);
+        }
+
+        Task IAsyncLifetime.InitializeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        Task IAsyncLifetime.DisposeAsync()
+        {
+            return _socket.CloseAsync();
         }
     }
 }

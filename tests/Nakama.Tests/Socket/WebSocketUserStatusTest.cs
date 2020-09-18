@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,26 +19,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Nakama.Tests
+namespace Nakama.Tests.Socket
 {
     // NOTE Test name patterns are: MethodName_StateUnderTest_ExpectedBehavior
-    public class SocketUserStatusTest : IDisposable
+    public class WebSocketUserStatusTest : IAsyncLifetime
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(2);
 
         private IClient _client;
         private readonly ISocket _socket;
 
-        public SocketUserStatusTest()
+        public WebSocketUserStatusTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Socket.From(_client);
-        }
-
-        public void Dispose()
-        {
-            _socket.Dispose();
-            _client = null;
+            _socket = Nakama.Socket.From(_client);
         }
 
         [Fact]
@@ -50,14 +44,14 @@ namespace Nakama.Tests
 
             var completer = new TaskCompletionSource<IStatusPresenceEvent>();
             var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer.SetCanceled());
+            canceller.Token.Register(() => completer.TrySetCanceled());
             canceller.CancelAfter(Timeout);
             _socket.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
             _socket.ReceivedError += e => completer.TrySetException(e);
             await _socket.ConnectAsync(session1);
             await _socket.FollowUsersAsync(new[] {session2.UserId});
 
-            var socket = Socket.From(_client);
+            var socket = Nakama.Socket.From(_client);
             await socket.ConnectAsync(session2);
             await socket.UpdateStatusAsync("new status change");
 
@@ -75,14 +69,14 @@ namespace Nakama.Tests
 
             var completer = new TaskCompletionSource<IStatusPresenceEvent>();
             var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer.SetCanceled());
+            canceller.Token.Register(() => completer.TrySetCanceled());
             canceller.CancelAfter(Timeout);
             _socket.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
             _socket.ReceivedError += e => completer.TrySetException(e);
             await _socket.ConnectAsync(session1);
             await _socket.FollowUsersAsync(new string[] { }, new[] {session2.Username});
 
-            var socket = Socket.From(_client);
+            var socket = Nakama.Socket.From(_client);
             await socket.ConnectAsync(session2);
             await socket.UpdateStatusAsync("new status change");
 
@@ -112,7 +106,7 @@ namespace Nakama.Tests
 
             var completer1 = new TaskCompletionSource<IStatusPresenceEvent>();
             var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer1.SetCanceled());
+            canceller.Token.Register(() => completer1.TrySetCanceled());
             canceller.CancelAfter(Timeout);
             _socket.ReceivedStatusPresence += statuses => completer1.TrySetResult(statuses);
             _socket.ReceivedError += e => completer1.TrySetException(e);
@@ -120,7 +114,7 @@ namespace Nakama.Tests
             await _socket.FollowUsersAsync(new[] {session2.UserId});
 
             // Second user comes online and sets status.
-            var socket = Socket.From(_client);
+            var socket = Nakama.Socket.From(_client);
             await socket.ConnectAsync(session2);
             await socket.UpdateStatusAsync("new status change");
 
@@ -149,10 +143,10 @@ namespace Nakama.Tests
 
             var id2 = Guid.NewGuid().ToString();
             var session2 = await _client.AuthenticateCustomAsync(id2);
-            var socket1 = Socket.From(_client);
+            var socket1 = Nakama.Socket.From(_client);
             //socket1.ReceivedError
             await socket1.ConnectAsync(session2);
-            var socket2 = Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
             //socket2.ReceivedError
             await socket2.ConnectAsync(session2);
 
@@ -174,17 +168,17 @@ namespace Nakama.Tests
         public async void FollowUsers_TwoUsers_ThirdUserFollowsBoth()
         {
             var id1 = Guid.NewGuid().ToString();
-            var socket1 = Socket.From(_client);
+            var socket1 = Nakama.Socket.From(_client);
             //socket1.ReceivedError
             var session1 = await _client.AuthenticateCustomAsync(id1);
 
             var id2 = Guid.NewGuid().ToString();
-            var socket2 = Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
             //socket2.ReceivedError
             var session2 = await _client.AuthenticateCustomAsync(id2);
 
             var id3 = Guid.NewGuid().ToString();
-            var socket3 = Socket.From(_client);
+            var socket3 = Nakama.Socket.From(_client);
             //socket3.ReceivedError
             var session3 = await _client.AuthenticateCustomAsync(id3);
 
@@ -216,7 +210,7 @@ namespace Nakama.Tests
 
             var completer = new TaskCompletionSource<IStatusPresenceEvent>();
             var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer.SetCanceled());
+            canceller.Token.Register(() => completer.TrySetCanceled());
             canceller.CancelAfter(Timeout);
             _socket.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
             _socket.ReceivedError += e => completer.TrySetException(e);
@@ -226,6 +220,16 @@ namespace Nakama.Tests
             var result = await completer.Task;
             Assert.NotNull(result);
             Assert.Contains(result.Joins, joined => joined.UserId.Equals(session.UserId));
+        }
+
+        Task IAsyncLifetime.InitializeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        Task IAsyncLifetime.DisposeAsync()
+        {
+            return _socket.CloseAsync();
         }
     }
 }

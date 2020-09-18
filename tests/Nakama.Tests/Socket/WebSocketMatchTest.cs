@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,26 @@ namespace Nakama.Tests.Socket
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
     using TinyJson;
 
-    [TestFixture]
-    [Ignore("Flakey. Needs improvement.")]
-    public class WebSocketMatchTest
+    // "Flakey. Needs improvement."
+    public class WebSocketMatchTest : IAsyncLifetime
     {
         private IClient _client;
         private ISocket _socket;
 
         // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+        public WebSocketMatchTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
-            _socket = _client.CreateWebSocket();
+            _client = ClientUtil.FromSettingsFile();
+            _socket = Nakama.Socket.From(_client);
         }
 
-        [TearDown]
-        public async Task TearDown()
-        {
-            await _socket.DisconnectAsync(false);
-        }
-
-        [Test]
+        [Fact]
         public async Task ShouldCreateMatch()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -52,19 +46,18 @@ namespace Nakama.Tests.Socket
 
             Assert.NotNull(match);
             Assert.NotNull(match.Id);
-            Assert.IsNotEmpty(match.Id);
+            Assert.NotEmpty(match.Id);
             Assert.False(match.Authoritative);
-            Assert.NotZero(match.Size);
-            Assert.Positive(match.Size);
+            Assert.True(match.Size > 0);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateMatchAndSecondUserJoin()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             await _socket.ConnectAsync(session1);
-            var socket2 = _client.CreateWebSocket();
+            var socket2 = Nakama.Socket.From(_client);
             await socket2.ConnectAsync(session2);
 
             var match1 = await _socket.CreateMatchAsync();
@@ -72,15 +65,16 @@ namespace Nakama.Tests.Socket
 
             Assert.NotNull(match1);
             Assert.NotNull(match2);
-            Assert.AreEqual(match1.Id, match2.Id);
-            Assert.AreEqual(match1.Label, match2.Label);
-            Assert.That(match1.Presences, Has.Count.EqualTo(1));
-            Assert.That(match2.Presences, Has.Count.EqualTo(2));
+            Assert.Equal(match1.Id, match2.Id);
+            Assert.Equal(match1.Label, match2.Label);
 
-            await socket2.DisconnectAsync(false);
+            Assert.True(match1.Presences.Count() == 0 && match1.Self.UserId == session1.UserId);
+            Assert.True(match2.Presences.Count() == 1);
+
+            await socket2.CloseAsync();
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateMatchAndLeave()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -89,32 +83,42 @@ namespace Nakama.Tests.Socket
 
             Assert.NotNull(match);
             Assert.NotNull(match.Id);
-            Assert.DoesNotThrowAsync(() => _socket.LeaveMatchAsync(match.Id));
+            await _socket.LeaveMatchAsync(match.Id);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateMatchAndSendState()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            _socket = _client.CreateWebSocket();
+            _socket = Nakama.Socket.From(_client);
             await _socket.ConnectAsync(session1);
 
-            var socket2 = _client.CreateWebSocket();
+            var socket2 = Nakama.Socket.From(_client);
             var completer = new TaskCompletionSource<IMatchState>();
-            socket2.OnMatchState += (_, state) => completer.SetResult(state);
+            socket2.ReceivedMatchState += (state) => completer.SetResult(state);
             await socket2.ConnectAsync(session2);
 
             var match = await _socket.CreateMatchAsync();
             await socket2.JoinMatchAsync(match.Id);
 
             var newState = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
-            _socket.SendMatchState(match.Id, 0, newState);
+            await _socket.SendMatchStateAsync(match.Id, 0, newState);
 
             var result = await completer.Task;
             Assert.NotNull(result);
-            Assert.AreEqual(newState, result.State);
+            Assert.Equal(newState, Encoding.UTF8.GetString(result.State));
+        }
+
+        Task IAsyncLifetime.InitializeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        Task IAsyncLifetime.DisposeAsync()
+        {
+            return _socket.CloseAsync();
         }
     }
 }

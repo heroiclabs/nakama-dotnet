@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,81 +17,76 @@
 namespace Nakama.Tests.Socket
 {
     using System;
+    using System.Net.Sockets;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
     public class WebSocketTest
     {
         private IClient _client;
         private ISocket _socket;
 
         // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+
+        public WebSocketTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
-            _socket = _client.CreateWebSocket();
+            _client = ClientUtil.FromSettingsFile();
+            _socket = Nakama.Socket.From(_client);
         }
 
-        [Test]
+        [Fact]
         public void ShouldCreateSocket()
         {
-            var client = new Client();
-            var socket = client.CreateWebSocket(5);
-
+            var client = ClientUtil.FromSettingsFile();
+            var socket = Nakama.Socket.From(client);
             Assert.NotNull(socket);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateSocketAndConnect()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-
             var completer = new TaskCompletionSource<bool>();
-            _socket.OnConnect += (_, args) => completer.SetResult(true);
+            _socket.Connected += () => completer.SetResult(true);
+
             await _socket.ConnectAsync(session);
 
-            Assert.IsTrue(await completer.Task);
-
-            await _socket.DisconnectAsync();
+            Assert.True(await completer.Task);
+            await _socket.CloseAsync();
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateSocketAndDisconnect()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-
             var completer = new TaskCompletionSource<bool>();
-            _socket.OnDisconnect += (_, args) => completer.SetResult(true);
-            await _socket.ConnectAsync(session);
-            await _socket.DisconnectAsync(false);
+            _socket.Closed += () => completer.SetResult(true);
 
-            Assert.IsTrue(await completer.Task);
+            await _socket.ConnectAsync(session);
+            await _socket.CloseAsync();
+
+            Assert.True(await completer.Task);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldCreateSocketAndDisconnectSilent()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
-            var completer = new TaskCompletionSource<bool>();
-            _socket.OnDisconnect += (_, args) => completer.SetResult(true);
             await _socket.ConnectAsync(session);
-            completer.SetResult(false);
-            await _socket.DisconnectAsync(false);
+            Assert.True(_socket.IsConnected);
 
-            Assert.IsFalse(await completer.Task);
+            await _socket.CloseAsync();
+            Assert.False(_socket.IsConnected);
         }
 
-        [Test]
-        public async Task ShouldCreateSocketAndDisconnectNoConnect()
+        [Fact]
+        public async Task MultipleConnectAttemptsThrowException()
         {
-            var completer = new TaskCompletionSource<bool>();
-            _socket.OnDisconnect += (_, args) => completer.SetResult(true);
-
-            Assert.DoesNotThrowAsync(() => _socket.DisconnectAsync());
-            Assert.IsTrue(await completer.Task);
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.ConnectAsync(session);
+            Assert.True(_socket.IsConnected);
+            await Assert.ThrowsAsync<SocketException>(() => _socket.ConnectAsync(session));
         }
     }
 }

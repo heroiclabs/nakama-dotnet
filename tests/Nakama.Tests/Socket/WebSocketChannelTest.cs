@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,30 +19,21 @@ namespace Nakama.Tests.Socket
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using Xunit;
     using TinyJson;
 
-    [TestFixture]
-    public class WebSocketChannelTest
+    public class WebSocketChannelTest : IAsyncLifetime
     {
         private IClient _client;
         private ISocket _socket;
 
-        // ReSharper disable RedundantArgumentDefaultValue
-        [SetUp]
-        public void SetUp()
+        public WebSocketChannelTest()
         {
-            _client = new Client("defaultkey", "127.0.0.1", 7350, false);
-            _socket = _client.CreateWebSocket();
+            _client = ClientUtil.FromSettingsFile();
+            _socket = Nakama.Socket.From(_client);
         }
 
-        [TearDown]
-        public async Task TearDown()
-        {
-            await _socket.DisconnectAsync(false);
-        }
-
-        [Test]
+        [Fact]
         public async Task ShouldCreateRoomChannel()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -51,17 +42,17 @@ namespace Nakama.Tests.Socket
 
             Assert.NotNull(channel);
             Assert.NotNull(channel.Id);
-            Assert.AreEqual(channel.Self.UserId, session.UserId);
-            Assert.AreEqual(channel.Self.Username, session.Username);
+            Assert.Equal(channel.Self.UserId, session.UserId);
+            Assert.Equal(channel.Self.Username, session.Username);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldSendMessageRoomChannel()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var completer = new TaskCompletionSource<IApiChannelMessage>();
-            _socket.OnChannelMessage += (sender, chatMessage) => completer.SetResult(chatMessage);
+            _socket.ReceivedChannelMessage += (chatMessage) => completer.SetResult(chatMessage);
             await _socket.ConnectAsync(session);
             var channel = await _socket.JoinChatAsync("myroom", ChannelType.Room);
 
@@ -72,12 +63,12 @@ namespace Nakama.Tests.Socket
 
             Assert.NotNull(sendAck);
             Assert.NotNull(message);
-            Assert.AreEqual(sendAck.ChannelId, message.ChannelId);
-            Assert.AreEqual(sendAck.MessageId, message.MessageId);
-            Assert.AreEqual(sendAck.Username, message.Username);
+            Assert.Equal(sendAck.ChannelId, message.ChannelId);
+            Assert.Equal(sendAck.MessageId, message.MessageId);
+            Assert.Equal(sendAck.Username, message.Username);
         }
 
-        [Test]
+        [Fact]
         public async Task ShouldSendMessageDirectChannel()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -87,10 +78,10 @@ namespace Nakama.Tests.Socket
             await _client.AddFriendsAsync(session2, new[] {session1.UserId});
 
             var completer = new TaskCompletionSource<IApiChannelMessage>();
-            _socket.OnChannelMessage += (sender, chatMessage) => completer.SetResult(chatMessage);
+            _socket.ReceivedChannelMessage += (chatMessage) => completer.SetResult(chatMessage);
             await _socket.ConnectAsync(session1);
 
-            var socket2 = _client.CreateWebSocket();
+            var socket2 = Nakama.Socket.From(_client);
             await socket2.ConnectAsync(session2);
             var channel = await _socket.JoinChatAsync(session2.UserId, ChannelType.DirectMessage, false, false);
 
@@ -101,9 +92,19 @@ namespace Nakama.Tests.Socket
 
             Assert.NotNull(sendAck);
             Assert.NotNull(message);
-            Assert.AreEqual(sendAck.ChannelId, message.ChannelId);
-            Assert.AreEqual(sendAck.MessageId, message.MessageId);
-            Assert.AreEqual(sendAck.Username, message.Username);
+            Assert.Equal(sendAck.ChannelId, message.ChannelId);
+            Assert.Equal(sendAck.MessageId, message.MessageId);
+            Assert.Equal(sendAck.Username, message.Username);
+        }
+
+        Task IAsyncLifetime.InitializeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        Task IAsyncLifetime.DisposeAsync()
+        {
+            return _socket.CloseAsync();
         }
     }
 }
