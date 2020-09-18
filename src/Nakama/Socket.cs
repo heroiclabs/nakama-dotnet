@@ -178,7 +178,7 @@ namespace Nakama
             int connectTimeoutSec = DefaultConnectTimeout)
         {
             var tcs = new TaskCompletionSource<bool>();
-            Action callback = () => tcs.SetResult(true);
+            Action callback = () => tcs.TrySetResult(true);
             Action<Exception> errback = e => tcs.TrySetException(e);
             _adapter.Connected += callback;
             _adapter.ReceivedError += errback;
