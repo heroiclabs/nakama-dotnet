@@ -17,6 +17,7 @@
 namespace Nakama.Tests.Socket
 {
     using System;
+    using System.Net.Sockets;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -77,6 +78,15 @@ namespace Nakama.Tests.Socket
 
             await _socket.CloseAsync();
             Assert.False(_socket.IsConnected);
+        }
+
+        [Fact]
+        public async Task MultipleConnectAttemptsThrowException()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.ConnectAsync(session);
+            Assert.True(_socket.IsConnected);
+            await Assert.ThrowsAsync<SocketException>(() => _socket.ConnectAsync(session));
         }
     }
 }
