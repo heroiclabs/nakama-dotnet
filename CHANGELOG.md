@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added Apple single sign-on support.
 - Added Steam single sign-on support.
 - Fixed serialization of HTTP API error messages.
+- Silenced a noisy but benign exception related to web socket connections.
 
 ## [2.5.0] - 2020-08-12
 ### Added
