@@ -1,4 +1,4 @@
-// Copyright 2018 The Nakama Authors
+// Copyright 2020 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -273,8 +273,7 @@ namespace Nakama
             {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
             {{- end }}
         {{- else if eq $parameter.Type "array"}}
-            {{/* Current bug in Nakama  3d6b38d302b705305d8ae0f0b8e6c2255aabe5be forces us to camelcase "user_ids" */}}
-            IEnumerable<{{ $parameter.Items.Type | camelCase }}> {{ $parameter.Name }}
+            IEnumerable<{{ $parameter.Items.Type }}> {{ $parameter.Name | camelCase }}
         {{- else if eq $parameter.Type "object"}}
             {{- if eq $parameter.AdditionalProperties.Type "string"}}
         IDictionary<string, string> {{ $parameter.Name }}
@@ -444,8 +443,28 @@ func snakeCaseToPascalCase(input string) (output string) {
 	return
 }
 
+func isSnakeCase(input string) (output bool) {
+
+	output = true
+
+	for _, v := range input {
+		vString := string(v)
+		if strings.ToUpper(vString) == vString {
+			output = false
+		}
+	}
+
+	return
+}
+
 func camelCaseToSnakeCase(input string) (output string) {
 	output = ""
+
+	if isSnakeCase(input) {
+		output = input
+		return
+	}
+
 	for _, v := range input {
 		vString := string(v)
 		if vString == strings.ToUpper(vString) {
