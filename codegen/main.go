@@ -332,7 +332,7 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "{{- $snakecase }}=", {{ $parameter.Name }}.ToString().ToLower(), "&");
             }
                 {{- else if eq $parameter.Type "array" }}
-            foreach (var elem in {{ $parameter.Name }} ?? new {{ $parameter.Items.Type }}[0])
+            foreach (var elem in {{ $parameter.Name | camelCase }} ?? new {{ $parameter.Items.Type }}[0])
             {
                 queryParams = string.Concat(queryParams, "{{- $snakecase }}=", elem, "&");
             }
@@ -449,7 +449,7 @@ func isSnakeCase(input string) (output bool) {
 
 	for _, v := range input {
 		vString := string(v)
-		if strings.ToUpper(vString) == vString {
+		if vString != "_" && strings.ToUpper(vString) == vString {
 			output = false
 		}
 	}
