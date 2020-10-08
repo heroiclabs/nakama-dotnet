@@ -235,9 +235,9 @@ namespace Nakama
         /// {{ $operation.Summary | stripNewlines }}
         /// </summary>
         {{- if $operation.Responses.Ok.Schema.Ref }}
-        public async Task<I{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}> {{ $operation.OperationId | pascalCase }}Async(
+        public async Task<I{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}> {{ $operation.OperationId | stripOperationPrefix | pascalCase }}Async(
         {{- else }}
-        public async Task {{ $operation.OperationId | pascalCase }}Async(
+        public async Task {{ $operation.OperationId | stripOperationPrefix |pascalCase }}Async(
         {{- end}}
 
         {{- $isPreviousParam := false}}
@@ -463,6 +463,10 @@ func stripNewlines(input string) (output string) {
 	return
 }
 
+func stripOperationPrefix(input string) string {
+	return strings.Replace(input, "Nakama_", "", 1)
+}
+
 func main() {
 	// Argument flags
 	var output = flag.String("output", "", "The output for generated code.")
@@ -549,13 +553,14 @@ func main() {
 	}
 
 	fmap := template.FuncMap{
-		"camelCase":     snakeCaseToCamelCase,
-		"cleanRef":      convertRefToClassName,
-		"pascalCase":    snakeCaseToPascalCase,
-		"stripNewlines": stripNewlines,
-		"title":         strings.Title,
-		"uppercase":     strings.ToUpper,
-		"snakeCase":     camelCaseToSnakeCase,
+		"camelCase":            snakeCaseToCamelCase,
+		"cleanRef":             convertRefToClassName,
+		"pascalCase":           snakeCaseToPascalCase,
+		"stripNewlines":        stripNewlines,
+		"title":                strings.Title,
+		"uppercase":            strings.ToUpper,
+		"snakeCase":            camelCaseToSnakeCase,
+		"stripOperationPrefix": stripOperationPrefix,
 	}
 
 	tmpl, err := template.New(inputFile).Funcs(fmap).Parse(codeTemplate)
