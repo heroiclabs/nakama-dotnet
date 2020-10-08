@@ -264,77 +264,78 @@ namespace Nakama
         {{- range $parameter := $operation.Parameters }}
 
         {{- if eq $isPreviousParam true}},{{- end}}
-        {{- $camelcase := $parameter.Name | camelCase }}
         {{- if eq $parameter.In "path" }}
-            {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
+            {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
         {{- else if eq $parameter.In "body" }}
             {{- if eq $parameter.Schema.Type "string" }}
-            string{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
+            string{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
             {{- else }}
-            {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
+            {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
             {{- end }}
         {{- else if eq $parameter.Type "array"}}
-            IEnumerable<{{ $parameter.Items.Type }}> {{ $camelcase }}
+            {{/* Current bug in Nakama  3d6b38d302b705305d8ae0f0b8e6c2255aabe5be forces us to camelcase "user_ids" */}}
+            IEnumerable<{{ $parameter.Items.Type | camelCase }}> {{ $parameter.Name }}
         {{- else if eq $parameter.Type "object"}}
             {{- if eq $parameter.AdditionalProperties.Type "string"}}
-        IDictionary<string, string> {{ $camelcase }}
+        IDictionary<string, string> {{ $parameter.Name }}
             {{- else if eq $parameter.Items.Type "integer"}}
-        IDictionary<string, int> {{ $camelcase }}
+        IDictionary<string, int> {{ $parameter.Name }}
             {{- else if eq $parameter.Items.Type "boolean"}}
-        IDictionary<string, int> {{ $camelcase }}
+        IDictionary<string, int> {{ $parameter.Name }}
             {{- else}}
-        IDictionary<string, {{ $parameter.Items.Type }}> {{ $camelcase }}
+        IDictionary<string, {{ $parameter.Items.Type }}> {{ $parameter.Name }}
             {{- end}}
         {{- else if eq $parameter.Type "integer" }}
-            int? {{ $camelcase }}
+            int? {{ $parameter.Name }}
         {{- else if eq $parameter.Type "boolean" }}
-            bool? {{ $camelcase }}
+            bool? {{ $parameter.Name }}
         {{- else if eq $parameter.Type "string" }}
-            string {{ $camelcase }}
+            string {{ $parameter.Name }}
         {{- else }}
-            {{ $parameter.Type }} {{ $camelcase }}
+            {{ $parameter.Type }} {{ $parameter.Name }}
         {{- end }}
         {{- $isPreviousParam = true}}
         {{- end }})
         {
             {{- range $parameter := $operation.Parameters }}
-            {{- $camelcase := $parameter.Name | camelCase }}
             {{- if $parameter.Required }}
-            if ({{ $camelcase }} == null)
+            if ({{ $parameter.Name }} == null)
             {
-                throw new ArgumentException("'{{ $camelcase }}' is required but was null.");
+                throw new ArgumentException("'{{ $parameter.Name }}' is required but was null.");
             }
             {{- end }}
             {{- end }}
 
             var urlpath = "{{- $url }}";
+
+
             {{- range $parameter := $operation.Parameters }}
-            {{- $camelcase := $parameter.Name | camelCase }}
+            {{- $snakecase := $parameter.Name | snakeCase }}
             {{- if eq $parameter.In "path" }}
-            urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $camelcase }}));
+            urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $parameter.Name }}));
             {{- end }}
             {{- end }}
 
             var queryParams = "";
             {{- range $parameter := $operation.Parameters }}
-            {{- $camelcase := $parameter.Name | camelCase }}
+            {{- $snakecase := $parameter.Name | snakeCase }}
             {{- if eq $parameter.In "query"}}
                 {{- if eq $parameter.Type "integer" }}
-            if ({{ $camelcase }} != null) {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
+            if ({{ $parameter.Name }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $snakecase }}=", {{ $parameter.Name }}, "&");
             }
                 {{- else if eq $parameter.Type "string" }}
-            if ({{ $camelcase }} != null) {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }}), "&");
+            if ({{ $parameter.Name }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $snakecase }}=", Uri.EscapeDataString({{ $parameter.Name }}), "&");
             }
                 {{- else if eq $parameter.Type "boolean" }}
-            if ({{ $camelcase }} != null) {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}.ToString().ToLower(), "&");
+            if ({{ $parameter.Name }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $snakecase }}=", {{ $parameter.Name }}.ToString().ToLower(), "&");
             }
                 {{- else if eq $parameter.Type "array" }}
-            foreach (var elem in {{ $camelcase }} ?? new {{ $parameter.Items.Type }}[0])
+            foreach (var elem in {{ $parameter.Name }} ?? new {{ $parameter.Items.Type }}[0])
             {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", elem, "&");
+                queryParams = string.Concat(queryParams, "{{- $snakecase }}=", elem, "&");
             }
                 {{- else }}
             {{ $parameter }} // ERROR
@@ -375,9 +376,8 @@ namespace Nakama
 
             byte[] content = null;
             {{- range $parameter := $operation.Parameters }}
-            {{- $camelcase := $parameter.Name | camelCase }}
             {{- if eq $parameter.In "body" }}
-            var jsonBody = {{ $camelcase }}.ToJson();
+            var jsonBody = {{ $parameter.Name }}.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             {{- end }}
             {{- end }}
