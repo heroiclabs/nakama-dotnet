@@ -3184,7 +3184,7 @@ namespace Nakama
     /// <summary>
     /// 
     /// </summary>
-    public interface IRuntimeError
+    public interface IRpcStatus
     {
 
         /// <summary>
@@ -3200,16 +3200,11 @@ namespace Nakama
         /// <summary>
         /// 
         /// </summary>
-        string Error { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         string Message { get; }
     }
 
     /// <inheritdoc />
-    internal class RuntimeError : IRuntimeError
+    internal class RpcStatus : IRpcStatus
     {
 
         /// <inheritdoc />
@@ -3222,10 +3217,6 @@ namespace Nakama
         public List<ProtobufAny> _details { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="error"), Preserve]
-        public string Error { get; set; }
-
-        /// <inheritdoc />
         [DataMember(Name="message"), Preserve]
         public string Message { get; set; }
 
@@ -3234,7 +3225,6 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Code: ", Code, ", ");
             output = string.Concat(output, "Details: [", string.Join(", ", Details), "], ");
-            output = string.Concat(output, "Error: ", Error, ", ");
             output = string.Concat(output, "Message: ", Message, ", ");
             return output;
         }
