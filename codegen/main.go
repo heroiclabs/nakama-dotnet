@@ -298,9 +298,9 @@ namespace Nakama
         {
             {{- range $parameter := $operation.Parameters }}
             {{- if $parameter.Required }}
-            if ({{ $parameter.Name }} == null)
+            if ({{ $parameter.Name | camelCase}} == null)
             {
-                throw new ArgumentException("'{{ $parameter.Name }}' is required but was null.");
+                throw new ArgumentException("'{{ $parameter.Name | camelCase }}' is required but was null.");
             }
             {{- end }}
             {{- end }}
