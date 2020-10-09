@@ -3338,7 +3338,9 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateAppleAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountApple body)
+            ApiAccountApple body,
+            bool? create,
+            string username)
         {
             if (body == null)
             {
@@ -3348,6 +3350,12 @@ namespace Nakama
             var urlpath = "/v2/account/authenticate/apple";
 
             var queryParams = "";
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {

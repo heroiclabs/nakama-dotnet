@@ -75,7 +75,7 @@ namespace Nakama
         /// <param name="token">The ID token received from Apple to validate.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
-        Task<ISession> AuthenticateAppleAsync(string username, string token, Dictionary<string, string> vars);
+        Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true, Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Authenticate a user with a custom id.
