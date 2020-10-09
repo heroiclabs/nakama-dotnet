@@ -5362,7 +5362,8 @@ namespace Nakama
         public async Task<IApiRpc> RpcFuncAsync(
             string bearerToken,
             string id,
-            string body)
+            string body,
+            string httpKey)
         {
             if (id == null)
             {
@@ -5377,6 +5378,9 @@ namespace Nakama
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
 
             var queryParams = "";
+            if (httpKey != null) {
+                queryParams = string.Concat(queryParams, "http_key=", Uri.EscapeDataString(httpKey), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {

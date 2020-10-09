@@ -428,7 +428,7 @@ namespace Nakama
 
         /// <inheritdoc cref="RpcAsync(Nakama.ISession,string,string)"/>
         public Task<IApiRpc> RpcAsync(ISession session, string id, string payload) =>
-            _apiClient.RpcFuncAsync(session.AuthToken, id, payload);
+            _apiClient.RpcFuncAsync(session.AuthToken, id, payload, null);
 
         /// <inheritdoc cref="RpcAsync(Nakama.ISession,string)"/>
         public Task<IApiRpc> RpcAsync(ISession session, string id) =>
