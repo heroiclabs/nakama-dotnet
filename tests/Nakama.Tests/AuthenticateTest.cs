@@ -116,8 +116,8 @@ namespace Nakama.Tests.Api
         public async void ShouldNotAuthenticateApple()
         {
             // Fails because Apple requires special configuration with the server.
-            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateAppleAsync("some_username", "some_token", new Dictionary<string, string>()));
-            Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateAppleAsync("some_token"));
+            Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
     }
 }

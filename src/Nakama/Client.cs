@@ -96,8 +96,8 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="AuthenticateAppleAsync"/>
-        public async Task<ISession> AuthenticateAppleAsync(string username, string token, Dictionary<string, string> vars) {
-            var response = await _apiClient.AuthenticateAppleAsync(username, string.Empty, new ApiAccountApple {Token = token, _vars = vars});
+        public async Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true, Dictionary<string, string> vars = null) {
+            var response = await _apiClient.AuthenticateAppleAsync(ServerKey, string.Empty, new ApiAccountApple {Token = token, _vars = vars}, create, username);
             return new Session(response.Token, response.Created);
         }
 
@@ -428,7 +428,7 @@ namespace Nakama
 
         /// <inheritdoc cref="RpcAsync(Nakama.ISession,string,string)"/>
         public Task<IApiRpc> RpcAsync(ISession session, string id, string payload) =>
-            _apiClient.RpcFuncAsync(session.AuthToken, id, payload);
+            _apiClient.RpcFuncAsync(session.AuthToken, id, payload, null);
 
         /// <inheritdoc cref="RpcAsync(Nakama.ISession,string)"/>
         public Task<IApiRpc> RpcAsync(ISession session, string id) =>

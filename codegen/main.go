@@ -1,4 +1,4 @@
-// Copyright 2018 The Nakama Authors
+// Copyright 2020 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -128,62 +128,63 @@ namespace Nakama
     {
         {{- range $propname, $property := $definition.Properties }}
         {{- $fieldname := $propname | pascalCase }}
+        {{- $attrDataName := $propname | snakeCase }}
 
         /// <inheritdoc />
         {{- if eq $property.Type "integer" }}
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public int {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "number" }}
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public double {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "boolean" }}
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public bool {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "string" }}
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public string {{ $fieldname }} { get; set; }
         {{- else if eq $property.Type "array" }}
             {{- if eq $property.Items.Type "string" }}
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public List<string> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "integer" }}
         [DataMember(Name="{{ $propname }}"), Preserve]
         public List<int> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "number" }}
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public List<double> {{ $fieldname }} { get; set; }
             {{- else if eq $property.Items.Type "boolean" }}
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public List<bool> {{ $fieldname }} { get; set; }
             {{- else}}
         public IEnumerable<I{{ $property.Items.Ref | cleanRef }}> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new List<{{ $property.Items.Ref | cleanRef }}>(0);
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public List<{{ $property.Items.Ref | cleanRef }}> _{{ $propname | camelCase }} { get; set; }
             {{- end }}
         {{- else if eq $property.Type "object"}}
             {{- if eq $property.AdditionalProperties.Type "string"}}
         public IDictionary<string, string> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, string>();
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public Dictionary<string, string> _{{ $propname | camelCase }} { get; set; }
             {{- else if eq $property.Items.Type "integer"}}
         public IDictionary<string, int> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, int>();
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
            {{- else if eq $property.Items.Type "number"}}
         public IDictionary<string, double> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, double>();
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public Dictionary<string, int> _{{ $propname | camelCase }} { get; set; }
             {{- else if eq $property.Items.Type "boolean"}}
         public IDictionary<string, bool> {{ $fieldname }} => _{{ $propname | camelCase }} ?? new Dictionary<string, bool>();
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public Dictionary<string, bool> _{{ $propname | camelCase }} { get; set; }
             {{- else}}
         public IDictionary<string, {{$property.AdditionalProperties | cleanRef}}> {{ $fieldname }}  => _{{ $propname | camelCase }} ?? new Dictionary<string, {{$property.AdditionalProperties | cleanRef}}>();
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public Dictionary<string, {{$property.AdditionalProperties | cleanRef}}> _{{ $propname | camelCase }} { get; set; }
             {{- end}}
         {{- else }}
         public I{{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | camelCase }};
-        [DataMember(Name="{{ $propname }}"), Preserve]
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public {{ $property.Ref | cleanRef }} _{{ $propname | camelCase }} { get; set; }
         {{- end }}
         {{- end }}
@@ -234,9 +235,9 @@ namespace Nakama
         /// {{ $operation.Summary | stripNewlines }}
         /// </summary>
         {{- if $operation.Responses.Ok.Schema.Ref }}
-        public async Task<I{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}> {{ $operation.OperationId | pascalCase }}Async(
+        public async Task<I{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}> {{ $operation.OperationId | stripOperationPrefix | pascalCase }}Async(
         {{- else }}
-        public async Task {{ $operation.OperationId | pascalCase }}Async(
+        public async Task {{ $operation.OperationId | stripOperationPrefix |pascalCase }}Async(
         {{- end}}
 
         {{- $isPreviousParam := false}}
@@ -263,77 +264,77 @@ namespace Nakama
         {{- range $parameter := $operation.Parameters }}
 
         {{- if eq $isPreviousParam true}},{{- end}}
-        {{- $camelcase := $parameter.Name | camelCase }}
         {{- if eq $parameter.In "path" }}
-            {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
+            {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
         {{- else if eq $parameter.In "body" }}
             {{- if eq $parameter.Schema.Type "string" }}
-            string{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
+            string{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
             {{- else }}
-            {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $camelcase }}
+            {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
             {{- end }}
         {{- else if eq $parameter.Type "array"}}
-            IEnumerable<{{ $parameter.Items.Type }}> {{ $camelcase }}
+            IEnumerable<{{ $parameter.Items.Type }}> {{ $parameter.Name | camelCase }}
         {{- else if eq $parameter.Type "object"}}
             {{- if eq $parameter.AdditionalProperties.Type "string"}}
-        IDictionary<string, string> {{ $camelcase }}
+        IDictionary<string, string> {{ $parameter.Name }}
             {{- else if eq $parameter.Items.Type "integer"}}
-        IDictionary<string, int> {{ $camelcase }}
+        IDictionary<string, int> {{ $parameter.Name }}
             {{- else if eq $parameter.Items.Type "boolean"}}
-        IDictionary<string, int> {{ $camelcase }}
+        IDictionary<string, int> {{ $parameter.Name }}
             {{- else}}
-        IDictionary<string, {{ $parameter.Items.Type }}> {{ $camelcase }}
+        IDictionary<string, {{ $parameter.Items.Type }}> {{ $parameter.Name }}
             {{- end}}
         {{- else if eq $parameter.Type "integer" }}
-            int? {{ $camelcase }}
+            int? {{ $parameter.Name }}
         {{- else if eq $parameter.Type "boolean" }}
-            bool? {{ $camelcase }}
+            bool? {{ $parameter.Name }}
         {{- else if eq $parameter.Type "string" }}
-            string {{ $camelcase }}
+            string {{ $parameter.Name }}
         {{- else }}
-            {{ $parameter.Type }} {{ $camelcase }}
+            {{ $parameter.Type }} {{ $parameter.Name }}
         {{- end }}
         {{- $isPreviousParam = true}}
         {{- end }})
         {
             {{- range $parameter := $operation.Parameters }}
-            {{- $camelcase := $parameter.Name | camelCase }}
             {{- if $parameter.Required }}
-            if ({{ $camelcase }} == null)
+            if ({{ $parameter.Name | camelCase}} == null)
             {
-                throw new ArgumentException("'{{ $camelcase }}' is required but was null.");
+                throw new ArgumentException("'{{ $parameter.Name | camelCase }}' is required but was null.");
             }
             {{- end }}
             {{- end }}
 
             var urlpath = "{{- $url }}";
+
+
             {{- range $parameter := $operation.Parameters }}
-            {{- $camelcase := $parameter.Name | camelCase }}
+            {{- $snakecase := $parameter.Name | snakeCase }}
             {{- if eq $parameter.In "path" }}
-            urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $camelcase }}));
+            urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $parameter.Name }}));
             {{- end }}
             {{- end }}
 
             var queryParams = "";
             {{- range $parameter := $operation.Parameters }}
-            {{- $camelcase := $parameter.Name | camelCase }}
+            {{- $snakecase := $parameter.Name | snakeCase }}
             {{- if eq $parameter.In "query"}}
                 {{- if eq $parameter.Type "integer" }}
-            if ({{ $camelcase }} != null) {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}, "&");
+            if ({{ $parameter.Name }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $snakecase }}=", {{ $parameter.Name }}, "&");
             }
                 {{- else if eq $parameter.Type "string" }}
-            if ({{ $camelcase }} != null) {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", Uri.EscapeDataString({{ $camelcase }}), "&");
+            if ({{ $parameter.Name }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $snakecase }}=", Uri.EscapeDataString({{ $parameter.Name }}), "&");
             }
                 {{- else if eq $parameter.Type "boolean" }}
-            if ({{ $camelcase }} != null) {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", {{ $camelcase }}.ToString().ToLower(), "&");
+            if ({{ $parameter.Name }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $snakecase }}=", {{ $parameter.Name }}.ToString().ToLower(), "&");
             }
                 {{- else if eq $parameter.Type "array" }}
-            foreach (var elem in {{ $camelcase }} ?? new {{ $parameter.Items.Type }}[0])
+            foreach (var elem in {{ $parameter.Name | camelCase }} ?? new {{ $parameter.Items.Type }}[0])
             {
-                queryParams = string.Concat(queryParams, "{{- $parameter.Name }}=", elem, "&");
+                queryParams = string.Concat(queryParams, "{{- $snakecase }}=", elem, "&");
             }
                 {{- else }}
             {{ $parameter }} // ERROR
@@ -374,9 +375,8 @@ namespace Nakama
 
             byte[] content = null;
             {{- range $parameter := $operation.Parameters }}
-            {{- $camelcase := $parameter.Name | camelCase }}
             {{- if eq $parameter.In "body" }}
-            var jsonBody = {{ $camelcase }}.ToJson();
+            var jsonBody = {{ $parameter.Name }}.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             {{- end }}
             {{- end }}
@@ -443,9 +443,47 @@ func snakeCaseToPascalCase(input string) (output string) {
 	return
 }
 
+func isSnakeCase(input string) (output bool) {
+
+	output = true
+
+	for _, v := range input {
+		vString := string(v)
+		if vString != "_" && strings.ToUpper(vString) == vString {
+			output = false
+		}
+	}
+
+	return
+}
+
+func camelCaseToSnakeCase(input string) (output string) {
+	output = ""
+
+	if isSnakeCase(input) {
+		output = input
+		return
+	}
+
+	for _, v := range input {
+		vString := string(v)
+		if vString == strings.ToUpper(vString) {
+			output += "_" + strings.ToLower(vString)
+		} else {
+			output += vString
+		}
+	}
+
+	return
+}
+
 func stripNewlines(input string) (output string) {
 	output = strings.Replace(input, "\n", " ", -1)
 	return
+}
+
+func stripOperationPrefix(input string) string {
+	return strings.Replace(input, "Nakama_", "", 1)
 }
 
 func main() {
@@ -534,13 +572,16 @@ func main() {
 	}
 
 	fmap := template.FuncMap{
-		"camelCase":     snakeCaseToCamelCase,
-		"cleanRef":      convertRefToClassName,
-		"pascalCase":    snakeCaseToPascalCase,
-		"stripNewlines": stripNewlines,
-		"title":         strings.Title,
-		"uppercase":     strings.ToUpper,
+		"camelCase":            snakeCaseToCamelCase,
+		"cleanRef":             convertRefToClassName,
+		"pascalCase":           snakeCaseToPascalCase,
+		"stripNewlines":        stripNewlines,
+		"title":                strings.Title,
+		"uppercase":            strings.ToUpper,
+		"snakeCase":            camelCaseToSnakeCase,
+		"stripOperationPrefix": stripOperationPrefix,
 	}
+
 	tmpl, err := template.New(inputFile).Funcs(fmap).Parse(codeTemplate)
 	if err != nil {
 		fmt.Printf("Template parse error: %s\n", err)

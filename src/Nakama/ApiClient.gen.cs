@@ -3184,7 +3184,7 @@ namespace Nakama
     /// <summary>
     /// 
     /// </summary>
-    public interface IRuntimeError
+    public interface IRpcStatus
     {
 
         /// <summary>
@@ -3200,16 +3200,11 @@ namespace Nakama
         /// <summary>
         /// 
         /// </summary>
-        string Error { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         string Message { get; }
     }
 
     /// <inheritdoc />
-    internal class RuntimeError : IRuntimeError
+    internal class RpcStatus : IRpcStatus
     {
 
         /// <inheritdoc />
@@ -3222,10 +3217,6 @@ namespace Nakama
         public List<ProtobufAny> _details { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="error"), Preserve]
-        public string Error { get; set; }
-
-        /// <inheritdoc />
         [DataMember(Name="message"), Preserve]
         public string Message { get; set; }
 
@@ -3234,7 +3225,6 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Code: ", Code, ", ");
             output = string.Concat(output, "Details: [", string.Join(", ", Details), "], ");
-            output = string.Concat(output, "Error: ", Error, ", ");
             output = string.Concat(output, "Message: ", Message, ", ");
             return output;
         }
@@ -3348,7 +3338,9 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateAppleAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountApple body)
+            ApiAccountApple body,
+            bool? create,
+            string username)
         {
             if (body == null)
             {
@@ -3358,6 +3350,12 @@ namespace Nakama
             var urlpath = "/v2/account/authenticate/apple";
 
             var queryParams = "";
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -4347,8 +4345,8 @@ namespace Nakama
                 throw new ArgumentException("'channelId' is required but was null.");
             }
 
-            var urlpath = "/v2/channel/{channel_id}";
-            urlpath = urlpath.Replace("{channel_id}", Uri.EscapeDataString(channelId));
+            var urlpath = "/v2/channel/{channelId}";
+            urlpath = urlpath.Replace("{channelId}", Uri.EscapeDataString(channelId));
 
             var queryParams = "";
             if (limit != null) {
@@ -4679,8 +4677,8 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
 
@@ -4716,8 +4714,8 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
 
@@ -4751,8 +4749,8 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/add";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}/add";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
@@ -4788,8 +4786,8 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/ban";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}/ban";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
@@ -4829,8 +4827,8 @@ namespace Nakama
                 throw new ArgumentException("'userIds' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/demote";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}/demote";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
@@ -4865,8 +4863,8 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/join";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}/join";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
 
@@ -4898,8 +4896,8 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/kick";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}/kick";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
@@ -4934,8 +4932,8 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/leave";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}/leave";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
 
@@ -4967,8 +4965,8 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/promote";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}/promote";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
@@ -5006,8 +5004,8 @@ namespace Nakama
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/group/{group_id}/user";
-            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/group/{groupId}/user";
+            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
             if (limit != null) {
@@ -5048,8 +5046,8 @@ namespace Nakama
                 throw new ArgumentException("'leaderboardId' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}";
-            urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
+            var urlpath = "/v2/leaderboard/{leaderboardId}";
+            urlpath = urlpath.Replace("{leaderboardId}", Uri.EscapeDataString(leaderboardId));
 
             var queryParams = "";
 
@@ -5084,8 +5082,8 @@ namespace Nakama
                 throw new ArgumentException("'leaderboardId' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}";
-            urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
+            var urlpath = "/v2/leaderboard/{leaderboardId}";
+            urlpath = urlpath.Replace("{leaderboardId}", Uri.EscapeDataString(leaderboardId));
 
             var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
@@ -5135,8 +5133,8 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}";
-            urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
+            var urlpath = "/v2/leaderboard/{leaderboardId}";
+            urlpath = urlpath.Replace("{leaderboardId}", Uri.EscapeDataString(leaderboardId));
 
             var queryParams = "";
 
@@ -5177,9 +5175,9 @@ namespace Nakama
                 throw new ArgumentException("'ownerId' is required but was null.");
             }
 
-            var urlpath = "/v2/leaderboard/{leaderboard_id}/owner/{owner_id}";
-            urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
-            urlpath = urlpath.Replace("{owner_id}", Uri.EscapeDataString(ownerId));
+            var urlpath = "/v2/leaderboard/{leaderboardId}/owner/{ownerId}";
+            urlpath = urlpath.Replace("{leaderboardId}", Uri.EscapeDataString(leaderboardId));
+            urlpath = urlpath.Replace("{ownerId}", Uri.EscapeDataString(ownerId));
 
             var queryParams = "";
             if (limit != null) {
@@ -5372,7 +5370,8 @@ namespace Nakama
         public async Task<IApiRpc> RpcFuncAsync(
             string bearerToken,
             string id,
-            string body)
+            string body,
+            string httpKey)
         {
             if (id == null)
             {
@@ -5387,6 +5386,9 @@ namespace Nakama
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
 
             var queryParams = "";
+            if (httpKey != null) {
+                queryParams = string.Concat(queryParams, "http_key=", Uri.EscapeDataString(httpKey), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -5574,9 +5576,9 @@ namespace Nakama
                 throw new ArgumentException("'userId' is required but was null.");
             }
 
-            var urlpath = "/v2/storage/{collection}/{user_id}";
+            var urlpath = "/v2/storage/{collection}/{userId}";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
-            urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
+            urlpath = urlpath.Replace("{userId}", Uri.EscapeDataString(userId));
 
             var queryParams = "";
             if (limit != null) {
@@ -5669,8 +5671,8 @@ namespace Nakama
                 throw new ArgumentException("'tournamentId' is required but was null.");
             }
 
-            var urlpath = "/v2/tournament/{tournament_id}";
-            urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
+            var urlpath = "/v2/tournament/{tournamentId}";
+            urlpath = urlpath.Replace("{tournamentId}", Uri.EscapeDataString(tournamentId));
 
             var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
@@ -5720,8 +5722,8 @@ namespace Nakama
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/tournament/{tournament_id}";
-            urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
+            var urlpath = "/v2/tournament/{tournamentId}";
+            urlpath = urlpath.Replace("{tournamentId}", Uri.EscapeDataString(tournamentId));
 
             var queryParams = "";
 
@@ -5755,8 +5757,8 @@ namespace Nakama
                 throw new ArgumentException("'tournamentId' is required but was null.");
             }
 
-            var urlpath = "/v2/tournament/{tournament_id}/join";
-            urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
+            var urlpath = "/v2/tournament/{tournamentId}/join";
+            urlpath = urlpath.Replace("{tournamentId}", Uri.EscapeDataString(tournamentId));
 
             var queryParams = "";
 
@@ -5794,9 +5796,9 @@ namespace Nakama
                 throw new ArgumentException("'ownerId' is required but was null.");
             }
 
-            var urlpath = "/v2/tournament/{tournament_id}/owner/{owner_id}";
-            urlpath = urlpath.Replace("{tournament_id}", Uri.EscapeDataString(tournamentId));
-            urlpath = urlpath.Replace("{owner_id}", Uri.EscapeDataString(ownerId));
+            var urlpath = "/v2/tournament/{tournamentId}/owner/{ownerId}";
+            urlpath = urlpath.Replace("{tournamentId}", Uri.EscapeDataString(tournamentId));
+            urlpath = urlpath.Replace("{ownerId}", Uri.EscapeDataString(ownerId));
 
             var queryParams = "";
             if (limit != null) {
@@ -5879,8 +5881,8 @@ namespace Nakama
                 throw new ArgumentException("'userId' is required but was null.");
             }
 
-            var urlpath = "/v2/user/{user_id}/group";
-            urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
+            var urlpath = "/v2/user/{userId}/group";
+            urlpath = urlpath.Replace("{userId}", Uri.EscapeDataString(userId));
 
             var queryParams = "";
             if (limit != null) {
