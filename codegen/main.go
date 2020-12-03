@@ -376,14 +376,14 @@ namespace Nakama
             byte[] content = null;
             {{- range $parameter := $operation.Parameters }}
             {{- if eq $parameter.In "body" }}
-            var jsonBody = {{ $parameter.Name }}.ToJson();
+            var jsonBody = JsonSerializer.GetCurrent().ToJson({{ $parameter.Name }});
             content = Encoding.UTF8.GetBytes(jsonBody);
             {{- end }}
             {{- end }}
 
             {{- if $operation.Responses.Ok.Schema.Ref }}
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
-            return contents.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>();
+            return JsonSerializer.GetCurrent().FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>(contents);
             {{- else }}
             await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
             {{- end}}
