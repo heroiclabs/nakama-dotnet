@@ -99,6 +99,13 @@ socket.ReceivedError += e => System.Console.WriteLine(e);
 await socket.ConnectAsync(session);
 ```
 
+### Json Parser
+
+Nakama ships with a custom implementation of TinyJson and uses that as the default JSON serializer.
+The serializer used by the `nakama-dotnet` can be overridden depending on the user's needs. In order
+to use a JSON parser, implement the `IJSONSerializer` interface and assign the implementor via
+`JSONSerializer.SetCurrent()`.
+
 ## Contribute
 
 The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to improve the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
