@@ -12,7 +12,7 @@ using scg = global::System.Collections.Generic;
 namespace Nakama {
 
   /// <summary>Holder for reflection information generated from apigrpc.proto</summary>
-  public static partial class ApigrpcReflection {
+  internal static partial class ApigrpcReflection {
 
     #region Descriptor
     /// <summary>File descriptor for apigrpc.proto</summary>

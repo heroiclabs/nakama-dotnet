@@ -12,7 +12,7 @@ using scg = global::System.Collections.Generic;
 namespace Nakama {
 
   /// <summary>Holder for reflection information generated from github.com/heroiclabs/nakama-common/api/api.proto</summary>
-  public static partial class ApiReflection {
+  internal static partial class ApiReflection {
 
     #region Descriptor
     /// <summary>File descriptor for github.com/heroiclabs/nakama-common/api/api.proto</summary>
@@ -401,7 +401,7 @@ namespace Nakama {
   /// <summary>
   /// A user with additional account details. Always the current user.
   /// </summary>
-  public sealed partial class Account : pb::IMessage<Account>
+  internal sealed partial class Account : pb::IMessage<Account>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -829,7 +829,7 @@ namespace Nakama {
   /// <summary>
   /// Send a Apple Sign In token to the server. Used with authenticate/link/unlink.
   /// </summary>
-  public sealed partial class AccountApple : pb::IMessage<AccountApple>
+  internal sealed partial class AccountApple : pb::IMessage<AccountApple>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -1035,7 +1035,7 @@ namespace Nakama {
   /// <summary>
   /// Send a custom ID to the server. Used with authenticate/link/unlink.
   /// </summary>
-  public sealed partial class AccountCustom : pb::IMessage<AccountCustom>
+  internal sealed partial class AccountCustom : pb::IMessage<AccountCustom>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -1241,7 +1241,7 @@ namespace Nakama {
   /// <summary>
   /// Send a device to the server. Used with authenticate/link/unlink and user.
   /// </summary>
-  public sealed partial class AccountDevice : pb::IMessage<AccountDevice>
+  internal sealed partial class AccountDevice : pb::IMessage<AccountDevice>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -1447,7 +1447,7 @@ namespace Nakama {
   /// <summary>
   /// Send an email with password to the server. Used with authenticate/link/unlink.
   /// </summary>
-  public sealed partial class AccountEmail : pb::IMessage<AccountEmail>
+  internal sealed partial class AccountEmail : pb::IMessage<AccountEmail>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -1692,7 +1692,7 @@ namespace Nakama {
   /// <summary>
   /// Send a Facebook token to the server. Used with authenticate/link/unlink.
   /// </summary>
-  public sealed partial class AccountFacebook : pb::IMessage<AccountFacebook>
+  internal sealed partial class AccountFacebook : pb::IMessage<AccountFacebook>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -1898,7 +1898,7 @@ namespace Nakama {
   /// <summary>
   /// Send a Facebook Instant Game token to the server. Used with authenticate/link/unlink.
   /// </summary>
-  public sealed partial class AccountFacebookInstantGame : pb::IMessage<AccountFacebookInstantGame>
+  internal sealed partial class AccountFacebookInstantGame : pb::IMessage<AccountFacebookInstantGame>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2104,7 +2104,7 @@ namespace Nakama {
   /// <summary>
   /// Send Apple's Game Center account credentials to the server. Used with authenticate/link/unlink.
   /// </summary>
-  public sealed partial class AccountGameCenter : pb::IMessage<AccountGameCenter>
+  internal sealed partial class AccountGameCenter : pb::IMessage<AccountGameCenter>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2505,7 +2505,7 @@ namespace Nakama {
   /// <summary>
   /// Send a Google token to the server. Used with authenticate/link/unlink.
   /// </summary>
-  public sealed partial class AccountGoogle : pb::IMessage<AccountGoogle>
+  internal sealed partial class AccountGoogle : pb::IMessage<AccountGoogle>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2711,7 +2711,7 @@ namespace Nakama {
   /// <summary>
   /// Send a Steam token to the server. Used with authenticate/link/unlink.
   /// </summary>
-  public sealed partial class AccountSteam : pb::IMessage<AccountSteam>
+  internal sealed partial class AccountSteam : pb::IMessage<AccountSteam>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2917,7 +2917,7 @@ namespace Nakama {
   /// <summary>
   /// Add one or more friends to the current user.
   /// </summary>
-  public sealed partial class AddFriendsRequest : pb::IMessage<AddFriendsRequest>
+  internal sealed partial class AddFriendsRequest : pb::IMessage<AddFriendsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3112,7 +3112,7 @@ namespace Nakama {
   /// <summary>
   /// Add users to a group.
   /// </summary>
-  public sealed partial class AddGroupUsersRequest : pb::IMessage<AddGroupUsersRequest>
+  internal sealed partial class AddGroupUsersRequest : pb::IMessage<AddGroupUsersRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3318,7 +3318,7 @@ namespace Nakama {
   /// <summary>
   /// Authenticate against the server with Apple Sign In.
   /// </summary>
-  public sealed partial class AuthenticateAppleRequest : pb::IMessage<AuthenticateAppleRequest>
+  internal sealed partial class AuthenticateAppleRequest : pb::IMessage<AuthenticateAppleRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3591,7 +3591,7 @@ namespace Nakama {
   /// <summary>
   /// Authenticate against the server with a custom ID.
   /// </summary>
-  public sealed partial class AuthenticateCustomRequest : pb::IMessage<AuthenticateCustomRequest>
+  internal sealed partial class AuthenticateCustomRequest : pb::IMessage<AuthenticateCustomRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3864,7 +3864,7 @@ namespace Nakama {
   /// <summary>
   /// Authenticate against the server with a device ID.
   /// </summary>
-  public sealed partial class AuthenticateDeviceRequest : pb::IMessage<AuthenticateDeviceRequest>
+  internal sealed partial class AuthenticateDeviceRequest : pb::IMessage<AuthenticateDeviceRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -4137,7 +4137,7 @@ namespace Nakama {
   /// <summary>
   /// Authenticate against the server with email+password.
   /// </summary>
-  public sealed partial class AuthenticateEmailRequest : pb::IMessage<AuthenticateEmailRequest>
+  internal sealed partial class AuthenticateEmailRequest : pb::IMessage<AuthenticateEmailRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -4410,7 +4410,7 @@ namespace Nakama {
   /// <summary>
   /// Authenticate against the server with Facebook.
   /// </summary>
-  public sealed partial class AuthenticateFacebookRequest : pb::IMessage<AuthenticateFacebookRequest>
+  internal sealed partial class AuthenticateFacebookRequest : pb::IMessage<AuthenticateFacebookRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -4730,7 +4730,7 @@ namespace Nakama {
   /// <summary>
   /// Authenticate against the server with Facebook Instant Game token.
   /// </summary>
-  public sealed partial class AuthenticateFacebookInstantGameRequest : pb::IMessage<AuthenticateFacebookInstantGameRequest>
+  internal sealed partial class AuthenticateFacebookInstantGameRequest : pb::IMessage<AuthenticateFacebookInstantGameRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -5003,7 +5003,7 @@ namespace Nakama {
   /// <summary>
   /// Authenticate against the server with Apple's Game Center.
   /// </summary>
-  public sealed partial class AuthenticateGameCenterRequest : pb::IMessage<AuthenticateGameCenterRequest>
+  internal sealed partial class AuthenticateGameCenterRequest : pb::IMessage<AuthenticateGameCenterRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -5276,7 +5276,7 @@ namespace Nakama {
   /// <summary>
   /// Authenticate against the server with Google.
   /// </summary>
-  public sealed partial class AuthenticateGoogleRequest : pb::IMessage<AuthenticateGoogleRequest>
+  internal sealed partial class AuthenticateGoogleRequest : pb::IMessage<AuthenticateGoogleRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -5549,7 +5549,7 @@ namespace Nakama {
   /// <summary>
   /// Authenticate against the server with Steam.
   /// </summary>
-  public sealed partial class AuthenticateSteamRequest : pb::IMessage<AuthenticateSteamRequest>
+  internal sealed partial class AuthenticateSteamRequest : pb::IMessage<AuthenticateSteamRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -5822,7 +5822,7 @@ namespace Nakama {
   /// <summary>
   /// Ban users from a group.
   /// </summary>
-  public sealed partial class BanGroupUsersRequest : pb::IMessage<BanGroupUsersRequest>
+  internal sealed partial class BanGroupUsersRequest : pb::IMessage<BanGroupUsersRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -6028,7 +6028,7 @@ namespace Nakama {
   /// <summary>
   /// Block one or more friends for the current user.
   /// </summary>
-  public sealed partial class BlockFriendsRequest : pb::IMessage<BlockFriendsRequest>
+  internal sealed partial class BlockFriendsRequest : pb::IMessage<BlockFriendsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -6223,7 +6223,7 @@ namespace Nakama {
   /// <summary>
   /// A message sent on a channel.
   /// </summary>
-  public sealed partial class ChannelMessage : pb::IMessage<ChannelMessage>
+  internal sealed partial class ChannelMessage : pb::IMessage<ChannelMessage>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -6903,7 +6903,7 @@ namespace Nakama {
   /// <summary>
   /// A list of channel messages, usually a result of a list operation.
   /// </summary>
-  public sealed partial class ChannelMessageList : pb::IMessage<ChannelMessageList>
+  internal sealed partial class ChannelMessageList : pb::IMessage<ChannelMessageList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -7148,7 +7148,7 @@ namespace Nakama {
   /// <summary>
   /// Create a group with the current user as owner.
   /// </summary>
-  public sealed partial class CreateGroupRequest : pb::IMessage<CreateGroupRequest>
+  internal sealed partial class CreateGroupRequest : pb::IMessage<CreateGroupRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -7521,7 +7521,7 @@ namespace Nakama {
   /// <summary>
   /// Delete one or more friends for the current user.
   /// </summary>
-  public sealed partial class DeleteFriendsRequest : pb::IMessage<DeleteFriendsRequest>
+  internal sealed partial class DeleteFriendsRequest : pb::IMessage<DeleteFriendsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -7716,7 +7716,7 @@ namespace Nakama {
   /// <summary>
   /// Delete a group the user has access to.
   /// </summary>
-  public sealed partial class DeleteGroupRequest : pb::IMessage<DeleteGroupRequest>
+  internal sealed partial class DeleteGroupRequest : pb::IMessage<DeleteGroupRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -7894,7 +7894,7 @@ namespace Nakama {
   /// <summary>
   /// Delete a leaderboard record.
   /// </summary>
-  public sealed partial class DeleteLeaderboardRecordRequest : pb::IMessage<DeleteLeaderboardRecordRequest>
+  internal sealed partial class DeleteLeaderboardRecordRequest : pb::IMessage<DeleteLeaderboardRecordRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8072,7 +8072,7 @@ namespace Nakama {
   /// <summary>
   /// Delete one or more notifications for the current user.
   /// </summary>
-  public sealed partial class DeleteNotificationsRequest : pb::IMessage<DeleteNotificationsRequest>
+  internal sealed partial class DeleteNotificationsRequest : pb::IMessage<DeleteNotificationsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8239,7 +8239,7 @@ namespace Nakama {
   /// <summary>
   /// Storage objects to delete.
   /// </summary>
-  public sealed partial class DeleteStorageObjectId : pb::IMessage<DeleteStorageObjectId>
+  internal sealed partial class DeleteStorageObjectId : pb::IMessage<DeleteStorageObjectId>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8495,7 +8495,7 @@ namespace Nakama {
   /// <summary>
   /// Batch delete storage objects.
   /// </summary>
-  public sealed partial class DeleteStorageObjectsRequest : pb::IMessage<DeleteStorageObjectsRequest>
+  internal sealed partial class DeleteStorageObjectsRequest : pb::IMessage<DeleteStorageObjectsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8662,7 +8662,7 @@ namespace Nakama {
   /// <summary>
   /// Represents an event to be passed through the server to registered event handlers.
   /// </summary>
-  public sealed partial class Event : pb::IMessage<Event>
+  internal sealed partial class Event : pb::IMessage<Event>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8955,7 +8955,7 @@ namespace Nakama {
   /// <summary>
   /// A friend of a user.
   /// </summary>
-  public sealed partial class Friend : pb::IMessage<Friend>
+  internal sealed partial class Friend : pb::IMessage<Friend>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -9239,7 +9239,7 @@ namespace Nakama {
       /// <summary>
       /// The friendship status.
       /// </summary>
-      public enum State {
+      internal enum State {
         /// <summary>
         /// The user is a friend of the current user.
         /// </summary>
@@ -9266,7 +9266,7 @@ namespace Nakama {
   /// <summary>
   /// A collection of zero or more friends of the user.
   /// </summary>
-  public sealed partial class FriendList : pb::IMessage<FriendList>
+  internal sealed partial class FriendList : pb::IMessage<FriendList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -9472,7 +9472,7 @@ namespace Nakama {
   /// <summary>
   /// Fetch a batch of zero or more users from the server.
   /// </summary>
-  public sealed partial class GetUsersRequest : pb::IMessage<GetUsersRequest>
+  internal sealed partial class GetUsersRequest : pb::IMessage<GetUsersRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -9695,7 +9695,7 @@ namespace Nakama {
   /// <summary>
   /// A group in the server.
   /// </summary>
-  public sealed partial class Group : pb::IMessage<Group>
+  internal sealed partial class Group : pb::IMessage<Group>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -10328,7 +10328,7 @@ namespace Nakama {
   /// <summary>
   /// One or more groups returned from a listing operation.
   /// </summary>
-  public sealed partial class GroupList : pb::IMessage<GroupList>
+  internal sealed partial class GroupList : pb::IMessage<GroupList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -10534,7 +10534,7 @@ namespace Nakama {
   /// <summary>
   /// A list of users belonging to a group, along with their role.
   /// </summary>
-  public sealed partial class GroupUserList : pb::IMessage<GroupUserList>
+  internal sealed partial class GroupUserList : pb::IMessage<GroupUserList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -10742,7 +10742,7 @@ namespace Nakama {
       /// <summary>
       /// A single user-role pair.
       /// </summary>
-      public sealed partial class GroupUser : pb::IMessage<GroupUser>
+      internal sealed partial class GroupUser : pb::IMessage<GroupUser>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
       #endif
@@ -10978,7 +10978,7 @@ namespace Nakama {
           /// <summary>
           /// The group role status.
           /// </summary>
-          public enum State {
+          internal enum State {
             /// <summary>
             /// The user is a superadmin with full control of the group.
             /// </summary>
@@ -11010,7 +11010,7 @@ namespace Nakama {
   /// <summary>
   /// Import Facebook friends into the current user's account.
   /// </summary>
-  public sealed partial class ImportFacebookFriendsRequest : pb::IMessage<ImportFacebookFriendsRequest>
+  internal sealed partial class ImportFacebookFriendsRequest : pb::IMessage<ImportFacebookFriendsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -11244,7 +11244,7 @@ namespace Nakama {
   /// <summary>
   /// Immediately join an open group, or request to join a closed one.
   /// </summary>
-  public sealed partial class JoinGroupRequest : pb::IMessage<JoinGroupRequest>
+  internal sealed partial class JoinGroupRequest : pb::IMessage<JoinGroupRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -11422,7 +11422,7 @@ namespace Nakama {
   /// <summary>
   /// The request to join a tournament.
   /// </summary>
-  public sealed partial class JoinTournamentRequest : pb::IMessage<JoinTournamentRequest>
+  internal sealed partial class JoinTournamentRequest : pb::IMessage<JoinTournamentRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -11600,7 +11600,7 @@ namespace Nakama {
   /// <summary>
   /// Kick a set of users from a group.
   /// </summary>
-  public sealed partial class KickGroupUsersRequest : pb::IMessage<KickGroupUsersRequest>
+  internal sealed partial class KickGroupUsersRequest : pb::IMessage<KickGroupUsersRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -11806,7 +11806,7 @@ namespace Nakama {
   /// <summary>
   /// Represents a complete leaderboard record with all scores and associated metadata.
   /// </summary>
-  public sealed partial class LeaderboardRecord : pb::IMessage<LeaderboardRecord>
+  internal sealed partial class LeaderboardRecord : pb::IMessage<LeaderboardRecord>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -12448,7 +12448,7 @@ namespace Nakama {
   /// <summary>
   /// A set of leaderboard records, may be part of a leaderboard records page or a batch of individual records.
   /// </summary>
-  public sealed partial class LeaderboardRecordList : pb::IMessage<LeaderboardRecordList>
+  internal sealed partial class LeaderboardRecordList : pb::IMessage<LeaderboardRecordList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -12721,7 +12721,7 @@ namespace Nakama {
   /// <summary>
   /// Leave a group.
   /// </summary>
-  public sealed partial class LeaveGroupRequest : pb::IMessage<LeaveGroupRequest>
+  internal sealed partial class LeaveGroupRequest : pb::IMessage<LeaveGroupRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -12899,7 +12899,7 @@ namespace Nakama {
   /// <summary>
   /// Link Facebook to the current user's account.
   /// </summary>
-  public sealed partial class LinkFacebookRequest : pb::IMessage<LinkFacebookRequest>
+  internal sealed partial class LinkFacebookRequest : pb::IMessage<LinkFacebookRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -13133,7 +13133,7 @@ namespace Nakama {
   /// <summary>
   /// List a channel's message history.
   /// </summary>
-  public sealed partial class ListChannelMessagesRequest : pb::IMessage<ListChannelMessagesRequest>
+  internal sealed partial class ListChannelMessagesRequest : pb::IMessage<ListChannelMessagesRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -13444,7 +13444,7 @@ namespace Nakama {
   /// <summary>
   /// List friends for a user.
   /// </summary>
-  public sealed partial class ListFriendsRequest : pb::IMessage<ListFriendsRequest>
+  internal sealed partial class ListFriendsRequest : pb::IMessage<ListFriendsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -13716,7 +13716,7 @@ namespace Nakama {
   /// <summary>
   /// List groups based on given filters.
   /// </summary>
-  public sealed partial class ListGroupsRequest : pb::IMessage<ListGroupsRequest>
+  internal sealed partial class ListGroupsRequest : pb::IMessage<ListGroupsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -13980,7 +13980,7 @@ namespace Nakama {
   /// <summary>
   /// List all users that are part of a group.
   /// </summary>
-  public sealed partial class ListGroupUsersRequest : pb::IMessage<ListGroupUsersRequest>
+  internal sealed partial class ListGroupUsersRequest : pb::IMessage<ListGroupUsersRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -14291,7 +14291,7 @@ namespace Nakama {
   /// <summary>
   /// List leaerboard records from a given leaderboard around the owner.
   /// </summary>
-  public sealed partial class ListLeaderboardRecordsAroundOwnerRequest : pb::IMessage<ListLeaderboardRecordsAroundOwnerRequest>
+  internal sealed partial class ListLeaderboardRecordsAroundOwnerRequest : pb::IMessage<ListLeaderboardRecordsAroundOwnerRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -14602,7 +14602,7 @@ namespace Nakama {
   /// <summary>
   /// List leaderboard records from a given leaderboard.
   /// </summary>
-  public sealed partial class ListLeaderboardRecordsRequest : pb::IMessage<ListLeaderboardRecordsRequest>
+  internal sealed partial class ListLeaderboardRecordsRequest : pb::IMessage<ListLeaderboardRecordsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -14941,7 +14941,7 @@ namespace Nakama {
   /// <summary>
   /// List realtime matches.
   /// </summary>
-  public sealed partial class ListMatchesRequest : pb::IMessage<ListMatchesRequest>
+  internal sealed partial class ListMatchesRequest : pb::IMessage<ListMatchesRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -15362,7 +15362,7 @@ namespace Nakama {
   /// <summary>
   /// Get a list of unexpired notifications.
   /// </summary>
-  public sealed partial class ListNotificationsRequest : pb::IMessage<ListNotificationsRequest>
+  internal sealed partial class ListNotificationsRequest : pb::IMessage<ListNotificationsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -15587,7 +15587,7 @@ namespace Nakama {
   /// <summary>
   /// List publicly readable storage objects in a given collection.
   /// </summary>
-  public sealed partial class ListStorageObjectsRequest : pb::IMessage<ListStorageObjectsRequest>
+  internal sealed partial class ListStorageObjectsRequest : pb::IMessage<ListStorageObjectsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -15890,7 +15890,7 @@ namespace Nakama {
   /// <summary>
   /// List tournament records from a given tournament around the owner.
   /// </summary>
-  public sealed partial class ListTournamentRecordsAroundOwnerRequest : pb::IMessage<ListTournamentRecordsAroundOwnerRequest>
+  internal sealed partial class ListTournamentRecordsAroundOwnerRequest : pb::IMessage<ListTournamentRecordsAroundOwnerRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -16201,7 +16201,7 @@ namespace Nakama {
   /// <summary>
   /// List tournament records from a given tournament.
   /// </summary>
-  public sealed partial class ListTournamentRecordsRequest : pb::IMessage<ListTournamentRecordsRequest>
+  internal sealed partial class ListTournamentRecordsRequest : pb::IMessage<ListTournamentRecordsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -16540,7 +16540,7 @@ namespace Nakama {
   /// <summary>
   /// List active/upcoming tournaments based on given filters.
   /// </summary>
-  public sealed partial class ListTournamentsRequest : pb::IMessage<ListTournamentsRequest>
+  internal sealed partial class ListTournamentsRequest : pb::IMessage<ListTournamentsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -16953,7 +16953,7 @@ namespace Nakama {
   /// <summary>
   /// List the groups a user is part of, and their relationship to each.
   /// </summary>
-  public sealed partial class ListUserGroupsRequest : pb::IMessage<ListUserGroupsRequest>
+  internal sealed partial class ListUserGroupsRequest : pb::IMessage<ListUserGroupsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -17264,7 +17264,7 @@ namespace Nakama {
   /// <summary>
   /// Represents a realtime match.
   /// </summary>
-  public sealed partial class Match : pb::IMessage<Match>
+  internal sealed partial class Match : pb::IMessage<Match>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -17567,7 +17567,7 @@ namespace Nakama {
   /// <summary>
   /// A list of realtime matches.
   /// </summary>
-  public sealed partial class MatchList : pb::IMessage<MatchList>
+  internal sealed partial class MatchList : pb::IMessage<MatchList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -17734,7 +17734,7 @@ namespace Nakama {
   /// <summary>
   /// A notification in the server.
   /// </summary>
-  public sealed partial class Notification : pb::IMessage<Notification>
+  internal sealed partial class Notification : pb::IMessage<Notification>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -18155,7 +18155,7 @@ namespace Nakama {
   /// <summary>
   /// A collection of zero or more notifications.
   /// </summary>
-  public sealed partial class NotificationList : pb::IMessage<NotificationList>
+  internal sealed partial class NotificationList : pb::IMessage<NotificationList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -18361,7 +18361,7 @@ namespace Nakama {
   /// <summary>
   /// Promote a set of users in a group to the next role up.
   /// </summary>
-  public sealed partial class PromoteGroupUsersRequest : pb::IMessage<PromoteGroupUsersRequest>
+  internal sealed partial class PromoteGroupUsersRequest : pb::IMessage<PromoteGroupUsersRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -18567,7 +18567,7 @@ namespace Nakama {
   /// <summary>
   /// Storage objects to get.
   /// </summary>
-  public sealed partial class ReadStorageObjectId : pb::IMessage<ReadStorageObjectId>
+  internal sealed partial class ReadStorageObjectId : pb::IMessage<ReadStorageObjectId>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -18823,7 +18823,7 @@ namespace Nakama {
   /// <summary>
   /// Batch get storage objects.
   /// </summary>
-  public sealed partial class ReadStorageObjectsRequest : pb::IMessage<ReadStorageObjectsRequest>
+  internal sealed partial class ReadStorageObjectsRequest : pb::IMessage<ReadStorageObjectsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -18990,7 +18990,7 @@ namespace Nakama {
   /// <summary>
   /// Execute an Lua function on the server.
   /// </summary>
-  public sealed partial class Rpc : pb::IMessage<Rpc>
+  internal sealed partial class Rpc : pb::IMessage<Rpc>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -19246,7 +19246,7 @@ namespace Nakama {
   /// <summary>
   /// A user's session used to authenticate messages.
   /// </summary>
-  public sealed partial class Session : pb::IMessage<Session>
+  internal sealed partial class Session : pb::IMessage<Session>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -19463,7 +19463,7 @@ namespace Nakama {
   /// <summary>
   /// An object within the storage engine.
   /// </summary>
-  public sealed partial class StorageObject : pb::IMessage<StorageObject>
+  internal sealed partial class StorageObject : pb::IMessage<StorageObject>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -19971,7 +19971,7 @@ namespace Nakama {
   /// <summary>
   /// A storage acknowledgement.
   /// </summary>
-  public sealed partial class StorageObjectAck : pb::IMessage<StorageObjectAck>
+  internal sealed partial class StorageObjectAck : pb::IMessage<StorageObjectAck>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -20266,7 +20266,7 @@ namespace Nakama {
   /// <summary>
   /// Batch of acknowledgements for the storage object write.
   /// </summary>
-  public sealed partial class StorageObjectAcks : pb::IMessage<StorageObjectAcks>
+  internal sealed partial class StorageObjectAcks : pb::IMessage<StorageObjectAcks>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -20433,7 +20433,7 @@ namespace Nakama {
   /// <summary>
   /// Batch of storage objects.
   /// </summary>
-  public sealed partial class StorageObjects : pb::IMessage<StorageObjects>
+  internal sealed partial class StorageObjects : pb::IMessage<StorageObjects>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -20600,7 +20600,7 @@ namespace Nakama {
   /// <summary>
   /// List of storage objects.
   /// </summary>
-  public sealed partial class StorageObjectList : pb::IMessage<StorageObjectList>
+  internal sealed partial class StorageObjectList : pb::IMessage<StorageObjectList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -20806,7 +20806,7 @@ namespace Nakama {
   /// <summary>
   /// A tournament on the server.
   /// </summary>
-  public sealed partial class Tournament : pb::IMessage<Tournament>
+  internal sealed partial class Tournament : pb::IMessage<Tournament>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -21635,7 +21635,7 @@ namespace Nakama {
   /// <summary>
   /// A list of tournaments.
   /// </summary>
-  public sealed partial class TournamentList : pb::IMessage<TournamentList>
+  internal sealed partial class TournamentList : pb::IMessage<TournamentList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -21841,7 +21841,7 @@ namespace Nakama {
   /// <summary>
   /// A set of tournament records which may be part of a tournament records page or a batch of individual records.
   /// </summary>
-  public sealed partial class TournamentRecordList : pb::IMessage<TournamentRecordList>
+  internal sealed partial class TournamentRecordList : pb::IMessage<TournamentRecordList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -22114,7 +22114,7 @@ namespace Nakama {
   /// <summary>
   /// Update a user's account details.
   /// </summary>
-  public sealed partial class UpdateAccountRequest : pb::IMessage<UpdateAccountRequest>
+  internal sealed partial class UpdateAccountRequest : pb::IMessage<UpdateAccountRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -22535,7 +22535,7 @@ namespace Nakama {
   /// <summary>
   /// Update fields in a given group.
   /// </summary>
-  public sealed partial class UpdateGroupRequest : pb::IMessage<UpdateGroupRequest>
+  internal sealed partial class UpdateGroupRequest : pb::IMessage<UpdateGroupRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -22948,7 +22948,7 @@ namespace Nakama {
   /// <summary>
   /// A user in the server.
   /// </summary>
-  public sealed partial class User : pb::IMessage<User>
+  internal sealed partial class User : pb::IMessage<User>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -23807,7 +23807,7 @@ namespace Nakama {
   /// <summary>
   /// A list of groups belonging to a user, along with the user's role in each group.
   /// </summary>
-  public sealed partial class UserGroupList : pb::IMessage<UserGroupList>
+  internal sealed partial class UserGroupList : pb::IMessage<UserGroupList>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -24015,7 +24015,7 @@ namespace Nakama {
       /// <summary>
       /// A single group-role pair.
       /// </summary>
-      public sealed partial class UserGroup : pb::IMessage<UserGroup>
+      internal sealed partial class UserGroup : pb::IMessage<UserGroup>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
       #endif
@@ -24251,7 +24251,7 @@ namespace Nakama {
           /// <summary>
           /// The group role status.
           /// </summary>
-          public enum State {
+          internal enum State {
             /// <summary>
             /// The user is a superadmin with full control of the group.
             /// </summary>
@@ -24283,7 +24283,7 @@ namespace Nakama {
   /// <summary>
   /// A collection of zero or more users.
   /// </summary>
-  public sealed partial class Users : pb::IMessage<Users>
+  internal sealed partial class Users : pb::IMessage<Users>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -24450,7 +24450,7 @@ namespace Nakama {
   /// <summary>
   /// A request to submit a score to a leaderboard.
   /// </summary>
-  public sealed partial class WriteLeaderboardRecordRequest : pb::IMessage<WriteLeaderboardRecordRequest>
+  internal sealed partial class WriteLeaderboardRecordRequest : pb::IMessage<WriteLeaderboardRecordRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -24678,7 +24678,7 @@ namespace Nakama {
       /// <summary>
       /// Record values to write.
       /// </summary>
-      public sealed partial class LeaderboardRecordWrite : pb::IMessage<LeaderboardRecordWrite>
+      internal sealed partial class LeaderboardRecordWrite : pb::IMessage<LeaderboardRecordWrite>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
       #endif
@@ -24939,7 +24939,7 @@ namespace Nakama {
   /// <summary>
   /// The object to store.
   /// </summary>
-  public sealed partial class WriteStorageObject : pb::IMessage<WriteStorageObject>
+  internal sealed partial class WriteStorageObject : pb::IMessage<WriteStorageObject>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -25328,7 +25328,7 @@ namespace Nakama {
   /// <summary>
   /// Write objects to the storage engine.
   /// </summary>
-  public sealed partial class WriteStorageObjectsRequest : pb::IMessage<WriteStorageObjectsRequest>
+  internal sealed partial class WriteStorageObjectsRequest : pb::IMessage<WriteStorageObjectsRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -25495,7 +25495,7 @@ namespace Nakama {
   /// <summary>
   /// A request to submit a score to a tournament.
   /// </summary>
-  public sealed partial class WriteTournamentRecordRequest : pb::IMessage<WriteTournamentRecordRequest>
+  internal sealed partial class WriteTournamentRecordRequest : pb::IMessage<WriteTournamentRecordRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -25723,7 +25723,7 @@ namespace Nakama {
       /// <summary>
       /// Record values to write.
       /// </summary>
-      public sealed partial class TournamentRecordWrite : pb::IMessage<TournamentRecordWrite>
+      internal sealed partial class TournamentRecordWrite : pb::IMessage<TournamentRecordWrite>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
       #endif

@@ -16,16 +16,8 @@
 
 # This command is a utility for generating protocol buffers.
 
-protoc -Iprotobuf/protos --csharp_out=./protobuf/generated \
+protoc -Iprotobuf/protos \
+--csharp_out=internal_access:./protobuf/Nakama.Protobuf/generated \
 protobuf/protos/github.com/heroiclabs/nakama-common/api/api.proto \
 protobuf/protos/github.com/heroiclabs/nakama-common/rtapi/realtime.proto \
-protobuf/protos/apigrpc.proto \
-protobuf/protos/google/protobuf/any.proto \
-protobuf/protos/google/protobuf/descriptor.proto \
-protobuf/protos/google/protobuf/empty.proto \
-protobuf/protos/google/protobuf/struct.proto \
-protobuf/protos/google/protobuf/timestamp.proto \
-protobuf/protos/google/protobuf/wrappers.proto \
-protobuf/protos/google/api/annotations.proto \
-protobuf/protos/google/api/http.proto \
-protobuf/protos/protoc-gen-swagger/options/openapiv2.proto
+protobuf/protos/apigrpc.proto

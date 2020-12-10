@@ -12,7 +12,7 @@ using scg = global::System.Collections.Generic;
 namespace Nakama {
 
   /// <summary>Holder for reflection information generated from github.com/heroiclabs/nakama-common/rtapi/realtime.proto</summary>
-  public static partial class RealtimeReflection {
+  internal static partial class RealtimeReflection {
 
     #region Descriptor
     /// <summary>File descriptor for github.com/heroiclabs/nakama-common/rtapi/realtime.proto</summary>
@@ -212,7 +212,7 @@ namespace Nakama {
   /// <summary>
   /// An envelope for a realtime message.
   /// </summary>
-  public sealed partial class Envelope : pb::IMessage<Envelope>
+  internal sealed partial class Envelope : pb::IMessage<Envelope>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2172,7 +2172,7 @@ namespace Nakama {
   /// <summary>
   /// A realtime chat channel.
   /// </summary>
-  public sealed partial class Channel : pb::IMessage<Channel>
+  internal sealed partial class Channel : pb::IMessage<Channel>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2582,7 +2582,7 @@ namespace Nakama {
   /// <summary>
   /// Join operation for a realtime chat channel.
   /// </summary>
-  public sealed partial class ChannelJoin : pb::IMessage<ChannelJoin>
+  internal sealed partial class ChannelJoin : pb::IMessage<ChannelJoin>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -2895,7 +2895,7 @@ namespace Nakama {
       /// <summary>
       /// The type of chat channel.
       /// </summary>
-      public enum Type {
+      internal enum Type {
         /// <summary>
         /// Default case. Assumed as ROOM type.
         /// </summary>
@@ -2922,7 +2922,7 @@ namespace Nakama {
   /// <summary>
   /// Leave a realtime channel.
   /// </summary>
-  public sealed partial class ChannelLeave : pb::IMessage<ChannelLeave>
+  internal sealed partial class ChannelLeave : pb::IMessage<ChannelLeave>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3100,7 +3100,7 @@ namespace Nakama {
   /// <summary>
   /// A receipt reply from a channel message send operation.
   /// </summary>
-  public sealed partial class ChannelMessageAck : pb::IMessage<ChannelMessageAck>
+  internal sealed partial class ChannelMessageAck : pb::IMessage<ChannelMessageAck>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3702,7 +3702,7 @@ namespace Nakama {
   /// <summary>
   /// Send a message to a realtime channel.
   /// </summary>
-  public sealed partial class ChannelMessageSend : pb::IMessage<ChannelMessageSend>
+  internal sealed partial class ChannelMessageSend : pb::IMessage<ChannelMessageSend>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -3919,7 +3919,7 @@ namespace Nakama {
   /// <summary>
   /// Update a message previously sent to a realtime channel.
   /// </summary>
-  public sealed partial class ChannelMessageUpdate : pb::IMessage<ChannelMessageUpdate>
+  internal sealed partial class ChannelMessageUpdate : pb::IMessage<ChannelMessageUpdate>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -4175,7 +4175,7 @@ namespace Nakama {
   /// <summary>
   /// Remove a message previously sent to a realtime channel.
   /// </summary>
-  public sealed partial class ChannelMessageRemove : pb::IMessage<ChannelMessageRemove>
+  internal sealed partial class ChannelMessageRemove : pb::IMessage<ChannelMessageRemove>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -4392,7 +4392,7 @@ namespace Nakama {
   /// <summary>
   /// A set of joins and leaves on a particular channel.
   /// </summary>
-  public sealed partial class ChannelPresenceEvent : pb::IMessage<ChannelPresenceEvent>
+  internal sealed partial class ChannelPresenceEvent : pb::IMessage<ChannelPresenceEvent>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -4782,7 +4782,7 @@ namespace Nakama {
   /// <summary>
   /// A logical error which may occur on the server.
   /// </summary>
-  public sealed partial class Error : pb::IMessage<Error>
+  internal sealed partial class Error : pb::IMessage<Error>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -5029,7 +5029,7 @@ namespace Nakama {
       /// <summary>
       /// The selection of possible error codes.
       /// </summary>
-      public enum Code {
+      internal enum Code {
         /// <summary>
         /// An unexpected result from the server.
         /// </summary>
@@ -5072,7 +5072,7 @@ namespace Nakama {
   /// <summary>
   /// A realtime match.
   /// </summary>
-  public sealed partial class Match : pb::IMessage<Match>
+  internal sealed partial class Match : pb::IMessage<Match>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -5451,7 +5451,7 @@ namespace Nakama {
   /// <summary>
   /// Create a new realtime match.
   /// </summary>
-  public sealed partial class MatchCreate : pb::IMessage<MatchCreate>
+  internal sealed partial class MatchCreate : pb::IMessage<MatchCreate>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -5590,7 +5590,7 @@ namespace Nakama {
   /// <summary>
   /// Realtime match data received from the server.
   /// </summary>
-  public sealed partial class MatchData : pb::IMessage<MatchData>
+  internal sealed partial class MatchData : pb::IMessage<MatchData>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -5933,7 +5933,7 @@ namespace Nakama {
   /// <summary>
   /// Send realtime match data to the server.
   /// </summary>
-  public sealed partial class MatchDataSend : pb::IMessage<MatchDataSend>
+  internal sealed partial class MatchDataSend : pb::IMessage<MatchDataSend>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -6256,7 +6256,7 @@ namespace Nakama {
   /// <summary>
   /// Join an existing realtime match.
   /// </summary>
-  public sealed partial class MatchJoin : pb::IMessage<MatchJoin>
+  internal sealed partial class MatchJoin : pb::IMessage<MatchJoin>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -6532,7 +6532,7 @@ namespace Nakama {
   /// <summary>
   /// Leave a realtime match.
   /// </summary>
-  public sealed partial class MatchLeave : pb::IMessage<MatchLeave>
+  internal sealed partial class MatchLeave : pb::IMessage<MatchLeave>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -6710,7 +6710,7 @@ namespace Nakama {
   /// <summary>
   /// A set of joins and leaves on a particular realtime match.
   /// </summary>
-  public sealed partial class MatchPresenceEvent : pb::IMessage<MatchPresenceEvent>
+  internal sealed partial class MatchPresenceEvent : pb::IMessage<MatchPresenceEvent>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -6944,7 +6944,7 @@ namespace Nakama {
   /// <summary>
   /// Start a new matchmaking process.
   /// </summary>
-  public sealed partial class MatchmakerAdd : pb::IMessage<MatchmakerAdd>
+  internal sealed partial class MatchmakerAdd : pb::IMessage<MatchmakerAdd>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -7256,7 +7256,7 @@ namespace Nakama {
   /// <summary>
   /// A successful matchmaking result.
   /// </summary>
-  public sealed partial class MatchmakerMatched : pb::IMessage<MatchmakerMatched>
+  internal sealed partial class MatchmakerMatched : pb::IMessage<MatchmakerMatched>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -7618,7 +7618,7 @@ namespace Nakama {
     /// <summary>Container for nested types declared in the MatchmakerMatched message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static partial class Types {
-      public sealed partial class MatchmakerUser : pb::IMessage<MatchmakerUser>
+      internal sealed partial class MatchmakerUser : pb::IMessage<MatchmakerUser>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
       #endif
@@ -7866,7 +7866,7 @@ namespace Nakama {
   /// <summary>
   /// Cancel an existing ongoing matchmaking process.
   /// </summary>
-  public sealed partial class MatchmakerRemove : pb::IMessage<MatchmakerRemove>
+  internal sealed partial class MatchmakerRemove : pb::IMessage<MatchmakerRemove>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8044,7 +8044,7 @@ namespace Nakama {
   /// <summary>
   /// A ticket representing a new matchmaking process.
   /// </summary>
-  public sealed partial class MatchmakerTicket : pb::IMessage<MatchmakerTicket>
+  internal sealed partial class MatchmakerTicket : pb::IMessage<MatchmakerTicket>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8222,7 +8222,7 @@ namespace Nakama {
   /// <summary>
   /// A collection of zero or more notifications.
   /// </summary>
-  public sealed partial class Notifications : pb::IMessage<Notifications>
+  internal sealed partial class Notifications : pb::IMessage<Notifications>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8389,7 +8389,7 @@ namespace Nakama {
   /// <summary>
   /// Application-level heartbeat and connection check.
   /// </summary>
-  public sealed partial class Ping : pb::IMessage<Ping>
+  internal sealed partial class Ping : pb::IMessage<Ping>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8528,7 +8528,7 @@ namespace Nakama {
   /// <summary>
   /// Application-level heartbeat and connection check response.
   /// </summary>
-  public sealed partial class Pong : pb::IMessage<Pong>
+  internal sealed partial class Pong : pb::IMessage<Pong>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8667,7 +8667,7 @@ namespace Nakama {
   /// <summary>
   /// A snapshot of statuses for some set of users.
   /// </summary>
-  public sealed partial class Status : pb::IMessage<Status>
+  internal sealed partial class Status : pb::IMessage<Status>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -8834,7 +8834,7 @@ namespace Nakama {
   /// <summary>
   /// Start receiving status updates for some set of users.
   /// </summary>
-  public sealed partial class StatusFollow : pb::IMessage<StatusFollow>
+  internal sealed partial class StatusFollow : pb::IMessage<StatusFollow>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -9029,7 +9029,7 @@ namespace Nakama {
   /// <summary>
   /// A batch of status updates for a given user.
   /// </summary>
-  public sealed partial class StatusPresenceEvent : pb::IMessage<StatusPresenceEvent>
+  internal sealed partial class StatusPresenceEvent : pb::IMessage<StatusPresenceEvent>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -9224,7 +9224,7 @@ namespace Nakama {
   /// <summary>
   /// Stop receiving status updates for some set of users.
   /// </summary>
-  public sealed partial class StatusUnfollow : pb::IMessage<StatusUnfollow>
+  internal sealed partial class StatusUnfollow : pb::IMessage<StatusUnfollow>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -9391,7 +9391,7 @@ namespace Nakama {
   /// <summary>
   /// Set the user's own status.
   /// </summary>
-  public sealed partial class StatusUpdate : pb::IMessage<StatusUpdate>
+  internal sealed partial class StatusUpdate : pb::IMessage<StatusUpdate>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -9577,7 +9577,7 @@ namespace Nakama {
   /// <summary>
   /// Represents identifying information for a stream.
   /// </summary>
-  public sealed partial class Stream : pb::IMessage<Stream>
+  internal sealed partial class Stream : pb::IMessage<Stream>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -9872,7 +9872,7 @@ namespace Nakama {
   /// <summary>
   /// A data message delivered over a stream.
   /// </summary>
-  public sealed partial class StreamData : pb::IMessage<StreamData>
+  internal sealed partial class StreamData : pb::IMessage<StreamData>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -10185,7 +10185,7 @@ namespace Nakama {
   /// <summary>
   /// A set of joins and leaves on a particular stream.
   /// </summary>
-  public sealed partial class StreamPresenceEvent : pb::IMessage<StreamPresenceEvent>
+  internal sealed partial class StreamPresenceEvent : pb::IMessage<StreamPresenceEvent>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
@@ -10428,7 +10428,7 @@ namespace Nakama {
   /// <summary>
   /// A user session associated to a stream, usually through a list operation or a join/leave event.
   /// </summary>
-  public sealed partial class UserPresence : pb::IMessage<UserPresence>
+  internal sealed partial class UserPresence : pb::IMessage<UserPresence>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
