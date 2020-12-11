@@ -54,29 +54,4 @@ namespace Nakama
         /// </summary>
         IUserPresence Self { get; }
     }
-
-    /// <inheritdoc cref="IMatch"/>
-    internal class Match : IMatch
-    {
-        [DataMember(Name = "authoritative"), Preserve] public bool Authoritative { get; set; }
-
-        [DataMember(Name = "match_id"), Preserve] public string Id { get; set; }
-
-        [DataMember(Name = "label"), Preserve] public string Label { get; set; }
-
-        public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
-        [DataMember(Name = "presences"), Preserve] public List<UserPresence> _presences { get; set; }
-
-        [DataMember(Name = "size"), Preserve] public int Size { get; set; }
-
-        public IUserPresence Self => _self;
-        [DataMember(Name = "self"), Preserve] public UserPresence _self { get; set; }
-
-        public override string ToString()
-        {
-            var presences = string.Join(", ", Presences);
-            return
-                $"Match(Authoritative={Authoritative}, Id='{Id}', Label='{Label}', Presences=[{presences}], Size={Size}, Self={Self})";
-        }
-    }
 }

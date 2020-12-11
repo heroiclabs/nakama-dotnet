@@ -15,7 +15,6 @@
  */
 
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Nakama
 {
@@ -39,22 +38,5 @@ namespace Nakama
         /// This join information is in response to a subscription made to be notified when a user comes online.
         /// </remarks>
         IEnumerable<IUserPresence> Joins { get; }
-    }
-
-    /// <inheritdoc cref="IStatusPresenceEvent"/>
-    internal class StatusPresenceEvent : IStatusPresenceEvent
-    {
-        public IEnumerable<IUserPresence> Leaves => _leaves ?? UserPresence.NoPresences;
-        [DataMember(Name = "leaves"), Preserve] public List<UserPresence> _leaves { get; set; }
-
-        public IEnumerable<IUserPresence> Joins => _joins ?? UserPresence.NoPresences;
-        [DataMember(Name = "joins"), Preserve] public List<UserPresence> _joins { get; set; }
-
-        public override string ToString()
-        {
-            var joins = string.Join(", ", Joins);
-            var leaves = string.Join(", ", Leaves);
-            return $"StatusPresenceEvent(Leaves=[{leaves}], Joins=[{joins}])";
-        }
     }
 }

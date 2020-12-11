@@ -545,7 +545,7 @@ namespace Nakama
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string SignedPlayerInfo { get; }
 
@@ -3182,23 +3182,23 @@ namespace Nakama
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string Message { get; }
     }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// Remove the user from the matchmaker pool by ticket.
+    /// Unfollow one or more users on the server.
     /// </summary>
-    internal class MatchmakerRemoveMessage
+    public class StatusUnfollowMessage
     {
-        [DataMember(Name="ticket"), Preserve]
-        public string Ticket { get; set; }
+        [DataMember(Name="user_ids"), Preserve]
+        public List<string> UserIds { get; set; }
 
         public override string ToString()
         {
-            return $"MatchmakerRemoveMessage(Ticket='{Ticket}')";
+            var userIds = string.Join(", ", UserIds);
+            return $"StatusUnfollowMessage(UserIds=[{userIds}])";
         }
     }
 }

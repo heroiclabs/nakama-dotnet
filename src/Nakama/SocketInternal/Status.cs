@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,19 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
-    /// <summary>
-    /// Follow one or more other users for status updates.
-    /// </summary>
-    internal class StatusFollowMessage
+    /// <inheritdoc cref="IStatus"/>
+    public class Status : IStatus
     {
-        [DataMember(Name = "user_ids"), Preserve] public List<string> UserIds { get; set; }
-
-        [DataMember(Name = "usernames"), Preserve] public List<string> Usernames { get; set; }
+        public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
+        [DataMember(Name="presences"), Preserve]
+        public List<UserPresence> _presences { get; set; }
 
         public override string ToString()
         {
-            var userIds = string.Join(", ", UserIds);
-            var usernames = string.Join(", ", Usernames);
-            return $"StatusFollowMessage(UserIds=[{userIds}],Usernames=[{usernames}])";
+            var presences = string.Join(", ", Presences);
+            return $"Status(Presences=[{presences}])";
         }
     }
 }

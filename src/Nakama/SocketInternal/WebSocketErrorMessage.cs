@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 
-namespace Nakama
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// A create message for a match on the server.
+    /// A logical error received on the WebSocket connection.
     /// </summary>
-    internal class MatchCreateMessage
+    public class WebSocketErrorMessage
     {
+        [DataMember(Name = "code"), Preserve] public int Code { get; set; }
+
+        [DataMember(Name = "context"), Preserve] public Dictionary<string, string> Context { get; set; }
+
+        [DataMember(Name = "message"), Preserve] public string Message { get; set; }
+
         public override string ToString()
         {
-            return "MatchCreateMessage()";
+            return $"WebSocketErrorMessage(Code={Code}, Context={Context}, Message='{Message}')";
         }
     }
 }

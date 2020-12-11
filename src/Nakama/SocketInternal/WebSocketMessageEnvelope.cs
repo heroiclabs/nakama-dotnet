@@ -16,12 +16,12 @@
 
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
     /// An envelope for messages received or sent on a <c>WebSocket</c>.
     /// </summary>
-    internal class WebSocketMessageEnvelope
+    public class WebSocketMessageEnvelope
     {
         [DataMember(Name="cid"), Preserve]
         public string Cid { get; set; }

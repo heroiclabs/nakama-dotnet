@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,19 @@
 
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// A leave message for a match on the server.
+    /// Remove the user from the matchmaker pool by ticket.
     /// </summary>
-    internal class MatchLeaveMessage
+    public class MatchmakerRemoveMessage
     {
-        [DataMember(Name="match_id"), Preserve]
-        public string MatchId { get; set; }
+        [DataMember(Name="ticket"), Preserve]
+        public string Ticket { get; set; }
 
         public override string ToString()
         {
-            return $"MatchLeaveMessage(MatchId='{MatchId}')";
+            return $"MatchmakerRemoveMessage(Ticket='{Ticket}')";
         }
     }
 }

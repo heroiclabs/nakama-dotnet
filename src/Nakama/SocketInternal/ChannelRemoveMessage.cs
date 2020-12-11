@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,24 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// A join message for a match on the server.
+    /// Remove a message from a chat channel.
     /// </summary>
-    internal class MatchJoinMessage
+    public class ChannelRemoveMessage
     {
-        [DataMember(Name="match_id"), Preserve]
-        public string MatchId { get; set; }
+        [DataMember(Name="channel_id"), Preserve]
+        public string ChannelId { get; set; }
 
-        [DataMember(Name="token"), Preserve]
-        public string Token { get; set; }
-
-        [DataMember(Name="metadata"), Preserve]
-        public IDictionary<string, string> Metadata { get; set; }
+        [DataMember(Name="message_id"), Preserve]
+        public string MessageId { get; set; }
 
         public override string ToString()
         {
-            return $"MatchJoinMessage(MatchId='{MatchId}', Token='{Token}, Metadata='{Metadata}')";
+            return $"ChannelRemoveMessage(ChannelId='{ChannelId}', MessageId='{MessageId}')";
         }
     }
 }

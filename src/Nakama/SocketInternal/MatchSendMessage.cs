@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,29 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// Unfollow one or more users on the server.
+    /// Send new state to a match on the server.
     /// </summary>
-    internal class StatusUnfollowMessage
+    public class MatchSendMessage
     {
-        [DataMember(Name="user_ids"), Preserve]
-        public List<string> UserIds { get; set; }
+        [DataMember(Name="match_id"), Preserve]
+        public string MatchId { get; set; }
+
+        [DataMember(Name="op_code"), Preserve]
+        public string OpCode { get; set; }
+
+        [DataMember(Name="presences"), Preserve]
+        public List<UserPresence> Presences { get; set; }
+
+        [DataMember(Name="data"), Preserve]
+        public string State { get; set; }
 
         public override string ToString()
         {
-            var userIds = string.Join(", ", UserIds);
-            return $"StatusUnfollowMessage(UserIds=[{userIds}])";
+            var presences = string.Join(", ", Presences);
+            return $"MatchSendMessage(MatchId='{MatchId}', OpCode={OpCode}, Presences=[{presences}], State='{State}')";
         }
     }
 }

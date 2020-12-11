@@ -55,9 +55,9 @@ namespace Nakama
     }
 
     /// <inheritdoc cref="IUserPresence"/>
-    internal class UserPresence : IUserPresence
+    public class UserPresence : IUserPresence
     {
-        internal static readonly IReadOnlyList<UserPresence> NoPresences = new List<UserPresence>(0);
+        public static readonly IReadOnlyList<UserPresence> NoPresences = new List<UserPresence>(0);
 
         [DataMember(Name = "persistence"), Preserve] public bool Persistence { get; set; }
 

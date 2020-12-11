@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
     /// Send a chat message to a channel on the server.
     /// </summary>
-    internal class ChannelSendMessage
+    public class ChannelSendMessage
     {
         [DataMember(Name="channel_id"), Preserve]
         public string ChannelId { get; set; }

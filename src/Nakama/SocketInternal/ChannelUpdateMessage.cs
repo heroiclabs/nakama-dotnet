@@ -14,32 +14,27 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// Send new state to a match on the server.
+    /// Update a chat message which has been sent to a channel.
     /// </summary>
-    internal class MatchSendMessage
+    public class ChannelUpdateMessage
     {
-        [DataMember(Name="match_id"), Preserve]
-        public string MatchId { get; set; }
+        [DataMember(Name="channel_id"), Preserve]
+        public string ChannelId { get; set; }
 
-        [DataMember(Name="op_code"), Preserve]
-        public string OpCode { get; set; }
+        [DataMember(Name="message_id"), Preserve]
+        public string MessageId { get; set; }
 
-        [DataMember(Name="presences"), Preserve]
-        public List<UserPresence> Presences { get; set; }
-
-        [DataMember(Name="data"), Preserve]
-        public string State { get; set; }
+        [DataMember(Name="content"), Preserve]
+        public string Content { get; set; }
 
         public override string ToString()
         {
-            var presences = string.Join(", ", Presences);
-            return $"MatchSendMessage(MatchId='{MatchId}', OpCode={OpCode}, Presences=[{presences}], State='{State}')";
+            return $"ChannelUpdateMessage(ChannelId='{ChannelId}', MessageId='{MessageId}', Content='{Content}')";
         }
     }
 }
