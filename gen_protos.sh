@@ -16,8 +16,6 @@
 
 # This command is a utility for generating protocol buffers.
 
-protoc -Isrc/Nakama.Protobuf/protos \
---csharp_out=internal_access:./src/Nakama.Protobuf/generated \
-./src/Nakama.Protobuf/protos/github.com/heroiclabs/nakama-common/api/api.proto \
+protoc -Isrc/Nakama.Protobuf/protos/github.com/heroiclabs/nakama-common -Isrc/Nakama.Protobuf/protos --csharp_out=internal_access:./src/Nakama.Protobuf/generated \
 ./src/Nakama.Protobuf/protos/github.com/heroiclabs/nakama-common/rtapi/realtime.proto \
-./src/Nakama.Protobuf/protos/apigrpc.proto
+./src/Nakama.Protobuf/protos/github.com/heroiclabs/nakama-common/api/api.proto
