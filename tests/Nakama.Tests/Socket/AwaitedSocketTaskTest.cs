@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,49 +18,48 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Nakama.Tests
+namespace Nakama.Tests.Socket
 {
     public class AwaitedSocketTaskTest : IDisposable
     {
         private IClient _client;
-        private readonly ISocket _socket;
 
         public AwaitedSocketTaskTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Nakama.Socket.From(_client);
         }
 
-        public void Dispose()
-        {
-            _socket.Dispose();
-            _client = null;
-        }
+        public void Dispose() { _client = null; }
 
-        [Fact]
-        public async void Socket_AwaitedTasks_AreCanceled()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async void Socket_AwaitedTasks_AreCanceled(TestAdapterFactory adapterFactory)
         {
+            var socket = Nakama.Socket.From(_client, adapterFactory());
             var id = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(id);
-            await _socket.ConnectAsync(session);
+            await socket.ConnectAsync(session);
 
-            var matchmakerTask1 = _socket.AddMatchmakerAsync("+label.foo:\"val\"", 15, 20);
-            var matchmakerTask2 = _socket.AddMatchmakerAsync("+label.bar:\"val\"", 15, 20);
-            await _socket.CloseAsync();
+            var matchmakerTask1 = socket.AddMatchmakerAsync("+label.foo:\"val\"", 15, 20);
+            var matchmakerTask2 = socket.AddMatchmakerAsync("+label.bar:\"val\"", 15, 20);
+            await socket.CloseAsync();
 
             await Assert.ThrowsAsync<TaskCanceledException>(() => Task.WhenAll(matchmakerTask1, matchmakerTask2));
         }
 
-        [Fact]
-        public async void Socket_AwaitedTasksAfterDisconnect_AreCanceled()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async void Socket_AwaitedTasksAfterDisconnect_AreCanceled(TestAdapterFactory adapterFactory)
         {
             var id = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(id);
-            await _socket.ConnectAsync(session);
+            var socket = Nakama.Socket.From(_client, adapterFactory());
 
-            await _socket.CloseAsync();
-            var statusTask1 = _socket.FollowUsersAsync(new[] {session.UserId});
-            var statusTask2 = _socket.FollowUsersAsync(new[] {session.UserId});
+            await socket.ConnectAsync(session);
+            await socket.CloseAsync();
+
+            var statusTask1 = socket.FollowUsersAsync(new[] {session.UserId});
+            var statusTask2 = socket.FollowUsersAsync(new[] {session.UserId});
 
             await Assert.ThrowsAsync<TaskCanceledException>(() => Task.WhenAll(statusTask1, statusTask2));
         }
