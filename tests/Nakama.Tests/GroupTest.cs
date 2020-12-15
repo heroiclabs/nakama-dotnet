@@ -25,12 +25,10 @@ namespace Nakama.Tests.Api
     public class GroupTest
     {
         private IClient _client;
-        private ISocket _socket;
 
         public GroupTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Nakama.Socket.From(_client);
         }
 
         [Fact]
