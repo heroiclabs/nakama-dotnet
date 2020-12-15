@@ -22,25 +22,27 @@ namespace Nakama.Tests.Socket
     using Xunit;
     using TinyJson;
 
-    public class WebSocketNotificationTest : IAsyncLifetime
+    public class WebSocketNotificationTest
     {
         private IClient _client;
-        private ISocket _socket;
 
         public WebSocketNotificationTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
-        public async Task ShouldReceiveNotification()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async Task ShouldReceiveNotification(TestAdapterFactory adapterFactory)
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var completer = new TaskCompletionSource<IApiNotification>();
-            _socket.ReceivedNotification += (notification) => completer.SetResult(notification);
-            await _socket.ConnectAsync(session);
+
+            var socket = Nakama.Socket.From(_client, adapterFactory());
+
+            socket.ReceivedNotification += (notification) => completer.SetResult(notification);
+            await socket.ConnectAsync(session);
 
             var payload = new Dictionary<string, string> {{"user_id", session.UserId}};
             var _ = _client.RpcAsync(session, "clientrpc.send_notification", payload.ToJson());
@@ -48,16 +50,8 @@ namespace Nakama.Tests.Socket
             var result = await completer.Task;
             Assert.NotNull(result);
             Assert.Equal(session.UserId, result.SenderId);
-        }
 
-        Task IAsyncLifetime.InitializeAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        Task IAsyncLifetime.DisposeAsync()
-        {
-            return _socket.CloseAsync();
+            await socket.CloseAsync();
         }
     }
 }
