@@ -20,7 +20,7 @@ using Nakama.SocketInternal;
 
 namespace Nakama.Tests.Socket
 {
-    public delegate WebSocketAdapter TestAdapterFactory();
+    public delegate ISocketAdapter TestAdapterFactory();
 
     public class WebSocketTestData : IEnumerable<object[]>
     {
@@ -29,7 +29,10 @@ namespace Nakama.Tests.Socket
         public IEnumerator<object[]> GetEnumerator()
         {
             TestAdapterFactory textAdapterFactory = () => new WebSocketAdapter();
+            TestAdapterFactory protobufAdapterFactory = () => new ProtobufAdapter();
+
             yield return new object[]{textAdapterFactory};
+            yield return new object[]{protobufAdapterFactory};
         }
     }
 }

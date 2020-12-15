@@ -2,6 +2,7 @@
     <ItemGroup>
       <PackageReference Include="Google.Protobuf" Version="3.14.0" />
       <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" Condition="'$(OS)'!='Windows_NT'" PrivateAssets="All" />
+      <ProjectReference Include="..\Nakama\Nakama.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net46'" />
