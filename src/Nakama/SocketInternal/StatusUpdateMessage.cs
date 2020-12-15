@@ -21,9 +21,10 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// Update the status of the current user.
     /// </summary>
+    [DataContract]
     public class StatusUpdateMessage
     {
-        [DataMember(Name="status"), Preserve]
+        [DataMember(Name="status", Order = 1), Preserve]
         public string Status { get; set; }
 
         public override string ToString()

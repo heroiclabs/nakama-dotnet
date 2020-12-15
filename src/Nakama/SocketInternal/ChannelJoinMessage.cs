@@ -21,18 +21,19 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// Send a channel join message to the server.
     /// </summary>
+    [DataContract]
     public class ChannelJoinMessage
     {
-        [DataMember(Name="hidden"), Preserve]
+        [DataMember(Name="hidden", Order = 1), Preserve]
         public bool Hidden { get; set; }
 
-        [DataMember(Name="persistence"), Preserve]
+        [DataMember(Name="persistence", Order = 2), Preserve]
         public bool Persistence { get; set; }
 
-        [DataMember(Name="target"), Preserve]
+        [DataMember(Name="target", Order = 3), Preserve]
         public string Target { get; set; }
 
-        [DataMember(Name="type"), Preserve]
+        [DataMember(Name="type", Order = 4), Preserve]
         public int Type { get; set; }
 
         public override string ToString()

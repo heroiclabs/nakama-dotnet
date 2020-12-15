@@ -21,9 +21,10 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// Remove the user from the matchmaker pool by ticket.
     /// </summary>
+    [DataContract]
     public class MatchmakerRemoveMessage
     {
-        [DataMember(Name="ticket"), Preserve]
+        [DataMember(Name="ticket", Order = 1), Preserve]
         public string Ticket { get; set; }
 
         public override string ToString()

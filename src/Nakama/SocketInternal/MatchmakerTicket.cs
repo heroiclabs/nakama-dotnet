@@ -19,9 +19,10 @@ using System.Runtime.Serialization;
 namespace Nakama.SocketInternal
 {
     /// <inheritdoc cref="IMatchmakerMatched"/>
+    [DataContract]
     public class MatchmakerTicket : IMatchmakerTicket
     {
-        [DataMember(Name="ticket"), Preserve]
+        [DataMember(Name="ticket", Order = 1), Preserve]
         public string Ticket { get; set; }
 
         public override string ToString()

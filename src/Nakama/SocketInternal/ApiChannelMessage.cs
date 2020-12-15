@@ -21,58 +21,59 @@ using System.Runtime.Serialization;
 namespace Nakama.SocketInternal
 {
     /// <inheritdoc />
+    [DataContract]
     public class ApiChannelMessage : IApiChannelMessage
     {
         /// <inheritdoc />
-        [DataMember(Name="channel_id"), Preserve]
+        [DataMember(Name="channel_id", Order = 1), Preserve]
         public string ChannelId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="code"), Preserve]
+        [DataMember(Name="code", Order = 2), Preserve]
         public int Code { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="content"), Preserve]
+        [DataMember(Name="content", Order = 3), Preserve]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time"), Preserve]
+        [DataMember(Name="create_time", Order = 4), Preserve]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="group_id"), Preserve]
+        [DataMember(Name="group_id", Order = 5), Preserve]
         public string GroupId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="message_id"), Preserve]
+        [DataMember(Name="message_id", Order = 6), Preserve]
         public string MessageId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="persistent"), Preserve]
+        [DataMember(Name="persistent", Order = 7), Preserve]
         public bool Persistent { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="room_name"), Preserve]
+        [DataMember(Name="room_name", Order = 8), Preserve]
         public string RoomName { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="sender_id"), Preserve]
+        [DataMember(Name="sender_id", Order = 9), Preserve]
         public string SenderId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="update_time"), Preserve]
+        [DataMember(Name="update_time", Order = 10), Preserve]
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user_id_one"), Preserve]
+        [DataMember(Name="user_id_one", Order = 11), Preserve]
         public string UserIdOne { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="user_id_two"), Preserve]
+        [DataMember(Name="user_id_two", Order = 12), Preserve]
         public string UserIdTwo { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="username"), Preserve]
+        [DataMember(Name="username", Order = 13), Preserve]
         public string Username { get; set; }
 
         public override string ToString()

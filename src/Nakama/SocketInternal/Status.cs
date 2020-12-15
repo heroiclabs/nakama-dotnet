@@ -20,6 +20,7 @@ using System.Runtime.Serialization;
 namespace Nakama.SocketInternal
 {
     /// <inheritdoc cref="IStatus"/>
+    [DataContract]
     public class Status : IStatus
     {
         public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;

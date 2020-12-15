@@ -19,10 +19,12 @@ using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Nakama.SocketInternal;
 using Nakama.Ninja.WebSockets;
-using Nakama.TinyJson;
+using ProtoBuf;
+using System.IO;
 
-namespace Nakama.SocketInternal
+namespace Nakama.Protobuf
 {
     /// <summary>
     /// A Protobuf adapter which uses the WebSocket protocol with Nakama server.
@@ -152,9 +154,9 @@ namespace Nakama.SocketInternal
 
             try
             {
-                var json = envelope.ToJson();
-                var buffer = System.Text.Encoding.UTF8.GetBytes(json);
-                var sendTask = _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, cancellationToken);
+                var stream = new MemoryStream();
+                Serializer.Serialize(stream, envelope);
+                var sendTask = _webSocket.SendAsync(new ArraySegment<byte>(stream.GetBuffer()), WebSocketMessageType.Text, true, cancellationToken);
                 await Task.WhenAny(sendTask, Task.Delay(_sendTimeoutSec, cancellationToken));
             }
             catch (Exception e)

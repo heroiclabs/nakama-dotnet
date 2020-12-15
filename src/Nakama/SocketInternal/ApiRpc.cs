@@ -19,18 +19,19 @@ using System.Runtime.Serialization;
 namespace Nakama.SocketInternal
 {
 /// <inheritdoc />
+    [DataContract]
     public class ApiRpc : IApiRpc
     {
         /// <inheritdoc />
-        [DataMember(Name="http_key"), Preserve]
+        [DataMember(Name="http_key", Order = 1), Preserve]
         public string HttpKey { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="id"), Preserve]
+        [DataMember(Name="id", Order = 2), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="payload"), Preserve]
+        [DataMember(Name="payload", Order = 3), Preserve]
         public string Payload { get; set; }
 
         public override string ToString()

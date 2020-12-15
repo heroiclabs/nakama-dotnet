@@ -20,16 +20,17 @@ using System.Runtime.Serialization;
 namespace Nakama.SocketInternal
 {
     /// <inheritdoc />
+    [DataContract]
     public class ApiNotificationList : IApiNotificationList
     {
 
         /// <inheritdoc />
-        [DataMember(Name="cacheable_cursor"), Preserve]
+        [DataMember(Name="cacheable_cursor", Order = 1), Preserve]
         public string CacheableCursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiNotification> Notifications => _notifications ?? new List<ApiNotification>(0);
-        [DataMember(Name="notifications"), Preserve]
+        [DataMember(Name="notifications", Order = 2), Preserve]
         public List<ApiNotification> _notifications { get; set; }
 
         public override string ToString()

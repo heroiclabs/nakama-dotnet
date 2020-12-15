@@ -22,15 +22,16 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// A join message for a match on the server.
     /// </summary>
+    [DataContract]
     public class MatchJoinMessage
     {
-        [DataMember(Name="match_id"), Preserve]
+        [DataMember(Name="match_id", Order = 1), Preserve]
         public string MatchId { get; set; }
 
-        [DataMember(Name="token"), Preserve]
+        [DataMember(Name="token", Order = 2), Preserve]
         public string Token { get; set; }
 
-        [DataMember(Name="metadata"), Preserve]
+        [DataMember(Name="metadata", Order = 3), Preserve]
         public IDictionary<string, string> Metadata { get; set; }
 
         public override string ToString()

@@ -22,9 +22,10 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// Unfollow one or more users on the server.
     /// </summary>
+    [DataContract]
     public class StatusUnfollowMessage
     {
-        [DataMember(Name="user_ids"), Preserve]
+        [DataMember(Name="user_ids", Order = 1), Preserve]
         public List<string> UserIds { get; set; }
 
         public override string ToString()

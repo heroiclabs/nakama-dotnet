@@ -21,12 +21,13 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// Send a chat message to a channel on the server.
     /// </summary>
+    [DataContract]
     public class ChannelSendMessage
     {
-        [DataMember(Name="channel_id"), Preserve]
+        [DataMember(Name="channel_id", Order = 1), Preserve]
         public string ChannelId { get; set; }
 
-        [DataMember(Name="content"), Preserve]
+        [DataMember(Name="content", Order = 2), Preserve]
         public string Content { get; set; }
 
         public override string ToString()

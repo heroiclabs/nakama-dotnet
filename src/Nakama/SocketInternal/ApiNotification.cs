@@ -21,31 +21,31 @@ namespace Nakama.SocketInternal
     public class ApiNotification : IApiNotification
     {
         /// <inheritdoc />
-        [DataMember(Name="code"), Preserve]
+        [DataMember(Name="code", Order = 1), Preserve]
         public int Code { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="content"), Preserve]
+        [DataMember(Name="content", Order = 2), Preserve]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time"), Preserve]
+        [DataMember(Name="create_time", Order = 3), Preserve]
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="id"), Preserve]
+        [DataMember(Name="id", Order = 4), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="persistent"), Preserve]
+        [DataMember(Name="persistent", Order = 5), Preserve]
         public bool Persistent { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="sender_id"), Preserve]
+        [DataMember(Name="sender_id", Order = 6), Preserve]
         public string SenderId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="subject"), Preserve]
+        [DataMember(Name="subject", Order = 7), Preserve]
         public string Subject { get; set; }
 
         public override string ToString()

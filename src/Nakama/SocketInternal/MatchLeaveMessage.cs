@@ -21,9 +21,10 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// A leave message for a match on the server.
     /// </summary>
+    [DataContract]
     public class MatchLeaveMessage
     {
-        [DataMember(Name="match_id"), Preserve]
+        [DataMember(Name="match_id", Order = 1), Preserve]
         public string MatchId { get; set; }
 
         public override string ToString()

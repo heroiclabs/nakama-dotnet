@@ -22,29 +22,30 @@ using System.Runtime.Serialization;
 namespace Nakama.SocketInternal
  {
     /// <inheritdoc cref="IChannel"/>
+    [DataContract]
     public class Channel : IChannel
     {
-        [DataMember(Name="id"), Preserve]
+        [DataMember(Name="id", Order = 1), Preserve]
         public string Id { get; set; }
 
         public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
-        [DataMember(Name="presences"), Preserve]
+        [DataMember(Name="presences", Order = 2), Preserve]
         public List<UserPresence> _presences { get; set; }
 
         public IUserPresence Self => _self;
-        [DataMember(Name="self"), Preserve]
+        [DataMember(Name="self", Order = 3), Preserve]
         public UserPresence _self { get; set; }
 
-        [DataMember(Name="room_name"), Preserve]
+        [DataMember(Name="room_name", Order = 4), Preserve]
         public string RoomName { get; set; }
 
-        [DataMember(Name="group_id"), Preserve]
+        [DataMember(Name="group_id", Order = 5), Preserve]
         public string GroupId { get; set; }
 
-        [DataMember(Name="user_id_one"), Preserve]
+        [DataMember(Name="user_id_one", Order = 6), Preserve]
         public string UserIdOne { get; set; }
 
-        [DataMember(Name="user_id_two"), Preserve]
+        [DataMember(Name="user_id_two", Order = 7), Preserve]
         public string UserIdTwo { get; set; }
 
         public override bool Equals(object obj)

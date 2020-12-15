@@ -22,18 +22,19 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// Send new state to a match on the server.
     /// </summary>
+    [DataContract]
     public class MatchSendMessage
     {
-        [DataMember(Name="match_id"), Preserve]
+        [DataMember(Name="match_id", Order = 1), Preserve]
         public string MatchId { get; set; }
 
-        [DataMember(Name="op_code"), Preserve]
+        [DataMember(Name="op_code", Order = 2), Preserve]
         public string OpCode { get; set; }
 
-        [DataMember(Name="presences"), Preserve]
+        [DataMember(Name="presences", Order = 3), Preserve]
         public List<UserPresence> Presences { get; set; }
 
-        [DataMember(Name="data"), Preserve]
+        [DataMember(Name="data", Order = 4), Preserve]
         public string State { get; set; }
 
         public override string ToString()

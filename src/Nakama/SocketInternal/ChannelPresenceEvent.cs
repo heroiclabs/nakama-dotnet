@@ -20,29 +20,30 @@ using System.Runtime.Serialization;
 namespace Nakama.SocketInternal
 {
 /// <inheritdoc cref="IChannelPresenceEvent"/>
+    [DataContract]
     public class ChannelPresenceEvent : IChannelPresenceEvent
     {
-        [DataMember(Name="channel_id"), Preserve]
+        [DataMember(Name="channel_id", Order = 1), Preserve]
         public string ChannelId { get; set; }
 
         public IEnumerable<IUserPresence> Joins => _joins ?? new List<UserPresence>(0);
-        [DataMember(Name="joins"), Preserve]
+        [DataMember(Name="joins", Order = 2), Preserve]
         public List<UserPresence> _joins { get; set; }
 
         public IEnumerable<IUserPresence> Leaves => _leaves ?? new List<UserPresence>(0);
-        [DataMember(Name="leaves"), Preserve]
+        [DataMember(Name="leaves", Order = 3), Preserve]
         public List<UserPresence> _leaves { get; set; }
 
-        [DataMember(Name="room_name"), Preserve]
+        [DataMember(Name="room_name", Order = 4), Preserve]
         public string RoomName { get; set; }
 
-        [DataMember(Name="group_id"), Preserve]
+        [DataMember(Name="group_id", Order= 5), Preserve]
         public string GroupId { get; set; }
 
-        [DataMember(Name="user_id_one"), Preserve]
+        [DataMember(Name="user_id_one", Order = 6), Preserve]
         public string UserIdOne { get; set; }
 
-        [DataMember(Name="user_id_two"), Preserve]
+        [DataMember(Name="user_id_two", Order = 7), Preserve]
         public string UserIdTwo { get; set; }
 
         public override string ToString()

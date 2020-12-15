@@ -21,9 +21,10 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// A leave message to a chat channel.
     /// </summary>
+    [DataContract]
     public class ChannelLeaveMessage
     {
-        [DataMember(Name="channel_id"), Preserve]
+        [DataMember(Name="channel_id", Order = 1), Preserve]
         public string ChannelId { get; set; }
 
         public override string ToString()

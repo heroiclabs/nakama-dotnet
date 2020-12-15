@@ -22,13 +22,14 @@ namespace Nakama.SocketInternal
     /// <summary>
     /// A logical error received on the WebSocket connection.
     /// </summary>
+    [DataContract]
     public class WebSocketErrorMessage
     {
-        [DataMember(Name = "code"), Preserve] public int Code { get; set; }
+        [DataMember(Name = "code", Order = 1), Preserve] public int Code { get; set; }
 
-        [DataMember(Name = "context"), Preserve] public Dictionary<string, string> Context { get; set; }
+        [DataMember(Name = "context", Order = 2), Preserve] public Dictionary<string, string> Context { get; set; }
 
-        [DataMember(Name = "message"), Preserve] public string Message { get; set; }
+        [DataMember(Name = "message", Order = 3), Preserve] public string Message { get; set; }
 
         public override string ToString()
         {

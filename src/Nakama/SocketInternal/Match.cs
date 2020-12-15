@@ -20,21 +20,22 @@ using System.Runtime.Serialization;
 namespace Nakama.SocketInternal
 {
     /// <inheritdoc cref="IMatch"/>
+    [DataContract]
     public class Match : IMatch
     {
-        [DataMember(Name = "authoritative"), Preserve] public bool Authoritative { get; set; }
+        [DataMember(Name = "authoritative", Order = 1), Preserve] public bool Authoritative { get; set; }
 
-        [DataMember(Name = "match_id"), Preserve] public string Id { get; set; }
+        [DataMember(Name = "match_id", Order = 2), Preserve] public string Id { get; set; }
 
-        [DataMember(Name = "label"), Preserve] public string Label { get; set; }
+        [DataMember(Name = "label", Order = 3), Preserve] public string Label { get; set; }
 
         public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
-        [DataMember(Name = "presences"), Preserve] public List<UserPresence> _presences { get; set; }
+        [DataMember(Name = "presences", Order = 4), Preserve] public List<UserPresence> _presences { get; set; }
 
-        [DataMember(Name = "size"), Preserve] public int Size { get; set; }
+        [DataMember(Name = "size", Order = 5), Preserve] public int Size { get; set; }
 
         public IUserPresence Self => _self;
-        [DataMember(Name = "self"), Preserve] public UserPresence _self { get; set; }
+        [DataMember(Name = "self", Order = 6), Preserve] public UserPresence _self { get; set; }
 
         public override string ToString()
         {
