@@ -17,7 +17,7 @@
 using System;
 using System.Threading;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
     /// An adapter which implements a socket with a protocol supported by Nakama.

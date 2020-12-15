@@ -21,7 +21,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nakama.Ninja.WebSockets;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
     /// An adapter which uses the WebSocket protocol with Nakama server.

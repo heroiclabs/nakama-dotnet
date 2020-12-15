@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using Nakama.SocketInternal;
 using System.Collections;
 using System.Collections.Generic;
 
