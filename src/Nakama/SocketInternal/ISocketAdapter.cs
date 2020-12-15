@@ -66,6 +66,14 @@ namespace Nakama.SocketInternal
         /// <param name="timeout">The timeout for the connect attempt on the socket.</param>
         void Connect(Uri uri, int timeout);
 
+
+        /// <summary>
+        /// Deserialize a WebSocketMessageEnvelope from an array of bytes.
+        /// </summary>
+        /// <param name="buffer">The array of bytes.</param>
+        /// <returns>The deserialized envelope.</returns>
+        WebSocketMessageEnvelope DeserializeEnvelope(ArraySegment<byte> buffer);
+
         /// <summary>
         /// Send data to the server with an asynchronous operation.
         /// </summary>

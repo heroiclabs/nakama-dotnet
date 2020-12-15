@@ -18,6 +18,7 @@ using System.Runtime.Serialization;
 
 namespace Nakama.SocketInternal
 {
+    [DataContract]
     public class ApiNotification : IApiNotification
     {
         /// <inheritdoc />

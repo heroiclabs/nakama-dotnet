@@ -137,6 +137,11 @@ namespace Nakama.Protobuf
             }
         }
 
+        public WebSocketMessageEnvelope DeserializeEnvelope(ArraySegment<byte> buffer)
+        {
+            return Serializer.Deserialize<WebSocketMessageEnvelope>(new ReadOnlyMemory<byte>(buffer.Array));
+        }
+
         public void Dispose()
         {
             _webSocket?.Dispose();

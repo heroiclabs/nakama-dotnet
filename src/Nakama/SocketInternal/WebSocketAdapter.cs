@@ -140,6 +140,12 @@ namespace Nakama.SocketInternal
             _webSocket?.Dispose();
         }
 
+        public WebSocketMessageEnvelope DeserializeEnvelope(ArraySegment<byte> buffer)
+        {
+            var contents = System.Text.Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
+            return contents.FromJson<WebSocketMessageEnvelope>();
+        }
+
         /// <inheritdoc cref="ISocketAdapter.Send"/>
         public async void Send(WebSocketMessageEnvelope envelope, CancellationToken cancellationToken,
             bool reliable = true)

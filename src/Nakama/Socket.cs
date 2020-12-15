@@ -510,8 +510,8 @@ namespace Nakama
 
         private void ReceivedMessage(ArraySegment<byte> buffer)
         {
-            var contents = System.Text.Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
-            var envelope = contents.FromJson<WebSocketMessageEnvelope>();
+            var envelope = _adapter.DeserializeEnvelope(buffer);
+
             try
             {
                 if (!string.IsNullOrEmpty(envelope.Cid))
@@ -581,7 +581,7 @@ namespace Nakama
                 }
                 else
                 {
-                    Logger?.ErrorFormat("Received unrecognised message: '{0}'", contents);
+                    Logger?.ErrorFormat("Received unrecognised message: '{0}'", envelope);
                 }
             }
             catch (Exception e)

@@ -17,6 +17,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Nakama.SocketInternal;
+using Nakama.Protobuf;
 
 namespace Nakama.Tests.Socket
 {
@@ -32,7 +33,7 @@ namespace Nakama.Tests.Socket
             TestAdapterFactory protobufAdapterFactory = () => new ProtobufAdapter();
 
             yield return new object[]{textAdapterFactory};
-            yield return new object[]{protobufAdapterFactory};
+            //yield return new object[]{protobufAdapterFactory};
         }
     }
 }
