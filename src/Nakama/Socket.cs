@@ -21,6 +21,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Nakama.SocketInternal;
 using Nakama.TinyJson;
 
 namespace Nakama
@@ -375,7 +376,7 @@ namespace Nakama
             var envelope = new WebSocketMessageEnvelope
             {
                 Cid = $"{_cid++}",
-                Rpc = new ApiRpc
+                Rpc = new Nakama.SocketInternal.ApiRpc
                 {
                     Id = funcId,
                     Payload = payload

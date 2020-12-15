@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Nakama.Socket
+namespace Nakama
 {
     /// <summary>
     /// A chat channel on the server.

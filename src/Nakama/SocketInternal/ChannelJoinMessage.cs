@@ -40,23 +40,4 @@ namespace Nakama.SocketInternal
             return $"ChannelJoinMessage(Hidden={Hidden}, Persistence={Persistence}, Target='{Target}', Type={Type})";
         }
     }
-
-    /// <summary>
-    /// The available channel types on the server.
-    /// </summary>
-    public enum ChannelType : uint
-    {
-        /// <summary>
-        /// A chat room which can be created dynamically with a name.
-        /// </summary>
-        Room = 1,
-        /// <summary>
-        /// A private chat between two users.
-        /// </summary>
-        DirectMessage = 2,
-        /// <summary>
-        /// A chat within a group on the server.
-        /// </summary>
-        Group = 3
-    }
 }

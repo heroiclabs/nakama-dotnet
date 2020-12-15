@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Nakama.SocketInternal;
 
 namespace Nakama
 {
@@ -268,7 +269,7 @@ namespace Nakama
         /// <param name="users">The users to unfollow.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnfollowUsersAsync(IEnumerable<IApiUser> users);
-        
+
         /// <summary>
         /// Unfollow one or more users from their status updates.
         /// </summary>

@@ -164,7 +164,7 @@ namespace Nakama
         public override string ToString()
         {
             return
-                $"WebSocketDriver(IsConnected={IsConnected}, IsConnecting={IsConnecting}, MaxMessageSize={MaxMessageSize}, Uri='{_uri}')";
+                $"WebSocketAdapter(IsConnected={IsConnected}, IsConnecting={IsConnecting}, MaxMessageSize={MaxMessageSize}, Uri='{_uri}')";
         }
 
         private async Task ReceiveLoop(WebSocket webSocket, CancellationToken cancellationToken)
