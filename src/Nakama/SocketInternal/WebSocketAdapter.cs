@@ -20,11 +20,12 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Nakama.Ninja.WebSockets;
+using Nakama.TinyJson;
 
 namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// An adapter which uses the WebSocket protocol with Nakama server.
+    /// A text-based adapter which uses the WebSocket protocol with Nakama server.
     /// </summary>
     public class WebSocketAdapter : ISocketAdapter
     {
@@ -140,7 +141,7 @@ namespace Nakama.SocketInternal
         }
 
         /// <inheritdoc cref="ISocketAdapter.Send"/>
-        public async void Send(ArraySegment<byte> buffer, CancellationToken cancellationToken,
+        public async void Send(WebSocketMessageEnvelope envelope, CancellationToken cancellationToken,
             bool reliable = true)
         {
             if (_webSocket == null)
@@ -151,7 +152,9 @@ namespace Nakama.SocketInternal
 
             try
             {
-                var sendTask = _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, cancellationToken);
+                var json = envelope.ToJson();
+                var buffer = System.Text.Encoding.UTF8.GetBytes(json);
+                var sendTask = _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, cancellationToken);
                 await Task.WhenAny(sendTask, Task.Delay(_sendTimeoutSec, cancellationToken));
             }
             catch (Exception e)

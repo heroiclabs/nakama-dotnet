@@ -592,17 +592,15 @@ namespace Nakama
 
         private Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope envelope)
         {
-            var json = envelope.ToJson();
-            var buffer = System.Text.Encoding.UTF8.GetBytes(json);
             if (string.IsNullOrEmpty(envelope.Cid))
             {
-                _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
+                _adapter.Send(envelope, CancellationToken.None);
                 return null; // No response required.
             }
 
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
             _responses[envelope.Cid] = completer;
-            _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
+            _adapter.Send(envelope, CancellationToken.None);
             return completer.Task;
         }
 

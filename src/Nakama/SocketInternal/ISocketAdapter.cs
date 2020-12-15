@@ -69,9 +69,9 @@ namespace Nakama.SocketInternal
         /// <summary>
         /// Send data to the server with an asynchronous operation.
         /// </summary>
-        /// <param name="buffer">The buffer with the message to send.</param>
+        /// <param name="envelope">The envelope with the message to send.</param>
         /// <param name="cancellationToken">A cancellation token used to propagate when the operation should be canceled.</param>
         /// <param name="reliable">If the message should be sent reliably (will be ignored by some protocols).</param>
-        void Send(ArraySegment<byte> buffer, CancellationToken cancellationToken, bool reliable = true);
+        void Send(WebSocketMessageEnvelope envelope, CancellationToken cancellationToken, bool reliable = true);
     }
 }
