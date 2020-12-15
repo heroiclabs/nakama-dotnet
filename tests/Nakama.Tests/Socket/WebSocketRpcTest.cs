@@ -22,40 +22,33 @@ namespace Nakama.Tests.Socket
     using Xunit;
     using TinyJson;
 
-    public class WebSocketRpcTest : IAsyncLifetime
+    public class WebSocketRpcTest
     {
         private IClient _client;
-        private ISocket _socket;
 
         public WebSocketRpcTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
-        public async Task ShouldSendRpcRoundtrip()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async Task ShouldSendRpcRoundtrip(TestAdapterFactory adapterFactory)
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            await _socket.ConnectAsync(session);
+            var socket = Nakama.Socket.From(_client, adapterFactory());
+
+            await socket.ConnectAsync(session);
 
             const string funcid = "clientrpc.rpc";
             var payload = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
-            var response = await _socket.RpcAsync(funcid, payload);
+            var response = await socket.RpcAsync(funcid, payload);
 
             Assert.NotNull(response);
             Assert.Equal(funcid, response.Id);
             Assert.Equal(payload, response.Payload);
-        }
 
-        Task IAsyncLifetime.InitializeAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        Task IAsyncLifetime.DisposeAsync()
-        {
-            return _socket.CloseAsync();
+            await socket.CloseAsync();
         }
     }
 }
