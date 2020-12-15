@@ -24,69 +24,99 @@ namespace Nakama.Tests.Socket
     public class WebSocketTest
     {
         private IClient _client;
-        private ISocket _socket;
 
         // ReSharper disable RedundantArgumentDefaultValue
 
         public WebSocketTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
-        public void ShouldCreateSocket()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public void ShouldCreateSocket(TestAdapterFactory adapterFactory)
         {
             var client = ClientUtil.FromSettingsFile();
-            var socket = Nakama.Socket.From(client);
+            var socket = Nakama.Socket.From(client, adapterFactory());
             Assert.NotNull(socket);
         }
 
-        [Fact]
-        public async Task ShouldCreateSocketAndConnect()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async Task ShouldCreateSocketAndConnect(TestAdapterFactory adapterFactory)
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var completer = new TaskCompletionSource<bool>();
-            _socket.Connected += () => completer.SetResult(true);
+            var socket = Nakama.Socket.From(_client, adapterFactory());
 
-            await _socket.ConnectAsync(session);
+            socket.Connected += () => completer.SetResult(true);
+
+            await socket.ConnectAsync(session);
 
             Assert.True(await completer.Task);
-            await _socket.CloseAsync();
+            await socket.CloseAsync();
         }
 
-        [Fact]
-        public async Task ShouldCreateSocketAndDisconnect()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async Task ShouldCreateSocketAndDisconnect(TestAdapterFactory adapterFactory)
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var completer = new TaskCompletionSource<bool>();
-            _socket.Closed += () => completer.SetResult(true);
 
-            await _socket.ConnectAsync(session);
-            await _socket.CloseAsync();
+            var socket = Nakama.Socket.From(_client, adapterFactory());
+            socket.Closed += () => completer.SetResult(true);
+
+            await socket.ConnectAsync(session);
+            await socket.CloseAsync();
 
             Assert.True(await completer.Task);
         }
 
-        [Fact]
-        public async Task ShouldCreateSocketAndDisconnectSilent()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async Task ShouldCreateSocketAndDisconnectSilent(TestAdapterFactory adapterFactory)
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket = Nakama.Socket.From(_client, adapterFactory());
 
-            await _socket.ConnectAsync(session);
-            Assert.True(_socket.IsConnected);
+            await socket.ConnectAsync(session);
+            Assert.True(socket.IsConnected);
 
-            await _socket.CloseAsync();
-            Assert.False(_socket.IsConnected);
+            await socket.CloseAsync();
+            Assert.False(socket.IsConnected);
         }
 
-        [Fact]
-        public async Task MultipleConnectAttemptsThrowException()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async Task MultipleConnectAttemptsThrowException(TestAdapterFactory adapterFactory)
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            await _socket.ConnectAsync(session);
-            Assert.True(_socket.IsConnected);
-            await Assert.ThrowsAsync<SocketException>(() => _socket.ConnectAsync(session));
+            var socket = Nakama.Socket.From(_client, adapterFactory());
+
+            await socket.ConnectAsync(session);
+            Assert.True(socket.IsConnected);
+            await Assert.ThrowsAsync<SocketException>(() => socket.ConnectAsync(session));
+        }
+
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async Task MultipleSocketsDoNotThrowException(TestAdapterFactory adapterFactory)
+        {
+            var id1 = $"{Guid.NewGuid()}";
+            var id2 = $"{Guid.NewGuid()}";
+
+            var session1 = await _client.AuthenticateCustomAsync(id1);
+            var session2 = await _client.AuthenticateCustomAsync(id2);
+
+            var socket1 = Nakama.Socket.From(_client, adapterFactory());
+            var socket2 = Nakama.Socket.From(_client, adapterFactory());
+
+            await socket1.ConnectAsync(session1);
+            await socket2.ConnectAsync(session2);
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
         }
     }
 }
