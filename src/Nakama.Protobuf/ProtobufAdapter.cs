@@ -47,6 +47,15 @@ namespace Nakama.Protobuf
         /// <inheritdoc cref="ISocketAdapter.Received"/>
         public event Action<ArraySegment<byte>> Received;
 
+        /// <inheritdoc cref="ISocketAdapter.Format"/>
+        public string Format
+        {
+            get
+            {
+                return "protobuf";
+            }
+        }
+
         /// <summary>
         /// If the WebSocket is connected.
         /// </summary>
@@ -151,6 +160,9 @@ namespace Nakama.Protobuf
         public async void Send(WebSocketMessageEnvelope envelope, CancellationToken cancellationToken,
             bool reliable = true)
         {
+
+            System.Console.WriteLine("protobuf send called");
+
             if (_webSocket == null)
             {
                 ReceivedError?.Invoke(new SocketException((int) SocketError.NotConnected));
@@ -161,7 +173,11 @@ namespace Nakama.Protobuf
             {
                 var stream = new MemoryStream();
                 Serializer.Serialize(stream, envelope);
-                var sendTask = _webSocket.SendAsync(new ArraySegment<byte>(stream.GetBuffer()), WebSocketMessageType.Text, true, cancellationToken);
+
+                var asByteArray = stream.ToArray();
+
+                var sendTask = _webSocket.SendAsync(new ArraySegment<byte>(asByteArray), WebSocketMessageType.Binary, true, cancellationToken);
+
                 await Task.WhenAny(sendTask, Task.Delay(_sendTimeoutSec, cancellationToken));
             }
             catch (Exception e)

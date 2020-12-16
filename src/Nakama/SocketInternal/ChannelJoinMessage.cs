@@ -24,16 +24,16 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class ChannelJoinMessage
     {
-        [DataMember(Name="hidden", Order = 1), Preserve]
+        [DataMember(Name="hidden", Order = 4), Preserve]
         public bool Hidden { get; set; }
 
-        [DataMember(Name="persistence", Order = 2), Preserve]
+        [DataMember(Name="persistence", Order = 3), Preserve]
         public bool Persistence { get; set; }
 
-        [DataMember(Name="target", Order = 3), Preserve]
+        [DataMember(Name="target", Order = 1), Preserve]
         public string Target { get; set; }
 
-        [DataMember(Name="type", Order = 4), Preserve]
+        [DataMember(Name="type", Order = 2), Preserve]
         public int Type { get; set; }
 
         public override string ToString()

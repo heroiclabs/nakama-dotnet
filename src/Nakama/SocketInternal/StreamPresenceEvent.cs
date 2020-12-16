@@ -45,13 +45,22 @@ namespace Nakama.SocketInternal
     public class StreamState : IStreamState
     {
         public IUserPresence Sender => _sender;
-        [DataMember(Name = "sender", Order = 1), Preserve] public UserPresence _sender { get; set; }
+
+        [DataMember(Name = "sender", Order = 2), Preserve]
+        public UserPresence _sender { get; set; }
 
         public string State => _state;
-        [DataMember(Name = "data", Order = 2), Preserve] public string _state { get; set; }
+
+        [DataMember(Name = "data", Order = 3), Preserve]
+        public string _state { get; set; }
 
         public IStream Stream => _stream;
-        [DataMember(Name = "stream", Order = 3), Preserve] public Stream _stream { get; set; }
+
+        [DataMember(Name = "stream", Order = 1), Preserve]
+        public Stream _stream { get; set; }
+
+        [DataMember(Name = "reliable", Order = 4), Preserve]
+        public string Reliable { get; set; }
 
         public override string ToString()
         {
@@ -63,13 +72,13 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class Stream : IStream
     {
-        [DataMember(Name = "descriptor", Order = 1), Preserve] public string Descriptor { get; set; }
+        [DataMember(Name = "descriptor", Order = 3), Preserve] public string Descriptor { get; set; }
 
-        [DataMember(Name = "label", Order = 2), Preserve] public string Label { get; set; }
+        [DataMember(Name = "label", Order = 4), Preserve] public string Label { get; set; }
 
-        [DataMember(Name = "mode", Order = 3), Preserve] public int Mode { get; set; }
+        [DataMember(Name = "mode", Order = 1), Preserve] public int Mode { get; set; }
 
-        [DataMember(Name = "subject", Order = 4), Preserve] public string Subject { get; set; }
+        [DataMember(Name = "subject", Order = 2), Preserve] public string Subject { get; set; }
 
         public override string ToString()
         {

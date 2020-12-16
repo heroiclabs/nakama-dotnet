@@ -31,11 +31,14 @@ namespace Nakama.SocketInternal
         [DataMember(Name="op_code", Order = 2), Preserve]
         public string OpCode { get; set; }
 
-        [DataMember(Name="presences", Order = 3), Preserve]
+        [DataMember(Name="presences", Order = 4), Preserve]
         public List<UserPresence> Presences { get; set; }
 
-        [DataMember(Name="data", Order = 4), Preserve]
+        [DataMember(Name="data", Order = 3), Preserve]
         public string State { get; set; }
+
+        [DataMember(Name="reliable", Order = 5), Preserve]
+        public bool Reliable { get; set; }
 
         public override string ToString()
         {

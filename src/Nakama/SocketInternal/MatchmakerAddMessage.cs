@@ -25,17 +25,22 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class MatchmakerAddMessage
     {
-        [DataMember(Name = "max_count", Order = 1), Preserve] public int MaxCount { get; set; }
 
-        [DataMember(Name = "min_count", Order = 2), Preserve] public int MinCount { get; set; }
+        [DataMember(Name = "min_count", Order = 1), Preserve]
+        public int MinCount { get; set; }
 
-        [DataMember(Name = "numeric_properties", Order = 3), Preserve]
+        [DataMember(Name = "max_count", Order = 2), Preserve]
+        public int MaxCount { get; set; }
+
+        [DataMember(Name = "query", Order = 3), Preserve]
+        public string Query { get; set; }
+
+        [DataMember(Name = "string_properties", Order = 4), Preserve]
+        public Dictionary<string, string> StringProperties { get; set; }
+
+        [DataMember(Name = "numeric_properties", Order = 5), Preserve]
         public Dictionary<string, double> NumericProperties { get; set; }
 
-        [DataMember(Name = "query", Order = 4), Preserve] public string Query { get; set; }
-
-        [DataMember(Name = "string_properties", Order = 5), Preserve]
-        public Dictionary<string, string> StringProperties { get; set; }
 
         public override string ToString()
         {

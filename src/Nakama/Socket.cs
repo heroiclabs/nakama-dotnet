@@ -163,6 +163,7 @@ namespace Nakama
                     NumericProperties = numericProperties
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.MatchmakerTicket;
         }
@@ -186,7 +187,7 @@ namespace Nakama
             var uri = new UriBuilder(_baseUri)
             {
                 Path = "/ws",
-                Query = $"lang=en&status={appearOnline}&token={session.AuthToken}"
+                Query = $"lang=en&status={appearOnline}&token={session.AuthToken}&format={_adapter.Format}"
             }.Uri;
             tcs.Task.ContinueWith(_ =>
             {
@@ -257,6 +258,7 @@ namespace Nakama
                     Type = (int) type
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.Channel;
         }

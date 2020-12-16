@@ -42,13 +42,13 @@ namespace Nakama.SocketInternal
         [DataMember(Name="channel_message_ack", Order = 6), Preserve]
         public ChannelMessageAck ChannelMessageAck { get; set; }
 
-        [DataMember(Name="channel_message_remove", Order = 7), Preserve]
+        [DataMember(Name="channel_message_remove", Order = 9), Preserve]
         public ChannelRemoveMessage ChannelMessageRemove { get; set; }
 
-        [DataMember(Name="channel_message_send", Order = 8), Preserve]
+        [DataMember(Name="channel_message_send", Order = 7), Preserve]
         public ChannelSendMessage ChannelMessageSend { get; set; }
 
-        [DataMember(Name="channel_message_update", Order = 9), Preserve]
+        [DataMember(Name="channel_message_update", Order = 8), Preserve]
         public ChannelUpdateMessage ChannelMessageUpdate { get; set; }
 
         [DataMember(Name="channel_presence_event", Order = 10), Preserve]
@@ -57,37 +57,37 @@ namespace Nakama.SocketInternal
         [DataMember(Name="error", Order = 11), Preserve]
         public WebSocketErrorMessage Error { get; set; }
 
-        [DataMember(Name="matchmaker_add", Order = 12), Preserve]
+        [DataMember(Name="matchmaker_add", Order = 19), Preserve]
         public MatchmakerAddMessage MatchmakerAdd { get; set; }
 
-        [DataMember(Name="matchmaker_matched", Order = 13), Preserve]
+        [DataMember(Name="matchmaker_matched", Order = 20), Preserve]
         public MatchmakerMatched MatchmakerMatched { get; set; }
 
-        [DataMember(Name="matchmaker_remove", Order = 14), Preserve]
+        [DataMember(Name="matchmaker_remove", Order = 21), Preserve]
         public MatchmakerRemoveMessage MatchmakerRemove { get; set; }
 
-        [DataMember(Name="matchmaker_ticket", Order = 15), Preserve]
+        [DataMember(Name="matchmaker_ticket", Order = 22), Preserve]
         public MatchmakerTicket MatchmakerTicket { get; set; }
 
-        [DataMember(Name="match", Order = 16), Preserve]
+        [DataMember(Name="match", Order = 12), Preserve]
         public Match Match { get; set; }
 
-        [DataMember(Name="match_create", Order = 17), Preserve]
+        [DataMember(Name="match_create", Order = 13), Preserve]
         public MatchCreateMessage MatchCreate { get; set; }
 
-        [DataMember(Name="match_join", Order = 18), Preserve]
+        [DataMember(Name="match_join", Order = 16), Preserve]
         public MatchJoinMessage MatchJoin { get; set; }
 
-        [DataMember(Name="match_leave", Order = 19), Preserve]
+        [DataMember(Name="match_leave", Order = 17), Preserve]
         public MatchLeaveMessage MatchLeave { get; set; }
 
-        [DataMember(Name="match_presence_event", Order = 20), Preserve]
+        [DataMember(Name="match_presence_event", Order = 18), Preserve]
         public MatchPresenceEvent MatchPresenceEvent { get; set; }
 
-        [DataMember(Name="match_data", Order = 21), Preserve]
+        [DataMember(Name="match_data", Order = 14), Preserve]
         public MatchState MatchState { get; set; }
 
-        [DataMember(Name="match_data_send", Order = 22), Preserve]
+        [DataMember(Name="match_data_send", Order = 15), Preserve]
         public MatchSendMessage MatchStateSend { get; set; }
 
         [DataMember(Name="notifications", Order = 23), Preserve]
@@ -111,10 +111,10 @@ namespace Nakama.SocketInternal
         [DataMember(Name="status_update", Order = 29), Preserve]
         public StatusUpdateMessage StatusUpdate { get; set; }
 
-        [DataMember(Name="stream_presence_event", Order = 30), Preserve]
+        [DataMember(Name="stream_presence_event", Order = 31), Preserve]
         public StreamPresenceEvent StreamPresenceEvent { get; set; }
 
-        [DataMember(Name="stream_data", Order = 31), Preserve]
+        [DataMember(Name="stream_data", Order = 30), Preserve]
         public StreamState StreamState { get; set; }
 
         public override string ToString()

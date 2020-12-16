@@ -24,17 +24,17 @@ namespace Nakama.SocketInternal
     {
         [DataMember(Name = "channel_id", Order = 1), Preserve] public string ChannelId { get; set; }
 
-        [DataMember(Name = "code", Order = 2), Preserve] public int Code { get; set; }
+        [DataMember(Name = "code", Order = 3), Preserve] public int Code { get; set; }
 
-        [DataMember(Name = "create_time", Order = 3), Preserve] public string CreateTime { get; set; }
+        [DataMember(Name = "create_time", Order = 5), Preserve] public string CreateTime { get; set; }
 
-        [DataMember(Name = "message_id", Order = 4), Preserve] public string MessageId { get; set; }
+        [DataMember(Name = "message_id", Order = 2), Preserve] public string MessageId { get; set; }
 
-        [DataMember(Name = "persistent", Order = 5), Preserve] public bool Persistent { get; set; }
+        [DataMember(Name = "persistent", Order = 7), Preserve] public bool Persistent { get; set; }
 
         [DataMember(Name = "update_time", Order = 6), Preserve] public string UpdateTime { get; set; }
 
-        [DataMember(Name = "username", Order = 7), Preserve] public string Username { get; set; }
+        [DataMember(Name = "username", Order = 4), Preserve] public string Username { get; set; }
 
         [DataMember(Name="room_name", Order = 8), Preserve] public string RoomName { get; set; }
 

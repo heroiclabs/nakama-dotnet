@@ -24,12 +24,12 @@ namespace Nakama.SocketInternal
     public class MatchPresenceEvent : IMatchPresenceEvent
     {
         public IEnumerable<IUserPresence> Joins => _joins ?? UserPresence.NoPresences;
-        [DataMember(Name = "joins", Order = 1), Preserve] public List<UserPresence> _joins { get; set; }
+        [DataMember(Name = "joins", Order = 2), Preserve] public List<UserPresence> _joins { get; set; }
 
         public IEnumerable<IUserPresence> Leaves => _leaves ?? UserPresence.NoPresences;
-        [DataMember(Name = "leaves", Order = 2), Preserve] public List<UserPresence> _leaves { get; set; }
+        [DataMember(Name = "leaves", Order = 3), Preserve] public List<UserPresence> _leaves { get; set; }
 
-        [DataMember(Name = "match_id", Order = 3), Preserve] public string MatchId { get; set; }
+        [DataMember(Name = "match_id", Order = 1), Preserve] public string MatchId { get; set; }
 
         public override string ToString()
         {

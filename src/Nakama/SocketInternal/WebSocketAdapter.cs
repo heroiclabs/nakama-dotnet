@@ -25,7 +25,7 @@ using Nakama.TinyJson;
 namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// A text-based adapter which uses the WebSocket protocol with Nakama server.
+    /// A JSON-based adapter which uses the WebSocket protocol with Nakama server.
     /// </summary>
     public class WebSocketAdapter : ISocketAdapter
     {
@@ -44,6 +44,15 @@ namespace Nakama.SocketInternal
 
         /// <inheritdoc cref="ISocketAdapter.Received"/>
         public event Action<ArraySegment<byte>> Received;
+
+        /// <inheritdoc cref="ISocketAdapter.Format"/>
+        public string Format
+        {
+            get
+            {
+                return "json";
+            }
+        }
 
         /// <summary>
         /// If the WebSocket is connected.

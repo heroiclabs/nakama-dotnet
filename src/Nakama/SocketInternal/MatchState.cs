@@ -25,16 +25,23 @@ namespace Nakama.SocketInternal
     {
         private static readonly byte[] NoBytes = new byte[0];
 
-        [DataMember(Name = "match_id", Order = 1), Preserve] public string MatchId { get; set; }
+        [DataMember(Name = "match_id", Order = 1), Preserve]
+        public string MatchId { get; set; }
 
         public long OpCode => Convert.ToInt64(_opCode);
-        [DataMember(Name = "op_code", Order = 2), Preserve] public string _opCode { get; set; }
+
+        [DataMember(Name = "op_code", Order = 3), Preserve]
+        public string _opCode { get; set; }
 
         public byte[] State => _state == null ? NoBytes :  Convert.FromBase64String(_state);
-        [DataMember(Name = "data", Order = 3), Preserve] public string _state { get; set; }
+
+        [DataMember(Name = "data", Order = 4), Preserve]
+        public string _state { get; set; }
 
         public IUserPresence UserPresence => _userPresence;
-        [DataMember(Name = "presence", Order = 4), Preserve] public UserPresence _userPresence { get; set; }
+
+        [DataMember(Name = "presence", Order = 2), Preserve]
+        public UserPresence _userPresence { get; set; }
 
         public override string ToString()
         {

@@ -25,12 +25,12 @@ namespace Nakama.SocketInternal
     {
 
         /// <inheritdoc />
-        [DataMember(Name="cacheable_cursor", Order = 1), Preserve]
+        [DataMember(Name="cacheable_cursor", Order = 2), Preserve]
         public string CacheableCursor { get; set; }
 
         /// <inheritdoc />
         public IEnumerable<IApiNotification> Notifications => _notifications ?? new List<ApiNotification>(0);
-        [DataMember(Name="notifications", Order = 2), Preserve]
+        [DataMember(Name="notifications", Order = 1), Preserve]
         public List<ApiNotification> _notifications { get; set; }
 
         public override string ToString()

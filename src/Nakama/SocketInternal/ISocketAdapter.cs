@@ -45,6 +45,11 @@ namespace Nakama.SocketInternal
         event Action<ArraySegment<byte>> Received;
 
         /// <summary>
+        /// The format of the socket messages.
+        /// </summary>
+        string Format { get; }
+
+        /// <summary>
         /// If the socket is connected.
         /// </summary>
         bool IsConnected { get; }

@@ -23,16 +23,16 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class Match : IMatch
     {
-        [DataMember(Name = "authoritative", Order = 1), Preserve] public bool Authoritative { get; set; }
+        [DataMember(Name = "authoritative", Order = 2), Preserve] public bool Authoritative { get; set; }
 
-        [DataMember(Name = "match_id", Order = 2), Preserve] public string Id { get; set; }
+        [DataMember(Name = "match_id", Order = 1), Preserve] public string Id { get; set; }
 
         [DataMember(Name = "label", Order = 3), Preserve] public string Label { get; set; }
 
         public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
-        [DataMember(Name = "presences", Order = 4), Preserve] public List<UserPresence> _presences { get; set; }
+        [DataMember(Name = "presences", Order = 5), Preserve] public List<UserPresence> _presences { get; set; }
 
-        [DataMember(Name = "size", Order = 5), Preserve] public int Size { get; set; }
+        [DataMember(Name = "size", Order = 4), Preserve] public int Size { get; set; }
 
         public IUserPresence Self => _self;
         [DataMember(Name = "self", Order = 6), Preserve] public UserPresence _self { get; set; }

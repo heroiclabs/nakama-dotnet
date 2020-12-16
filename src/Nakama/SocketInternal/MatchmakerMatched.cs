@@ -23,9 +23,9 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class MatchmakerMatched : IMatchmakerMatched
     {
-        [DataMember(Name = "match_id", Order = 1), Preserve] public string MatchId { get; set; }
+        [DataMember(Name = "match_id", Order = 2), Preserve] public string MatchId { get; set; }
 
-        [DataMember(Name = "ticket", Order = 2), Preserve] public string Ticket { get; set; }
+        [DataMember(Name = "ticket", Order = 1), Preserve] public string Ticket { get; set; }
 
         [DataMember(Name = "token", Order = 3), Preserve] public string Token { get; set; }
 
