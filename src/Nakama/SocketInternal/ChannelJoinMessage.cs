@@ -24,11 +24,17 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class ChannelJoinMessage
     {
-        [DataMember(Name="hidden", Order = 4), Preserve]
+        [DataMember(Name="hidden"), Preserve]
         public bool Hidden { get; set; }
 
-        [DataMember(Name="persistence", Order = 3), Preserve]
+        [DataMember(Order = 4), Preserve]
+        private BoolValue HiddenValue => Hidden;
+
+        [DataMember(Name="persistence"), Preserve]
         public bool Persistence { get; set; }
+
+        [DataMember(Order = 3), Preserve]
+        private BoolValue PersistenceValue => Hidden;
 
         [DataMember(Name="target", Order = 1), Preserve]
         public string Target { get; set; }

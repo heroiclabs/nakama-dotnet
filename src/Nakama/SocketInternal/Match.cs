@@ -27,7 +27,10 @@ namespace Nakama.SocketInternal
 
         [DataMember(Name = "match_id", Order = 1), Preserve] public string Id { get; set; }
 
-        [DataMember(Name = "label", Order = 3), Preserve] public string Label { get; set; }
+        [DataMember(Order = 3), Preserve]
+        private StringValue LabelValue => Label;
+
+        [DataMember(Name = "label"), Preserve] public string Label { get; set; }
 
         public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
         [DataMember(Name = "presences", Order = 5), Preserve] public List<UserPresence> _presences { get; set; }

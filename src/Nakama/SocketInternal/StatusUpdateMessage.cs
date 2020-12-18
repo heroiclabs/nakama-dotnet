@@ -24,8 +24,11 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class StatusUpdateMessage
     {
-        [DataMember(Name="status", Order = 1), Preserve]
+        [DataMember(Name="status"), Preserve]
         public string Status { get; set; }
+
+        [DataMember(Order = 1), Preserve]
+        private StringValue StatusValue => Status;
 
         public override string ToString()
         {

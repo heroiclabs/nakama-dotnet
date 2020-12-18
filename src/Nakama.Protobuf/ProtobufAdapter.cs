@@ -24,6 +24,8 @@ using Nakama.Ninja.WebSockets;
 using ProtoBuf;
 using System.IO;
 
+[module: CompatibilityLevel(CompatibilityLevel.Level300)]
+
 namespace Nakama.Protobuf
 {
     /// <summary>
@@ -78,9 +80,7 @@ namespace Nakama.Protobuf
                 IncludeExceptionInCloseResponse = true,
                 KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec),
                 NoDelay = true
-            }, sendTimeoutSec)
-        {
-        }
+            }, sendTimeoutSec) {}
 
         public ProtobufAdapter(WebSocketClientOptions options, int sendTimeoutSec)
         {
@@ -148,7 +148,18 @@ namespace Nakama.Protobuf
 
         public WebSocketMessageEnvelope DeserializeEnvelope(ArraySegment<byte> buffer)
         {
-            return Serializer.Deserialize<WebSocketMessageEnvelope>(new ReadOnlyMemory<byte>(buffer.Array));
+            WebSocketMessageEnvelope envelope = null;
+
+            try
+            {
+               envelope = Serializer.Deserialize<WebSocketMessageEnvelope>(buffer.AsMemory<byte>());
+            }
+            catch (Exception e)
+            {
+                ReceivedError?.Invoke(new FormatException("Could not deserialize protocol buffer.", e));
+            }
+
+            return envelope;
         }
 
         public void Dispose()
@@ -160,8 +171,6 @@ namespace Nakama.Protobuf
         public async void Send(WebSocketMessageEnvelope envelope, CancellationToken cancellationToken,
             bool reliable = true)
         {
-
-            System.Console.WriteLine("protobuf send called");
 
             if (_webSocket == null)
             {

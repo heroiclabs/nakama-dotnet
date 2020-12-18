@@ -16,6 +16,7 @@
 * limitations under the License.
 */
 
+using System;
 using System.Runtime.Serialization;
 
 namespace Nakama.SocketInternal
@@ -29,16 +30,22 @@ namespace Nakama.SocketInternal
         public string ChannelId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="code", Order = 3), Preserve]
+        [DataMember(Name="code"), Preserve]
         public int Code { get; set; }
+
+        [DataMember(Order = 3), Preserve]
+        public IntValue CodeValue => Code;
 
         /// <inheritdoc />
         [DataMember(Name="content", Order = 6), Preserve]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time", Order = 7), Preserve]
+        [DataMember(Name="create_time"), Preserve]
         public string CreateTime { get; set; }
+
+        [DataMember(Order = 7)]
+        public IntValue CreateTimeValue => System.Convert.ToInt32(CreateTime);
 
         /// <inheritdoc />
         [DataMember(Name="group_id", Order = 11), Preserve]
@@ -49,8 +56,11 @@ namespace Nakama.SocketInternal
         public string MessageId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="persistent", Order = 9), Preserve]
+        [DataMember(Name="persistent"), Preserve]
         public bool Persistent { get; set; }
+
+        [DataMember(Order = 9)]
+        private BoolValue PersistentValue => Persistent;
 
         /// <inheritdoc />
         [DataMember(Name="room_name", Order = 10), Preserve]
@@ -61,8 +71,11 @@ namespace Nakama.SocketInternal
         public string SenderId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="update_time", Order = 8), Preserve]
+        [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
+
+        [DataMember(Order = 8)]
+        private IntValue UpdateTimeValue => Convert.ToInt32(UpdateTime);
 
         /// <inheritdoc />
         [DataMember(Name="user_id_one", Order = 12), Preserve]

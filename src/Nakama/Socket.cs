@@ -512,7 +512,17 @@ namespace Nakama
 
         private void ReceivedMessage(ArraySegment<byte> buffer)
         {
-            var envelope = _adapter.DeserializeEnvelope(buffer);
+            WebSocketMessageEnvelope envelope;
+
+            try
+            {
+                envelope = _adapter.DeserializeEnvelope(buffer);
+            }
+            catch (Exception e)
+            {
+                Logger?.ErrorFormat("Error deserializing socket envelope: '{0}'", e.Message);
+                return;
+            }
 
             try
             {

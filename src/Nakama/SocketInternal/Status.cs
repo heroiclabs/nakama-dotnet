@@ -24,7 +24,7 @@ namespace Nakama.SocketInternal
     public class Status : IStatus
     {
         public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
-        [DataMember(Name="presences"), Preserve]
+        [DataMember(Name="presences", Order = 1), Preserve]
         public List<UserPresence> _presences { get; set; }
 
         public override string ToString()

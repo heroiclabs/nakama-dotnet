@@ -53,46 +53,4 @@ namespace Nakama
         /// </summary>
         string UserId { get; }
     }
-
-    /// <inheritdoc cref="IUserPresence"/>
-    public class UserPresence : IUserPresence
-    {
-        public static readonly IReadOnlyList<UserPresence> NoPresences = new List<UserPresence>(0);
-
-        [DataMember(Name = "persistence"), Preserve] public bool Persistence { get; set; }
-
-        [DataMember(Name = "session_id"), Preserve] public string SessionId { get; set; }
-
-        [DataMember(Name = "status"), Preserve] public string Status { get; set; }
-
-        [DataMember(Name = "username"), Preserve] public string Username { get; set; }
-
-        [DataMember(Name = "user_id"), Preserve] public string UserId { get; set; }
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is UserPresence item))
-            {
-                return false;
-            }
-            return Equals(item);
-        }
-
-        private bool Equals(IUserPresence other) => string.Equals(SessionId, other.SessionId) && string.Equals(UserId, other.UserId);
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                // ReSharper disable twice NonReadonlyMemberInGetHashCode
-                return ((SessionId?.GetHashCode() ?? 0) * 397) ^ (UserId?.GetHashCode() ?? 0);
-            }
-        }
-
-        public override string ToString()
-        {
-            return
-                $"UserPresence(Persistence={Persistence}, SessionId='{SessionId}', Status='{Status}', Username='{Username}', UserId='{UserId}')";
-        }
-    }
 }

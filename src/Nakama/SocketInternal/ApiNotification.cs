@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using System.Runtime.Serialization;
 
 namespace Nakama.SocketInternal
@@ -22,16 +23,22 @@ namespace Nakama.SocketInternal
     public class ApiNotification : IApiNotification
     {
         /// <inheritdoc />
-        [DataMember(Name="code", Order = 4), Preserve]
+        [DataMember(Name="code"), Preserve]
         public int Code { get; set; }
+
+        [DataMember(Order = 4)]
+        private IntValue CodeValue => Code;
 
         /// <inheritdoc />
         [DataMember(Name="content", Order = 3), Preserve]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time", Order = 6), Preserve]
+        [DataMember(Name="create_time"), Preserve]
         public string CreateTime { get; set; }
+
+        [DataMember(Order = 6)]
+        public IntValue CreateTimeValue => Convert.ToInt32(CreateTime);
 
         /// <inheritdoc />
         [DataMember(Name="id", Order = 1), Preserve]

@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using System.Runtime.Serialization;
 
 namespace Nakama.SocketInternal
@@ -22,27 +23,50 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class ChannelMessageAck : IChannelMessageAck
     {
-        [DataMember(Name = "channel_id", Order = 1), Preserve] public string ChannelId { get; set; }
+        [DataMember(Name = "channel_id", Order = 1), Preserve]
+        public string ChannelId { get; set; }
 
-        [DataMember(Name = "code", Order = 3), Preserve] public int Code { get; set; }
+        [DataMember(Name = "code"), Preserve]
+        public int Code { get; set; }
 
-        [DataMember(Name = "create_time", Order = 5), Preserve] public string CreateTime { get; set; }
+        [DataMember(Order = 3), Preserve]
+        private IntValue CodeValue => Code;
 
-        [DataMember(Name = "message_id", Order = 2), Preserve] public string MessageId { get; set; }
+        [DataMember(Name = "create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-        [DataMember(Name = "persistent", Order = 7), Preserve] public bool Persistent { get; set; }
+        [DataMember(Order = 5)]
+        private IntValue CreateTimeValue => Convert.ToInt32(CreateTime);
 
-        [DataMember(Name = "update_time", Order = 6), Preserve] public string UpdateTime { get; set; }
+        [DataMember(Name = "message_id", Order = 2), Preserve]
+        public string MessageId { get; set; }
 
-        [DataMember(Name = "username", Order = 4), Preserve] public string Username { get; set; }
+        [DataMember(Name = "persistent"), Preserve]
+        public bool Persistent { get; set; }
 
-        [DataMember(Name="room_name", Order = 8), Preserve] public string RoomName { get; set; }
+        [DataMember(Order = 7), Preserve]
+        private BoolValue PersistentValue => Persistent;
 
-        [DataMember(Name="group_id", Order = 9), Preserve] public string GroupId { get; set; }
+        [DataMember(Name = "update_time"), Preserve]
+        public string UpdateTime { get; set; }
 
-        [DataMember(Name="user_id_one", Order = 10), Preserve] public string UserIdOne { get; set; }
+        [DataMember(Order = 6)]
+        private IntValue UpdateTimeValue => Convert.ToInt32(UpdateTime);
 
-        [DataMember(Name="user_id_two", Order = 11), Preserve] public string UserIdTwo { get; set; }
+        [DataMember(Name = "username", Order = 4), Preserve]
+        public string Username { get; set; }
+
+        [DataMember(Name="room_name", Order = 8), Preserve]
+        public string RoomName { get; set; }
+
+        [DataMember(Name="group_id", Order = 9), Preserve]
+        public string GroupId { get; set; }
+
+        [DataMember(Name="user_id_one", Order = 10), Preserve]
+        public string UserIdOne { get; set; }
+
+        [DataMember(Name="user_id_two", Order = 11), Preserve]
+        public string UserIdTwo { get; set; }
 
         public override string ToString()
         {

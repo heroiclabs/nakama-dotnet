@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -167,7 +168,7 @@ namespace Nakama.Tests.Socket
             var session2 = await _client.AuthenticateCustomAsync(id2);
 
             var socket2 = Nakama.Socket.From(_client, adapterFactory());
-            //socket2.ReceivedError
+
             await socket2.ConnectAsync(session2);
 
             // Both sockets for single user set statuses.
@@ -237,13 +238,15 @@ namespace Nakama.Tests.Socket
 
             var socket1 = Nakama.Socket.From(_client, adapterFactory());
             socket1.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
-            socket1.ReceivedError += e => completer.TrySetException(e);
             await socket1.ConnectAsync(session);
 
             await socket1.UpdateStatusAsync("super status change!");
             var result = await completer.Task;
+
             Assert.NotNull(result);
             Assert.Contains(result.Joins, joined => joined.UserId.Equals(session.UserId));
+
+            await socket1.CloseAsync();
         }
     }
 }
