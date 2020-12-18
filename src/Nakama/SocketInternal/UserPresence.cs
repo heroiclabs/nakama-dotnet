@@ -27,18 +27,25 @@ namespace Nakama.SocketInternal
     {
         public static readonly IReadOnlyList<UserPresence> NoPresences = new List<UserPresence>(0);
 
-        [DataMember(Name = "persistence", Order = 4), Preserve] public bool Persistence { get; set; }
+        [DataMember(Name = "persistence", Order = 4), Preserve]
+        public bool Persistence { get; set; }
 
-        [DataMember(Name = "session_id", Order = 2), Preserve] public string SessionId { get; set; }
+        [DataMember(Name = "session_id", Order = 2), Preserve]
+        public string SessionId { get; set; }
 
-        [DataMember(Name = "status"), Preserve] public string Status { get; set; }
+        string IUserPresence.Status { get { return _statusValue.Value ?? _status; }}
+
+        [DataMember(Name = "username", Order = 3), Preserve]
+        public string Username { get; set; }
+
+        [DataMember(Name = "user_id", Order = 1), Preserve]
+        public string UserId { get; set; }
+
+        [DataMember(Name = "status"), Preserve]
+        private string _status;
 
         [DataMember(Order = 5), Preserve]
-        private StringValue StatusValue => Status;
-
-        [DataMember(Name = "username", Order = 3), Preserve] public string Username { get; set; }
-
-        [DataMember(Name = "user_id", Order = 1), Preserve] public string UserId { get; set; }
+        private StringValue _statusValue;
 
         public override bool Equals(object obj)
         {

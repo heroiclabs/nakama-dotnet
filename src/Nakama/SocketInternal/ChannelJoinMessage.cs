@@ -24,23 +24,45 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class ChannelJoinMessage
     {
-        [DataMember(Name="hidden"), Preserve]
-        public bool Hidden { get; set; }
+        [IgnoreDataMember]
+        public bool Hidden
+        {
+            get => _hiddenValue.HasValue ? _hiddenValue.Value : _hidden;
+            set
+            {
+                _hidden = value;
+                _hiddenValue.Value = value;
+            }
+        }
 
-        [DataMember(Order = 4), Preserve]
-        private BoolValue HiddenValue => Hidden;
-
-        [DataMember(Name="persistence"), Preserve]
-        public bool Persistence { get; set; }
-
-        [DataMember(Order = 3), Preserve]
-        private BoolValue PersistenceValue => Hidden;
+        [IgnoreDataMember]
+        public bool Persistence
+        {
+            get => _persistenceValue.HasValue ? _persistenceValue.Value : _persistence;
+            set
+            {
+                _persistenceValue.Value = value;
+                _persistence = value;
+            }
+        }
 
         [DataMember(Name="target", Order = 1), Preserve]
         public string Target { get; set; }
 
         [DataMember(Name="type", Order = 2), Preserve]
         public int Type { get; set; }
+
+        [DataMember(Order = 4), Preserve]
+        private BoolValue _hiddenValue;
+
+        [DataMember(Name="hidden"), Preserve]
+        private bool _hidden;
+
+        [DataMember(Name="persistence"), Preserve]
+        private bool _persistence;
+
+        [DataMember(Order = 3), Preserve]
+        private BoolValue _persistenceValue;
 
         public override string ToString()
         {

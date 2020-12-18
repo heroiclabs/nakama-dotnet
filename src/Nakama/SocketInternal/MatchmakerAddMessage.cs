@@ -41,7 +41,6 @@ namespace Nakama.SocketInternal
         [DataMember(Name = "numeric_properties", Order = 5), Preserve]
         public Dictionary<string, double> NumericProperties { get; set; }
 
-
         public override string ToString()
         {
             return

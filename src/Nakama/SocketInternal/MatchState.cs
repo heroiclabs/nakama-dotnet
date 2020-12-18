@@ -33,7 +33,7 @@ namespace Nakama.SocketInternal
         [DataMember(Name = "op_code", Order = 3), Preserve]
         public string _opCode { get; set; }
 
-        public byte[] State => _state == null ? NoBytes :  Convert.FromBase64String(_state);
+        public byte[] State => _state == null ? NoBytes : Convert.FromBase64String(_state);
 
         [DataMember(Name = "data", Order = 4), Preserve]
         public string _state { get; set; }

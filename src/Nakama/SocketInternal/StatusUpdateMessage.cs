@@ -15,7 +15,6 @@
  */
 
 using System.Runtime.Serialization;
-
 namespace Nakama.SocketInternal
 {
     /// <summary>
@@ -24,11 +23,22 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class StatusUpdateMessage
     {
-        [DataMember(Name="status"), Preserve]
-        public string Status { get; set; }
+        [IgnoreDataMember]
+        public string Status
+        {
+            get => _statusValue.Value ?? _status;
+            set
+            {
+                _status = value;
+                _statusValue.Value = value;
+            }
+        }
 
-        [DataMember(Order = 1), Preserve]
-        private StringValue StatusValue => Status;
+        [DataMember(Name="status"), Preserve]
+        public string _status;
+
+        [Exclude, DataMember(Order = 1), Preserve]
+        public StringValue _statusValue;
 
         public override string ToString()
         {

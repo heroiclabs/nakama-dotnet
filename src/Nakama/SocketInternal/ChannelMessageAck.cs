@@ -14,7 +14,6 @@
 * limitations under the License.
 */
 
-using System;
 using System.Runtime.Serialization;
 
 namespace Nakama.SocketInternal
@@ -26,32 +25,20 @@ namespace Nakama.SocketInternal
         [DataMember(Name = "channel_id", Order = 1), Preserve]
         public string ChannelId { get; set; }
 
-        [DataMember(Name = "code"), Preserve]
-        public int Code { get; set; }
+        [IgnoreDataMember]
+        public int Code => _codeValue.HasValue ? _codeValue.Value : _code;
 
-        [DataMember(Order = 3), Preserve]
-        private IntValue CodeValue => Code;
-
-        [DataMember(Name = "create_time"), Preserve]
-        public string CreateTime { get; set; }
-
-        [DataMember(Order = 5)]
-        private IntValue CreateTimeValue => Convert.ToInt32(CreateTime);
+        [IgnoreDataMember]
+        public string CreateTime => _createTimeValue.HasValue ? _createTimeValue.Value.ToString() : _createTime;
 
         [DataMember(Name = "message_id", Order = 2), Preserve]
         public string MessageId { get; set; }
 
-        [DataMember(Name = "persistent"), Preserve]
-        public bool Persistent { get; set; }
+        [IgnoreDataMember]
+        public bool Persistent => _persistentValue.HasValue ? _persistentValue.Value : _persistent;
 
-        [DataMember(Order = 7), Preserve]
-        private BoolValue PersistentValue => Persistent;
-
-        [DataMember(Name = "update_time"), Preserve]
-        public string UpdateTime { get; set; }
-
-        [DataMember(Order = 6)]
-        private IntValue UpdateTimeValue => Convert.ToInt32(UpdateTime);
+        [IgnoreDataMember]
+        public string UpdateTime => _updateTimeValue.HasValue ? _updateTimeValue.Value.ToString() : _updateTime;
 
         [DataMember(Name = "username", Order = 4), Preserve]
         public string Username { get; set; }
@@ -67,6 +54,30 @@ namespace Nakama.SocketInternal
 
         [DataMember(Name="user_id_two", Order = 11), Preserve]
         public string UserIdTwo { get; set; }
+
+        [DataMember(Name = "code"), Preserve]
+        private int _code;
+
+        [DataMember(Order = 3), Preserve]
+        private IntValue _codeValue;
+
+        [DataMember(Name = "create_time"), Preserve]
+        private string _createTime;
+
+        [DataMember(Order = 5), Preserve]
+        private IntValue _createTimeValue;
+
+        [DataMember(Name = "persistent"), Preserve]
+        private bool _persistent;
+
+        [DataMember(Order = 7), Preserve]
+        private BoolValue _persistentValue;
+
+        [DataMember(Name = "update_time"), Preserve]
+        private string _updateTime;
+
+        [DataMember(Order = 6), Preserve]
+        private IntValue _updateTimeValue;
 
         public override string ToString()
         {

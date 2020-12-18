@@ -38,9 +38,10 @@ namespace Nakama.Tests.Socket
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var socket = Nakama.Socket.From(_client, adapterFactory());
 
+            socket.ReceivedError += e => System.Console.WriteLine(e.Message);
             await socket.ConnectAsync(session);
-            var channel = await socket.JoinChatAsync("myroom", ChannelType.Room);
 
+            var channel = await socket.JoinChatAsync("myroom", ChannelType.Room);
             Assert.NotNull(channel);
             Assert.NotNull(channel.Id);
             Assert.Equal(channel.Self.UserId, session.UserId);
@@ -60,11 +61,15 @@ namespace Nakama.Tests.Socket
             var completer = new TaskCompletionSource<IApiChannelMessage>();
             socket.ReceivedChannelMessage += (chatMessage) => completer.SetResult(chatMessage);
             await socket.ConnectAsync(session);
+            socket.ReceivedError += e => System.Console.WriteLine(e.Message);
+
             var channel = await socket.JoinChatAsync("myroom", ChannelType.Room);
 
             // Send chat message.
             var content = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
+
             var sendAck = await socket.WriteChatMessageAsync(channel, content);
+
             var message = await completer.Task.ConfigureAwait(false);
 
             Assert.NotNull(sendAck);
@@ -87,6 +92,7 @@ namespace Nakama.Tests.Socket
             await _client.AddFriendsAsync(session2, new[] {session1.UserId});
 
             var socket1 = Nakama.Socket.From(_client, adapterFactory());
+            socket1.ReceivedError += e => Console.WriteLine(e.Message);
 
             var completer = new TaskCompletionSource<IApiChannelMessage>();
             socket1.ReceivedChannelMessage += (chatMessage) => completer.SetResult(chatMessage);
@@ -94,10 +100,18 @@ namespace Nakama.Tests.Socket
 
             var socket2 = Nakama.Socket.From(_client, adapterFactory());
             await socket2.ConnectAsync(session2);
+            socket2.ReceivedError += e => Console.WriteLine(e.Message);
+
+            System.Console.WriteLine("joining chat");
+
+
             var channel = await socket1.JoinChatAsync(session2.UserId, ChannelType.DirectMessage, false, false);
 
             // Send chat message.
             var content = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
+
+            System.Console.WriteLine("writing message");
+
             var sendAck = await socket1.WriteChatMessageAsync(channel, content);
             var message = await completer.Task.ConfigureAwait(false);
 

@@ -23,22 +23,14 @@ namespace Nakama.SocketInternal
     public class ApiNotification : IApiNotification
     {
         /// <inheritdoc />
-        [DataMember(Name="code"), Preserve]
-        public int Code { get; set; }
-
-        [DataMember(Order = 4)]
-        private IntValue CodeValue => Code;
+        public int Code => _codeValue.HasValue ? _codeValue.Value : _code;
 
         /// <inheritdoc />
         [DataMember(Name="content", Order = 3), Preserve]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time"), Preserve]
-        public string CreateTime { get; set; }
-
-        [DataMember(Order = 6)]
-        public IntValue CreateTimeValue => Convert.ToInt32(CreateTime);
+        public string CreateTime => _createTimeValue.HasValue ? _createTimeValue.Value.ToString() : _createTime;
 
         /// <inheritdoc />
         [DataMember(Name="id", Order = 1), Preserve]
@@ -55,6 +47,18 @@ namespace Nakama.SocketInternal
         /// <inheritdoc />
         [DataMember(Name="subject", Order = 2), Preserve]
         public string Subject { get; set; }
+
+        [DataMember(Name="code"), Preserve]
+        private int _code;
+
+        [DataMember(Order = 4), Preserve]
+        private int? _codeValue { get; set; }
+
+        [DataMember(Name="create_time"), Preserve]
+        private string _createTime;
+
+        [DataMember(Order = 6), Preserve]
+        private IntValue _createTimeValue;
 
         public override string ToString()
         {

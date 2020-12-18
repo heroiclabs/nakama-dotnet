@@ -81,15 +81,32 @@ namespace Nakama.Tests.Socket
             var socket1 = Nakama.Socket.From(_client, adapterFactory());
 
             socket1.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
-            socket1.ReceivedError += e => completer.TrySetException(e);
+            socket1.ReceivedError += e =>
+            {
+                System.Console.WriteLine(e.Message);
+                completer.TrySetException(e);
+            };
+
             await socket1.ConnectAsync(session1);
+
             await socket1.FollowUsersAsync(new string[] { }, new[] {session2.Username});
 
             var socket2 = Nakama.Socket.From(_client);
+
+            socket2.ReceivedError += e => System.Console.WriteLine(e.Message);
             await socket2.ConnectAsync(session2);
+
+            System.Console.WriteLine("updating status");
+
             await socket2.UpdateStatusAsync("new status change");
 
+            System.Console.WriteLine("done updating status");
+
+
             var result = await completer.Task;
+
+            System.Console.WriteLine("done awaiting task");
+
             Assert.NotNull(result);
             Assert.Contains(result.Joins, joined => joined.UserId.Equals(session2.UserId));
 

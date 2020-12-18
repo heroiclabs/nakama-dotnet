@@ -22,23 +22,25 @@ namespace Nakama.SocketInternal
     /// A Protobuf-Net serializable class corresponding to the well-known
     /// google.protobuf.BoolValue type.
     ///
-    /// Keep in mind that grpc-gateway will automatically deserialize a boolean into a BoolValue;
+    /// Keep in mind that grpc-gateway will automatically deserialize a vool into a BoolValue;
     /// there is no need to for the client to utilize this for JSON.
     /// </summary>
     [DataContract]
-    public class BoolValue
+    public struct BoolValue
     {
+        public bool HasValue => _nullable.HasValue;
+        public bool Value
+        {
+            get => _nullable.Value;
+            set => _nullable = value;
+        }
+
         [DataMember(Order = 1), Preserve]
-        public bool Value { get; set; }
+        private bool? _nullable { get; set; }
 
         public override string ToString()
         {
-            return $"BoolValue(Value='{Value}')";
-        }
-
-        public static implicit operator BoolValue(bool value)
-        {
-            return new BoolValue{Value = value};
+            return $"BoolValue(Value='{_nullable}')";
         }
     }
 }

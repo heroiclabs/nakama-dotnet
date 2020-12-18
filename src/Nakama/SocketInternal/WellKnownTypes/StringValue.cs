@@ -26,7 +26,7 @@ namespace Nakama.SocketInternal
     /// there is no need to for the client to utilize this for JSON.
     /// </summary>
     [DataContract]
-    public class StringValue
+    public struct StringValue
     {
         [DataMember(Order = 1), Preserve]
         public string Value { get; set; }

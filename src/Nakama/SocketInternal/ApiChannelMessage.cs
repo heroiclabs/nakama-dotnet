@@ -16,7 +16,6 @@
 * limitations under the License.
 */
 
-using System;
 using System.Runtime.Serialization;
 
 namespace Nakama.SocketInternal
@@ -30,22 +29,14 @@ namespace Nakama.SocketInternal
         public string ChannelId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="code"), Preserve]
-        public int Code { get; set; }
-
-        [DataMember(Order = 3), Preserve]
-        public IntValue CodeValue => Code;
+        public int Code => _codeValue.HasValue ? _codeValue.Value : _code;
 
         /// <inheritdoc />
         [DataMember(Name="content", Order = 6), Preserve]
         public string Content { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="create_time"), Preserve]
-        public string CreateTime { get; set; }
-
-        [DataMember(Order = 7)]
-        public IntValue CreateTimeValue => System.Convert.ToInt32(CreateTime);
+        public string CreateTime => _createTimeValue.HasValue ? _createTimeValue.Value.ToString() : _createTime;
 
         /// <inheritdoc />
         [DataMember(Name="group_id", Order = 11), Preserve]
@@ -56,11 +47,7 @@ namespace Nakama.SocketInternal
         public string MessageId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="persistent"), Preserve]
-        public bool Persistent { get; set; }
-
-        [DataMember(Order = 9)]
-        private BoolValue PersistentValue => Persistent;
+        public bool Persistent => _persistentValue.HasValue ? _persistentValue.Value : _persistent;
 
         /// <inheritdoc />
         [DataMember(Name="room_name", Order = 10), Preserve]
@@ -71,11 +58,7 @@ namespace Nakama.SocketInternal
         public string SenderId { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="update_time"), Preserve]
-        public string UpdateTime { get; set; }
-
-        [DataMember(Order = 8)]
-        private IntValue UpdateTimeValue => Convert.ToInt32(UpdateTime);
+        public string UpdateTime => _updateTimeValue.HasValue ? _updateTimeValue.Value.ToString() : _updateTime.ToString();
 
         /// <inheritdoc />
         [DataMember(Name="user_id_one", Order = 12), Preserve]
@@ -89,11 +72,35 @@ namespace Nakama.SocketInternal
         [DataMember(Name="username", Order = 5), Preserve]
         public string Username { get; set; }
 
+        [DataMember(Name="code"), Preserve]
+        private int _code { get; set; }
+
+        [DataMember(Order = 3), Preserve]
+        private IntValue _codeValue;
+
+        [DataMember(Name="create_time"), Preserve]
+        private string _createTime;
+
+        [DataMember(Order = 7), Preserve]
+        private IntValue _createTimeValue;
+
+        [DataMember(Name="persistent"), Preserve]
+        private bool _persistent;
+
+        [DataMember(Order = 9), Preserve]
+        private BoolValue _persistentValue;
+
+        [DataMember(Name="update_time"), Preserve]
+        private int _updateTime;
+
+        [DataMember(Order = 8), Preserve]
+        private IntValue _updateTimeValue;
+
         public override string ToString()
         {
             var output = "";
             output = string.Concat(output, "ChannelId: ", ChannelId, ", ");
-            output = string.Concat(output, "Code: ", Code, ", ");
+            output = string.Concat(output, "Code: ", _code, ", ");
             output = string.Concat(output, "Content: ", Content, ", ");
             output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
             output = string.Concat(output, "GroupId: ", GroupId, ", ");

@@ -27,10 +27,8 @@ namespace Nakama.SocketInternal
 
         [DataMember(Name = "match_id", Order = 1), Preserve] public string Id { get; set; }
 
-        [DataMember(Order = 3), Preserve]
-        private StringValue LabelValue => Label;
-
-        [DataMember(Name = "label"), Preserve] public string Label { get; set; }
+        [IgnoreDataMember]
+        public string Label => _labelValue.Value ?? _label;
 
         public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
         [DataMember(Name = "presences", Order = 5), Preserve] public List<UserPresence> _presences { get; set; }
@@ -39,6 +37,12 @@ namespace Nakama.SocketInternal
 
         public IUserPresence Self => _self;
         [DataMember(Name = "self", Order = 6), Preserve] public UserPresence _self { get; set; }
+
+        [DataMember(Order = 3), Preserve]
+        private StringValue _labelValue;
+
+        [DataMember(Name = "label"), Preserve]
+        private string _label;
 
         public override string ToString()
         {

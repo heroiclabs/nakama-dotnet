@@ -22,23 +22,22 @@ namespace Nakama.SocketInternal
     /// A Protobuf-Net serializable class corresponding to the well-known
     /// google.protobuf.IntValue type.
     ///
-    /// Keep in mind that grpc-gateway will automatically deserialize a boolean into an IntValue;
+    /// Keep in mind that grpc-gateway will automatically deserialize a vool into a IntValue;
     /// there is no need to for the client to utilize this for JSON.
     /// </summary>
     [DataContract]
-    public class IntValue
+    public struct IntValue
     {
+        public bool HasValue => _nullable.HasValue;
+        public int Value => _nullable.Value;
+
         [DataMember(Order = 1), Preserve]
-        public int Value { get; set; }
+        private int? _nullable { get; set; }
 
         public override string ToString()
         {
-            return $"IntValue(Value='{Value}')";
+            return $"IntValue(Value='{_nullable}')";
         }
 
-        public static implicit operator IntValue(int value)
-        {
-            return new IntValue{Value = value};
-        }
     }
 }
