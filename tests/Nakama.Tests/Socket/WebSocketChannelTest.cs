@@ -102,15 +102,10 @@ namespace Nakama.Tests.Socket
             await socket2.ConnectAsync(session2);
             socket2.ReceivedError += e => Console.WriteLine(e.Message);
 
-            System.Console.WriteLine("joining chat");
-
-
             var channel = await socket1.JoinChatAsync(session2.UserId, ChannelType.DirectMessage, false, false);
 
             // Send chat message.
             var content = new Dictionary<string, string> {{"hello", "world"}}.ToJson();
-
-            System.Console.WriteLine("writing message");
 
             var sendAck = await socket1.WriteChatMessageAsync(channel, content);
             var message = await completer.Task.ConfigureAwait(false);

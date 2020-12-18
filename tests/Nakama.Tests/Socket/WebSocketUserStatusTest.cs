@@ -96,16 +96,9 @@ namespace Nakama.Tests.Socket
             socket2.ReceivedError += e => System.Console.WriteLine(e.Message);
             await socket2.ConnectAsync(session2);
 
-            System.Console.WriteLine("updating status");
-
             await socket2.UpdateStatusAsync("new status change");
 
-            System.Console.WriteLine("done updating status");
-
-
             var result = await completer.Task;
-
-            System.Console.WriteLine("done awaiting task");
 
             Assert.NotNull(result);
             Assert.Contains(result.Joins, joined => joined.UserId.Equals(session2.UserId));
