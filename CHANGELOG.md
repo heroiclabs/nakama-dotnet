@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- TinyJson DataMember fields now require a `Name` field to be passed in order for them to be parsed.
+
+### Added
+- Added Protobuf support for WebSockets via the `Nakama.Protobuf` namespace.
+
 ## [2.7.0] - 2020-10-19
 ### Changed
 - Upgrade code generator to new Swagger format.
