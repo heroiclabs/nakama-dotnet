@@ -33,7 +33,7 @@ namespace Nakama.SocketInternal
         [DataMember(Name = "session_id", Order = 2), Preserve]
         public string SessionId { get; set; }
 
-        string IUserPresence.Status { get { return _statusValue.Value ?? _status; }}
+        public string Status => _statusValue.Value ?? _status;
 
         [DataMember(Name = "username", Order = 3), Preserve]
         public string Username { get; set; }

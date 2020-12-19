@@ -218,7 +218,10 @@ namespace Nakama.TinyJson
 
         private static string GetMemberName(MemberInfo member)
         {
-            return ((DataMemberAttribute) Attribute.GetCustomAttribute(member, typeof(DataMemberAttribute), true)).Name;
+            if (!member.IsDefined(typeof(DataMemberAttribute), true)) return member.Name;
+            var dataMemberAttribute =
+                (DataMemberAttribute) Attribute.GetCustomAttribute(member, typeof(DataMemberAttribute), true);
+            return !string.IsNullOrEmpty(dataMemberAttribute.Name) ? dataMemberAttribute.Name : member.Name;
         }
     }
 }

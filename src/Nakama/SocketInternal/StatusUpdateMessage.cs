@@ -37,7 +37,7 @@ namespace Nakama.SocketInternal
         [DataMember(Name="status"), Preserve]
         public string _status;
 
-        [Exclude, DataMember(Order = 1), Preserve]
+        [DataMember(Order = 1), Preserve]
         public StringValue _statusValue;
 
         public override string ToString()
