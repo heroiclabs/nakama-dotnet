@@ -383,8 +383,10 @@ namespace Nakama.TinyJson
                 {
                     var dataMemberAttribute =
                         (DataMemberAttribute) Attribute.GetCustomAttribute(member, typeof(DataMemberAttribute), true);
-                    if (!string.IsNullOrEmpty(dataMemberAttribute.Name))
-                        name = dataMemberAttribute.Name;
+                    if (string.IsNullOrEmpty(dataMemberAttribute.Name))
+                        continue;
+
+                    name = dataMemberAttribute.Name;
                 }
 
                 nameToMember.Add(name, member);

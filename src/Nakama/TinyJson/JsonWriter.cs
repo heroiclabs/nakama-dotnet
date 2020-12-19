@@ -158,6 +158,16 @@ namespace Nakama.TinyJson
                     type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
                 foreach (var t in fieldInfos)
                 {
+                    if (t.IsDefined(typeof(DataMemberAttribute), true))
+                    {
+                        var dataMemberAttribute = (DataMemberAttribute) Attribute.GetCustomAttribute(t, typeof(DataMemberAttribute), true);
+
+                        if (string.IsNullOrEmpty(dataMemberAttribute.Name))
+                        {
+                            continue;
+                        }
+                    }
+
                     if (t.IsDefined(typeof(IgnoreDataMemberAttribute), true))
                         continue;
 
@@ -180,6 +190,16 @@ namespace Nakama.TinyJson
                     if (!t.CanRead || t.IsDefined(typeof(IgnoreDataMemberAttribute), true))
                         continue;
 
+                    if (t.IsDefined(typeof(DataMemberAttribute), true))
+                    {
+                        var dataMemberAttribute = (DataMemberAttribute) Attribute.GetCustomAttribute(t, typeof(DataMemberAttribute), true);
+
+                        if (string.IsNullOrEmpty(dataMemberAttribute.Name))
+                        {
+                            continue;
+                        }
+                    }
+
                     var value = t.GetValue(item, null);
                     if (value == null) continue;
                     if (isFirst)
@@ -198,10 +218,7 @@ namespace Nakama.TinyJson
 
         private static string GetMemberName(MemberInfo member)
         {
-            if (!member.IsDefined(typeof(DataMemberAttribute), true)) return member.Name;
-            var dataMemberAttribute =
-                (DataMemberAttribute) Attribute.GetCustomAttribute(member, typeof(DataMemberAttribute), true);
-            return !string.IsNullOrEmpty(dataMemberAttribute.Name) ? dataMemberAttribute.Name : member.Name;
+            return ((DataMemberAttribute) Attribute.GetCustomAttribute(member, typeof(DataMemberAttribute), true)).Name;
         }
     }
 }
