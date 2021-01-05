@@ -60,7 +60,9 @@ namespace Nakama.Tests.Api
         [Fact]
         public async Task ShouldListLeaderboardRecordsWithOwnerId()
         {
-            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            string guid = Guid.NewGuid().ToString();
+            string username = guid + "_username";
+            var session = await _client.AuthenticateCustomAsync(guid, username);
             await _client.WriteLeaderboardRecordAsync(session, _leaderboardId, 10L);
             var result = await _client.ListLeaderboardRecordsAsync(session, _leaderboardId, new[] {session.UserId});
 
@@ -69,6 +71,8 @@ namespace Nakama.Tests.Api
             Assert.Null(result.PrevCursor);
             Assert.NotEmpty(result.Records);
             Assert.Equal(result.OwnerRecords.Count(r => r.OwnerId == session.UserId), 1);
+            Assert.True(result.Records.Any(record => record.Username == username));
+            Assert.True(result.OwnerRecords.Any(record => record.Username == username));
         }
 
         [Fact]
