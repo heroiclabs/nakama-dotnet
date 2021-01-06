@@ -28,20 +28,4 @@ namespace Nakama
         string ToJson(object obj);
         T FromJson<T>(string json);
     }
-
-    public static class JsonSerializer
-    {
-        private static readonly IJsonSerializer defaultSerializer = new TinyJsonSerializer();
-        private static IJsonSerializer assignedSerialier;
-
-        public static IJsonSerializer GetCurrent()
-        {
-            return assignedSerialier ?? defaultSerializer;
-        }
-
-        public static void SetCurrent(IJsonSerializer serializer)
-        {
-            assignedSerialier = serializer;
-        }
-    }
 }
