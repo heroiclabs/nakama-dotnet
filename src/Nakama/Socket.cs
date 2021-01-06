@@ -21,7 +21,6 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Nakama.TinyJson;
 
 namespace Nakama
 {
@@ -85,13 +84,14 @@ namespace Nakama
         public ILogger Logger { get; set; }
 
         private readonly ISocketAdapter _adapter;
+        private readonly IJsonSerializer _jsonSerializer;
         private readonly Uri _baseUri;
         private readonly ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
 
         /// <summary>
         /// A new socket with default options.
         /// </summary>
-        public Socket() : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort, new WebSocketAdapter())
+        public Socket() : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort, new WebSocketAdapter(), new TinyJson.TinyJsonSerializer())
         {
         }
 
@@ -100,7 +100,7 @@ namespace Nakama
         /// </summary>
         /// <param name="adapter">The adapter for use with the socket.</param>
         public Socket(ISocketAdapter adapter) : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort,
-            adapter)
+            adapter, new TinyJson.TinyJsonSerializer())
         {
         }
 
@@ -111,10 +111,12 @@ namespace Nakama
         /// <param name="host">The host address of the server.</param>
         /// <param name="port">The port number of the server.</param>
         /// <param name="adapter">The adapter for use with the socket.</param>
-        public Socket(string scheme, string host, int port, ISocketAdapter adapter)
+        /// <param name="jsonSerializer">The JSON adapter to use when encoding and decoding JSON.</param>
+        public Socket(string scheme, string host, int port, ISocketAdapter adapter, IJsonSerializer jsonSerializer)
         {
             Logger = NullLogger.Instance;
             _adapter = adapter;
+            _jsonSerializer = jsonSerializer;
             _baseUri = new UriBuilder(scheme, host, port).Uri;
             _responses = new ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
 
@@ -502,15 +504,27 @@ namespace Nakama
         /// <returns>A new socket with connection settings from the client.</returns>
         public static ISocket From(IClient client, ISocketAdapter adapter)
         {
+            return From(client, adapter, new TinyJson.TinyJsonSerializer());
+        }
+
+        /// <summary>
+        /// Build a socket from a client object and socket adapter.
+        /// </summary>
+        /// <param name="client">A client object.</param>
+        /// <param name="adapter">The socket adapter to use with the connection.</param>
+        /// <param name="jsonSerializer">The JSON adapter to use when encoding and decoding JSON.</param>
+        /// <returns>A new socket with connection settings from the client.</returns>
+        public static ISocket From(IClient client, ISocketAdapter adapter, IJsonSerializer jsonSerializer)
+        {
             var scheme = client.Scheme.ToLower().Equals("http") ? "ws" : "wss";
             // TODO improve how logger is passed into socket object.
-            return new Socket(scheme, client.Host, client.Port, adapter) {Logger = (client as Client)?.Logger};
+            return new Socket(scheme, client.Host, client.Port, adapter, jsonSerializer) {Logger = (client as Client)?.Logger};
         }
 
         private void ReceivedMessage(ArraySegment<byte> buffer)
         {
             var contents = System.Text.Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
-            var envelope = contents.FromJson<WebSocketMessageEnvelope>();
+            var envelope = _jsonSerializer.FromJson<WebSocketMessageEnvelope>(contents);
             try
             {
                 if (!string.IsNullOrEmpty(envelope.Cid))
@@ -591,7 +605,7 @@ namespace Nakama
 
         private Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope envelope)
         {
-            var json = envelope.ToJson();
+            var json = _jsonSerializer.ToJson(envelope);
             var buffer = System.Text.Encoding.UTF8.GetBytes(json);
             if (string.IsNullOrEmpty(envelope.Cid))
             {

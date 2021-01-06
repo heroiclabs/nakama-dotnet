@@ -74,16 +74,16 @@ namespace Nakama
         }
 
         public Client(string serverKey, IHttpAdapter adapter) : this(DefaultScheme, DefaultHost, DefaultPort, serverKey,
-            adapter)
+            adapter, new TinyJson.TinyJsonSerializer())
         {
         }
 
         public Client(string scheme, string host, int port, string serverKey) : this(scheme, host, port, serverKey,
-            HttpRequestAdapter.WithGzip())
+            HttpRequestAdapter.WithGzip(), new TinyJson.TinyJsonSerializer())
         {
         }
 
-        public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter)
+        public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter, IJsonSerializer serializer)
         {
             Host = host;
             Port = port;
@@ -91,7 +91,7 @@ namespace Nakama
             ServerKey = serverKey;
             Timeout = 15;
 
-            _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, Timeout);
+            _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, serializer, Timeout);
             Logger = NullLogger.Instance; // must set logger last.
         }
 
