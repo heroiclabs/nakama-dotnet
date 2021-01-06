@@ -220,12 +220,14 @@ namespace Nakama
         private readonly Uri _baseUri;
         private readonly int _timeout;
         public readonly IHttpAdapter HttpAdapter;
+        public readonly IJsonSerializer JsonSerializer;
 
-        public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
+        public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, IJsonSerializer jsonSerializer, int timeout = 10)
         {
             _baseUri = baseUri;
             _timeout = timeout;
             HttpAdapter = httpAdapter;
+            JsonSerializer = jsonSerializer;
         }
 
         {{- range $url, $path := .Paths }}
@@ -376,14 +378,14 @@ namespace Nakama
             byte[] content = null;
             {{- range $parameter := $operation.Parameters }}
             {{- if eq $parameter.In "body" }}
-            var jsonBody = JsonSerializer.GetCurrent().ToJson({{ $parameter.Name }});
+            var jsonBody = JsonSerializer.ToJson({{ $parameter.Name }});
             content = Encoding.UTF8.GetBytes(jsonBody);
             {{- end }}
             {{- end }}
 
             {{- if $operation.Responses.Ok.Schema.Ref }}
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
-            return JsonSerializer.GetCurrent().FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>(contents);
+            return JsonSerializer.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>(contents);
             {{- else }}
             await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
             {{- end}}

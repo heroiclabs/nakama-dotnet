@@ -103,8 +103,7 @@ await socket.ConnectAsync(session);
 
 Nakama ships with a custom implementation of TinyJson and uses that as the default JSON serializer.
 The serializer used by the `nakama-dotnet` can be overridden depending on the user's needs. In order
-to use a JSON parser, implement the `IJSONSerializer` interface and assign the implementor via
-`JSONSerializer.SetCurrent()`.
+to use a JSON parser, implement the `IJSONSerializer` interface and pass the implementor to the constructor of the `Client`.
 
 ## Contribute
 
