@@ -217,15 +217,16 @@ namespace Nakama
     /// </summary>
     internal class ApiClient
     {
-        private readonly Uri _baseUri;
-        private readonly int _timeout;
         public readonly IHttpAdapter HttpAdapter;
+        public int Timeout { get; set; }
+
+        private readonly Uri _baseUri;
 
         public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
         {
             _baseUri = baseUri;
-            _timeout = timeout;
             HttpAdapter = httpAdapter;
+            Timeout = timeout;
         }
 
         {{- range $url, $path := .Paths }}
@@ -382,10 +383,10 @@ namespace Nakama
             {{- end }}
 
             {{- if $operation.Responses.Ok.Schema.Ref }}
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
             return contents.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>();
             {{- else }}
-            await HttpAdapter.SendAsync(method, uri, headers, content, _timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
             {{- end}}
         }
         {{- end }}

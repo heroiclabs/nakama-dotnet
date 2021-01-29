@@ -64,7 +64,11 @@ namespace Nakama
         public string ServerKey { get; }
 
         /// <inheritdoc cref="IClient.Timeout"/>
-        public int Timeout { get; set; }
+        public int Timeout
+        {
+            get => _apiClient.Timeout;
+            set => _apiClient.Timeout = value;
+        }
 
         private readonly ApiClient _apiClient;
         private ILogger _logger;
