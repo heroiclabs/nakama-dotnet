@@ -67,7 +67,7 @@ namespace Nakama
             }
 
             Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri, body);
-
+            _httpClient.Timeout = TimeSpan.FromSeconds(timeout);
             var response = await _httpClient.SendAsync(request);
             var contents = await response.Content.ReadAsStringAsync();
             response.Content?.Dispose();
