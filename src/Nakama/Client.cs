@@ -73,6 +73,8 @@ namespace Nakama
         private readonly ApiClient _apiClient;
         private ILogger _logger;
 
+        private const int DefaultTimeout = 15;
+
         public Client(string serverKey) : this(serverKey, HttpRequestAdapter.WithGzip())
         {
         }
@@ -93,9 +95,7 @@ namespace Nakama
             Port = port;
             Scheme = scheme;
             ServerKey = serverKey;
-            Timeout = 15;
-
-            _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, Timeout);
+            _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, DefaultTimeout);
             Logger = NullLogger.Instance; // must set logger last.
         }
 
