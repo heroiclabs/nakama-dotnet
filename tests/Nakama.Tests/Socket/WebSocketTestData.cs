@@ -33,7 +33,7 @@ namespace Nakama.Tests.Socket
             TestAdapterFactory protobufAdapterFactory = () => new ProtobufAdapter();
 
             yield return new object[]{textAdapterFactory};
-            //yield return new object[]{protobufAdapterFactory};
+            yield return new object[]{protobufAdapterFactory};
         }
     }
 }
