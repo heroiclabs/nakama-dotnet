@@ -24,13 +24,19 @@ namespace Nakama.SocketInternal
     public class StreamPresenceEvent : IStreamPresenceEvent
     {
         public IEnumerable<IUserPresence> Leaves => _leaves ?? UserPresence.NoPresences;
-        [DataMember(Name = "leaves", Order = 1), Preserve] public List<UserPresence> _leaves { get; set; }
+
+        [DataMember(Name = "leaves", Order = 1), Preserve]
+        private List<UserPresence> _leaves;
 
         public IEnumerable<IUserPresence> Joins => _joins ?? UserPresence.NoPresences;
-        [DataMember(Name = "joins", Order = 2), Preserve] public List<UserPresence> _joins { get; set; }
+
+        [DataMember(Name = "joins", Order = 2), Preserve]
+        private List<UserPresence> _joins;
 
         public IStream Stream => _stream;
-        [DataMember(Name = "stream", Order = 3), Preserve] public Stream _stream { get; set; }
+
+        [DataMember(Name = "stream", Order = 3), Preserve]
+        private Stream _stream;
 
         public override string ToString()
         {
@@ -47,17 +53,17 @@ namespace Nakama.SocketInternal
         public IUserPresence Sender => _sender;
 
         [DataMember(Name = "sender", Order = 2), Preserve]
-        public UserPresence _sender { get; set; }
+        private UserPresence _sender;
 
         public string State => _state;
 
         [DataMember(Name = "data", Order = 3), Preserve]
-        public string _state { get; set; }
+        public string _state;
 
         public IStream Stream => _stream;
 
         [DataMember(Name = "stream", Order = 1), Preserve]
-        public Stream _stream { get; set; }
+        private Stream _stream;
 
         [DataMember(Name = "reliable", Order = 4), Preserve]
         public string Reliable { get; set; }

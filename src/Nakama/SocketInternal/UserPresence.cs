@@ -45,7 +45,7 @@ namespace Nakama.SocketInternal
         private string _status;
 
         [DataMember(Order = 5), Preserve]
-        private StringValue _statusValue;
+        private StringValue _statusValue = new StringValue();
 
         public override bool Equals(object obj)
         {

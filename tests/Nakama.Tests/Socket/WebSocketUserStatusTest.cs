@@ -15,14 +15,12 @@
  */
 
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Nakama.Tests.Socket
 {
-    // NOTE Test name patterns are: MethodName_StateUnderTest_ExpectedBehavior
     public class WebSocketUserStatusTest
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(2);
@@ -189,6 +187,7 @@ namespace Nakama.Tests.Socket
 
             var statuses = await socket1.FollowUsersAsync(new[] {session2.UserId});
             Assert.NotNull(statuses);
+            Assert.NotNull(statuses.Presences);
             Assert.Contains(statuses.Presences,
                 presence => presence.Status.Equals(status1) || presence.Status.Equals(status2));
 

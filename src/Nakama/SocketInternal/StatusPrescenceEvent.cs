@@ -24,10 +24,14 @@ namespace Nakama.SocketInternal
     public class StatusPresenceEvent : IStatusPresenceEvent
     {
         public IEnumerable<IUserPresence> Leaves => _leaves ?? UserPresence.NoPresences;
-        [DataMember(Name = "leaves", Order = 3), Preserve] public List<UserPresence> _leaves { get; set; }
+
+        [DataMember(Name = "leaves", Order = 3), Preserve]
+        private List<UserPresence> _leaves;
 
         public IEnumerable<IUserPresence> Joins => _joins ?? UserPresence.NoPresences;
-        [DataMember(Name = "joins", Order = 2), Preserve] public List<UserPresence> _joins { get; set; }
+
+        [DataMember(Name = "joins", Order = 2), Preserve]
+        private List<UserPresence> _joins;
 
         public override string ToString()
         {

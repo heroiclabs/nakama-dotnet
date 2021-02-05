@@ -23,17 +23,24 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class MatchmakerMatched : IMatchmakerMatched
     {
-        [DataMember(Name = "match_id", Order = 2), Preserve] public string MatchId { get; set; }
+        [DataMember(Name = "match_id", Order = 2), Preserve]
+        public string MatchId { get; set; }
 
-        [DataMember(Name = "ticket", Order = 1), Preserve] public string Ticket { get; set; }
+        [DataMember(Name = "ticket", Order = 1), Preserve]
+        public string Ticket { get; set; }
 
-        [DataMember(Name = "token", Order = 3), Preserve] public string Token { get; set; }
+        [DataMember(Name = "token", Order = 3), Preserve]
+        public string Token { get; set; }
 
         public IEnumerable<IMatchmakerUser> Users => _users ?? new List<MatchmakerUser>(0);
-        [DataMember(Name = "users", Order = 4), Preserve] public List<MatchmakerUser> _users { get; set; }
+
+        [DataMember(Name = "users", Order = 4), Preserve]
+        private List<MatchmakerUser> _users { get; set; }
 
         public IMatchmakerUser Self => _self;
-        [DataMember(Name = "self", Order = 5), Preserve] public MatchmakerUser _self { get; set; }
+
+        [DataMember(Name = "self", Order = 5), Preserve]
+        private MatchmakerUser _self { get; set; }
 
         public override string ToString()
         {
@@ -50,15 +57,17 @@ namespace Nakama.SocketInternal
         public IDictionary<string, double> NumericProperties => _numericProperties ?? new Dictionary<string, double>();
 
         [DataMember(Name = "numeric_properties", Order = 1), Preserve]
-        public Dictionary<string, double> _numericProperties { get; set; }
+        private Dictionary<string, double> _numericProperties { get; set; }
 
         public IUserPresence Presence => _presence;
-        [DataMember(Name = "presence", Order = 2), Preserve] public UserPresence _presence { get; set; }
+
+        [DataMember(Name = "presence", Order = 2), Preserve]
+        private UserPresence _presence { get; set; }
 
         public IDictionary<string, string> StringProperties => _stringProperties ?? new Dictionary<string, string>();
 
         [DataMember(Name = "string_properties", Order = 3), Preserve]
-        public Dictionary<string, string> _stringProperties { get; set; }
+        private Dictionary<string, string> _stringProperties;
 
         public override string ToString()
         {

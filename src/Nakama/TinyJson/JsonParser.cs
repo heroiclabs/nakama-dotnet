@@ -388,6 +388,24 @@ namespace Nakama.TinyJson
 
                     name = dataMemberAttribute.Name;
                 }
+                else
+                {
+                    var asPropertyInfo = member as PropertyInfo;
+
+                    // private properties and fields are required to have a DataMemberAttribute
+                    if (asPropertyInfo != null && asPropertyInfo.GetGetMethod() != null
+                        && !asPropertyInfo.GetGetMethod().IsPublic)
+                    {
+                        continue;
+                    }
+
+                    var asFieldInfo = member as FieldInfo;
+
+                    if (asFieldInfo != null && !asFieldInfo.IsPublic)
+                    {
+                        continue;
+                    }
+                }
 
                 nameToMember.Add(name, member);
             }
@@ -409,14 +427,14 @@ namespace Nakama.TinyJson
             if (!_fieldInfoCache.TryGetValue(type, out nameToField))
             {
                 nameToField = CreateMemberNameDictionary(
-                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy));
+                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic));
                 _fieldInfoCache.Add(type, nameToField);
             }
 
             if (!_propertyInfoCache.TryGetValue(type, out nameToProperty))
             {
                 nameToProperty = CreateMemberNameDictionary(
-                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy));
+                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic));
                 _propertyInfoCache.Add(type, nameToProperty);
             }
 

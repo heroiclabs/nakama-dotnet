@@ -30,8 +30,9 @@ namespace Nakama.SocketInternal
 
         /// <inheritdoc />
         public IEnumerable<IApiNotification> Notifications => _notifications ?? new List<ApiNotification>(0);
+
         [DataMember(Name="notifications", Order = 1), Preserve]
-        public List<ApiNotification> _notifications { get; set; }
+        private List<ApiNotification> _notifications;
 
         public override string ToString()
         {

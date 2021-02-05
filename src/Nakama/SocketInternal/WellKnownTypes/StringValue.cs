@@ -28,17 +28,23 @@ namespace Nakama.SocketInternal
     [DataContract]
     public struct StringValue
     {
+        public string Value
+        {
+            get => _value;
+            set => _value = value;
+        }
+
         [DataMember(Order = 1), Preserve]
-        public string Value { get; set; }
+        private string _value { get; set; }
 
         public override string ToString()
         {
-            return $"StringValue(Value='{Value}')";
+            return $"StringValue(Value='{_value}')";
         }
 
         public static implicit operator StringValue(string value)
         {
-            return new StringValue{Value = value};
+            return new StringValue{_value = value};
         }
     }
 }

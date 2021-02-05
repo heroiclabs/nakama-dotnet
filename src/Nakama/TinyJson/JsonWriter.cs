@@ -155,7 +155,7 @@ namespace Nakama.TinyJson
 
                 var isFirst = true;
                 var fieldInfos =
-                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic);
                 foreach (var t in fieldInfos)
                 {
                     if (t.IsDefined(typeof(DataMemberAttribute), true))
@@ -167,6 +167,15 @@ namespace Nakama.TinyJson
                             continue;
                         }
                     }
+                    else
+                    {
+                        // private fields require the datamember attribute
+                        if (!t.IsPublic)
+                        {
+                            continue;
+                        }
+                    }
+
 
                     if (t.IsDefined(typeof(IgnoreDataMemberAttribute), true))
                         continue;
@@ -184,7 +193,7 @@ namespace Nakama.TinyJson
                 }
 
                 var propertyInfo =
-                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic);
                 foreach (var t in propertyInfo)
                 {
                     if (!t.CanRead || t.IsDefined(typeof(IgnoreDataMemberAttribute), true))
@@ -195,6 +204,14 @@ namespace Nakama.TinyJson
                         var dataMemberAttribute = (DataMemberAttribute) Attribute.GetCustomAttribute(t, typeof(DataMemberAttribute), true);
 
                         if (string.IsNullOrEmpty(dataMemberAttribute.Name))
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        // private properties require the datamember attribute
+                        if (!t.GetGetMethod().IsPublic)
                         {
                             continue;
                         }

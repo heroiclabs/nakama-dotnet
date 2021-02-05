@@ -35,10 +35,10 @@ namespace Nakama.SocketInternal
         }
 
         [DataMember(Name="status"), Preserve]
-        public string _status;
+        private string _status;
 
         [DataMember(Order = 1), Preserve]
-        public StringValue _statusValue;
+        private StringValue _statusValue = new StringValue();
 
         public override string ToString()
         {

@@ -25,11 +25,14 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class WebSocketErrorMessage
     {
-        [DataMember(Name = "code", Order = 1), Preserve] public int Code { get; set; }
+        [DataMember(Name = "code", Order = 1), Preserve]
+        public int Code { get; set; }
 
-        [DataMember(Name = "context", Order = 3), Preserve] public Dictionary<string, string> Context { get; set; }
+        [DataMember(Name = "context", Order = 3), Preserve]
+        public Dictionary<string, string> Context { get; set; }
 
-        [DataMember(Name = "message", Order = 2), Preserve] public string Message { get; set; }
+        [DataMember(Name = "message", Order = 2), Preserve]
+        public string Message { get; set; }
 
         public override string ToString()
         {

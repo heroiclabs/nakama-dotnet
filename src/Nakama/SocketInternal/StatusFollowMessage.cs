@@ -25,9 +25,11 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class StatusFollowMessage
     {
-        [DataMember(Name = "user_ids", Order = 1), Preserve] public List<string> UserIds { get; set; }
+        [DataMember(Name = "user_ids", Order = 1), Preserve]
+        public List<string> UserIds { get; set; }
 
-        [DataMember(Name = "usernames", Order = 2), Preserve] public List<string> Usernames { get; set; }
+        [DataMember(Name = "usernames", Order = 2), Preserve]
+        public List<string> Usernames { get; set; }
 
         public override string ToString()
         {

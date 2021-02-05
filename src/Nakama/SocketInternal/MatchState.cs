@@ -31,17 +31,17 @@ namespace Nakama.SocketInternal
         public long OpCode => Convert.ToInt64(_opCode);
 
         [DataMember(Name = "op_code", Order = 3), Preserve]
-        public string _opCode { get; set; }
+        private string _opCode { get; set; }
 
         public byte[] State => _state == null ? NoBytes : Convert.FromBase64String(_state);
 
         [DataMember(Name = "data", Order = 4), Preserve]
-        public string _state { get; set; }
+        private string _state;
 
         public IUserPresence UserPresence => _userPresence;
 
         [DataMember(Name = "presence", Order = 2), Preserve]
-        public UserPresence _userPresence { get; set; }
+        private UserPresence _userPresence;
 
         public override string ToString()
         {
