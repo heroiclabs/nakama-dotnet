@@ -211,7 +211,7 @@ namespace Nakama.TinyJson
                     else
                     {
                         // private properties require the datamember attribute
-                        if (!t.GetGetMethod().IsPublic)
+                        if (t.GetGetMethod() != null && !t.GetGetMethod().IsPublic)
                         {
                             continue;
                         }
