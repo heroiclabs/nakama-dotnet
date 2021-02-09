@@ -23,7 +23,6 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class StatusUpdateMessage
     {
-        [IgnoreDataMember]
         public string Status
         {
             get => _statusValue.Value ?? _status;

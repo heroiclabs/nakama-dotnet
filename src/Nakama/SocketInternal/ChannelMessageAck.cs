@@ -25,19 +25,15 @@ namespace Nakama.SocketInternal
         [DataMember(Name = "channel_id", Order = 1), Preserve]
         public string ChannelId { get; set; }
 
-        [IgnoreDataMember]
         public int Code => _codeValue.HasValue ? _codeValue.Value : _code;
 
-        [IgnoreDataMember]
         public string CreateTime => _createTimeValue.HasValue ? _createTimeValue.Value.ToString() : _createTime;
 
         [DataMember(Name = "message_id", Order = 2), Preserve]
         public string MessageId { get; set; }
 
-        [IgnoreDataMember]
         public bool Persistent => _persistentValue.HasValue ? _persistentValue.Value : _persistent;
 
-        [IgnoreDataMember]
         public string UpdateTime => _updateTimeValue.HasValue ? _updateTimeValue.Value.ToString() : _updateTime;
 
         [DataMember(Name = "username", Order = 4), Preserve]

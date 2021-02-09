@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Changed
-- TinyJson DataMember fields now require a `Name` field to be passed in order for them to be parsed.
+- TinyJson DataMember attributes now require a `Name` field to be passed in order for them to be parsed.
+- TinyJson public fields and properties will no longer automatically get parsed without a DataMember attribute.
 
 ### Added
 - Added Protobuf support for WebSockets via the `Nakama.Protobuf` namespace.

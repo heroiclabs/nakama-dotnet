@@ -375,9 +375,6 @@ namespace Nakama.TinyJson
             var nameToMember = new Dictionary<string, T>();
             foreach (var member in members)
             {
-                if (member.IsDefined(typeof(IgnoreDataMemberAttribute), true))
-                    continue;
-
                 var name = member.Name;
                 if (member.IsDefined(typeof(DataMemberAttribute), true))
                 {
@@ -390,21 +387,7 @@ namespace Nakama.TinyJson
                 }
                 else
                 {
-                    var asPropertyInfo = member as PropertyInfo;
-
-                    // private properties and fields are required to have a DataMemberAttribute
-                    if (asPropertyInfo != null && asPropertyInfo.GetGetMethod() != null
-                        && !asPropertyInfo.GetGetMethod().IsPublic)
-                    {
-                        continue;
-                    }
-
-                    var asFieldInfo = member as FieldInfo;
-
-                    if (asFieldInfo != null && !asFieldInfo.IsPublic)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
                 nameToMember.Add(name, member);

@@ -24,7 +24,6 @@ namespace Nakama.SocketInternal
     [DataContract]
     public class ChannelJoinMessage
     {
-        [IgnoreDataMember]
         public bool Hidden
         {
             get => _hiddenValue.HasValue ? _hiddenValue.Value : _hidden;
@@ -35,7 +34,6 @@ namespace Nakama.SocketInternal
             }
         }
 
-        [IgnoreDataMember]
         public bool Persistence
         {
             get => _persistenceValue.HasValue ? _persistenceValue.Value : _persistence;
