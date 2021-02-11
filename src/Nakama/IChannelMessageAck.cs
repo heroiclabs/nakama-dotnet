@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-using System.Runtime.Serialization;
-
 namespace Nakama
 {
     /// <summary>
@@ -77,37 +75,5 @@ namespace Nakama
         /// The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
         /// </summary>
         string UserIdTwo { get; }
-    }
-
-    /// <inheritdoc cref="IChannelMessageAck"/>
-    internal class ChannelMessageAck : IChannelMessageAck
-    {
-        [DataMember(Name = "channel_id"), Preserve] public string ChannelId { get; set; }
-
-        [DataMember(Name = "code"), Preserve] public int Code { get; set; }
-
-        [DataMember(Name = "create_time"), Preserve] public string CreateTime { get; set; }
-
-        [DataMember(Name = "message_id"), Preserve] public string MessageId { get; set; }
-
-        [DataMember(Name = "persistent"), Preserve] public bool Persistent { get; set; }
-
-        [DataMember(Name = "update_time"), Preserve] public string UpdateTime { get; set; }
-
-        [DataMember(Name = "username"), Preserve] public string Username { get; set; }
-
-        [DataMember(Name="room_name"), Preserve] public string RoomName { get; set; }
-
-        [DataMember(Name="group_id"), Preserve] public string GroupId { get; set; }
-
-        [DataMember(Name="user_id_one"), Preserve] public string UserIdOne { get; set; }
-
-        [DataMember(Name="user_id_two"), Preserve] public string UserIdTwo { get; set; }
-
-        public override string ToString()
-        {
-            return
-                $"ChannelMessageAck(ChannelId='{ChannelId}', Code={Code}, CreateTime={CreateTime}, MessageId='{MessageId}', Persistent={Persistent}, UpdateTime={UpdateTime}, Username='{Username}', RoomName='{RoomName}', GroupId='{GroupId}', UserIdOne='{UserIdOne}', UserIdTwo='{UserIdTwo}')";
-        }
     }
 }

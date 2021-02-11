@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,33 +14,8 @@
  * limitations under the License.
  */
 
-using System.Runtime.Serialization;
-
 namespace Nakama
 {
-    /// <summary>
-    /// Send a channel join message to the server.
-    /// </summary>
-    internal class ChannelJoinMessage
-    {
-        [DataMember(Name="hidden"), Preserve]
-        public bool Hidden { get; set; }
-
-        [DataMember(Name="persistence"), Preserve]
-        public bool Persistence { get; set; }
-
-        [DataMember(Name="target"), Preserve]
-        public string Target { get; set; }
-
-        [DataMember(Name="type"), Preserve]
-        public int Type { get; set; }
-
-        public override string ToString()
-        {
-            return $"ChannelJoinMessage(Hidden={Hidden}, Persistence={Persistence}, Target='{Target}', Type={Type})";
-        }
-    }
-
     /// <summary>
     /// The available channel types on the server.
     /// </summary>

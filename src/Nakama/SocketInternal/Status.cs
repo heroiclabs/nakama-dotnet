@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
-    /// <summary>
-    /// Remove the user from the matchmaker pool by ticket.
-    /// </summary>
-    internal class MatchmakerRemoveMessage
+    /// <inheritdoc cref="IStatus"/>
+    [DataContract]
+    public class Status : IStatus
     {
-        [DataMember(Name="ticket"), Preserve]
-        public string Ticket { get; set; }
+        public IEnumerable<IUserPresence> Presences => _presences ?? UserPresence.NoPresences;
+
+        [DataMember(Name="presences", Order = 1), Preserve]
+        private List<UserPresence> _presences;
 
         public override string ToString()
         {
-            return $"MatchmakerRemoveMessage(Ticket='{Ticket}')";
+            var presences = string.Join(", ", Presences);
+            return $"Status(Presences=[{presences}])";
         }
     }
 }

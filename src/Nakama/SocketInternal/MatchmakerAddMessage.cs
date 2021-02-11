@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,29 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
     /// Add the user to the matchmaker pool with properties.
     /// </summary>
-    internal class MatchmakerAddMessage
+    [DataContract]
+    public class MatchmakerAddMessage
     {
-        [DataMember(Name = "max_count"), Preserve] public int MaxCount { get; set; }
 
-        [DataMember(Name = "min_count"), Preserve] public int MinCount { get; set; }
+        [DataMember(Name = "min_count", Order = 1), Preserve]
+        public int MinCount { get; set; }
 
-        [DataMember(Name = "numeric_properties"), Preserve]
-        public Dictionary<string, double> NumericProperties { get; set; }
+        [DataMember(Name = "max_count", Order = 2), Preserve]
+        public int MaxCount { get; set; }
 
-        [DataMember(Name = "query"), Preserve] public string Query { get; set; }
+        [DataMember(Name = "query", Order = 3), Preserve]
+        public string Query { get; set; }
 
-        [DataMember(Name = "string_properties"), Preserve]
+        [DataMember(Name = "string_properties", Order = 4), Preserve]
         public Dictionary<string, string> StringProperties { get; set; }
+
+        [DataMember(Name = "numeric_properties", Order = 5), Preserve]
+        public Dictionary<string, double> NumericProperties { get; set; }
 
         public override string ToString()
         {

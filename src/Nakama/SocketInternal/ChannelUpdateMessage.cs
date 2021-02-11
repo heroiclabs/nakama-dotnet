@@ -14,25 +14,28 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// A logical error received on the WebSocket connection.
+    /// Update a chat message which has been sent to a channel.
     /// </summary>
-    internal class WebSocketErrorMessage
+    [DataContract]
+    public class ChannelUpdateMessage
     {
-        [DataMember(Name = "code"), Preserve] public int Code { get; set; }
+        [DataMember(Name="channel_id", Order = 1), Preserve]
+        public string ChannelId { get; set; }
 
-        [DataMember(Name = "context"), Preserve] public Dictionary<string, string> Context { get; set; }
+        [DataMember(Name="message_id", Order = 2), Preserve]
+        public string MessageId { get; set; }
 
-        [DataMember(Name = "message"), Preserve] public string Message { get; set; }
+        [DataMember(Name="content", Order = 3), Preserve]
+        public string Content { get; set; }
 
         public override string ToString()
         {
-            return $"WebSocketErrorMessage(Code={Code}, Context={Context}, Message='{Message}')";
+            return $"ChannelUpdateMessage(ChannelId='{ChannelId}', MessageId='{MessageId}', Content='{Content}')";
         }
     }
 }

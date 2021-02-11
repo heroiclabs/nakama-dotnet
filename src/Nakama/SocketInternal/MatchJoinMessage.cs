@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// Update the status of the current user.
+    /// A join message for a match on the server.
     /// </summary>
-    internal class StatusUpdateMessage
+    [DataContract]
+    public class MatchJoinMessage
     {
-        [DataMember(Name="status"), Preserve]
-        public string Status { get; set; }
+        [DataMember(Name="match_id", Order = 1), Preserve]
+        public string MatchId { get; set; }
+
+        [DataMember(Name="token", Order = 2), Preserve]
+        public string Token { get; set; }
+
+        [DataMember(Name="metadata", Order = 3), Preserve]
+        public IDictionary<string, string> Metadata { get; set; }
 
         public override string ToString()
         {
-            return $"StatusUpdateMessage(Status='{Status}')";
+            return $"MatchJoinMessage(MatchId='{MatchId}', Token='{Token}, Metadata='{Metadata}')";
         }
     }
 }

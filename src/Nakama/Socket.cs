@@ -21,6 +21,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Nakama.SocketInternal;
 using Nakama.TinyJson;
 
 namespace Nakama
@@ -162,6 +163,7 @@ namespace Nakama
                     NumericProperties = numericProperties
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.MatchmakerTicket;
         }
@@ -185,7 +187,7 @@ namespace Nakama
             var uri = new UriBuilder(_baseUri)
             {
                 Path = "/ws",
-                Query = $"lang=en&status={appearOnline}&token={session.AuthToken}"
+                Query = $"lang=en&status={appearOnline}&token={session.AuthToken}&format={_adapter.Format}"
             }.Uri;
             tcs.Task.ContinueWith(_ =>
             {
@@ -256,6 +258,7 @@ namespace Nakama
                     Type = (int) type
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.Channel;
         }
@@ -375,7 +378,7 @@ namespace Nakama
             var envelope = new WebSocketMessageEnvelope
             {
                 Cid = $"{_cid++}",
-                Rpc = new ApiRpc
+                Rpc = new Nakama.SocketInternal.ApiRpc
                 {
                     Id = funcId,
                     Payload = payload
@@ -509,8 +512,18 @@ namespace Nakama
 
         private void ReceivedMessage(ArraySegment<byte> buffer)
         {
-            var contents = System.Text.Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
-            var envelope = contents.FromJson<WebSocketMessageEnvelope>();
+            WebSocketMessageEnvelope envelope;
+
+            try
+            {
+                envelope = _adapter.DeserializeEnvelope(buffer);
+            }
+            catch (Exception e)
+            {
+                Logger?.ErrorFormat("Error deserializing socket envelope: '{0}'", e.Message);
+                return;
+            }
+
             try
             {
                 if (!string.IsNullOrEmpty(envelope.Cid))
@@ -580,7 +593,7 @@ namespace Nakama
                 }
                 else
                 {
-                    Logger?.ErrorFormat("Received unrecognised message: '{0}'", contents);
+                    Logger?.ErrorFormat("Received unrecognised message: '{0}'", envelope);
                 }
             }
             catch (Exception e)
@@ -591,17 +604,15 @@ namespace Nakama
 
         private Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope envelope)
         {
-            var json = envelope.ToJson();
-            var buffer = System.Text.Encoding.UTF8.GetBytes(json);
             if (string.IsNullOrEmpty(envelope.Cid))
             {
-                _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
+                _adapter.Send(envelope, CancellationToken.None);
                 return null; // No response required.
             }
 
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
             _responses[envelope.Cid] = completer;
-            _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
+            _adapter.Send(envelope, CancellationToken.None);
             return completer.Task;
         }
 

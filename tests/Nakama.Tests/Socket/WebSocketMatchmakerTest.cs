@@ -20,49 +20,47 @@ namespace Nakama.Tests.Socket
     using System.Threading.Tasks;
     using Xunit;
 
-    public class WebSocketMatchmakerTest : IAsyncLifetime
+    public class WebSocketMatchmakerTest
     {
         private IClient _client;
-        private ISocket _socket;
 
         public WebSocketMatchmakerTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
-        public async Task ShouldJoinMatchmaker()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async Task ShouldJoinMatchmaker(TestAdapterFactory adapterFactory)
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            await _socket.ConnectAsync(session);
-            var matchmakerTicket = await _socket.AddMatchmakerAsync("*");
+            var socket = Nakama.Socket.From(_client, adapterFactory());
+
+            await socket.ConnectAsync(session);
+            var matchmakerTicket = await socket.AddMatchmakerAsync("*");
 
             Assert.NotNull(matchmakerTicket);
             Assert.NotEmpty(matchmakerTicket.Ticket);
+
+            await socket.CloseAsync();
         }
 
-        // "Flakey. Needs improvement."
-        [Fact]
-        public async Task ShouldJoinAndLeaveMatchmaker()
+        // flakey, needs improvement
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async Task ShouldJoinAndLeaveMatchmaker(TestAdapterFactory adapterFactory)
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            await _socket.ConnectAsync(session);
-            var matchmakerTicket = await _socket.AddMatchmakerAsync("*");
+            var socket = Nakama.Socket.From(_client, adapterFactory());
+
+            await socket.ConnectAsync(session);
+            var matchmakerTicket = await socket.AddMatchmakerAsync("*");
 
             Assert.NotNull(matchmakerTicket);
             Assert.NotEmpty(matchmakerTicket.Ticket);
-            await _socket.RemoveMatchmakerAsync(matchmakerTicket);
-        }
+            await socket.RemoveMatchmakerAsync(matchmakerTicket);
 
-        Task IAsyncLifetime.InitializeAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        Task IAsyncLifetime.DisposeAsync()
-        {
-            return _socket.CloseAsync();
+            await socket.CloseAsync();
         }
     }
 }

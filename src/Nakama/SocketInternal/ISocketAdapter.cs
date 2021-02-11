@@ -17,7 +17,7 @@
 using System;
 using System.Threading;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
     /// An adapter which implements a socket with a protocol supported by Nakama.
@@ -45,6 +45,11 @@ namespace Nakama
         event Action<ArraySegment<byte>> Received;
 
         /// <summary>
+        /// The format of the socket messages.
+        /// </summary>
+        string Format { get; }
+
+        /// <summary>
         /// If the socket is connected.
         /// </summary>
         bool IsConnected { get; }
@@ -66,12 +71,20 @@ namespace Nakama
         /// <param name="timeout">The timeout for the connect attempt on the socket.</param>
         void Connect(Uri uri, int timeout);
 
+
+        /// <summary>
+        /// Deserialize a WebSocketMessageEnvelope from an array of bytes.
+        /// </summary>
+        /// <param name="buffer">The array of bytes.</param>
+        /// <returns>The deserialized envelope.</returns>
+        WebSocketMessageEnvelope DeserializeEnvelope(ArraySegment<byte> buffer);
+
         /// <summary>
         /// Send data to the server with an asynchronous operation.
         /// </summary>
-        /// <param name="buffer">The buffer with the message to send.</param>
+        /// <param name="envelope">The envelope with the message to send.</param>
         /// <param name="cancellationToken">A cancellation token used to propagate when the operation should be canceled.</param>
         /// <param name="reliable">If the message should be sent reliably (will be ignored by some protocols).</param>
-        void Send(ArraySegment<byte> buffer, CancellationToken cancellationToken, bool reliable = true);
+        void Send(WebSocketMessageEnvelope envelope, CancellationToken cancellationToken, bool reliable = true);
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,31 @@
 
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// Send a chat message to a channel on the server.
+    /// A Protobuf-Net serializable class corresponding to the well-known
+    /// google.protobuf.BoolValue type.
+    ///
+    /// Keep in mind that grpc-gateway will automatically deserialize a vool into a BoolValue;
+    /// there is no need to for the client to utilize this for JSON.
     /// </summary>
-    internal class ChannelSendMessage
+    [DataContract]
+    public struct BoolValue
     {
-        [DataMember(Name="channel_id"), Preserve]
-        public string ChannelId { get; set; }
+        public bool HasValue => _nullable.HasValue;
+        public bool Value
+        {
+            get => _nullable.Value;
+            set => _nullable = value;
+        }
 
-        [DataMember(Name="content"), Preserve]
-        public string Content { get; set; }
+        [DataMember(Order = 1), Preserve]
+        private bool? _nullable { get; set; }
 
         public override string ToString()
         {
-            return $"ChannelSendMessage(ChannelId='{ChannelId}', Content='{Content}')";
+            return $"BoolValue(Value='{_nullable}')";
         }
     }
 }

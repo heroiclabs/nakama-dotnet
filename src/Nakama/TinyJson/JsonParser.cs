@@ -375,16 +375,19 @@ namespace Nakama.TinyJson
             var nameToMember = new Dictionary<string, T>();
             foreach (var member in members)
             {
-                if (member.IsDefined(typeof(IgnoreDataMemberAttribute), true))
-                    continue;
-
                 var name = member.Name;
                 if (member.IsDefined(typeof(DataMemberAttribute), true))
                 {
                     var dataMemberAttribute =
                         (DataMemberAttribute) Attribute.GetCustomAttribute(member, typeof(DataMemberAttribute), true);
-                    if (!string.IsNullOrEmpty(dataMemberAttribute.Name))
-                        name = dataMemberAttribute.Name;
+                    if (string.IsNullOrEmpty(dataMemberAttribute.Name))
+                        continue;
+
+                    name = dataMemberAttribute.Name;
+                }
+                else
+                {
+                    continue;
                 }
 
                 nameToMember.Add(name, member);
@@ -407,14 +410,14 @@ namespace Nakama.TinyJson
             if (!_fieldInfoCache.TryGetValue(type, out nameToField))
             {
                 nameToField = CreateMemberNameDictionary(
-                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy));
+                    type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic));
                 _fieldInfoCache.Add(type, nameToField);
             }
 
             if (!_propertyInfoCache.TryGetValue(type, out nameToProperty))
             {
                 nameToProperty = CreateMemberNameDictionary(
-                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy));
+                    type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic));
                 _propertyInfoCache.Add(type, nameToProperty);
             }
 

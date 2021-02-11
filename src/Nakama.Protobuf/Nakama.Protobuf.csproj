@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" Condition="'$(OS)'!='Windows_NT'" PrivateAssets="All" />
+      <PackageReference Include="protobuf-net" Version="3.0.73" />
+      <ProjectReference Include="..\Nakama\Nakama.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net46'" />
+    </ItemGroup>
+    <PropertyGroup>
+      <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    </PropertyGroup>
+    <PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
+      <Authors>Nakama Authors &amp; contributors</Authors>
+      <Company>Heroic Labs</Company>
+      <Description>Nakama is an open-source server designed to power modern games and apps. This package adds Protobuf support to Websocket messages sent betweens the dotnet-client and the Nakama server.</Description>
+        <PackageId>NakamaClientProtobuf</PackageId>
+      <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+      <PackageTags>clientsdk;nakama;gameserver;backend;restapi</PackageTags>
+      <RepositoryUrl>https://github.com/heroiclabs/nakama-dotnet</RepositoryUrl>
+    </PropertyGroup>
+  </Project>

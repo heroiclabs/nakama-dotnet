@@ -25,12 +25,10 @@ namespace Nakama.Tests.Api
     public class GroupTest
     {
         private IClient _client;
-        private ISocket _socket;
 
         public GroupTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Nakama.Socket.From(_client);
         }
 
         [Fact]
@@ -205,7 +203,7 @@ namespace Nakama.Tests.Api
 
             Assert.Equal(admins.GroupUsers.Count(), 2);
 
-            await _client.DemoteGroupUsersAsync(session1, group.Id, new string[]{session2.UserId, session3.UserId});
+            await _client.DemoteGroupUsersAsync(session1, group.Id, new string[]{null});
 
             admins = await _client.ListGroupUsersAsync(session1, group.Id, state: 1, limit: 2);
             Assert.Equal(admins.GroupUsers.Count(), 0);

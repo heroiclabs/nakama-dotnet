@@ -28,16 +28,4 @@ namespace Nakama
         /// </summary>
         string Ticket { get; }
     }
-
-    /// <inheritdoc cref="IMatchmakerMatched"/>
-    internal class MatchmakerTicket : IMatchmakerTicket
-    {
-        [DataMember(Name="ticket"), Preserve]
-        public string Ticket { get; set; }
-
-        public override string ToString()
-        {
-            return $"MatchmakerTicket(Ticket='{Ticket}')";
-        }
-    }
 }

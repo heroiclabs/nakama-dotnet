@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,26 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// Follow one or more other users for status updates.
+    /// A logical error received on the WebSocket connection.
     /// </summary>
-    internal class StatusFollowMessage
+    [DataContract]
+    public class WebSocketErrorMessage
     {
-        [DataMember(Name = "user_ids"), Preserve] public List<string> UserIds { get; set; }
+        [DataMember(Name = "code", Order = 1), Preserve]
+        public int Code { get; set; }
 
-        [DataMember(Name = "usernames"), Preserve] public List<string> Usernames { get; set; }
+        [DataMember(Name = "context", Order = 3), Preserve]
+        public Dictionary<string, string> Context { get; set; }
+
+        [DataMember(Name = "message", Order = 2), Preserve]
+        public string Message { get; set; }
 
         public override string ToString()
         {
-            var userIds = string.Join(", ", UserIds);
-            var usernames = string.Join(", ", Usernames);
-            return $"StatusFollowMessage(UserIds=[{userIds}],Usernames=[{usernames}])";
+            return $"WebSocketErrorMessage(Code={Code}, Context={Context}, Message='{Message}')";
         }
     }
 }

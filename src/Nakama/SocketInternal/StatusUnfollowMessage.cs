@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// Update a chat message which has been sent to a channel.
+    /// Unfollow one or more users on the server.
     /// </summary>
-    internal class ChannelUpdateMessage
+    [DataContract]
+    public class StatusUnfollowMessage
     {
-        [DataMember(Name="channel_id"), Preserve]
-        public string ChannelId { get; set; }
-
-        [DataMember(Name="message_id"), Preserve]
-        public string MessageId { get; set; }
-
-        [DataMember(Name="content"), Preserve]
-        public string Content { get; set; }
+        [DataMember(Name="user_ids", Order = 1), Preserve]
+        public List<string> UserIds { get; set; }
 
         public override string ToString()
         {
-            return $"ChannelUpdateMessage(ChannelId='{ChannelId}', MessageId='{MessageId}', Content='{Content}')";
+            var userIds = string.Join(", ", UserIds);
+            return $"StatusUnfollowMessage(UserIds=[{userIds}])";
         }
     }
 }

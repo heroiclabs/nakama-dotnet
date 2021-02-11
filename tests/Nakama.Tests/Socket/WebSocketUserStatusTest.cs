@@ -21,22 +21,20 @@ using Xunit;
 
 namespace Nakama.Tests.Socket
 {
-    // NOTE Test name patterns are: MethodName_StateUnderTest_ExpectedBehavior
-    public class WebSocketUserStatusTest : IAsyncLifetime
+    public class WebSocketUserStatusTest
     {
         private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(2);
 
         private IClient _client;
-        private readonly ISocket _socket;
 
         public WebSocketUserStatusTest()
         {
             _client = ClientUtil.FromSettingsFile();
-            _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
-        public async void FollowUsers_NoUsers_AnotherUser()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async void FollowUsers_NoUsers_AnotherUser(TestAdapterFactory adapterFactory)
         {
             var id = Guid.NewGuid().ToString();
             var session1 = await _client.AuthenticateCustomAsync(id);
@@ -46,22 +44,29 @@ namespace Nakama.Tests.Socket
             var canceller = new CancellationTokenSource();
             canceller.Token.Register(() => completer.TrySetCanceled());
             canceller.CancelAfter(Timeout);
-            _socket.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
-            _socket.ReceivedError += e => completer.TrySetException(e);
-            await _socket.ConnectAsync(session1);
-            await _socket.FollowUsersAsync(new[] {session2.UserId});
 
-            var socket = Nakama.Socket.From(_client);
-            await socket.ConnectAsync(session2);
-            await socket.UpdateStatusAsync("new status change");
+            var socket1 = Nakama.Socket.From(_client, adapterFactory());
+
+            socket1.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
+            socket1.ReceivedError += e => completer.TrySetException(e);
+            await socket1.ConnectAsync(session1);
+            await socket1.FollowUsersAsync(new[] {session2.UserId});
+
+            var socket2 = Nakama.Socket.From(_client, adapterFactory());
+            await socket2.ConnectAsync(session2);
+            await socket2.UpdateStatusAsync("new status change");
 
             var result = await completer.Task;
             Assert.NotNull(result);
             Assert.Contains(result.Joins, joined => joined.UserId.Equals(session2.UserId));
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
         }
 
-        [Fact]
-        public async void FollowUsers_NoUsers_AnotherUserByUsername()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async void FollowUsers_NoUsers_AnotherUserByUsername(TestAdapterFactory adapterFactory)
         {
             var id = Guid.NewGuid().ToString();
             var session1 = await _client.AuthenticateCustomAsync(id);
@@ -71,34 +76,54 @@ namespace Nakama.Tests.Socket
             var canceller = new CancellationTokenSource();
             canceller.Token.Register(() => completer.TrySetCanceled());
             canceller.CancelAfter(Timeout);
-            _socket.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
-            _socket.ReceivedError += e => completer.TrySetException(e);
-            await _socket.ConnectAsync(session1);
-            await _socket.FollowUsersAsync(new string[] { }, new[] {session2.Username});
+            var socket1 = Nakama.Socket.From(_client, adapterFactory());
 
-            var socket = Nakama.Socket.From(_client);
-            await socket.ConnectAsync(session2);
-            await socket.UpdateStatusAsync("new status change");
+            socket1.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
+            socket1.ReceivedError += e =>
+            {
+                System.Console.WriteLine(e.Message);
+                completer.TrySetException(e);
+            };
+
+            await socket1.ConnectAsync(session1);
+
+            await socket1.FollowUsersAsync(new string[] { }, new[] {session2.Username});
+
+            var socket2 = Nakama.Socket.From(_client);
+
+            socket2.ReceivedError += e => System.Console.WriteLine(e.Message);
+            await socket2.ConnectAsync(session2);
+
+            await socket2.UpdateStatusAsync("new status change");
 
             var result = await completer.Task;
+
             Assert.NotNull(result);
             Assert.Contains(result.Joins, joined => joined.UserId.Equals(session2.UserId));
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
         }
 
-        [Fact]
-        public async void FollowUsers_NoUsers_FollowedSelf()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async void FollowUsers_NoUsers_FollowedSelf(TestAdapterFactory adapterFactory)
         {
             var id = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(id);
-            await _socket.ConnectAsync(session);
+            var socket1 = Nakama.Socket.From(_client, adapterFactory());
+            await socket1.ConnectAsync(session);
 
-            var statuses = await _socket.FollowUsersAsync(new[] {session.UserId});
+            var statuses = await socket1.FollowUsersAsync(new[] {session.UserId});
             Assert.NotNull(statuses);
             Assert.Empty(statuses.Presences);
+
+            await socket1.CloseAsync();
         }
 
-        [Fact]
-        public async void FollowUsers_NoUsers_UserJoinsAndLeaves()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async void FollowUsers_NoUsers_UserJoinsAndLeaves(TestAdapterFactory adapterFactory)
         {
             var id = Guid.NewGuid().ToString();
             var session1 = await _client.AuthenticateCustomAsync(id);
@@ -108,15 +133,17 @@ namespace Nakama.Tests.Socket
             var canceller = new CancellationTokenSource();
             canceller.Token.Register(() => completer1.TrySetCanceled());
             canceller.CancelAfter(Timeout);
-            _socket.ReceivedStatusPresence += statuses => completer1.TrySetResult(statuses);
-            _socket.ReceivedError += e => completer1.TrySetException(e);
-            await _socket.ConnectAsync(session1);
-            await _socket.FollowUsersAsync(new[] {session2.UserId});
+
+            var socket1 = Nakama.Socket.From(_client, adapterFactory());
+            socket1.ReceivedStatusPresence += statuses => completer1.TrySetResult(statuses);
+            socket1.ReceivedError += e => completer1.TrySetException(e);
+            await socket1.ConnectAsync(session1);
+            await socket1.FollowUsersAsync(new[] {session2.UserId});
 
             // Second user comes online and sets status.
-            var socket = Nakama.Socket.From(_client);
-            await socket.ConnectAsync(session2);
-            await socket.UpdateStatusAsync("new status change");
+            var socket2 = Nakama.Socket.From(_client, adapterFactory());
+            await socket2.ConnectAsync(session2);
+            await socket2.UpdateStatusAsync("new status change");
 
             var result1 = await completer1.Task;
             Assert.NotNull(result1);
@@ -124,30 +151,32 @@ namespace Nakama.Tests.Socket
             Assert.Contains(result1.Joins, joined => joined.UserId.Equals(session2.UserId));
 
             var completer2 = new TaskCompletionSource<IStatusPresenceEvent>();
-            _socket.ReceivedStatusPresence += statuses => completer2.SetResult(statuses);
+            socket1.ReceivedStatusPresence += statuses => completer2.SetResult(statuses);
 
             // Second user drops offline.
-            await socket.CloseAsync();
+            await socket2.CloseAsync();
             var result2 = await completer2.Task;
             Assert.NotNull(result2);
             Assert.Empty(result2.Joins);
             Assert.Contains(result2.Leaves, left => left.UserId.Equals(session2.UserId));
         }
 
-        [Fact]
-        public async void FollowUsers_TwoSessions_HasTwoStatuses()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async void FollowUsers_TwoSessions_HasTwoStatuses(TestAdapterFactory adapterFactory)
         {
             var id1 = Guid.NewGuid().ToString();
             var session1 = await _client.AuthenticateCustomAsync(id1);
-            await _socket.ConnectAsync(session1);
+
+            var socket1 = Nakama.Socket.From(_client, adapterFactory());
+
+            await socket1.ConnectAsync(session1);
 
             var id2 = Guid.NewGuid().ToString();
             var session2 = await _client.AuthenticateCustomAsync(id2);
-            var socket1 = Nakama.Socket.From(_client);
-            //socket1.ReceivedError
-            await socket1.ConnectAsync(session2);
-            var socket2 = Nakama.Socket.From(_client);
-            //socket2.ReceivedError
+
+            var socket2 = Nakama.Socket.From(_client, adapterFactory());
+
             await socket2.ConnectAsync(session2);
 
             // Both sockets for single user set statuses.
@@ -156,29 +185,31 @@ namespace Nakama.Tests.Socket
             const string status2 = "user 2 socket 2 status.";
             await socket2.UpdateStatusAsync(status2);
 
-            var statuses = await _socket.FollowUsersAsync(new[] {session2.UserId});
+            var statuses = await socket1.FollowUsersAsync(new[] {session2.UserId});
             Assert.NotNull(statuses);
+            Assert.NotNull(statuses.Presences);
             Assert.Contains(statuses.Presences,
                 presence => presence.Status.Equals(status1) || presence.Status.Equals(status2));
 
             await socket2.CloseAsync();
         }
 
-        [Fact]
-        public async void FollowUsers_TwoUsers_ThirdUserFollowsBoth()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async void FollowUsers_TwoUsers_ThirdUserFollowsBoth(TestAdapterFactory adapterFactory)
         {
             var id1 = Guid.NewGuid().ToString();
-            var socket1 = Nakama.Socket.From(_client);
+            var socket1 = Nakama.Socket.From(_client, adapterFactory());
             //socket1.ReceivedError
             var session1 = await _client.AuthenticateCustomAsync(id1);
 
             var id2 = Guid.NewGuid().ToString();
-            var socket2 = Nakama.Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client, adapterFactory());
             //socket2.ReceivedError
             var session2 = await _client.AuthenticateCustomAsync(id2);
 
             var id3 = Guid.NewGuid().ToString();
-            var socket3 = Nakama.Socket.From(_client);
+            var socket3 = Nakama.Socket.From(_client, adapterFactory());
             //socket3.ReceivedError
             var session3 = await _client.AuthenticateCustomAsync(id3);
 
@@ -202,8 +233,9 @@ namespace Nakama.Tests.Socket
             await socket3.CloseAsync();
         }
 
-        [Fact]
-        public async void UpdateStatus_NoStatus_HasStatus()
+        [Theory]
+        [ClassData(typeof(WebSocketTestData))]
+        public async void UpdateStatus_NoStatus_HasStatus(TestAdapterFactory adapterFactory)
         {
             var id = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(id);
@@ -212,24 +244,18 @@ namespace Nakama.Tests.Socket
             var canceller = new CancellationTokenSource();
             canceller.Token.Register(() => completer.TrySetCanceled());
             canceller.CancelAfter(Timeout);
-            _socket.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
-            _socket.ReceivedError += e => completer.TrySetException(e);
-            await _socket.ConnectAsync(session);
 
-            await _socket.UpdateStatusAsync("super status change!");
+            var socket1 = Nakama.Socket.From(_client, adapterFactory());
+            socket1.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
+            await socket1.ConnectAsync(session);
+
+            await socket1.UpdateStatusAsync("super status change!");
             var result = await completer.Task;
+
             Assert.NotNull(result);
             Assert.Contains(result.Joins, joined => joined.UserId.Equals(session.UserId));
-        }
 
-        Task IAsyncLifetime.InitializeAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        Task IAsyncLifetime.DisposeAsync()
-        {
-            return _socket.CloseAsync();
+            await socket1.CloseAsync();
         }
     }
 }

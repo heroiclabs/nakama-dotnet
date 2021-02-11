@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,19 @@ using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Nakama.SocketInternal;
 using Nakama.Ninja.WebSockets;
+using ProtoBuf;
+using System.IO;
 
-namespace Nakama
+[module: CompatibilityLevel(CompatibilityLevel.Level300)]
+
+namespace Nakama.Protobuf
 {
     /// <summary>
-    /// An adapter which uses the WebSocket protocol with Nakama server.
+    /// A Protobuf adapter which uses the WebSocket protocol with Nakama server.
     /// </summary>
-    public class WebSocketAdapter : ISocketAdapter
+    public class ProtobufAdapter : ISocketAdapter
     {
         private const int KeepAliveIntervalSec = 15;
         private const int MaxMessageSize = 1024 * 256;
@@ -44,6 +49,15 @@ namespace Nakama
         /// <inheritdoc cref="ISocketAdapter.Received"/>
         public event Action<ArraySegment<byte>> Received;
 
+        /// <inheritdoc cref="ISocketAdapter.Format"/>
+        public string Format
+        {
+            get
+            {
+                return "protobuf";
+            }
+        }
+
         /// <summary>
         /// If the WebSocket is connected.
         /// </summary>
@@ -60,17 +74,15 @@ namespace Nakama
         private WebSocket _webSocket;
         private Uri _uri;
 
-        public WebSocketAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec, int sendTimeoutSec = SendTimeoutSec) :
+        public ProtobufAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec, int sendTimeoutSec = SendTimeoutSec) :
             this(new WebSocketClientOptions
             {
                 IncludeExceptionInCloseResponse = true,
                 KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec),
                 NoDelay = true
-            }, sendTimeoutSec)
-        {
-        }
+            }, sendTimeoutSec) {}
 
-        public WebSocketAdapter(WebSocketClientOptions options, int sendTimeoutSec)
+        public ProtobufAdapter(WebSocketClientOptions options, int sendTimeoutSec)
         {
             _options = options;
             _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
@@ -134,15 +146,32 @@ namespace Nakama
             }
         }
 
+        public WebSocketMessageEnvelope DeserializeEnvelope(ArraySegment<byte> buffer)
+        {
+            WebSocketMessageEnvelope envelope = null;
+
+            try
+            {
+               envelope = Serializer.Deserialize<WebSocketMessageEnvelope>(buffer.AsMemory<byte>());
+            }
+            catch (Exception e)
+            {
+                ReceivedError?.Invoke(new FormatException("Could not deserialize protocol buffer.", e));
+            }
+
+            return envelope;
+        }
+
         public void Dispose()
         {
             _webSocket?.Dispose();
         }
 
         /// <inheritdoc cref="ISocketAdapter.Send"/>
-        public async void Send(ArraySegment<byte> buffer, CancellationToken cancellationToken,
+        public async void Send(WebSocketMessageEnvelope envelope, CancellationToken cancellationToken,
             bool reliable = true)
         {
+
             if (_webSocket == null)
             {
                 ReceivedError?.Invoke(new SocketException((int) SocketError.NotConnected));
@@ -151,7 +180,13 @@ namespace Nakama
 
             try
             {
-                var sendTask = _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, cancellationToken);
+                var stream = new MemoryStream();
+                Serializer.Serialize(stream, envelope);
+
+                var asByteArray = stream.ToArray();
+
+                var sendTask = _webSocket.SendAsync(new ArraySegment<byte>(asByteArray), WebSocketMessageType.Binary, true, cancellationToken);
+
                 await Task.WhenAny(sendTask, Task.Delay(_sendTimeoutSec, cancellationToken));
             }
             catch (Exception e)
@@ -164,7 +199,7 @@ namespace Nakama
         public override string ToString()
         {
             return
-                $"WebSocketDriver(IsConnected={IsConnected}, IsConnecting={IsConnecting}, MaxMessageSize={MaxMessageSize}, Uri='{_uri}')";
+                $"WebSocketAdapter(IsConnected={IsConnected}, IsConnecting={IsConnecting}, MaxMessageSize={MaxMessageSize}, Uri='{_uri}')";
         }
 
         private async Task ReceiveLoop(WebSocket webSocket, CancellationToken cancellationToken)

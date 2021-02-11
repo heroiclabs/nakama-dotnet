@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nakama\Nakama.csproj" />
+    <ProjectReference Include="..\..\src\Nakama.Protobuf\Nakama.Protobuf.csproj" />
   </ItemGroup>
 
   <ItemGroup>

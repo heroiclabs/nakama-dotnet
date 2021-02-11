@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-namespace Nakama
+using System.Runtime.Serialization;
+
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// A create message for a match on the server.
+    /// A leave message to a chat channel.
     /// </summary>
-    internal class MatchCreateMessage
+    [DataContract]
+    public class ChannelLeaveMessage
     {
+        [DataMember(Name="channel_id", Order = 1), Preserve]
+        public string ChannelId { get; set; }
+
         public override string ToString()
         {
-            return "MatchCreateMessage()";
+            return $"ChannelLeaveMessage(ChannelId='{ChannelId}')";
         }
     }
 }

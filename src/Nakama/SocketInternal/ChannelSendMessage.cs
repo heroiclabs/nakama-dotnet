@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
-    /// Receive status updates for users.
+    /// Send a chat message to a channel on the server.
     /// </summary>
-    public interface IStatus
+    [DataContract]
+    public class ChannelSendMessage
     {
-        /// <summary>
-        /// The status events for the users followed.
-        /// </summary>
-        IEnumerable<IUserPresence> Presences { get; }
+        [DataMember(Name="channel_id", Order = 1), Preserve]
+        public string ChannelId { get; set; }
+
+        [DataMember(Name="content", Order = 2), Preserve]
+        public string Content { get; set; }
+
+        public override string ToString()
+        {
+            return $"ChannelSendMessage(ChannelId='{ChannelId}', Content='{Content}')";
+        }
     }
 }

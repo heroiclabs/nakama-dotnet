@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,24 +17,28 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama
+namespace Nakama.SocketInternal
 {
     /// <summary>
     /// Send new state to a match on the server.
     /// </summary>
-    internal class MatchSendMessage
+    [DataContract]
+    public class MatchSendMessage
     {
-        [DataMember(Name="match_id"), Preserve]
+        [DataMember(Name="match_id", Order = 1), Preserve]
         public string MatchId { get; set; }
 
-        [DataMember(Name="op_code"), Preserve]
+        [DataMember(Name="op_code", Order = 2), Preserve]
         public string OpCode { get; set; }
 
-        [DataMember(Name="presences"), Preserve]
+        [DataMember(Name="presences", Order = 4), Preserve]
         public List<UserPresence> Presences { get; set; }
 
-        [DataMember(Name="data"), Preserve]
+        [DataMember(Name="data", Order = 3), Preserve]
         public string State { get; set; }
+
+        [DataMember(Name="reliable", Order = 5), Preserve]
+        public bool Reliable { get; set; }
 
         public override string ToString()
         {

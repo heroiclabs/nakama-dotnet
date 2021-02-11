@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2020 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace Nakama
 {
@@ -38,24 +37,5 @@ namespace Nakama
         /// The unique match identifier.
         /// </summary>
         string MatchId { get; }
-    }
-
-    /// <inheritdoc cref="IMatchPresenceEvent"/>
-    internal class MatchPresenceEvent : IMatchPresenceEvent
-    {
-        public IEnumerable<IUserPresence> Joins => _joins ?? UserPresence.NoPresences;
-        [DataMember(Name = "joins"), Preserve] public List<UserPresence> _joins { get; set; }
-
-        public IEnumerable<IUserPresence> Leaves => _leaves ?? UserPresence.NoPresences;
-        [DataMember(Name = "leaves"), Preserve] public List<UserPresence> _leaves { get; set; }
-
-        [DataMember(Name = "match_id"), Preserve] public string MatchId { get; set; }
-
-        public override string ToString()
-        {
-            var joins = string.Join(", ", Joins);
-            var leaves = string.Join(", ", Leaves);
-            return $"MatchPresenceEvent(Joins=[{joins}], Leaves=[{leaves}], MatchId='{MatchId}')";
-        }
     }
 }
