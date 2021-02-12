@@ -545,7 +545,7 @@ namespace Nakama
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string SignedPlayerInfo { get; }
 
@@ -1709,7 +1709,7 @@ namespace Nakama
         bool Authoritative { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string HandlerName { get; }
 
@@ -1729,7 +1729,7 @@ namespace Nakama
         int Size { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         int TickRate { get; }
     }
@@ -3229,18 +3229,18 @@ namespace Nakama
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface IProtobufAny
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string TypeUrl { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string Value { get; }
     }
@@ -3267,23 +3267,23 @@ namespace Nakama
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string Message { get; }
     }

@@ -193,6 +193,7 @@ namespace Nakama
 
                 try
                 {
+
                     Received?.Invoke(data);
                 }
                 catch (Exception e)

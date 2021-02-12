@@ -510,6 +510,7 @@ namespace Nakama
         private void ReceivedMessage(ArraySegment<byte> buffer)
         {
             var contents = System.Text.Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
+
             var envelope = contents.FromJson<WebSocketMessageEnvelope>();
             try
             {
@@ -601,6 +602,7 @@ namespace Nakama
 
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
             _responses[envelope.Cid] = completer;
+
             _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
             return completer.Task;
         }
