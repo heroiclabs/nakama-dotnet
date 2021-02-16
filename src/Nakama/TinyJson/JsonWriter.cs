@@ -101,6 +101,14 @@ namespace Nakama.TinyJson
             {
                 stringBuilder.Append((bool) item ? "true" : "false");
             }
+            else if (type == typeof(System.DateTime))
+            {
+                stringBuilder.Append("\"" + item + "\"");
+            }
+            else if (type == typeof(System.Guid))
+            {
+                stringBuilder.Append("\"" + item + "\"");
+            }
             else if (type.IsEnum)
             {
                 stringBuilder.Append('"');
