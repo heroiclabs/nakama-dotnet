@@ -46,6 +46,29 @@ namespace Nakama.Tests
 
             Assert.Equal(result1.SomeVal, result2.SomeVal);
         }
+        
+        [Fact]
+        public void FromObject_ToObject()
+        {
+            TestObjectWithAllTypes testObject = new TestObjectWithAllTypes();
+            testObject.UUID = Guid.NewGuid();
+            testObject.IntVal = 1;
+            testObject.DateTimeVal = DateTime.Now;
+            testObject.BoolVal = true;
+            testObject.FloatVal = 1.1F;
+            testObject.Stringval = "Good Work";
+
+            string json = testObject.ToJson();
+
+            TestObjectWithAllTypes testObjectFromJson = json.FromJson<TestObjectWithAllTypes>();
+
+            Assert.Equal(testObject.UUID, testObjectFromJson.UUID);
+            Assert.Equal(testObject.IntVal, testObjectFromJson.IntVal);
+            Assert.Equal(testObject.DateTimeVal, testObjectFromJson.DateTimeVal);
+            Assert.Equal(testObject.BoolVal, testObjectFromJson.BoolVal);
+            Assert.Equal(testObject.FloatVal, testObjectFromJson.FloatVal);
+            Assert.Equal(testObject.Stringval, testObjectFromJson.Stringval);
+        }
     }
 
     public interface ITestObject
@@ -79,5 +102,15 @@ namespace Nakama.Tests
 
         [DataMember(Name = "date_val")]
         public DateTime DateVal { get; set; }
+    }
+    
+    internal class TestObjectWithAllTypes
+    {
+        public Guid UUID { get; set; }
+        public int IntVal { get; set; }
+        public DateTime DateTimeVal { get; set; }
+        public bool BoolVal { get; set; }
+        public float FloatVal { get; set; }
+        public string Stringval { get; set; }
     }
 }
