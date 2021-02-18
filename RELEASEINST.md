@@ -13,15 +13,15 @@ These instructions guide the release process for new official Nakama client SDK 
 
    ```shell
    git add CHANGELOG
-   git commit -m "Nakama .NET 2.5.0 release."
-   git tag -a v2.5.0 -m "v2.5.0"
-   git push origin v2.5.0 master
+   git commit -m "Nakama .NET <version> release."
+   git tag -a <version> -m "<version>"
+   git push origin <version> master
    ```
 
 4. Create a release build of the code.
 
    ```shell
-   dotnet build -c Release /p:AssemblyVersion=2.5.0.0 src/Nakama/Nakama.csproj
+   dotnet build -c Release src/Nakama/Nakama.csproj
    ```
 
 5. Create a release on GitHub: https://github.com/heroiclabs/nakama-dotnet/releases/new
@@ -31,8 +31,8 @@ These instructions guide the release process for new official Nakama client SDK 
 7. Package and push the release to Nuget.
 
    ```shell
-   dotnet pack -p:AssemblyVersion=2.5.0.0 -p:PackageVersion=2.5.0 -c Release src/Nakama/Nakama.csproj
-   dotnet nuget push ./src/Nakama/bin/Release/NakamaClient.2.5.0.nupkg -k "somekey" -s https://api.nuget.org/v3/index.json
+   dotnet pack -p:PackageVersion=<package-version> -c Release src/Nakama/Nakama.csproj
+   dotnet nuget push ./src/Nakama/bin/Release/NakamaClient.<package-version>.nupkg -k "somekey" -s https://api.nuget.org/v3/index.json
    ```
 
 8. Update CHANGELOG with section for new unreleased changes.
