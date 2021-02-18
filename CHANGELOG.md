@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.7.1] - 2020-02-1
+### Fixed
+- HTTP Client now properly reads off timeout value.
+
 ## [2.7.0] - 2020-10-19
 ### Changed
 - Upgrade code generator to new Swagger format.
