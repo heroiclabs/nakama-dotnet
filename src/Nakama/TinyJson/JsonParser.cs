@@ -217,6 +217,20 @@ namespace Nakama.TinyJson
                 return result;
             }
 
+            if (type == typeof(DateTime))
+            {
+                DateTime result;
+                DateTime.TryParse(json.Replace("\"", string.Empty), out result);
+                return result;
+            }
+
+            if (type == typeof(Guid))
+            {
+                Guid result;
+                Guid.TryParse(json.Replace("\"", string.Empty), out result);
+                return result;
+            }
+
             if (json == "null")
             {
                 return null;
