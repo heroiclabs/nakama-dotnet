@@ -103,7 +103,7 @@ namespace Nakama.TinyJson
             }
             else if (type == typeof(System.DateTime))
             {
-                stringBuilder.Append("\"" + item + "\"");
+                stringBuilder.Append("\"" + ((DateTime)item).ToString("yyyy-MM-ddTHH:mm:ss.fffffffK") + "\"");
             }
             else if (type == typeof(System.Guid))
             {
