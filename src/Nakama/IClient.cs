@@ -158,9 +158,10 @@ namespace Nakama
         /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
+        /// <param name="import">If the Steam friends should be imported.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null);
+            bool import = true, Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Ban a set of users from a group.
@@ -284,6 +285,19 @@ namespace Nakama
         Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null);
 
         /// <summary>
+        /// Import Steam friends and add them to the user's account.
+        /// </summary>
+        /// <remarks>
+        /// The server will import friends when the user authenticates with Steam. This function can be used to be
+        /// explicit with the import operation.
+        /// </remarks>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="token">An access token from Steam.</param>
+        /// <param name="reset">If the Steam friend import for the user should be reset.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null);
+
+        /// <summary>
         /// Join a group if it has open membership or request to join it.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -385,8 +399,9 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An authentication token from the Steam network.</param>
+        /// <param name="import">If the Steam friends should be imported.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkSteamAsync(ISession session, string token);
+        Task LinkSteamAsync(ISession session, string token, bool import);
 
         /// <summary>
         /// List messages from a chat channel.

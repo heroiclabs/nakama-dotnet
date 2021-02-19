@@ -379,7 +379,7 @@ namespace Nakama.Tests.Api
             var customid = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(customid);
 
-            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkSteamAsync(session, "invalid"));
+            var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.LinkSteamAsync(session, "invalid", false));
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
