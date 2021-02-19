@@ -538,13 +538,13 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="categoryStart">The start of the category of tournaments to include.</param>
         /// <param name="categoryEnd">The end of the category of tournaments to include.</param>
-        /// <param name="startTime">The start time of the tournaments. (UNIX timestamp)</param>
-        /// <param name="endTime">The end time of the tournaments. (UNIX timestamp)</param>
+        /// <param name="startTime">The start time of the tournaments. (UNIX timestamp). If null, tournaments will not be filtered by start time.</param>
+        /// <param name="endTime">The end time of the tournaments. (UNIX timestamp). If null, tournaments will not be filtered by end time.</param>
         /// <param name="limit">The number of tournaments to list.</param>
         /// <param name="cursor">An optional cursor for the next page of tournaments.</param>
         /// <returns>A task which resolves to the list of tournament objects.</returns>
         Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
-            int startTime, int endTime, int limit = 1, string cursor = null);
+            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null);
 
         /// <summary>
         /// List of groups the current user is a member of.
