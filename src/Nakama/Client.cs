@@ -179,10 +179,10 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateSteamAsync"/>
         public async Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null)
+            bool import = true, Dictionary<string, string> vars = null)
         {
             var response = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty,
-                new ApiAccountSteam {Token = token, _vars = vars}, create, username);
+                new ApiAccountSteam {Token = token, _vars = vars}, create, username, import);
             return new Session(response.Token, response.Created);
         }
 
@@ -264,6 +264,10 @@ namespace Nakama
         public Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null) =>
             _apiClient.ImportFacebookFriendsAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, reset);
 
+        /// <inheritdoc cref="ImportSteamFriendsAsync"/>
+        public Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null) =>
+            _apiClient.ImportSteamFriendsAsync(session.AuthToken, new ApiAccountSteam {Token = token}, reset);
+
         /// <inheritdoc cref="JoinGroupAsync"/>
         public Task JoinGroupAsync(ISession session, string groupId) =>
             _apiClient.JoinGroupAsync(session.AuthToken, groupId);
@@ -318,8 +322,9 @@ namespace Nakama
             _apiClient.LinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token});
 
         /// <inheritdoc cref="LinkSteamAsync"/>
-        public Task LinkSteamAsync(ISession session, string token) =>
-            _apiClient.LinkSteamAsync(session.AuthToken, new ApiAccountSteam {Token = token});
+        public Task LinkSteamAsync(ISession session, string token, bool sync) =>
+            _apiClient.LinkSteamAsync(session.AuthToken,
+            new ApiLinkSteamRequest {Sync = sync, _account = new ApiAccountSteam {Token = token}});
 
         /// <inheritdoc cref="ListChannelMessagesAsync(Nakama.ISession,Nakama.IChannel,int,bool,string)"/>
         public Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, IChannel channel, int limit = 1,

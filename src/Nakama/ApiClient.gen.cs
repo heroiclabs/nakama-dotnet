@@ -545,7 +545,7 @@ namespace Nakama
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string SignedPlayerInfo { get; }
 
@@ -1698,6 +1698,45 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Link Steam to the current user's account.
+    /// </summary>
+    public interface IApiLinkSteamRequest
+    {
+
+        /// <summary>
+        /// The Facebook account details.
+        /// </summary>
+        IApiAccountSteam Account { get; }
+
+        /// <summary>
+        /// Import Steam friends for the user.
+        /// </summary>
+        bool Sync { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiLinkSteamRequest : IApiLinkSteamRequest
+    {
+
+        /// <inheritdoc />
+        public IApiAccountSteam Account => _account;
+        [DataMember(Name="account"), Preserve]
+        public ApiAccountSteam _account { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="sync"), Preserve]
+        public bool Sync { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Account: ", Account, ", ");
+            output = string.Concat(output, "Sync: ", Sync, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Represents a realtime match.
     /// </summary>
     public interface IApiMatch
@@ -1709,7 +1748,7 @@ namespace Nakama
         bool Authoritative { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string HandlerName { get; }
 
@@ -1729,7 +1768,7 @@ namespace Nakama
         int Size { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         int TickRate { get; }
     }
@@ -3229,18 +3268,18 @@ namespace Nakama
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IProtobufAny
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string TypeUrl { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Value { get; }
     }
@@ -3267,23 +3306,23 @@ namespace Nakama
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Message { get; }
     }
@@ -3782,7 +3821,8 @@ namespace Nakama
             string basicAuthPassword,
             ApiAccountSteam body,
             bool? create,
-            string username)
+            string username,
+            bool? sync)
         {
             if (body == null)
             {
@@ -3797,6 +3837,9 @@ namespace Nakama
             }
             if (username != null) {
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
+            if (sync != null) {
+                queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -4091,7 +4134,7 @@ namespace Nakama
         /// </summary>
         public async Task LinkSteamAsync(
             string bearerToken,
-            ApiAccountSteam body)
+            ApiLinkSteamRequest body)
         {
             if (body == null)
             {
@@ -4691,6 +4734,43 @@ namespace Nakama
             }
 
             var urlpath = "/v2/friend/facebook";
+
+            var queryParams = "";
+            if (reset != null) {
+                queryParams = string.Concat(queryParams, "reset=", reset.ToString().ToLower(), "&");
+            }
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+        }
+
+        /// <summary>
+        /// Import Steam friends and add them to a user's account.
+        /// </summary>
+        public async Task ImportSteamFriendsAsync(
+            string bearerToken,
+            ApiAccountSteam body,
+            bool? reset)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/friend/steam";
 
             var queryParams = "";
             if (reset != null) {
