@@ -390,7 +390,7 @@ namespace Nakama
 
         /// <inheritdoc cref="ListTournamentsAsync"/>
         public Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
-            int startTime, int endTime, int limit = 1, string cursor = null) =>
+            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null) =>
             _apiClient.ListTournamentsAsync(session.AuthToken, categoryStart, categoryEnd, startTime, endTime, limit,
                 cursor);
 
