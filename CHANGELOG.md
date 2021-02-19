@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.8.0] - 2020-02-19
+### Changed
+- Listing tournaments can now be done without providing start or end time filters.
+- Can now import Steam friends after authenticating or linking to a Steam account.
+
 ## [2.7.1] - 2020-02-1
 ### Fixed
 - HTTP Client now properly reads off timeout value.
