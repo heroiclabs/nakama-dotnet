@@ -87,9 +87,10 @@ namespace Nakama
             }
 
             var decoded = contents.FromJson<Dictionary<string, object>>();
+            string message = decoded.ContainsKey("message") ? decoded["message"].ToString() : string.Empty;
+            int grpcCode = decoded.ContainsKey("code") ? (int) decoded["code"] : -1;
 
-            var exception = new ApiResponseException((int) response.StatusCode, decoded["message"].ToString(),
-                (int) decoded["code"]);
+            var exception = new ApiResponseException((int) response.StatusCode, message, grpcCode);
 
             if (decoded.ContainsKey("error"))
             {
