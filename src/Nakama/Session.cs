@@ -79,7 +79,7 @@ namespace Nakama
             }
             variables = string.Concat(variables, "}");
             return
-                $"Session(AuthToken='{AuthToken}', Created={Created}, CreateTime={CreateTime}, ExpireTime={ExpireTime}, Variables={variables}, Username='{Username}', UserId='{UserId}')";
+                $"Session(AuthToken='{AuthToken}', Created={Created}, CreateTime={CreateTime}, ExpireTime={ExpireTime}, RefreshToken={RefreshToken}, RefreshExpireTime={RefreshExpireTime}, Variables={variables}, Username='{Username}', UserId='{UserId}')";
         }
 
         internal Session(string authToken, string refreshToken, bool created)

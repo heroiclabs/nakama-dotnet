@@ -855,6 +855,17 @@ namespace Nakama
         /// <inheritdoc cref="SessionRefreshAsync"/>
         public async Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null)
         {
+            // NOTE: Warn developers to encourage them to set a suitable session and refresh token lifetime.
+            if (session.Created && session.ExpireTime - session.CreateTime < 70)
+            {
+                Logger.WarnFormat("Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
+            }
+
+            if (session.Created && session.RefreshExpireTime - session.CreateTime < 3700)
+            {
+                Logger.WarnFormat("Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
+            }
+
             var response = await _apiClient.SessionRefreshAsync(ServerKey, string.Empty,
                 new ApiSessionRefreshRequest {Token = session.RefreshToken, _vars = vars});
 
