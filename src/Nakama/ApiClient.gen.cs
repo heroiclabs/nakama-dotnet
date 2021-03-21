@@ -2144,6 +2144,44 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
+    /// </summary>
+    public interface IApiSessionLogoutRequest
+    {
+
+        /// <summary>
+        /// Refresh token to invalidate.
+        /// </summary>
+        string RefreshToken { get; }
+
+        /// <summary>
+        /// Session token to log out.
+        /// </summary>
+        string Token { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiSessionLogoutRequest : IApiSessionLogoutRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="refresh_token"), Preserve]
+        public string RefreshToken { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="token"), Preserve]
+        public string Token { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "RefreshToken: ", RefreshToken, ", ");
+            output = string.Concat(output, "Token: ", Token, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Authenticate against the server with a refresh token.
     /// </summary>
     public interface IApiSessionRefreshRequest
@@ -5611,6 +5649,39 @@ namespace Nakama
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
             return contents.FromJson<ApiRpc>();
+        }
+
+        /// <summary>
+        /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
+        /// </summary>
+        public async Task SessionLogoutAsync(
+            string bearerToken,
+            ApiSessionLogoutRequest body)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/session/logout";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
         }
 
         /// <summary>
