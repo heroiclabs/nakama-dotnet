@@ -27,5 +27,10 @@ namespace Nakama.Tests
         {
             System.Console.WriteLine(string.Concat("[INFO] ", format), args);
         }
+
+        public void WarnFormat(string format, params object[] args)
+        {
+            System.Console.WriteLine(string.Concat("[WARN] ", format), args);
+        }
     }
 }
