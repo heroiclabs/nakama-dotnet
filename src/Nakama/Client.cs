@@ -37,9 +37,9 @@ namespace Nakama
         public const int DefaultPort = 7350;
 
         /// <summary>
-        /// The default expired datetime used to check session lifetime.
+        /// The default expired timespan used to check session lifetime.
         /// </summary>
-        public static DateTime DefaultExpiredDateTime = DateTime.UtcNow.AddMinutes(5);
+        public static TimeSpan DefaultExpiredTimeSpan = TimeSpan.FromMinutes(5);
 
         /// <inheritdoc cref="IClient.AutoRefreshSession"/>
         public bool AutoRefreshSession { get; }
@@ -115,7 +115,7 @@ namespace Nakama
             IEnumerable<string> usernames = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -127,7 +127,7 @@ namespace Nakama
         public async Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -221,7 +221,7 @@ namespace Nakama
         public async Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -234,7 +234,7 @@ namespace Nakama
             IEnumerable<string> usernames = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -247,7 +247,7 @@ namespace Nakama
             string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -268,7 +268,7 @@ namespace Nakama
             IEnumerable<string> usernames = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -280,7 +280,7 @@ namespace Nakama
         public async Task DeleteGroupAsync(ISession session, string groupId)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -292,7 +292,7 @@ namespace Nakama
         public async Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -304,7 +304,7 @@ namespace Nakama
         public async Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -316,7 +316,7 @@ namespace Nakama
         public async Task DeleteStorageObjectsAsync(ISession session, params StorageObjectId[] ids)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -340,7 +340,7 @@ namespace Nakama
         public async Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -352,7 +352,7 @@ namespace Nakama
         public async Task EventAsync(ISession session, string name, Dictionary<string, string> properties)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -369,7 +369,7 @@ namespace Nakama
         public async Task<IApiAccount> GetAccountAsync(ISession session)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -382,7 +382,7 @@ namespace Nakama
             IEnumerable<string> usernames = null, IEnumerable<string> facebookIds = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -394,7 +394,7 @@ namespace Nakama
         public async Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -407,7 +407,7 @@ namespace Nakama
         public async Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -419,7 +419,7 @@ namespace Nakama
         public async Task JoinGroupAsync(ISession session, string groupId)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -431,7 +431,7 @@ namespace Nakama
         public async Task JoinTournamentAsync(ISession session, string tournamentId)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -443,7 +443,7 @@ namespace Nakama
         public async Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -455,7 +455,7 @@ namespace Nakama
         public async Task LeaveGroupAsync(ISession session, string groupId)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -467,7 +467,7 @@ namespace Nakama
         public async Task LinkAppleAsync(ISession session, string token)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -479,7 +479,7 @@ namespace Nakama
         public async Task LinkCustomAsync(ISession session, string id)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -491,7 +491,7 @@ namespace Nakama
         public async Task LinkDeviceAsync(ISession session, string id)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -503,7 +503,7 @@ namespace Nakama
         public async Task LinkEmailAsync(ISession session, string email, string password)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -516,7 +516,7 @@ namespace Nakama
         public async Task LinkFacebookAsync(ISession session, string token, bool? import = true)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -529,7 +529,7 @@ namespace Nakama
             string salt, string signature, string timestamp)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -550,7 +550,7 @@ namespace Nakama
         public async Task LinkGoogleAsync(ISession session, string token)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -562,7 +562,7 @@ namespace Nakama
         public async Task LinkSteamAsync(ISession session, string token, bool sync)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -582,7 +582,7 @@ namespace Nakama
             bool forward = true, string cursor = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -594,7 +594,7 @@ namespace Nakama
         public async Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -608,7 +608,7 @@ namespace Nakama
             string cursor)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -621,7 +621,7 @@ namespace Nakama
             string cursor = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -634,7 +634,7 @@ namespace Nakama
             IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -649,7 +649,7 @@ namespace Nakama
             string leaderboardId, string ownerId, long? expiry = null, int limit = 1)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -665,7 +665,7 @@ namespace Nakama
             string label, string query)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -678,7 +678,7 @@ namespace Nakama
             string cacheableCursor = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -697,7 +697,7 @@ namespace Nakama
             string cursor = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -710,7 +710,7 @@ namespace Nakama
             string tournamentId, string ownerId, long? expiry = null, int limit = 1)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -725,7 +725,7 @@ namespace Nakama
             IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -739,7 +739,7 @@ namespace Nakama
             int? startTime = null, int? endTime = null, int limit = 1, string cursor = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -758,7 +758,7 @@ namespace Nakama
             string cursor)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -771,7 +771,7 @@ namespace Nakama
             string userId, int limit = 1, string cursor = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -783,7 +783,7 @@ namespace Nakama
         public async Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -796,7 +796,7 @@ namespace Nakama
             params IApiReadStorageObjectId[] ids)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -820,7 +820,7 @@ namespace Nakama
         public async Task<IApiRpc> RpcAsync(ISession session, string id, string payload)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -832,7 +832,7 @@ namespace Nakama
         public async Task<IApiRpc> RpcAsync(ISession session, string id)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -888,7 +888,7 @@ namespace Nakama
         public async Task UnlinkAppleAsync(ISession session, string token)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -900,7 +900,7 @@ namespace Nakama
         public async Task UnlinkCustomAsync(ISession session, string id)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -912,7 +912,7 @@ namespace Nakama
         public async Task UnlinkDeviceAsync(ISession session, string id)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -924,7 +924,7 @@ namespace Nakama
         public async Task UnlinkEmailAsync(ISession session, string email, string password)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -937,7 +937,7 @@ namespace Nakama
         public async Task UnlinkFacebookAsync(ISession session, string token)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -950,7 +950,7 @@ namespace Nakama
             string salt, string signature, string timestamp)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -972,7 +972,7 @@ namespace Nakama
         public async Task UnlinkGoogleAsync(ISession session, string token)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -984,7 +984,7 @@ namespace Nakama
         public async Task UnlinkSteamAsync(ISession session, string token)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -997,7 +997,7 @@ namespace Nakama
             string avatarUrl = null, string langTag = null, string location = null, string timezone = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -1019,7 +1019,7 @@ namespace Nakama
             string description = null, string avatarUrl = null, string langTag = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -1041,7 +1041,7 @@ namespace Nakama
             long score, long subScore = 0, string metadata = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -1061,7 +1061,7 @@ namespace Nakama
             params IApiWriteStorageObject[] objects)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
@@ -1090,7 +1090,7 @@ namespace Nakama
             long subScore = 0, string metadata = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                session.HasExpired(DefaultExpiredDateTime))
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
                 await SessionRefreshAsync(session);
             }
