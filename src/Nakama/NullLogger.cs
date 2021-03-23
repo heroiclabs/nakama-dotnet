@@ -36,5 +36,10 @@ namespace Nakama
         public void InfoFormat(string format, params object[] args)
         {
         }
+
+        /// <inheritdoc cref="ILogger.WarnFormat"/>
+        public void WarnFormat(string format, params object[] args)
+        {
+        }
     }
 }

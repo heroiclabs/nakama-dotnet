@@ -49,6 +49,7 @@ When authenticated the server responds with an auth token (JWT) which contains u
 
 ```csharp
 System.Console.WriteLine(session.AuthToken); // raw JWT token
+System.Console.WriteLine(session.RefreshToken); // raw JWT token.
 System.Console.WriteLine(session.UserId);
 System.Console.WriteLine(session.Username);
 System.Console.WriteLine("Session has expired: {0}", session.IsExpired);
@@ -58,15 +59,25 @@ System.Console.WriteLine("Session expires at: {0}", session.ExpireTime);
 It is recommended to store the auth token from the session and check at startup if it has expired. If the token has expired you must reauthenticate. The expiry time of the token can be changed as a setting in the server.
 
 ```csharp
-var authtoken = "restored from somewhere";
-var session = Session.Restore(authtoken);
-if (session.IsExpired)
+var authToken = "restored from somewhere";
+var refreshToken = "restored from somewhere";
+var session = Session.Restore(authToken, refreshToken);
+
+// Check whether a session is close to expiry.
+if (session.HasExpired(DateTime.UtcNow.AddDays(1)))
 {
-    System.Console.WriteLine("Session has expired. Must reauthenticate!");
+    try
+    {
+        session = await client.SessionRefreshAsync(session);
+    }
+    catch (ApiException e)
+    {
+        System.Console.WriteLine("Session can no longer be refreshed. Must reauthenticate!");
+    }
 }
 ```
 
-NOTE: The length of the lifetime of a session can be changed on the server with the "--session.token_expiry_sec" command flag argument.
+:warning: NOTE: The length of the lifetime of a session can be set on the server with the "--session.token_expiry_sec" command flag argument. The lifetime of the refresh token for a session can be set on the server with the "--session.refresh_token_expiry_sec" command flag.
 
 ### Requests
 

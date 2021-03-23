@@ -1,18 +1,16 @@
-/**
- * Copyright 2018 The Nakama Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2018 The Nakama Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 using System;
 using System.Collections.Generic;
@@ -25,6 +23,11 @@ namespace Nakama
     /// </summary>
     public interface IClient
     {
+        /// <summary>
+        /// True if the session should be refreshed with an active refresh token.
+        /// </summary>
+        bool AutoRefreshSession { get; }
+
         /// <summary>
         /// The host address of the server. Defaults to "127.0.0.1".
         /// </summary>
@@ -167,7 +170,7 @@ namespace Nakama
         /// Ban a set of users from a group.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="ids">The group to ban the users from.</param>
+        /// <param name="groupId">The group to ban the users from.</param>
         /// <param name="usernames">The usernames of the users to ban.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames);
@@ -641,6 +644,30 @@ namespace Nakama
         /// <param name="payload">A payload to send with the function call.</param>
         /// <returns>A task to resolve an RPC response.</returns>
         Task<IApiRpc> RpcAsync(string httpKey, string id, string payload = null);
+
+        /// <summary>
+        /// Log out a session which invalidates the authorization and refresh token.
+        /// </summary>
+        /// <param name="session">The session to logout.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task SessionLogoutAsync(ISession session);
+
+        /// <summary>
+        /// Log out a session which optionally invalidates the authorization and/or refresh tokens.
+        /// </summary>
+        /// <param name="authToken">The authorization token to invalidate, may be <c>null</c>.</param>
+        /// <param name="refreshToken">The refresh token to invalidate, may be <c>null</c>.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task SessionLogoutAsync(string authToken, string refreshToken);
+
+        /// <summary>
+        /// Refresh the session unless the current refresh token has expired. If vars are specified they will replace
+        /// what is currently stored inside the session token.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="vars">Extra information which should be bundled inside the session token.</param>
+        /// <returns>A task which resolves to a new session object.</returns>
+        Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Remove the Apple ID from the social profiles on the current user's account.

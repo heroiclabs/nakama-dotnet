@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- A session can be refreshed on demand with "SessionRefreshAsync" method.
+- Session and/or refresh tokens can now be disabled with a client logout.
+- The client now supports session auto-refresh using refresh tokens. This is enabled by default.
 
 ## [2.8.0] - 2020-02-19
 ### Changed

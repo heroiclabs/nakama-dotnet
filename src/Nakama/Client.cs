@@ -1,18 +1,16 @@
-/**
- * Copyright 2018 The Nakama Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2018 The Nakama Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 using System;
 using System.Collections.Generic;
@@ -37,6 +35,14 @@ namespace Nakama
         /// The default port number of the server.
         /// </summary>
         public const int DefaultPort = 7350;
+
+        /// <summary>
+        /// The default expired timespan used to check session lifetime.
+        /// </summary>
+        public static TimeSpan DefaultExpiredTimeSpan = TimeSpan.FromMinutes(5);
+
+        /// <inheritdoc cref="IClient.AutoRefreshSession"/>
+        public bool AutoRefreshSession { get; }
 
         /// <inheritdoc cref="IClient.Host"/>
         public string Host { get; }
@@ -75,22 +81,27 @@ namespace Nakama
 
         private const int DefaultTimeout = 15;
 
-        public Client(string serverKey) : this(serverKey, HttpRequestAdapter.WithGzip())
+        public Client(string serverKey, bool autoRefreshSession = true) : this(serverKey, HttpRequestAdapter.WithGzip(),
+            autoRefreshSession)
         {
         }
 
-        public Client(string serverKey, IHttpAdapter adapter) : this(DefaultScheme, DefaultHost, DefaultPort, serverKey,
-            adapter)
+        public Client(string serverKey, IHttpAdapter adapter, bool autoRefreshSession = true) : this(DefaultScheme,
+            DefaultHost, DefaultPort, serverKey,
+            adapter, autoRefreshSession)
         {
         }
 
-        public Client(string scheme, string host, int port, string serverKey) : this(scheme, host, port, serverKey,
-            HttpRequestAdapter.WithGzip())
+        public Client(string scheme, string host, int port, string serverKey, bool autoRefreshSession = true) : this(
+            scheme, host, port, serverKey,
+            HttpRequestAdapter.WithGzip(), autoRefreshSession)
         {
         }
 
-        public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter)
+        public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter,
+            bool autoRefreshSession = true)
         {
+            AutoRefreshSession = autoRefreshSession;
             Host = host;
             Port = port;
             Scheme = scheme;
@@ -99,19 +110,39 @@ namespace Nakama
             Logger = NullLogger.Instance; // must set logger last.
         }
 
-        /// <inheritdoc cref="AuthenticateAppleAsync"/>
-        public async Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true, Dictionary<string, string> vars = null) {
-            var response = await _apiClient.AuthenticateAppleAsync(ServerKey, string.Empty, new ApiAccountApple {Token = token, _vars = vars}, create, username);
-            return new Session(response.Token, response.Created);
+        /// <inheritdoc cref="AddFriendsAsync"/>
+        public async Task AddFriendsAsync(ISession session, IEnumerable<string> ids,
+            IEnumerable<string> usernames = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames);
         }
 
-        /// <inheritdoc cref="AddFriendsAsync"/>
-        public Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null) =>
-            _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames);
-
         /// <inheritdoc cref="AddGroupUsersAsync"/>
-        public Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids) =>
-            _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids);
+        public async Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids);
+        }
+
+        /// <inheritdoc cref="AuthenticateAppleAsync"/>
+        public async Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
+            Dictionary<string, string> vars = null)
+        {
+            var response = await _apiClient.AuthenticateAppleAsync(ServerKey, string.Empty,
+                new ApiAccountApple {Token = token, _vars = vars}, create, username);
+            return new Session(response.Token, response.RefreshToken, response.Created);
+        }
 
         /// <inheritdoc cref="AuthenticateCustomAsync"/>
         public async Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true,
@@ -119,7 +150,7 @@ namespace Nakama
         {
             var response = await _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty,
                 new ApiAccountCustom {Id = id, _vars = vars}, create, username);
-            return new Session(response.Token, response.Created);
+            return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateDeviceAsync"/>
@@ -128,7 +159,7 @@ namespace Nakama
         {
             var response = await _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty,
                 new ApiAccountDevice {Id = id, _vars = vars}, create, username);
-            return new Session(response.Token, response.Created);
+            return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateEmailAsync"/>
@@ -137,7 +168,7 @@ namespace Nakama
         {
             var response = await _apiClient.AuthenticateEmailAsync(ServerKey, string.Empty,
                 new ApiAccountEmail {Email = email, Password = password, _vars = vars}, create, username);
-            return new Session(response.Token, response.Created);
+            return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateFacebookAsync"/>
@@ -146,7 +177,7 @@ namespace Nakama
         {
             var response = await _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty,
                 new ApiAccountFacebook {Token = token, _vars = vars}, create, username, import);
-            return new Session(response.Token, response.Created);
+            return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateGameCenterAsync"/>
@@ -165,7 +196,7 @@ namespace Nakama
                     TimestampSeconds = timestamp,
                     _vars = vars
                 }, create, username);
-            return new Session(response.Token, response.Created);
+            return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateGoogleAsync"/>
@@ -174,7 +205,7 @@ namespace Nakama
         {
             var response = await _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty,
                 new ApiAccountGoogle {Token = token, _vars = vars}, create, username);
-            return new Session(response.Token, response.Created);
+            return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateSteamAsync"/>
@@ -183,21 +214,45 @@ namespace Nakama
         {
             var response = await _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty,
                 new ApiAccountSteam {Token = token, _vars = vars}, create, username, import);
-            return new Session(response.Token, response.Created);
+            return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="BanGroupUsersAsync"/>
-        public Task BanGroupUsersAsync(ISession session, string groupId,
-            IEnumerable<string> usernames) => _apiClient.BanGroupUsersAsync(session.AuthToken, groupId, usernames);
+        public async Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.BanGroupUsersAsync(session.AuthToken, groupId, usernames);
+        }
 
         /// <inheritdoc cref="BlockFriendsAsync"/>
-        public Task BlockFriendsAsync(ISession session, IEnumerable<string> ids,
-            IEnumerable<string> usernames = null) => _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames);
+        public async Task BlockFriendsAsync(ISession session, IEnumerable<string> ids,
+            IEnumerable<string> usernames = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames);
+        }
 
         /// <inheritdoc cref="CreateGroupAsync"/>
-        public Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description = "",
-            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100) =>
-            _apiClient.CreateGroupAsync(session.AuthToken, new ApiCreateGroupRequest
+        public async Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description = "",
+            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.CreateGroupAsync(session.AuthToken, new ApiCreateGroupRequest
             {
                 Name = name,
                 Description = description,
@@ -206,26 +261,66 @@ namespace Nakama
                 Open = open,
                 MaxCount = maxCount
             });
+        }
 
         /// <inheritdoc cref="DeleteFriendsAsync"/>
-        public Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids,
-            IEnumerable<string> usernames = null) => _apiClient.DeleteFriendsAsync(session.AuthToken, ids, usernames);
+        public async Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids,
+            IEnumerable<string> usernames = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.DeleteFriendsAsync(session.AuthToken, ids, usernames);
+        }
 
         /// <inheritdoc cref="DeleteGroupAsync"/>
-        public Task DeleteGroupAsync(ISession session, string groupId) =>
-            _apiClient.DeleteGroupAsync(session.AuthToken, groupId);
+        public async Task DeleteGroupAsync(ISession session, string groupId)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.DeleteGroupAsync(session.AuthToken, groupId);
+        }
 
         /// <inheritdoc cref="DeleteLeaderboardRecordAsync"/>
-        public Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId) =>
-            _apiClient.DeleteLeaderboardRecordAsync(session.AuthToken, leaderboardId);
+        public async Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.DeleteLeaderboardRecordAsync(session.AuthToken, leaderboardId);
+        }
 
         /// <inheritdoc cref="DeleteNotificationsAsync"/>
-        public Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids) =>
-            _apiClient.DeleteNotificationsAsync(session.AuthToken, ids);
+        public async Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.DeleteNotificationsAsync(session.AuthToken, ids);
+        }
 
         /// <inheritdoc cref="DeleteStorageObjectsAsync"/>
-        public Task DeleteStorageObjectsAsync(ISession session, params StorageObjectId[] ids)
+        public async Task DeleteStorageObjectsAsync(ISession session, params StorageObjectId[] ids)
         {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
             var objects = new List<ApiDeleteStorageObjectId>(ids.Length);
             foreach (var id in ids)
             {
@@ -237,94 +332,244 @@ namespace Nakama
                 });
             }
 
-            return _apiClient.DeleteStorageObjectsAsync(session.AuthToken,
+            await _apiClient.DeleteStorageObjectsAsync(session.AuthToken,
                 new ApiDeleteStorageObjectsRequest {_objectIds = objects});
         }
 
         /// <inheritdoc cref="DemoteGroupUsersAsync"/>
-        public Task DemoteGroupUsersAsync(ISession session, string groupId,
-            IEnumerable<string> usernames) => _apiClient.DemoteGroupUsersAsync(session.AuthToken, groupId, usernames);
+        public async Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
 
-         /// <inheritdoc cref="EventAsync"/>
-        public Task EventAsync(ISession session, string name, Dictionary<string, string> properties) => _apiClient.EventAsync(session.AuthToken, new ApiEvent{
-            External = true,
-            Name = name,
-            _properties = properties
-        });
+            await _apiClient.DemoteGroupUsersAsync(session.AuthToken, groupId, usernames);
+        }
+
+        /// <inheritdoc cref="EventAsync"/>
+        public async Task EventAsync(ISession session, string name, Dictionary<string, string> properties)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.EventAsync(session.AuthToken, new ApiEvent
+            {
+                External = true,
+                Name = name,
+                _properties = properties
+            });
+        }
 
         /// <inheritdoc cref="GetAccountAsync"/>
-        public Task<IApiAccount> GetAccountAsync(ISession session) => _apiClient.GetAccountAsync(session.AuthToken);
+        public async Task<IApiAccount> GetAccountAsync(ISession session)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.GetAccountAsync(session.AuthToken);
+        }
 
         /// <inheritdoc cref="GetUsersAsync"/>
-        public Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids,
-            IEnumerable<string> usernames = null, IEnumerable<string> facebookIds = null) =>
-            _apiClient.GetUsersAsync(session.AuthToken, ids, usernames, facebookIds);
+        public async Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids,
+            IEnumerable<string> usernames = null, IEnumerable<string> facebookIds = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.GetUsersAsync(session.AuthToken, ids, usernames, facebookIds);
+        }
 
         /// <inheritdoc cref="ImportFacebookFriendsAsync"/>
-        public Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null) =>
-            _apiClient.ImportFacebookFriendsAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, reset);
+        public async Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.ImportFacebookFriendsAsync(session.AuthToken, new ApiAccountFacebook {Token = token},
+                reset);
+        }
 
         /// <inheritdoc cref="ImportSteamFriendsAsync"/>
-        public Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null) =>
-            _apiClient.ImportSteamFriendsAsync(session.AuthToken, new ApiAccountSteam {Token = token}, reset);
+        public async Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.ImportSteamFriendsAsync(session.AuthToken, new ApiAccountSteam {Token = token}, reset);
+        }
 
         /// <inheritdoc cref="JoinGroupAsync"/>
-        public Task JoinGroupAsync(ISession session, string groupId) =>
-            _apiClient.JoinGroupAsync(session.AuthToken, groupId);
+        public async Task JoinGroupAsync(ISession session, string groupId)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.JoinGroupAsync(session.AuthToken, groupId);
+        }
 
         /// <inheritdoc cref="JoinTournamentAsync"/>
-        public Task JoinTournamentAsync(ISession session, string tournamentId) =>
-            _apiClient.JoinTournamentAsync(session.AuthToken, tournamentId);
+        public async Task JoinTournamentAsync(ISession session, string tournamentId)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.JoinTournamentAsync(session.AuthToken, tournamentId);
+        }
 
         /// <inheritdoc cref="KickGroupUsersAsync"/>
-        public Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids) =>
-            _apiClient.KickGroupUsersAsync(session.AuthToken, groupId, ids);
+        public async Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.KickGroupUsersAsync(session.AuthToken, groupId, ids);
+        }
 
         /// <inheritdoc cref="LeaveGroupAsync"/>
-        public Task LeaveGroupAsync(ISession session, string groupId) =>
-            _apiClient.LeaveGroupAsync(session.AuthToken, groupId);
+        public async Task LeaveGroupAsync(ISession session, string groupId)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.LeaveGroupAsync(session.AuthToken, groupId);
+        }
 
         /// <inheritdoc cref="LinkAppleAsync"/>
-        public Task LinkAppleAsync(ISession session, string token) =>
-            _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token});
+        public async Task LinkAppleAsync(ISession session, string token)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token});
+        }
 
         /// <inheritdoc cref="LinkCustomAsync"/>
-        public Task LinkCustomAsync(ISession session, string id) =>
-            _apiClient.LinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id});
+        public async Task LinkCustomAsync(ISession session, string id)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.LinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id});
+        }
 
         /// <inheritdoc cref="LinkDeviceAsync"/>
-        public Task LinkDeviceAsync(ISession session, string id) =>
-            _apiClient.LinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id});
+        public async Task LinkDeviceAsync(ISession session, string id)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.LinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id});
+        }
 
         /// <inheritdoc cref="LinkEmailAsync"/>
-        public Task LinkEmailAsync(ISession session, string email, string password) =>
-            _apiClient.LinkEmailAsync(session.AuthToken, new ApiAccountEmail {Email = email, Password = password});
+        public async Task LinkEmailAsync(ISession session, string email, string password)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.LinkEmailAsync(session.AuthToken,
+                new ApiAccountEmail {Email = email, Password = password});
+        }
 
         /// <inheritdoc cref="LinkFacebookAsync"/>
-        public Task LinkFacebookAsync(ISession session, string token, bool? import = true) =>
-            _apiClient.LinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, import);
+        public async Task LinkFacebookAsync(ISession session, string token, bool? import = true)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.LinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, import);
+        }
 
         /// <inheritdoc cref="LinkGameCenterAsync"/>
-        public Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestamp) => _apiClient.LinkGameCenterAsync(session.AuthToken,
-            new ApiAccountGameCenter
+        public async Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
+            string salt, string signature, string timestamp)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
-                BundleId = bundleId,
-                PlayerId = playerId,
-                PublicKeyUrl = publicKeyUrl,
-                Salt = salt,
-                Signature = signature,
-                TimestampSeconds = timestamp
-            });
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.LinkGameCenterAsync(session.AuthToken,
+                new ApiAccountGameCenter
+                {
+                    BundleId = bundleId,
+                    PlayerId = playerId,
+                    PublicKeyUrl = publicKeyUrl,
+                    Salt = salt,
+                    Signature = signature,
+                    TimestampSeconds = timestamp
+                });
+        }
 
         /// <inheritdoc cref="LinkGoogleAsync"/>
-        public Task LinkGoogleAsync(ISession session, string token) =>
-            _apiClient.LinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token});
+        public async Task LinkGoogleAsync(ISession session, string token)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.LinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token});
+        }
 
         /// <inheritdoc cref="LinkSteamAsync"/>
-        public Task LinkSteamAsync(ISession session, string token, bool sync) =>
-            _apiClient.LinkSteamAsync(session.AuthToken,
-            new ApiLinkSteamRequest {Sync = sync, _account = new ApiAccountSteam {Token = token}});
+        public async Task LinkSteamAsync(ISession session, string token, bool sync)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.LinkSteamAsync(session.AuthToken,
+                new ApiLinkSteamRequest {Sync = sync, _account = new ApiAccountSteam {Token = token}});
+        }
 
         /// <inheritdoc cref="ListChannelMessagesAsync(Nakama.ISession,Nakama.IChannel,int,bool,string)"/>
         public Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, IChannel channel, int limit = 1,
@@ -332,94 +577,230 @@ namespace Nakama
             ListChannelMessagesAsync(session, channel.Id, limit, forward, cursor);
 
         /// <inheritdoc cref="ListChannelMessagesAsync(Nakama.ISession,string,int,bool,string)"/>
-        public Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit = 1,
-            bool forward = true, string cursor = null) =>
-            _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor);
+        public async Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId,
+            int limit = 1,
+            bool forward = true, string cursor = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor);
+        }
 
         /// <inheritdoc cref="ListFriendsAsync"/>
-        public Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor) =>
-            _apiClient.ListFriendsAsync(session.AuthToken, limit, state, cursor);
+        public async Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListFriendsAsync(session.AuthToken, limit, state, cursor);
+        }
 
         /// <inheritdoc cref="ListGroupUsersAsync"/>
-        public Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state, int limit,
-            string cursor) =>
-            _apiClient.ListGroupUsersAsync(session.AuthToken, groupId, limit, state, cursor);
+        public async Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state,
+            int limit,
+            string cursor)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListGroupUsersAsync(session.AuthToken, groupId, limit, state, cursor);
+        }
 
         /// <inheritdoc cref="ListGroupsAsync"/>
-        public Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1,
-            string cursor = null) => _apiClient.ListGroupsAsync(session.AuthToken, name, cursor, limit);
+        public async Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1,
+            string cursor = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListGroupsAsync(session.AuthToken, name, cursor, limit);
+        }
 
         /// <inheritdoc cref="ListLeaderboardRecordsAsync"/>
-        public Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
-            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null) =>
-            _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit, cursor,
+        public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit,
+                cursor,
                 expiry?.ToString());
+        }
 
         /// <inheritdoc cref="ListLeaderboardRecordsAroundOwnerAsync"/>
-        public Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session,
-            string leaderboardId, string ownerId, long? expiry = null, int limit = 1) =>
-            _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId, limit,
+        public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session,
+            string leaderboardId, string ownerId, long? expiry = null, int limit = 1)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId,
+                limit,
                 expiry?.ToString());
+        }
 
         /// <inheritdoc cref="ListMatchesAsync"/>
-        public Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
-            string label, string query) =>
-            _apiClient.ListMatchesAsync(session.AuthToken, limit, authoritative, label, min, max, query);
+        public async Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit,
+            bool authoritative,
+            string label, string query)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListMatchesAsync(session.AuthToken, limit, authoritative, label, min, max, query);
+        }
 
         /// <inheritdoc cref="ListNotificationsAsync"/>
-        public Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
-            string cacheableCursor = null) =>
-            _apiClient.ListNotificationsAsync(session.AuthToken, limit, cacheableCursor);
+        public async Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
+            string cacheableCursor = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
 
-        [Obsolete("ListStorageObjects is obsolete, please use ListStorageObjectsAsync instead.", false)]
+            return await _apiClient.ListNotificationsAsync(session.AuthToken, limit, cacheableCursor);
+        }
+
+        [Obsolete("ListStorageObjects is obsolete, please use ListStorageObjectsAsync instead.", true)]
         public Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit = 1,
             string cursor = null) =>
             _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor);
 
         /// <inheritdoc cref="ListStorageObjectsAsync"/>
-        public Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection, int limit = 1,
-            string cursor = null) =>
-            _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor);
+        public async Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection,
+            int limit = 1,
+            string cursor = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor);
+        }
 
         /// <inheritdoc cref="ListTournamentRecordsAroundOwnerAsync"/>
-        public Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session,
-            string tournamentId, string ownerId, long? expiry = null, int limit = 1) =>
-            _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId, limit,
+        public async Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session,
+            string tournamentId, string ownerId, long? expiry = null, int limit = 1)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId,
+                limit,
                 expiry?.ToString());
+        }
 
         /// <inheritdoc cref="ListTournamentRecordsAsync"/>
-        public Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
-            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null) =>
-            _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit, cursor,
+        public async Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit, cursor,
                 expiry?.ToString());
+        }
 
         /// <inheritdoc cref="ListTournamentsAsync"/>
-        public Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
-            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null) =>
-            _apiClient.ListTournamentsAsync(session.AuthToken, categoryStart, categoryEnd, startTime, endTime, limit,
+        public async Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
+            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListTournamentsAsync(session.AuthToken, categoryStart, categoryEnd, startTime,
+                endTime, limit,
                 cursor);
+        }
 
         /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession,int?,int,string)"/>
         public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state, int limit, string cursor) =>
             ListUserGroupsAsync(session, session.UserId, state, limit, cursor);
 
         /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession,string,int?,int,string)"/>
-        public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state, int limit,
-            string cursor) =>
-            _apiClient.ListUserGroupsAsync(session.AuthToken, userId, limit, state, cursor);
+        public async Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state, int limit,
+            string cursor)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListUserGroupsAsync(session.AuthToken, userId, limit, state, cursor);
+        }
 
         /// <inheritdoc cref="ListUsersStorageObjectsAsync"/>
-        public Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection,
-            string userId, int limit = 1, string cursor = null) =>
-            _apiClient.ListStorageObjects2Async(session.AuthToken, collection, userId, limit, cursor);
+        public async Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection,
+            string userId, int limit = 1, string cursor = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ListStorageObjects2Async(session.AuthToken, collection, userId, limit, cursor);
+        }
 
         /// <inheritdoc cref="PromoteGroupUsersAsync"/>
-        public Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids) =>
-            _apiClient.PromoteGroupUsersAsync(session.AuthToken, groupId, ids);
+        public async Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.PromoteGroupUsersAsync(session.AuthToken, groupId, ids);
+        }
 
         /// <inheritdoc cref="ReadStorageObjectsAsync"/>
-        public Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session, params IApiReadStorageObjectId[] ids)
+        public async Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session,
+            params IApiReadStorageObjectId[] ids)
         {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
             var objects = new List<ApiReadStorageObjectId>(ids.Length);
             foreach (var id in ids)
             {
@@ -431,21 +812,72 @@ namespace Nakama
                 });
             }
 
-            return _apiClient.ReadStorageObjectsAsync(session.AuthToken,
+            return await _apiClient.ReadStorageObjectsAsync(session.AuthToken,
                 new ApiReadStorageObjectsRequest {_objectIds = objects});
         }
 
         /// <inheritdoc cref="RpcAsync(Nakama.ISession,string,string)"/>
-        public Task<IApiRpc> RpcAsync(ISession session, string id, string payload) =>
-            _apiClient.RpcFuncAsync(session.AuthToken, id, payload, null);
+        public async Task<IApiRpc> RpcAsync(ISession session, string id, string payload)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.RpcFuncAsync(session.AuthToken, id, payload, null);
+        }
 
         /// <inheritdoc cref="RpcAsync(Nakama.ISession,string)"/>
-        public Task<IApiRpc> RpcAsync(ISession session, string id) =>
-            _apiClient.RpcFunc2Async(session.AuthToken, id, null, null);
+        public async Task<IApiRpc> RpcAsync(ISession session, string id)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.RpcFunc2Async(session.AuthToken, id, null, null);
+        }
 
         /// <inheritdoc cref="RpcAsync(string,string,string)"/>
         public Task<IApiRpc> RpcAsync(string httpkey, string id, string payload = null) =>
             _apiClient.RpcFunc2Async(null, id, payload, httpkey);
+
+        /// <inheritdoc cref="SessionLogoutAsync(Nakama.ISession)"/>
+        public Task SessionLogoutAsync(ISession session) => SessionLogoutAsync(session.AuthToken, session.RefreshToken);
+
+        /// <inheritdoc cref="SessionLogoutAsync(string,string)"/>
+        public Task SessionLogoutAsync(string authToken, string refreshToken) =>
+            _apiClient.SessionLogoutAsync(authToken,
+                new ApiSessionLogoutRequest {Token = authToken, RefreshToken = refreshToken});
+
+        /// <inheritdoc cref="SessionRefreshAsync"/>
+        public async Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null)
+        {
+            // NOTE: Warn developers to encourage them to set a suitable session and refresh token lifetime.
+            if (session.Created && session.ExpireTime - session.CreateTime < 70)
+            {
+                Logger.WarnFormat("Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
+            }
+
+            if (session.Created && session.RefreshExpireTime - session.CreateTime < 3700)
+            {
+                Logger.WarnFormat("Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
+            }
+
+            var response = await _apiClient.SessionRefreshAsync(ServerKey, string.Empty,
+                new ApiSessionRefreshRequest {Token = session.RefreshToken, _vars = vars});
+
+            if (session is Session updatedSession)
+            {
+                // Update session object in place if we can.
+                updatedSession.Update(response.Token, response.RefreshToken);
+                return updatedSession;
+            }
+
+            return new Session(response.Token, response.RefreshToken, response.Created);
+        }
 
         public override string ToString()
         {
@@ -453,51 +885,124 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="UnlinkAppleAsync"/>
-        public Task UnlinkAppleAsync(ISession session, string token) =>
-            _apiClient.UnlinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token});
+        public async Task UnlinkAppleAsync(ISession session, string token)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UnlinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token});
+        }
 
         /// <inheritdoc cref="UnlinkCustomAsync"/>
-        public Task UnlinkCustomAsync(ISession session, string id) =>
-            _apiClient.UnlinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id});
+        public async Task UnlinkCustomAsync(ISession session, string id)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UnlinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id});
+        }
 
         /// <inheritdoc cref="UnlinkDeviceAsync"/>
-        public Task UnlinkDeviceAsync(ISession session, string id) =>
-            _apiClient.UnlinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id});
+        public async Task UnlinkDeviceAsync(ISession session, string id)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UnlinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id});
+        }
 
         /// <inheritdoc cref="UnlinkEmailAsync"/>
-        public Task UnlinkEmailAsync(ISession session, string email, string password) =>
-            _apiClient.UnlinkEmailAsync(session.AuthToken, new ApiAccountEmail {Email = email, Password = password});
+        public async Task UnlinkEmailAsync(ISession session, string email, string password)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UnlinkEmailAsync(session.AuthToken,
+                new ApiAccountEmail {Email = email, Password = password});
+        }
 
         /// <inheritdoc cref="UnlinkFacebookAsync"/>
-        public Task UnlinkFacebookAsync(ISession session, string token) =>
-            _apiClient.UnlinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token});
+        public async Task UnlinkFacebookAsync(ISession session, string token)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UnlinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token});
+        }
 
         /// <inheritdoc cref="UnlinkGameCenterAsync"/>
-        public Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestamp) => _apiClient.UnlinkGameCenterAsync(
-            session.AuthToken,
-            new ApiAccountGameCenter
+        public async Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
+            string salt, string signature, string timestamp)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
-                BundleId = bundleId,
-                PlayerId = playerId,
-                PublicKeyUrl = publicKeyUrl,
-                Salt = salt,
-                Signature = signature,
-                TimestampSeconds = timestamp
-            });
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UnlinkGameCenterAsync(
+                session.AuthToken,
+                new ApiAccountGameCenter
+                {
+                    BundleId = bundleId,
+                    PlayerId = playerId,
+                    PublicKeyUrl = publicKeyUrl,
+                    Salt = salt,
+                    Signature = signature,
+                    TimestampSeconds = timestamp
+                });
+        }
 
         /// <inheritdoc cref="UnlinkGoogleAsync"/>
-        public Task UnlinkGoogleAsync(ISession session, string token) =>
-            _apiClient.UnlinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token});
+        public async Task UnlinkGoogleAsync(ISession session, string token)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UnlinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token});
+        }
 
         /// <inheritdoc cref="UnlinkSteamAsync"/>
-        public Task UnlinkSteamAsync(ISession session, string token) =>
-            _apiClient.UnlinkSteamAsync(session.AuthToken, new ApiAccountSteam {Token = token});
+        public async Task UnlinkSteamAsync(ISession session, string token)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UnlinkSteamAsync(session.AuthToken, new ApiAccountSteam {Token = token});
+        }
 
         /// <inheritdoc cref="UpdateAccountAsync"/>
-        public Task UpdateAccountAsync(ISession session, string username, string displayName = null,
-            string avatarUrl = null, string langTag = null, string location = null, string timezone = null) =>
-            _apiClient.UpdateAccountAsync(
+        public async Task UpdateAccountAsync(ISession session, string username, string displayName = null,
+            string avatarUrl = null, string langTag = null, string location = null, string timezone = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UpdateAccountAsync(
                 session.AuthToken, new ApiUpdateAccountRequest
                 {
                     AvatarUrl = avatarUrl,
@@ -507,36 +1012,60 @@ namespace Nakama
                     Timezone = timezone,
                     Username = username
                 });
+        }
 
         /// <inheritdoc cref="UpdateGroupAsync"/>
-        public Task UpdateGroupAsync(ISession session, string groupId, string name, bool open,
-            string description = null,
-            string avatarUrl = null, string langTag = null) => _apiClient.UpdateGroupAsync(
-            session.AuthToken, groupId,
-            new ApiUpdateGroupRequest
+        public async Task UpdateGroupAsync(ISession session, string groupId, string name, bool open,
+            string description = null, string avatarUrl = null, string langTag = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
-                Name = name,
-                Open = open,
-                AvatarUrl = avatarUrl,
-                Description = description,
-                LangTag = langTag
-            });
+                await SessionRefreshAsync(session);
+            }
+
+            await _apiClient.UpdateGroupAsync(
+                session.AuthToken, groupId,
+                new ApiUpdateGroupRequest
+                {
+                    Name = name,
+                    Open = open,
+                    AvatarUrl = avatarUrl,
+                    Description = description,
+                    LangTag = langTag
+                });
+        }
 
         /// <inheritdoc cref="WriteLeaderboardRecordAsync"/>
-        public Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId,
-            long score, long subScore = 0, string metadata = null) => _apiClient.WriteLeaderboardRecordAsync(
-            session.AuthToken, leaderboardId,
-            new WriteLeaderboardRecordRequestLeaderboardRecordWrite
+        public async Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId,
+            long score, long subScore = 0, string metadata = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
-                Metadata = metadata,
-                Score = score.ToString(),
-                Subscore = subScore.ToString()
-            });
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.WriteLeaderboardRecordAsync(
+                session.AuthToken, leaderboardId,
+                new WriteLeaderboardRecordRequestLeaderboardRecordWrite
+                {
+                    Metadata = metadata,
+                    Score = score.ToString(),
+                    Subscore = subScore.ToString()
+                });
+        }
 
         /// <inheritdoc cref="WriteStorageObjectsAsync"/>
-        public Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session,
+        public async Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session,
             params IApiWriteStorageObject[] objects)
         {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
             var writes = new List<ApiWriteStorageObject>(objects.Length);
             foreach (var obj in objects)
             {
@@ -551,19 +1080,29 @@ namespace Nakama
                 });
             }
 
-            return _apiClient.WriteStorageObjectsAsync(session.AuthToken,
+            return await _apiClient.WriteStorageObjectsAsync(session.AuthToken,
                 new ApiWriteStorageObjectsRequest {_objects = writes});
         }
 
         /// <inheritdoc cref="WriteTournamentRecordAsync"/>
-        public Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
-            long subScore = 0, string metadata = null) => _apiClient.WriteTournamentRecordAsync(session.AuthToken,
-            tournamentId,
-            new WriteTournamentRecordRequestTournamentRecordWrite
+        public async Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId,
+            long score,
+            long subScore = 0, string metadata = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
-                Metadata = metadata,
-                Score = score.ToString(),
-                Subscore = subScore.ToString()
-            });
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.WriteTournamentRecordAsync(session.AuthToken,
+                tournamentId,
+                new WriteTournamentRecordRequestTournamentRecordWrite
+                {
+                    Metadata = metadata,
+                    Score = score.ToString(),
+                    Subscore = subScore.ToString()
+                });
+        }
     }
 }
