@@ -233,6 +233,7 @@ namespace Nakama
         /// <param name="payload">An (optional) payload to send to the server.</param>
         /// <returns>A task which resolves to the RPC function response object.</returns>
         Task<IApiRpc> RpcAsync(string funcId, string payload = null);
+        Task<IApiRpc> RpcAsync(string funcId, ArraySegment<byte> payload);
 
         /// <summary>
         /// Send input to a multiplayer match on the server.
@@ -260,6 +261,8 @@ namespace Nakama
         /// <param name="presences">The presences in the match who should receive the input.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task SendMatchStateAsync(string matchId, long opCode, byte[] state,
+            IEnumerable<IUserPresence> presences = null);
+        Task SendMatchStateAsync(string matchId, long opCode, ArraySegment<byte> state,
             IEnumerable<IUserPresence> presences = null);
 
         /// <summary>
