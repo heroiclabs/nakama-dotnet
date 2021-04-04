@@ -130,7 +130,7 @@ namespace Nakama
     }
 
     /// <inheritdoc cref="IStream"/>
-    internal class Stream : IStream
+    public class Stream : IStream
     {
         [DataMember(Name = "descriptor"), Preserve] public string Descriptor { get; set; }
 
