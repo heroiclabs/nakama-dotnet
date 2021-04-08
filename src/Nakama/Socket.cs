@@ -367,7 +367,7 @@ namespace Nakama
             return SendAsync(envelope);
         }
 
-        /// <inheritdoc cref="RpcAsync"/>
+        /// <inheritdoc cref="RpcAsync(string,string)"/>
         public async Task<IApiRpc> RpcAsync(string funcId, string payload = null)
         {
             var envelope = new WebSocketMessageEnvelope
@@ -377,6 +377,22 @@ namespace Nakama
                 {
                     Id = funcId,
                     Payload = payload
+                }
+            };
+            var response = await SendAsync(envelope);
+            return response.Rpc;
+        }
+
+        /// <inheritdoc cref="RpcAsync(string,ArraySegment{byte})"/>
+        public async Task<IApiRpc> RpcAsync(string funcId, ArraySegment<byte> payload)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                Rpc = new ApiRpc
+                {
+                    Id = funcId,
+                    Payload = Convert.ToBase64String(payload.Array, payload.Offset, payload.Count)
                 }
             };
             var response = await SendAsync(envelope);
@@ -400,6 +416,23 @@ namespace Nakama
                     OpCode = Convert.ToString(opCode),
                     Presences = BuildPresenceList(presences),
                     State = Convert.ToBase64String(state)
+                }
+            };
+            SendAsync(envelope);
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc cref="SendMatchStateAsync(string,long,ArraySegment{byte},System.Collections.Generic.IEnumerable{Nakama.IUserPresence})"/>
+        public Task SendMatchStateAsync(string matchId, long opCode, ArraySegment<byte> state, IEnumerable<IUserPresence> presences = null)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                MatchStateSend = new MatchSendMessage
+                {
+                    MatchId = matchId,
+                    OpCode = Convert.ToString(opCode),
+                    Presences = BuildPresenceList(presences),
+                    State = Convert.ToBase64String(state.Array, state.Offset, state.Count)
                 }
             };
             SendAsync(envelope);
