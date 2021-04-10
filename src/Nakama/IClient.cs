@@ -78,7 +78,8 @@ namespace Nakama
         /// <param name="token">The ID token received from Apple to validate.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <returns>A task which resolves to a session object.</returns>
-        Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true, Dictionary<string, string> vars = null);
+        Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
+            Dictionary<string, string> vars = null);
 
         /// <summary>
         /// Authenticate a user with a custom id.
@@ -449,7 +450,8 @@ namespace Nakama
         /// <param name="limit">The number of groups to list.</param>
         /// <param name="cursor">A cursor for the current position in the group listing.</param>
         /// <returns>A task which resolves to the group user objects.</returns>
-        Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state = null, int limit = 1, string cursor = null);
+        Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state = null, int limit = 1,
+            string cursor = null);
 
         /// <summary>
         /// List groups on the server.
@@ -769,6 +771,32 @@ namespace Nakama
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UpdateGroupAsync(ISession session, string groupId, string name, bool open, string description = null,
             string avatarUrl = null, string langTag = null);
+
+        /// <summary>
+        /// Validate a purchase receipt against the Apple App Store.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="receipt">The purchase receipt to be validated.</param>
+        /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt);
+
+        /// <summary>
+        /// Validate a purchase receipt against the Google Play Store.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="receipt">The purchase receipt to be validated.</param>
+        /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt);
+
+        /// <summary>
+        /// Validate a purchase receipt against the Huawei AppGallery.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="receipt">The purchase receipt to be validated.</param>
+        /// <param name="signature">The signature of the purchase receipt.</param>
+        /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
+            string signature);
 
         /// <summary>
         /// Write a record to a leaderboard.
