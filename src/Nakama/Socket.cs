@@ -85,6 +85,8 @@ namespace Nakama
         private readonly Uri _baseUri;
         private readonly Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
 
+        private Object _lockObj = new Object();
+
         /// <summary>
         /// A new socket with default options.
         /// </summary>
@@ -118,17 +120,7 @@ namespace Nakama
             _adapter.Connected += () => Connected?.Invoke();
             _adapter.Closed += () =>
             {
-                foreach (var response in _responses)
-                {
-                    response.Value.TrySetCanceled();
-                }
-
-                _responses.Clear();
-                Closed?.Invoke();
-            };
-            _adapter.ReceivedError += e =>
-            {
-                if (!_adapter.IsConnected)
+                lock (_lockObj)
                 {
                     foreach (var response in _responses)
                     {
@@ -138,8 +130,27 @@ namespace Nakama
                     _responses.Clear();
                 }
 
+                Closed?.Invoke();
+            };
+            _adapter.ReceivedError += e =>
+            {
+                if (!_adapter.IsConnected)
+                {
+                    lock (_lockObj)
+                    {
+
+                        foreach (var response in _responses)
+                        {
+                            response.Value.TrySetCanceled();
+                        }
+
+                        _responses.Clear();
+                    }
+                }
+
                 ReceivedError?.Invoke(e);
             };
+
             _adapter.Received += ReceivedMessage;
         }
 
@@ -546,24 +557,27 @@ namespace Nakama
             {
                 if (!string.IsNullOrEmpty(envelope.Cid))
                 {
-                    // Handle message response.
-                    if (_responses.ContainsKey(envelope.Cid))
+                    lock (_lockObj)
                     {
-                        TaskCompletionSource<WebSocketMessageEnvelope> completer = _responses[envelope.Cid];
-                        _responses.Remove(envelope.Cid);
-
-                        if (envelope.Error != null)
+                        // Handle message response.
+                        if (_responses.ContainsKey(envelope.Cid))
                         {
-                            completer.SetException(new WebSocketException(WebSocketError.InvalidState, envelope.Error.Message));
+                            TaskCompletionSource<WebSocketMessageEnvelope> completer = _responses[envelope.Cid];
+                            _responses.Remove(envelope.Cid);
+
+                            if (envelope.Error != null)
+                            {
+                                completer.SetException(new WebSocketException(WebSocketError.InvalidState, envelope.Error.Message));
+                            }
+                            else
+                            {
+                                completer.SetResult(envelope);
+                            }
                         }
                         else
                         {
-                            completer.SetResult(envelope);
+                            Logger?.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
                         }
-                    }
-                    else
-                    {
-                        Logger?.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
                     }
                 }
                 else if (envelope.Error != null)
@@ -629,9 +643,12 @@ namespace Nakama
                 _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
                 return null; // No response required.
             }
-
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
-            _responses[envelope.Cid] = completer;
+
+            lock (_lockObj)
+            {
+                _responses[envelope.Cid] = completer;
+            }
 
             _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
             return completer.Task;
