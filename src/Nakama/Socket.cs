@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
@@ -84,7 +83,7 @@ namespace Nakama
 
         private readonly ISocketAdapter _adapter;
         private readonly Uri _baseUri;
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
+        private readonly Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
 
         /// <summary>
         /// A new socket with default options.
@@ -114,7 +113,7 @@ namespace Nakama
             Logger = NullLogger.Instance;
             _adapter = adapter;
             _baseUri = new UriBuilder(scheme, host, port).Uri;
-            _responses = new ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
+            _responses = new Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
 
             _adapter.Connected += () => Connected?.Invoke();
             _adapter.Closed += () =>
@@ -548,23 +547,23 @@ namespace Nakama
                 if (!string.IsNullOrEmpty(envelope.Cid))
                 {
                     // Handle message response.
-                    TaskCompletionSource<WebSocketMessageEnvelope> completer;
-                    var cid = envelope.Cid;
-                    _responses.TryRemove(cid, out completer);
-                    if (completer == null)
+                    if (_responses.ContainsKey(envelope.Cid))
                     {
-                        Logger?.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
-                        return;
-                    }
+                        TaskCompletionSource<WebSocketMessageEnvelope> completer = _responses[envelope.Cid];
+                        _responses.Remove(envelope.Cid);
 
-                    if (envelope.Error != null)
-                    {
-                        completer.SetException(new WebSocketException(WebSocketError.InvalidState,
-                            envelope.Error.Message));
+                        if (envelope.Error != null)
+                        {
+                            completer.SetException(new WebSocketException(WebSocketError.InvalidState, envelope.Error.Message));
+                        }
+                        else
+                        {
+                            completer.SetResult(envelope);
+                        }
                     }
                     else
                     {
-                        completer.SetResult(envelope);
+                        Logger?.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
                     }
                 }
                 else if (envelope.Error != null)
