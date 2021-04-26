@@ -553,6 +553,7 @@ namespace Nakama
             var contents = System.Text.Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
 
             var envelope = contents.FromJson<WebSocketMessageEnvelope>();
+
             try
             {
                 if (!string.IsNullOrEmpty(envelope.Cid))

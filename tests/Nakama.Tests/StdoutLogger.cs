@@ -18,19 +18,43 @@ namespace Nakama.Tests
 {
     public class StdoutLogger : ILogger
     {
+        public enum LogLevel { Off, All }
+
+        private readonly LogLevel _logLevel;
+
+        public StdoutLogger(LogLevel logLevel)
+        {
+            _logLevel = logLevel;
+        }
+
         public void ErrorFormat(string format, params object[] args)
         {
-            System.Console.WriteLine(string.Concat("[ERROR] ", format), args);
+            switch(_logLevel)
+            {
+                case LogLevel.All:
+                    System.Console.WriteLine(string.Concat("[ERROR] ", format), args);
+                    break;
+            }
         }
 
         public void InfoFormat(string format, params object[] args)
         {
-            System.Console.WriteLine(string.Concat("[INFO] ", format), args);
+            switch(_logLevel)
+            {
+                case LogLevel.All:
+                    System.Console.WriteLine(string.Concat("[INFO] ", format), args);
+                    break;
+            }
         }
 
         public void WarnFormat(string format, params object[] args)
         {
-            System.Console.WriteLine(string.Concat("[WARN] ", format), args);
+            switch(_logLevel)
+            {
+                case LogLevel.All:
+                    System.Console.WriteLine(string.Concat("[WARN] ", format), args);
+                    break;
+            }
         }
     }
 }

@@ -50,15 +50,7 @@ namespace Nakama
         /// <summary>
         /// The logger to use with the client.
         /// </summary>
-        public ILogger Logger
-        {
-            get => _logger;
-            set
-            {
-                _apiClient.HttpAdapter.Logger = value;
-                _logger = value;
-            }
-        }
+        public readonly ILogger Logger;
 
         /// <inheritdoc cref="IClient.Port"/>
         public int Port { get; }
@@ -77,7 +69,6 @@ namespace Nakama
         }
 
         private readonly ApiClient _apiClient;
-        private ILogger _logger;
 
         private const int DefaultTimeout = 15;
 
@@ -88,26 +79,26 @@ namespace Nakama
 
         public Client(string serverKey, IHttpAdapter adapter, bool autoRefreshSession = true) : this(DefaultScheme,
             DefaultHost, DefaultPort, serverKey,
-            adapter, autoRefreshSession)
+            adapter, NullLogger.Instance, autoRefreshSession)
         {
         }
 
         public Client(string scheme, string host, int port, string serverKey, bool autoRefreshSession = true) : this(
             scheme, host, port, serverKey,
-            HttpRequestAdapter.WithGzip(), autoRefreshSession)
+            HttpRequestAdapter.WithGzip(), NullLogger.Instance, autoRefreshSession)
         {
         }
 
-        public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter,
+        public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter, ILogger logger,
             bool autoRefreshSession = true)
         {
+            this.Logger = logger;
             AutoRefreshSession = autoRefreshSession;
             Host = host;
             Port = port;
             Scheme = scheme;
             ServerKey = serverKey;
             _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, DefaultTimeout);
-            Logger = NullLogger.Instance; // must set logger last.
         }
 
         /// <inheritdoc cref="AddFriendsAsync"/>

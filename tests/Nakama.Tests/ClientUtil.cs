@@ -26,12 +26,8 @@ namespace Nakama.Tests
         {
             var settings = new ConfigurationBuilder().AddJsonFile(path).Build();
             var port = System.Convert.ToInt32(settings["PORT"]);
-            var client = new Client(settings["SCHEME"], settings["HOST"], port, settings["SERVER_KEY"]);
-            if (System.Convert.ToBoolean(settings["STDOUT"]))
-            {
-                client.Logger = new StdoutLogger();
-            }
-            return client;
+            StdoutLogger.LogLevel logLevel = System.Convert.ToBoolean(settings["STDOUT"]) ? StdoutLogger.LogLevel.All : StdoutLogger.LogLevel.Off;
+            return new Client(settings["SCHEME"], settings["HOST"], port, settings["SERVER_KEY"], HttpRequestAdapter.WithGzip(), new StdoutLogger(logLevel));
         }
     }
 }

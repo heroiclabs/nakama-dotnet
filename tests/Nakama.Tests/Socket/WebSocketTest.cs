@@ -88,5 +88,13 @@ namespace Nakama.Tests.Socket
             Assert.True(_socket.IsConnected);
             await Assert.ThrowsAsync<SocketException>(() => _socket.ConnectAsync(session));
         }
+
+        [Fact]
+        public void ShouldPassCorrectHttpAdapter()
+        {
+            var logger = new StdoutLogger(StdoutLogger.LogLevel.All);
+            var client = new Client("http", "localhost", 7350, "defaultkey", new EmptyHttpAdapter(), logger);
+            Assert.Equal(typeof(EmptyHttpAdapter), client.Adapter.GetType());
+        }
     }
 }
