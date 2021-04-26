@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
@@ -84,7 +83,9 @@ namespace Nakama
 
         private readonly ISocketAdapter _adapter;
         private readonly Uri _baseUri;
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
+        private readonly Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
+
+        private Object _lockObj = new Object();
 
         /// <summary>
         /// A new socket with default options.
@@ -114,22 +115,12 @@ namespace Nakama
             Logger = NullLogger.Instance;
             _adapter = adapter;
             _baseUri = new UriBuilder(scheme, host, port).Uri;
-            _responses = new ConcurrentDictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
+            _responses = new Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
 
             _adapter.Connected += () => Connected?.Invoke();
             _adapter.Closed += () =>
             {
-                foreach (var response in _responses)
-                {
-                    response.Value.TrySetCanceled();
-                }
-
-                _responses.Clear();
-                Closed?.Invoke();
-            };
-            _adapter.ReceivedError += e =>
-            {
-                if (!_adapter.IsConnected)
+                lock (_lockObj)
                 {
                     foreach (var response in _responses)
                     {
@@ -139,8 +130,27 @@ namespace Nakama
                     _responses.Clear();
                 }
 
+                Closed?.Invoke();
+            };
+            _adapter.ReceivedError += e =>
+            {
+                if (!_adapter.IsConnected)
+                {
+                    lock (_lockObj)
+                    {
+
+                        foreach (var response in _responses)
+                        {
+                            response.Value.TrySetCanceled();
+                        }
+
+                        _responses.Clear();
+                    }
+                }
+
                 ReceivedError?.Invoke(e);
             };
+
             _adapter.Received += ReceivedMessage;
         }
 
@@ -547,24 +557,27 @@ namespace Nakama
             {
                 if (!string.IsNullOrEmpty(envelope.Cid))
                 {
-                    // Handle message response.
-                    TaskCompletionSource<WebSocketMessageEnvelope> completer;
-                    var cid = envelope.Cid;
-                    _responses.TryRemove(cid, out completer);
-                    if (completer == null)
+                    lock (_lockObj)
                     {
-                        Logger?.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
-                        return;
-                    }
+                        // Handle message response.
+                        if (_responses.ContainsKey(envelope.Cid))
+                        {
+                            TaskCompletionSource<WebSocketMessageEnvelope> completer = _responses[envelope.Cid];
+                            _responses.Remove(envelope.Cid);
 
-                    if (envelope.Error != null)
-                    {
-                        completer.SetException(new WebSocketException(WebSocketError.InvalidState,
-                            envelope.Error.Message));
-                    }
-                    else
-                    {
-                        completer.SetResult(envelope);
+                            if (envelope.Error != null)
+                            {
+                                completer.SetException(new WebSocketException(WebSocketError.InvalidState, envelope.Error.Message));
+                            }
+                            else
+                            {
+                                completer.SetResult(envelope);
+                            }
+                        }
+                        else
+                        {
+                            Logger?.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
+                        }
                     }
                 }
                 else if (envelope.Error != null)
@@ -630,9 +643,12 @@ namespace Nakama
                 _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
                 return null; // No response required.
             }
-
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
-            _responses[envelope.Cid] = completer;
+
+            lock (_lockObj)
+            {
+                _responses[envelope.Cid] = completer;
+            }
 
             _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
             return completer.Task;

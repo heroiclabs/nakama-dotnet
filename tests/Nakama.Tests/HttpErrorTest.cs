@@ -53,7 +53,7 @@ namespace Nakama.Tests.Api
             Assert.True(exception.Data.Contains("Cause"));
         }
 
-        [Fact]
+        [Fact(Skip = "requires go plugin")]
         public async Task BadGoRpcReturnsErrorMessageAndEmptyDict()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -70,7 +70,7 @@ namespace Nakama.Tests.Api
         Make RPC calls to storage API as an example to test error format in Lua and Go runtimes.
         */
 
-        [Fact]
+        [Fact (Skip = "requires go plugin")]
         public async Task BadGoStorageRpcReturnsErrorMessageAndEmptyDict()
         {
             var session = await _client.AuthenticateCustomAsync("user_rpc_error_storage_go");
