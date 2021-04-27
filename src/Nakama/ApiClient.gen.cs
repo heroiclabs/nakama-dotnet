@@ -118,39 +118,41 @@ namespace Nakama
     }
 
     /// <summary>
-    /// - UNKNOWN: Unknown environment.  - SANDBOX: Sandbox/test environment.  - PRODUCTION: Production environment.
+    /// Environment where the purchase took place
     /// </summary>
-    public interface IValidatedPurchaseEnvironment
+    public enum ValidatedPurchaseEnvironment
     {
-    }
-
-    /// <inheritdoc />
-    internal class ValidatedPurchaseEnvironment : IValidatedPurchaseEnvironment
-    {
-
-        public override string ToString()
-        {
-            var output = "";
-            return output;
-        }
+        /// <summary>
+        /// - UNKNOWN: Unknown environment.
+        /// </summary>
+        UNKNOWN = 0,
+        /// <summary>
+        ///  - SANDBOX: Sandbox/test environment.
+        /// </summary>
+        SANDBOX = 1,
+        /// <summary>
+        ///  - PRODUCTION: Production environment.
+        /// </summary>
+        PRODUCTION = 2,
     }
 
     /// <summary>
-    /// - APPLE_APP_STORE: Apple App Store  - GOOGLE_PLAY_STORE: Google Play Store  - HUAWEI_APP_GALLERY: Huawei App Gallery
+    /// Validation Provider
     /// </summary>
-    public interface IValidatedPurchaseStore
+    public enum ValidatedPurchaseStore
     {
-    }
-
-    /// <inheritdoc />
-    internal class ValidatedPurchaseStore : IValidatedPurchaseStore
-    {
-
-        public override string ToString()
-        {
-            var output = "";
-            return output;
-        }
+        /// <summary>
+        /// - APPLE_APP_STORE: Apple App Store
+        /// </summary>
+        APPLE_APP_STORE = 0,
+        /// <summary>
+        ///  - GOOGLE_PLAY_STORE: Google Play Store
+        /// </summary>
+        GOOGLE_PLAY_STORE = 1,
+        /// <summary>
+        ///  - HUAWEI_APP_GALLERY: Huawei App Gallery
+        /// </summary>
+        HUAWEI_APP_GALLERY = 2,
     }
 
     /// <summary>
@@ -581,7 +583,7 @@ namespace Nakama
     {
 
         /// <summary>
-        /// 
+        /// The OAuth token received from a Facebook Instant Game that may be decoded with the Application Secret (must be available with the nakama configuration)
         /// </summary>
         string SignedPlayerInfo { get; }
 
@@ -1784,7 +1786,7 @@ namespace Nakama
         bool Authoritative { get; }
 
         /// <summary>
-        /// 
+        /// Handler name
         /// </summary>
         string HandlerName { get; }
 
@@ -1804,7 +1806,7 @@ namespace Nakama
         int Size { get; }
 
         /// <summary>
-        /// 
+        /// Tick Rate
         /// </summary>
         int TickRate { get; }
     }
@@ -3235,7 +3237,7 @@ namespace Nakama
     }
 
     /// <summary>
-    /// The request to validate a receipt with Apple App Store.
+    /// Apple IAP Purchases validation request
     /// </summary>
     public interface IApiValidatePurchaseAppleRequest
     {
@@ -3263,7 +3265,7 @@ namespace Nakama
     }
 
     /// <summary>
-    /// The request to validate a receipt with Google Play Store.
+    /// Google IAP Purchase validation request
     /// </summary>
     public interface IApiValidatePurchaseGoogleRequest
     {
@@ -3291,7 +3293,7 @@ namespace Nakama
     }
 
     /// <summary>
-    /// The request to validate a receipt with Huawei AppGallery.
+    /// Huawei IAP Purchase validation request
     /// </summary>
     public interface IApiValidatePurchaseHuaweiRequest
     {
@@ -3329,7 +3331,7 @@ namespace Nakama
     }
 
     /// <summary>
-    /// The purchases which have been validated.
+    /// Validate IAP response
     /// </summary>
     public interface IApiValidatePurchaseResponse
     {
@@ -3371,7 +3373,7 @@ namespace Nakama
         /// <summary>
         /// Whether the purchase was done in production or sandbox environment.
         /// </summary>
-        IValidatedPurchaseEnvironment Environment { get; }
+        ValidatedPurchaseEnvironment Environment { get; }
 
         /// <summary>
         /// Purchase Product ID.
@@ -3379,7 +3381,7 @@ namespace Nakama
         string ProductId { get; }
 
         /// <summary>
-        /// Raw store provider validation response.
+        /// Raw provider validation response.
         /// </summary>
         string ProviderResponse { get; }
 
@@ -3389,9 +3391,9 @@ namespace Nakama
         string PurchaseTime { get; }
 
         /// <summary>
-        /// The store the receipt was validated against.
+        /// Store identifier
         /// </summary>
-        IValidatedPurchaseStore Store { get; }
+        ValidatedPurchaseStore Store { get; }
 
         /// <summary>
         /// Purchase Transaction ID.
@@ -3413,7 +3415,7 @@ namespace Nakama
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        public IValidatedPurchaseEnvironment Environment => _environment;
+        public ValidatedPurchaseEnvironment Environment => _environment;
         [DataMember(Name="environment"), Preserve]
         public ValidatedPurchaseEnvironment _environment { get; set; }
 
@@ -3430,7 +3432,7 @@ namespace Nakama
         public string PurchaseTime { get; set; }
 
         /// <inheritdoc />
-        public IValidatedPurchaseStore Store => _store;
+        public ValidatedPurchaseStore Store => _store;
         [DataMember(Name="store"), Preserve]
         public ValidatedPurchaseStore _store { get; set; }
 
@@ -3448,7 +3450,7 @@ namespace Nakama
             output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
             output = string.Concat(output, "Environment: ", Environment, ", ");
             output = string.Concat(output, "ProductId: ", ProductId, ", ");
-            output = string.Concat(output, "ProviderPayload: ", ProviderResponse, ", ");
+            output = string.Concat(output, "ProviderResponse: ", ProviderResponse, ", ");
             output = string.Concat(output, "PurchaseTime: ", PurchaseTime, ", ");
             output = string.Concat(output, "Store: ", Store, ", ");
             output = string.Concat(output, "TransactionId: ", TransactionId, ", ");
