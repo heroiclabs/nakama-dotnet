@@ -39,8 +39,7 @@ namespace Nakama
         public async Task<string> SendAsync(string method, Uri uri, IDictionary<string, string> headers, byte[] body,
             int timeout)
         {
-            Logger.WarnFormat("EmptyHttpAdapter has not implemented SendAsync()");
-            return await Task<string>.FromResult<string>("complete");
+            throw new NotImplementedException();
         }
     }
 }

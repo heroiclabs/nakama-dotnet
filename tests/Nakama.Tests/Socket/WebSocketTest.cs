@@ -94,7 +94,7 @@ namespace Nakama.Tests.Socket
         {
             var logger = new StdoutLogger(StdoutLogger.LogLevel.All);
             var client = new Client("http", "localhost", 7350, "defaultkey", new EmptyHttpAdapter(), logger);
-            Assert.Equal(typeof(EmptyHttpAdapter), client.Adapter.GetType());
+            Assert.ThrowsAsync<NotImplementedException>(() => client.AuthenticateCustomAsync("should throw"));
         }
     }
 }
