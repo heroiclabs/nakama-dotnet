@@ -94,7 +94,7 @@ namespace Nakama
 
             if (decoded.ContainsKey("error"))
             {
-                this.CopyResponseError(decoded["error"], exception);
+                IHttpAdapterUtil.CopyResponseError(this, decoded["error"], exception);
             }
 
             throw exception;

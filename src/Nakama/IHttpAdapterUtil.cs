@@ -19,9 +19,11 @@ using System.Collections.Generic;
 namespace Nakama
 {
     /// <summary>
-    /// Extension methods for the <see cref="IHttpAdapter"> interface.
+    /// Utility methods for the <see cref="IHttpAdapter"> interface.
+    /// NOTE: DO NOT USE EXTENSION METHODS as Unity cannot cross-compile
+    /// them properly to WebGL.
     /// </summary>
-    public static class IHttpAdapterExtensions
+    public static class IHttpAdapterUtil
     {
         /// <summary>
         /// Performs an in-place copy of data from Nakama's error response into
@@ -30,7 +32,7 @@ namespace Nakama
         /// <param name="adapter">The adapter receiving the error response.</param>
         /// <param name="err"> The decoded error field from the server response.</param>
         /// <param name="e"> The exception whose data dictionary is being written to.</param>
-        public static void CopyResponseError(this IHttpAdapter adapter, object err, ApiResponseException e)
+        public static void CopyResponseError(IHttpAdapter adapter, object err, ApiResponseException e)
         {
             var errString = err as string;
             var errDict = err as Dictionary<string, object>;
