@@ -1036,6 +1036,52 @@ namespace Nakama
                 });
         }
 
+        /// <inheritdoc cref="ValidatePurchaseAppleAsync"/>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ValidatePurchaseAppleAsync(session.AuthToken, new ApiValidatePurchaseAppleRequest
+            {
+                Receipt = receipt
+            });
+        }
+
+        /// <inheritdoc cref="ValidatePurchaseGoogleAsync"/>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ValidatePurchaseGoogleAsync(session.AuthToken, new ApiValidatePurchaseGoogleRequest
+            {
+                Purchase = receipt
+            });
+        }
+
+        /// <inheritdoc cref="ValidatePurchaseHuaweiAsync"/>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt, string signature)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session);
+            }
+
+            return await _apiClient.ValidatePurchaseHuaweiAsync(session.AuthToken, new ApiValidatePurchaseHuaweiRequest
+            {
+                Purchase = receipt,
+                Signature = signature
+            });
+        }
+
         /// <inheritdoc cref="WriteLeaderboardRecordAsync"/>
         public async Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId,
             long score, long subScore = 0, string metadata = null)

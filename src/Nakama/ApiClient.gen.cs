@@ -118,6 +118,44 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Environment where the purchase took place
+    /// </summary>
+    public enum ValidatedPurchaseEnvironment
+    {
+        /// <summary>
+        /// - UNKNOWN: Unknown environment.
+        /// </summary>
+        UNKNOWN = 0,
+        /// <summary>
+        ///  - SANDBOX: Sandbox/test environment.
+        /// </summary>
+        SANDBOX = 1,
+        /// <summary>
+        ///  - PRODUCTION: Production environment.
+        /// </summary>
+        PRODUCTION = 2,
+    }
+
+    /// <summary>
+    /// Validation Provider
+    /// </summary>
+    public enum ValidatedPurchaseStore
+    {
+        /// <summary>
+        /// - APPLE_APP_STORE: Apple App Store
+        /// </summary>
+        APPLE_APP_STORE = 0,
+        /// <summary>
+        ///  - GOOGLE_PLAY_STORE: Google Play Store
+        /// </summary>
+        GOOGLE_PLAY_STORE = 1,
+        /// <summary>
+        ///  - HUAWEI_APP_GALLERY: Huawei App Gallery
+        /// </summary>
+        HUAWEI_APP_GALLERY = 2,
+    }
+
+    /// <summary>
     /// Record values to write.
     /// </summary>
     public interface IWriteLeaderboardRecordRequestLeaderboardRecordWrite
@@ -545,7 +583,7 @@ namespace Nakama
     {
 
         /// <summary>
-        /// 
+        /// The OAuth token received from a Facebook Instant Game that may be decoded with the Application Secret (must be available with the nakama configuration)
         /// </summary>
         string SignedPlayerInfo { get; }
 
@@ -1748,7 +1786,7 @@ namespace Nakama
         bool Authoritative { get; }
 
         /// <summary>
-        /// 
+        /// Handler name
         /// </summary>
         string HandlerName { get; }
 
@@ -1768,7 +1806,7 @@ namespace Nakama
         int Size { get; }
 
         /// <summary>
-        /// 
+        /// Tick Rate
         /// </summary>
         int TickRate { get; }
     }
@@ -3194,6 +3232,229 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "Users: [", string.Join(", ", Users), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Apple IAP Purchases validation request
+    /// </summary>
+    public interface IApiValidatePurchaseAppleRequest
+    {
+
+        /// <summary>
+        /// Base64 encoded Apple receipt data payload.
+        /// </summary>
+        string Receipt { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatePurchaseAppleRequest : IApiValidatePurchaseAppleRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="receipt"), Preserve]
+        public string Receipt { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Receipt: ", Receipt, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Google IAP Purchase validation request
+    /// </summary>
+    public interface IApiValidatePurchaseGoogleRequest
+    {
+
+        /// <summary>
+        /// JSON encoded Google purchase payload.
+        /// </summary>
+        string Purchase { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatePurchaseGoogleRequest : IApiValidatePurchaseGoogleRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="purchase"), Preserve]
+        public string Purchase { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Purchase: ", Purchase, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Huawei IAP Purchase validation request
+    /// </summary>
+    public interface IApiValidatePurchaseHuaweiRequest
+    {
+
+        /// <summary>
+        /// JSON encoded Huawei InAppPurchaseData.
+        /// </summary>
+        string Purchase { get; }
+
+        /// <summary>
+        /// InAppPurchaseData signature.
+        /// </summary>
+        string Signature { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatePurchaseHuaweiRequest : IApiValidatePurchaseHuaweiRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="purchase"), Preserve]
+        public string Purchase { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="signature"), Preserve]
+        public string Signature { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Purchase: ", Purchase, ", ");
+            output = string.Concat(output, "Signature: ", Signature, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Validate IAP response
+    /// </summary>
+    public interface IApiValidatePurchaseResponse
+    {
+
+        /// <summary>
+        /// Newly seen validated purchases.
+        /// </summary>
+        IEnumerable<IApiValidatedPurchase> ValidatedPurchases { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatePurchaseResponse : IApiValidatePurchaseResponse
+    {
+
+        /// <inheritdoc />
+        public IEnumerable<IApiValidatedPurchase> ValidatedPurchases => _validatedPurchases ?? new List<ApiValidatedPurchase>(0);
+        [DataMember(Name="validated_purchases"), Preserve]
+        public List<ApiValidatedPurchase> _validatedPurchases { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "ValidatedPurchases: [", string.Join(", ", ValidatedPurchases), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Validated Purchase stored by Nakama.
+    /// </summary>
+    public interface IApiValidatedPurchase
+    {
+
+        /// <summary>
+        /// UNIX Timestamp when the receipt validation was stored in DB.
+        /// </summary>
+        string CreateTime { get; }
+
+        /// <summary>
+        /// Whether the purchase was done in production or sandbox environment.
+        /// </summary>
+        ValidatedPurchaseEnvironment Environment { get; }
+
+        /// <summary>
+        /// Purchase Product ID.
+        /// </summary>
+        string ProductId { get; }
+
+        /// <summary>
+        /// Raw provider validation response.
+        /// </summary>
+        string ProviderResponse { get; }
+
+        /// <summary>
+        /// UNIX Timestamp when the purchase was done.
+        /// </summary>
+        string PurchaseTime { get; }
+
+        /// <summary>
+        /// Store identifier
+        /// </summary>
+        ValidatedPurchaseStore Store { get; }
+
+        /// <summary>
+        /// Purchase Transaction ID.
+        /// </summary>
+        string TransactionId { get; }
+
+        /// <summary>
+        /// UNIX Timestamp when the receipt validation was updated in DB.
+        /// </summary>
+        string UpdateTime { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatedPurchase : IApiValidatedPurchase
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
+
+        /// <inheritdoc />
+        public ValidatedPurchaseEnvironment Environment => _environment;
+        [DataMember(Name="environment"), Preserve]
+        public ValidatedPurchaseEnvironment _environment { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="product_id"), Preserve]
+        public string ProductId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="provider_response"), Preserve]
+        public string ProviderResponse { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="purchase_time"), Preserve]
+        public string PurchaseTime { get; set; }
+
+        /// <inheritdoc />
+        public ValidatedPurchaseStore Store => _store;
+        [DataMember(Name="store"), Preserve]
+        public ValidatedPurchaseStore _store { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="transaction_id"), Preserve]
+        public string TransactionId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
+            output = string.Concat(output, "Environment: ", Environment, ", ");
+            output = string.Concat(output, "ProductId: ", ProductId, ", ");
+            output = string.Concat(output, "ProviderResponse: ", ProviderResponse, ", ");
+            output = string.Concat(output, "PurchaseTime: ", PurchaseTime, ", ");
+            output = string.Concat(output, "Store: ", Store, ", ");
+            output = string.Concat(output, "TransactionId: ", TransactionId, ", ");
+            output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
             return output;
         }
     }
@@ -5272,6 +5533,108 @@ namespace Nakama
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
             return contents.FromJson<ApiGroupUserList>();
+        }
+
+        /// <summary>
+        /// Validate Apple IAP Receipt
+        /// </summary>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(
+            string bearerToken,
+            ApiValidatePurchaseAppleRequest body)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/purchase/apple";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            return contents.FromJson<ApiValidatePurchaseResponse>();
+        }
+
+        /// <summary>
+        /// Validate Google IAP Receipt
+        /// </summary>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(
+            string bearerToken,
+            ApiValidatePurchaseGoogleRequest body)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/purchase/google";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            return contents.FromJson<ApiValidatePurchaseResponse>();
+        }
+
+        /// <summary>
+        /// Validate Huawei IAP Receipt
+        /// </summary>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(
+            string bearerToken,
+            ApiValidatePurchaseHuaweiRequest body)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/purchase/huawei";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            return contents.FromJson<ApiValidatePurchaseResponse>();
         }
 
         /// <summary>
