@@ -1,5 +1,5 @@
 ﻿/**
- * Copyright 2018 The Nakama Authors
+ * Copyright 2021 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,14 @@ namespace Nakama.Tests.Api
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
     using System.Threading.Tasks;
     using Xunit;
     using TinyJson;
 
     public class LeaderboardTest : IAsyncLifetime
     {
-        private IClient _client;
-        private string _leaderboardId;
+        protected IClient _client;
+        protected string _leaderboardId;
 
         // ReSharper disable RedundantArgumentDefaultValue
 
@@ -116,44 +115,7 @@ namespace Nakama.Tests.Api
             await _client.DeleteLeaderboardRecordAsync(session, "invalid");
         }
 
-        [Fact]
-        public async Task ShouldReturnFirstAroundOwner()
-        {
-            const int NUM_TOTAL_RECORDS = 10;
 
-            var authTasks = new List<Task<ISession>>();
-
-            for (int i = 0; i < NUM_TOTAL_RECORDS; i++)
-            {
-                authTasks.Add( _client.AuthenticateCustomAsync($"{Guid.NewGuid()}"));
-            }
-
-            ISession[] sessions = await Task.WhenAll(authTasks.ToArray());
-
-            var listTasks = new List<Task<IApiLeaderboardRecord>>();
-
-            const int BASE_SCORE = 100;
-
-            for (int i = 0; i < NUM_TOTAL_RECORDS; i++)
-            {
-                int score = BASE_SCORE + i;
-                listTasks.Add(_client.WriteLeaderboardRecordAsync(sessions[i], _leaderboardId, score));
-            }
-
-            Task.WaitAll(listTasks.ToArray());
-
-            const int NUM_RECORDS_TO_REQUEST = 4;
-
-            int ownerIndex = 8;
-            IApiLeaderboardRecordList records = await _client.ListLeaderboardRecordsAroundOwnerAsync(sessions[ownerIndex], _leaderboardId, sessions[ownerIndex].UserId, null, NUM_RECORDS_TO_REQUEST);
-            IApiLeaderboardRecord[] recordArray = records.Records.ToArray();
-
-            Assert.True(recordArray.Length == NUM_RECORDS_TO_REQUEST);
-
-            Assert.Equal("109", recordArray[0].Score);
-            Assert.Equal("108", recordArray[1].Score);
-            Assert.Equal("107", recordArray[2].Score);
-        }
 
         public async Task InitializeAsync()
         {
