@@ -97,7 +97,7 @@ namespace Nakama.Tests.Api
         }
 
         [Fact]
-        public async Task OneRecord()
+        public async Task OneRecordOneLimit()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 1, limit: 1, ownerIndex: 0);
             var recordArray = records.Records.ToArray();
@@ -106,7 +106,27 @@ namespace Nakama.Tests.Api
         }
 
         [Fact]
-        public async Task AllRecords()
+        public async Task TwoRecordsTwoLimit()
+        {
+            IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 2, limit: 2, ownerIndex: 1);
+            var recordArray = records.Records.ToArray();
+            Assert.Equal(2, recordArray.Length);
+            Assert.Equal("101", recordArray[0].Score);
+            Assert.Equal("100", recordArray[1].Score);
+        }
+
+        [Fact]
+        public async Task ThreeRecordsTwoLimit()
+        {
+            IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 3, limit: 2, ownerIndex: 1);
+            var recordArray = records.Records.ToArray();
+            Assert.Equal(2, recordArray.Length);
+            Assert.Equal("102", recordArray[0].Score);
+            Assert.Equal("101", recordArray[1].Score);
+        }
+
+        [Fact]
+        public async Task ThreeRecordsThreeLimit()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 3, limit: 3, ownerIndex: 1);
             var recordArray = records.Records.ToArray();
