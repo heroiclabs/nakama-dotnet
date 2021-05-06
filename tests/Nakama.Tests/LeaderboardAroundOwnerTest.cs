@@ -25,7 +25,7 @@ namespace Nakama.Tests.Api
     public class LeaderboardAroundOwnerTest : LeaderboardTest
     {
         [Fact]
-        public async Task OwnerNearTop()
+        public async Task OwnerInFront()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 1);
             var recordArray = records.Records.ToArray();
@@ -38,9 +38,35 @@ namespace Nakama.Tests.Api
         }
 
         [Fact]
-        public async Task OwnerNearBottom()
+        public async Task OwnerInBack()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 9);
+            var recordArray = records.Records.ToArray();
+
+            Assert.Equal(4, recordArray.Length);
+            Assert.Equal("103", recordArray[0].Score);
+            Assert.Equal("102", recordArray[1].Score);
+            Assert.Equal("101", recordArray[2].Score);
+            Assert.Equal("100", recordArray[3].Score);
+        }
+
+        [Fact]
+        public async Task OwnerNearFront()
+        {
+            IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 2);
+            var recordArray = records.Records.ToArray();
+
+            Assert.Equal(4, recordArray.Length);
+            Assert.Equal("109", recordArray[0].Score);
+            Assert.Equal("108", recordArray[1].Score);
+            Assert.Equal("107", recordArray[2].Score);
+            Assert.Equal("106", recordArray[3].Score);
+        }
+
+        [Fact]
+        public async Task OwnerNearBack()
+        {
+            IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 8);
             var recordArray = records.Records.ToArray();
 
             Assert.Equal(4, recordArray.Length);
@@ -121,8 +147,8 @@ namespace Nakama.Tests.Api
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 3, limit: 2, ownerIndex: 1);
             var recordArray = records.Records.ToArray();
             Assert.Equal(2, recordArray.Length);
-            Assert.Equal("102", recordArray[0].Score);
-            Assert.Equal("101", recordArray[1].Score);
+            Assert.Equal("101", recordArray[0].Score);
+            Assert.Equal("100", recordArray[1].Score);
         }
 
         [Fact]
