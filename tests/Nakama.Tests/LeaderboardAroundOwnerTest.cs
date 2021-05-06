@@ -27,7 +27,7 @@ namespace Nakama.Tests.Api
         [Fact]
         public async Task OwnerInFront()
         {
-            IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 1);
+            IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 0);
             var recordArray = records.Records.ToArray();
 
             Assert.Equal(4, recordArray.Length);
@@ -53,7 +53,7 @@ namespace Nakama.Tests.Api
         [Fact]
         public async Task OwnerNearFront()
         {
-            IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 2);
+            IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 1);
             var recordArray = records.Records.ToArray();
 
             Assert.Equal(4, recordArray.Length);
