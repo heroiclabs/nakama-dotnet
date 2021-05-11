@@ -69,6 +69,13 @@ namespace Nakama
 
         /// <inheritdoc cref="ReceivedStreamState"/>
         public event Action<IStreamState> ReceivedStreamState;
+        public event Action<IParty> ReceivedParty;
+        public event Action<IPartyClose> ReceivedPartyClose;
+        public event Action<IPartyData> ReceivedPartyData;
+        public event Action<IPartyJoinRequest> ReceivedPartyJoinRequest;
+        public event Action<IPartyLeader> ReceivedPartyLeader;
+        public event Action<IPartyPresenceEvent> ReceivedPartyPresence;
+        public event Action<IPartyMatchmakerTicket> ReceivedPartyMatchmakerTicket;
 
         /// <inheritdoc cref="IsConnected"/>
         public bool IsConnected => _adapter.IsConnected;
@@ -154,6 +161,22 @@ namespace Nakama
             _adapter.Received += ReceivedMessage;
         }
 
+        /// <inheritdoc cref="AcceptPartyMemberAsync"/>
+        public Task AcceptPartyMemberAsync(string partyId, IUserPresence presence)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyAccept = new PartyAccept
+                {
+                    PartyId = partyId,
+                    Presence = presence as UserPresence // TODO serialize interface directly in protobuf
+                }
+            };
+
+            return SendAsync(envelope);
+        }
+
         /// <inheritdoc cref="AddMatchmakerAsync"/>
         public async Task<IMatchmakerTicket> AddMatchmakerAsync(string query = "*", int minCount = 2, int maxCount = 8,
             Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null)
@@ -172,6 +195,26 @@ namespace Nakama
             };
             var response = await SendAsync(envelope);
             return response.MatchmakerTicket;
+        }
+
+        /// <inheritdoc cref="AddMatchmakerPartyAsync"/>
+        public Task AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount, Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyMatchmakerAdd = new PartyMatchmakerAdd
+                {
+                    PartyId = partyId,
+                    Query = query,
+                    MinCount = minCount,
+                    MaxCount = maxCount,
+                    StringProperties = stringProperties,
+                    NumericProperties = numericProperties
+                }
+            };
+
+            return SendAsync(envelope);
         }
 
         /// <inheritdoc cref="CloseAsync"/>
@@ -205,6 +248,18 @@ namespace Nakama
             return tcs.Task;
         }
 
+        /// <inheritdoc cref="ClosePartyAsync"/>
+        public Task ClosePartyAsync(string partyId)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyClose = new PartyClose { PartyId = partyId }
+            };
+
+            return SendAsync(envelope);
+        }
+
         /// <inheritdoc cref="CreateMatchAsync"/>
         public async Task<IMatch> CreateMatchAsync()
         {
@@ -215,6 +270,22 @@ namespace Nakama
             };
             var response = await SendAsync(envelope);
             return response.Match;
+        }
+
+        /// <inheritdoc cref="CreatePartyAsync"/>
+        public Task CreatePartyAsync(bool open, int maxSize)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyCreate = new PartyCreate
+                {
+                    Open = open,
+                    MaxSize = maxSize
+                }
+            };
+
+            return SendAsync(envelope);
         }
 
         /// <summary>
@@ -306,6 +377,21 @@ namespace Nakama
             return response.Match;
         }
 
+        /// <inheritdoc cref="JoinPartyAsync"/>
+        public Task JoinPartyAsync(string partyId)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyJoin = new PartyJoin
+                {
+                    PartyId = partyId
+                }
+            };
+
+            return SendAsync(envelope);
+        }
+
         /// <inheritdoc cref="LeaveChatAsync(Nakama.IChannel)"/>
         public Task LeaveChatAsync(IChannel channel) => LeaveChatAsync(channel.Id);
 
@@ -337,6 +423,53 @@ namespace Nakama
                     MatchId = matchId
                 }
             };
+            return SendAsync(envelope);
+        }
+
+        /// <inheritdoc cref="LeavePartyAsync"/>
+        public Task LeavePartyAsync(string partyId)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyLeave = new PartyLeave
+                {
+                    PartyId = partyId
+                }
+            };
+
+            return SendAsync(envelope);
+        }
+
+        /// <inheritdoc cref="ListPartyJoinRequestsAsync"/>
+        public async Task<IPartyJoinRequest> ListPartyJoinRequestsAsync(string partyId)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyJoinRequestList = new PartyJoinRequestList
+                {
+                    PartyId = partyId,
+                }
+            };
+
+            var response = await SendAsync(envelope);
+            return response.PartyJoinRequest;
+        }
+
+        /// <inheritdoc cref="PromotePartyMember"/>
+        public Task PromotePartyMember(string partyId, IUserPresence partyMember)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyPromote = new PartyPromote
+                {
+                    PartyId = partyId,
+                    Presence = partyMember as UserPresence // TODO serialize interface directly in protobuf
+                }
+            };
+
             return SendAsync(envelope);
         }
 
@@ -374,6 +507,39 @@ namespace Nakama
                     Ticket = ticket
                 }
             };
+
+            return SendAsync(envelope);
+        }
+
+        /// <inheritdoc="RemoveMatchmakerPartyAsync"/>
+        public Task RemoveMatchmakerPartyAsync(string partyId, string ticket)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyMatchmakerRemove = new PartyMatchmakerRemove
+                {
+                    PartyId = partyId,
+                    Ticket = ticket
+                }
+            };
+
+            return SendAsync(envelope);
+        }
+
+        /// <inheritdoc="RemovePartyMemberAsync"/>
+        public Task RemovePartyMemberAsync(string partyId, IUserPresence presence)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{_cid++}",
+                PartyRemove = new PartyRemove
+                {
+                    PartyId = partyId,
+                    Presence = presence
+                }
+            };
+
             return SendAsync(envelope);
         }
 
@@ -409,6 +575,23 @@ namespace Nakama
             return response.Rpc;
         }
 
+        /// <inheritdoc cref="SendMatchStateAsync(string,long,ArraySegment{byte},System.Collections.Generic.IEnumerable{Nakama.IUserPresence})"/>
+        public Task SendMatchStateAsync(string matchId, long opCode, ArraySegment<byte> state, IEnumerable<IUserPresence> presences = null)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                MatchStateSend = new MatchSendMessage
+                {
+                    MatchId = matchId,
+                    OpCode = Convert.ToString(opCode),
+                    Presences = BuildPresenceList(presences),
+                    State = Convert.ToBase64String(state.Array, state.Offset, state.Count)
+                }
+            };
+            SendAsync(envelope);
+            return Task.CompletedTask;
+        }
+
         /// <inheritdoc cref="SendMatchStateAsync(string,long,string,System.Collections.Generic.IEnumerable{Nakama.IUserPresence})"/>
         public Task SendMatchStateAsync(string matchId, long opCode, string state,
             IEnumerable<IUserPresence> presences = null) => SendMatchStateAsync(matchId, opCode,
@@ -432,19 +615,19 @@ namespace Nakama
             return Task.CompletedTask;
         }
 
-        /// <inheritdoc cref="SendMatchStateAsync(string,long,ArraySegment{byte},System.Collections.Generic.IEnumerable{Nakama.IUserPresence})"/>
-        public Task SendMatchStateAsync(string matchId, long opCode, ArraySegment<byte> state, IEnumerable<IUserPresence> presences = null)
+        /// <inheritdoc="SendPartyDataAsync"/>
+        public Task SendPartyDataAsync(string partyId, int opcode, byte[] data)
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                MatchStateSend = new MatchSendMessage
+                PartyDataSend = new PartyDataSend
                 {
-                    MatchId = matchId,
-                    OpCode = Convert.ToString(opCode),
-                    Presences = BuildPresenceList(presences),
-                    State = Convert.ToBase64String(state.Array, state.Offset, state.Count)
+                    PartyId = partyId,
+                    OpCode = opcode,
+                    Data = data
                 }
             };
+
             SendAsync(envelope);
             return Task.CompletedTask;
         }
@@ -622,6 +805,34 @@ namespace Nakama
                 else if (envelope.StreamState != null)
                 {
                     ReceivedStreamState?.Invoke(envelope.StreamState);
+                }
+                else if (envelope.Party != null)
+                {
+                    ReceivedParty?.Invoke(envelope.Party);
+                }
+                else if (envelope.PartyClose != null)
+                {
+                    ReceivedPartyClose?.Invoke(envelope.PartyClose);
+                }
+                else if (envelope.PartyData != null)
+                {
+                    ReceivedPartyData?.Invoke(envelope.PartyData);
+                }
+                else if (envelope.PartyJoinRequest != null)
+                {
+                    ReceivedPartyJoinRequest?.Invoke(envelope.PartyJoinRequest);
+                }
+                else if (envelope.PartyLeader != null)
+                {
+                    ReceivedPartyLeader?.Invoke(envelope.PartyLeader);
+                }
+                else if (envelope.PartyMatchmakerTicket != null)
+                {
+                    ReceivedPartyMatchmakerTicket?.Invoke(envelope.PartyMatchmakerTicket);
+                }
+                else if (envelope.PartyPresenceEvent != null)
+                {
+                    ReceivedPartyPresence?.Invoke(envelope.PartyPresenceEvent);
                 }
                 else
                 {
