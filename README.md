@@ -70,7 +70,7 @@ if (session.HasExpired(DateTime.UtcNow.AddDays(1)))
     {
         session = await client.SessionRefreshAsync(session);
     }
-    catch (ApiException e)
+    catch (ApiResponseException e)
     {
         System.Console.WriteLine("Session can no longer be refreshed. Must reauthenticate!");
     }
