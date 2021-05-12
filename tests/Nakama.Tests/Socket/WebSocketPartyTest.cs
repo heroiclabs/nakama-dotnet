@@ -33,21 +33,16 @@ namespace Nakama.Tests.Socket
         public async Task ShouldCreateAndJoinParty()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            System.Console.WriteLine("creating socket");
             var socket = Nakama.Socket.From(_client);
-            System.Console.WriteLine("done creating socket");
-
             await socket.ConnectAsync(session);
-            System.Console.WriteLine("done connecting");
-
             var completer = new TaskCompletionSource<IParty>();
             socket.ReceivedParty += (party) => completer.SetResult(party);
             socket.CreatePartyAsync(false, 1);
 
             var result = await completer.Task;
-            System.Console.WriteLine("done getting result");
 
             Assert.NotNull(result);
+            Assert.NotNull(result.Self);
             Assert.Equal(session.UserId, result.Self.UserId);
 
             await socket.CloseAsync();
@@ -109,7 +104,6 @@ namespace Nakama.Tests.Socket
             var session2 = await client2.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var socket1 = Nakama.Socket.From(_client);
-
             var socket2 = Nakama.Socket.From(client2);
 
             await socket1.ConnectAsync(session1);
