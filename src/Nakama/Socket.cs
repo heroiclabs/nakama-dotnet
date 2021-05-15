@@ -69,12 +69,23 @@ namespace Nakama
 
         /// <inheritdoc cref="ReceivedStreamState"/>
         public event Action<IStreamState> ReceivedStreamState;
-        public event Action<IParty> ReceivedParty;
+
+        /// <inheritdoc cref="ReceivedPartyClose"/>
         public event Action<IPartyClose> ReceivedPartyClose;
+
+        /// <inheritdoc cref="ReceivedPartyData"/>
         public event Action<IPartyData> ReceivedPartyData;
+
+        /// <inheritdoc cref="ReceivedPartyJoinRequest"/>
         public event Action<IPartyJoinRequest> ReceivedPartyJoinRequest;
+
+        /// <inheritdoc cref="ReceivedPartyLeader"/>
         public event Action<IPartyLeader> ReceivedPartyLeader;
+
+        /// <inheritdoc cref="ReceivedPartyPresence"/>
         public event Action<IPartyPresenceEvent> ReceivedPartyPresence;
+
+        /// <inheritdoc cref="ReceivedPartyMatchmakerTicket"/>
         public event Action<IPartyMatchmakerTicket> ReceivedPartyMatchmakerTicket;
 
         /// <inheritdoc cref="IsConnected"/>
@@ -273,7 +284,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="CreatePartyAsync"/>
-        public Task CreatePartyAsync(bool open, int maxSize)
+        public async Task<IParty> CreatePartyAsync(bool open, int maxSize)
         {
             var envelope = new WebSocketMessageEnvelope
             {
@@ -285,7 +296,8 @@ namespace Nakama
                 }
             };
 
-            return SendAsync(envelope);
+            var response = await SendAsync(envelope);
+            return response.Party;
         }
 
         /// <summary>
@@ -533,10 +545,10 @@ namespace Nakama
             var envelope = new WebSocketMessageEnvelope
             {
                 Cid = $"{_cid++}",
-                PartyRemove = new PartyRemove
+                PartyMemberRemove = new PartyMemberRemove
                 {
                     PartyId = partyId,
-                    Presence = presence
+                    Presence = presence as UserPresence
                 }
             };
 
@@ -615,16 +627,37 @@ namespace Nakama
             return Task.CompletedTask;
         }
 
-        /// <inheritdoc="SendPartyDataAsync"/>
-        public Task SendPartyDataAsync(string partyId, int opcode, byte[] data)
+        /// <inheritdoc cref="SendPartyDataAsync(string,long,ArraySegment{byte})"/>
+        public Task SendPartyDataAsync(string partyId, long opCode, ArraySegment<byte> data)
         {
             var envelope = new WebSocketMessageEnvelope
             {
                 PartyDataSend = new PartyDataSend
                 {
                     PartyId = partyId,
-                    OpCode = opcode,
-                    Data = data
+                    OpCode = Convert.ToString(opCode),
+                    Data = Convert.ToBase64String(data.Array, data.Offset, data.Count)
+                }
+            };
+
+            SendAsync(envelope);
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc cref="SendPartyDataAsync(string,long,string)"/>
+        public Task SendPartyDataAsync(string partyId, long opCode, string data) =>
+            SendPartyDataAsync(partyId, opCode, System.Text.Encoding.UTF8.GetBytes(data));
+
+        /// <inheritdoc cref="SendPartyDataAsync(string,long,byte[])"/>
+        public Task SendPartyDataAsync(string partyId, long opCode, byte[] data)
+        {
+            var envelope = new WebSocketMessageEnvelope
+            {
+                PartyDataSend = new PartyDataSend
+                {
+                    PartyId = partyId,
+                    OpCode = Convert.ToString(opCode),
+                    Data = Convert.ToBase64String(data)
                 }
             };
 
@@ -805,10 +838,6 @@ namespace Nakama
                 else if (envelope.StreamState != null)
                 {
                     ReceivedStreamState?.Invoke(envelope.StreamState);
-                }
-                else if (envelope.Party != null)
-                {
-                    ReceivedParty?.Invoke(envelope.Party);
                 }
                 else if (envelope.PartyClose != null)
                 {

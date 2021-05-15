@@ -1,32 +1,34 @@
-/**
- * Copyright 2021 The Nakama Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Nakama Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Nakama.Tests.Socket
 {
     public class WebSocketPartyTest
     {
-        private IClient _client;
+        private readonly ITestOutputHelper _testOutputHelper;
+        private readonly IClient _client;
 
-        public WebSocketPartyTest()
+        public WebSocketPartyTest(ITestOutputHelper testOutputHelper)
         {
-            _client = ClientUtil.FromSettingsFile();
+            _testOutputHelper = testOutputHelper;
+            _client = TestsUtil.FromSettingsFile();
         }
 
         [Fact]
@@ -35,107 +37,103 @@ namespace Nakama.Tests.Socket
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var socket = Nakama.Socket.From(_client);
             await socket.ConnectAsync(session);
-            var completer = new TaskCompletionSource<IParty>();
-            socket.ReceivedParty += (party) => completer.SetResult(party);
-            socket.CreatePartyAsync(false, 1);
 
-            var result = await completer.Task;
+            var result = await socket.CreatePartyAsync(false, 1);
 
             Assert.NotNull(result);
             Assert.NotNull(result.Self);
             Assert.Equal(session.UserId, result.Self.UserId);
+            Assert.Equal(session.Username, result.Self.Username);
 
             await socket.CloseAsync();
         }
 
         [Fact]
-        public async Task ShouldAddAndRemoveFromMatchmaker()
+        public async Task ShouldAddAndRemovePartyFromMatchmaker()
         {
-            var client2 = ClientUtil.FromSettingsFile();
-
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            var session2 = await client2.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var socket1 = Nakama.Socket.From(_client);
-            var socket2 = Nakama.Socket.From(client2);
+            var socket2 = Nakama.Socket.From(_client);
 
             await socket1.ConnectAsync(session1);
             await socket2.ConnectAsync(session2);
 
-            var partyCreatedTCS = new TaskCompletionSource<IParty>();
+            var partyJoinRequestTcs = new TaskCompletionSource<IPartyJoinRequest>();
+            socket1.ReceivedPartyJoinRequest += request => partyJoinRequestTcs.SetResult(request);
 
-            socket1.ReceivedParty += (party) => partyCreatedTCS.SetResult(party);
-            socket1.CreatePartyAsync(false, 1);
+            var partyPresenceJoinedTcs = new TaskCompletionSource<IPartyPresenceEvent>();
+            socket1.ReceivedPartyPresence += presenceEvt => partyPresenceJoinedTcs.SetResult(presenceEvt);
 
-            var party = await partyCreatedTCS.Task;
+            var partyMatchmakingTcs = new TaskCompletionSource<IPartyMatchmakerTicket>();
+            socket1.ReceivedPartyMatchmakerTicket += matchmakerTicket => partyMatchmakingTcs.SetResult(matchmakerTicket);
 
-            var partyJoinRequestTCS = new TaskCompletionSource<IPartyJoinRequest>();
-            socket1.ReceivedPartyJoinRequest += (request) => partyJoinRequestTCS.SetResult(request);
+            var party = await socket1.CreatePartyAsync(false, 2);
+            Assert.NotNull(party);
+            Assert.NotEmpty(party.Id);
+            Assert.False(party.Open);
 
-            socket2.JoinPartyAsync(party.PartyId);
-            var joinRequest = await partyJoinRequestTCS.Task;
+            await socket2.JoinPartyAsync(party.Id);
 
-            socket1.AcceptPartyMemberAsync(joinRequest.PartyId, joinRequest.Presences[0]);
+            var joinRequest = await partyJoinRequestTcs.Task;
 
-            var partyPresenceJoinedTCS = new TaskCompletionSource<IPartyPresenceEvent>();
-            socket1.ReceivedPartyPresence += (presenceEvt) => partyPresenceJoinedTCS.SetResult(presenceEvt);
+            await socket1.AcceptPartyMemberAsync(joinRequest.PartyId, joinRequest.Presences.First());
 
-            await partyJoinRequestTCS.Task;
+            await partyPresenceJoinedTcs.Task;
 
-            var partyMatchmakingTCS = new TaskCompletionSource<IPartyMatchmakerTicket>();
+            await socket1.AddMatchmakerPartyAsync(party.Id, "*", 2, 2);
+            var result = await partyMatchmakingTcs.Task;
 
-            socket1.ReceivedPartyMatchmakerTicket += (ticket) => partyMatchmakingTCS.SetResult(ticket);
+            Assert.NotEmpty(result.Ticket);
+            await socket1.RemoveMatchmakerPartyAsync(party.Id, result.Ticket);
 
-            socket1.AddMatchmakerPartyAsync(party.PartyId, "*", 2, 2);
-
-            IPartyMatchmakerTicket ticket = await partyMatchmakingTCS.Task;
-
-            Assert.False(string.IsNullOrEmpty(ticket.Ticket));
-            await socket1.RemoveMatchmakerPartyAsync(party.PartyId, ticket.Ticket);
             await socket1.CloseAsync();
+            await socket2.CloseAsync();
         }
 
         [Fact]
         public async Task ShouldPromoteMember()
         {
-            var client2 = ClientUtil.FromSettingsFile();
-
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
-            var session2 = await client2.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
 
             var socket1 = Nakama.Socket.From(_client);
-            var socket2 = Nakama.Socket.From(client2);
+            var socket2 = Nakama.Socket.From(_client);
 
             await socket1.ConnectAsync(session1);
             await socket2.ConnectAsync(session2);
 
-            var partyCreatedTCS = new TaskCompletionSource<IParty>();
+            var partyJoinRequestTcs = new TaskCompletionSource<IPartyJoinRequest>();
+            socket1.ReceivedPartyJoinRequest += request => partyJoinRequestTcs.SetResult(request);
 
-            socket1.ReceivedParty += (party) => partyCreatedTCS.SetResult(party);
-            socket1.CreatePartyAsync(false, 1);
+            var partyPromoteTcs = new TaskCompletionSource<IPartyLeader>();
+            socket1.ReceivedPartyLeader += newLeader => partyPromoteTcs.SetResult(newLeader);
 
-            var party = await partyCreatedTCS.Task;
+            var party = await socket1.CreatePartyAsync(false, 2);
+            Assert.NotNull(party);
+            Assert.NotEmpty(party.Id);
+            Assert.False(party.Open);
 
-            var partyJoinRequestTCS = new TaskCompletionSource<IPartyJoinRequest>();
-            socket1.ReceivedPartyJoinRequest += (request) => partyJoinRequestTCS.SetResult(request);
+            await socket2.JoinPartyAsync(party.Id);
 
-            socket2.JoinPartyAsync(party.PartyId);
-            var joinRequest = await partyJoinRequestTCS.Task;
+            var joinRequest = await partyJoinRequestTcs.Task;
+            _testOutputHelper.WriteLine(joinRequest.ToString());
 
-            socket1.AcceptPartyMemberAsync(joinRequest.PartyId, joinRequest.Presences[0]);
+            var partyPresenceJoinedTcs = new TaskCompletionSource<IPartyPresenceEvent>();
+            socket1.ReceivedPartyPresence += presenceEvt => partyPresenceJoinedTcs.SetResult(presenceEvt);
 
-            var partyPresenceJoinedTCS = new TaskCompletionSource<IPartyPresenceEvent>();
-            socket1.ReceivedPartyPresence += (presenceEvt) => partyPresenceJoinedTCS.SetResult(presenceEvt);
+            await socket1.AcceptPartyMemberAsync(joinRequest.PartyId, joinRequest.Presences.First());
+            var partyPresenceEvent = await partyPresenceJoinedTcs.Task;
+            _testOutputHelper.WriteLine(partyPresenceEvent.ToString());
 
-            IPartyPresenceEvent socket2User = await partyPresenceJoinedTCS.Task;
+            await socket1.PromotePartyMember(party.Id, partyPresenceEvent.Joins.First());
 
-            var partyPromoteTCS = new TaskCompletionSource<IPartyLeader>();
-            socket1.ReceivedPartyLeader += (leader) => partyPromoteTCS.SetResult(leader);
+            var promotedLeader = await partyPromoteTcs.Task;
+            _testOutputHelper.WriteLine(promotedLeader.ToString());
 
-            socket1.PromotePartyMember(party.PartyId, socket2User.Joins[0]);
-
-            IPartyLeader newLeader = await partyPromoteTCS.Task;
-            Assert.True(newLeader.Presence.UserId == session2.UserId);
+            Assert.NotNull(promotedLeader);
+            Assert.Equal(session2.UserId, promotedLeader.Presence.UserId);
         }
     }
 }

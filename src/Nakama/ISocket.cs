@@ -69,11 +69,6 @@ namespace Nakama
         event Action<IApiNotification> ReceivedNotification;
 
         /// <summary>
-        /// Received party information.
-        /// </summary>
-        event Action<IParty> ReceivedParty;
-
-        /// <summary>
         /// Received a party close event.
         /// </summary>
         event Action<IPartyClose> ReceivedPartyClose;
@@ -94,14 +89,14 @@ namespace Nakama
         event Action<IPartyLeader> ReceivedPartyLeader;
 
         /// <summary>
-        /// Received a new presence event in the party.
-        /// </summary>
-        event Action<IPartyPresenceEvent> ReceivedPartyPresence;
-
-        /// <summary>
         /// Received a new matchmaker ticket for the party.
         /// </summary>
         event Action<IPartyMatchmakerTicket> ReceivedPartyMatchmakerTicket;
+
+        /// <summary>
+        /// Received a new presence event in the party.
+        /// </summary>
+        event Action<IPartyPresenceEvent> ReceivedPartyPresence;
 
         /// <summary>
         /// Received a presence change for when a user updated their online status.
@@ -158,12 +153,13 @@ namespace Nakama
         /// <param name="stringProperties">String properties.</param>
         /// <param name="numericProperties">Numeric properties.</param>
         /// <returns>A task which resolves to a party matchmaker ticket object.</returns>
-        Task AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount, Dictionary<string, string> stringProperties = null, Dictionary<string, double>  numericProperties = null);
+        Task AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount,
+            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null);
 
         /// <summary>
         /// End a party, kicking all party members and closing it.
         /// </summary>
-        /// <param name="partyId">Party ID.</param>
+        /// <param name="partyId">The ID of the party.</param>
         /// <returns>A task to represent the asynchronous operation.</returns>
         Task ClosePartyAsync(string partyId);
 
@@ -180,7 +176,8 @@ namespace Nakama
         /// <param name="appearOnline">If the user who appear online to other users.</param>
         /// <param name="connectTimeout">The time allowed for the socket connection to be established.</param>
         /// <returns>A task to represent the asynchronous operation.</returns>
-        Task ConnectAsync(ISession session, bool appearOnline = false, int connectTimeout = Socket.DefaultConnectTimeout);
+        Task ConnectAsync(ISession session, bool appearOnline = false,
+            int connectTimeout = Socket.DefaultConnectTimeout);
 
         /// <summary>
         /// Create a multiplayer match on the server.
@@ -194,7 +191,7 @@ namespace Nakama
         /// <param name="open">Whether or not the party will require join requests to be approved by the party leader.</param>
         /// <param name="maxSize">Maximum number of party members.</param>
         /// <returns>A task to represent the asynchronous operation.</returns>
-        Task CreatePartyAsync(bool open, int maxSize);
+        Task<IParty> CreatePartyAsync(bool open, int maxSize);
 
         /// <summary>
         /// Subscribe to one or more users for their status updates.
@@ -398,10 +395,28 @@ namespace Nakama
         /// Send data to a party.
         /// </summary>
         /// <param name="partyId">Party ID to send to.</param>
-        /// <param name="opcode">Op code value.</param>
+        /// <param name="opCode">Op code value.</param>
+        /// <param name="data">The input data to send from the byte buffer, if any.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task SendPartyDataAsync(string partyId, long opCode, ArraySegment<byte> data);
+
+        /// <summary>
+        /// Send data to a party.
+        /// </summary>
+        /// <param name="partyId">Party ID to send to.</param>
+        /// <param name="opCode">Op code value.</param>
         /// <param name="data">Data payload, if any.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task SendPartyDataAsync(string partyId, int opcode, byte[] data);
+        Task SendPartyDataAsync(string partyId, long opCode, string data);
+
+        /// <summary>
+        /// Send data to a party.
+        /// </summary>
+        /// <param name="partyId">Party ID to send to.</param>
+        /// <param name="opCode">Op code value.</param>
+        /// <param name="data">Data payload, if any.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task SendPartyDataAsync(string partyId, long opCode, byte[] data);
 
         /// <summary>
         /// Unfollow one or more users from their status updates.
@@ -409,7 +424,7 @@ namespace Nakama
         /// <param name="users">The users to unfollow.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnfollowUsersAsync(IEnumerable<IApiUser> users);
-        
+
         /// <summary>
         /// Unfollow one or more users from their status updates.
         /// </summary>

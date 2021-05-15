@@ -27,7 +27,7 @@ namespace Nakama.Tests.Socket
 
         public WebSocketMatchmakerTest()
         {
-            _client = ClientUtil.FromSettingsFile();
+            _client = TestsUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
         }
 

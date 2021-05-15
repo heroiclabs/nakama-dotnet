@@ -32,7 +32,7 @@ namespace Nakama.Tests.Socket
 
         public WebSocketUserStatusTest()
         {
-            _client = ClientUtil.FromSettingsFile();
+            _client = TestsUtil.FromSettingsFile();
         }
 
         [Fact]

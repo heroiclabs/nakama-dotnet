@@ -12,31 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
     /// <summary>
-    /// Incoming party data delivered from the server.
+    /// Kick a party member, or decline a request to join.
     /// </summary>
-    public interface IPartyData
+    internal class PartyMemberRemove
     {
-        /// <summary>
-        /// The ID of the party.
-        /// </summary>
-        string PartyId { get; }
+        [DataMember(Name = "party_id"), Preserve]
+        public string PartyId { get; set; }
 
-        /// <summary>
-        /// A reference to the user presence that sent this data, if any.
-        /// </summary>
-        IUserPresence Presence { get; }
+        [DataMember(Name = "presence"), Preserve]
+        public UserPresence Presence { get; set; }
 
-        /// <summary>
-        /// The operation code the message was sent with.
-        /// </summary>
-        long OpCode { get; }
-
-        /// <summary>
-        /// Data payload, if any.
-        /// </summary>
-        byte[] Data { get; }
+        public override string ToString() => $"PartyMemberRemove(PartyId='{PartyId}', Presence={Presence})";
     }
 }

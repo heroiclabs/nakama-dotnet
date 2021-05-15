@@ -33,7 +33,7 @@ namespace Nakama.Tests.Socket
         // ReSharper disable RedundantArgumentDefaultValue
         public WebSocketMatchTest()
         {
-            _client = ClientUtil.FromSettingsFile();
+            _client = TestsUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
         }
 

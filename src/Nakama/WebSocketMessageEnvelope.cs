@@ -138,7 +138,7 @@ namespace Nakama
         public PartyAccept PartyAccept { get; set; }
 
         [DataMember(Name="party_remove"), Preserve]
-        public PartyRemove PartyRemove { get; set; }
+        public PartyMemberRemove PartyMemberRemove { get; set; }
 
         [DataMember(Name="party_close"), Preserve]
         public PartyClose PartyClose { get; set; }
