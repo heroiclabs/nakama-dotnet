@@ -31,7 +31,7 @@ These instructions guide the release process for new official Nakama client SDK 
 7. Package and push the release to Nuget.
 
    ```shell
-   dotnet pack -p:PackageVersion=<package-version> -c Release src/Nakama/Nakama.csproj
+   dotnet pack -p:AssemblyVersion=<package-version> -p:PackageVersion=<package-version> -c Release src/Nakama/Nakama.csproj
    dotnet nuget push ./src/Nakama/bin/Release/NakamaClient.<package-version>.nupkg -k "somekey" -s https://api.nuget.org/v3/index.json
    ```
 
