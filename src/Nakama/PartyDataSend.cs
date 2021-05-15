@@ -12,32 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes to nowhere.
+    /// Send data to a party.
     /// </summary>
-    internal class NullLogger : ILogger
+    internal class PartyDataSend
     {
-        public static readonly ILogger Instance = new NullLogger();
+      [DataMember(Name = "party_id"), Preserve]
+      public string PartyId { get; set; }
 
-        private NullLogger()
-        {
-        }
+      [DataMember(Name = "op_code"), Preserve]
+      public string OpCode { get; set; }
 
-        /// <inheritdoc cref="ILogger.ErrorFormat"/>
-        public void ErrorFormat(string format, params object[] args)
-        {
-        }
+      [DataMember(Name = "data"), Preserve]
+      public string Data { get; set; }
 
-        /// <inheritdoc cref="ILogger.InfoFormat"/>
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.WarnFormat"/>
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
+      public override string ToString() => $"PartyDataSend(PartyId='{PartyId}', OpCode={OpCode}, Data='{Data}')";
     }
 }

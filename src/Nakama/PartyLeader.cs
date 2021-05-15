@@ -12,32 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes to nowhere.
+    /// Announcement of a new party leader.
     /// </summary>
-    internal class NullLogger : ILogger
+    internal class PartyLeader : IPartyLeader
     {
-        public static readonly ILogger Instance = new NullLogger();
+        [DataMember(Name = "party_id"), Preserve]
+        public string PartyId { get; set; }
 
-        private NullLogger()
-        {
-        }
+        public IUserPresence Presence => PresenceField;
 
-        /// <inheritdoc cref="ILogger.ErrorFormat"/>
-        public void ErrorFormat(string format, params object[] args)
-        {
-        }
+        [DataMember(Name = "presence"), Preserve]
+        public UserPresence PresenceField { get; set; }
 
-        /// <inheritdoc cref="ILogger.InfoFormat"/>
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.WarnFormat"/>
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
+        public override string ToString() => $"PartyLeader(PartyId='{PartyId}', Presence={Presence})";
     }
 }

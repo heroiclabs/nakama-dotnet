@@ -145,7 +145,9 @@ To run a specific test, pass the fully qualified name of the method to `dotnet t
 dotnet test --filter "Nakama.Tests.Api.GroupTest.ShouldPromoteAndDemoteUsers"
 ```
 
-### License
+If you'd like to attach a Visual Studio debugger to a test, set `VSTEST_HOST_DEBUG` to `true` in your shell environment and run `dotnet test`. Attach the debugger to the process identified by the console.
+
+### Licenses
 
 This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/nakama-dotnet/blob/master/LICENSE).
 

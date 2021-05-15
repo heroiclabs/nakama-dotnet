@@ -55,18 +55,18 @@ namespace Nakama
 
         [DataMember(Name = "match_id"), Preserve] public string MatchId { get; set; }
 
-        public long OpCode => Convert.ToInt64(_opCode);
-        [DataMember(Name = "op_code"), Preserve] public string _opCode { get; set; }
+        public long OpCode => Convert.ToInt64(OpCodeField);
+        [DataMember(Name = "op_code"), Preserve] public string OpCodeField { get; set; }
 
-        public byte[] State => _state == null ? NoBytes :  Convert.FromBase64String(_state);
-        [DataMember(Name = "data"), Preserve] public string _state { get; set; }
+        public byte[] State => StateField == null ? NoBytes :  Convert.FromBase64String(StateField);
+        [DataMember(Name = "data"), Preserve] public string StateField { get; set; }
 
-        public IUserPresence UserPresence => _userPresence;
-        [DataMember(Name = "presence"), Preserve] public UserPresence _userPresence { get; set; }
+        public IUserPresence UserPresence => UserPresenceField;
+        [DataMember(Name = "presence"), Preserve] public UserPresence UserPresenceField { get; set; }
 
         public override string ToString()
         {
-            return $"MatchState(MatchId='{MatchId}', OpCode={OpCode}, State='{_state}', UserPresence={UserPresence})";
+            return $"MatchState(MatchId='{MatchId}', OpCode={OpCode}, State='{State}', UserPresence={UserPresence})";
         }
     }
 }

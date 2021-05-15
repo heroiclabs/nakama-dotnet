@@ -12,32 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes to nowhere.
+    /// Create a new party.
     /// </summary>
-    internal class NullLogger : ILogger
+    internal class PartyCreate
     {
-        public static readonly ILogger Instance = new NullLogger();
+        [DataMember(Name = "open"), Preserve] public bool Open { get; set; }
 
-        private NullLogger()
-        {
-        }
+        [DataMember(Name = "max_size"), Preserve]
+        public int MaxSize { get; set; }
 
-        /// <inheritdoc cref="ILogger.ErrorFormat"/>
-        public void ErrorFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.InfoFormat"/>
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.WarnFormat"/>
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
+        public override string ToString() => $"PartyCreate(Open={Open}, MaxSize={MaxSize})";
     }
 }

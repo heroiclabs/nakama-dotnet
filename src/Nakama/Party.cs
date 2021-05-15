@@ -18,27 +18,30 @@ using System.Runtime.Serialization;
 namespace Nakama
 {
     /// <summary>
-    /// Receive status updates for users.
+    /// Incoming information about a party.
     /// </summary>
-    public interface IStatus
+    internal class Party : IParty
     {
-        /// <summary>
-        /// The status events for the users followed.
-        /// </summary>
-        IEnumerable<IUserPresence> Presences { get; }
-    }
+        [DataMember(Name = "party_id"), Preserve]
+        public string Id { get; set; }
 
-    /// <inheritdoc cref="IStatus"/>
-    internal class Status : IStatus
-    {
+        [DataMember(Name = "open"), Preserve] public bool Open { get; set; }
+
+        [DataMember(Name = "max_size"), Preserve]
+        public int MaxSize { get; set; }
+
+        public IUserPresence Self => SelfField;
+
+        [DataMember(Name = "self"), Preserve] public UserPresence SelfField { get; set; }
+
+        public IUserPresence Leader => LeaderField;
+
+        [DataMember(Name = "leader"), Preserve]
+        public UserPresence LeaderField { get; set; }
+
         public IEnumerable<IUserPresence> Presences => PresencesField ?? UserPresence.NoPresences;
-        [DataMember(Name="presences"), Preserve]
-        public List<UserPresence> PresencesField { get; set; }
 
-        public override string ToString()
-        {
-            var presences = string.Join(", ", Presences);
-            return $"Status(Presences=[{presences}])";
-        }
+        [DataMember(Name = "presences"), Preserve]
+        private List<UserPresence> PresencesField { get; set; }
     }
 }

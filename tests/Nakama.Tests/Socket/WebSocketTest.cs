@@ -30,14 +30,14 @@ namespace Nakama.Tests.Socket
 
         public WebSocketTest()
         {
-            _client = ClientUtil.FromSettingsFile();
+            _client = TestsUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
         }
 
         [Fact]
         public void ShouldCreateSocket()
         {
-            var client = ClientUtil.FromSettingsFile();
+            var client = TestsUtil.FromSettingsFile();
             var socket = Nakama.Socket.From(client);
             Assert.NotNull(socket);
         }

@@ -12,32 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes to nowhere.
+    /// Presence update for a particular party.
     /// </summary>
-    internal class NullLogger : ILogger
+    public interface IPartyPresenceEvent
     {
-        public static readonly ILogger Instance = new NullLogger();
+        /// <summary>
+        /// The ID of the party.
+        /// </summary>
+        string PartyId { get; }
 
-        private NullLogger()
-        {
-        }
+        /// <summary>
+        /// The user presences that have just joined the party.
+        /// </summary>
+        IEnumerable<IUserPresence> Joins { get; }
 
-        /// <inheritdoc cref="ILogger.ErrorFormat"/>
-        public void ErrorFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.InfoFormat"/>
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.WarnFormat"/>
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
+        /// <summary>
+        /// The user presences that have just left the party.
+        /// </summary>
+        IEnumerable<IUserPresence> Leaves { get; }
     }
 }

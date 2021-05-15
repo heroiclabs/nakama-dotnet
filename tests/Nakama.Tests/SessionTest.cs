@@ -56,7 +56,7 @@ namespace Nakama.Tests
         [Fact]
         public async void GetVariables_VariablesField_FromAuthenticate()
         {
-            var client = ClientUtil.FromSettingsFile();
+            var client = TestsUtil.FromSettingsFile();
             var id = Guid.NewGuid().ToString();
             var vars = new Dictionary<string, string> {{"k1", "v1"}};
             var session = await client.AuthenticateDeviceAsync(id, null, true, vars);
@@ -68,7 +68,7 @@ namespace Nakama.Tests
         [Fact]
         public async void GetRefreshToken_RefreshTokenField_FromAuthenticate()
         {
-            var client = ClientUtil.FromSettingsFile();
+            var client = TestsUtil.FromSettingsFile();
             var id = Guid.NewGuid().ToString();
             var session = await client.AuthenticateDeviceAsync(id);
             Assert.NotNull(session);
@@ -79,7 +79,7 @@ namespace Nakama.Tests
         [Fact]
         public async void SessionLogout_RefreshTokenField_Disabled()
         {
-            var client = ClientUtil.FromSettingsFile();
+            var client = TestsUtil.FromSettingsFile();
             var id = Guid.NewGuid().ToString();
             var session = await client.AuthenticateDeviceAsync(id);
             Assert.NotNull(session);

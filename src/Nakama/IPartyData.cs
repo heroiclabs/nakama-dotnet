@@ -15,29 +15,28 @@
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes to nowhere.
+    /// Incoming party data delivered from the server.
     /// </summary>
-    internal class NullLogger : ILogger
+    public interface IPartyData
     {
-        public static readonly ILogger Instance = new NullLogger();
+        /// <summary>
+        /// The ID of the party.
+        /// </summary>
+        string PartyId { get; }
 
-        private NullLogger()
-        {
-        }
+        /// <summary>
+        /// A reference to the user presence that sent this data, if any.
+        /// </summary>
+        IUserPresence Presence { get; }
 
-        /// <inheritdoc cref="ILogger.ErrorFormat"/>
-        public void ErrorFormat(string format, params object[] args)
-        {
-        }
+        /// <summary>
+        /// The operation code the message was sent with.
+        /// </summary>
+        long OpCode { get; }
 
-        /// <inheritdoc cref="ILogger.InfoFormat"/>
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.WarnFormat"/>
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
+        /// <summary>
+        /// Data payload, if any.
+        /// </summary>
+        byte[] Data { get; }
     }
 }

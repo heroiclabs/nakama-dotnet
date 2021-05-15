@@ -15,29 +15,18 @@
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes to nowhere.
+    /// A response from starting a new party matchmaking process.
     /// </summary>
-    internal class NullLogger : ILogger
+    public interface IPartyMatchmakerTicket
     {
-        public static readonly ILogger Instance = new NullLogger();
+        /// <summary>
+        /// The ID of the party.
+        /// </summary>
+        string PartyId { get; }
 
-        private NullLogger()
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.ErrorFormat"/>
-        public void ErrorFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.InfoFormat"/>
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.WarnFormat"/>
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
+        /// <summary>
+        /// The ticket that can be used to cancel matchmaking.
+        /// </summary>
+        string Ticket { get; }
     }
 }

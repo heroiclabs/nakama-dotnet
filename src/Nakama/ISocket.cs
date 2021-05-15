@@ -69,6 +69,36 @@ namespace Nakama
         event Action<IApiNotification> ReceivedNotification;
 
         /// <summary>
+        /// Received a party close event.
+        /// </summary>
+        event Action<IPartyClose> ReceivedPartyClose;
+
+        /// <summary>
+        /// Received custom party data.
+        /// </summary>
+        event Action<IPartyData> ReceivedPartyData;
+
+        /// <summary>
+        /// Received a request to join the party.
+        /// </summary>
+        event Action<IPartyJoinRequest> ReceivedPartyJoinRequest;
+
+        /// <summary>
+        /// Received a change in the party leader.
+        /// </summary>
+        event Action<IPartyLeader> ReceivedPartyLeader;
+
+        /// <summary>
+        /// Received a new matchmaker ticket for the party.
+        /// </summary>
+        event Action<IPartyMatchmakerTicket> ReceivedPartyMatchmakerTicket;
+
+        /// <summary>
+        /// Received a new presence event in the party.
+        /// </summary>
+        event Action<IPartyPresenceEvent> ReceivedPartyPresence;
+
+        /// <summary>
         /// Received a presence change for when a user updated their online status.
         /// </summary>
         event Action<IStatusPresenceEvent> ReceivedStatusPresence;
@@ -94,6 +124,14 @@ namespace Nakama
         bool IsConnecting { get; }
 
         /// <summary>
+        /// Accept a party member's request to join the party.
+        /// </summary>
+        /// <param name="partyId">The party ID to accept the join request for.</param>
+        /// <param name="presence"> The presence to accept as a party member. </param>
+        /// <returns>A task to represent the asynchronous operation.</returns>
+        Task AcceptPartyMemberAsync(string partyId, IUserPresence presence);
+
+        /// <summary>
         /// Join the matchmaker pool and search for opponents on the server.
         /// </summary>
         /// <param name="query">The matchmaker query to search for opponents.</param>
@@ -104,6 +142,26 @@ namespace Nakama
         /// <returns>A task which resolves to a matchmaker ticket object.</returns>
         Task<IMatchmakerTicket> AddMatchmakerAsync(string query = "*", int minCount = 2, int maxCount = 8,
             Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null);
+
+        /// <summary>
+        /// Begin matchmaking as a party.
+        /// </summary>
+        /// <param name="partyId">Party ID.</param>
+        /// <param name="query">Filter query used to identify suitable users.</param>
+        /// <param name="minCount">Minimum total user count to match together.</param>
+        /// <param name="maxCount">Maximum total user count to match together.</param>
+        /// <param name="stringProperties">String properties.</param>
+        /// <param name="numericProperties">Numeric properties.</param>
+        /// <returns>A task which resolves to a party matchmaker ticket object.</returns>
+        Task AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount,
+            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null);
+
+        /// <summary>
+        /// End a party, kicking all party members and closing it.
+        /// </summary>
+        /// <param name="partyId">The ID of the party.</param>
+        /// <returns>A task to represent the asynchronous operation.</returns>
+        Task ClosePartyAsync(string partyId);
 
         /// <summary>
         /// Close the socket connection to the server.
@@ -118,13 +176,22 @@ namespace Nakama
         /// <param name="appearOnline">If the user who appear online to other users.</param>
         /// <param name="connectTimeout">The time allowed for the socket connection to be established.</param>
         /// <returns>A task to represent the asynchronous operation.</returns>
-        Task ConnectAsync(ISession session, bool appearOnline = false, int connectTimeout = Socket.DefaultConnectTimeout);
+        Task ConnectAsync(ISession session, bool appearOnline = false,
+            int connectTimeout = Socket.DefaultConnectTimeout);
 
         /// <summary>
         /// Create a multiplayer match on the server.
         /// </summary>
         /// <returns>A task to represent the asynchronous operation.</returns>
         Task<IMatch> CreateMatchAsync();
+
+        /// <summary>
+        /// Create a party.
+        /// </summary>
+        /// <param name="open">Whether or not the party will require join requests to be approved by the party leader.</param>
+        /// <param name="maxSize">Maximum number of party members.</param>
+        /// <returns>A task to represent the asynchronous operation.</returns>
+        Task<IParty> CreatePartyAsync(bool open, int maxSize);
 
         /// <summary>
         /// Subscribe to one or more users for their status updates.
@@ -150,6 +217,13 @@ namespace Nakama
         /// <param name="hidden">If the current user should be hidden on the channel.</param>
         /// <returns>A task which resolves to a chat channel object.</returns>
         Task<IChannel> JoinChatAsync(string target, ChannelType type, bool persistence = false, bool hidden = false);
+
+        /// <summary>
+        /// Join a party.
+        /// </summary>
+        /// <param name="partyId">Party ID</param>
+        /// <returns>A task to represent the asynchronous operation.</returns>
+        Task JoinPartyAsync(string partyId);
 
         /// <summary>
         /// Join a multiplayer match with the matchmaker matched object.
@@ -195,6 +269,28 @@ namespace Nakama
         Task LeaveMatchAsync(string matchId);
 
         /// <summary>
+        /// Leave the party.
+        /// </summary>
+        /// <param name="partyId">Party ID.</param>
+        /// <returns>A task to represent the asynchronous operation.</returns>
+        Task LeavePartyAsync(string partyId);
+
+        /// <summary>
+        /// Request a list of pending join requests for a party.
+        /// </summary>
+        /// <param name="partyId">Party ID.</param>
+        /// <returns>A task which resolves to a list of all party join requests.</returns>
+        Task<IPartyJoinRequest> ListPartyJoinRequestsAsync(string partyId);
+
+        /// <summary>
+        /// Promote a new party leader.
+        /// </summary>
+        /// <param name="partyId">Party ID.</param>
+        /// <param name="partyMember">The presence of an existing party member to promote as the new leader.</param>
+        /// <returns>A task which resolves to an announcement of a new party leader.</returns>
+        Task PromotePartyMember(string partyId, IUserPresence partyMember);
+
+        /// <summary>
         /// Remove a chat message from a chat channel on the server.
         /// </summary>
         /// <param name="channel">The chat channel with the message to remove.</param>
@@ -223,6 +319,22 @@ namespace Nakama
         /// <param name="ticket">The contents of the ticket returned by the matchmaker on join.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task RemoveMatchmakerAsync(string ticket);
+
+        /// <summary>
+        /// Cancel a party matchmaking process using a ticket.
+        /// </summary>
+        /// <param name="partyId">Party ID.</param>
+        /// <param name="ticket">The ticket to cancel.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task RemoveMatchmakerPartyAsync(string partyId, string ticket);
+
+        /// <summary>
+        /// Kick a party member, or decline a request to join.
+        /// </summary>
+        /// <param name="partyId">Party ID to remove/reject from.</param>
+        /// <param name="presence">The presence to remove or reject.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task RemovePartyMemberAsync(string partyId, IUserPresence presence);
 
         /// <summary>
         /// Execute an RPC function to the server.
@@ -280,12 +392,39 @@ namespace Nakama
             IEnumerable<IUserPresence> presences = null);
 
         /// <summary>
+        /// Send data to a party.
+        /// </summary>
+        /// <param name="partyId">Party ID to send to.</param>
+        /// <param name="opCode">Op code value.</param>
+        /// <param name="data">The input data to send from the byte buffer, if any.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task SendPartyDataAsync(string partyId, long opCode, ArraySegment<byte> data);
+
+        /// <summary>
+        /// Send data to a party.
+        /// </summary>
+        /// <param name="partyId">Party ID to send to.</param>
+        /// <param name="opCode">Op code value.</param>
+        /// <param name="data">Data payload, if any.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task SendPartyDataAsync(string partyId, long opCode, string data);
+
+        /// <summary>
+        /// Send data to a party.
+        /// </summary>
+        /// <param name="partyId">Party ID to send to.</param>
+        /// <param name="opCode">Op code value.</param>
+        /// <param name="data">Data payload, if any.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task SendPartyDataAsync(string partyId, long opCode, byte[] data);
+
+        /// <summary>
         /// Unfollow one or more users from their status updates.
         /// </summary>
         /// <param name="users">The users to unfollow.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnfollowUsersAsync(IEnumerable<IApiUser> users);
-        
+
         /// <summary>
         /// Unfollow one or more users from their status updates.
         /// </summary>

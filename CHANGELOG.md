@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The client now supports session auto-refresh using refresh tokens. This is enabled by default.
 - New socket RPC and MatchSend methods using ArraySegment to allow developers to manage memory re-use.
 - Add IAP validation APIs for purchase receipts with Apple App Store, Google Play Store, and Huawei AppGallery.
+- Add Realtime Parties feature.
 
 ## [2.8.0] - 2020-02-19
 ### Changed

@@ -29,7 +29,7 @@ namespace Nakama.Tests.Api
 
         public GroupTest()
         {
-            _client = ClientUtil.FromSettingsFile();
+            _client = TestsUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
         }
 

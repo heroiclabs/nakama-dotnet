@@ -29,7 +29,7 @@ namespace Nakama.Tests.Socket
 
         public WebSocketChannelTest()
         {
-            _client = ClientUtil.FromSettingsFile();
+            _client = TestsUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
         }
 

@@ -15,29 +15,13 @@
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes to nowhere.
+    /// End a party, kicking all party members and closing it.
     /// </summary>
-    internal class NullLogger : ILogger
+    public interface IPartyClose
     {
-        public static readonly ILogger Instance = new NullLogger();
-
-        private NullLogger()
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.ErrorFormat"/>
-        public void ErrorFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.InfoFormat"/>
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.WarnFormat"/>
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
+        /// <summary>
+        /// The ID of the party to close.
+        /// </summary>
+        string PartyId { get; }
     }
 }

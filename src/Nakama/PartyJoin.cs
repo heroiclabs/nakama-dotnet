@@ -12,32 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes to nowhere.
+    /// Join a party, or request to join if the party is not open.
     /// </summary>
-    internal class NullLogger : ILogger
+    internal class PartyJoin
     {
-        public static readonly ILogger Instance = new NullLogger();
+        [DataMember(Name = "party_id"), Preserve]
+        public string PartyId { get; set; }
 
-        private NullLogger()
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.ErrorFormat"/>
-        public void ErrorFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.InfoFormat"/>
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.WarnFormat"/>
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
+        public override string ToString() => $"PartyJoin(PartyId='{PartyId}')";
     }
 }

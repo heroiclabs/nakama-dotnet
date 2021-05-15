@@ -116,6 +116,57 @@ namespace Nakama
         [DataMember(Name="stream_data"), Preserve]
         public StreamState StreamState { get; set; }
 
+        [DataMember(Name="party"), Preserve]
+        public Party Party { get; set; }
+
+        [DataMember(Name="party_create"), Preserve]
+        public PartyCreate PartyCreate { get; set; }
+
+        [DataMember(Name="party_join"), Preserve]
+        public PartyJoin PartyJoin { get; set; }
+
+        [DataMember(Name="party_leave"), Preserve]
+        public PartyLeave PartyLeave { get; set; }
+
+        [DataMember(Name="party_promote"), Preserve]
+        public PartyPromote PartyPromote { get; set; }
+
+        [DataMember(Name="party_leader"), Preserve]
+        public PartyLeader PartyLeader { get; set; }
+
+        [DataMember(Name="party_accept"), Preserve]
+        public PartyAccept PartyAccept { get; set; }
+
+        [DataMember(Name="party_remove"), Preserve]
+        public PartyMemberRemove PartyMemberRemove { get; set; }
+
+        [DataMember(Name="party_close"), Preserve]
+        public PartyClose PartyClose { get; set; }
+
+        [DataMember(Name="party_join_request_list"), Preserve]
+        public PartyJoinRequestList PartyJoinRequestList { get; set; }
+
+        [DataMember(Name="party_join_request"), Preserve]
+        public PartyJoinRequest PartyJoinRequest { get; set; }
+
+        [DataMember(Name="party_matchmaker_add"), Preserve]
+        public PartyMatchmakerAdd PartyMatchmakerAdd { get; set; }
+
+        [DataMember(Name="party_matchmaker_remove"), Preserve]
+        public PartyMatchmakerRemove PartyMatchmakerRemove { get; set; }
+
+        [DataMember(Name="party_matchmaker_ticket"), Preserve]
+        public PartyMatchmakerTicket PartyMatchmakerTicket { get; set; }
+
+        [DataMember(Name="party_data"), Preserve]
+        public PartyData PartyData { get; set; }
+
+        [DataMember(Name="party_data_send"), Preserve]
+        public PartyDataSend PartyDataSend { get; set; }
+
+        [DataMember(Name="party_presence_event"), Preserve]
+        public PartyPresenceEvent PartyPresenceEvent { get; set; }
+
         public override string ToString()
         {
             return "WebSocketMessageEnvelope";

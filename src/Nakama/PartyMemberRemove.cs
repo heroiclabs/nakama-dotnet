@@ -12,32 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
     /// <summary>
-    /// A logger which writes to nowhere.
+    /// Kick a party member, or decline a request to join.
     /// </summary>
-    internal class NullLogger : ILogger
+    internal class PartyMemberRemove
     {
-        public static readonly ILogger Instance = new NullLogger();
+        [DataMember(Name = "party_id"), Preserve]
+        public string PartyId { get; set; }
 
-        private NullLogger()
-        {
-        }
+        [DataMember(Name = "presence"), Preserve]
+        public UserPresence Presence { get; set; }
 
-        /// <inheritdoc cref="ILogger.ErrorFormat"/>
-        public void ErrorFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.InfoFormat"/>
-        public void InfoFormat(string format, params object[] args)
-        {
-        }
-
-        /// <inheritdoc cref="ILogger.WarnFormat"/>
-        public void WarnFormat(string format, params object[] args)
-        {
-        }
+        public override string ToString() => $"PartyMemberRemove(PartyId='{PartyId}', Presence={Presence})";
     }
 }
