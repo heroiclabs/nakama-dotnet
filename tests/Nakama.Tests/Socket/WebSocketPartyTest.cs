@@ -135,5 +135,35 @@ namespace Nakama.Tests.Socket
             Assert.NotNull(promotedLeader);
             Assert.Equal(session2.UserId, promotedLeader.Presence.UserId);
         }
+
+        [Fact]
+        public async Task ShouldSendAndReceivePartyData()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var socket1 = Nakama.Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
+
+            await socket1.ConnectAsync(session1);
+            await socket2.ConnectAsync(session2);
+
+            var party = await socket1.CreatePartyAsync(true, 1);
+
+            await socket2.JoinPartyAsync(party.Id);
+
+            var partyDataTcs = new TaskCompletionSource<IPartyData>();
+
+            socket1.ReceivedPartyData += (data) => partyDataTcs.SetResult(data);
+
+            await socket2.SendPartyDataAsync(party.Id, 0, System.Text.Encoding.UTF8.GetBytes("hello world"));
+
+            await partyDataTcs.Task;
+
+            Assert.Equal(System.Text.Encoding.UTF8.GetString(partyDataTcs.Task.Result.Data), "hello world");
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
+        }
     }
 }
