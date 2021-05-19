@@ -68,7 +68,10 @@ namespace Nakama
         /// </summary>
         event Action<IApiNotification> ReceivedNotification;
 
-        /// <inheritdoc cref="ReceivedParty"/>
+        /// <summary>
+        /// Received a party event. This will occur when the current user's invitation request is accepted
+        /// by the party leader of a closed party.
+        /// </summary>
         event Action<IParty> ReceivedParty;
 
         /// <summary>
