@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -164,6 +165,69 @@ namespace Nakama.Tests.Socket
 
             await socket1.CloseAsync();
             await socket2.CloseAsync();
+        }
+
+        [Fact]
+        public async Task ShouldJoinClosedParty()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var socket1 = Nakama.Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
+
+            await socket1.ConnectAsync(session1);
+            await socket2.ConnectAsync(session2);
+
+            var party = await socket1.CreatePartyAsync(false, 2);
+
+            var requestedJoinTcs = new TaskCompletionSource<IPartyJoinRequest>();
+            socket1.ReceivedPartyJoinRequest += (request) => requestedJoinTcs.SetResult(request);
+            await socket2.JoinPartyAsync(party.Id);
+
+            await requestedJoinTcs.Task;
+
+            var acceptedTcs = new TaskCompletionSource<IParty>();
+
+            socket2.ReceivedParty += (party) => acceptedTcs.SetResult(party);
+
+            foreach (var presence in requestedJoinTcs.Task.Result.Presences)
+            {
+                await socket1.AcceptPartyMemberAsync(requestedJoinTcs.Task.Result.PartyId, presence);
+            }
+
+            await acceptedTcs.Task;
+
+            Assert.True(acceptedTcs.Task.Result.Id == party.Id);
+            Assert.True(acceptedTcs.Task.Result.Self.UserId == session2.UserId);
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
+        }
+
+        [Fact]
+        public async Task ShouldNotJoinPastMaxSize()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session3 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var socket1 = Nakama.Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
+            var socket3 = Nakama.Socket.From(_client);
+
+            await socket1.ConnectAsync(session1);
+            await socket2.ConnectAsync(session2);
+            await socket3.ConnectAsync(session3);
+
+            var party = await socket1.CreatePartyAsync(true, 1);
+
+            await socket2.JoinPartyAsync(party.Id);
+            await Assert.ThrowsAsync<WebSocketException>(() => socket3.JoinPartyAsync(party.Id));
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
+            await socket3.CloseAsync();
         }
     }
 }

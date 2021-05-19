@@ -70,6 +70,9 @@ namespace Nakama
         /// <inheritdoc cref="ReceivedStreamState"/>
         public event Action<IStreamState> ReceivedStreamState;
 
+        /// <inheritdoc cref="ReceivedParty"/>
+        public event Action<IParty> ReceivedParty;
+
         /// <inheritdoc cref="ReceivedPartyClose"/>
         public event Action<IPartyClose> ReceivedPartyClose;
 
@@ -838,6 +841,10 @@ namespace Nakama
                 else if (envelope.StreamState != null)
                 {
                     ReceivedStreamState?.Invoke(envelope.StreamState);
+                }
+                else if (envelope.Party != null)
+                {
+                    ReceivedParty?.Invoke(envelope.Party);
                 }
                 else if (envelope.PartyClose != null)
                 {

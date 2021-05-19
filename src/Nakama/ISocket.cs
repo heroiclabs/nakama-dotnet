@@ -68,6 +68,9 @@ namespace Nakama
         /// </summary>
         event Action<IApiNotification> ReceivedNotification;
 
+        /// <inheritdoc cref="ReceivedParty"/>
+        event Action<IParty> ReceivedParty;
+
         /// <summary>
         /// Received a party close event.
         /// </summary>
