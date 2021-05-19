@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [2.9.1] - 2021-05-19
+### Added
+- The `Socket.ReceivedParty` event can now be subscribed to in order to listen for acceptance events
+from the leader of a closed party.
+
 ## [2.9.0] - 2021-05-15
 ### Added
 - A session can be refreshed on demand with "SessionRefreshAsync" method.
