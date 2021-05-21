@@ -771,6 +771,8 @@ namespace Nakama
         {
             var contents = System.Text.Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
 
+            Logger?.DebugFormat("Received JSON over web socket: {0}", contents);
+
             var envelope = contents.FromJson<WebSocketMessageEnvelope>();
             try
             {
@@ -884,6 +886,9 @@ namespace Nakama
         private Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope envelope)
         {
             var json = envelope.ToJson();
+
+            Logger?.DebugFormat("Sending JSON over web socket: {0}", json);
+
             var buffer = System.Text.Encoding.UTF8.GetBytes(json);
             if (string.IsNullOrEmpty(envelope.Cid))
             {

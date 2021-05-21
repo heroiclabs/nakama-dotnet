@@ -25,6 +25,11 @@ namespace Nakama
         {
         }
 
+        /// <inheritdoc cref="ILogger.DebugFormat"/>
+        public void DebugFormat(string format, params object[] args)
+        {
+        }
+
         /// <inheritdoc cref="ILogger.ErrorFormat"/>
         public void ErrorFormat(string format, params object[] args)
         {
