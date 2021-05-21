@@ -28,10 +28,13 @@ These instructions guide the release process for new official Nakama client SDK 
 
 6. Copy the CHANGELOG section to the release notes. Upload the release DLL to be part of the GitHub release. Publish it.
 
-7. Package and push the release to Nuget.
+7. Package and push the release to Nuget. Don't put a `v` prefix before the version number.
 
    ```shell
    dotnet pack -p:AssemblyVersion=<package-version> -p:PackageVersion=<package-version> -c Release src/Nakama/Nakama.csproj
+   ```
+
+   ```shell
    dotnet nuget push ./src/Nakama/bin/Release/NakamaClient.<package-version>.nupkg -k "somekey" -s https://api.nuget.org/v3/index.json
    ```
 
