@@ -13,11 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 using Xunit;
 using Xunit.Abstractions;
+using System.Threading;
 
 namespace Nakama.Tests.Socket
 {
@@ -246,6 +249,62 @@ namespace Nakama.Tests.Socket
             Assert.Equal(party.Leader.UserId, party.Presences.First().UserId);
 
             await socket1.CloseAsync();
+        }
+
+        [Fact]
+        public async Task PresencesInitializedWithConcurrentJoins()
+        {
+            const int numMembers = 5;
+
+            var leaderSession = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var leaderSocket = Nakama.Socket.From(_client);
+            await leaderSocket.ConnectAsync(leaderSession);
+
+            var memberSessions = new ISession[numMembers];
+            var memberSockets = new Nakama.ISocket[numMembers];
+
+            IParty party = await leaderSocket.CreatePartyAsync(true, numMembers);
+
+            var memberPartyObjects = new IParty[numMembers];
+
+            int partyObjCounter = 0;
+
+
+            for (int i = 0; i < numMembers; i++)
+            {
+                memberSessions[i] = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+                memberSockets[i] = (Nakama.Socket.From(_client));
+                await memberSockets[i].ConnectAsync(memberSessions[i]);
+                memberSockets[i].ReceivedParty += party => {
+                    memberPartyObjects[partyObjCounter] = party;
+                    Interlocked.Increment(ref partyObjCounter);
+                };
+
+                memberSockets[i].JoinPartyAsync(party.Id);
+            }
+
+            while (partyObjCounter < numMembers)
+            {
+                System.Console.WriteLine(partyObjCounter);
+                await Task.Delay(25);
+            }
+
+            // includes duplicates
+            var combinedPresences = memberPartyObjects.SelectMany(party => party.Presences);
+
+            foreach (var presence in combinedPresences)
+            {
+                Assert.False(string.IsNullOrEmpty(presence.UserId));
+                Assert.False(string.IsNullOrEmpty(presence.Username));
+                Assert.False(string.IsNullOrEmpty(presence.SessionId));
+            }
+
+            await leaderSocket.CloseAsync();
+
+            foreach (var memberSocket in memberSockets)
+            {
+                await memberSocket.CloseAsync();
+            }
         }
     }
 }
