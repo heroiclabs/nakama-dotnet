@@ -229,5 +229,23 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
             await socket3.CloseAsync();
         }
+
+        [Fact]
+        public async Task LeaderShouldBeInInitialPresences()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var socket1 = Nakama.Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
+
+            await socket1.ConnectAsync(session1);
+
+            var party = await socket1.CreatePartyAsync(true, 1);
+
+            Assert.Equal(1, party.Presences.Count());
+            Assert.Equal(party.Leader.UserId, party.Presences.First().UserId);
+
+            await socket1.CloseAsync();
+        }
     }
 }

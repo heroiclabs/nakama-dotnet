@@ -42,6 +42,6 @@ namespace Nakama
         public IEnumerable<IUserPresence> Presences => PresencesField ?? UserPresence.NoPresences;
 
         [DataMember(Name = "presences"), Preserve]
-        private List<UserPresence> PresencesField { get; set; }
+        public List<UserPresence> PresencesField { get; set; }
     }
 }
