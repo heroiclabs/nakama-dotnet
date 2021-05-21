@@ -159,7 +159,7 @@ namespace Nakama
         /// <param name="stringProperties">String properties.</param>
         /// <param name="numericProperties">Numeric properties.</param>
         /// <returns>A task which resolves to a party matchmaker ticket object.</returns>
-        Task AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount,
+        Task<IPartyMatchmakerTicket> AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount,
             Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null);
 
         /// <summary>
