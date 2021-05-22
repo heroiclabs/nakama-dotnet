@@ -30,7 +30,7 @@ namespace Nakama.Tests
         private const string RefreshToken =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1NTVjNDQwMC0yZGIxLTRkYmEtOTgwMC1jZjBmYzljMTVjMTAiLCJ1c24iOiJ1YWVuWGxFRnlhIiwiZXhwIjoxNjE2MzQ3OTc2fQ.l6bKhmcEbGHKV8YQVDKF8ysmWgOqcz3tCDSRn0eIKPw";
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void GetVariables_VariablesField_Empty()
         {
             var session = Session.Restore(AuthToken);
@@ -40,7 +40,7 @@ namespace Nakama.Tests
             Assert.Empty(session.Vars);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void GetVariables_VariablesField_Values()
         {
             var session = Session.Restore(AuthTokenVariables);
@@ -53,7 +53,7 @@ namespace Nakama.Tests
             Assert.Contains(session.Vars, pair => pair.Key.Equals("k1") || pair.Key.Equals("k2"));
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void GetVariables_VariablesField_FromAuthenticate()
         {
             var client = TestsUtil.FromSettingsFile();
@@ -65,7 +65,7 @@ namespace Nakama.Tests
             Assert.Equal(vars, session.Vars);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void GetRefreshToken_RefreshTokenField_FromAuthenticate()
         {
             var client = TestsUtil.FromSettingsFile();
@@ -76,7 +76,7 @@ namespace Nakama.Tests
             Assert.NotEqual(0L, session.RefreshExpireTime);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void SessionLogout_RefreshTokenField_Disabled()
         {
             var client = TestsUtil.FromSettingsFile();
@@ -88,7 +88,7 @@ namespace Nakama.Tests
             Assert.Equal(401, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void GetUsername_UsernameField_NotNull()
         {
             var session = Session.Restore(AuthToken);
@@ -98,7 +98,7 @@ namespace Nakama.Tests
             Assert.Equal("vTGdGHyxvl", session.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void GetUserId_UserIdField_NotNull()
         {
             var session = Session.Restore(AuthToken);
@@ -108,7 +108,7 @@ namespace Nakama.Tests
             Assert.Equal("f4158f2b-80f3-4926-946b-a8ccfc165490", session.UserId);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void IsExpired_ExpiredField_True()
         {
             var session = Session.Restore(AuthToken);
@@ -119,7 +119,7 @@ namespace Nakama.Tests
             Assert.True(session.IsExpired);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void IsRefreshExpired_RefreshExpiredField_True()
         {
             var session = Session.Restore(AuthToken, RefreshToken);
@@ -130,14 +130,14 @@ namespace Nakama.Tests
             Assert.True(session.IsRefreshExpired);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void Restore_AuthTokenEmptyString_Null()
         {
             var session = Session.Restore("");
             Assert.Null(session);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void Restore_RefreshTokenNull_Valid()
         {
             var session = Session.Restore(AuthToken, null);

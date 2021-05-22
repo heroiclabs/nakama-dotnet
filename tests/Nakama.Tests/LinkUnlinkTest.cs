@@ -31,7 +31,7 @@ namespace Nakama.Tests.Api
             _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldLinkCustomId()
         {
             var customid1 = Guid.NewGuid().ToString();
@@ -46,7 +46,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(original.Username, updated.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldLinkCustomIdSame()
         {
             var customid = Guid.NewGuid().ToString();
@@ -59,7 +59,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(session.Username, account.User.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldLinkCustomIdFieldEmpty()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -73,7 +73,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(customid, account.CustomId);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldUnlinkCustomId()
         {
             var customid = Guid.NewGuid().ToString();
@@ -88,7 +88,7 @@ namespace Nakama.Tests.Api
             Assert.Null(account.CustomId);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotLinkCustomIdInuse()
         {
             var customid = Guid.NewGuid().ToString();
@@ -100,7 +100,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Conflict, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkCustomId()
         {
             var customid = Guid.NewGuid().ToString();
@@ -110,7 +110,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkCustomIdNotOwned()
         {
             var customid = Guid.NewGuid().ToString();
@@ -122,7 +122,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldLinkDeviceId()
         {
             var deviceid1 = Guid.NewGuid().ToString();
@@ -137,7 +137,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(original.Username, updated.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldLinkDeviceIdSame()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -150,7 +150,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(session.Username, account.User.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotLinkDeviceIdInuse()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -162,7 +162,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Conflict, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldUnlinkDeviceId()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -175,7 +175,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(account.Devices.Count(d => d.Id == deviceid), 0);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkDeviceId()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -185,7 +185,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkDeviceIdNotOwned()
         {
             var deviceid1 = Guid.NewGuid().ToString();
@@ -197,7 +197,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldLinkEmail()
         {
             var customid = Guid.NewGuid().ToString();
@@ -213,7 +213,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(original.Username, updated.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldLinkEmailSame()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
@@ -227,7 +227,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(session.Username, account.User.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotLinkEmailInuse()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
@@ -240,7 +240,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Conflict, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldUnlinkEmail()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
@@ -255,7 +255,7 @@ namespace Nakama.Tests.Api
             Assert.NotEqual(email, account.Email);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkEmail()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
@@ -266,7 +266,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkEmailNotOwned()
         {
             var email = string.Format("{0}@{0}.com", Guid.NewGuid().ToString());
@@ -279,7 +279,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Forbidden, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotLinkFacebook()
         {
             var customid = Guid.NewGuid().ToString();
@@ -289,7 +289,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkFacebook()
         {
             var customid = Guid.NewGuid().ToString();
@@ -299,7 +299,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotLinkGameCenter()
         {
             var customid = Guid.NewGuid().ToString();
@@ -317,7 +317,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotLinkGameCenterBadInput()
         {
             var customid = Guid.NewGuid().ToString();
@@ -335,7 +335,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkGameCenterBadInput()
         {
             var customid = Guid.NewGuid().ToString();
@@ -353,7 +353,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotLinkGoogle()
         {
             var customid = Guid.NewGuid().ToString();
@@ -363,7 +363,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkGoogle()
         {
             var customid = Guid.NewGuid().ToString();
@@ -373,7 +373,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotLinkSteam()
         {
             var customid = Guid.NewGuid().ToString();
@@ -383,7 +383,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkSteam()
         {
             var customid = Guid.NewGuid().ToString();
@@ -393,7 +393,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotLinkApple()
         {
             var customid = Guid.NewGuid().ToString();
@@ -403,7 +403,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotUnlinkApple()
         {
             var customid = Guid.NewGuid().ToString();

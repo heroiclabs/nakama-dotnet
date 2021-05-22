@@ -35,7 +35,7 @@ namespace Nakama.Tests.Api
             _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldWriteLeaderboardRecord()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -56,7 +56,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(session.Username, record.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldListLeaderboardRecordsWithOwnerId()
         {
             string guid = Guid.NewGuid().ToString();
@@ -74,7 +74,7 @@ namespace Nakama.Tests.Api
             Assert.True(result.OwnerRecords.Any(record => record.Username == username));
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldListLeaderboardRecordsEmpty()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -87,7 +87,7 @@ namespace Nakama.Tests.Api
             Assert.Empty(result.OwnerRecords);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldDeleteLeaderboardRecord()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -101,7 +101,7 @@ namespace Nakama.Tests.Api
             Assert.Empty(result.Records);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldDeleteLeaderboardRecordNotFound()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");

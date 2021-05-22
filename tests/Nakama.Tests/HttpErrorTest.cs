@@ -34,7 +34,7 @@ namespace Nakama.Tests.Api
             _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task BadLuaRpcReturnsErrorMessageAndDict()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");

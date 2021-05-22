@@ -35,7 +35,7 @@ namespace Nakama.Tests.Socket
             _client = TestsUtil.FromSettingsFile();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void FollowUsers_NoUsers_AnotherUser()
         {
             var id1 = Guid.NewGuid().ToString();
@@ -45,13 +45,9 @@ namespace Nakama.Tests.Socket
             var session2 = await _client.AuthenticateCustomAsync(id2);
 
             var completer = new TaskCompletionSource<IStatusPresenceEvent>();
-            var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer.TrySetCanceled());
-            canceller.CancelAfter(Timeout);
 
             var socket1 = Nakama.Socket.From(_client);
             socket1.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
-            socket1.ReceivedError += e => canceller.Cancel();
             await socket1.ConnectAsync(session1);
             await socket1.FollowUsersAsync(new[] {session2.UserId});
 
@@ -67,7 +63,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void FollowUsers_NoUsers_AnotherUserByUsername()
         {
             var id = Guid.NewGuid().ToString();
@@ -75,9 +71,6 @@ namespace Nakama.Tests.Socket
             var session2 = await _client.AuthenticateCustomAsync(id + "a");
 
             var completer = new TaskCompletionSource<IStatusPresenceEvent>();
-            var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer.TrySetCanceled());
-            canceller.CancelAfter(Timeout);
 
             var socket1 = Nakama.Socket.From(_client);
             socket1.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
@@ -97,7 +90,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void FollowUsers_NoUsers_FollowedSelf()
         {
             var id = Guid.NewGuid().ToString();
@@ -114,7 +107,7 @@ namespace Nakama.Tests.Socket
             await socket1.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void FollowUsers_NoUsers_UserJoinsAndLeaves()
         {
             var id1 = Guid.NewGuid().ToString();
@@ -123,9 +116,6 @@ namespace Nakama.Tests.Socket
             var session2 = await _client.AuthenticateCustomAsync(id2);
 
             var completer1 = new TaskCompletionSource<IStatusPresenceEvent>();
-            var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer1.TrySetCanceled());
-            canceller.CancelAfter(Timeout);
 
             var socket1 = Nakama.Socket.From(_client);
             socket1.ReceivedStatusPresence += statuses => completer1.TrySetResult(statuses);
@@ -156,7 +146,7 @@ namespace Nakama.Tests.Socket
             await socket1.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void FollowUsers_TwoSessions_HasTwoStatuses()
         {
             var id1 = Guid.NewGuid().ToString();
@@ -186,7 +176,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void FollowUsers_TwoUsers_ThirdUserFollowsBoth()
         {
             var id1 = Guid.NewGuid().ToString();
@@ -224,16 +214,13 @@ namespace Nakama.Tests.Socket
             await socket3.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void UpdateStatus_NoStatus_HasStatus()
         {
             var id = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(id);
 
             var completer = new TaskCompletionSource<IStatusPresenceEvent>();
-            var canceller = new CancellationTokenSource();
-            canceller.Token.Register(() => completer.TrySetCanceled());
-            canceller.CancelAfter(Timeout);
 
             var socket1 = Nakama.Socket.From(_client);
             socket1.ReceivedStatusPresence += statuses => completer.SetResult(statuses);
@@ -297,7 +284,7 @@ namespace Nakama.Tests.Socket
             await socket1.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void TestUserDoesNotReceiveUpdatedAfterUnfollow()
         {
             var id1 = Guid.NewGuid().ToString();
@@ -324,11 +311,6 @@ namespace Nakama.Tests.Socket
 
             await socket2.ConnectAsync(session2);
 
-            var cancelAfterTimeout = new CancellationTokenSource();
-            cancelAfterTimeout.Token.Register(() => waitForStatusPresence.TrySetException(
-                new Exception("Timeout while waiting for socket two to come online.")));
-            cancelAfterTimeout.CancelAfter(Timeout);
-
             await socket2.UpdateStatusAsync("new status change");
             await waitForStatusPresence.Task;
             socket1.ReceivedStatusPresence -= receivedPresenceWhileFollowing;
@@ -352,7 +334,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void TestUserFollowSameUserTwice()
         {
             var id1 = Guid.NewGuid().ToString();
@@ -386,7 +368,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void TestUnfollowSelf()
         {
             var id1 = Guid.NewGuid().ToString();
@@ -410,7 +392,7 @@ namespace Nakama.Tests.Socket
             await socket1.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void TestFollowNonExistentUser()
         {
             var id1 = Guid.NewGuid().ToString();

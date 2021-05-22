@@ -33,7 +33,7 @@ namespace Nakama.Tests.Socket
             _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateRoomChannel()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -46,7 +46,7 @@ namespace Nakama.Tests.Socket
             Assert.Equal(channel.Self.Username, session.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldSendMessageRoomChannel()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -68,7 +68,7 @@ namespace Nakama.Tests.Socket
             Assert.Equal(sendAck.Username, message.Username);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldSendMessageDirectChannel()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");

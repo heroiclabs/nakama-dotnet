@@ -24,7 +24,7 @@ namespace Nakama.Tests
 {
     public class TinyJsonParserTest
     {
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void FromJson_JsonInput_Parsed()
         {
             const string json = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}]}";
@@ -34,7 +34,7 @@ namespace Nakama.Tests
             Assert.Equal("val2", result.Nested.First().AnotherVal);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void FromJson_JsonInput_ParsedTwice()
         {
             const string json1 = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}]}";

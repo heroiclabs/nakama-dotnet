@@ -24,7 +24,7 @@ namespace Nakama.Tests.Api
 {
     public class LeaderboardAroundOwnerTest : LeaderboardTest
     {
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task OwnerInFront()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 0);
@@ -37,7 +37,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("106", recordArray[3].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task OwnerInBack()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 9);
@@ -50,7 +50,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("100", recordArray[3].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task OwnerNearFront()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 1);
@@ -63,7 +63,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("106", recordArray[3].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task OwnerNearBack()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 8);
@@ -76,7 +76,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("100", recordArray[3].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task OwnerInMiddle()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 5);
@@ -90,7 +90,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("102", recordArray[3].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task NotEnoughRecordsForLimit()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 4, limit: 10, ownerIndex: 2);
@@ -103,7 +103,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("100", recordArray[3].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task OddLimit()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 5, limit: 3, ownerIndex: 3);
@@ -116,13 +116,13 @@ namespace Nakama.Tests.Api
             Assert.Equal("100", recordArray[2].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task NoRecords()
         {
             await Assert.ThrowsAsync<ApiResponseException>(() => CreateAndFetchRecords(numRecords: 1, limit: 0, ownerIndex: 0));
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task OneRecordOneLimit()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 1, limit: 1, ownerIndex: 0);
@@ -131,7 +131,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("100", recordArray[0].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task TwoRecordsTwoLimit()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 2, limit: 2, ownerIndex: 1);
@@ -141,7 +141,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("100", recordArray[1].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ThreeRecordsTwoLimit()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 3, limit: 2, ownerIndex: 1);
@@ -151,7 +151,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("100", recordArray[1].Score);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ThreeRecordsThreeLimit()
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 3, limit: 3, ownerIndex: 1);

@@ -37,7 +37,7 @@ namespace Nakama.Tests
             _client = null;
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void Socket_AwaitedTasks_AreCanceled()
         {
             var id = Guid.NewGuid().ToString();
@@ -51,7 +51,7 @@ namespace Nakama.Tests
             await Assert.ThrowsAsync<TaskCanceledException>(() => Task.WhenAll(matchmakerTask1, matchmakerTask2));
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void Socket_AwaitedTasksAfterDisconnect_AreCanceled()
         {
             var id = Guid.NewGuid().ToString();

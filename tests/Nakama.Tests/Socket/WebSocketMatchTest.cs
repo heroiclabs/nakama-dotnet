@@ -37,7 +37,7 @@ namespace Nakama.Tests.Socket
             _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateMatch()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -51,7 +51,7 @@ namespace Nakama.Tests.Socket
             Assert.True(match.Size > 0);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateMatchAndSecondUserJoin()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -74,7 +74,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateMatchAndLeave()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -86,7 +86,7 @@ namespace Nakama.Tests.Socket
             await _socket.LeaveMatchAsync(match.Id);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateMatchAndSendState()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");

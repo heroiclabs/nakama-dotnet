@@ -35,7 +35,7 @@ namespace Nakama.Tests.Socket
             _client = TestsUtil.FromSettingsFile();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateAndJoinParty()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -52,7 +52,7 @@ namespace Nakama.Tests.Socket
             await socket.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldAddAndRemovePartyFromMatchmaker()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -96,7 +96,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldPromoteMember()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -140,7 +140,7 @@ namespace Nakama.Tests.Socket
             Assert.Equal(session2.UserId, promotedLeader.Presence.UserId);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldSendAndReceivePartyData()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -170,7 +170,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldJoinClosedParty()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -208,7 +208,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotJoinPastMaxSize()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -233,7 +233,7 @@ namespace Nakama.Tests.Socket
             await socket3.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task LeaderShouldBeInInitialPresences()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -251,7 +251,7 @@ namespace Nakama.Tests.Socket
             await socket1.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task PresencesInitializedWithConcurrentJoins()
         {
             const int numMembers = 5;

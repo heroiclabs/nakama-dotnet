@@ -34,7 +34,7 @@ namespace Nakama.Tests.Socket
             _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void ShouldCreateSocket()
         {
             var client = TestsUtil.FromSettingsFile();
@@ -42,7 +42,7 @@ namespace Nakama.Tests.Socket
             Assert.NotNull(socket);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateSocketAndConnect()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -55,7 +55,7 @@ namespace Nakama.Tests.Socket
             await _socket.CloseAsync();
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateSocketAndDisconnect()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -68,7 +68,7 @@ namespace Nakama.Tests.Socket
             Assert.True(await completer.Task);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateSocketAndDisconnectSilent()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -80,7 +80,7 @@ namespace Nakama.Tests.Socket
             Assert.False(_socket.IsConnected);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task MultipleConnectAttemptsThrowException()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");

@@ -32,7 +32,7 @@ namespace Nakama.Tests.Api
             _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldAuthenticateCustomId()
         {
             var customid = Guid.NewGuid();
@@ -44,7 +44,7 @@ namespace Nakama.Tests.Api
             Assert.False(session.IsExpired);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldAuthenticateDeviceId()
         {
             var deviceid = Guid.NewGuid().ToString();
@@ -61,7 +61,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(account.Devices.Count(d => d.Id == deviceid), 1);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldAuthenticateEmail()
         {
             var session = await _client.AuthenticateEmailAsync("super@heroes.com", "batsignal");
@@ -72,14 +72,14 @@ namespace Nakama.Tests.Api
             Assert.False(session.IsExpired);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void ShouldNotAuthenticateFacebook()
         {
             var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateFacebookAsync("invalid"));
             Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void ShouldNotAuthenticateGameCenter()
         {
             var bundleId = string.Empty;
@@ -95,14 +95,14 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void ShouldNotAuthenticateGoogle()
         {
             var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateGoogleAsync("invalid"));
             Assert.Equal((int) HttpStatusCode.Unauthorized, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void ShouldNotAuthenticateSteam()
         {
             var ex = await Assert.ThrowsAsync<ApiResponseException>(() => _client.AuthenticateSteamAsync("invalid"));
@@ -112,7 +112,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void ShouldNotAuthenticateApple()
         {
             // Fails because Apple requires special configuration with the server.

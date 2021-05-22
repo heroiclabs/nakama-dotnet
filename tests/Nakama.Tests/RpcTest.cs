@@ -33,7 +33,7 @@ namespace Nakama.Tests.Api
             _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldRpcRoundtrip()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -45,7 +45,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(payload, rpc.Payload);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldRpcGet()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -56,7 +56,7 @@ namespace Nakama.Tests.Api
             Assert.Equal("{\"message\":\"PONG\"}", rpc.Payload);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldRpcGetRoundtrip()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -68,7 +68,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(payload, rpc.Payload);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldRpcWithoutSession()
         {
             // Http Key is used often for server to server function calls

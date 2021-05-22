@@ -33,7 +33,7 @@ namespace Nakama.Tests.Api
             _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateGroup()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -57,7 +57,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(open, group.Open);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateGroupDefault()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -76,7 +76,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(name, group.Name);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotCreateGroup()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -88,7 +88,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.Conflict, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldListGroups()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -101,7 +101,7 @@ namespace Nakama.Tests.Api
             Assert.NotEmpty(result.Groups);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldListGroupsNameFilter()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -115,7 +115,7 @@ namespace Nakama.Tests.Api
             Assert.True(result.Groups.Count(g => name.Equals(g.Name)) == 1);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldListGroupsFilterTwo()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -133,7 +133,7 @@ namespace Nakama.Tests.Api
             Assert.True(result.Groups.Count(g => name1.Equals(g.Name) || name2.Equals(g.Name)) == 2);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldListGroupsCursor()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -150,7 +150,7 @@ namespace Nakama.Tests.Api
             Assert.True(result.Groups.Count() >= 1);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldDeleteGroup()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -168,7 +168,7 @@ namespace Nakama.Tests.Api
             Assert.Empty(result2.UserGroups);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldDeleteGroupInvalid()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -178,7 +178,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldNotDeleteGroupNotSuperAdmin()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -189,7 +189,7 @@ namespace Nakama.Tests.Api
             Assert.Equal((int) HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldPromoteAndDemoteUsers()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -214,7 +214,7 @@ namespace Nakama.Tests.Api
             Assert.Equal(members.GroupUsers.Count(), 2);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldBanUsers()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");

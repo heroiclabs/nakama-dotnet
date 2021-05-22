@@ -31,7 +31,7 @@ namespace Nakama.Tests.Socket
             _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldJoinMatchmaker()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -43,7 +43,7 @@ namespace Nakama.Tests.Socket
         }
 
         // "Flakey. Needs improvement."
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldJoinAndLeaveMatchmaker()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");

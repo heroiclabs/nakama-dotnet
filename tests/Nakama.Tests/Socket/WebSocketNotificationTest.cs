@@ -33,7 +33,7 @@ namespace Nakama.Tests.Socket
             _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldReceiveNotification()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
