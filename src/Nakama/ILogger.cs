@@ -20,6 +20,13 @@ namespace Nakama
     public interface ILogger
     {
         /// <summary>
+        /// Logs a formatted string with the DEBUG level.
+        /// </summary>
+        /// <param name="format">A string with zero or more format items.</param>
+        /// <param name="args">An object array with zero or more objects to format.</param>
+        void DebugFormat(string format, params object[] args);
+
+        /// <summary>
         /// Logs a formatted string with the ERROR level.
         /// </summary>
         /// <param name="format">A string with zero or more format items.</param>

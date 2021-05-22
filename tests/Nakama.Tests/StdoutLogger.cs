@@ -18,6 +18,11 @@ namespace Nakama.Tests
 {
     public class StdoutLogger : ILogger
     {
+        public void DebugFormat(string format, params object[] args)
+        {
+            System.Console.WriteLine(string.Concat("[DEBUG] ", format), args);
+        }
+
         public void ErrorFormat(string format, params object[] args)
         {
             System.Console.WriteLine(string.Concat("[ERROR] ", format), args);
