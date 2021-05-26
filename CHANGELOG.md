@@ -16,6 +16,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixed
 - Fixed issue where `IUserPresence` objects were not being deserialized properly by the client as part of the `IParty` object.
 
+### Changed
+- AddMatchmakerPartyAsync now returns an IPartyMatchmakerTicket.
+- Renamed PromotePartyMember to PromotePartyMemberAsync.
+
 ## [2.9.1] - 2021-05-19
 ### Added
 - The `Socket.ReceivedParty` event can now be subscribed to in order to listen for acceptance events from the leader of a closed party.

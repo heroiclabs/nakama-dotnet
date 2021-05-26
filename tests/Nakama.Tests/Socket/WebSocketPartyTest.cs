@@ -129,7 +129,7 @@ namespace Nakama.Tests.Socket
             var partyPresenceEvent = await partyPresenceJoinedTcs.Task;
             _testOutputHelper.WriteLine(partyPresenceEvent.ToString());
 
-            await socket1.PromotePartyMember(party.Id, partyPresenceEvent.Joins.First());
+            await socket1.PromotePartyMemberAsync(party.Id, partyPresenceEvent.Joins.First());
 
             var promotedLeader = await partyPromoteTcs.Task;
             _testOutputHelper.WriteLine(promotedLeader.ToString());
