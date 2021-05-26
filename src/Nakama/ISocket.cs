@@ -295,7 +295,7 @@ namespace Nakama
         /// <param name="partyId">Party ID.</param>
         /// <param name="partyMember">The presence of an existing party member to promote as the new leader.</param>
         /// <returns>A task which resolves to an announcement of a new party leader.</returns>
-        Task PromotePartyMember(string partyId, IUserPresence partyMember);
+        Task PromotePartyMemberAsync(string partyId, IUserPresence partyMember);
 
         /// <summary>
         /// Remove a chat message from a chat channel on the server.

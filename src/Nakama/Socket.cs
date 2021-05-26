@@ -473,8 +473,8 @@ namespace Nakama
             return response.PartyJoinRequest;
         }
 
-        /// <inheritdoc cref="PromotePartyMember"/>
-        public Task PromotePartyMember(string partyId, IUserPresence partyMember)
+        /// <inheritdoc cref="PromotePartyMemberAsync"/>
+        public Task PromotePartyMemberAsync(string partyId, IUserPresence partyMember)
         {
             var envelope = new WebSocketMessageEnvelope
             {
