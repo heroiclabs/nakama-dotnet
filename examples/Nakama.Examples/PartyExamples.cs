@@ -100,7 +100,8 @@ namespace Nakama.Examples
 
         private async void PromoteToLeader()
         {
-            socket.ReceivedPartyLeader += newLeader => {
+            socket.ReceivedPartyLeader += newLeader =>
+            {
                 System.Console.WriteLine("new party leader " + newLeader);
             };
 
@@ -122,12 +123,13 @@ namespace Nakama.Examples
 
         private async void SendPartyData()
         {
-            await socket.SendPartyDataAsync("<partyid>", 1, System.Text.Encoding.UTF8.GetBytes("{\"hello\": \"world\"}"));
+            await socket.SendPartyDataAsync(partyId: "<partyid>", opCode: 1, data: System.Text.Encoding.UTF8.GetBytes("{\"hello\": \"world\"}"));
         }
 
         private async void ReceivePartyData()
         {
-            socket.ReceivedPartyData += data => {
+            socket.ReceivedPartyData += data =>
+            {
                 System.Console.WriteLine("received data " + data.Data);
             };
         }
@@ -144,12 +146,12 @@ namespace Nakama.Examples
                 socket.JoinMatchAsync(matched);
             };
 
-            await socket.AddMatchmakerPartyAsync("<partyid>", "*", 2, 6);
+            await socket.AddMatchmakerPartyAsync(partyId: "<partyid>", query: "*", minCount: 2, maxCount: 6);
         }
 
         private async void RemoveFromMatchmakeAsParty()
         {
-            IPartyMatchmakerTicket ticket = await socket.AddMatchmakerPartyAsync("<partyid>", "*", 2, 6);
+            IPartyMatchmakerTicket ticket = await socket.AddMatchmakerPartyAsync(partyId: "<partyid>", query: "*", minCount: 2, maxCount: 6);
             await socket.RemoveMatchmakerPartyAsync(ticket.PartyId, ticket.Ticket);
         }
     }
