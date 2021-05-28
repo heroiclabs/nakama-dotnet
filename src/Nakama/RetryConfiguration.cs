@@ -20,7 +20,8 @@ namespace Nakama
 {
     /// <summary>
     /// A configuration for controlling retriable requests.
-    ///
+    /// </summary>
+    /// <remarks>
     /// Retry configurations can be assigned to the <see cref="IClient"/> on a request-by-request basis using
     /// using <see cref="IClient.ConfigureRetry"/> by passing the name of the method to configure as a key.
     ///
@@ -28,7 +29,7 @@ namespace Nakama
     /// Configurations assigned via <see cref="IClient.ConfigureRetry"/> take precedence over the global configuration.
     ///
     /// Note that assigning a new configuration does not change the configuration used by outstanding requests.
-    /// </summary>
+    /// </remarks>
     public class RetryConfiguration
     {
         /// <summary>

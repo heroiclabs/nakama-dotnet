@@ -44,9 +44,7 @@ namespace Nakama
         /// <inheritdoc cref="IClient.AutoRefreshSession"/>
         public bool AutoRefreshSession { get; }
 
-        /// <summary>
-        /// The global retry configuration. See <see cref="RetryConfiguration"/>.
-        /// </summary>
+        /// <inheritdoc cref="IClient.GlobalRetryConfiguration"/>
         public RetryConfiguration GlobalRetryConfiguration
         {
             get => _retryInvoker.GlobalRetryConfiguration;
@@ -72,9 +70,7 @@ namespace Nakama
         /// <inheritdoc cref="IClient.Port"/>
         public int Port { get; }
 
-        /// <summary>
-        /// Used to seed random values generated during request retries.
-        /// </summary>
+        /// <inheritdoc cref="IClient.RetryJitterSeed"/>
         public int RetryJitterSeed => _retryInvoker.JitterSeed;
 
         /// <inheritdoc cref="IClient.Scheme"/>
@@ -258,12 +254,7 @@ namespace Nakama
             await _retryInvoker.InvokeWithRetry(nameof(BlockFriendsAsync), () => _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames));
         }
 
-        /// <summary>
-        /// Configure request retries for a specific method.
-        /// <see cref="RetryConfiguration"/>
-        /// </summary>
-        /// <param name="retryId">The name of the method to configure retries for.</param>
-        /// <param name="retryConfiguration">The configuration to use for the method.</param>
+        /// <inheritdoc cref="ConfigureRetry"/>
         public void ConfigureRetry(string retryId, RetryConfiguration retryConfiguration)
         {
             _retryInvoker.ConfigureRetry(retryId, retryConfiguration);
@@ -805,7 +796,7 @@ namespace Nakama
 
             return await _retryInvoker.InvokeWithRetry(nameof(ListUsersStorageObjectsAsync), () => _apiClient.ListStorageObjects2Async(session.AuthToken, collection, userId, limit, cursor));
         }
-
+        /// <inheritdoc cref="ListenForRetries"/>
         public void ListenForRetries(Task task, RetryListener listener)
         {
             _retryInvoker.ListenForRetries(task, listener);

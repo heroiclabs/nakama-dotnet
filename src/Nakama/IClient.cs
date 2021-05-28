@@ -28,6 +28,9 @@ namespace Nakama
         /// </summary>
         bool AutoRefreshSession { get; }
 
+        /// <summary>
+        /// The global retry configuration. See <see cref="RetryConfiguration"/>.
+        /// </summary>
         RetryConfiguration GlobalRetryConfiguration { get; set; }
 
         /// <summary>
@@ -40,6 +43,9 @@ namespace Nakama
         /// </summary>
         int Port { get; }
 
+        /// <summary>
+        /// Used to seed random values generated during request retries.
+        /// </summary>
         int RetryJitterSeed { get; }
 
         /// <summary>
@@ -189,6 +195,12 @@ namespace Nakama
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null);
 
+        /// <summary>
+        /// Configure request retries for a specific method.
+        /// <see cref="RetryConfiguration"/>
+        /// </summary>
+        /// <param name="retryId">The name of the method to configure retries for.</param>
+        /// <param name="retryConfiguration">The configuration to use for the method.</param>
         void ConfigureRetry(string retryId, RetryConfiguration retryConfiguration);
 
         /// <summary>
@@ -607,6 +619,12 @@ namespace Nakama
         Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
             int limit = 1, string cursor = null);
 
+        /// <summary>
+        /// Listen for retry events for the provided request. All listeners for the task will be cleared by the client
+        /// automatically upon task completion or cancellation.
+        /// </summary>
+        /// <param name="task">The task representing the original request to be retried.</param>
+        /// <param name="listener">The listener to invoke on retry.</param>
         void ListenForRetries(Task task, RetryListener listener);
 
         /// <summary>

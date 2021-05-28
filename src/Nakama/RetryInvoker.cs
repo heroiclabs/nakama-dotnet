@@ -61,8 +61,6 @@ namespace Nakama
         {
             schedule = schedule ?? CreateSchedule(retryId);
 
-            // TODO task id collisions
-            // TODO concurrency pass.
             try
             {
                 Task<T> requestTask = request();
@@ -96,8 +94,6 @@ namespace Nakama
         {
             schedule = schedule ?? CreateSchedule(retryId);
 
-            // TODO task id collisions
-            // TODO concurrency pass.
             try
             {
                 Task requestTask = request();
