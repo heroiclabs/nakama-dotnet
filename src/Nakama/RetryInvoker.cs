@@ -28,7 +28,6 @@ namespace Nakama
     {
         public int JitterSeed { get; private set; }
 
-        private readonly Dictionary<string, RetryConfiguration> _retryConfigurations = new Dictionary<string, RetryConfiguration>();
         private readonly Dictionary<int, RetryListener> _retryListeners = new Dictionary<int, RetryListener>();
         private readonly Random _random;
 
@@ -44,21 +43,10 @@ namespace Nakama
             maxRetries: 5,
             maxDelay: TimeSpan.FromSeconds(16));
 
-        public void ConfigureRetry(string retryId, RetryConfiguration retryConfiguration)
+        public async Task<T> InvokeWithRetry<T>(string retryId, Func<Task<T>> request, RetrySchedule schedule = null, RetryConfiguration configuration)
         {
-            if (retryConfiguration == null)
-            {
-                _retryConfigurations.Remove(retryId);
-            }
-            else
-            {
-                _retryConfigurations[retryId] = retryConfiguration;
-            }
-        }
-
-        public async Task<T> InvokeWithRetry<T>(string retryId, Func<Task<T>> request, RetrySchedule schedule = null)
-        {
-            schedule = schedule ?? CreateSchedule(retryId);
+            configuration = configuration ?? GlobalRetryConfiguration;
+            schedule = schedule ?? new RetrySchedule(configuration);
 
             try
             {
@@ -69,7 +57,7 @@ namespace Nakama
                 if (IsTransientException(e))
                 {
                     await Backoff(schedule, e);
-                    return await InvokeWithRetry<T>(retryId, request, schedule);
+                    return await InvokeWithRetry<T>(retryId, request, schedule, configuration);
                 }
                 else
                 {
@@ -82,9 +70,10 @@ namespace Nakama
             }
         }
 
-        public async Task InvokeWithRetry(string retryId, Func<Task> request, RetrySchedule schedule = null)
+        public async Task InvokeWithRetry(string retryId, Func<Task> request, RetrySchedule schedule = null, RetryConfiguration configuration)
         {
-            schedule = schedule ?? CreateSchedule(retryId);
+            configuration = configuration ?? GlobalRetryConfiguration;
+            schedule = schedule ?? new RetrySchedule(configuration);
 
             try
             {
@@ -95,7 +84,7 @@ namespace Nakama
                 if (IsTransientException(e))
                 {
                     await Backoff(schedule, e);
-                    await InvokeWithRetry(retryId, request, schedule);
+                    await InvokeWithRetry(retryId, request, schedule, configuration);
                 }
                 else
                 {
@@ -152,15 +141,6 @@ namespace Nakama
             {
                 _retryListeners.Remove(schedule.OriginTask.Value);
             }
-        }
-
-        private RetrySchedule CreateSchedule(string retryId)
-        {
-            RetryConfiguration config = (_retryConfigurations.ContainsKey(retryId) ?
-                _retryConfigurations[retryId] :
-                GlobalRetryConfiguration);
-
-            return new RetrySchedule(config);
         }
 
         private Task Backoff(RetrySchedule schedule, Exception e)
