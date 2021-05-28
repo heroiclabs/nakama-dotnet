@@ -42,7 +42,7 @@ namespace Nakama
         public RetryConfiguration GlobalRetryConfiguration { get; set; } = new RetryConfiguration(
             baseDelay: TimeSpan.FromSeconds(1),
             jitter: RetryJitter.FullJitter,
-            maxAttempts: 5,
+            maxRetries: 5,
             maxDelay: TimeSpan.FromSeconds(16));
 
         public void ConfigureRetry(string retryId, RetryConfiguration retryConfiguration)

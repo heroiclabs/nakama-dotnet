@@ -20,9 +20,9 @@ using System.Threading.Tasks;
 
 namespace Nakama.Tests
 {
-    public enum TransientResponseType
+    public enum TransientAdapterResponseType
     {
-        ServerDefault,
+        ServerOk,
         TransientError
     }
 
@@ -34,10 +34,10 @@ namespace Nakama.Tests
         public ILogger Logger { get; set; }
 
         private int _sendAttempts = 0;
-        private readonly TransientResponseType[] _sendSchedule;
+        private readonly TransientAdapterResponseType[] _sendSchedule;
         private readonly IHttpAdapter _httpRequestAdapter = HttpRequestAdapter.WithGzip();
 
-        public TransientExceptionHttpAdapter(params TransientResponseType[] sendSchedule)
+        public TransientExceptionHttpAdapter(TransientAdapterResponseType[] sendSchedule)
         {
             _sendSchedule = sendSchedule;
         }
@@ -49,12 +49,12 @@ namespace Nakama.Tests
                 throw new IndexOutOfRangeException("The number of send attempts has exceeded the length of the send schedule.");
             }
 
-            TransientResponseType responseType = _sendSchedule[_sendAttempts];
+            TransientAdapterResponseType responseType = _sendSchedule[_sendAttempts];
             _sendAttempts++;
 
             switch (responseType)
             {
-                case TransientResponseType.TransientError:
+                case TransientAdapterResponseType.TransientError:
                     throw new ApiResponseException(500, "This exception represents a transient error.", -1);
                 default:
                     return _httpRequestAdapter.SendAsync(method, uri, headers, body, timeoutSec);

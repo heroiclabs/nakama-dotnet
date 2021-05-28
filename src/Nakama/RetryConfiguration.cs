@@ -57,31 +57,31 @@ namespace Nakama
         /// Create a new retry configuration.
         /// </summary>
         /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
-        /// <param name="maxAttempts">The maximum number of attempts to make before cancelling the request task.</param>
-        public RetryConfiguration(TimeSpan baseDelay, int maxAttempts) :
-            this(baseDelay, maxAttempts, null, RetryJitter.FullJitter) {}
+        /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
+        public RetryConfiguration(TimeSpan baseDelay, int maxRetries) :
+            this(baseDelay, maxRetries, null, RetryJitter.FullJitter) {}
 
         /// <summary>
         /// Create a new retry configuration.
         /// </summary>
         /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
-        /// <param name="maxAttempts">The maximum number of attempts to make before cancelling the request task.</param>
+        /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="maxDelay">The maximum number of attempts to make before cancelling the request task.</param>
-        public RetryConfiguration(TimeSpan baseDelay, int maxAttempts, TimeSpan maxDelay) :
-            this(baseDelay, maxAttempts, maxDelay, RetryJitter.FullJitter) {}
+        public RetryConfiguration(TimeSpan baseDelay, int maxRetries, TimeSpan maxDelay) :
+            this(baseDelay, maxRetries, maxDelay, RetryJitter.FullJitter) {}
 
         /// <summary>
         /// Create a new retry configuration.
         /// </summary>
         /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
-        /// <param name="maxAttempts">The maximum number of attempts to make before cancelling the request task.</param>
+        /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="maxDelay">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="jitter">/// The jitter algorithm used to apply randomness to the retry delay.</param>
-        public RetryConfiguration(TimeSpan baseDelay, int maxAttempts, TimeSpan? maxDelay, Jitter jitter)
+        public RetryConfiguration(TimeSpan baseDelay, int maxRetries, TimeSpan? maxDelay, Jitter jitter)
         {
             BaseDelay = baseDelay;
             Jitter = jitter;
-            MaxAttempts = maxAttempts;
+            MaxAttempts = maxRetries;
             MaxDelay = maxDelay;
         }
     }
