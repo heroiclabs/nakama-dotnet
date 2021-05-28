@@ -214,7 +214,8 @@ namespace Nakama.Tests
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
-                TransientAdapterResponseType.TransientError};
+                TransientAdapterResponseType.TransientError
+            };
 
             var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
             var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
