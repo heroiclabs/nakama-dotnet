@@ -23,9 +23,5 @@ namespace Nakama
     /// </summary>
     /// <param name="numRetry">The number of retries made so far, including this retry.</param>
     /// <param name="retry">An holding inromation about the retry attempt.</param>
-    /// <param name="cancellationSource">A token source that issues cancellation tokens to all retry requests.
-    /// Call <see cref="CancellationTokenSource.Cancel"/> on this object to cancel the existing retry request
-    /// and prevent future retries by raising a <see cref="TaskCanceledException"/>.
-    /// </param>
-    public delegate void RetryListener(int numRetry, Retry retry, CancellationTokenSource cancellationSource);
+    public delegate void RetryListener(int numRetry, Retry retry);
 }

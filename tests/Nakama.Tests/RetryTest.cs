@@ -49,7 +49,7 @@ namespace Nakama.Tests
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
-            RetryListener retryListener = (int numRetry, Retry retry, CancellationTokenSource cts) => {
+            RetryListener retryListener = (int numRetry, Retry retry) => {
                 lastNumRetry = numRetry;
             };
 
@@ -81,7 +81,7 @@ namespace Nakama.Tests
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
-            RetryListener retryListener = (int numRetry, Retry retry, CancellationTokenSource cts) => {
+            RetryListener retryListener = (int numRetry, Retry retry) => {
                 lastNumRetry = numRetry;
             };
 
@@ -113,7 +113,7 @@ namespace Nakama.Tests
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
-            RetryListener retryListener = (int numRetry, Retry retry, CancellationTokenSource cts) => {
+            RetryListener retryListener = (int numRetry, Retry retry) => {
                 lastNumRetry = numRetry;
             };
 
@@ -142,7 +142,7 @@ namespace Nakama.Tests
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
-            RetryListener retryListener = (int numRetry, Retry retry, CancellationTokenSource cts) => {
+            RetryListener retryListener = (int numRetry, Retry retry) => {
                 lastNumRetry = numRetry;
             };
 
@@ -167,7 +167,7 @@ namespace Nakama.Tests
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
-            RetryListener retryListener = (int numRetry, Retry retry, CancellationTokenSource cts) => {
+            RetryListener retryListener = (int numRetry, Retry retry) => {
                 lastNumRetry = numRetry;
             };
 
@@ -198,44 +198,13 @@ namespace Nakama.Tests
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
-            RetryListener retryListener = (int numRetry, Retry retry, CancellationTokenSource cts) => {
+            RetryListener retryListener = (int numRetry, Retry retry) => {
                 lastNumRetry = numRetry;
             };
 
             client.ListenForRetries(sessionTask, retryListener);
             ISession session = await sessionTask;
             Assert.NotNull(session);
-        }
-
-        [Fact]
-        public async void RetryListener_CancelsRetries()
-        {
-            var adapterSchedule = new TransientAdapterResponseType[4]{
-                TransientAdapterResponseType.TransientError,
-                TransientAdapterResponseType.TransientError,
-                TransientAdapterResponseType.TransientError,
-                TransientAdapterResponseType.TransientError
-            };
-
-            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
-            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
-
-            var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 4);
-            client.GlobalRetryConfiguration = config;
-
-            int lastNumRetry = -1;
-
-            Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
-
-            RetryListener retryListener = (int numRetry, Retry retry, CancellationTokenSource cts) => {
-                lastNumRetry = numRetry;
-                cts.Cancel();
-            };
-
-            client.ListenForRetries(sessionTask, retryListener);
-
-            await Assert.ThrowsAsync<TaskCanceledException>(async () => await sessionTask);
-            Assert.Equal(1, lastNumRetry);
         }
     }
 }

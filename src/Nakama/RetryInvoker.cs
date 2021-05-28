@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -63,14 +62,7 @@ namespace Nakama
 
             try
             {
-                Task<T> requestTask = request();
-
-                if (!schedule.OriginTask.HasValue)
-                {
-                    schedule.SetOriginTask(requestTask.Id);
-                }
-
-                return await requestTask;
+                return await request();
             }
             catch (Exception e)
             {
@@ -96,14 +88,7 @@ namespace Nakama
 
             try
             {
-                Task requestTask = request();
-
-                if (!schedule.OriginTask.HasValue)
-                {
-                    schedule.SetOriginTask(requestTask.Id);
-                }
-
-                await requestTask;
+                await request();
             }
             catch (Exception e)
             {
@@ -157,7 +142,7 @@ namespace Nakama
             if (schedule.OriginTask.HasValue && _retryListeners.ContainsKey(schedule.OriginTask.Value))
             {
                 _retryListeners[schedule.OriginTask.Value].Invoke(
-                    schedule.Retries.Count, newRetry, schedule.RetryTokenSource);
+                    schedule.Retries.Count, newRetry);
             }
         }
 
@@ -175,7 +160,7 @@ namespace Nakama
                 _retryConfigurations[retryId] :
                 GlobalRetryConfiguration);
 
-            return new RetrySchedule(config, new CancellationTokenSource());
+            return new RetrySchedule(config);
         }
 
         private Task Backoff(RetrySchedule schedule, Exception e)
@@ -189,7 +174,7 @@ namespace Nakama
 
             schedule.Retries.Add(newRetry);
             TryInvokeRetryListeners(schedule, newRetry);
-            return Task.Delay(newRetry.JitterBackoff.Milliseconds, schedule.RetryTokenSource.Token);
+            return Task.Delay(newRetry.JitterBackoff.Milliseconds);
         }
     }
 }

@@ -25,23 +25,11 @@ namespace Nakama
         public RetryConfiguration Configuration { get; }
         public int? OriginTask { get; private set; }
         public List<Retry> Retries { get; }
-        public CancellationTokenSource RetryTokenSource { get; }
 
-        public RetrySchedule(RetryConfiguration configuration, CancellationTokenSource source)
+        public RetrySchedule(RetryConfiguration configuration)
         {
             Configuration = configuration;
             Retries = new List<Retry>();
-            RetryTokenSource = source;
-        }
-
-        public void SetOriginTask(int id)
-        {
-            if (OriginTask.HasValue)
-            {
-                throw new InvalidOperationException("Cannot set a new request task id once it is set.");
-            }
-
-            OriginTask = id;
         }
     }
 }
