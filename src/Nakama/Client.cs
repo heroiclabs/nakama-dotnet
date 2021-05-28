@@ -48,6 +48,7 @@ namespace Nakama
         public RetryConfiguration GlobalRetryConfiguration { get; set; } = new RetryConfiguration(
             baseDelay: TimeSpan.FromSeconds(1),
             jitter: RetryJitter.FullJitter,
+            listener: null,
             maxRetries: 5,
             maxDelay: TimeSpan.FromSeconds(16));
 
@@ -252,12 +253,6 @@ namespace Nakama
             }
 
             await _retryInvoker.InvokeWithRetry(() => _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames));
-        }
-
-        /// <inheritdoc cref="ConfigureRetry"/>
-        public void ConfigureRetry(string retryId, RetryConfiguration retryConfiguration)
-        {
-            _retryInvoker.ConfigureRetry(retryId, retryConfiguration);
         }
 
         /// <inheritdoc cref="CreateGroupAsync"/>
@@ -796,11 +791,6 @@ namespace Nakama
 
             return await _retryInvoker.InvokeWithRetry(() => _apiClient.ListStorageObjects2Async(session.AuthToken, collection, userId, limit, cursor));
         }
-        /// <inheritdoc cref="ListenForRetries"/>
-        public void ListenForRetries(Task task, RetryListener listener)
-        {
-            _retryInvoker.ListenForRetries(task, listener);
-        }
 
         /// <inheritdoc cref="PromoteGroupUsersAsync"/>
         public async Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids)
@@ -889,7 +879,7 @@ namespace Nakama
                 Logger.WarnFormat("Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
             }
 
-            var response = await _retryInvoker.InvokeWithRetry(nameof(SessionRefreshAsync), () => _apiClient.SessionRefreshAsync(ServerKey, string.Empty,
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.SessionRefreshAsync(ServerKey, string.Empty,
                 new ApiSessionRefreshRequest {Token = session.RefreshToken, _vars = vars}));
 
             if (session is Session updatedSession)

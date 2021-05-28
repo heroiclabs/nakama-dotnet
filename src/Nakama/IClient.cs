@@ -196,14 +196,6 @@ namespace Nakama
         Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null);
 
         /// <summary>
-        /// Configure request retries for a specific method.
-        /// <see cref="RetryConfiguration"/>
-        /// </summary>
-        /// <param name="retryId">The name of the method to configure retries for.</param>
-        /// <param name="retryConfiguration">The configuration to use for the method.</param>
-        void ConfigureRetry(string retryId, RetryConfiguration retryConfiguration);
-
-        /// <summary>
         /// Create a group.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -618,14 +610,6 @@ namespace Nakama
         /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
             int limit = 1, string cursor = null);
-
-        /// <summary>
-        /// Listen for retry events for the provided request. All listeners for the task will be cleared by the client
-        /// automatically upon task completion or cancellation.
-        /// </summary>
-        /// <param name="task">The task representing the original request to be retried.</param>
-        /// <param name="listener">The listener to invoke on retry.</param>
-        void ListenForRetries(Task task, RetryListener listener);
 
         /// <summary>
         /// Promote one or more users in the group.

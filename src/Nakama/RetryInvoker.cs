@@ -101,7 +101,7 @@ namespace Nakama
 
             Retry newRetry = CreateNewRetry(history);
             history.Retries.Add(newRetry);
-            history.Listener?.Invoke(history.Retries.Count, newRetry);
+            history.Configuration.RetryListener?.Invoke(history.Retries.Count, newRetry);
             return Task.Delay(newRetry.JitterBackoff.Milliseconds);
         }
     }
