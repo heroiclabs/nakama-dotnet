@@ -20,13 +20,13 @@ using System.Collections.Generic;
 namespace Nakama
 {
     /// <summary>
-    /// The Jitter algorithm is responsible for introducing randomness to a retry schedule.
+    /// The Jitter algorithm is responsible for introducing randomness to a delay before a retry.
     /// </summary>
-    /// <param name="retryHistory">Information about previous retry attempts in the retry schedule.</param>
-    /// <param name="retryDelay">A span of time between the last failed attempt in the retry schedule
+    /// <param name="retryHistory">Information about previous retry attempts.</param>
+    /// <param name="retryDelay">A span of time between the last failed attempt in the retry history
     /// and the next upcoming attempt.</param>
     /// <param name="random">A <see cref="Random"/> object that has been seeded by <see cref="IClient.RetryJitterSeed"/>.
-    /// <returns>A new span of time between the last failed attempt in the retry schedule and the next upcoming attempt.</returns>
+    /// <returns>A new span of time between the last failed attempt in the retry history and the next upcoming attempt.</returns>
     public delegate TimeSpan Jitter(IList<Retry> retryHistory, TimeSpan retryDelay, Random random);
 
     /// <summary>

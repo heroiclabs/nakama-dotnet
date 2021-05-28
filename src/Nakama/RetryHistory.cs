@@ -18,16 +18,14 @@ using System.Collections.Generic;
 
 namespace Nakama
 {
-    internal class RetrySchedule
+    internal class RetryHistory
     {
         public RetryConfiguration Configuration { get; }
-        public RetryListener Listener { get; }
         public List<Retry> Retries { get; }
 
-        public RetrySchedule(RetryConfiguration globalConfiguration, RetryConfiguration localConfiguration, RetryListener listener)
+        public RetryHistory(RetryConfiguration globalConfiguration, RetryConfiguration localConfiguration, RetryListener listener)
         {
             Configuration = localConfiguration ?? globalConfiguration;
-            Listener = listener;
             Retries = new List<Retry>();
         }
     }

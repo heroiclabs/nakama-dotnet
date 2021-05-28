@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -36,7 +35,7 @@ namespace Nakama
             _random = new Random(JitterSeed);
         }
 
-        public async Task<T> InvokeWithRetry<T>(Func<Task<T>> request, RetrySchedule schedule = null)
+        public async Task<T> InvokeWithRetry<T>(Func<Task<T>> request, RetryHistory history = null)
         {
             try
             {
@@ -46,8 +45,8 @@ namespace Nakama
             {
                 if (IsTransientException(e))
                 {
-                    await Backoff(schedule, e);
-                    return await InvokeWithRetry<T>(request, schedule);
+                    await Backoff(history, e);
+                    return await InvokeWithRetry<T>(request, history);
                 }
                 else
                 {
@@ -56,7 +55,7 @@ namespace Nakama
             }
         }
 
-        public async Task InvokeWithRetry(Func<Task> request, RetrySchedule schedule = null)
+        public async Task InvokeWithRetry(Func<Task> request, RetryHistory history = null)
         {
             try
             {
@@ -66,8 +65,8 @@ namespace Nakama
             {
                 if (IsTransientException(e))
                 {
-                    await Backoff(schedule, e);
-                    await InvokeWithRetry(request, schedule);
+                    await Backoff(history, e);
+                    await InvokeWithRetry(request, history);
                 }
                 else
                 {
@@ -85,24 +84,24 @@ namespace Nakama
             return (e is ApiResponseException apiException && apiException.StatusCode >= 500) || e is HttpRequestException;
         }
 
-        private Retry CreateNewRetry(RetrySchedule schedule)
+        private Retry CreateNewRetry(RetryHistory history)
         {
-            double delaySeconds = Math.Pow(schedule.Configuration.BaseDelay.TotalSeconds, schedule.Retries.Count + 1);
+            double delaySeconds = Math.Pow(history.Configuration.BaseDelay.TotalSeconds, history.Retries.Count + 1);
             TimeSpan expoBackoff = TimeSpan.FromSeconds(delaySeconds);
-            TimeSpan jitteredBackoff = schedule.Configuration.Jitter(schedule.Retries, expoBackoff, this._random);
+            TimeSpan jitteredBackoff = history.Configuration.Jitter(history.Retries, expoBackoff, this._random);
             return new Retry(expoBackoff, jitteredBackoff);
         }
 
-        private Task Backoff(RetrySchedule schedule, Exception e)
+        private Task Backoff(RetryHistory history, Exception e)
         {
-            if (schedule.Retries.Count >= schedule.Configuration.MaxAttempts)
+            if (history.Retries.Count >= history.Configuration.MaxAttempts)
             {
                 throw new TaskCanceledException("Exceeded max retry attempts.", e);
             }
 
-            Retry newRetry = CreateNewRetry(schedule);
-            schedule.Retries.Add(newRetry);
-            schedule.Listener?.Invoke(schedule.Retries.Count, newRetry);
+            Retry newRetry = CreateNewRetry(history);
+            history.Retries.Add(newRetry);
+            history.Listener?.Invoke(history.Retries.Count, newRetry);
             return Task.Delay(newRetry.JitterBackoff.Milliseconds);
         }
     }
