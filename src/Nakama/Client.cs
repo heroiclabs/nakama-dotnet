@@ -45,11 +45,11 @@ namespace Nakama
         public bool AutoRefreshSession { get; }
 
         /// <inheritdoc cref="IClient.GlobalRetryConfiguration"/>
-        public RetryConfiguration GlobalRetryConfiguration
-        {
-            get => _retryInvoker.GlobalRetryConfiguration;
-            set => _retryInvoker.GlobalRetryConfiguration = value;
-        }
+        public RetryConfiguration GlobalRetryConfiguration { get; set; } = new RetryConfiguration(
+            baseDelay: TimeSpan.FromSeconds(1),
+            jitter: RetryJitter.FullJitter,
+            maxRetries: 5,
+            maxDelay: TimeSpan.FromSeconds(16));
 
         /// <inheritdoc cref="IClient.Host"/>
         public string Host { get; }

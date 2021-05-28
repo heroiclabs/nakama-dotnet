@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace Nakama
 {
     internal class RetrySchedule
     {
         public RetryConfiguration Configuration { get; }
-        public int? OriginTask { get; private set; }
+        public RetryListener Listener { get; }
         public List<Retry> Retries { get; }
 
-        public RetrySchedule(RetryConfiguration configuration)
+        public RetrySchedule(RetryConfiguration globalConfiguration, RetryConfiguration localConfiguration, RetryListener listener)
         {
-            Configuration = configuration;
+            Configuration = localConfiguration ?? globalConfiguration;
+            Listener = listener;
             Retries = new List<Retry>();
         }
     }
