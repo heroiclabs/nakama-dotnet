@@ -36,7 +36,7 @@ namespace Nakama
             _random = new Random(JitterSeed);
         }
 
-        public async Task<T> InvokeWithRetry<T>(string retryId, Func<Task<T>> request, RetrySchedule schedule)
+        public async Task<T> InvokeWithRetry<T>(Func<Task<T>> request, RetrySchedule schedule = null)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Nakama
                 if (IsTransientException(e))
                 {
                     await Backoff(schedule, e);
-                    return await InvokeWithRetry<T>(retryId, request, schedule);
+                    return await InvokeWithRetry<T>(request, schedule);
                 }
                 else
                 {
@@ -56,7 +56,7 @@ namespace Nakama
             }
         }
 
-        public async Task InvokeWithRetry(string retryId, Func<Task> request, RetrySchedule schedule = null)
+        public async Task InvokeWithRetry(Func<Task> request, RetrySchedule schedule = null)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace Nakama
                 if (IsTransientException(e))
                 {
                     await Backoff(schedule, e);
-                    await InvokeWithRetry(retryId, request, schedule);
+                    await InvokeWithRetry(request, schedule);
                 }
                 else
                 {
