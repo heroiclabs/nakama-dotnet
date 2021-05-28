@@ -46,13 +46,11 @@ namespace Nakama
         /// <summary>
         /// The maximum number of attempts to make before cancelling the request task.
         /// </summary>
-        /// <value></value>
         public int MaxAttempts { get; }
 
         /// <summary>
         /// The maximum amount of time to wait between requests.
         /// </summary>
-        /// <value></value>
         public TimeSpan? MaxDelay { get; }
 
         /// <summary>
@@ -60,7 +58,6 @@ namespace Nakama
         /// </summary>
         /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
         /// <param name="maxAttempts">The maximum number of attempts to make before cancelling the request task.</param>
-        /// <returns></returns>
         public RetryConfiguration(TimeSpan baseDelay, int maxAttempts) :
             this(baseDelay, maxAttempts, null, RetryJitter.FullJitter) {}
 
@@ -70,7 +67,6 @@ namespace Nakama
         /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
         /// <param name="maxAttempts">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="maxDelay">The maximum number of attempts to make before cancelling the request task.</param>
-        /// <returns></returns>
         public RetryConfiguration(TimeSpan baseDelay, int maxAttempts, TimeSpan maxDelay) :
             this(baseDelay, maxAttempts, maxDelay, RetryJitter.FullJitter) {}
 

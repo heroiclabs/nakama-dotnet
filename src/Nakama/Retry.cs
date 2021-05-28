@@ -27,7 +27,7 @@ namespace Nakama
         /// <summary>
         /// The delay in the request retry attributable to the exponential backoff algorithm.
         /// </summary>
-        public TimeSpan ExpoBackoff { get; }
+        public TimeSpan ExponentialBackoff { get; }
 
         /// <summary>
         /// The delay in the request retry attributable to the jitter algorithm.
@@ -36,7 +36,7 @@ namespace Nakama
 
         internal Retry(TimeSpan expoBackoff, TimeSpan jitterBackoff)
         {
-            ExpoBackoff = expoBackoff;
+            ExponentialBackoff = expoBackoff;
             JitterBackoff = jitterBackoff;
         }
     }
