@@ -28,6 +28,8 @@ namespace Nakama
         /// </summary>
         bool AutoRefreshSession { get; }
 
+        RetryConfiguration GlobalRetryConfiguration { get; set; }
+
         /// <summary>
         /// The host address of the server. Defaults to "127.0.0.1".
         /// </summary>
@@ -37,6 +39,8 @@ namespace Nakama
         /// The port number of the server. Defaults to 7350.
         /// </summary>
         int Port { get; }
+
+        int RetryJitterSeed { get; }
 
         /// <summary>
         /// The protocol scheme used to connect with the server. Must be either "http" or "https".
@@ -184,6 +188,8 @@ namespace Nakama
         /// <param name="usernames">The usernames of the users to block.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null);
+
+        void ConfigureRetry(string retryId, RetryConfiguration retryConfiguration);
 
         /// <summary>
         /// Create a group.
@@ -600,6 +606,8 @@ namespace Nakama
         /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
             int limit = 1, string cursor = null);
+
+        void ListenForRetries(Task task, RetryListener listener);
 
         /// <summary>
         /// Promote one or more users in the group.
