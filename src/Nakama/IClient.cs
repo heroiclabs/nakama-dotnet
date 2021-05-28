@@ -195,6 +195,8 @@ namespace Nakama
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null);
 
+        ConfiguredRequest ConfigureRequest(RetryConfiguration retryConfiguration);
+
         /// <summary>
         /// Create a group.
         /// </summary>
