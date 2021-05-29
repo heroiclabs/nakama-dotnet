@@ -118,7 +118,7 @@ namespace Nakama.Tests
         [Fact]
         public async void RetryConfiguration_ZeroRetries_RetriesZeroTimes()
         {
-            var adapterSchedule = new TransientAdapterResponseType[0]{};
+            var adapterSchedule = new TransientAdapterResponseType[1]{TransientAdapterResponseType.ServerOk};
 
             var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
             var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);

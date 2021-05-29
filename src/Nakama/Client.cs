@@ -49,8 +49,7 @@ namespace Nakama
             baseDelay: TimeSpan.FromSeconds(1),
             jitter: RetryJitter.FullJitter,
             listener: null,
-            maxRetries: 5,
-            maxDelay: TimeSpan.FromSeconds(16));
+            maxRetries: 5);
 
         /// <inheritdoc cref="IClient.Host"/>
         public string Host { get; }
