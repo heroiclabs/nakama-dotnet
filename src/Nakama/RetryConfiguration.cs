@@ -49,11 +49,6 @@ namespace Nakama
         public int MaxAttempts { get; }
 
         /// <summary>
-        /// The maximum amount of time to wait between requests.
-        /// </summary>
-        public TimeSpan? MaxDelay { get; }
-
-        /// <summary>
         /// A callback that is invoked before a new retry attempt is made.
         /// </summary>
         public RetryListener RetryListener { get; }
@@ -64,7 +59,7 @@ namespace Nakama
         /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         public RetryConfiguration(TimeSpan baseDelay, int maxRetries) :
-            this(baseDelay, maxRetries, null, null, RetryJitter.FullJitter) {}
+            this(baseDelay, maxRetries, null, RetryJitter.FullJitter) {}
 
         /// <summary>
         /// Create a new retry configuration.
@@ -73,7 +68,7 @@ namespace Nakama
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="listener">A callback that is invoked before a new retry attempt is made.</param>
         public RetryConfiguration(TimeSpan baseDelay, int maxRetries, RetryListener listener) :
-            this(baseDelay, maxRetries, listener, null, RetryJitter.FullJitter) {}
+            this(baseDelay, maxRetries, listener, RetryJitter.FullJitter) {}
 
         /// <summary>
         /// Create a new retry configuration.
@@ -81,14 +76,12 @@ namespace Nakama
         /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="listener">A callback that is invoked before a new retry attempt is made.</param>
-        /// <param name="maxDelay">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="jitter">/// The jitter algorithm used to apply randomness to the retry delay.</param>
-        public RetryConfiguration(TimeSpan baseDelay, int maxRetries, RetryListener listener, TimeSpan? maxDelay, Jitter jitter)
+        public RetryConfiguration(TimeSpan baseDelay, int maxRetries, RetryListener listener, Jitter jitter)
         {
             BaseDelay = baseDelay;
             RetryListener = listener;
             MaxAttempts = maxRetries;
-            MaxDelay = maxDelay;
             Jitter = jitter;
         }
     }
