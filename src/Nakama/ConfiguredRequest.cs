@@ -19,22 +19,37 @@ using System.Threading.Tasks;
 
 namespace Nakama
 {
+    /// <summary>
+    /// A low-level configuration to use for requests from <see cref="IClient"/>.
+    /// Intended for advanced use only.
+    /// </summary>
     public class ConfiguredRequest
     {
-        public RetryConfiguration RetryConfiguration { get; }
-        private RetryInvoker _invoker;
+        private readonly RetryInvoker _invoker;
+        private readonly RetryConfiguration _retryConfiguration;
 
         internal ConfiguredRequest(RetryConfiguration retryConfiguration, RetryInvoker invoker)
         {
-            RetryConfiguration = retryConfiguration;
+            _retryConfiguration = retryConfiguration;
             _invoker = invoker;
         }
 
+        /// <summary>
+        /// Invokes the client request.
+        /// </summary>
+        /// <param name="request">The client request.</param>
+        /// <typeparam name="T">The type parameter of the task representing the request.</typeparam>
+        /// <returns>A task representing the request.</returns>
         public Task<T> Invoke<T>(Func<Task<T>> request)
         {
-            return request();
+            return _invoker.InvokeWithRetry(request, new RetryHistory(_retryConfiguration));
         }
 
+        /// <summary>
+        /// Invokes the client request.
+        /// </summary>
+        /// <param name="request">The client request.</param>
+        /// <returns>A task representing the request.</returns>
         public Task Invoke(Func<Task> request)
         {
             return request();

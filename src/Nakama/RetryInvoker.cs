@@ -35,7 +35,7 @@ namespace Nakama
             _random = new Random(JitterSeed);
         }
 
-        public async Task<T> InvokeWithRetry<T>(Func<Task<T>> request, RetryHistory history = null)
+        public async Task<T> InvokeWithRetry<T>(Func<Task<T>> request, RetryHistory history)
         {
             try
             {

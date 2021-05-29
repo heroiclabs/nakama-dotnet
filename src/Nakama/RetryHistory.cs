@@ -23,9 +23,9 @@ namespace Nakama
         public RetryConfiguration Configuration { get; }
         public List<Retry> Retries { get; }
 
-        public RetryHistory(RetryConfiguration globalConfiguration, RetryConfiguration localConfiguration, RetryListener listener)
+        public RetryHistory(RetryConfiguration configuration)
         {
-            Configuration = localConfiguration ?? globalConfiguration;
+            Configuration = configuration;
             Retries = new List<Retry>();
         }
     }

@@ -50,7 +50,7 @@ namespace Nakama.Tests
             var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 1);
             client.GlobalRetryConfiguration = config;
 
-            ISession session = await client.ConfigureRequest(config).Invoke(() => client.AuthenticateCustomAsync("test_id"));
+            ISession session = await client.AuthenticateCustomAsync("test_id");
 
             Assert.NotNull(session);
             Assert.Equal(1, lastNumRetry);
@@ -191,7 +191,6 @@ namespace Nakama.Tests
             var localConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 3);
             Task<ISession> sessionTask = client.ConfigureRequest(localConfig)
                 .Invoke(() => client.AuthenticateCustomAsync("test_id"));
-
 
             ISession session = await sessionTask;
             Assert.NotNull(session);

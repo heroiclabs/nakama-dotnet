@@ -195,6 +195,15 @@ namespace Nakama
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null);
 
+        /// <summary>
+        /// Configures a <see cref="ConfiguredRequest"> with low-level values that are
+        /// otherwise automated by the client.
+        /// </summary>
+        /// <param name="retryConfiguration">
+        /// A <see cref="RetryConfiguration"/> used to control automatic retry requests.
+        /// This configuration will override the <see cref="IClient.GlobalRetryConfiguration"/>
+        /// </param>
+        /// <returns>The configured request to be invoked.</returns>
         ConfiguredRequest ConfigureRequest(RetryConfiguration retryConfiguration);
 
         /// <summary>
