@@ -32,7 +32,7 @@ namespace Nakama
         /// <summary>
         /// The global retry configuration. See <see cref="RetryConfiguration"/>.
         /// </summary>
-        RetryConfiguration GlobalRetryConfiguration { get; set; }
+        RetryConfiguration GlobalRequestConfiguration { get; set; }
 
         /// <summary>
         /// The host address of the server. Defaults to "127.0.0.1".
@@ -202,7 +202,7 @@ namespace Nakama
         /// </summary>
         /// <param name="retryConfiguration">
         /// A <see cref="RetryConfiguration"/> used to control automatic retry requests.
-        /// This configuration will override the <see cref="IClient.GlobalRetryConfiguration"/>
+        /// This configuration will override the <see cref="IClient.GlobalRequestConfiguration"/>
         /// </param>
         /// <param name="canceller">
         /// A <see cref="CancellationTokenSource"> that issues cancellation tokens to client requests. Can

@@ -48,7 +48,7 @@ namespace Nakama.Tests
             };
 
             var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 1, retryListener);
-            client.GlobalRetryConfiguration = config;
+            client.GlobalRequestConfiguration = config;
 
             ISession session = await client.AuthenticateCustomAsync("test_id");
 
@@ -78,7 +78,7 @@ namespace Nakama.Tests
             };
 
             var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(50), maxRetries: 5, retryListener);
-            client.GlobalRetryConfiguration = config;
+            client.GlobalRequestConfiguration = config;
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
@@ -106,7 +106,7 @@ namespace Nakama.Tests
             };
 
             var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 3, retryListener);
-            client.GlobalRetryConfiguration = config;
+            client.GlobalRequestConfiguration = config;
 
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
@@ -130,7 +130,7 @@ namespace Nakama.Tests
             };
 
             var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 1, retryListener);
-            client.GlobalRetryConfiguration = config;
+            client.GlobalRequestConfiguration = config;
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
@@ -157,7 +157,7 @@ namespace Nakama.Tests
             };
 
             var globalConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 1);
-            client.GlobalRetryConfiguration = globalConfig;
+            client.GlobalRequestConfiguration = globalConfig;
 
             var localConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 3);
             Task<ISession> sessionTask = client.ConfigureRequest(localConfig)
