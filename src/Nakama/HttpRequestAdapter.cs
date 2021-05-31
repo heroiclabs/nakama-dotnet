@@ -72,7 +72,6 @@ namespace Nakama
 
             var timeoutToken = new CancellationTokenSource();
             timeoutToken.CancelAfter(TimeSpan.FromSeconds(timeout));
-
             Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri, body);
 
             var response = await _httpClient.SendAsync(request, timeoutToken.Token);

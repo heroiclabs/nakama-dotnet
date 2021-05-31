@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -203,8 +204,12 @@ namespace Nakama
         /// A <see cref="RetryConfiguration"/> used to control automatic retry requests.
         /// This configuration will override the <see cref="IClient.GlobalRetryConfiguration"/>
         /// </param>
+        /// <param name="canceller">
+        /// A <see cref="CancellationTokenSource"> that issues cancellation tokens to client requests. Can
+        /// be used to cancel requests that have been sent but not yet resolved.
+        /// </param>
         /// <returns>The configured request to be invoked.</returns>
-        ConfiguredRequest ConfigureRequest(RetryConfiguration retryConfiguration);
+        ConfiguredRequest ConfigureRequest(RetryConfiguration retryConfiguration, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Create a group.

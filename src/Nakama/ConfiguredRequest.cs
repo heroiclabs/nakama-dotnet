@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -27,11 +28,16 @@ namespace Nakama
     {
         private readonly RetryInvoker _invoker;
         private readonly RetryConfiguration _retryConfiguration;
+        private CancellationTokenSource _canceller;
 
-        internal ConfiguredRequest(RetryConfiguration retryConfiguration, RetryInvoker invoker)
+        internal ConfiguredRequest(
+            RetryInvoker invoker,
+            RetryConfiguration retryConfiguration,
+            CancellationTokenSource cts = null)
         {
-            _retryConfiguration = retryConfiguration;
             _invoker = invoker;
+            _retryConfiguration = retryConfiguration;
+            _canceller = cts;
         }
 
         /// <summary>
@@ -42,7 +48,14 @@ namespace Nakama
         /// <returns>A task representing the request.</returns>
         public Task<T> Invoke<T>(Func<Task<T>> request)
         {
-            return _invoker.InvokeWithRetry(request, new RetryHistory(_retryConfiguration));
+            Task<T> invocation = _invoker.InvokeWithRetry(request, new RetryHistory(_retryConfiguration));
+
+//            if (_canceller != null)
+  //          {
+    //            _canceller.Token
+      //      }
+
+            return invocation;
         }
 
         /// <summary>

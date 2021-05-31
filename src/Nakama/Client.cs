@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -131,7 +132,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames));
         }
 
         /// <inheritdoc cref="AddGroupUsersAsync"/>
@@ -143,14 +144,14 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids));
         }
 
         /// <inheritdoc cref="AuthenticateAppleAsync"/>
         public async Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
             Dictionary<string, string> vars = null)
         {
-            var response = await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.AuthenticateAppleAsync(ServerKey, string.Empty,
+            var response = await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.AuthenticateAppleAsync(ServerKey, string.Empty,
                 new ApiAccountApple {Token = token, _vars = vars}, create, username));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
@@ -159,7 +160,7 @@ namespace Nakama
         public async Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true,
             Dictionary<string, string> vars = null)
         {
-            var response = await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty,
+            var response = await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty,
                 new ApiAccountCustom {Id = id, _vars = vars}, create, username));
 
             return new Session(response.Token, response.RefreshToken, response.Created);
@@ -169,7 +170,7 @@ namespace Nakama
         public async Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true,
             Dictionary<string, string> vars = null)
         {
-            var response = await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty,
+            var response = await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty,
                 new ApiAccountDevice {Id = id, _vars = vars}, create, username));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
@@ -178,7 +179,7 @@ namespace Nakama
         public async Task<ISession> AuthenticateEmailAsync(string email, string password, string username = null,
             bool create = true, Dictionary<string, string> vars = null)
         {
-            var response = await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() =>_apiClient.AuthenticateEmailAsync(ServerKey, string.Empty,
+            var response = await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() =>_apiClient.AuthenticateEmailAsync(ServerKey, string.Empty,
                 new ApiAccountEmail {Email = email, Password = password, _vars = vars}, create, username));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
@@ -187,7 +188,7 @@ namespace Nakama
         public async Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
             bool import = true, Dictionary<string, string> vars = null)
         {
-            var response = await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty,
+            var response = await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty,
                 new ApiAccountFacebook {Token = token, _vars = vars}, create, username, import));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
@@ -197,7 +198,7 @@ namespace Nakama
             string salt, string signature, string timestamp, string username = null, bool create = true,
             Dictionary<string, string> vars = null)
         {
-            var response = await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty,
+            var response = await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty,
                 new ApiAccountGameCenter
                 {
                     BundleId = bundleId,
@@ -215,7 +216,7 @@ namespace Nakama
         public async Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true,
             Dictionary<string, string> vars = null)
         {
-            var response = await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty,
+            var response = await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty,
                 new ApiAccountGoogle {Token = token, _vars = vars}, create, username));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
@@ -224,7 +225,7 @@ namespace Nakama
         public async Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true,
             bool import = true, Dictionary<string, string> vars = null)
         {
-            var response = await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty,
+            var response = await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty,
                 new ApiAccountSteam {Token = token, _vars = vars}, create, username, import));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
@@ -238,7 +239,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.BanGroupUsersAsync(session.AuthToken, groupId, usernames));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.BanGroupUsersAsync(session.AuthToken, groupId, usernames));
         }
 
         /// <inheritdoc cref="BlockFriendsAsync"/>
@@ -251,12 +252,13 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames));
         }
 
-        public ConfiguredRequest ConfigureRequest(RetryConfiguration retryConfiguration)
+        /// <inheritdoc cref="ConfigureRequest">
+        public ConfiguredRequest ConfigureRequest(RetryConfiguration retryConfiguration, CancellationTokenSource cancellationTokenSource = null)
         {
-            return new ConfiguredRequest(retryConfiguration, _retryInvoker);
+            return new ConfiguredRequest(_retryInvoker, retryConfiguration, cancellationTokenSource);
         }
 
         /// <inheritdoc cref="CreateGroupAsync"/>
@@ -269,7 +271,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.CreateGroupAsync(session.AuthToken, new ApiCreateGroupRequest
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.CreateGroupAsync(session.AuthToken, new ApiCreateGroupRequest
             {
                 Name = name,
                 Description = description,
@@ -290,7 +292,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.DeleteFriendsAsync(session.AuthToken, ids, usernames));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.DeleteFriendsAsync(session.AuthToken, ids, usernames));
         }
 
         /// <inheritdoc cref="DeleteGroupAsync"/>
@@ -302,7 +304,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.DeleteGroupAsync(session.AuthToken, groupId));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.DeleteGroupAsync(session.AuthToken, groupId));
         }
 
         /// <inheritdoc cref="DeleteLeaderboardRecordAsync"/>
@@ -314,7 +316,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.DeleteLeaderboardRecordAsync(session.AuthToken, leaderboardId));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.DeleteLeaderboardRecordAsync(session.AuthToken, leaderboardId));
         }
 
         /// <inheritdoc cref="DeleteNotificationsAsync"/>
@@ -326,7 +328,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.DeleteNotificationsAsync(session.AuthToken, ids));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.DeleteNotificationsAsync(session.AuthToken, ids));
         }
 
         /// <inheritdoc cref="DeleteStorageObjectsAsync"/>
@@ -349,7 +351,7 @@ namespace Nakama
                 });
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.DeleteStorageObjectsAsync(session.AuthToken,
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.DeleteStorageObjectsAsync(session.AuthToken,
                 new ApiDeleteStorageObjectsRequest {_objectIds = objects}));
         }
 
@@ -362,7 +364,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.DemoteGroupUsersAsync(session.AuthToken, groupId, usernames));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.DemoteGroupUsersAsync(session.AuthToken, groupId, usernames));
         }
 
         /// <inheritdoc cref="EventAsync"/>
@@ -374,7 +376,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.EventAsync(session.AuthToken, new ApiEvent
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.EventAsync(session.AuthToken, new ApiEvent
             {
                 External = true,
                 Name = name,
@@ -391,7 +393,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.GetAccountAsync(session.AuthToken));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.GetAccountAsync(session.AuthToken));
         }
 
         /// <inheritdoc cref="GetUsersAsync"/>
@@ -404,7 +406,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.GetUsersAsync(session.AuthToken, ids, usernames, facebookIds));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.GetUsersAsync(session.AuthToken, ids, usernames, facebookIds));
         }
 
         /// <inheritdoc cref="ImportFacebookFriendsAsync"/>
@@ -416,7 +418,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ImportFacebookFriendsAsync(session.AuthToken, new ApiAccountFacebook {Token = token},
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ImportFacebookFriendsAsync(session.AuthToken, new ApiAccountFacebook {Token = token},
                 reset));
         }
 
@@ -429,7 +431,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ImportSteamFriendsAsync(session.AuthToken, new ApiAccountSteam {Token = token}, reset));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ImportSteamFriendsAsync(session.AuthToken, new ApiAccountSteam {Token = token}, reset));
         }
 
         /// <inheritdoc cref="JoinGroupAsync"/>
@@ -441,7 +443,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.JoinGroupAsync(session.AuthToken, groupId));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.JoinGroupAsync(session.AuthToken, groupId));
         }
 
         /// <inheritdoc cref="JoinTournamentAsync"/>
@@ -453,7 +455,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.JoinTournamentAsync(session.AuthToken, tournamentId));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.JoinTournamentAsync(session.AuthToken, tournamentId));
         }
 
         /// <inheritdoc cref="KickGroupUsersAsync"/>
@@ -465,7 +467,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.KickGroupUsersAsync(session.AuthToken, groupId, ids));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.KickGroupUsersAsync(session.AuthToken, groupId, ids));
         }
 
         /// <inheritdoc cref="LeaveGroupAsync"/>
@@ -477,7 +479,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.LeaveGroupAsync(session.AuthToken, groupId));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.LeaveGroupAsync(session.AuthToken, groupId));
         }
 
         /// <inheritdoc cref="LinkAppleAsync"/>
@@ -489,7 +491,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token}));
         }
 
         /// <inheritdoc cref="LinkCustomAsync"/>
@@ -501,7 +503,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.LinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.LinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id}));
         }
 
         /// <inheritdoc cref="LinkDeviceAsync"/>
@@ -513,7 +515,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.LinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.LinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id}));
         }
 
         /// <inheritdoc cref="LinkEmailAsync"/>
@@ -525,7 +527,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.LinkEmailAsync(session.AuthToken,
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.LinkEmailAsync(session.AuthToken,
                 new ApiAccountEmail {Email = email, Password = password}));
         }
 
@@ -538,7 +540,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.LinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, import));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.LinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, import));
         }
 
         /// <inheritdoc cref="LinkGameCenterAsync"/>
@@ -551,7 +553,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.LinkGameCenterAsync(session.AuthToken,
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.LinkGameCenterAsync(session.AuthToken,
                 new ApiAccountGameCenter
                 {
                     BundleId = bundleId,
@@ -572,7 +574,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.LinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.LinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token}));
         }
 
         /// <inheritdoc cref="LinkSteamAsync"/>
@@ -584,7 +586,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.LinkSteamAsync(session.AuthToken,
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.LinkSteamAsync(session.AuthToken,
                 new ApiLinkSteamRequest {Sync = sync, _account = new ApiAccountSteam {Token = token}}));
         }
 
@@ -604,7 +606,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor));
         }
 
         /// <inheritdoc cref="ListFriendsAsync"/>
@@ -616,7 +618,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListFriendsAsync(session.AuthToken, limit, state, cursor));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListFriendsAsync(session.AuthToken, limit, state, cursor));
         }
 
         /// <inheritdoc cref="ListGroupUsersAsync"/>
@@ -630,7 +632,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListGroupUsersAsync(session.AuthToken, groupId, limit, state, cursor));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListGroupUsersAsync(session.AuthToken, groupId, limit, state, cursor));
         }
 
         /// <inheritdoc cref="ListGroupsAsync"/>
@@ -643,7 +645,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListGroupsAsync(session.AuthToken, name, cursor, limit));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListGroupsAsync(session.AuthToken, name, cursor, limit));
         }
 
         /// <inheritdoc cref="ListLeaderboardRecordsAsync"/>
@@ -656,7 +658,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit,
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit,
                 cursor,
                 expiry?.ToString()));
         }
@@ -671,7 +673,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId,
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId,
                 limit,
                 expiry?.ToString()));
         }
@@ -687,7 +689,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListMatchesAsync(session.AuthToken, limit, authoritative, label, min, max, query));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListMatchesAsync(session.AuthToken, limit, authoritative, label, min, max, query));
         }
 
         /// <inheritdoc cref="ListNotificationsAsync"/>
@@ -700,7 +702,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListNotificationsAsync(session.AuthToken, limit, cacheableCursor));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListNotificationsAsync(session.AuthToken, limit, cacheableCursor));
         }
 
         [Obsolete("ListStorageObjects is obsolete, please use ListStorageObjectsAsync instead.", true)]
@@ -719,7 +721,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor));
         }
 
         /// <inheritdoc cref="ListTournamentRecordsAroundOwnerAsync"/>
@@ -732,7 +734,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId,
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId,
                 limit,
                 expiry?.ToString()));
         }
@@ -747,7 +749,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit, cursor,
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit, cursor,
                 expiry?.ToString()));
         }
 
@@ -761,7 +763,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListTournamentsAsync(session.AuthToken, categoryStart, categoryEnd, startTime,
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListTournamentsAsync(session.AuthToken, categoryStart, categoryEnd, startTime,
                 endTime, limit,
                 cursor));
         }
@@ -780,7 +782,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListUserGroupsAsync(session.AuthToken, userId, limit, state, cursor));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListUserGroupsAsync(session.AuthToken, userId, limit, state, cursor));
         }
 
         /// <inheritdoc cref="ListUsersStorageObjectsAsync"/>
@@ -793,7 +795,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ListStorageObjects2Async(session.AuthToken, collection, userId, limit, cursor));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ListStorageObjects2Async(session.AuthToken, collection, userId, limit, cursor));
         }
 
         /// <inheritdoc cref="PromoteGroupUsersAsync"/>
@@ -805,7 +807,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.PromoteGroupUsersAsync(session.AuthToken, groupId, ids));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.PromoteGroupUsersAsync(session.AuthToken, groupId, ids));
         }
 
         /// <inheritdoc cref="ReadStorageObjectsAsync"/>
@@ -829,7 +831,7 @@ namespace Nakama
                 });
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ReadStorageObjectsAsync(session.AuthToken,
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ReadStorageObjectsAsync(session.AuthToken,
                 new ApiReadStorageObjectsRequest {_objectIds = objects}));
         }
 
@@ -842,7 +844,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.RpcFuncAsync(session.AuthToken, id, payload, null));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.RpcFuncAsync(session.AuthToken, id, payload, null));
         }
 
         /// <inheritdoc cref="RpcAsync(Nakama.ISession,string)"/>
@@ -854,19 +856,19 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.RpcFunc2Async(session.AuthToken, id, null, null));
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.RpcFunc2Async(session.AuthToken, id, null, null));
         }
 
         /// <inheritdoc cref="RpcAsync(string,string,string)"/>
         public Task<IApiRpc> RpcAsync(string httpkey, string id, string payload = null) =>
-            new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.RpcFunc2Async(null, id, payload, httpkey));
+            new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.RpcFunc2Async(null, id, payload, httpkey));
 
         /// <inheritdoc cref="SessionLogoutAsync(Nakama.ISession)"/>
-        public Task SessionLogoutAsync(ISession session) => new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => SessionLogoutAsync(session.AuthToken, session.RefreshToken));
+        public Task SessionLogoutAsync(ISession session) => new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => SessionLogoutAsync(session.AuthToken, session.RefreshToken));
 
         /// <inheritdoc cref="SessionLogoutAsync(string,string)"/>
         public Task SessionLogoutAsync(string authToken, string refreshToken) =>
-            new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.SessionLogoutAsync(authToken,
+            new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.SessionLogoutAsync(authToken,
                 new ApiSessionLogoutRequest {Token = authToken, RefreshToken = refreshToken}));
 
         /// <inheritdoc cref="SessionRefreshAsync"/>
@@ -883,7 +885,7 @@ namespace Nakama
                 Logger.WarnFormat("Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
             }
 
-            var response = await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.SessionRefreshAsync(ServerKey, string.Empty,
+            var response = await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.SessionRefreshAsync(ServerKey, string.Empty,
                 new ApiSessionRefreshRequest {Token = session.RefreshToken, _vars = vars}));
 
             if (session is Session updatedSession)
@@ -910,7 +912,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.UnlinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.UnlinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token}));
         }
 
         /// <inheritdoc cref="UnlinkCustomAsync"/>
@@ -922,7 +924,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.UnlinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.UnlinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id}));
         }
 
         /// <inheritdoc cref="UnlinkDeviceAsync"/>
@@ -934,7 +936,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.UnlinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.UnlinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id}));
         }
 
         /// <inheritdoc cref="UnlinkEmailAsync"/>
@@ -946,7 +948,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.UnlinkEmailAsync(session.AuthToken,
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.UnlinkEmailAsync(session.AuthToken,
                 new ApiAccountEmail {Email = email, Password = password}));
         }
 
@@ -959,7 +961,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.UnlinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.UnlinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token}));
         }
 
         /// <inheritdoc cref="UnlinkGameCenterAsync"/>
@@ -972,7 +974,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.UnlinkGameCenterAsync(
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.UnlinkGameCenterAsync(
                 session.AuthToken,
                 new ApiAccountGameCenter
                 {
@@ -994,7 +996,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.UnlinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.UnlinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token}));
         }
 
         /// <inheritdoc cref="UnlinkSteamAsync"/>
@@ -1006,7 +1008,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.UnlinkSteamAsync(session.AuthToken, new ApiAccountSteam {Token = token}));
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.UnlinkSteamAsync(session.AuthToken, new ApiAccountSteam {Token = token}));
         }
 
         /// <inheritdoc cref="UpdateAccountAsync"/>
@@ -1019,7 +1021,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.UpdateAccountAsync(
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.UpdateAccountAsync(
                 session.AuthToken, new ApiUpdateAccountRequest
                 {
                     AvatarUrl = avatarUrl,
@@ -1041,7 +1043,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() =>_apiClient.UpdateGroupAsync(
+            await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() =>_apiClient.UpdateGroupAsync(
                 session.AuthToken, groupId,
                 new ApiUpdateGroupRequest
                 {
@@ -1062,7 +1064,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ValidatePurchaseAppleAsync(session.AuthToken, new ApiValidatePurchaseAppleRequest
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ValidatePurchaseAppleAsync(session.AuthToken, new ApiValidatePurchaseAppleRequest
             {
                 Receipt = receipt
             }));
@@ -1077,7 +1079,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ValidatePurchaseGoogleAsync(session.AuthToken, new ApiValidatePurchaseGoogleRequest
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ValidatePurchaseGoogleAsync(session.AuthToken, new ApiValidatePurchaseGoogleRequest
             {
                 Purchase = receipt
             }));
@@ -1092,7 +1094,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.ValidatePurchaseHuaweiAsync(session.AuthToken, new ApiValidatePurchaseHuaweiRequest
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.ValidatePurchaseHuaweiAsync(session.AuthToken, new ApiValidatePurchaseHuaweiRequest
             {
                 Purchase = receipt,
                 Signature = signature
@@ -1109,7 +1111,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.WriteLeaderboardRecordAsync(
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.WriteLeaderboardRecordAsync(
                 session.AuthToken, leaderboardId,
                 new WriteLeaderboardRecordRequestLeaderboardRecordWrite
                 {
@@ -1143,7 +1145,7 @@ namespace Nakama
                 });
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.WriteStorageObjectsAsync(session.AuthToken,
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.WriteStorageObjectsAsync(session.AuthToken,
                 new ApiWriteStorageObjectsRequest {_objects = writes}));
         }
 
@@ -1158,7 +1160,7 @@ namespace Nakama
                 await SessionRefreshAsync(session);
             }
 
-            return await new ConfiguredRequest(GlobalRetryConfiguration, _retryInvoker).Invoke(() => _apiClient.WriteTournamentRecordAsync(session.AuthToken,
+            return await new ConfiguredRequest(_retryInvoker, GlobalRetryConfiguration).Invoke(() => _apiClient.WriteTournamentRecordAsync(session.AuthToken,
                 tournamentId,
                 new WriteTournamentRecordRequestTournamentRecordWrite
                 {
