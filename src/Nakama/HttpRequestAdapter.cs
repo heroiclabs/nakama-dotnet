@@ -83,7 +83,6 @@ namespace Nakama
 
             Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri, body);
 
-            System.Console.WriteLine("linked source is " + linkedSource);
             var response = await _httpClient.SendAsync(request, linkedSource == null ? timeoutToken : linkedSource.Token);
             var contents = await response.Content.ReadAsStringAsync();
             response.Content?.Dispose();

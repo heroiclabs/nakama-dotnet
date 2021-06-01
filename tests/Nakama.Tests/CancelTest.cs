@@ -37,7 +37,15 @@ namespace Nakama.Tests
         [Fact]
         public async void TestCancelDuringBackoff()
         {
-            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath);
+            var adapterSchedule = new TransientAdapterResponseType[3] {
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+            };
+
+            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
+
+            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
 
             var canceller = new CancellationTokenSource();
 
