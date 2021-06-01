@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -47,7 +48,7 @@ namespace Nakama.Tests
                 lastNumRetry = numRetry;
             };
 
-            var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 1, retryListener);
+            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 1, retryListener);
             client.GlobalRetryConfiguration = config;
 
             ISession session = await client.AuthenticateCustomAsync("test_id");
@@ -77,7 +78,7 @@ namespace Nakama.Tests
                 lastNumRetry = numRetry;
             };
 
-            var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(50), maxRetries: 5, retryListener);
+            var config = new RetryConfiguration(baseDelay: 1, maxRetries: 5, retryListener);
             client.GlobalRetryConfiguration = config;
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
@@ -105,7 +106,7 @@ namespace Nakama.Tests
                 lastNumRetry = numRetry;
             };
 
-            var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 3, retryListener);
+            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
             client.GlobalRetryConfiguration = config;
 
 
@@ -129,7 +130,7 @@ namespace Nakama.Tests
                 lastNumRetry = numRetry;
             };
 
-            var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 0, retryListener);
+            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 0, retryListener);
             client.GlobalRetryConfiguration = config;
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
@@ -157,10 +158,10 @@ namespace Nakama.Tests
                 lastNumRetry = numRetry;
             };
 
-            var globalConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 1, retryListener);
+            var globalConfig = new RetryConfiguration(baseDelay: 10, maxRetries: 1, retryListener);
             client.GlobalRetryConfiguration = globalConfig;
 
-            var localConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 3, retryListener);
+            var localConfig = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
             var session = await client.AuthenticateCustomAsync("test_id", null, true, null, new RequestConfiguration(localConfig));
             Assert.NotNull(session);
             Assert.Equal(3, lastNumRetry);
@@ -168,9 +169,69 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_Delay_ExpectedTimes()
+        public async void RetryConfiguration_Delay_ExpectedExponentialTimes()
         {
+            var adapterSchedule = new TransientAdapterResponseType[4] {
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.ServerOk
+            };
 
+            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
+            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
+
+
+            var retries = new List<Retry>();
+
+            RetryListener retryListener = (int numRetry, Retry retry) => {
+                retries.Add(retry);
+            };
+
+            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
+            client.GlobalRetryConfiguration = config;
+
+            Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
+
+            ISession session = await sessionTask;
+            Assert.NotNull(session);
+
+            Assert.True(10 == retries[0].ExponentialBackoff);
+            Assert.True(100 == retries[1].ExponentialBackoff);
+            Assert.True(1000 == retries[2].ExponentialBackoff);
+        }
+
+        [Fact]
+        public async void RetryConfiguration_Delay_ExpectedDelays()
+        {
+            var adapterSchedule = new TransientAdapterResponseType[4] {
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.ServerOk
+            };
+
+            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
+            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
+
+
+            var retries = new List<Retry>();
+
+            RetryListener retryListener = (int numRetry, Retry retry) => {
+                retries.Add(retry);
+            };
+
+            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
+            client.GlobalRetryConfiguration = config;
+
+            Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
+            Assert.Equal(1, retries.Count);
+            await Task.Delay(10);
+            Assert.Equal(2, retries.Count);
+            await Task.Delay(100);
+            Assert.Equal(3, retries.Count);
+            await Task.Delay(1000);
+            Assert.True(sessionTask.IsCompletedSuccessfully);
         }
     }
 }

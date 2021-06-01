@@ -25,16 +25,16 @@ namespace Nakama
     public class Retry
     {
         /// <summary>
-        /// The delay in the request retry attributable to the exponential backoff algorithm.
+        /// The delay (milliseconds) in the request retry attributable to the exponential backoff algorithm.
         /// </summary>
-        public TimeSpan ExponentialBackoff { get; }
+        public int ExponentialBackoff { get; }
 
         /// <summary>
-        /// The delay in the request retry attributable to the jitter algorithm.
+        /// The delay (milliseconds) in the request retry attributable to the jitter algorithm.
         /// </summary>
-        public TimeSpan JitterBackoff { get; }
+        public int JitterBackoff { get; }
 
-        internal Retry(TimeSpan expoBackoff, TimeSpan jitterBackoff)
+        internal Retry(int expoBackoff, int jitterBackoff)
         {
             ExponentialBackoff = expoBackoff;
             JitterBackoff = jitterBackoff;

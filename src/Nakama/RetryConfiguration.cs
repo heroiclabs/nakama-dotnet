@@ -33,10 +33,10 @@ namespace Nakama
     public class RetryConfiguration
     {
         /// <summary>
-        /// The base delay used to calculate the time before making another request attempt.
+        /// The base delay (milliseconds) used to calculate the time before making another request attempt.
         /// This base will be raised to N, where N is the number of retry attempts.
         /// </summary>
-        public TimeSpan BaseDelay { get; }
+        public int BaseDelay { get; }
 
         /// <summary>
         /// The jitter algorithm used to apply randomness to the retry delay. Defaults to <see cref="RetryJitter.FullJitter"/>
@@ -56,28 +56,28 @@ namespace Nakama
         /// <summary>
         /// Create a new retry configuration.
         /// </summary>
-        /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
+        /// <param name="baseDelay">The base delay (milliseconds) used to calculate the time before making another request attempt.</param>
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
-        public RetryConfiguration(TimeSpan baseDelay, int maxRetries) :
+        public RetryConfiguration(int baseDelay, int maxRetries) :
             this(baseDelay, maxRetries, null, RetryJitter.FullJitter) {}
 
         /// <summary>
         /// Create a new retry configuration.
         /// </summary>
-        /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
+        /// <param name="baseDelay">The base delay (milliseconds) used to calculate the time before making another request attempt.</param>
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="listener">A callback that is invoked before a new retry attempt is made.</param>
-        public RetryConfiguration(TimeSpan baseDelay, int maxRetries, RetryListener listener) :
+        public RetryConfiguration(int baseDelay, int maxRetries, RetryListener listener) :
             this(baseDelay, maxRetries, listener, RetryJitter.FullJitter) {}
 
         /// <summary>
         /// Create a new retry configuration.
         /// </summary>
-        /// <param name="baseDelay">The base delay used to calculate the time before making another request attempt.</param>
+        /// <param name="baseDelay">The base delay (milliseconds) used to calculate the time before making another request attempt.</param>
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="listener">A callback that is invoked before a new retry attempt is made.</param>
         /// <param name="jitter">/// The jitter algorithm used to apply randomness to the retry delay.</param>
-        public RetryConfiguration(TimeSpan baseDelay, int maxRetries, RetryListener listener, Jitter jitter)
+        public RetryConfiguration(int baseDelay, int maxRetries, RetryListener listener, Jitter jitter)
         {
             BaseDelay = baseDelay;
             RetryListener = listener;

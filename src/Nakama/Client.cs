@@ -46,7 +46,7 @@ namespace Nakama
 
         /// <inheritdoc cref="IClient.GlobalRetryConfiguration"/>
         public RetryConfiguration GlobalRetryConfiguration { get; set; } = new RetryConfiguration(
-            baseDelay: TimeSpan.FromSeconds(1),
+            baseDelay: 1000,
             jitter: RetryJitter.FullJitter,
             listener: null,
             maxRetries: 5);

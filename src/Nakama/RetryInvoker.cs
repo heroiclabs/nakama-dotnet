@@ -86,9 +86,8 @@ namespace Nakama
 
         private Retry CreateNewRetry(RetryHistory history)
         {
-            double delaySeconds = Math.Pow(history.Configuration.BaseDelay.TotalSeconds, history.Retries.Count + 1);
-            TimeSpan expoBackoff = TimeSpan.FromSeconds(delaySeconds);
-            TimeSpan jitteredBackoff = history.Configuration.Jitter(history.Retries, expoBackoff, this._random);
+            int expoBackoff = System.Convert.ToInt32(Math.Pow(history.Configuration.BaseDelay, history.Retries.Count + 1));
+            int jitteredBackoff = history.Configuration.Jitter(history.Retries, expoBackoff, this._random);
             return new Retry(expoBackoff, jitteredBackoff);
         }
 
@@ -102,7 +101,7 @@ namespace Nakama
             Retry newRetry = CreateNewRetry(history);
             history.Retries.Add(newRetry);
             history.Configuration.RetryListener?.Invoke(history.Retries.Count, newRetry);
-            return Task.Delay(newRetry.JitterBackoff.Milliseconds);
+            return Task.Delay(newRetry.JitterBackoff);
         }
     }
 }
