@@ -3568,18 +3568,18 @@ namespace Nakama
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IProtobufAny
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string TypeUrl { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Value { get; }
     }
@@ -3606,23 +3606,23 @@ namespace Nakama
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Message { get; }
     }
@@ -3676,7 +3676,7 @@ namespace Nakama
         /// </summary>
         public async Task HealthcheckAsync(
             string bearerToken,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/healthcheck";
@@ -3703,7 +3703,7 @@ namespace Nakama
         /// </summary>
         public async Task<IApiAccount> GetAccountAsync(
             string bearerToken,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/account";
@@ -3732,7 +3732,7 @@ namespace Nakama
         public async Task UpdateAccountAsync(
             string bearerToken,
             ApiUpdateAccountRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3769,7 +3769,7 @@ namespace Nakama
             ApiAccountApple body,
             bool? create,
             string username,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3814,7 +3814,7 @@ namespace Nakama
             ApiAccountCustom body,
             bool? create,
             string username,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3859,7 +3859,7 @@ namespace Nakama
             ApiAccountDevice body,
             bool? create,
             string username,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3904,7 +3904,7 @@ namespace Nakama
             ApiAccountEmail body,
             bool? create,
             string username,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3950,7 +3950,7 @@ namespace Nakama
             bool? create,
             string username,
             bool? sync,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3998,7 +3998,7 @@ namespace Nakama
             ApiAccountFacebookInstantGame body,
             bool? create,
             string username,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4043,7 +4043,7 @@ namespace Nakama
             ApiAccountGameCenter body,
             bool? create,
             string username,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4088,7 +4088,7 @@ namespace Nakama
             ApiAccountGoogle body,
             bool? create,
             string username,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4134,7 +4134,7 @@ namespace Nakama
             bool? create,
             string username,
             bool? sync,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4179,7 +4179,7 @@ namespace Nakama
         public async Task LinkAppleAsync(
             string bearerToken,
             ApiAccountApple body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4213,7 +4213,7 @@ namespace Nakama
         public async Task LinkCustomAsync(
             string bearerToken,
             ApiAccountCustom body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4247,7 +4247,7 @@ namespace Nakama
         public async Task LinkDeviceAsync(
             string bearerToken,
             ApiAccountDevice body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4281,7 +4281,7 @@ namespace Nakama
         public async Task LinkEmailAsync(
             string bearerToken,
             ApiAccountEmail body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4316,7 +4316,7 @@ namespace Nakama
             string bearerToken,
             ApiAccountFacebook body,
             bool? sync,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4353,7 +4353,7 @@ namespace Nakama
         public async Task LinkFacebookInstantGameAsync(
             string bearerToken,
             ApiAccountFacebookInstantGame body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4387,7 +4387,7 @@ namespace Nakama
         public async Task LinkGameCenterAsync(
             string bearerToken,
             ApiAccountGameCenter body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4421,7 +4421,7 @@ namespace Nakama
         public async Task LinkGoogleAsync(
             string bearerToken,
             ApiAccountGoogle body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4455,7 +4455,7 @@ namespace Nakama
         public async Task LinkSteamAsync(
             string bearerToken,
             ApiLinkSteamRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4490,7 +4490,7 @@ namespace Nakama
             string basicAuthUsername,
             string basicAuthPassword,
             ApiSessionRefreshRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4526,7 +4526,7 @@ namespace Nakama
         public async Task UnlinkAppleAsync(
             string bearerToken,
             ApiAccountApple body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4560,7 +4560,7 @@ namespace Nakama
         public async Task UnlinkCustomAsync(
             string bearerToken,
             ApiAccountCustom body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4594,7 +4594,7 @@ namespace Nakama
         public async Task UnlinkDeviceAsync(
             string bearerToken,
             ApiAccountDevice body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4628,7 +4628,7 @@ namespace Nakama
         public async Task UnlinkEmailAsync(
             string bearerToken,
             ApiAccountEmail body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4662,7 +4662,7 @@ namespace Nakama
         public async Task UnlinkFacebookAsync(
             string bearerToken,
             ApiAccountFacebook body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4696,7 +4696,7 @@ namespace Nakama
         public async Task UnlinkFacebookInstantGameAsync(
             string bearerToken,
             ApiAccountFacebookInstantGame body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4730,7 +4730,7 @@ namespace Nakama
         public async Task UnlinkGameCenterAsync(
             string bearerToken,
             ApiAccountGameCenter body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4764,7 +4764,7 @@ namespace Nakama
         public async Task UnlinkGoogleAsync(
             string bearerToken,
             ApiAccountGoogle body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4798,7 +4798,7 @@ namespace Nakama
         public async Task UnlinkSteamAsync(
             string bearerToken,
             ApiAccountSteam body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4835,7 +4835,7 @@ namespace Nakama
             int? limit,
             bool? forward,
             string cursor,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (channelId == null)
             {
@@ -4878,7 +4878,7 @@ namespace Nakama
         public async Task EventAsync(
             string bearerToken,
             ApiEvent body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4913,7 +4913,7 @@ namespace Nakama
             string bearerToken,
             IEnumerable<string> ids,
             IEnumerable<string> usernames,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/friend";
@@ -4951,7 +4951,7 @@ namespace Nakama
             int? limit,
             int? state,
             string cursor,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/friend";
@@ -4990,7 +4990,7 @@ namespace Nakama
             string bearerToken,
             IEnumerable<string> ids,
             IEnumerable<string> usernames,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/friend";
@@ -5027,7 +5027,7 @@ namespace Nakama
             string bearerToken,
             IEnumerable<string> ids,
             IEnumerable<string> usernames,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/friend/block";
@@ -5064,7 +5064,7 @@ namespace Nakama
             string bearerToken,
             ApiAccountFacebook body,
             bool? reset,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5102,7 +5102,7 @@ namespace Nakama
             string bearerToken,
             ApiAccountSteam body,
             bool? reset,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5141,7 +5141,7 @@ namespace Nakama
             string name,
             string cursor,
             int? limit,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/group";
@@ -5179,7 +5179,7 @@ namespace Nakama
         public async Task<IApiGroup> CreateGroupAsync(
             string bearerToken,
             ApiCreateGroupRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5214,7 +5214,7 @@ namespace Nakama
         public async Task DeleteGroupAsync(
             string bearerToken,
             string groupId,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5248,7 +5248,7 @@ namespace Nakama
             string bearerToken,
             string groupId,
             ApiUpdateGroupRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5288,7 +5288,7 @@ namespace Nakama
             string bearerToken,
             string groupId,
             IEnumerable<string> userIds,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5326,7 +5326,7 @@ namespace Nakama
             string bearerToken,
             string groupId,
             IEnumerable<string> userIds,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5364,7 +5364,7 @@ namespace Nakama
             string bearerToken,
             string groupId,
             IEnumerable<string> userIds,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5405,7 +5405,7 @@ namespace Nakama
         public async Task JoinGroupAsync(
             string bearerToken,
             string groupId,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5439,7 +5439,7 @@ namespace Nakama
             string bearerToken,
             string groupId,
             IEnumerable<string> userIds,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5476,7 +5476,7 @@ namespace Nakama
         public async Task LeaveGroupAsync(
             string bearerToken,
             string groupId,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5510,7 +5510,7 @@ namespace Nakama
             string bearerToken,
             string groupId,
             IEnumerable<string> userIds,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5550,7 +5550,7 @@ namespace Nakama
             int? limit,
             int? state,
             string cursor,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5593,7 +5593,7 @@ namespace Nakama
         public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(
             string bearerToken,
             ApiValidatePurchaseAppleRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5628,7 +5628,7 @@ namespace Nakama
         public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(
             string bearerToken,
             ApiValidatePurchaseGoogleRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5663,7 +5663,7 @@ namespace Nakama
         public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(
             string bearerToken,
             ApiValidatePurchaseHuaweiRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5698,7 +5698,7 @@ namespace Nakama
         public async Task DeleteLeaderboardRecordAsync(
             string bearerToken,
             string leaderboardId,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
             {
@@ -5735,7 +5735,7 @@ namespace Nakama
             int? limit,
             string cursor,
             string expiry,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
             {
@@ -5783,7 +5783,7 @@ namespace Nakama
             string bearerToken,
             string leaderboardId,
             WriteLeaderboardRecordRequestLeaderboardRecordWrite body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
             {
@@ -5826,7 +5826,7 @@ namespace Nakama
             string ownerId,
             int? limit,
             string expiry,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
             {
@@ -5876,7 +5876,7 @@ namespace Nakama
             int? minSize,
             int? maxSize,
             string query,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/match";
@@ -5923,7 +5923,7 @@ namespace Nakama
         public async Task DeleteNotificationsAsync(
             string bearerToken,
             IEnumerable<string> ids,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/notification";
@@ -5956,7 +5956,7 @@ namespace Nakama
             string bearerToken,
             int? limit,
             string cacheableCursor,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/notification";
@@ -5993,7 +5993,7 @@ namespace Nakama
             string id,
             string payload,
             string httpKey,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (id == null)
             {
@@ -6038,7 +6038,7 @@ namespace Nakama
             string id,
             string body,
             string httpKey,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (id == null)
             {
@@ -6084,7 +6084,7 @@ namespace Nakama
         public async Task SessionLogoutAsync(
             string bearerToken,
             ApiSessionLogoutRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -6118,7 +6118,7 @@ namespace Nakama
         public async Task<IApiStorageObjects> ReadStorageObjectsAsync(
             string bearerToken,
             ApiReadStorageObjectsRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -6153,7 +6153,7 @@ namespace Nakama
         public async Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(
             string bearerToken,
             ApiWriteStorageObjectsRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -6188,7 +6188,7 @@ namespace Nakama
         public async Task DeleteStorageObjectsAsync(
             string bearerToken,
             ApiDeleteStorageObjectsRequest body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -6225,7 +6225,7 @@ namespace Nakama
             string userId,
             int? limit,
             string cursor,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (collection == null)
             {
@@ -6271,7 +6271,7 @@ namespace Nakama
             string userId,
             int? limit,
             string cursor,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (collection == null)
             {
@@ -6321,7 +6321,7 @@ namespace Nakama
             int? endTime,
             int? limit,
             string cursor,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/tournament";
@@ -6372,7 +6372,7 @@ namespace Nakama
             int? limit,
             string cursor,
             string expiry,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
@@ -6420,7 +6420,7 @@ namespace Nakama
             string bearerToken,
             string tournamentId,
             WriteTournamentRecordRequestTournamentRecordWrite body,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
@@ -6460,7 +6460,7 @@ namespace Nakama
         public async Task JoinTournamentAsync(
             string bearerToken,
             string tournamentId,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
@@ -6496,7 +6496,7 @@ namespace Nakama
             string ownerId,
             int? limit,
             string expiry,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
@@ -6543,7 +6543,7 @@ namespace Nakama
             IEnumerable<string> ids,
             IEnumerable<string> usernames,
             IEnumerable<string> facebookIds,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/user";
@@ -6587,7 +6587,7 @@ namespace Nakama
             int? limit,
             int? state,
             string cursor,
-			CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken)
         {
             if (userId == null)
             {
