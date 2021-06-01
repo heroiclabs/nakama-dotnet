@@ -55,7 +55,7 @@ namespace Nakama
             }
         }
 
-        public async Task InvokeWithRetry(Func<Task> request, RetryHistory history = null)
+        public async Task InvokeWithRetry(Func<Task> request, RetryHistory history)
         {
             try
             {
