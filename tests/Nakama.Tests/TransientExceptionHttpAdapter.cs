@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nakama.Tests
@@ -42,7 +43,7 @@ namespace Nakama.Tests
             _sendSchedule = sendSchedule;
         }
 
-        Task<string> IHttpAdapter.SendAsync(string method, Uri uri, IDictionary<string, string> headers, byte[] body, int timeoutSec)
+        Task<string> IHttpAdapter.SendAsync(string method, Uri uri, IDictionary<string, string> headers, byte[] body, int timeoutSec, CancellationToken? userCancelToken)
         {
             if (_sendAttempts > _sendSchedule.Length - 1)
             {
