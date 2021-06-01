@@ -323,7 +323,7 @@ namespace Nakama
         {{- end }}
         {{- $isPreviousParam = true}}
         {{- end }},
-			CancellationToken? cancellationToken)
+		CancellationToken? cancellationToken)
         {
             {{- range $parameter := $operation.Parameters }}
             {{- if $parameter.Required }}

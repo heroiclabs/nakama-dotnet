@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-using System;
-
 namespace Nakama
 {
     /// <summary>
     /// A configuration for controlling retriable requests.
     /// </summary>
     /// <remarks>
-    /// Retry configurations can be assigned to the <see cref="IClient"/> on a request-by-request basis using
-    /// using <see cref="IClient.ConfigureRetry"/> by passing the name of the method to configure as a key.
+    /// Retry configurations can be assigned to the <see cref="IClient"/> on a request-by-request basis via
+    /// the see <cref="RequestConfiguration"/> parameter.
     ///
     /// Retry configurations can also be assigned on a global basis using <see cref="IClient.GlobalRetryConfiguration"/>.
-    /// Configurations assigned via <see cref="IClient.ConfigureRetry"/> take precedence over the global configuration.
-    ///
-    /// Note that assigning a new configuration does not change the configuration used by outstanding requests.
+    /// Configurations passed via the see <cref="RequestConfiguraiton"/> parameter take precedence over the global configuration.
     /// </remarks>
     public class RetryConfiguration
     {
