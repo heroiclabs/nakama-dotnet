@@ -160,10 +160,7 @@ namespace Nakama.Tests
             client.GlobalRetryConfiguration = globalConfig;
 
             var localConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 3);
-            Task<ISession> sessionTask = client.ConfigureRequest(localConfig)
-                .Invoke(() => client.AuthenticateCustomAsync("test_id"));
-
-            ISession session = await sessionTask;
+            var session = await client.AuthenticateCustomAsync("test_id", null, true, null, new RequestConfiguration(localConfig));
             Assert.NotNull(session);
         }
 
