@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using System;
 
 namespace Nakama.Tests
 {
@@ -204,17 +205,14 @@ namespace Nakama.Tests
         [Fact]
         public async void RetryConfiguration_Delay_ExpectedDelays()
         {
-            var adapterSchedule = new TransientAdapterResponseType[4] {
+            var adapterSchedule = new TransientAdapterResponseType[3] {
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
-                TransientAdapterResponseType.ServerOk
             };
 
             var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
             var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
-
-
             var retries = new List<Retry>();
 
             RetryListener retryListener = (int numRetry, Retry retry) => {
@@ -224,14 +222,23 @@ namespace Nakama.Tests
             var config = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
             client.GlobalRetryConfiguration = config;
 
-            Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
-            Assert.Equal(1, retries.Count);
-            await Task.Delay(10);
-            Assert.Equal(2, retries.Count);
-            await Task.Delay(100);
-            Assert.Equal(3, retries.Count);
-            await Task.Delay(1000);
-            Assert.True(sessionTask.IsCompletedSuccessfully);
+            DateTime timeBeforeRequest = DateTime.Now;
+            DateTime timeAfterRequest = default(DateTime);
+
+            try
+            {
+                await client.AuthenticateCustomAsync("test_id");
+            }
+            catch
+            {
+                timeAfterRequest = DateTime.Now;
+            }
+
+            int expectedElapsedTime = retries.Sum(retry => retry.JitterBackoff);
+            int actualElapsedTime = (int) (timeAfterRequest - timeBeforeRequest).TotalMilliseconds;
+
+            // actual will be slightly higher due to cpu elapsed time
+            Assert.True(expectedElapsedTime < actualElapsedTime);
         }
     }
 }
