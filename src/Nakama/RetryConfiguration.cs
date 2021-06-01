@@ -25,7 +25,7 @@ namespace Nakama
     /// Retry configurations can be assigned to the <see cref="IClient"/> on a request-by-request basis using
     /// using <see cref="IClient.ConfigureRetry"/> by passing the name of the method to configure as a key.
     ///
-    /// Retry configurations can also be assigned on a global basis using <see cref="IClient.GlobalRequestConfiguration"/>.
+    /// Retry configurations can also be assigned on a global basis using <see cref="IClient.GlobalRetryConfiguration"/>.
     /// Configurations assigned via <see cref="IClient.ConfigureRetry"/> take precedence over the global configuration.
     ///
     /// Note that assigning a new configuration does not change the configuration used by outstanding requests.
