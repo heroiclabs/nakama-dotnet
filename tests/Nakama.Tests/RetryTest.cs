@@ -118,7 +118,7 @@ namespace Nakama.Tests
         [Fact]
         public async void RetryConfiguration_ZeroRetries_RetriesZeroTimes()
         {
-            var adapterSchedule = new TransientAdapterResponseType[1]{TransientAdapterResponseType.ServerOk};
+            var adapterSchedule = new TransientAdapterResponseType[1]{TransientAdapterResponseType.TransientError};
 
             var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
             var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
@@ -129,7 +129,7 @@ namespace Nakama.Tests
                 lastNumRetry = numRetry;
             };
 
-            var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 1, retryListener);
+            var config = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 0, retryListener);
             client.GlobalRetryConfiguration = config;
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
