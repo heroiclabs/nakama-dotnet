@@ -13,11 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
-using System.Collections.Concurrent;
 using Xunit;
 using Xunit.Abstractions;
 using System.Threading;
@@ -305,6 +303,55 @@ namespace Nakama.Tests.Socket
             {
                 await memberSocket.CloseAsync();
             }
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldBootThenClose()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session3 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var socket1 = Nakama.Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
+            var socket3 = Nakama.Socket.From(_client);
+
+            await socket1.ConnectAsync(session1);
+            await socket2.ConnectAsync(session2);
+            await socket3.ConnectAsync(session3);
+
+            var party = await socket1.CreatePartyAsync(true, 2);
+
+            var socket2PresenceTcs = new TaskCompletionSource<IUserPresence>();
+
+            socket1.ReceivedPartyPresence += presences => {
+                if (!socket2PresenceTcs.Task.IsCompleted)
+                {
+                    socket2PresenceTcs.SetResult(presences.Joins.FirstOrDefault(presence => presence.UserId == session2.UserId));
+                }
+            };
+
+            await socket2.JoinPartyAsync(party.Id);
+            await socket3.JoinPartyAsync(party.Id);
+
+            await socket2PresenceTcs.Task;
+
+            var socket2CloseTcs = new TaskCompletionSource();
+            var socket3CloseTcs = new TaskCompletionSource();
+
+            socket2.ReceivedPartyClose += (close) => socket2CloseTcs.SetResult();
+
+            await socket1.RemovePartyMemberAsync(party.Id, socket2PresenceTcs.Task.Result);
+            await socket2CloseTcs.Task;
+
+            socket3.ReceivedPartyClose += (close) => socket3CloseTcs.SetResult();
+
+            await socket1.ClosePartyAsync(party.Id);
+            await socket3CloseTcs.Task;
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
+            await socket3.CloseAsync();
         }
     }
 }
