@@ -141,7 +141,8 @@ namespace Nakama.Tests
         [Fact]
         public async void RetryConfiguration_OverrideSet_OverridesGlobal()
         {
-            var adapterSchedule = new TransientAdapterResponseType[3] {
+            var adapterSchedule = new TransientAdapterResponseType[4] {
+                TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.ServerOk
@@ -156,12 +157,14 @@ namespace Nakama.Tests
                 lastNumRetry = numRetry;
             };
 
-            var globalConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 1);
+            var globalConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 1, retryListener);
             client.GlobalRetryConfiguration = globalConfig;
 
-            var localConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 3);
+            var localConfig = new RetryConfiguration(baseDelay: TimeSpan.FromMilliseconds(100), maxRetries: 3, retryListener);
             var session = await client.AuthenticateCustomAsync("test_id", null, true, null, new RequestConfiguration(localConfig));
             Assert.NotNull(session);
+            Assert.Equal(3, lastNumRetry);
+
         }
 
         [Fact]
