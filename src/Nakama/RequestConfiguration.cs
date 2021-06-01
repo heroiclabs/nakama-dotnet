@@ -46,11 +46,24 @@ namespace Nakama
         /// A <see cref="CancellationTokenSource"> that issues cancellation tokens to client requests. Can
         /// be used to cancel requests that have been sent but not yet resolved.
         /// </param>
-        /// <returns> A new request configuration. </returns>
-        public RequestConfiguration(RetryConfiguration retryConfiguration, CancellationTokenSource cts = null)
+        /// <returns>A new request configuration.</returns>
+        public RequestConfiguration(RetryConfiguration retryConfiguration, CancellationTokenSource canceller = null)
         {
             RetryConfiguration = retryConfiguration;
-            Canceller = cts;
+            Canceller = canceller;
+        }
+
+        /// <summary>
+        /// Create a new request configuration.
+        /// </summary>
+        /// <param name="canceller">
+        /// A <see cref="CancellationTokenSource"> that issues cancellation tokens to client requests. Can
+        /// be used to cancel requests that have been sent but not yet resolved.
+        /// </param>
+        /// <returns>A new request configuration.</returns>
+        public RequestConfiguration(CancellationTokenSource canceller)
+        {
+            Canceller = canceller;
         }
     }
 }

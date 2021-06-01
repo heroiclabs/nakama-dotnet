@@ -15,6 +15,7 @@
  */
 
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Nakama
 {
@@ -22,11 +23,13 @@ namespace Nakama
     {
         public RetryConfiguration Configuration { get; }
         public List<Retry> Retries { get; }
+        public CancellationToken? UserCancelToken { get; }
 
-        public RetryHistory(RetryConfiguration configuration)
+        public RetryHistory(RetryConfiguration configuration, CancellationToken? userCancelToken)
         {
             Configuration = configuration;
             Retries = new List<Retry>();
+            UserCancelToken = userCancelToken;
         }
     }
 }

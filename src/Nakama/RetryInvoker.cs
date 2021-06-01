@@ -16,6 +16,7 @@
 
 using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -101,7 +102,15 @@ namespace Nakama
             Retry newRetry = CreateNewRetry(history);
             history.Retries.Add(newRetry);
             history.Configuration.RetryListener?.Invoke(history.Retries.Count, newRetry);
-            return Task.Delay(newRetry.JitterBackoff);
+
+            if (history.UserCancelToken.HasValue)
+            {
+                return Task.Delay(newRetry.JitterBackoff, history.UserCancelToken.Value);
+            }
+            else
+            {
+                return Task.Delay(newRetry.JitterBackoff);
+            }
         }
     }
 }

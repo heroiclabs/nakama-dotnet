@@ -197,9 +197,9 @@ namespace Nakama.Tests
             ISession session = await sessionTask;
             Assert.NotNull(session);
 
-            Assert.True(10 == retries[0].ExponentialBackoff);
-            Assert.True(100 == retries[1].ExponentialBackoff);
-            Assert.True(1000 == retries[2].ExponentialBackoff);
+            Assert.Equal(10, retries[0].ExponentialBackoff);
+            Assert.Equal(100, retries[1].ExponentialBackoff);
+            Assert.Equal(1000, retries[2].ExponentialBackoff);
         }
 
         [Fact]
