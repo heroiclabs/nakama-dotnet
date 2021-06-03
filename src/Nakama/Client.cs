@@ -859,7 +859,7 @@ namespace Nakama
              _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFunc2Async(null, id, payload, httpkey, requestConfiguration?.Canceller?.Token), new RetryHistory(requestConfiguration?.RetryConfiguration ?? GlobalRetryConfiguration, requestConfiguration?.Canceller?.Token));
 
         /// <inheritdoc cref="SessionLogoutAsync(Nakama.ISession)"/>
-        public Task SessionLogoutAsync(ISession session, RequestConfiguration requestConfiguration = null) =>  _retryInvoker.InvokeWithRetry(() => SessionLogoutAsync(session.AuthToken, session.RefreshToken), new RetryHistory(requestConfiguration?.RetryConfiguration ?? GlobalRetryConfiguration, requestConfiguration?.Canceller?.Token));
+        public Task SessionLogoutAsync(ISession session, RequestConfiguration requestConfiguration = null) => SessionLogoutAsync(session.AuthToken, session.RefreshToken, requestConfiguration);
 
         /// <inheritdoc cref="SessionLogoutAsync(string,string)"/>
         public Task SessionLogoutAsync(string authToken, string refreshToken, RequestConfiguration requestConfiguration = null) =>
