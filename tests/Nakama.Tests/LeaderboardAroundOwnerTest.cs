@@ -82,7 +82,7 @@ namespace Nakama.Tests.Api
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 10, limit: 4, ownerIndex: 5);
             var recordArray = records.Records.ToArray();
 
-            Assert.Equal(recordArray.Length, 4);
+            Assert.Equal(4, recordArray.Length);
             // owner score is 104
             Assert.Equal("105", recordArray[0].Score);
             Assert.Equal("104", recordArray[1].Score);
@@ -127,7 +127,7 @@ namespace Nakama.Tests.Api
         {
             IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 1, limit: 1, ownerIndex: 0);
             var recordArray = records.Records.ToArray();
-            Assert.Equal(1, recordArray.Length);
+            Assert.Single(recordArray);
             Assert.Equal("100", recordArray[0].Score);
         }
 

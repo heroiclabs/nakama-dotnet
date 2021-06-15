@@ -162,7 +162,7 @@ namespace Nakama.Tests.Socket
 
             await partyDataTcs.Task;
 
-            Assert.Equal(System.Text.Encoding.UTF8.GetString(partyDataTcs.Task.Result.Data), "hello world");
+            Assert.Equal("hello world", System.Text.Encoding.UTF8.GetString(partyDataTcs.Task.Result.Data));
 
             await socket1.CloseAsync();
             await socket2.CloseAsync();
@@ -243,7 +243,7 @@ namespace Nakama.Tests.Socket
 
             var party = await socket1.CreatePartyAsync(true, 1);
 
-            Assert.Equal(1, party.Presences.Count());
+            Assert.Single(party.Presences);
             Assert.Equal(party.Leader.UserId, party.Presences.First().UserId);
 
             await socket1.CloseAsync();
@@ -278,7 +278,7 @@ namespace Nakama.Tests.Socket
                     Interlocked.Increment(ref partyObjCounter);
                 };
 
-                memberSockets[i].JoinPartyAsync(party.Id);
+                memberSockets[i].JoinPartyAsync(party.Id).Start();
             }
 
             while (partyObjCounter < numMembers)

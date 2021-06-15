@@ -69,9 +69,9 @@ namespace Nakama.Tests.Api
             Assert.Null(result.NextCursor);
             Assert.Null(result.PrevCursor);
             Assert.NotEmpty(result.Records);
-            Assert.Equal(result.OwnerRecords.Count(r => r.OwnerId == session.UserId), 1);
-            Assert.True(result.Records.Any(record => record.Username == username));
-            Assert.True(result.OwnerRecords.Any(record => record.Username == username));
+            Assert.Equal(1, result.OwnerRecords.Count(r => r.OwnerId == session.UserId));
+            Assert.Contains(result.Records, record => record.Username == username);
+            Assert.Contains(result.OwnerRecords, record => record.Username == username);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]

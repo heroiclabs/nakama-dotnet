@@ -274,9 +274,9 @@ namespace Nakama.Tests.Socket
             {
                 statuses = await socket1.FollowUsersAsync(followeeSessions.Select(session => session.UserId));
             }
-            catch (ApiResponseException e)
+            catch (ApiResponseException)
             {
-                throw e;
+                throw;
             }
 
             Assert.Equal(numFollowees, statuses.Presences.Count());
@@ -362,7 +362,7 @@ namespace Nakama.Tests.Socket
 
             await Task.Delay(Timeout);
 
-            Assert.Equal(numStatusesReceived, 1);
+            Assert.Equal(1, numStatusesReceived);
 
             await socket1.CloseAsync();
             await socket2.CloseAsync();

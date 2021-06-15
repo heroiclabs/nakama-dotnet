@@ -203,15 +203,15 @@ namespace Nakama.Tests.Api
 
             var admins = await _client.ListGroupUsersAsync(session1, group.Id, state: 1, limit: 2);
 
-            Assert.Equal(admins.GroupUsers.Count(), 2);
+            Assert.Equal(2, admins.GroupUsers.Count());
 
             await _client.DemoteGroupUsersAsync(session1, group.Id, new string[]{session2.UserId, session3.UserId});
 
             admins = await _client.ListGroupUsersAsync(session1, group.Id, state: 1, limit: 2);
-            Assert.Equal(admins.GroupUsers.Count(), 0);
+            Assert.Empty(admins.GroupUsers);
 
             var members = await _client.ListGroupUsersAsync(session1, group.Id, state: 2, limit: 2);
-            Assert.Equal(members.GroupUsers.Count(), 2);
+            Assert.Equal(2, members.GroupUsers.Count());
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
@@ -227,7 +227,7 @@ namespace Nakama.Tests.Api
             await _client.BanGroupUsersAsync(session1, group.Id, new []{session2.UserId, session3.UserId});
 
             var remainingMembers = await _client.ListGroupUsersAsync(session1, group.Id, state: null, limit: 100);
-            Assert.Equal(remainingMembers.GroupUsers.Count(), 1);
+            Assert.Single(remainingMembers.GroupUsers);
         }
 
     }
