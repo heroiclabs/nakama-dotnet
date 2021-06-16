@@ -54,7 +54,13 @@ namespace Nakama.Replicated
         {
             if (response.Success)
             {
-                // TODO implement
+                var merger = new ValueMergerGuest(
+                    _presenceTracker.Host.Presence,
+                    _presenceTracker.Host.Presence,
+                    _varStore,
+                    response.CurrentStore);
+
+                merger.Merge();
             }
             else
             {
@@ -62,7 +68,7 @@ namespace Nakama.Replicated
             }
         }
 
-        public void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addMethod)
+        public void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addToOutgoingStore)
         {
             if (_varStore.HasLockVersion(key))
             {
@@ -83,7 +89,7 @@ namespace Nakama.Replicated
             var replicatedValue = new ReplicatedValue<T>(key, newValue, _varStore.GetLockVersion(key), status, Presence);
 
             ReplicatedValueStore outgoingStore = status == KeyValidationStatus.Pending ? _valuesToHost : _valuesToAll;
-            addMethod(outgoingStore, replicatedValue);
+            addToOutgoingStore(outgoingStore, replicatedValue);
             // send to all
             OnReplicatedDataSend(null, outgoingStore);
         }

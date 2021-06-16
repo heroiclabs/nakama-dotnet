@@ -25,7 +25,7 @@ namespace Nakama.Replicated
 
         IUserPresence Presence { get; }
         void HandleRemoteDataChanged(IUserPresence sender, ReplicatedValueStore store);
-        void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addMethod);
+        void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addToOutgoingStore);
 
     }
 }
