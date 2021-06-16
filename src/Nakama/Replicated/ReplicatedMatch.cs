@@ -102,13 +102,18 @@ namespace Nakama.Replicated
 
         private void HandleGuestJoined(ReplicatedGuest joinedGuest)
         {
-            joinedGuest.OnHandshakeRequestSend += HandleHandshakeRequestSend;
             joinedGuest.OnReplicatedDataSend += HandleReplicatedDataSend;
+
+            var keysForValidation = _varStore.GetAllKeysAsList();
+            _socket.SendMatchStateAsync(
+                _match.Id,
+                _handshakeOpcode,
+                Encode(new HandshakeRequest(keysForValidation)),
+                new IUserPresence[]{_presenceTracker.Host.Presence});
         }
 
         private void HandleGuestLeft(ReplicatedGuest leftGuest)
         {
-            leftGuest.OnHandshakeRequestSend -= HandleHandshakeRequestSend;
             leftGuest.OnReplicatedDataSend -= HandleReplicatedDataSend;
         }
 

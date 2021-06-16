@@ -19,7 +19,6 @@ using System.Collections.Generic;
 
 namespace Nakama.Replicated
 {
-    // todo dynamic host choosing, and populate guests
     internal class ReplicatedPresenceTracker
     {
         public delegate void ReplicatedHostChangedHandler(ReplicatedHost oldHost, ReplicatedHost newHost);

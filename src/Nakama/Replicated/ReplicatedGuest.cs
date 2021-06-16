@@ -22,7 +22,6 @@ namespace Nakama.Replicated
     internal class ReplicatedGuest : IReplicatedMember
     {
         public event Action<IEnumerable<IUserPresence>, ReplicatedValueStore> OnReplicatedDataSend;
-        public event Action<HandshakeRequest> OnHandshakeRequestSend;
 
         public IUserPresence Presence { get; }
 
@@ -37,17 +36,6 @@ namespace Nakama.Replicated
             Presence = presence;
             _presenceTracker = presenceTracker;
             _varStore = varStore;
-        }
-
-        // todo unused
-        public void ReceivedSelfJoined()
-        {
-            var keysForValidation = _varStore.GetAllKeysAsList();
-
-            if (OnHandshakeRequestSend != null)
-            {
-                OnHandshakeRequestSend(new HandshakeRequest(keysForValidation));
-            }
         }
 
         public void ReceivedHandshakeResponse(HandshakeResponse response)
