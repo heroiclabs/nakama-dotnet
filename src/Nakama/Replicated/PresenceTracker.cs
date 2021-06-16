@@ -42,7 +42,6 @@ namespace Nakama.Replicated
         private readonly List<string> _joinOrder = new List<string>();
         private readonly Dictionary<string, IUserPresence> _presences = new Dictionary<string, IUserPresence>();
         private readonly IUserPresence _self;
-        private readonly Dictionary<string, IUserPresence> _others = new Dictionary<string, IUserPresence>();
         private readonly bool _trackHost;
 
         public PresenceTracker(IUserPresence self, bool trackHost, HostHeuristic hostHeuristic)

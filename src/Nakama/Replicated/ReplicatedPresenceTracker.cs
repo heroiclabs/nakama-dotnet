@@ -34,7 +34,6 @@ namespace Nakama.Replicated
 
         private readonly Dictionary<string, ReplicatedGuest> _guests = new Dictionary<string, ReplicatedGuest>();
         private ReplicatedHost _host;
-        private readonly Dictionary<string, IReplicatedMember> _others = new Dictionary<string, IReplicatedMember>();
         private readonly PresenceTracker _presenceTracker;
         private IReplicatedMember _self;
         private ReplicatedValueStore _valStore;
