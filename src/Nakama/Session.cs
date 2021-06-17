@@ -112,7 +112,7 @@ namespace Nakama
             {
                 foreach (var variable in dictionary)
                 {
-                    Vars.Add(variable.Key, variable.Value.ToString());
+                    Vars[variable.Key] = variable.Value.ToString();
                 }
             }
 
