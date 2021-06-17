@@ -37,12 +37,8 @@ namespace Nakama.Replicated
         private readonly ConcurrentDictionary<ReplicatedKey, ReplicatedVar<int>> _ints = new ConcurrentDictionary<ReplicatedKey, ReplicatedVar<int>>();
         private readonly ConcurrentDictionary<ReplicatedKey, ReplicatedVar<string>> _strings = new ConcurrentDictionary<ReplicatedKey, ReplicatedVar<string>>();
 
-        private readonly IUserPresence _self;
-
-        public ReplicatedVarStore(IUserPresence self)
+        public ReplicatedVarStore()
         {
-            _self = self;
-
             _keys[KeyValidationStatus.None] = new HashSet<ReplicatedKey>();
             _keys[KeyValidationStatus.Pending] = new HashSet<ReplicatedKey>();
             _keys[KeyValidationStatus.Validated] = new HashSet<ReplicatedKey>();
@@ -163,7 +159,6 @@ namespace Nakama.Replicated
 
             _lockVersions[key] = 0;
             collection[key] = replicated;
-            replicated.Self = _self;
         }
     }
 }

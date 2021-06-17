@@ -41,35 +41,16 @@ namespace Nakama.Replicated
         private KeyValidationStatus _validationStatus;
         private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
 
-        internal IUserPresence Self { get; set; }
-
         private readonly object _valueLock = new object();
 
         public void SetValue(IUserPresence presence, T value)
         {
-            AssertSelf();
             SetValue(presence, value, ReplicatedClientType.Local, _validationStatus);
         }
 
-        public void SetValue(T value)
-        {
-            AssertSelf();
-            SetValue(Self, value);
-        }
-
-        public T GetValue()
-        {
-            AssertSelf();
-
-            lock (_valueLock)
-            {
-                return _values[Self.UserId];
-            }
-        }
 
         public T GetValue(IUserPresence presence)
         {
-            AssertSelf();
 
             lock (_valueLock)
             {
@@ -86,8 +67,6 @@ namespace Nakama.Replicated
 
         internal void SetValue(IUserPresence presence, T value, ReplicatedClientType source, KeyValidationStatus validationStatus)
         {
-            AssertSelf();
-
             lock (_valueLock)
             {
                 T oldValue = _values.ContainsKey(presence.UserId) ? _values[presence.UserId] : default(T);
@@ -114,8 +93,6 @@ namespace Nakama.Replicated
 
         internal void Clear()
         {
-            Self = null;
-
             lock (_valueLock)
             {
                 _values.Clear();
@@ -124,14 +101,6 @@ namespace Nakama.Replicated
             OnHostValidate = null;
             OnValueChangedLocal = null;
             OnValueChangedRemote = null;
-        }
-
-        private void AssertSelf()
-        {
-            if (Self == null)
-            {
-                throw new InvalidOperationException("Replicated variable must be registered to a match before use.");
-            }
         }
     }
 }

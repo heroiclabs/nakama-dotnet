@@ -29,8 +29,6 @@ namespace Nakama.Replicated
             NewestMember
         }
 
-        public IUserPresence Self => _self;
-
         public delegate void HostChangedHandler(IUserPresence oldHost, IUserPresence newHost);
 
         public event HostChangedHandler OnHostChanged;
@@ -41,19 +39,12 @@ namespace Nakama.Replicated
         private readonly HostHeuristic _hostHeuristic;
         private readonly List<string> _joinOrder = new List<string>();
         private readonly Dictionary<string, IUserPresence> _presences = new Dictionary<string, IUserPresence>();
-        private readonly IUserPresence _self;
         private readonly bool _trackHost;
 
-        public PresenceTracker(IUserPresence self, bool trackHost, HostHeuristic hostHeuristic)
+        public PresenceTracker(bool trackHost, HostHeuristic hostHeuristic)
         {
-            _self = self;
             _trackHost = trackHost;
             _hostHeuristic = hostHeuristic;
-        }
-
-        public IEnumerable<IUserPresence> GetGuests()
-        {
-            return _presences.Where(presence => presence.Value.UserId != _host.UserId).Select(presence => presence.Value);
         }
 
         public IUserPresence GetHost()

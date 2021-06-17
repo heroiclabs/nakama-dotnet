@@ -20,16 +20,23 @@ namespace Nakama.Replicated
 {
     public static class ReplicatedExtensions
     {
-        public async static Task<IMatch> CreateReplicatedMatch(this ISocket socket, ReplicatedOpcodes opcodes)
+        // todo don't require session as a parameter here since we pass it to socket.
+        public async static Task<ReplicatedMatch> CreateReplicatedMatch(this ISocket socket, ISession session, ReplicatedOpcodes opcodes)
         {
+            var varStore = new ReplicatedVarStore();
+            var presenceTracker = new ReplicatedPresenceTracker(session, varStore);
+            socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
             IMatch match = await socket.CreateMatchAsync();
-            return new ReplicatedMatch(socket, match, opcodes);
+            return new ReplicatedMatch(socket, match, opcodes, varStore, presenceTracker);
         }
 
-        public async static Task<IMatch> JoinReplicatedMatch(this ISocket socket, string matchId, ReplicatedOpcodes opcodes)
+        public async static Task<ReplicatedMatch> JoinReplicatedMatch(this ISocket socket, ISession session, string matchId, ReplicatedOpcodes opcodes)
         {
+            var varStore = new ReplicatedVarStore();
+            var presenceTracker = new ReplicatedPresenceTracker(session, varStore);
+            socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
             IMatch match = await socket.JoinMatchAsync(matchId);
-            return new ReplicatedMatch(socket, match, opcodes);
+            return new ReplicatedMatch(socket, match, opcodes, varStore, presenceTracker);
         }
     }
 }

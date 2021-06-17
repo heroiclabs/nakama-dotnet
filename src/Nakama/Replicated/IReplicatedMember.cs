@@ -22,10 +22,7 @@ namespace Nakama.Replicated
     internal interface IReplicatedMember
     {
         event Action<IEnumerable<IUserPresence>, ReplicatedValueStore> OnReplicatedDataSend;
-
-        IUserPresence Presence { get; }
         void HandleRemoteDataChanged(IUserPresence sender, ReplicatedValueStore store);
         void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addToOutgoingStore);
-
     }
 }

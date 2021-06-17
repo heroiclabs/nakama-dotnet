@@ -79,14 +79,14 @@ namespace Nakama.Replicated
                     case KeyValidationStatus.Validated:
                         throw new InvalidOperationException("Host received value that already claims to be validated.");
                     case KeyValidationStatus.Pending:
-                        if (localType.OnHostValidate(localType.GetValue(), remoteValue))
+                        if (localType.OnHostValidate(localType.GetValue(_sender), remoteValue))
                         {
                             localType.SetValue(_sender, remoteValue, ReplicatedClientType.Remote, KeyValidationStatus.Validated);
                         }
                         else
                         {
                             // one guest has incorrect value. queue a rollback for that guest.
-                            var outgoing = new ReplicatedValue<T>(remoteReplicatedValue.Key, localType.GetValue(), _localVars.GetLockVersion(remoteReplicatedValue.Key), KeyValidationStatus.Validated, _sender);
+                            var outgoing = new ReplicatedValue<T>(remoteReplicatedValue.Key, localType.GetValue(_sender), _localVars.GetLockVersion(remoteReplicatedValue.Key), KeyValidationStatus.Validated, _sender);
                             addValueToSend(outgoing);
                         }
                     break;

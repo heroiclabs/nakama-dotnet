@@ -27,21 +27,19 @@ namespace Nakama.Replicated
         public event Action<ReplicatedGuest> OnReplicatedGuestLeft;
         public event ReplicatedHostChangedHandler OnReplicatedHostChanged;
 
-        public IEnumerable<ReplicatedGuest> Guests => _guests.Values;
+        public IReadOnlyDictionary<string, ReplicatedGuest> Guests => _guests;
         public ReplicatedHost Host => _host;
-        public IReplicatedMember Self => _self;
 
         private readonly Dictionary<string, ReplicatedGuest> _guests = new Dictionary<string, ReplicatedGuest>();
         private ReplicatedHost _host;
         private readonly PresenceTracker _presenceTracker;
-        private IReplicatedMember _self;
-        private ReplicatedValueStore _valStore;
+        private readonly ISession _session;
         private ReplicatedVarStore _varStore;
 
-        public ReplicatedPresenceTracker(IUserPresence self, ReplicatedValueStore valStore, ReplicatedVarStore varStore)
+        public ReplicatedPresenceTracker(ISession session, ReplicatedVarStore varStore)
         {
-            _presenceTracker = new PresenceTracker(self, trackHost: true, PresenceTracker.HostHeuristic.NewestMember);
-            _valStore = valStore;
+            _session = session;
+            _presenceTracker = new PresenceTracker(trackHost: true, PresenceTracker.HostHeuristic.NewestMember);
             _varStore = varStore;
             _presenceTracker.OnHostChanged += HandleHostChanged;
             _presenceTracker.OnGuestJoined += HandleGuestJoined;
@@ -59,17 +57,7 @@ namespace Nakama.Replicated
                 return;
             }
 
-            _host = new ReplicatedHost(newHost, this, _varStore);
-
-            if (_host.Presence.UserId == _presenceTracker.Self.UserId)
-            {
-                _self = _host;
-            }
-            else
-            {
-                AddGuest(_presenceTracker.Self);
-            }
-
+            _host = new ReplicatedHost(newHost, _guests, _varStore);
             OnReplicatedHostChanged(oldReplicatedHost, _host);
         }
 
@@ -78,9 +66,19 @@ namespace Nakama.Replicated
             _presenceTracker.HandlePresenceEvent(presenceEvent);
         }
 
-        public bool SelfIsHost()
+        public IReplicatedMember GetSelf()
         {
-            return Self.Presence.UserId == _host.Presence.UserId;
+            if (_host.Presence.UserId == _session.UserId)
+            {
+                return _host;
+            }
+
+            if (_guests.ContainsKey(_session.UserId))
+            {
+                return _guests[_session.UserId];
+            }
+
+            throw new KeyNotFoundException("Could not find self.");
         }
 
         private void HandleGuestLeft(IUserPresence guest)

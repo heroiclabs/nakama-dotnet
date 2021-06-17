@@ -28,16 +28,15 @@ namespace Nakama.Replicated
         public IUserPresence Presence => _presence;
 
         private readonly IUserPresence _presence;
-        private readonly ReplicatedVarStore _varStore;
-
+        private readonly IReadOnlyDictionary<string, ReplicatedGuest> _guests;
         private readonly ReplicatedValueStore _valuesToAll = new ReplicatedValueStore();
         private readonly Dictionary<string, ReplicatedValueStore> _valuesToGuest = new Dictionary<string, ReplicatedValueStore>();
-        private readonly ReplicatedPresenceTracker _presenceTracker;
+        private readonly ReplicatedVarStore _varStore;
 
-        public ReplicatedHost(IUserPresence presence, ReplicatedPresenceTracker presenceTracker, ReplicatedVarStore varStore)
+        public ReplicatedHost(IUserPresence presence, IReadOnlyDictionary<string, ReplicatedGuest> guests, ReplicatedVarStore varStore)
         {
             _presence = presence;
-            _presenceTracker = presenceTracker;
+            _guests = guests;
             _varStore = varStore;
         }
 
@@ -49,37 +48,37 @@ namespace Nakama.Replicated
 
             bool success = localKeys.All(request.AllKeys.Contains);
 
-            ReplicatedValueStore valStore = null;
+            ReplicatedValueStore outgoingValues = null;
 
             if (success)
             {
                 // user may have joined mid-match. send data for them to sync.
                 // todo we don't send any pending values in the var store.
                 // that is perhaps an optimization that can be made later.
-                valStore = new ReplicatedValueStore();
+                outgoingValues = new ReplicatedValueStore();
 
                 foreach (KeyValuePair<ReplicatedKey, ReplicatedVar<bool>> kvp in _varStore.Bools)
                 {
-                    valStore.AddBool(ReplicatedVarToValue(kvp));
+                    outgoingValues.AddBool(ReplicatedVarToValue(kvp));
                 }
 
                 foreach (KeyValuePair<ReplicatedKey, ReplicatedVar<float>> kvp in _varStore.Floats)
                 {
-                    valStore.AddFloat(ReplicatedVarToValue(kvp));
+                    outgoingValues.AddFloat(ReplicatedVarToValue(kvp));
                 }
 
                 foreach (KeyValuePair<ReplicatedKey, ReplicatedVar<int>> kvp in _varStore.Ints)
                 {
-                    valStore.AddInt(ReplicatedVarToValue(kvp));
+                    outgoingValues.AddInt(ReplicatedVarToValue(kvp));
                 }
 
                 foreach (KeyValuePair<ReplicatedKey, ReplicatedVar<string>> kvp in _varStore.Strings)
                 {
-                    valStore.AddString(ReplicatedVarToValue(kvp));
+                    outgoingValues.AddString(ReplicatedVarToValue(kvp));
                 }
             }
 
-            response = new HandshakeResponse(valStore, success);
+            response = new HandshakeResponse(outgoingValues, success);
 
             if (OnHandshakeResponseSend != null)
             {
@@ -99,12 +98,12 @@ namespace Nakama.Replicated
             merger.Merge();
 
             OnReplicatedDataSend(new IUserPresence[]{sender}, _valuesToGuest[sender.UserId]);
-            OnReplicatedDataSend(_presenceTracker.Guests.Select(guest => guest.Presence), _valuesToAll);
+            OnReplicatedDataSend(_guests.Select(kvp => kvp.Value.Presence), _valuesToAll);
         }
 
         private ReplicatedValue<T> ReplicatedVarToValue<T>(KeyValuePair<ReplicatedKey, ReplicatedVar<T>> kvp)
         {
-            return new ReplicatedValue<T>(kvp.Key, kvp.Value.GetValue(), _varStore.GetLockVersion(kvp.Key), kvp.Value.KeyValidationStatus, _presence);
+            return new ReplicatedValue<T>(kvp.Key, kvp.Value.GetValue(_presence), _varStore.GetLockVersion(kvp.Key), kvp.Value.KeyValidationStatus, _presence);
         }
 
         public void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addMethod)
