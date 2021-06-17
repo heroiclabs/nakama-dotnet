@@ -48,16 +48,6 @@ namespace Nakama.Replicated
             _presenceTracker.OnGuestLeft += HandleGuestLeft;
         }
 
-        public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
-        {
-            _presenceTracker.HandlePresenceEvent(presenceEvent);
-        }
-
-        public bool SelfIsHost()
-        {
-            return Self.Presence.UserId == _host.Presence.UserId;
-        }
-
         private void HandleHostChanged(IUserPresence oldHost, IUserPresence newHost)
         {
             ReplicatedHost oldReplicatedHost = _host;
@@ -81,6 +71,16 @@ namespace Nakama.Replicated
             }
 
             OnReplicatedHostChanged(oldReplicatedHost, _host);
+        }
+
+        public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
+        {
+            _presenceTracker.HandlePresenceEvent(presenceEvent);
+        }
+
+        public bool SelfIsHost()
+        {
+            return Self.Presence.UserId == _host.Presence.UserId;
         }
 
         private void HandleGuestLeft(IUserPresence guest)
