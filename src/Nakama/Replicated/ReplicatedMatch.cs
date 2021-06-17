@@ -43,33 +43,15 @@ namespace Nakama.Replicated
         public int Size => _match.Size;
         public IUserPresence Self => _match.Self;
 
-        private readonly ReplicatedOpcodes _opcodes;
         private readonly IMatch _match;
         private readonly ReplicatedPresenceTracker _presenceTracker;
-        private readonly ISocket _socket;
-        private readonly ReplicatedValueStore _valuesToAll = new ReplicatedValueStore();
         private readonly ReplicatedVarStore _varStore;
 
-        internal ReplicatedMatch(ISocket socket, IMatch match, ReplicatedOpcodes opcodes, ReplicatedVarStore varStore, ReplicatedPresenceTracker presenceTracker)
+        internal ReplicatedMatch(IMatch match, ReplicatedVarStore varStore, ReplicatedPresenceTracker presenceTracker)
         {
-            _socket = socket;
-            _opcodes = opcodes;
             _match = match;
             _varStore = varStore;
             _presenceTracker = presenceTracker;
-            _presenceTracker.OnReplicatedGuestJoined += HandleGuestJoined;
-            _presenceTracker.OnReplicatedGuestLeft += HandleGuestLeft;
-            _presenceTracker.OnReplicatedHostChanged += HandleHostChanged;
-        }
-
-        public void HandleReceivedMatchPresence(IMatchPresenceEvent e)
-        {
-            if (e.MatchId != _match.Id)
-            {
-                throw new ArgumentException($"Received presence for unexpected match: {e.MatchId}");
-            }
-
-            _presenceTracker.HandlePresenceEvent(e);
         }
 
         public void RegisterBool(string id, ReplicatedVar<bool> replicatedBool)
@@ -98,88 +80,6 @@ namespace Nakama.Replicated
             var key = new ReplicatedKey(id, _match.Self.UserId);
             _varStore.RegisterString(key, replicatedString);
             replicatedString.OnValueChangedLocal += (oldValue, newValue) => _presenceTracker.GetSelf().HandleLocalDataChanged<string>(key, newValue, (store, val) => store.AddString(val));
-        }
-
-        private void HandleGuestJoined(ReplicatedGuest joinedGuest)
-        {
-            joinedGuest.OnReplicatedDataSend += HandleReplicatedDataSend;
-
-            var keysForValidation = _varStore.GetAllKeysAsList();
-            _socket.SendMatchStateAsync(
-                _match.Id,
-                _opcodes.HandshakeOpcode,
-                Encode(new HandshakeRequest(keysForValidation)),
-                new IUserPresence[]{_presenceTracker.Host.Presence});
-        }
-
-        private void HandleGuestLeft(ReplicatedGuest leftGuest)
-        {
-            leftGuest.OnReplicatedDataSend -= HandleReplicatedDataSend;
-        }
-
-        private void HandleHostChanged(ReplicatedHost oldHost, ReplicatedHost newHost)
-        {
-            if (oldHost != null)
-            {
-                oldHost.OnHandshakeResponseSend -= HandleHandshakeResponseSend;
-                oldHost.OnReplicatedDataSend -= HandleReplicatedDataSend;
-            }
-
-            if (newHost != null)
-            {
-                newHost.OnHandshakeResponseSend += HandleHandshakeResponseSend;
-                newHost.OnReplicatedDataSend += HandleReplicatedDataSend;
-            }
-        }
-
-        private void HandleHandshakeRequestSend(HandshakeRequest request)
-        {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, Encode(request), new IUserPresence[]{_presenceTracker.Host.Presence});
-        }
-
-        private void HandleHandshakeResponseSend(IUserPresence target, HandshakeResponse response)
-        {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.ReplicatedDataOpcode, Encode(response), new IUserPresence[]{target});
-        }
-
-        private void HandleReplicatedDataSend(IEnumerable<IUserPresence> targets, ReplicatedValueStore values)
-        {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.ReplicatedDataOpcode, Encode(values), targets);
-        }
-
-        private void HandleReceivedMatchState(IMatchState matchState)
-        {
-            if (matchState.OpCode == _opcodes.ReplicatedDataOpcode)
-            {
-                ReplicatedValueStore incomingStore = JsonParser.FromJson<ReplicatedValueStore>(System.Text.Encoding.UTF8.GetString(matchState.State));
-                _presenceTracker.GetSelf().HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
-            }
-            else if (matchState.OpCode == _opcodes.HandshakeOpcode)
-            {
-                if (_presenceTracker.GetSelf() is ReplicatedHost hostSelf)
-                {
-                    string json = System.Text.Encoding.UTF8.GetString(matchState.State);
-                    var handshakeRequest = JsonParser.FromJson<HandshakeRequest>(json);
-                    hostSelf.ReceivedHandshakeRequest(matchState.UserPresence, handshakeRequest);
-                }
-                else
-                {
-                    var guestSelf = _presenceTracker.GetSelf() as ReplicatedGuest;
-                    string json = System.Text.Encoding.UTF8.GetString(matchState.State);
-                    var handshakeResponse = JsonParser.FromJson<HandshakeResponse>(json);
-                    guestSelf.ReceivedHandshakeResponse(handshakeResponse);
-                }
-            }
-        }
-
-        private byte[] Encode(object data)
-        {
-            return System.Text.Encoding.UTF8.GetBytes(data.ToJson());
-        }
-
-        private T Decode<T>(byte[] data)
-        {
-            return TinyJson.JsonParser.FromJson<T>(System.Text.Encoding.UTF8.GetString(data));
         }
     }
 }

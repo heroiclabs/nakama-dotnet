@@ -26,8 +26,16 @@ namespace Nakama.Replicated
             var varStore = new ReplicatedVarStore();
             var presenceTracker = new ReplicatedPresenceTracker(session, varStore);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
+
             IMatch match = await socket.CreateMatchAsync();
-            return new ReplicatedMatch(socket, match, opcodes, varStore, presenceTracker);
+
+            var replicatedSocket = new ReplicatedSocket(match.Id, opcodes, presenceTracker, socket, varStore);
+
+            presenceTracker.OnReplicatedGuestJoined += replicatedSocket.HandleGuestJoined;
+            presenceTracker.OnReplicatedGuestLeft += replicatedSocket.HandleGuestLeft;
+            presenceTracker.OnReplicatedHostChanged += replicatedSocket.HandleHostChanged;
+
+            return new ReplicatedMatch(match, varStore, presenceTracker);
         }
 
         public async static Task<ReplicatedMatch> JoinReplicatedMatch(this ISocket socket, ISession session, string matchId, ReplicatedOpcodes opcodes)
@@ -35,8 +43,15 @@ namespace Nakama.Replicated
             var varStore = new ReplicatedVarStore();
             var presenceTracker = new ReplicatedPresenceTracker(session, varStore);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
+
+            var replicatedSocket = new ReplicatedSocket(matchId, opcodes, presenceTracker, socket, varStore);
+
+            presenceTracker.OnReplicatedGuestJoined += replicatedSocket.HandleGuestJoined;
+            presenceTracker.OnReplicatedGuestLeft += replicatedSocket.HandleGuestLeft;
+            presenceTracker.OnReplicatedHostChanged += replicatedSocket.HandleHostChanged;
+
             IMatch match = await socket.JoinMatchAsync(matchId);
-            return new ReplicatedMatch(socket, match, opcodes, varStore, presenceTracker);
+            return new ReplicatedMatch(match, varStore, presenceTracker);
         }
     }
 }
