@@ -32,7 +32,7 @@ namespace Nakama.Tests.Socket
         private const int _HOST_INDEX = 0;
 
         private readonly List<IClient> _clients = new List<IClient>();
-        private readonly List<ReplicatedMatch> _replicatedMatches = new List<ReplicatedMatch>();
+        private readonly List<ReplicatedMatch> _matches = new List<ReplicatedMatch>();
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
 
@@ -43,19 +43,80 @@ namespace Nakama.Tests.Socket
 
         public WebSocketReplicatedTest()
         {
-            Init();
+            _clients.AddRange(CreateClients());
+            _sockets.AddRange(CreateSockets(_clients));
+            _sessions.AddRange(CreateSessions(_clients));
+            ConnectSockets(_sockets, _sessions);
+            _matches.AddRange(CreateMatches(_sockets, _sessions));
         }
 
-        private async void Init()
+        private void RegisterMatch(ReplicatedMatch match)
         {
+            match.RegisterBool(nameof(_testBool), _testBool);
+            match.RegisterFloat(nameof(_testFloat), _testFloat);
+            match.RegisterInt(nameof(_testInt), _testInt);
+            match.RegisterString(nameof(_testString), _testString);
+        }
+
+        private IEnumerable<IClient> CreateClients()
+        {
+            var clients = new List<IClient>();
+
             for (int i = 0; i < _NUM_CLIENTS; i++)
             {
-                _clients.Add(TestsUtil.FromSettingsFile());
-                var newSocket = Nakama.Socket.From(_clients[i]);
-                newSocket.ReceivedError += (e) => throw e;
-                _sockets.Add(newSocket);
+                clients.Add(TestsUtil.FromSettingsFile());
             }
 
+            return clients;
+        }
+
+        private IEnumerable<ReplicatedMatch> CreateMatches(List<ISocket> sockets, List<ISession> sessions)
+        {
+            var matchTasks = new List<Task<ReplicatedMatch>>();
+
+            matchTasks.Add(sockets[_HANDSHAKE_OPCODE].CreateReplicatedMatch(_sessions[_HOST_INDEX], new ReplicatedOpcodes(_DATA_OPCODE, _HANDSHAKE_OPCODE)));
+
+            Task.WaitAll(matchTasks.ToArray());
+
+            for (int i = 0; i < _NUM_CLIENTS; i++)
+            {
+                if (i == _HOST_INDEX)
+                {
+                    continue;
+                }
+
+                matchTasks.Add(_sockets[i].JoinReplicatedMatch(_sessions[i], matchTasks[0].Result.Id, new ReplicatedOpcodes(_DATA_OPCODE, _HANDSHAKE_OPCODE)));
+            }
+
+            Task.WaitAll(matchTasks.ToArray());
+
+            IEnumerable<ReplicatedMatch> allMatches = matchTasks.Select(task => task.Result);
+
+            foreach (var match in allMatches)
+            {
+                RegisterMatch(match);
+            }
+
+            return allMatches;
+        }
+
+        private IEnumerable<ISocket> CreateSockets(List<IClient> clients)
+        {
+            var sockets = new List<ISocket>();
+
+            for (int i = 0; i < _NUM_CLIENTS; i++)
+            {
+                var newSocket = Nakama.Socket.From(clients[i]);
+                sockets.Add(newSocket);
+                newSocket.ReceivedError += (e) => throw e;
+                sockets.Add(newSocket);
+            }
+
+            return sockets;
+        }
+
+        private IEnumerable<ISession> CreateSessions(IEnumerable<IClient> clients)
+        {
             var authTasks = new List<Task<ISession>>();
 
             foreach (var client in _clients)
@@ -65,48 +126,20 @@ namespace Nakama.Tests.Socket
 
             Task.WaitAll(authTasks.ToArray());
 
-            _sessions.AddRange(authTasks.Select(task => task.Result));
+            return authTasks.Select(task => task.Result);
+        }
 
+        private void ConnectSockets(List<ISocket> sockets, List<ISession> sessions)
+        {
             var connectTasks = new List<Task>();
 
             for (int i = 0; i < _NUM_CLIENTS; i++)
             {
-                ISocket socket = _sockets[i];
-                connectTasks.Add(socket.ConnectAsync(_sessions[i]));
+                ISocket socket = sockets[i];
+                connectTasks.Add(socket.ConnectAsync(sessions[i]));
             }
 
             Task.WaitAll(connectTasks.ToArray());
-
-            var joinMatchTasks = new List<Task<IMatch>>();
-
-            System.Console.WriteLine("awaiting");
-
-            var match = await _sockets[0].CreateReplicatedMatch(_sessions[0], new ReplicatedOpcodes(_DATA_OPCODE, _HANDSHAKE_OPCODE));
-
-            for (int i = 1; i < _NUM_CLIENTS; i++)
-            {
-                var replicatedMatch = await _sockets[i].JoinReplicatedMatch(_sessions[0], match.Id, new ReplicatedOpcodes(_DATA_OPCODE, _HANDSHAKE_OPCODE));
-                replicatedMatch.RegisterBool(nameof(_testBool), _testBool);
-                replicatedMatch.RegisterFloat(nameof(_testFloat), _testFloat);
-                replicatedMatch.RegisterInt(nameof(_testInt), _testInt);
-                replicatedMatch.RegisterString(nameof(_testString), _testString);
-                _replicatedMatches.Add(replicatedMatch);
-            }
-
-            System.Console.WriteLine("done awaiting");
-
-            for (int i = 0; i < _NUM_CLIENTS; i++)
-            {
-                Task<IMatch> matchTask = _sockets[i].JoinMatchAsync(match.Id);
-                joinMatchTasks.Add(matchTask);
-            }
-
-            System.Console.WriteLine("about to join");
-
-            Task.WaitAll(joinMatchTasks.ToArray());
-            System.Console.WriteLine("done joining");
-
-            System.Console.WriteLine("done initting");
         }
 
         public void Dispose()
@@ -141,7 +174,6 @@ namespace Nakama.Tests.Socket
             }
 
             Task.WaitAll(joinMatchTasks.ToArray());
-
         }
     }
 }
