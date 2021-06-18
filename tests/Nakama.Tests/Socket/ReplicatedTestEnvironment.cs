@@ -35,10 +35,15 @@ namespace Nakama.Tests
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
 
-        private readonly Dictionary<string, Owned<bool>> _testBools = new Dictionary<string, Owned<bool>>();
-        private readonly Dictionary<string, Owned<float>> _testFloats = new Dictionary<string, Owned<float>>();
-        private readonly Dictionary<string, Owned<int>> _testInts = new Dictionary<string, Owned<int>>();
-        private readonly Dictionary<string, Owned<string>> _testStrings = new Dictionary<string, Owned<string>>();
+        private readonly Dictionary<string, Owned<bool>> _ownedBools = new Dictionary<string, Owned<bool>>();
+        private readonly Dictionary<string, Owned<float>> _ownedFloats = new Dictionary<string, Owned<float>>();
+        private readonly Dictionary<string, Owned<int>> _ownedInts = new Dictionary<string, Owned<int>>();
+        private readonly Dictionary<string, Owned<string>> _ownedStrings = new Dictionary<string, Owned<string>>();
+
+        private readonly Dictionary<string, Shared<bool>> _sharedBools = new Dictionary<string, Shared<bool>>();
+        private readonly Dictionary<string, Shared<float>> _sharedFloats = new Dictionary<string, Shared<float>>();
+        private readonly Dictionary<string, Shared<int>> _sharedInts = new Dictionary<string, Shared<int>>();
+        private readonly Dictionary<string, Shared<string>> _sharedStrings = new Dictionary<string, Shared<string>>();
 
         public ReplicatedTestEnvironment(ReplicatedOpcodes opcodes, int numClients, int numTestVars, int hostIndex)
         {
@@ -55,24 +60,84 @@ namespace Nakama.Tests
             RegsterOwnedVars(_matches);
         }
 
-        public void SetValue(IUserPresence clientPresence, IUserPresence targetPresence, bool value)
+        public void SetOwnedBool(IUserPresence clientPresence, IUserPresence targetPresence, bool value)
         {
-            _testBools[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
+            _ownedBools[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
-        public void SetValue(IUserPresence clientPresence, IUserPresence targetPresence, float value)
+        public void SetOwnedFloat(IUserPresence clientPresence, IUserPresence targetPresence, float value)
         {
-            _testFloats[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
+            _ownedFloats[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
-        public void SetValue(IUserPresence clientPresence, IUserPresence targetPresence, int value)
+        public void SetOwnedInt(IUserPresence clientPresence, IUserPresence targetPresence, int value)
         {
-            _testInts[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
+            _ownedInts[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
-        public void SetValue(IUserPresence clientPresence, IUserPresence targetPresence, string value)
+        public void SetOwnedString(IUserPresence clientPresence, IUserPresence targetPresence, string value)
         {
-            _testStrings[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
+            _ownedStrings[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
+        }
+
+        public void SetSharedBool(IUserPresence clientPresence, bool value)
+        {
+            _sharedBools[clientPresence.UserId].SetValue(value);
+        }
+
+        public void SetSharedFloat(IUserPresence clientPresence, float value)
+        {
+            _sharedFloats[clientPresence.UserId].SetValue(value);
+        }
+
+        public void SetSharedInt(IUserPresence clientPresence, int value)
+        {
+            _sharedInts[clientPresence.UserId].SetValue(value);
+        }
+
+        public void SetSharedString(IUserPresence clientPresence, string value)
+        {
+            _sharedStrings[clientPresence.UserId].SetValue(value);
+        }
+
+        public Owned<bool> GetOwnedBool(IUserPresence clientPresence)
+        {
+            return _ownedBools[clientPresence.UserId];
+        }
+
+        public Owned<float> GetOwnedFloat(IUserPresence clientPresence, IUserPresence targetPresence, float value)
+        {
+            return _ownedFloats[clientPresence.UserId];
+        }
+
+        public Owned<int> GetOwnedInt(IUserPresence clientPresence, IUserPresence targetPresence, int value)
+        {
+            return _ownedInts[clientPresence.UserId];
+        }
+
+        public Owned<string> GetOwnedString(IUserPresence clientPresence, IUserPresence targetPresence, string value)
+        {
+            return _ownedStrings[clientPresence.UserId];
+        }
+
+        public Shared<bool> GetSharedBool(IUserPresence clientPresence)
+        {
+            return _sharedBools[clientPresence.UserId];
+        }
+
+        public Shared<float> GetSharedFloat(IUserPresence clientPresence)
+        {
+            return _sharedFloats[clientPresence.UserId];
+        }
+
+        public Shared<int> GetSharedInt(IUserPresence clientPresence)
+        {
+            return _sharedInts[clientPresence.UserId];
+        }
+
+        public Shared<string> GetSharedString(IUserPresence clientPresence)
+        {
+            return _sharedStrings[clientPresence.UserId];
         }
 
         private IEnumerable<IClient> CreateClients()
@@ -156,11 +221,10 @@ namespace Nakama.Tests
 
                 for (int j = 0; j < NumTestVars; j++)
                 {
-                    System.Console.WriteLine(presence.UserId + nameof(_testBools));
-                    matches[i].RegisterBool(presence.UserId + nameof(_testBools), new Owned<bool>());
-                    matches[i].RegisterFloat(presence.UserId + nameof(_testFloats), new Owned<float>());
-                    matches[i].RegisterInt(presence.UserId + nameof(_testInts), new Owned<int>());
-                    matches[i].RegisterString(presence.UserId + nameof(_testStrings), new Owned<string>());
+                    matches[i].RegisterBool(presence.UserId + nameof(_ownedBools), new Owned<bool>());
+                    matches[i].RegisterFloat(presence.UserId + nameof(_ownedFloats), new Owned<float>());
+                    matches[i].RegisterInt(presence.UserId + nameof(_ownedInts), new Owned<int>());
+                    matches[i].RegisterString(presence.UserId + nameof(_ownedStrings), new Owned<string>());
                 }
             }
         }
