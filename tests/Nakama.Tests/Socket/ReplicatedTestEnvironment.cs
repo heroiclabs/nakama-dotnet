@@ -52,7 +52,7 @@ namespace Nakama.Tests
             _sessions.AddRange(CreateSessions(_clients));
             ConnectSockets(_sockets, _sessions);
             _matches.AddRange(CreateMatches(_sockets, _sessions));
-            RegisterVars(_matches);
+            RegsterOwnedVars(_matches);
         }
 
         public void SetValue(IUserPresence clientPresence, IUserPresence targetPresence, bool value)
@@ -148,7 +148,7 @@ namespace Nakama.Tests
             Task.WaitAll(connectTasks.ToArray());
         }
 
-        private void RegisterVars(List<ReplicatedMatch> matches)
+        private void RegsterOwnedVars(List<ReplicatedMatch> matches)
         {
             for (int i = 0; i < matches.Count; i++)
             {
