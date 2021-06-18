@@ -22,37 +22,37 @@ namespace Nakama.Replicated
     internal class ValueMergerHost
     {
         private IUserPresence _sender;
-        private OwnedStore _localVars;
+        private OwnedStore _ownedVars;
         private ReplicatedValueStore _remoteVals;
         private ReplicatedValueStore _outgoingVals;
 
         internal ValueMergerHost(
-            IUserPresence sender, OwnedStore localVars, ReplicatedValueStore remoteVals, ReplicatedValueStore responseVals)
+            IUserPresence sender, OwnedStore ownedVars, ReplicatedValueStore remoteVals, ReplicatedValueStore responseVals)
         {
             _sender = sender;
-            _localVars = localVars;
+            _ownedVars = ownedVars;
             _remoteVals = remoteVals;
             _outgoingVals = responseVals;
         }
 
         public void Merge()
         {
-            Merge(_remoteVals.Bools, _localVars.Bools, _remoteVals.AddBool);
-            Merge(_remoteVals.Floats, _localVars.Floats, _remoteVals.AddFloat);
-            Merge(_remoteVals.Ints, _localVars.Ints, _remoteVals.AddInt);
-            Merge(_remoteVals.Strings, _localVars.Strings, _remoteVals.AddString);
+            Merge(_remoteVals.Bools, _ownedVars.Bools, _remoteVals.AddBool);
+            Merge(_remoteVals.Floats, _ownedVars.Floats, _remoteVals.AddFloat);
+            Merge(_remoteVals.Ints, _ownedVars.Ints, _remoteVals.AddInt);
+            Merge(_remoteVals.Strings, _ownedVars.Strings, _remoteVals.AddString);
         }
 
         private void Merge<T>(
             IEnumerable<ReplicatedValue<T>> remoteValues,
-            IReadOnlyDictionary<ReplicatedKey, Owned<T>> localVars,
+            IReadOnlyDictionary<ReplicatedKey, Owned<T>> ownedVars,
             Action<ReplicatedValue<T>> addValueToSend)
         {
             foreach (ReplicatedValue<T> remoteReplicatedValue in remoteValues)
             {
                 T remoteValue = remoteReplicatedValue.Value;
 
-                if (!_localVars.HasLockVersion(remoteReplicatedValue.Key))
+                if (!_ownedVars.HasLockVersion(remoteReplicatedValue.Key))
                 {
                     throw new ArgumentException($"Received unrecognized remote key: {remoteReplicatedValue.Key}");
                 }
@@ -60,14 +60,14 @@ namespace Nakama.Replicated
                 // todo one client updated locally while another value was in flight
                 // how to handle? think about 2x2 host guest combos
                 // also if values are equal it doesn't matter.
-                if (remoteReplicatedValue.LockVersion == _localVars.GetLockVersion(remoteReplicatedValue.Key))
+                if (remoteReplicatedValue.LockVersion == _ownedVars.GetLockVersion(remoteReplicatedValue.Key))
                 {
                     throw new ArgumentException($"Received conflicting remote key: {remoteReplicatedValue.Key}");
                 }
 
-                Owned<T> localType = localVars[remoteReplicatedValue.Key];
+                Owned<T> localType = ownedVars[remoteReplicatedValue.Key];
 
-                if (remoteReplicatedValue.LockVersion < _localVars.GetLockVersion(remoteReplicatedValue.Key))
+                if (remoteReplicatedValue.LockVersion < _ownedVars.GetLockVersion(remoteReplicatedValue.Key))
                 {
                     // stale data because this client updated the value
                     // before receiving.
@@ -86,7 +86,7 @@ namespace Nakama.Replicated
                         else
                         {
                             // one guest has incorrect value. queue a rollback for that guest.
-                            var outgoing = new ReplicatedValue<T>(remoteReplicatedValue.Key, localType.GetValue(_sender), _localVars.GetLockVersion(remoteReplicatedValue.Key), KeyValidationStatus.Validated, _sender);
+                            var outgoing = new ReplicatedValue<T>(remoteReplicatedValue.Key, localType.GetValue(_sender), _ownedVars.GetLockVersion(remoteReplicatedValue.Key), KeyValidationStatus.Validated, _sender);
                             addValueToSend(outgoing);
                         }
                     break;
