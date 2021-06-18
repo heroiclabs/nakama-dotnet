@@ -16,11 +16,11 @@
 
 using System;
 using System.Collections.Generic;
-using Nakama.TinyJson;
 
 namespace Nakama.Replicated
 {
     // todo entire concurrency pass on all this
+    // enforce key ids should be unique across types
     // TODO what if someone changes the type collection that the key is in, will try to send to the incorrect type
     // between clients and may pass handshake.
     // removed client -- flush values from Replicated<T> after some time.
@@ -32,6 +32,8 @@ namespace Nakama.Replicated
     // todo replicated list
     // todo potential race when creating and joining a match between the construction of this object
     // and the dispatching of presence objects off the socket.
+    // TODO restore the default getvalue call with self
+    // ~destructor definitely doesn't work, think about end match flow.
     public class ReplicatedMatch : IMatch
     {
         public event Action<Exception> OnError;
@@ -57,6 +59,7 @@ namespace Nakama.Replicated
         public void RegisterBool(string id, ReplicatedVar<bool> replicatedBool)
         {
             var key = new ReplicatedKey(id, _match.Self.UserId);
+            replicatedBool.Self = _match.Self;
             _varStore.RegisterBool(key, replicatedBool);
             replicatedBool.OnValueChangedLocal += (oldValue, newValue) => _presenceTracker.GetSelf().HandleLocalDataChanged<bool>(key, newValue, (store, val) => store.AddBool(val));
         }
@@ -64,6 +67,7 @@ namespace Nakama.Replicated
         public void RegisterFloat(string id, ReplicatedVar<float> replicatedFloat)
         {
             var key = new ReplicatedKey(id, _match.Self.UserId);
+            replicatedFloat.Self = _match.Self;
             _varStore.RegisterFloat(key, replicatedFloat);
             replicatedFloat.OnValueChangedLocal += (oldValue, newValue) => _presenceTracker.GetSelf().HandleLocalDataChanged<float>(key, newValue, (store, val) => store.AddFloat(val));
         }
@@ -71,6 +75,7 @@ namespace Nakama.Replicated
         public void RegisterInt(string id, ReplicatedVar<int> replicatedInt)
         {
             var key = new ReplicatedKey(id, _match.Self.UserId);
+            replicatedInt.Self = _match.Self;
             _varStore.RegisterInt(key, replicatedInt);
             replicatedInt.OnValueChangedLocal += (oldValue, newValue) => _presenceTracker.GetSelf().HandleLocalDataChanged<int>(key, newValue, (store, val) => store.AddInt(val));
         }
@@ -78,6 +83,7 @@ namespace Nakama.Replicated
         public void RegisterString(string id, ReplicatedVar<string> replicatedString)
         {
             var key = new ReplicatedKey(id, _match.Self.UserId);
+            replicatedString.Self = _match.Self;
             _varStore.RegisterString(key, replicatedString);
             replicatedString.OnValueChangedLocal += (oldValue, newValue) => _presenceTracker.GetSelf().HandleLocalDataChanged<string>(key, newValue, (store, val) => store.AddString(val));
         }

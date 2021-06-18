@@ -21,17 +21,17 @@ namespace Nakama.Replicated
     public struct ReplicatedOpcodes
     {
         public int HandshakeOpcode { get; }
-        public int ReplicatedDataOpcode { get; }
+        public int DataOpcode { get; }
 
-        public ReplicatedOpcodes(int handshakeOpcode, int replicatedDataOpcode)
+        public ReplicatedOpcodes(int handshakeOpcode, int dataOpcode)
         {
-            if (handshakeOpcode == replicatedDataOpcode)
+            if (handshakeOpcode == dataOpcode)
             {
                 throw new ArgumentException("Data opcode and handshake opcode must be different values.");
             }
 
             HandshakeOpcode = handshakeOpcode;
-            ReplicatedDataOpcode = replicatedDataOpcode;
+            DataOpcode = dataOpcode;
         }
     }
 }

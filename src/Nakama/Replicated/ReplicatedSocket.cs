@@ -75,17 +75,17 @@ namespace Nakama.Replicated
 
         private void HandleHandshakeResponseSend(IUserPresence target, HandshakeResponse response)
         {
-            _socket.SendMatchStateAsync(_matchId, _opcodes.ReplicatedDataOpcode, Encode(response), new IUserPresence[]{target});
+            _socket.SendMatchStateAsync(_matchId, _opcodes.DataOpcode, Encode(response), new IUserPresence[]{target});
         }
 
         private void HandleReplicatedDataSend(IEnumerable<IUserPresence> targets, ReplicatedValueStore values)
         {
-            _socket.SendMatchStateAsync(_matchId, _opcodes.ReplicatedDataOpcode, Encode(values), targets);
+            _socket.SendMatchStateAsync(_matchId, _opcodes.DataOpcode, Encode(values), targets);
         }
 
         private void HandleReceivedMatchState(IMatchState matchState)
         {
-            if (matchState.OpCode == _opcodes.ReplicatedDataOpcode)
+            if (matchState.OpCode == _opcodes.DataOpcode)
             {
                 ReplicatedValueStore incomingStore = JsonParser.FromJson<ReplicatedValueStore>(System.Text.Encoding.UTF8.GetString(matchState.State));
                 _presenceTracker.GetSelf().HandleRemoteDataChanged(matchState.UserPresence, incomingStore);

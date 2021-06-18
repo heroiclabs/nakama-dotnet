@@ -38,6 +38,13 @@ namespace Nakama.Replicated
         public ValueChangedHandler<T> OnValueChangedRemote;
         public KeyValidationStatus KeyValidationStatus => _validationStatus;
 
+        // todo throw exception if reassigning self. maybe not here?
+        internal IUserPresence Self
+        {
+            get;
+            set;
+        }
+
         private KeyValidationStatus _validationStatus;
         private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
 
@@ -48,6 +55,15 @@ namespace Nakama.Replicated
             SetValue(presence, value, ReplicatedClientType.Local, _validationStatus);
         }
 
+        public void SetValue(T value)
+        {
+            SetValue(Self, value, ReplicatedClientType.Local, _validationStatus);
+        }
+
+        public T GetValue()
+        {
+            return GetValue(Self);
+        }
 
         public T GetValue(IUserPresence presence)
         {
@@ -101,6 +117,7 @@ namespace Nakama.Replicated
             OnHostValidate = null;
             OnValueChangedLocal = null;
             OnValueChangedRemote = null;
+            Self = null;
         }
     }
 }
