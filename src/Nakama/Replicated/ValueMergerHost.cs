@@ -37,15 +37,15 @@ namespace Nakama.Replicated
 
         public void Merge()
         {
-            Merge(_remoteVals.Bools, _ownedVars.Bools, _remoteVals.AddBool);
-            Merge(_remoteVals.Floats, _ownedVars.Floats, _remoteVals.AddFloat);
-            Merge(_remoteVals.Ints, _ownedVars.Ints, _remoteVals.AddInt);
-            Merge(_remoteVals.Strings, _ownedVars.Strings, _remoteVals.AddString);
+            Merge(_ownedVars.Bools, _remoteVals.Bools, _remoteVals.AddBool);
+            Merge(_ownedVars.Floats, _remoteVals.Floats, _remoteVals.AddFloat);
+            Merge(_ownedVars.Ints, _remoteVals.Ints, _remoteVals.AddInt);
+            Merge(_ownedVars.Strings, _remoteVals.Strings, _remoteVals.AddString);
         }
 
         private void Merge<T>(
-            IEnumerable<ReplicatedValue<T>> remoteValues,
             IReadOnlyDictionary<ReplicatedKey, Owned<T>> ownedVars,
+            IEnumerable<ReplicatedValue<T>> remoteValues,
             Action<ReplicatedValue<T>> addValueToSend)
         {
             foreach (ReplicatedValue<T> remoteReplicatedValue in remoteValues)
