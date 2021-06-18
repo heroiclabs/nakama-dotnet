@@ -25,18 +25,16 @@ namespace Nakama.Replicated
         public event Action<IUserPresence, HandshakeResponse> OnHandshakeResponseSend;
         public event Action<IEnumerable<IUserPresence>, ReplicatedValueStore> OnReplicatedDataSend;
 
-        public IUserPresence Presence => _presence;
+        private PresenceTracker _presenceTracker;
+        public IUserPresence Presence => _presenceTracker.GetHost();
 
-        private readonly IUserPresence _presence;
         private readonly IReadOnlyDictionary<string, ReplicatedGuest> _guests;
         private readonly ReplicatedValueStore _valuesToAll = new ReplicatedValueStore();
         private readonly Dictionary<string, ReplicatedValueStore> _valuesToGuest = new Dictionary<string, ReplicatedValueStore>();
-        private readonly OwnedStore _ownedStore;
-
-        public ReplicatedHost(IUserPresence presence, IReadOnlyDictionary<string, ReplicatedGuest> guests, OwnedStore ownedStore)
+        private readonly Store _ownedStore;
+        public ReplicatedHost(PresenceTracker presenceTracker, Store ownedStore)
         {
-            _presence = presence;
-            _guests = guests;
+            _presenceTracker = presenceTracker;
             _ownedStore = ownedStore;
         }
 
@@ -86,24 +84,24 @@ namespace Nakama.Replicated
             }
         }
 
-        public void HandleRemoteDataChanged(IUserPresence sender, ReplicatedValueStore remoteVals)
+        public void HandleRemoteDataChanged(IUserPresence source, ReplicatedValueStore remoteVals)
         {
             // prepare data to send back to user for data that requires host validation.
-            if (!_valuesToGuest.ContainsKey(sender.UserId))
+            if (!_valuesToGuest.ContainsKey(source.UserId))
             {
-                _valuesToGuest[sender.UserId] = new ReplicatedValueStore();
+                _valuesToGuest[source.UserId] = new ReplicatedValueStore();
             }
 
-            var merger = new ValueMergerHost(sender, _ownedStore, remoteVals, _valuesToGuest[sender.UserId]);
+            var merger = new ValueMergerHost(_presenceTracker, source, _ownedStore, remoteVals, _valuesToGuest[source.UserId]);
             merger.Merge();
 
-            OnReplicatedDataSend(new IUserPresence[]{sender}, _valuesToGuest[sender.UserId]);
+            OnReplicatedDataSend(new IUserPresence[]{source}, _valuesToGuest[source.UserId]);
             OnReplicatedDataSend(_guests.Select(kvp => kvp.Value.Presence), _valuesToAll);
         }
 
         private ReplicatedValue<T> OwnedToValue<T>(KeyValuePair<ReplicatedKey, Owned<T>> kvp)
         {
-            return new ReplicatedValue<T>(kvp.Key, kvp.Value.GetValue(_presence), _ownedStore.GetLockVersion(kvp.Key), kvp.Value.KeyValidationStatus, _presence);
+            return new ReplicatedValue<T>(kvp.Key, kvp.Value.GetValue(Presence), _ownedStore.GetLockVersion(kvp.Key), kvp.Value.KeyValidationStatus, Presence);
         }
 
         public void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addMethod)
@@ -124,7 +122,7 @@ namespace Nakama.Replicated
                 throw new InvalidOperationException("Host should not have local key pending validation: " + key);
             }
 
-            addMethod(_valuesToAll, new ReplicatedValue<T>(key, newValue, _ownedStore.GetLockVersion(key), status, _presence));
+            addMethod(_valuesToAll, new ReplicatedValue<T>(key, newValue, _ownedStore.GetLockVersion(key), status, Presence));
         }
     }
 }

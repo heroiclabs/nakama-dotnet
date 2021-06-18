@@ -25,13 +25,13 @@ namespace Nakama.Replicated
 
         public IUserPresence Presence { get; }
 
-        private readonly ReplicatedPresenceTracker _presenceTracker;
-        private readonly OwnedStore _ownedStore;
+        private readonly PresenceTracker _presenceTracker;
+        private readonly Store _ownedStore;
 
         private readonly ReplicatedValueStore _valuesToHost = new ReplicatedValueStore();
         private readonly ReplicatedValueStore _valuesToAll = new ReplicatedValueStore();
 
-        public ReplicatedGuest(IUserPresence presence, ReplicatedPresenceTracker presenceTracker, OwnedStore ownedStore)
+        public ReplicatedGuest(IUserPresence presence, PresenceTracker presenceTracker, Store ownedStore)
         {
             Presence = presence;
             _presenceTracker = presenceTracker;
@@ -43,8 +43,8 @@ namespace Nakama.Replicated
             if (response.Success)
             {
                 var merger = new ValueMergerGuest(
-                    _presenceTracker.Host.Presence,
-                    _presenceTracker.Host.Presence,
+                    _presenceTracker,
+                    _presenceTracker.GetHost(),
                     _ownedStore,
                     response.CurrentStore);
 
@@ -84,7 +84,7 @@ namespace Nakama.Replicated
 
         public void HandleRemoteDataChanged(IUserPresence sender, ReplicatedValueStore remoteVals)
         {
-            var merger = new ValueMergerGuest(Presence, _presenceTracker.Host.Presence, _ownedStore, remoteVals);
+            var merger = new ValueMergerGuest(_presenceTracker, sender, _ownedStore, remoteVals);
             merger.Merge();
         }
     }

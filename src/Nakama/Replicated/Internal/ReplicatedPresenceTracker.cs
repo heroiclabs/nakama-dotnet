@@ -34,9 +34,9 @@ namespace Nakama.Replicated
         private ReplicatedHost _host;
         private readonly PresenceTracker _presenceTracker;
         private readonly ISession _session;
-        private OwnedStore _ownedStore;
+        private Store _ownedStore;
 
-        public ReplicatedPresenceTracker(ISession session, OwnedStore ownedStore)
+        public ReplicatedPresenceTracker(ISession session, Store ownedStore)
         {
             _session = session;
             _presenceTracker = new PresenceTracker(trackHost: true, PresenceTracker.HostHeuristic.NewestMember);
@@ -57,7 +57,7 @@ namespace Nakama.Replicated
                 return;
             }
 
-            _host = new ReplicatedHost(newHost, _guests, _ownedStore);
+            _host = new ReplicatedHost(_presenceTracker, _ownedStore);
             OnReplicatedHostChanged(oldReplicatedHost, _host);
         }
 
@@ -98,7 +98,7 @@ namespace Nakama.Replicated
                 throw new InvalidOperationException("Joining guest already exists.");
             }
 
-            var newGuest = new ReplicatedGuest(presence, this, _ownedStore);
+            var newGuest = new ReplicatedGuest(presence, _presenceTracker, _ownedStore);
             _guests[presence.UserId] = newGuest;
             OnReplicatedGuestJoined?.Invoke(newGuest);
         }
@@ -110,7 +110,7 @@ namespace Nakama.Replicated
                 throw new InvalidOperationException("Leaving guest does not exist.");
             }
 
-            var oldGuest = new ReplicatedGuest(presence, this, _ownedStore);
+            var oldGuest = new ReplicatedGuest(presence, _presenceTracker, _ownedStore);
             _guests.Remove(presence.UserId);
             OnReplicatedGuestLeft?.Invoke(oldGuest);
         }

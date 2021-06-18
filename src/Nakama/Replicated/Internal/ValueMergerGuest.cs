@@ -21,15 +21,14 @@ namespace Nakama.Replicated
 {
 internal class ValueMergerGuest
 {
-        private OwnedStore _ownedVars;
+        private Store _ownedVars;
+        private PresenceTracker _presenceTracker;
         private ReplicatedValueStore _remoteVals;
         private IUserPresence _sender;
-        private IUserPresence _host;
 
-        internal ValueMergerGuest(IUserPresence sender, IUserPresence host, OwnedStore ownedVars, ReplicatedValueStore remoteVals)
+        internal ValueMergerGuest(PresenceTracker presenceTracker, IUserPresence sender, Store ownedVars, ReplicatedValueStore remoteVals)
         {
             _sender = sender;
-            _host = host;
             _ownedVars = ownedVars;
             _remoteVals = remoteVals;
         }
@@ -69,7 +68,7 @@ internal class ValueMergerGuest
                 if (incomingValue.LockVersion < _ownedVars.GetLockVersion(incomingValue.Key))
                 {
                     // host can roll back the guest's value and lock version
-                    if (_sender.UserId != _host.UserId ||
+                    if (_sender.UserId != _presenceTracker.GetHost().UserId ||
                         incomingValue.KeyValidationStatus != KeyValidationStatus.Validated)
                     {
                         // stale data because this client updated the value
@@ -78,15 +77,19 @@ internal class ValueMergerGuest
                     }
                 }
 
+                IUserPresence target;
+
                 switch (incomingValue.KeyValidationStatus)
                 {
                     case KeyValidationStatus.Pending:
                         throw new InvalidOperationException("Guest received value pending validation.");
                     case KeyValidationStatus.Validated:
-                        localType.SetValue(_sender, remoteValue, ReplicatedClientType.Remote, KeyValidationStatus.Validated);
+                        target = _presenceTracker.GetPresence(incomingValue.Key.UserId);
+                        localType.SetValue(remoteValue, _sender, target, KeyValidationStatus.Validated);
                     break;
                     case KeyValidationStatus.None:
-                        localType.SetValue(_sender, remoteValue, ReplicatedClientType.Remote, KeyValidationStatus.None);
+                        target = _presenceTracker.GetPresence(incomingValue.Key.UserId);
+                        localType.SetValue(remoteValue, _sender, target, KeyValidationStatus.None);
                     break;
                 }
             }

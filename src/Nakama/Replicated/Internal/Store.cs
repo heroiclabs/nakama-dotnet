@@ -20,7 +20,7 @@ using System.Collections.Generic;
 
 namespace Nakama.Replicated
 {
-    internal class OwnedStore
+    internal class Store
     {
         public IReadOnlyDictionary<ReplicatedKey, Owned<bool>> Bools => _bools;
         public IReadOnlyDictionary<ReplicatedKey, Owned<float>> Floats => _floats;
@@ -37,7 +37,7 @@ namespace Nakama.Replicated
         private readonly ConcurrentDictionary<ReplicatedKey, Owned<int>> _ints = new ConcurrentDictionary<ReplicatedKey, Owned<int>>();
         private readonly ConcurrentDictionary<ReplicatedKey, Owned<string>> _strings = new ConcurrentDictionary<ReplicatedKey, Owned<string>>();
 
-        public OwnedStore()
+        public Store()
         {
             _keys[KeyValidationStatus.None] = new HashSet<ReplicatedKey>();
             _keys[KeyValidationStatus.Pending] = new HashSet<ReplicatedKey>();
@@ -47,7 +47,7 @@ namespace Nakama.Replicated
         // note: MAY CONTAIN DUPLICATES because they will have been filtered by type
         // todo check keys validated by host and lock versions for duplicates.
 
-        ~OwnedStore()
+        ~Store()
         {
             foreach (Owned<bool> b in _bools.Values)
             {
@@ -145,7 +145,6 @@ namespace Nakama.Replicated
 
             return keysCopy;
         }
-
 
         private void Register<T>(
             ReplicatedKey key,

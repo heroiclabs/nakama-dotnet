@@ -57,22 +57,22 @@ namespace Nakama.Tests
 
         public void SetValue(IUserPresence clientPresence, IUserPresence targetPresence, bool value)
         {
-            _testBools[clientPresence.UserId].SetValue(targetPresence, value);
+            _testBools[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
         public void SetValue(IUserPresence clientPresence, IUserPresence targetPresence, float value)
         {
-            _testFloats[clientPresence.UserId].SetValue(targetPresence, value);
+            _testFloats[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
         public void SetValue(IUserPresence clientPresence, IUserPresence targetPresence, int value)
         {
-            _testInts[clientPresence.UserId].SetValue(targetPresence, value);
+            _testInts[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
         public void SetValue(IUserPresence clientPresence, IUserPresence targetPresence, string value)
         {
-            _testStrings[clientPresence.UserId].SetValue(targetPresence, value);
+            _testStrings[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
         private IEnumerable<IClient> CreateClients()

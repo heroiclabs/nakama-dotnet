@@ -25,9 +25,9 @@ namespace Nakama.Replicated
         private readonly ReplicatedOpcodes _opcodes;
         private readonly ReplicatedPresenceTracker _presenceTracker;
         private readonly ISocket _socket;
-        private readonly OwnedStore _ownedStore;
+        private readonly Store _ownedStore;
 
-        internal ReplicatedSocket(string matchId, ReplicatedOpcodes opcodes, ReplicatedPresenceTracker presenceTracker, ISocket socket, OwnedStore ownedStore)
+        internal ReplicatedSocket(string matchId, ReplicatedOpcodes opcodes, ReplicatedPresenceTracker presenceTracker, ISocket socket, Store ownedStore)
         {
             _matchId = matchId;
             _opcodes = opcodes;

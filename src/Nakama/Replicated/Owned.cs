@@ -19,11 +19,11 @@ using System.Collections.Generic;
 
 namespace Nakama.Replicated
 {
-    public delegate bool HostValidationHandler<T>(T oldValue, T newValue);
-    public delegate void ValueChangedHandler<T>(T oldValue, T newValue);
+    public delegate bool HostValidationHandler<T>(T oldValue, T newValue, IUserPresence source, IUserPresence target);
+    public delegate void OwnedChangedHandler<T>(T oldValue, T newValue, IUserPresence source, IUserPresence target);
 
     /// <summary>
-    /// A variable whose value is synchronized across all clients connected to the same match.
+    /// A variable whose value for each user is synchronized across all clients connected to the same match.
     /// </summary>
     public class Owned<T>
     {
@@ -34,8 +34,7 @@ namespace Nakama.Replicated
         /// otherwise a ReplicationValidationException will be thrown on this device.
         /// </summary>
         public HostValidationHandler<T> OnHostValidate;
-        public ValueChangedHandler<T> OnValueChangedLocal;
-        public ValueChangedHandler<T> OnValueChangedRemote;
+        public OwnedChangedHandler<T> OnValueChanged;
         public KeyValidationStatus KeyValidationStatus => _validationStatus;
 
         // todo throw exception if reassigning self. maybe not here?
@@ -50,14 +49,14 @@ namespace Nakama.Replicated
 
         private readonly object _valueLock = new object();
 
-        public void SetValue(IUserPresence presence, T value)
+        public void SetValue(T value, IUserPresence source, IUserPresence target)
         {
-            SetValue(presence, value, ReplicatedClientType.Local, _validationStatus);
+            SetValue(value, source, target, _validationStatus);
         }
 
-        public void SetValue(T value)
+        public void SetValue(T value, IUserPresence target)
         {
-            SetValue(Self, value, ReplicatedClientType.Local, _validationStatus);
+            SetValue(value, Self, target, _validationStatus);
         }
 
         public T GetValue()
@@ -81,29 +80,21 @@ namespace Nakama.Replicated
             }
         }
 
-        internal void SetValue(IUserPresence presence, T value, ReplicatedClientType source, KeyValidationStatus validationStatus)
+        internal void SetValue(T value, IUserPresence source, IUserPresence target, KeyValidationStatus validationStatus)
         {
             lock (_valueLock)
             {
-                T oldValue = _values.ContainsKey(presence.UserId) ? _values[presence.UserId] : default(T);
+                T oldValue = _values.ContainsKey(target.UserId) ? _values[target.UserId] : default(T);
 
                 if (oldValue.Equals(value))
                 {
                     return;
                 }
 
-                _values[presence.UserId] = value;
+                _values[target.UserId] = value;
                 _validationStatus = validationStatus;
 
-                switch (source)
-                {
-                    case ReplicatedClientType.Local:
-                    OnValueChangedLocal?.Invoke(oldValue, value);
-                    break;
-                    default:
-                    OnValueChangedRemote?.Invoke(oldValue, value);
-                    break;
-                }
+                OnValueChanged?.Invoke(oldValue, value, source, target);
             }
         }
 
@@ -115,8 +106,7 @@ namespace Nakama.Replicated
             }
 
             OnHostValidate = null;
-            OnValueChangedLocal = null;
-            OnValueChangedRemote = null;
+            OnValueChanged = null;
             Self = null;
         }
     }

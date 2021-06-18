@@ -24,6 +24,8 @@ namespace Nakama.Replicated
     /// </summary>
     internal struct ReplicatedKey
     {
+        public string UserId => _userId;
+
         [DataMember(Name="user_id"), Preserve]
         private string _userId;
 

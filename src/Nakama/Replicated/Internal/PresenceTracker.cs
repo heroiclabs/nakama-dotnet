@@ -57,6 +57,11 @@ namespace Nakama.Replicated
             return _presences.Values;
         }
 
+        public IUserPresence GetPresence(string userId)
+        {
+            return _presences[userId];
+        }
+
         public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
         {
             foreach (IUserPresence joiner in presenceEvent.Joins)

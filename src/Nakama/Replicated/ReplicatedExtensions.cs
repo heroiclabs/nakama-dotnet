@@ -23,7 +23,7 @@ namespace Nakama.Replicated
         // todo don't require session as a parameter here since we pass it to socket.
         public async static Task<ReplicatedMatch> CreateReplicatedMatch(this ISocket socket, ISession session, ReplicatedOpcodes opcodes)
         {
-            var ownedStore = new OwnedStore();
+            var ownedStore = new Store();
             var presenceTracker = new ReplicatedPresenceTracker(session, ownedStore);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
 
@@ -40,7 +40,7 @@ namespace Nakama.Replicated
 
         public async static Task<ReplicatedMatch> JoinReplicatedMatch(this ISocket socket, ISession session, string matchId, ReplicatedOpcodes opcodes)
         {
-            var ownedStore = new OwnedStore();
+            var ownedStore = new Store();
             var presenceTracker = new ReplicatedPresenceTracker(session, ownedStore);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
 
