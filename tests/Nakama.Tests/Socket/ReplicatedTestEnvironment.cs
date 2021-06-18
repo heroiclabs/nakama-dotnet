@@ -35,10 +35,10 @@ namespace Nakama.Tests
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
 
-        private readonly Dictionary<string, ReplicatedVar<bool>> _testBools = new Dictionary<string, ReplicatedVar<bool>>();
-        private readonly Dictionary<string, ReplicatedVar<float>> _testFloats = new Dictionary<string, ReplicatedVar<float>>();
-        private readonly Dictionary<string, ReplicatedVar<int>> _testInts = new Dictionary<string, ReplicatedVar<int>>();
-        private readonly Dictionary<string, ReplicatedVar<string>> _testStrings = new Dictionary<string, ReplicatedVar<string>>();
+        private readonly Dictionary<string, Owned<bool>> _testBools = new Dictionary<string, Owned<bool>>();
+        private readonly Dictionary<string, Owned<float>> _testFloats = new Dictionary<string, Owned<float>>();
+        private readonly Dictionary<string, Owned<int>> _testInts = new Dictionary<string, Owned<int>>();
+        private readonly Dictionary<string, Owned<string>> _testStrings = new Dictionary<string, Owned<string>>();
 
         public ReplicatedTestEnvironment(ReplicatedOpcodes opcodes, int numClients, int numTestVars, int hostIndex)
         {
@@ -157,10 +157,10 @@ namespace Nakama.Tests
                 for (int j = 0; j < NumTestVars; j++)
                 {
                     System.Console.WriteLine(presence.UserId + nameof(_testBools));
-                    matches[i].RegisterBool(presence.UserId + nameof(_testBools), new ReplicatedVar<bool>());
-                    matches[i].RegisterFloat(presence.UserId + nameof(_testFloats), new ReplicatedVar<float>());
-                    matches[i].RegisterInt(presence.UserId + nameof(_testInts), new ReplicatedVar<int>());
-                    matches[i].RegisterString(presence.UserId + nameof(_testStrings), new ReplicatedVar<string>());
+                    matches[i].RegisterBool(presence.UserId + nameof(_testBools), new Owned<bool>());
+                    matches[i].RegisterFloat(presence.UserId + nameof(_testFloats), new Owned<float>());
+                    matches[i].RegisterInt(presence.UserId + nameof(_testInts), new Owned<int>());
+                    matches[i].RegisterString(presence.UserId + nameof(_testStrings), new Owned<string>());
                 }
             }
         }

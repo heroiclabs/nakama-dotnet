@@ -26,16 +26,16 @@ namespace Nakama.Replicated
         public IUserPresence Presence { get; }
 
         private readonly ReplicatedPresenceTracker _presenceTracker;
-        private readonly ReplicatedVarStore _varStore;
+        private readonly OwnedStore _ownedStore;
 
         private readonly ReplicatedValueStore _valuesToHost = new ReplicatedValueStore();
         private readonly ReplicatedValueStore _valuesToAll = new ReplicatedValueStore();
 
-        public ReplicatedGuest(IUserPresence presence, ReplicatedPresenceTracker presenceTracker, ReplicatedVarStore varStore)
+        public ReplicatedGuest(IUserPresence presence, ReplicatedPresenceTracker presenceTracker, OwnedStore ownedStore)
         {
             Presence = presence;
             _presenceTracker = presenceTracker;
-            _varStore = varStore;
+            _ownedStore = ownedStore;
         }
 
         public void ReceivedHandshakeResponse(HandshakeResponse response)
@@ -45,7 +45,7 @@ namespace Nakama.Replicated
                 var merger = new ValueMergerGuest(
                     _presenceTracker.Host.Presence,
                     _presenceTracker.Host.Presence,
-                    _varStore,
+                    _ownedStore,
                     response.CurrentStore);
 
                 merger.Merge();
@@ -58,23 +58,23 @@ namespace Nakama.Replicated
 
         public void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addToOutgoingStore)
         {
-            if (_varStore.HasLockVersion(key))
+            if (_ownedStore.HasLockVersion(key))
             {
-                _varStore.IncrementLockVersion(key);
+                _ownedStore.IncrementLockVersion(key);
             }
             else
             {
                 throw new KeyNotFoundException("Tried incrementing lock version for non-existent key: " + key);
             }
 
-            KeyValidationStatus status = _varStore.GetValidationStatus(key);
+            KeyValidationStatus status = _ownedStore.GetValidationStatus(key);
 
             if (status == KeyValidationStatus.Validated)
             {
                 status = KeyValidationStatus.Pending;
             }
 
-            var replicatedValue = new ReplicatedValue<T>(key, newValue, _varStore.GetLockVersion(key), status, Presence);
+            var replicatedValue = new ReplicatedValue<T>(key, newValue, _ownedStore.GetLockVersion(key), status, Presence);
 
             ReplicatedValueStore outgoingStore = status == KeyValidationStatus.Pending ? _valuesToHost : _valuesToAll;
             addToOutgoingStore(outgoingStore, replicatedValue);
@@ -84,7 +84,7 @@ namespace Nakama.Replicated
 
         public void HandleRemoteDataChanged(IUserPresence sender, ReplicatedValueStore remoteVals)
         {
-            var merger = new ValueMergerGuest(Presence, _presenceTracker.Host.Presence, _varStore, remoteVals);
+            var merger = new ValueMergerGuest(Presence, _presenceTracker.Host.Presence, _ownedStore, remoteVals);
             merger.Merge();
         }
     }

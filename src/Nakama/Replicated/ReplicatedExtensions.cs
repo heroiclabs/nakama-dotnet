@@ -23,35 +23,35 @@ namespace Nakama.Replicated
         // todo don't require session as a parameter here since we pass it to socket.
         public async static Task<ReplicatedMatch> CreateReplicatedMatch(this ISocket socket, ISession session, ReplicatedOpcodes opcodes)
         {
-            var varStore = new ReplicatedVarStore();
-            var presenceTracker = new ReplicatedPresenceTracker(session, varStore);
+            var ownedStore = new OwnedStore();
+            var presenceTracker = new ReplicatedPresenceTracker(session, ownedStore);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
 
             IMatch match = await socket.CreateMatchAsync();
 
-            var replicatedSocket = new ReplicatedSocket(match.Id, opcodes, presenceTracker, socket, varStore);
+            var replicatedSocket = new ReplicatedSocket(match.Id, opcodes, presenceTracker, socket, ownedStore);
 
             presenceTracker.OnReplicatedGuestJoined += replicatedSocket.HandleGuestJoined;
             presenceTracker.OnReplicatedGuestLeft += replicatedSocket.HandleGuestLeft;
             presenceTracker.OnReplicatedHostChanged += replicatedSocket.HandleHostChanged;
 
-            return new ReplicatedMatch(match, varStore, presenceTracker);
+            return new ReplicatedMatch(match, ownedStore, presenceTracker);
         }
 
         public async static Task<ReplicatedMatch> JoinReplicatedMatch(this ISocket socket, ISession session, string matchId, ReplicatedOpcodes opcodes)
         {
-            var varStore = new ReplicatedVarStore();
-            var presenceTracker = new ReplicatedPresenceTracker(session, varStore);
+            var ownedStore = new OwnedStore();
+            var presenceTracker = new ReplicatedPresenceTracker(session, ownedStore);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
 
-            var replicatedSocket = new ReplicatedSocket(matchId, opcodes, presenceTracker, socket, varStore);
+            var replicatedSocket = new ReplicatedSocket(matchId, opcodes, presenceTracker, socket, ownedStore);
 
             presenceTracker.OnReplicatedGuestJoined += replicatedSocket.HandleGuestJoined;
             presenceTracker.OnReplicatedGuestLeft += replicatedSocket.HandleGuestLeft;
             presenceTracker.OnReplicatedHostChanged += replicatedSocket.HandleHostChanged;
 
             IMatch match = await socket.JoinMatchAsync(matchId);
-            return new ReplicatedMatch(match, varStore, presenceTracker);
+            return new ReplicatedMatch(match, ownedStore, presenceTracker);
         }
     }
 }

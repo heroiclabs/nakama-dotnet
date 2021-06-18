@@ -25,7 +25,7 @@ namespace Nakama.Replicated
     /// <summary>
     /// A variable whose value is synchronized across all clients connected to the same match.
     /// </summary>
-    public class ReplicatedVar<T>
+    public class Owned<T>
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then

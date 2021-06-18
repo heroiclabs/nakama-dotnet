@@ -31,20 +31,20 @@ namespace Nakama.Replicated
         private readonly IReadOnlyDictionary<string, ReplicatedGuest> _guests;
         private readonly ReplicatedValueStore _valuesToAll = new ReplicatedValueStore();
         private readonly Dictionary<string, ReplicatedValueStore> _valuesToGuest = new Dictionary<string, ReplicatedValueStore>();
-        private readonly ReplicatedVarStore _varStore;
+        private readonly OwnedStore _ownedStore;
 
-        public ReplicatedHost(IUserPresence presence, IReadOnlyDictionary<string, ReplicatedGuest> guests, ReplicatedVarStore varStore)
+        public ReplicatedHost(IUserPresence presence, IReadOnlyDictionary<string, ReplicatedGuest> guests, OwnedStore ownedStore)
         {
             _presence = presence;
             _guests = guests;
-            _varStore = varStore;
+            _ownedStore = ownedStore;
         }
 
         public void ReceivedHandshakeRequest(IUserPresence requester, HandshakeRequest request)
         {
             HandshakeResponse response;
 
-            List<ReplicatedKey> localKeys = _varStore.GetAllKeysAsList();
+            List<ReplicatedKey> localKeys = _ownedStore.GetAllKeysAsList();
 
             bool success = localKeys.All(request.AllKeys.Contains);
 
@@ -57,24 +57,24 @@ namespace Nakama.Replicated
                 // that is perhaps an optimization that can be made later.
                 outgoingValues = new ReplicatedValueStore();
 
-                foreach (KeyValuePair<ReplicatedKey, ReplicatedVar<bool>> kvp in _varStore.Bools)
+                foreach (KeyValuePair<ReplicatedKey, Owned<bool>> kvp in _ownedStore.Bools)
                 {
-                    outgoingValues.AddBool(ReplicatedVarToValue(kvp));
+                    outgoingValues.AddBool(OwnedToValue(kvp));
                 }
 
-                foreach (KeyValuePair<ReplicatedKey, ReplicatedVar<float>> kvp in _varStore.Floats)
+                foreach (KeyValuePair<ReplicatedKey, Owned<float>> kvp in _ownedStore.Floats)
                 {
-                    outgoingValues.AddFloat(ReplicatedVarToValue(kvp));
+                    outgoingValues.AddFloat(OwnedToValue(kvp));
                 }
 
-                foreach (KeyValuePair<ReplicatedKey, ReplicatedVar<int>> kvp in _varStore.Ints)
+                foreach (KeyValuePair<ReplicatedKey, Owned<int>> kvp in _ownedStore.Ints)
                 {
-                    outgoingValues.AddInt(ReplicatedVarToValue(kvp));
+                    outgoingValues.AddInt(OwnedToValue(kvp));
                 }
 
-                foreach (KeyValuePair<ReplicatedKey, ReplicatedVar<string>> kvp in _varStore.Strings)
+                foreach (KeyValuePair<ReplicatedKey, Owned<string>> kvp in _ownedStore.Strings)
                 {
-                    outgoingValues.AddString(ReplicatedVarToValue(kvp));
+                    outgoingValues.AddString(OwnedToValue(kvp));
                 }
             }
 
@@ -94,37 +94,37 @@ namespace Nakama.Replicated
                 _valuesToGuest[sender.UserId] = new ReplicatedValueStore();
             }
 
-            var merger = new ValueMergerHost(sender, _varStore, remoteVals, _valuesToGuest[sender.UserId]);
+            var merger = new ValueMergerHost(sender, _ownedStore, remoteVals, _valuesToGuest[sender.UserId]);
             merger.Merge();
 
             OnReplicatedDataSend(new IUserPresence[]{sender}, _valuesToGuest[sender.UserId]);
             OnReplicatedDataSend(_guests.Select(kvp => kvp.Value.Presence), _valuesToAll);
         }
 
-        private ReplicatedValue<T> ReplicatedVarToValue<T>(KeyValuePair<ReplicatedKey, ReplicatedVar<T>> kvp)
+        private ReplicatedValue<T> OwnedToValue<T>(KeyValuePair<ReplicatedKey, Owned<T>> kvp)
         {
-            return new ReplicatedValue<T>(kvp.Key, kvp.Value.GetValue(_presence), _varStore.GetLockVersion(kvp.Key), kvp.Value.KeyValidationStatus, _presence);
+            return new ReplicatedValue<T>(kvp.Key, kvp.Value.GetValue(_presence), _ownedStore.GetLockVersion(kvp.Key), kvp.Value.KeyValidationStatus, _presence);
         }
 
         public void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addMethod)
         {
-            if (_varStore.HasLockVersion(key))
+            if (_ownedStore.HasLockVersion(key))
             {
-                _varStore.IncrementLockVersion(key);
+                _ownedStore.IncrementLockVersion(key);
             }
             else
             {
                 throw new KeyNotFoundException("Tried incrementing lock version for non-existent key: " + key);
             }
 
-            var status = _varStore.GetValidationStatus(key);
+            var status = _ownedStore.GetValidationStatus(key);
 
             if (status == KeyValidationStatus.Pending)
             {
                 throw new InvalidOperationException("Host should not have local key pending validation: " + key);
             }
 
-            addMethod(_valuesToAll, new ReplicatedValue<T>(key, newValue, _varStore.GetLockVersion(key), status, _presence));
+            addMethod(_valuesToAll, new ReplicatedValue<T>(key, newValue, _ownedStore.GetLockVersion(key), status, _presence));
         }
     }
 }

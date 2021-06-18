@@ -22,12 +22,12 @@ namespace Nakama.Replicated
     internal class ValueMergerHost
     {
         private IUserPresence _sender;
-        private ReplicatedVarStore _localVars;
+        private OwnedStore _localVars;
         private ReplicatedValueStore _remoteVals;
         private ReplicatedValueStore _outgoingVals;
 
         internal ValueMergerHost(
-            IUserPresence sender, ReplicatedVarStore localVars, ReplicatedValueStore remoteVals, ReplicatedValueStore responseVals)
+            IUserPresence sender, OwnedStore localVars, ReplicatedValueStore remoteVals, ReplicatedValueStore responseVals)
         {
             _sender = sender;
             _localVars = localVars;
@@ -45,7 +45,7 @@ namespace Nakama.Replicated
 
         private void Merge<T>(
             IEnumerable<ReplicatedValue<T>> remoteValues,
-            IReadOnlyDictionary<ReplicatedKey, ReplicatedVar<T>> localVars,
+            IReadOnlyDictionary<ReplicatedKey, Owned<T>> localVars,
             Action<ReplicatedValue<T>> addValueToSend)
         {
             foreach (ReplicatedValue<T> remoteReplicatedValue in remoteValues)
@@ -65,7 +65,7 @@ namespace Nakama.Replicated
                     throw new ArgumentException($"Received conflicting remote key: {remoteReplicatedValue.Key}");
                 }
 
-                ReplicatedVar<T> localType = localVars[remoteReplicatedValue.Key];
+                Owned<T> localType = localVars[remoteReplicatedValue.Key];
 
                 if (remoteReplicatedValue.LockVersion < _localVars.GetLockVersion(remoteReplicatedValue.Key))
                 {

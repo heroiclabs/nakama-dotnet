@@ -20,24 +20,24 @@ using System.Collections.Generic;
 
 namespace Nakama.Replicated
 {
-    internal class ReplicatedVarStore
+    internal class OwnedStore
     {
-        public IReadOnlyDictionary<ReplicatedKey, ReplicatedVar<bool>> Bools => _bools;
-        public IReadOnlyDictionary<ReplicatedKey, ReplicatedVar<float>> Floats => _floats;
-        public IReadOnlyDictionary<ReplicatedKey, ReplicatedVar<int>> Ints => _ints;
-        public IReadOnlyDictionary<ReplicatedKey, ReplicatedVar<string>> Strings => _strings;
+        public IReadOnlyDictionary<ReplicatedKey, Owned<bool>> Bools => _bools;
+        public IReadOnlyDictionary<ReplicatedKey, Owned<float>> Floats => _floats;
+        public IReadOnlyDictionary<ReplicatedKey, Owned<int>> Ints => _ints;
+        public IReadOnlyDictionary<ReplicatedKey, Owned<string>> Strings => _strings;
 
         private readonly ConcurrentDictionary<KeyValidationStatus, HashSet<ReplicatedKey>> _keys = new ConcurrentDictionary<KeyValidationStatus, HashSet<ReplicatedKey>>();
         private readonly ConcurrentDictionary<ReplicatedKey, int> _lockVersions = new ConcurrentDictionary<ReplicatedKey, int>();
         private readonly object _lockVersionLock = new object();
 
         // TODO what if we have outgoing at the same time
-        private readonly ConcurrentDictionary<ReplicatedKey, ReplicatedVar<bool>> _bools = new ConcurrentDictionary<ReplicatedKey, ReplicatedVar<bool>>();
-        private readonly ConcurrentDictionary<ReplicatedKey, ReplicatedVar<float>> _floats = new ConcurrentDictionary<ReplicatedKey, ReplicatedVar<float>>();
-        private readonly ConcurrentDictionary<ReplicatedKey, ReplicatedVar<int>> _ints = new ConcurrentDictionary<ReplicatedKey, ReplicatedVar<int>>();
-        private readonly ConcurrentDictionary<ReplicatedKey, ReplicatedVar<string>> _strings = new ConcurrentDictionary<ReplicatedKey, ReplicatedVar<string>>();
+        private readonly ConcurrentDictionary<ReplicatedKey, Owned<bool>> _bools = new ConcurrentDictionary<ReplicatedKey, Owned<bool>>();
+        private readonly ConcurrentDictionary<ReplicatedKey, Owned<float>> _floats = new ConcurrentDictionary<ReplicatedKey, Owned<float>>();
+        private readonly ConcurrentDictionary<ReplicatedKey, Owned<int>> _ints = new ConcurrentDictionary<ReplicatedKey, Owned<int>>();
+        private readonly ConcurrentDictionary<ReplicatedKey, Owned<string>> _strings = new ConcurrentDictionary<ReplicatedKey, Owned<string>>();
 
-        public ReplicatedVarStore()
+        public OwnedStore()
         {
             _keys[KeyValidationStatus.None] = new HashSet<ReplicatedKey>();
             _keys[KeyValidationStatus.Pending] = new HashSet<ReplicatedKey>();
@@ -47,24 +47,24 @@ namespace Nakama.Replicated
         // note: MAY CONTAIN DUPLICATES because they will have been filtered by type
         // todo check keys validated by host and lock versions for duplicates.
 
-        ~ReplicatedVarStore()
+        ~OwnedStore()
         {
-            foreach (ReplicatedVar<bool> b in _bools.Values)
+            foreach (Owned<bool> b in _bools.Values)
             {
                 b.Clear();
             }
 
-            foreach (ReplicatedVar<float> f in _floats.Values)
+            foreach (Owned<float> f in _floats.Values)
             {
                 f.Clear();
             }
 
-            foreach (ReplicatedVar<int> i in _ints.Values)
+            foreach (Owned<int> i in _ints.Values)
             {
                 i.Clear();
             }
 
-            foreach (ReplicatedVar<string> s in _strings.Values)
+            foreach (Owned<string> s in _strings.Values)
             {
                 s.Clear();
             }
@@ -111,22 +111,22 @@ namespace Nakama.Replicated
             }
         }
 
-        public void RegisterBool(ReplicatedKey key, ReplicatedVar<bool> replicatedBool)
+        public void RegisterBool(ReplicatedKey key, Owned<bool> replicatedBool)
         {
             Register(key, replicatedBool, _bools);
         }
 
-        public void RegisterFloat(ReplicatedKey key, ReplicatedVar<float> replicatedFloat)
+        public void RegisterFloat(ReplicatedKey key, Owned<float> replicatedFloat)
         {
             Register(key, replicatedFloat, _floats);
         }
 
-        public void RegisterInt(ReplicatedKey key, ReplicatedVar<int> replicatedInt)
+        public void RegisterInt(ReplicatedKey key, Owned<int> replicatedInt)
         {
             Register(key, replicatedInt, _ints);
         }
 
-        public void RegisterString(ReplicatedKey key, ReplicatedVar<string> replicatedString)
+        public void RegisterString(ReplicatedKey key, Owned<string> replicatedString)
         {
             Register(key, replicatedString, _strings);
         }
@@ -149,8 +149,8 @@ namespace Nakama.Replicated
 
         private void Register<T>(
             ReplicatedKey key,
-            ReplicatedVar<T> replicated,
-            ConcurrentDictionary<ReplicatedKey, ReplicatedVar<T>> collection)
+            Owned<T> replicated,
+            ConcurrentDictionary<ReplicatedKey, Owned<T>> collection)
         {
             if (collection.ContainsKey(key))
             {

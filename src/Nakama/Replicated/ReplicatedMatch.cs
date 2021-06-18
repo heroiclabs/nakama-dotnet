@@ -47,44 +47,44 @@ namespace Nakama.Replicated
 
         private readonly IMatch _match;
         private readonly ReplicatedPresenceTracker _presenceTracker;
-        private readonly ReplicatedVarStore _varStore;
+        private readonly OwnedStore _ownedStore;
 
-        internal ReplicatedMatch(IMatch match, ReplicatedVarStore varStore, ReplicatedPresenceTracker presenceTracker)
+        internal ReplicatedMatch(IMatch match, OwnedStore ownedStore, ReplicatedPresenceTracker presenceTracker)
         {
             _match = match;
-            _varStore = varStore;
+            _ownedStore = ownedStore;
             _presenceTracker = presenceTracker;
         }
 
-        public void RegisterBool(string id, ReplicatedVar<bool> replicatedBool)
+        public void RegisterBool(string id, Owned<bool> replicatedBool)
         {
             var key = new ReplicatedKey(id, _match.Self.UserId);
             replicatedBool.Self = _match.Self;
-            _varStore.RegisterBool(key, replicatedBool);
+            _ownedStore.RegisterBool(key, replicatedBool);
             replicatedBool.OnValueChangedLocal += (oldValue, newValue) => _presenceTracker.GetSelf().HandleLocalDataChanged<bool>(key, newValue, (store, val) => store.AddBool(val));
         }
 
-        public void RegisterFloat(string id, ReplicatedVar<float> replicatedFloat)
+        public void RegisterFloat(string id, Owned<float> replicatedFloat)
         {
             var key = new ReplicatedKey(id, _match.Self.UserId);
             replicatedFloat.Self = _match.Self;
-            _varStore.RegisterFloat(key, replicatedFloat);
+            _ownedStore.RegisterFloat(key, replicatedFloat);
             replicatedFloat.OnValueChangedLocal += (oldValue, newValue) => _presenceTracker.GetSelf().HandleLocalDataChanged<float>(key, newValue, (store, val) => store.AddFloat(val));
         }
 
-        public void RegisterInt(string id, ReplicatedVar<int> replicatedInt)
+        public void RegisterInt(string id, Owned<int> replicatedInt)
         {
             var key = new ReplicatedKey(id, _match.Self.UserId);
             replicatedInt.Self = _match.Self;
-            _varStore.RegisterInt(key, replicatedInt);
+            _ownedStore.RegisterInt(key, replicatedInt);
             replicatedInt.OnValueChangedLocal += (oldValue, newValue) => _presenceTracker.GetSelf().HandleLocalDataChanged<int>(key, newValue, (store, val) => store.AddInt(val));
         }
 
-        public void RegisterString(string id, ReplicatedVar<string> replicatedString)
+        public void RegisterString(string id, Owned<string> replicatedString)
         {
             var key = new ReplicatedKey(id, _match.Self.UserId);
             replicatedString.Self = _match.Self;
-            _varStore.RegisterString(key, replicatedString);
+            _ownedStore.RegisterString(key, replicatedString);
             replicatedString.OnValueChangedLocal += (oldValue, newValue) => _presenceTracker.GetSelf().HandleLocalDataChanged<string>(key, newValue, (store, val) => store.AddString(val));
         }
     }

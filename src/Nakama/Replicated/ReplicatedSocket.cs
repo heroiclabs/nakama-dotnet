@@ -25,22 +25,22 @@ namespace Nakama.Replicated
         private readonly ReplicatedOpcodes _opcodes;
         private readonly ReplicatedPresenceTracker _presenceTracker;
         private readonly ISocket _socket;
-        private readonly ReplicatedVarStore _varStore;
+        private readonly OwnedStore _ownedStore;
 
-        internal ReplicatedSocket(string matchId, ReplicatedOpcodes opcodes, ReplicatedPresenceTracker presenceTracker, ISocket socket, ReplicatedVarStore varStore)
+        internal ReplicatedSocket(string matchId, ReplicatedOpcodes opcodes, ReplicatedPresenceTracker presenceTracker, ISocket socket, OwnedStore ownedStore)
         {
             _matchId = matchId;
             _opcodes = opcodes;
             _presenceTracker = presenceTracker;
             _socket = socket;
-            _varStore = varStore;
+            _ownedStore = ownedStore;
         }
 
         public void HandleGuestJoined(ReplicatedGuest joinedGuest)
         {
             joinedGuest.OnReplicatedDataSend += HandleReplicatedDataSend;
 
-            var keysForValidation = _varStore.GetAllKeysAsList();
+            var keysForValidation = _ownedStore.GetAllKeysAsList();
             _socket.SendMatchStateAsync(
                 _matchId,
                 _opcodes.HandshakeOpcode,
