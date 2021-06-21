@@ -14,23 +14,24 @@
 * limitations under the License.
 */
 
-namespace Nakama.Replicated
-{
-    public delegate void SharedChangedHandler<T>(T oldValue, T newValue, IUserPresence source);
+using System;
+using Nakama;
 
+namespace NakamaSync
+{
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// </summary>
-    public class Shared<T>
+    public class SharedVar<T> : ISyncVar
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then
-        /// when a replicated value is set, this client will reach out to the
+        /// when a synced value is set, this client will reach out to the
         /// host who will validate and if it's validated the host will send to all clients
         /// otherwise a ReplicationValidationException will be thrown on this device.
         /// </summary>
-        public HostValidationHandler<T> OnHostValidate;
-        public SharedChangedHandler<T> OnValueChanged;
+        public Action<ISharedVarEvent<T>> OnHostValidate;
+        public Action<ISharedVarEvent<T>> OnValueChanged;
         public KeyValidationStatus KeyValidationStatus => _validationStatus;
 
         internal IUserPresence Self
@@ -70,11 +71,12 @@ namespace Nakama.Replicated
 
                 _value = value;
                 _validationStatus = validationStatus;
-                OnValueChanged?.Invoke(oldValue, value, presence);
+                OnValueChanged?.Invoke(new SharedVarEvent<T>(presence, oldValue, value));
             }
         }
 
-        internal void Clear()
+        // todo this should not be public!
+        public void Reset()
         {
             lock (_valueLock)
             {

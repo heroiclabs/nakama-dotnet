@@ -16,25 +16,25 @@
 
 using System;
 using System.Collections.Generic;
+using Nakama;
 
-namespace Nakama.Replicated
+namespace NakamaSync
 {
-    public delegate bool HostValidationHandler<T>(T oldValue, T newValue, IUserPresence source, IUserPresence target);
-    public delegate void OwnedChangedHandler<T>(T oldValue, T newValue, IUserPresence source, IUserPresence target);
-
     /// <summary>
-    /// A variable whose value for each user is synchronized across all clients connected to the same match.
+    /// A variable containing a value for each user in the match. Each value is synchronized across all users.
     /// </summary>
-    public class Owned<T>
+    public class UserVar<T> : ISyncVar
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then
-        /// when a replicated value is set, this client will reach out to the
+        /// when a synced value is set, this client will reach out to the
         /// host who will validate and if it's validated the host will send to all clients
         /// otherwise a ReplicationValidationException will be thrown on this device.
         /// </summary>
-        public HostValidationHandler<T> OnHostValidate;
-        public OwnedChangedHandler<T> OnValueChanged;
+        public Func<IUserVarEvent<T>, bool> OnHostValidate;
+        public Action<IUserVarEvent<T>> OnRemoteValueChanged;
+        internal Action<IUserVarEvent<T>> OnLocalValueChanged;
+
         public KeyValidationStatus KeyValidationStatus => _validationStatus;
 
         // todo throw exception if reassigning self. maybe not here?
@@ -51,12 +51,12 @@ namespace Nakama.Replicated
 
         public void SetValue(T value, IUserPresence source, IUserPresence target)
         {
-            SetValue(value, source, target, _validationStatus);
+            SetValue(value, source, target, _validationStatus, OnLocalValueChanged);
         }
 
         public void SetValue(T value, IUserPresence target)
         {
-            SetValue(value, Self, target, _validationStatus);
+            SetValue(value, Self, target, _validationStatus, OnLocalValueChanged);
         }
 
         public T GetValue()
@@ -66,7 +66,6 @@ namespace Nakama.Replicated
 
         public T GetValue(IUserPresence presence)
         {
-
             lock (_valueLock)
             {
                 if (_values.ContainsKey(presence.UserId))
@@ -75,12 +74,12 @@ namespace Nakama.Replicated
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Tried retrieving a replicated value from an unrecognized user id: {presence.UserId}");
+                    throw new InvalidOperationException($"Tried retrieving a synced value from an unrecognized user id: {presence.UserId}");
                 }
             }
         }
 
-        internal void SetValue(T value, IUserPresence source, IUserPresence target, KeyValidationStatus validationStatus)
+        internal void SetValue(T value, IUserPresence source, IUserPresence target, KeyValidationStatus validationStatus, Action<UserVarEvent<T>> eventDispatch)
         {
             lock (_valueLock)
             {
@@ -94,11 +93,12 @@ namespace Nakama.Replicated
                 _values[target.UserId] = value;
                 _validationStatus = validationStatus;
 
-                OnValueChanged?.Invoke(oldValue, value, source, target);
+                eventDispatch?.Invoke(new UserVarEvent<T>(source, target, oldValue, value));
             }
         }
 
-        internal void Clear()
+        // TODO this should not be public!!!
+        public void Reset()
         {
             lock (_valueLock)
             {
@@ -106,7 +106,8 @@ namespace Nakama.Replicated
             }
 
             OnHostValidate = null;
-            OnValueChanged = null;
+            OnLocalValueChanged = null;
+            OnRemoteValueChanged = null;
             Self = null;
         }
     }

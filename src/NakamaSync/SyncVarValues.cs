@@ -17,33 +17,33 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Nakama.Replicated
+namespace NakamaSync
 {
-    internal class ReplicatedValueStore
+    internal class SyncVarValues
     {
-        public IEnumerable<ReplicatedValue<bool>> Bools => _bools;
-        public IEnumerable<ReplicatedValue<float>> Floats => _floats;
-        public IEnumerable<ReplicatedValue<int>> Ints => _ints;
-        public IEnumerable<ReplicatedValue<string>> Strings => _strings;
+        public IEnumerable<SyncVarValue<bool>> Bools => _bools;
+        public IEnumerable<SyncVarValue<float>> Floats => _floats;
+        public IEnumerable<SyncVarValue<int>> Ints => _ints;
+        public IEnumerable<SyncVarValue<string>> Strings => _strings;
 
         private readonly object _boolLock = new object();
         private readonly object _floatLock = new object();
         private readonly object _intLock = new object();
         private readonly object _stringLock = new object();
 
-        [DataMember(Name="replicated_bools"), Preserve]
-        private List<ReplicatedValue<bool>> _bools = new List<ReplicatedValue<bool>>();
+        [DataMember(Name="synced_bools"), Preserve]
+        private List<SyncVarValue<bool>> _bools = new List<SyncVarValue<bool>>();
 
-        [DataMember(Name="replicated_floats"), Preserve]
-        private List<ReplicatedValue<float>> _floats = new List<ReplicatedValue<float>>();
+        [DataMember(Name="synced_floats"), Preserve]
+        private List<SyncVarValue<float>> _floats = new List<SyncVarValue<float>>();
 
-        [DataMember(Name="replicated_ints"), Preserve]
-        private List<ReplicatedValue<int>> _ints = new List<ReplicatedValue<int>>();
+        [DataMember(Name="synced_ints"), Preserve]
+        private List<SyncVarValue<int>> _ints = new List<SyncVarValue<int>>();
 
-        [DataMember(Name="replicated_strings"), Preserve]
-        private List<ReplicatedValue<string>> _strings = new List<ReplicatedValue<string>>();
+        [DataMember(Name="synced_strings"), Preserve]
+        private List<SyncVarValue<string>> _strings = new List<SyncVarValue<string>>();
 
-        public void AddBool(ReplicatedValue<bool> value)
+        public void AddBool(SyncVarValue<bool> value)
         {
             lock (_boolLock)
             {
@@ -51,7 +51,7 @@ namespace Nakama.Replicated
             }
         }
 
-        public void AddFloat(ReplicatedValue<float> value)
+        public void AddFloat(SyncVarValue<float> value)
         {
             lock (_floatLock)
             {
@@ -59,7 +59,7 @@ namespace Nakama.Replicated
             }
         }
 
-        public void AddInt(ReplicatedValue<int> value)
+        public void AddInt(SyncVarValue<int> value)
         {
             lock (_intLock)
             {
@@ -67,7 +67,7 @@ namespace Nakama.Replicated
             }
         }
 
-        public void AddString(ReplicatedValue<string> value)
+        public void AddString(SyncVarValue<string> value)
         {
             lock (_stringLock)
             {

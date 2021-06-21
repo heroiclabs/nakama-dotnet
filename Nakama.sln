@@ -11,9 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4CBC1D9A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nakama.Tests", "tests\Nakama.Tests\Nakama.Tests.csproj", "{AFD0AF63-EA45-49A6-8889-3E65A48F0521}"
 EndProject
+<<<<<<< HEAD
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{2F955298-B3F4-4C26-BA88-667D2B3668B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nakama.Examples", "examples\Nakama.Examples\Nakama.Examples.csproj", "{DEDE03C1-1574-4CC6-B20C-1101B960A2DB}"
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NakamaSync", "src\NakamaSync\NakamaSync.csproj", "{EC75A76B-C75B-436A-873A-797CEF2B1E5C}"
+>>>>>>> aa583af (create shared var and add ability to multiple types of vars)
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,10 +68,23 @@ Global
 		{DEDE03C1-1574-4CC6-B20C-1101B960A2DB}.Release|x64.Build.0 = Release|Any CPU
 		{DEDE03C1-1574-4CC6-B20C-1101B960A2DB}.Release|x86.ActiveCfg = Release|Any CPU
 		{DEDE03C1-1574-4CC6-B20C-1101B960A2DB}.Release|x86.Build.0 = Release|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Debug|x64.Build.0 = Debug|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Debug|x86.Build.0 = Debug|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Release|x64.ActiveCfg = Release|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Release|x64.Build.0 = Release|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{10E81453-27EC-4D8E-82A7-DEDEFABBD648} = {651F309B-3615-44A7-A5B4-832B4ACE2258}
 		{AFD0AF63-EA45-49A6-8889-3E65A48F0521} = {4CBC1D9A-0727-4D31-A3BC-484EF98E7617}
 		{DEDE03C1-1574-4CC6-B20C-1101B960A2DB} = {2F955298-B3F4-4C26-BA88-667D2B3668B9}
+		{EC75A76B-C75B-436A-873A-797CEF2B1E5C} = {651F309B-3615-44A7-A5B4-832B4ACE2258}
 	EndGlobalSection
 EndGlobal

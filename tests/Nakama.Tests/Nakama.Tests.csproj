@@ -16,6 +16,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Nakama\Nakama.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\NakamaSync\NakamaSync.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="settings.json">

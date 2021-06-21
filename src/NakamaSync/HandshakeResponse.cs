@@ -16,7 +16,7 @@
 
 using System.Runtime.Serialization;
 
-namespace Nakama.Replicated
+namespace NakamaSync
 {
     /// <summary>
     /// A handshake response from a host to a guest.
@@ -24,10 +24,10 @@ namespace Nakama.Replicated
     internal class HandshakeResponse
     {
         /// <summary>
-        /// The store of replicated values for a local client to merge in upon
+        /// The store of synced values for a local client to merge in upon
         /// receiving the handshake response.
         /// </summary>
-        public ReplicatedValueStore CurrentStore => _currentStore;
+        public SyncVarValues Store => _currentStore;
 
         /// <summary>
         /// Whether or not the handshake was successful.
@@ -35,7 +35,7 @@ namespace Nakama.Replicated
         public bool Success => _success;
 
         [DataMember(Name="currentStore"), Preserve]
-        private ReplicatedValueStore _currentStore;
+        private SyncVarValues _currentStore;
 
         [DataMember(Name="success"), Preserve]
         private bool _success;
@@ -43,7 +43,7 @@ namespace Nakama.Replicated
         /// <summary>
         /// Create a handshake response from a host to a guest.
         /// </summary>
-        internal HandshakeResponse(ReplicatedValueStore currentState, bool success)
+        internal HandshakeResponse(SyncVarValues currentState, bool success)
         {
             _currentStore = currentState;
             _success = success;

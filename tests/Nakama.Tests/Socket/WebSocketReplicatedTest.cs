@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using Nakama.Replicated;
+using NakamaSync;
 using Xunit;
 
 namespace Nakama.Tests.Socket
@@ -26,7 +26,7 @@ namespace Nakama.Tests.Socket
         public WebSocketReplicatedTest()
         {
             _testEnv = new ReplicatedTestEnvironment(
-                new ReplicatedOpcodes(handshakeOpcode: 0, dataOpcode: 1),
+                new SyncedOpcodes(handshakeOpcode: 0, dataOpcode: 1),
                 numClients: 5,
                 numTestVars: 1,
                 hostIndex: 0);

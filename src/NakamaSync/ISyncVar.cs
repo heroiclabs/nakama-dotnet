@@ -14,21 +14,12 @@
 * limitations under the License.
 */
 
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace Nakama.Replicated
+namespace NakamaSync
 {
-    internal class HandshakeRequest
+    // todo incomplete interface?
+    // todo not internal
+    internal interface ISyncVar
     {
-        public List<ReplicatedKey> AllKeys => _allKeys;
-
-        [DataMember(Name="keys"), Preserve]
-        private List<ReplicatedKey> _allKeys;
-
-        internal HandshakeRequest(List<ReplicatedKey> allKeys)
-        {
-            _allKeys = allKeys;
-        }
+        void Reset();
     }
 }

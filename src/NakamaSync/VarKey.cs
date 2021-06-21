@@ -16,31 +16,31 @@
 
 using System.Runtime.Serialization;
 
-namespace Nakama.Replicated
+namespace NakamaSync
 {
     /// <summary>
-    /// A key that uniquely identifies a single replicated object.
-    /// The key is a combination of a user id and the replicated object id.
+    /// A key that uniquely identifies a single sync var.
+    /// The key is a combination of a user id and the sync var id.
     /// </summary>
-    internal struct ReplicatedKey
+    internal struct VarKey
     {
         public string UserId => _userId;
 
         [DataMember(Name="user_id"), Preserve]
         private string _userId;
 
-        [DataMember(Name="replicated_id"), Preserve]
-        private string _replicatedId;
+        [DataMember(Name="synced_id"), Preserve]
+        private string _syncedId;
 
-        public ReplicatedKey(string userId, string replicatedId)
+        public VarKey(string userId, string syncedId)
         {
             _userId = userId;
-            _replicatedId = replicatedId;
+            _syncedId = syncedId;
         }
 
         public override string ToString()
         {
-            return $"ReplicatedKey(UserId='{_userId}', ReplicatedId='{_replicatedId}')";
+            return $"ReplicatedKey(UserId='{_userId}', ReplicatedId='{_syncedId}')";
         }
     }
 }

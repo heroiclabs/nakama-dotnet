@@ -14,24 +14,14 @@
 * limitations under the License.
 */
 
-using System;
+using Nakama;
 
-namespace Nakama.Replicated
+namespace NakamaSync
 {
-    public struct ReplicatedOpcodes
+    public interface ISharedVarEvent<T>
     {
-        public int HandshakeOpcode { get; }
-        public int DataOpcode { get; }
-
-        public ReplicatedOpcodes(int handshakeOpcode, int dataOpcode)
-        {
-            if (handshakeOpcode == dataOpcode)
-            {
-                throw new ArgumentException("Data opcode and handshake opcode must be different values.");
-            }
-
-            HandshakeOpcode = handshakeOpcode;
-            DataOpcode = dataOpcode;
-        }
+        IUserPresence Sender { get; }
+        T OldValue { get; }
+        T NewValue { get; }
     }
 }

@@ -16,9 +16,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Nakama;
 
-namespace Nakama.Replicated
+namespace NakamaSync
 {
     // TODO catch presence tracker exceptions.
     internal class PresenceTracker
@@ -26,7 +26,7 @@ namespace Nakama.Replicated
         internal enum HostHeuristic
         {
             None,
-            NewestMember
+            OldestMember
         }
 
         public delegate void HostChangedHandler(IUserPresence oldHost, IUserPresence newHost);
@@ -40,11 +40,18 @@ namespace Nakama.Replicated
         private readonly List<string> _joinOrder = new List<string>();
         private readonly Dictionary<string, IUserPresence> _presences = new Dictionary<string, IUserPresence>();
         private readonly bool _trackHost;
+        private readonly string _userId;
 
-        public PresenceTracker(bool trackHost, HostHeuristic hostHeuristic)
+        public PresenceTracker(string userId, bool trackHost, HostHeuristic hostHeuristic)
         {
+            _userId = userId;
             _trackHost = trackHost;
             _hostHeuristic = hostHeuristic;
+        }
+
+        public bool IsSelfHost()
+        {
+            return _userId == _host.UserId;
         }
 
         public IUserPresence GetHost()
@@ -52,9 +59,14 @@ namespace Nakama.Replicated
             return _host;
         }
 
-        public IEnumerable<IUserPresence> GetPresences()
+        public IUserPresence GetSelf()
         {
-            return _presences.Values;
+            if (!_presences.ContainsKey(_userId))
+            {
+                throw new KeyNotFoundException("Could not find self in presences.");
+            }
+
+            return _presences[_userId];
         }
 
         public IUserPresence GetPresence(string userId)
@@ -75,7 +87,7 @@ namespace Nakama.Replicated
                     _presences[joiner.UserId] = joiner;
                     _joinOrder.Add(joiner.UserId);
 
-                    if (_hostHeuristic == HostHeuristic.NewestMember && _presences.Count == 0)
+                    if (_hostHeuristic == HostHeuristic.OldestMember && _presences.Count == 0)
                     {
                         SetHost(joiner);
                     }
@@ -98,7 +110,7 @@ namespace Nakama.Replicated
                         continue;
                     }
 
-                    if (_hostHeuristic == HostHeuristic.NewestMember && _host.UserId == leaver.UserId)
+                    if (_hostHeuristic == HostHeuristic.OldestMember && _host.UserId == leaver.UserId)
                     {
                         SetHost(_presences[_joinOrder[0]]);
                     }

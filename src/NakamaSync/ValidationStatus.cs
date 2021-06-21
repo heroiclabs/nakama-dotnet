@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-namespace Nakama.Replicated
+namespace NakamaSync
 {
     public enum KeyValidationStatus
     {

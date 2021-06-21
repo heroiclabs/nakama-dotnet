@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Nakama.Replicated;
+using NakamaSync;
 
 namespace Nakama.Tests
 {
@@ -28,24 +28,24 @@ namespace Nakama.Tests
         public int HostIndex { get; }
         public int NumClients { get; }
         public int NumTestVars { get; }
-        public ReplicatedOpcodes Opcodes { get; }
+        public SyncedOpcodes Opcodes { get; }
 
         private readonly List<IClient> _clients = new List<IClient>();
-        private readonly List<ReplicatedMatch> _matches = new List<ReplicatedMatch>();
+        private readonly List<SyncedMatch> _matches = new List<SyncedMatch>();
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
 
-        private readonly Dictionary<string, Owned<bool>> _ownedBools = new Dictionary<string, Owned<bool>>();
-        private readonly Dictionary<string, Owned<float>> _ownedFloats = new Dictionary<string, Owned<float>>();
-        private readonly Dictionary<string, Owned<int>> _ownedInts = new Dictionary<string, Owned<int>>();
-        private readonly Dictionary<string, Owned<string>> _ownedStrings = new Dictionary<string, Owned<string>>();
+        private readonly Dictionary<string, UserVar<bool>> _userBools = new Dictionary<string, UserVar<bool>>();
+        private readonly Dictionary<string, UserVar<float>> _userFloats = new Dictionary<string, UserVar<float>>();
+        private readonly Dictionary<string, UserVar<int>> _userInts = new Dictionary<string, UserVar<int>>();
+        private readonly Dictionary<string, UserVar<string>> _userStrings = new Dictionary<string, UserVar<string>>();
 
-        private readonly Dictionary<string, Shared<bool>> _sharedBools = new Dictionary<string, Shared<bool>>();
-        private readonly Dictionary<string, Shared<float>> _sharedFloats = new Dictionary<string, Shared<float>>();
-        private readonly Dictionary<string, Shared<int>> _sharedInts = new Dictionary<string, Shared<int>>();
-        private readonly Dictionary<string, Shared<string>> _sharedStrings = new Dictionary<string, Shared<string>>();
+        private readonly Dictionary<string, SharedVar<bool>> _sharedBools = new Dictionary<string, SharedVar<bool>>();
+        private readonly Dictionary<string, SharedVar<float>> _sharedFloats = new Dictionary<string, SharedVar<float>>();
+        private readonly Dictionary<string, SharedVar<int>> _sharedInts = new Dictionary<string, SharedVar<int>>();
+        private readonly Dictionary<string, SharedVar<string>> _sharedStrings = new Dictionary<string, SharedVar<string>>();
 
-        public ReplicatedTestEnvironment(ReplicatedOpcodes opcodes, int numClients, int numTestVars, int hostIndex)
+        public ReplicatedTestEnvironment(SyncedOpcodes opcodes, int numClients, int numTestVars, int hostIndex)
         {
             Opcodes = opcodes;
             NumClients = numClients;
@@ -57,27 +57,27 @@ namespace Nakama.Tests
             _sessions.AddRange(CreateSessions(_clients));
             ConnectSockets(_sockets, _sessions);
             _matches.AddRange(CreateMatches(_sockets, _sessions));
-            RegsterOwnedVars(_matches);
+            RegsterUserVars(_matches);
         }
 
-        public void SetOwnedBool(IUserPresence clientPresence, IUserPresence targetPresence, bool value)
+        public void SetUserBool(IUserPresence clientPresence, IUserPresence targetPresence, bool value)
         {
-            _ownedBools[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
+            _userBools[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
-        public void SetOwnedFloat(IUserPresence clientPresence, IUserPresence targetPresence, float value)
+        public void SetUserFloat(IUserPresence clientPresence, IUserPresence targetPresence, float value)
         {
-            _ownedFloats[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
+            _userFloats[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
-        public void SetOwnedInt(IUserPresence clientPresence, IUserPresence targetPresence, int value)
+        public void SetUserInt(IUserPresence clientPresence, IUserPresence targetPresence, int value)
         {
-            _ownedInts[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
+            _userInts[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
-        public void SetOwnedString(IUserPresence clientPresence, IUserPresence targetPresence, string value)
+        public void SetUserString(IUserPresence clientPresence, IUserPresence targetPresence, string value)
         {
-            _ownedStrings[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
+            _userStrings[clientPresence.UserId].SetValue(value, clientPresence, targetPresence);
         }
 
         public void SetSharedBool(IUserPresence clientPresence, bool value)
@@ -100,42 +100,42 @@ namespace Nakama.Tests
             _sharedStrings[clientPresence.UserId].SetValue(value);
         }
 
-        public Owned<bool> GetOwnedBool(IUserPresence clientPresence)
+        public UserVar<bool> GetUserBool(IUserPresence clientPresence)
         {
-            return _ownedBools[clientPresence.UserId];
+            return _userBools[clientPresence.UserId];
         }
 
-        public Owned<float> GetOwnedFloat(IUserPresence clientPresence, IUserPresence targetPresence, float value)
+        public UserVar<float> GetUserFloat(IUserPresence clientPresence, IUserPresence targetPresence, float value)
         {
-            return _ownedFloats[clientPresence.UserId];
+            return _userFloats[clientPresence.UserId];
         }
 
-        public Owned<int> GetOwnedInt(IUserPresence clientPresence, IUserPresence targetPresence, int value)
+        public UserVar<int> GetUserInt(IUserPresence clientPresence, IUserPresence targetPresence, int value)
         {
-            return _ownedInts[clientPresence.UserId];
+            return _userInts[clientPresence.UserId];
         }
 
-        public Owned<string> GetOwnedString(IUserPresence clientPresence, IUserPresence targetPresence, string value)
+        public UserVar<string> GetUserString(IUserPresence clientPresence, IUserPresence targetPresence, string value)
         {
-            return _ownedStrings[clientPresence.UserId];
+            return _userStrings[clientPresence.UserId];
         }
 
-        public Shared<bool> GetSharedBool(IUserPresence clientPresence)
+        public SharedVar<bool> GetSharedBool(IUserPresence clientPresence)
         {
             return _sharedBools[clientPresence.UserId];
         }
 
-        public Shared<float> GetSharedFloat(IUserPresence clientPresence)
+        public SharedVar<float> GetSharedFloat(IUserPresence clientPresence)
         {
             return _sharedFloats[clientPresence.UserId];
         }
 
-        public Shared<int> GetSharedInt(IUserPresence clientPresence)
+        public SharedVar<int> GetSharedInt(IUserPresence clientPresence)
         {
             return _sharedInts[clientPresence.UserId];
         }
 
-        public Shared<string> GetSharedString(IUserPresence clientPresence)
+        public SharedVar<string> GetSharedString(IUserPresence clientPresence)
         {
             return _sharedStrings[clientPresence.UserId];
         }
@@ -152,10 +152,10 @@ namespace Nakama.Tests
             return clients;
         }
 
-        private IEnumerable<ReplicatedMatch> CreateMatches(List<ISocket> sockets, List<ISession> sessions)
+        private IEnumerable<SyncedMatch> CreateMatches(List<ISocket> sockets, List<ISession> sessions)
         {
-            var matchTasks = new List<Task<ReplicatedMatch>>();
-            matchTasks.Add(sockets[HostIndex].CreateReplicatedMatch(_sessions[HostIndex], new ReplicatedOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode)));
+            var matchTasks = new List<Task<SyncedMatch>>();
+            matchTasks.Add(sockets[HostIndex].CreateSyncedMatch(_sessions[HostIndex], new SyncedOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode)));
             Task.WaitAll(matchTasks.ToArray());
 
             for (int i = 0; i < NumClients; i++)
@@ -165,7 +165,7 @@ namespace Nakama.Tests
                     continue;
                 }
 
-                matchTasks.Add(_sockets[i].JoinReplicatedMatch(_sessions[i], matchTasks[0].Result.Id, new ReplicatedOpcodes(Opcodes.DataOpcode, Opcodes.HandshakeOpcode)));
+                matchTasks.Add(_sockets[i].JoinSyncedMatch(_sessions[i], matchTasks[0].Result.Id, new SyncedOpcodes(Opcodes.DataOpcode, Opcodes.HandshakeOpcode)));
             }
 
             Task.WaitAll(matchTasks.ToArray());
@@ -213,7 +213,7 @@ namespace Nakama.Tests
             Task.WaitAll(connectTasks.ToArray());
         }
 
-        private void RegsterOwnedVars(List<ReplicatedMatch> matches)
+        private void RegsterUserVars(List<SyncedMatch> matches)
         {
             for (int i = 0; i < matches.Count; i++)
             {
@@ -221,10 +221,10 @@ namespace Nakama.Tests
 
                 for (int j = 0; j < NumTestVars; j++)
                 {
-                    matches[i].RegisterBool(presence.UserId + nameof(_ownedBools), new Owned<bool>());
-                    matches[i].RegisterFloat(presence.UserId + nameof(_ownedFloats), new Owned<float>());
-                    matches[i].RegisterInt(presence.UserId + nameof(_ownedInts), new Owned<int>());
-                    matches[i].RegisterString(presence.UserId + nameof(_ownedStrings), new Owned<string>());
+                    matches[i].RegisterBool(presence.UserId + nameof(_userBools), new UserVar<bool>());
+                    matches[i].RegisterFloat(presence.UserId + nameof(_userFloats), new UserVar<float>());
+                    matches[i].RegisterInt(presence.UserId + nameof(_userInts), new UserVar<int>());
+                    matches[i].RegisterString(presence.UserId + nameof(_userStrings), new UserVar<string>());
                 }
             }
         }

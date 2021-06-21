@@ -15,14 +15,23 @@
 */
 
 using System;
-using System.Collections.Generic;
 
-namespace Nakama.Replicated
+namespace NakamaSync
 {
-    internal interface IReplicatedMember
+    public struct SyncedOpcodes
     {
-        event Action<IEnumerable<IUserPresence>, ReplicatedValueStore> OnReplicatedDataSend;
-        void HandleRemoteDataChanged(IUserPresence sender, ReplicatedValueStore store);
-        void HandleLocalDataChanged<T>(ReplicatedKey key, T newValue, Action<ReplicatedValueStore, ReplicatedValue<T>> addToOutgoingStore);
+        public int HandshakeOpcode { get; }
+        public int DataOpcode { get; }
+
+        public SyncedOpcodes(int handshakeOpcode, int dataOpcode)
+        {
+            if (handshakeOpcode == dataOpcode)
+            {
+                throw new ArgumentException("Data opcode and handshake opcode must be different values.");
+            }
+
+            HandshakeOpcode = handshakeOpcode;
+            DataOpcode = dataOpcode;
+        }
     }
 }

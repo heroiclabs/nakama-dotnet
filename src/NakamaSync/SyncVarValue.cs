@@ -15,19 +15,20 @@
 */
 
 using System.Runtime.Serialization;
+using Nakama;
 
-namespace Nakama.Replicated
+namespace NakamaSync
 {
     /// <summary>
     /// A data-transfer object loosely corresponding to the outgoing value for a Replicated<T>.
     /// </summary>
-    internal class ReplicatedValue<T>
+    internal class SyncVarValue<T>
     {
         [DataMember(Name="key_validation_status"), Preserve]
         public KeyValidationStatus KeyValidationStatus { get; }
 
         [DataMember(Name="key"), Preserve]
-        public ReplicatedKey Key { get; }
+        public VarKey Key { get; }
 
         [DataMember(Name="lock_version"), Preserve]
         public int LockVersion { get; }
@@ -35,7 +36,7 @@ namespace Nakama.Replicated
         [DataMember(Name="value"), Preserve]
         public T Value { get; }
 
-        public ReplicatedValue(ReplicatedKey key, T value, int lockVersion, KeyValidationStatus keyValidationStatus, IUserPresence sender)
+        public SyncVarValue(VarKey key, T value, int lockVersion, KeyValidationStatus keyValidationStatus, IUserPresence sender)
         {
             Key = key;
             Value = value;
