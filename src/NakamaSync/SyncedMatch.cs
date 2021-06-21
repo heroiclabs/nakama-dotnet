@@ -43,6 +43,8 @@ namespace NakamaSync
     // expose interfaces, not concrete classes.
     // todo rename this class?
     // something is weird about guesthandler requiring self presence but presence tracker not. can we potentially just add self to presence tracker?
+    // todo handle host changed
+    // todo handle guest left
     public class SyncedMatch : IMatch
     {
         public event Action<Exception> OnError;
@@ -54,6 +56,8 @@ namespace NakamaSync
         public int Size => _match.Size;
         public IUserPresence Self => _match.Self;
 
+        private readonly GuestHandler _guestHandler;
+        private readonly HostHandler _hostHandler;
         private IMatch _match;
         private readonly SyncedOpcodes _opcodes;
         private readonly PresenceTracker _presenceTracker;
@@ -66,8 +70,8 @@ namespace NakamaSync
         {
             var newMatch = new SyncedMatch(socket, session, opcodes);
             socket.ReceivedMatchPresence += newMatch._presenceTracker.HandlePresenceEvent;
-            newMatch._match = await socket.CreateMatchAsync();
             newMatch._presenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
+            newMatch._match = await socket.CreateMatchAsync();
             return newMatch;
         }
 
@@ -110,6 +114,8 @@ namespace NakamaSync
             _session = session;
             _socket = socket;
             _opcodes = opcodes;
+            _guestHandler = new GuestHandler(_presenceTracker, _varStore, _varKeys);
+            _hostHandler = new HostHandler(_presenceTracker, _varStore, _varKeys);
             _socket.ReceivedMatchState += HandleReceivedMatchState;
         }
 
@@ -153,12 +159,12 @@ namespace NakamaSync
                 if (_presenceTracker.GetHost().UserId == _session.UserId)
                 {
                     SyncVarValues incomingStore = JsonParser.FromJson<SyncVarValues>(System.Text.Encoding.UTF8.GetString(matchState.State));
-                    new HostHandler(_presenceTracker, _varStore, _varKeys).HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
+                    _hostHandler.HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
                 }
                 else
                 {
                     SyncVarValues incomingStore = JsonParser.FromJson<SyncVarValues>(System.Text.Encoding.UTF8.GetString(matchState.State));
-                    new GuestHandler(_presenceTracker, _varStore, _varKeys).HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
+                    _guestHandler.HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
                 }
 
             }
@@ -168,13 +174,13 @@ namespace NakamaSync
                 {
                     string json = System.Text.Encoding.UTF8.GetString(matchState.State);
                     var handshakeRequest = JsonParser.FromJson<HandshakeRequest>(json);
-                    new HostHandler(_presenceTracker, _varStore, _varKeys).ReceivedHandshakeRequest(matchState.UserPresence, handshakeRequest);
+                    _hostHandler.ReceivedHandshakeRequest(matchState.UserPresence, handshakeRequest);
                 }
                 else
                 {
                     string json = System.Text.Encoding.UTF8.GetString(matchState.State);
                     var handshakeResponse = JsonParser.FromJson<HandshakeResponse>(json);
-                    new GuestHandler(_presenceTracker, _varStore, _varKeys).ReceivedHandshakeResponse(handshakeResponse);
+                    _guestHandler.ReceivedHandshakeResponse(handshakeResponse);
                 }
             }
         }
