@@ -15,16 +15,25 @@
 */
 
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace NakamaSync
 {
     internal class VarStore
     {
+        public ConcurrentDictionary<VarKey, SharedVar<bool>> SharedBools => _sharedBools;
+        public ConcurrentDictionary<VarKey, SharedVar<float>> SharedFloats => _sharedFloats;
+        public ConcurrentDictionary<VarKey, SharedVar<int>> SharedInts => _sharedInts;
+        public ConcurrentDictionary<VarKey, SharedVar<string>> SharedStrings => _sharedStrings;
+
         public ConcurrentDictionary<VarKey, UserVar<bool>> UserBools => _userBools;
         public ConcurrentDictionary<VarKey, UserVar<float>> UserFloats => _userFloats;
         public ConcurrentDictionary<VarKey, UserVar<int>> UserInts => _userInts;
         public ConcurrentDictionary<VarKey, UserVar<string>> UserStrings => _userStrings;
+
+        private readonly ConcurrentDictionary<VarKey, SharedVar<bool>> _sharedBools = new ConcurrentDictionary<VarKey, SharedVar<bool>>();
+        private readonly ConcurrentDictionary<VarKey, SharedVar<float>> _sharedFloats = new ConcurrentDictionary<VarKey, SharedVar<float>>();
+        private readonly ConcurrentDictionary<VarKey, SharedVar<int>> _sharedInts = new ConcurrentDictionary<VarKey, SharedVar<int>>();
+        private readonly ConcurrentDictionary<VarKey, SharedVar<string>> _sharedStrings = new ConcurrentDictionary<VarKey, SharedVar<string>>();
 
         private readonly ConcurrentDictionary<VarKey, UserVar<bool>> _userBools = new ConcurrentDictionary<VarKey, UserVar<bool>>();
         private readonly ConcurrentDictionary<VarKey, UserVar<float>> _userFloats = new ConcurrentDictionary<VarKey, UserVar<float>>();

@@ -19,13 +19,13 @@ using Xunit;
 
 namespace Nakama.Tests.Socket
 {
-    public class WebSocketReplicatedTest
+    public class WebSocketSyncedTest
     {
-        private readonly ReplicatedTestEnvironment _testEnv;
+        private readonly SyncedTestEnvironment _testEnv;
 
-        public WebSocketReplicatedTest()
+        public WebSocketSyncedTest()
         {
-            _testEnv = new ReplicatedTestEnvironment(
+            _testEnv = new SyncedTestEnvironment(
                 new SyncedOpcodes(handshakeOpcode: 0, dataOpcode: 1),
                 numClients: 5,
                 numTestVars: 1,

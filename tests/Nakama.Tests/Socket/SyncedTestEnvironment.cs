@@ -22,7 +22,7 @@ using NakamaSync;
 
 namespace Nakama.Tests
 {
-    public class ReplicatedTestEnvironment
+    public class SyncedTestEnvironment
     {
         public IUserPresence Host => _matches[HostIndex].Self;
         public int HostIndex { get; }
@@ -45,7 +45,7 @@ namespace Nakama.Tests
         private readonly Dictionary<string, SharedVar<int>> _sharedInts = new Dictionary<string, SharedVar<int>>();
         private readonly Dictionary<string, SharedVar<string>> _sharedStrings = new Dictionary<string, SharedVar<string>>();
 
-        public ReplicatedTestEnvironment(SyncedOpcodes opcodes, int numClients, int numTestVars, int hostIndex)
+        public SyncedTestEnvironment(SyncedOpcodes opcodes, int numClients, int numTestVars, int hostIndex)
         {
             Opcodes = opcodes;
             NumClients = numClients;
