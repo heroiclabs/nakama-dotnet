@@ -35,8 +35,9 @@ namespace Nakama.Tests.Socket
         [Fact]
         private void ReplicatedFromHostShouldShareData()
         {
-            _testEnv.SetSharedBool(_testEnv.Host, true);
-            Assert.True(_testEnv.GetSharedBool(_testEnv.Host).GetValue());
+            SyncedTestUserEnvironment hostEnv = _testEnv.GetUserEnv(_testEnv.Host);
+            hostEnv.SharedBools[0].SetValue(true);
+            Assert.True(hostEnv.SharedBools[0].GetValue());
         }
 
         public void Dispose()
