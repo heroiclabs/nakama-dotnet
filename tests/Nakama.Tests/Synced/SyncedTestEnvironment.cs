@@ -34,7 +34,7 @@ namespace Nakama.Tests
         private readonly List<SyncedMatch> _matches = new List<SyncedMatch>();
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
-        private readonly Dictionary<string, SyncedTestUserEnvironment> _usersEnvs = new Dictionary<string, SyncedTestUserEnvironment>();
+        private readonly Dictionary<string, SyncedTestUserEnvironment> _userEnvs = new Dictionary<string, SyncedTestUserEnvironment>();
 
         public SyncedTestEnvironment(SyncedOpcodes opcodes, int numClients, int numTestVars, int hostIndex)
         {
@@ -46,14 +46,14 @@ namespace Nakama.Tests
             _clients.AddRange(CreateClients());
             _sockets.AddRange(CreateSockets(_clients));
             _sessions.AddRange(CreateSessions(_clients));
-            _usersEnvs = CreateTestEnvs(_matches, _sessions, numTestVars);
             ConnectSockets(_sockets, _sessions);
             _matches.AddRange(CreateMatches(_sockets, _sessions));
+            _userEnvs = CreateTestEnvs(_matches, _sessions, numTestVars);
         }
 
         public SyncedTestUserEnvironment GetUserEnv(IUserPresence clientPresence)
         {
-            return _usersEnvs[clientPresence.UserId];
+            return _userEnvs[clientPresence.UserId];
         }
 
         private IEnumerable<IClient> CreateClients()
