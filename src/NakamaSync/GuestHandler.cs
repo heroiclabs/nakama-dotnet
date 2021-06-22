@@ -72,7 +72,7 @@ namespace NakamaSync
             }
             else
             {
-                getAddToQueue(_valuesToHost)(newSyncedValue);
+                getAddToQueue(_valuesToAll)(newSyncedValue);
             }
         }
 

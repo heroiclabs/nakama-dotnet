@@ -84,6 +84,30 @@ namespace NakamaSync
             return newMatch;
         }
 
+        public void RegisterBool(string id, SharedVar<bool> userBool)
+        {
+            var key = new VarKey(id, _session.UserId);
+            Register(key, userBool, _varStore.SharedBools, store => store.AddBool);
+        }
+
+        public void RegisterFloat(string id, SharedVar<float> userFloat)
+        {
+            var key = new VarKey(id, _session.UserId);
+            Register(key, userFloat, _varStore.SharedFloats, store => store.AddFloat);
+        }
+
+        public void RegisterInt(string id, SharedVar<int> userInt)
+        {
+            var key = new VarKey(id, _session.UserId);
+            Register(key, userInt, _varStore.SharedInts, store => store.AddInt);
+        }
+
+        public void RegisterString(string id, SharedVar<string> userString)
+        {
+            var key = new VarKey(id, _session.UserId);
+            Register(key, userString, _varStore.SharedStrings, store => store.AddString);
+        }
+
         public void RegisterBool(string id, UserVar<bool> userBool)
         {
             var key = new VarKey(id, _session.UserId);
@@ -119,12 +143,20 @@ namespace NakamaSync
             _socket.ReceivedMatchState += HandleReceivedMatchState;
         }
 
-        private void Register<T>(VarKey key, UserVar<T> userVar, IDictionary<VarKey, UserVar<T>> varStore, Func<SyncVarValues, Action<SyncVarValue<T>>> getAddToQueue)
+        private void Register<T>(VarKey key, SharedVar<T> var, IDictionary<VarKey, SharedVar<T>> varStore, Func<SyncVarValues, Action<SyncVarValue<T>>> getAddToQueue)
         {
-            _varKeys.RegisterKey(key, userVar.KeyValidationStatus);
-            varStore[key] = userVar;
-            userVar.Self = _presenceTracker.GetSelf();
-            userVar.OnLocalValueChanged += (evt) => HandleUserVarChanged<T>(key, evt, getAddToQueue);
+            _varKeys.RegisterKey(key, var.KeyValidationStatus);
+            varStore[key] = var;
+            var.Self = _presenceTracker.GetSelf();
+            var.OnLocalValueChanged += (evt) => HandleVarChanged<T>(key, evt, getAddToQueue);
+        }
+
+        private void Register<T>(VarKey key, UserVar<T> var, IDictionary<VarKey, UserVar<T>> varStore, Func<SyncVarValues, Action<SyncVarValue<T>>> getAddToQueue)
+        {
+            _varKeys.RegisterKey(key, var.KeyValidationStatus);
+            varStore[key] = var;
+            var.Self = _presenceTracker.GetSelf();
+            var.OnLocalValueChanged += (evt) => HandleVarChanged<T>(key, evt, getAddToQueue);
         }
 
         private void HandleGuestJoined(IUserPresence joinedGuest)
@@ -195,7 +227,7 @@ namespace NakamaSync
             return Nakama.TinyJson.JsonParser.FromJson<T>(System.Text.Encoding.UTF8.GetString(data));
         }
 
-        private void HandleUserVarChanged<T>(VarKey key, IUserVarEvent<T> evt, Func<SyncVarValues, Action<SyncVarValue<T>>> getOutgoingQueue)
+        private void HandleVarChanged<T>(VarKey key, IVarEvent<T> evt, Func<SyncVarValues, Action<SyncVarValue<T>>> getOutgoingQueue)
         {
             if (_varKeys.HasLockVersion(key))
             {

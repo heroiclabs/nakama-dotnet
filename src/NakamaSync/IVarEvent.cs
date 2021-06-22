@@ -16,10 +16,8 @@
 
 namespace NakamaSync
 {
-    // todo incomplete interface?
-    // todo not internal
-    internal interface ISyncVar
+    public interface IVarEvent<T>
     {
-        void Reset();
+        T NewValue { get; }
     }
 }

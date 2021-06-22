@@ -18,11 +18,10 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public interface IUserVarEvent<T>
+    public interface IUserVarEvent<T> : IVarEvent<T>
     {
         IUserPresence Sender { get; }
         IUserPresence Target { get; }
         T OldValue { get; }
-        T NewValue { get; }
     }
 }

@@ -57,7 +57,7 @@ namespace Nakama.Tests
             _sessions.AddRange(CreateSessions(_clients));
             ConnectSockets(_sockets, _sessions);
             _matches.AddRange(CreateMatches(_sockets, _sessions));
-            RegsterUserVars(_matches);
+            RegisterVars(_matches);
         }
 
         public void SetUserBool(IUserPresence clientPresence, IUserPresence targetPresence, bool value)
@@ -213,7 +213,7 @@ namespace Nakama.Tests
             Task.WaitAll(connectTasks.ToArray());
         }
 
-        private void RegsterUserVars(List<SyncedMatch> matches)
+        private void RegisterVars(List<SyncedMatch> matches)
         {
             for (int i = 0; i < matches.Count; i++)
             {
@@ -221,6 +221,11 @@ namespace Nakama.Tests
 
                 for (int j = 0; j < NumTestVars; j++)
                 {
+                    matches[i].RegisterBool(presence.UserId + nameof(_userBools), new SharedVar<bool>());
+                    matches[i].RegisterFloat(presence.UserId + nameof(_userFloats), new SharedVar<float>());
+                    matches[i].RegisterInt(presence.UserId + nameof(_userInts), new SharedVar<int>());
+                    matches[i].RegisterString(presence.UserId + nameof(_userStrings), new SharedVar<string>());
+
                     matches[i].RegisterBool(presence.UserId + nameof(_userBools), new UserVar<bool>());
                     matches[i].RegisterFloat(presence.UserId + nameof(_userFloats), new UserVar<float>());
                     matches[i].RegisterInt(presence.UserId + nameof(_userInts), new UserVar<int>());

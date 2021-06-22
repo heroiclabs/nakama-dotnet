@@ -23,7 +23,7 @@ namespace NakamaSync
     /// <summary>
     /// A variable containing a value for each user in the match. Each value is synchronized across all users.
     /// </summary>
-    public class UserVar<T> : ISyncVar
+    public class UserVar<T>
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then

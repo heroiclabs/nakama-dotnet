@@ -22,7 +22,7 @@ namespace NakamaSync
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// </summary>
-    public class SharedVar<T> : ISyncVar
+    public class SharedVar<T>
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then
@@ -31,7 +31,8 @@ namespace NakamaSync
         /// otherwise a ReplicationValidationException will be thrown on this device.
         /// </summary>
         public Action<ISharedVarEvent<T>> OnHostValidate;
-        public Action<ISharedVarEvent<T>> OnValueChanged;
+        public Action<ISharedVarEvent<T>> OnRemoteValueChanged;
+        internal Action<ISharedVarEvent<T>> OnLocalValueChanged;
         public KeyValidationStatus KeyValidationStatus => _validationStatus;
 
         internal IUserPresence Self
@@ -47,7 +48,7 @@ namespace NakamaSync
 
         public void SetValue(T value)
         {
-            SetValue(value, Self, _validationStatus);
+            SetValue(value, Self, _validationStatus, OnLocalValueChanged);
         }
 
         public T GetValue()
@@ -58,7 +59,7 @@ namespace NakamaSync
             }
         }
 
-        internal void SetValue(T value, IUserPresence presence, KeyValidationStatus validationStatus)
+        internal void SetValue(T value, IUserPresence presence, KeyValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
         {
             lock (_valueLock)
             {
@@ -71,7 +72,7 @@ namespace NakamaSync
 
                 _value = value;
                 _validationStatus = validationStatus;
-                OnValueChanged?.Invoke(new SharedVarEvent<T>(presence, oldValue, value));
+                eventDispatch?.Invoke(new SharedVarEvent<T>(presence, oldValue, value));
             }
         }
 
@@ -84,7 +85,8 @@ namespace NakamaSync
             }
 
             OnHostValidate = null;
-            OnValueChanged = null;
+            OnLocalValueChanged = null;
+            OnRemoteValueChanged = null;
         }
     }
 }
