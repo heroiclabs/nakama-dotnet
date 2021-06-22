@@ -33,11 +33,35 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact]
-        private void ReplicatedFromHostShouldShareData()
+        private void SharedVarShouldRetainData()
         {
             SyncedTestUserEnvironment hostEnv = _testEnv.GetUserEnv(_testEnv.Host);
             hostEnv.SharedBools[0].SetValue(true);
             Assert.True(hostEnv.SharedBools[0].GetValue());
+        }
+
+        [Fact]
+        private void UserVarShouldRetainData()
+        {
+            SyncedTestUserEnvironment hostEnv = _testEnv.GetHostEnv();
+            hostEnv.UserBools[0].SetValue(true, _testEnv.Host);
+            Assert.True(hostEnv.UserBools[0].GetValue(_testEnv.Host));
+        }
+
+        [Fact]
+        private void BadHandshakeShouldFail()
+        {
+
+        }
+
+        [Fact]
+        private void SharedVarShouldSyncData()
+        {
+            SyncedTestUserEnvironment hostEnv = _testEnv.GetHostEnv();
+            hostEnv.SharedBools[0].SetValue(true);
+
+            SyncedTestUserEnvironment guestEnv = _testEnv.GetRandomGuestEnv();
+            Assert.True(guestEnv.SharedBools[0].GetValue());
         }
 
         public void Dispose()

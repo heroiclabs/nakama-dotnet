@@ -24,6 +24,8 @@ namespace Nakama.Tests
 {
     public class SyncedTestEnvironment
     {
+        private const int _RAND_GUEST_SEED = 1;
+
         public IUserPresence Host => _matches[HostIndex].Self;
         public int HostIndex { get; }
         public int NumClients { get; }
@@ -35,6 +37,7 @@ namespace Nakama.Tests
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
         private readonly Dictionary<string, SyncedTestUserEnvironment> _userEnvs = new Dictionary<string, SyncedTestUserEnvironment>();
+        private readonly Random _randomGuest = new Random(_RAND_GUEST_SEED);
 
         public SyncedTestEnvironment(SyncedOpcodes opcodes, int numClients, int numTestVars, int hostIndex)
         {
@@ -51,9 +54,39 @@ namespace Nakama.Tests
             _userEnvs = CreateTestEnvs(_matches, _sessions, numTestVars);
         }
 
+
+        public SyncedTestUserEnvironment GetHostEnv()
+        {
+            return _userEnvs[_matches[HostIndex].Self.UserId];
+        }
+
+        public SyncedTestUserEnvironment GetRandomGuestEnv()
+        {
+            List<IUserPresence> guests = GetGuests();
+            int randGuestIndex = _randomGuest.Next(guests.Count);
+            return _userEnvs[guests[randGuestIndex].UserId];
+        }
+
         public SyncedTestUserEnvironment GetUserEnv(IUserPresence clientPresence)
         {
             return _userEnvs[clientPresence.UserId];
+        }
+
+        private List<IUserPresence> GetGuests()
+        {
+            var guests = new List<IUserPresence>();
+
+            for (int i = 0; i < _matches.Count; i++)
+            {
+                if (i == HostIndex)
+                {
+                    continue;
+                }
+
+                guests.Add(_matches[i].Self);
+            }
+
+            return guests;
         }
 
         private IEnumerable<IClient> CreateClients()

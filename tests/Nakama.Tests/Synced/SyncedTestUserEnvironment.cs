@@ -46,35 +46,35 @@ namespace Nakama.Tests
             for (int i = 0; i < numTestVars; i++)
             {
                 var newSharedBool = new SharedVar<bool>();
-                match.RegisterBool($"{Guid.NewGuid()}", newSharedBool);
+                match.RegisterBool(nameof(newSharedBool) + i, newSharedBool);
                 SharedBools.Add(newSharedBool);
 
                 var newSharedFloat = new SharedVar<float>();
-                match.RegisterFloat($"{Guid.NewGuid()}", newSharedFloat);
+                match.RegisterFloat(nameof(newSharedFloat) + i, newSharedFloat);
                 SharedFloats.Add(newSharedFloat);
 
                 var newSharedInt = new SharedVar<int>();
-                match.RegisterInt($"{Guid.NewGuid()}", newSharedInt);
+                match.RegisterInt(nameof(newSharedInt) + i, newSharedInt);
                 SharedInts.Add(newSharedInt);
 
                 var newSharedString = new SharedVar<string>();
-                match.RegisterString($"{Guid.NewGuid()}", newSharedString);
+                match.RegisterString(nameof(newSharedString) + i, newSharedString);
                 SharedStrings.Add(newSharedString);
 
                 var newUserBool = new UserVar<bool>();
-                match.RegisterBool($"{Guid.NewGuid()}", newUserBool);
+                match.RegisterBool(nameof(newUserBool) + i, newUserBool);
                 UserBools.Add(newUserBool);
 
                 var newUserFloat = new UserVar<float>();
-                match.RegisterFloat($"{Guid.NewGuid()}", newUserFloat);
+                match.RegisterFloat(nameof(newUserFloat) + i, newUserFloat);
                 UserFloats.Add(newUserFloat);
 
                 var newUserInt = new UserVar<int>();
-                match.RegisterInt($"{Guid.NewGuid()}", newUserInt);
+                match.RegisterInt(nameof(newUserInt) + i, newUserInt);
                 UserInts.Add(newUserInt);
 
                 var newUserString = new UserVar<string>();
-                match.RegisterString($"{Guid.NewGuid()}", newUserString);
+                match.RegisterString(nameof(newUserString) + i, newUserString);
                 UserStrings.Add(newUserString);
             }
         }

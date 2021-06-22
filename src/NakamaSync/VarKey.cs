@@ -24,18 +24,19 @@ namespace NakamaSync
     /// </summary>
     internal struct VarKey
     {
+        public string SyncedId => _syncedId;
         public string UserId => _userId;
-
-        [DataMember(Name="user_id"), Preserve]
-        private string _userId;
 
         [DataMember(Name="synced_id"), Preserve]
         private string _syncedId;
 
-        public VarKey(string userId, string syncedId)
+        [DataMember(Name="user_id"), Preserve]
+        private string _userId;
+
+        public VarKey(string syncedId, string userId)
         {
-            _userId = userId;
             _syncedId = syncedId;
+            _userId = userId;
         }
 
         public override string ToString()

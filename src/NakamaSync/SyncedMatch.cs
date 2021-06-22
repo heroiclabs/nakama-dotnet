@@ -42,9 +42,9 @@ namespace NakamaSync
     // to string calls
     // expose interfaces, not concrete classes.
     // todo rename this class?
-    // something is weird about guesthandler requiring self presence but presence tracker not. can we potentially just add self to presence tracker?
     // todo handle host changed
     // todo handle guest left
+    // todo what happens if user id changes? can it even?
     public class SyncedMatch : IMatch
     {
         public event Action<Exception> OnError;
@@ -65,6 +65,7 @@ namespace NakamaSync
         private readonly ISocket _socket;
         private readonly VarKeys _varKeys = new VarKeys();
         private readonly VarStore _varStore = new VarStore();
+        private HashSet<object> _registeredVars = new HashSet<object>();
 
         public static async Task<SyncedMatch> Create(ISocket socket, ISession session, SyncedOpcodes opcodes)
         {
@@ -145,6 +146,11 @@ namespace NakamaSync
 
         private void Register<T>(VarKey key, SharedVar<T> var, IDictionary<VarKey, SharedVar<T>> varStore, Func<SyncVarValues, Action<SyncVarValue<T>>> getAddToQueue)
         {
+            if (!_registeredVars.Add(var))
+            {
+                throw new ArgumentException("Tried registering the same shared var with a different id: " + key.SyncedId);
+            }
+
             _varKeys.RegisterKey(key, var.KeyValidationStatus);
             varStore[key] = var;
             var.Self = _presenceTracker.GetSelf();
@@ -153,6 +159,11 @@ namespace NakamaSync
 
         private void Register<T>(VarKey key, UserVar<T> var, IDictionary<VarKey, UserVar<T>> varStore, Func<SyncVarValues, Action<SyncVarValue<T>>> getAddToQueue)
         {
+            if (!_registeredVars.Add(var))
+            {
+                throw new ArgumentException("Tried registering the same user var with a different id: " + key.SyncedId);
+            }
+
             _varKeys.RegisterKey(key, var.KeyValidationStatus);
             varStore[key] = var;
             var.Self = _presenceTracker.GetSelf();
