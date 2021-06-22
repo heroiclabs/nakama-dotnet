@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Nakama;
@@ -29,9 +30,9 @@ namespace NakamaSync
         private PresenceTracker _presenceTracker;
         public IUserPresence Presence => _presenceTracker.GetHost();
 
-        private readonly IReadOnlyDictionary<string, IUserPresence> _guests;
+        private readonly ConcurrentDictionary<string, IUserPresence> _guests = new ConcurrentDictionary<string, IUserPresence>();
         private readonly SyncVarValues _valuesToAll = new SyncVarValues();
-        private readonly Dictionary<string, SyncVarValues> _valuesToGuest = new Dictionary<string, SyncVarValues>();
+        private readonly ConcurrentDictionary<string, SyncVarValues> _valuesToGuest = new ConcurrentDictionary<string, SyncVarValues>();
         private readonly VarKeys _varKeys;
         private readonly VarStore _store;
 

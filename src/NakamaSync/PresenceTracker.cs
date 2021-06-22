@@ -87,7 +87,7 @@ namespace NakamaSync
                     _presences[joiner.UserId] = joiner;
                     _joinOrder.Add(joiner.UserId);
 
-                    if (_hostHeuristic == HostHeuristic.OldestMember && _presences.Count == 0)
+                    if (_hostHeuristic == HostHeuristic.OldestMember && _presences.Count == 1)
                     {
                         SetHost(joiner);
                     }
