@@ -221,15 +221,15 @@ namespace Nakama.Tests
 
                 for (int j = 0; j < NumTestVars; j++)
                 {
-                    matches[i].RegisterBool(presence.UserId + nameof(_userBools), new SharedVar<bool>());
-                    matches[i].RegisterFloat(presence.UserId + nameof(_userFloats), new SharedVar<float>());
-                    matches[i].RegisterInt(presence.UserId + nameof(_userInts), new SharedVar<int>());
-                    matches[i].RegisterString(presence.UserId + nameof(_userStrings), new SharedVar<string>());
+                    matches[i].RegisterBool($"{Guid.NewGuid()}", new SharedVar<bool>());
+                    matches[i].RegisterFloat($"{Guid.NewGuid()}", new SharedVar<float>());
+                    matches[i].RegisterInt($"{Guid.NewGuid()}", new SharedVar<int>());
+                    matches[i].RegisterString($"{Guid.NewGuid()}", new SharedVar<string>());
 
-                    matches[i].RegisterBool(presence.UserId + nameof(_userBools), new UserVar<bool>());
-                    matches[i].RegisterFloat(presence.UserId + nameof(_userFloats), new UserVar<float>());
-                    matches[i].RegisterInt(presence.UserId + nameof(_userInts), new UserVar<int>());
-                    matches[i].RegisterString(presence.UserId + nameof(_userStrings), new UserVar<string>());
+                    matches[i].RegisterBool($"{Guid.NewGuid()}", new UserVar<bool>());
+                    matches[i].RegisterFloat($"{Guid.NewGuid()}", new UserVar<float>());
+                    matches[i].RegisterInt($"{Guid.NewGuid()}", new UserVar<int>());
+                    matches[i].RegisterString($"{Guid.NewGuid()}", new UserVar<string>());
                 }
             }
         }
