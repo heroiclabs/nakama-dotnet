@@ -55,18 +55,17 @@ namespace Nakama.Tests
             _sockets.AddRange(CreateSockets(_clients));
             _sessions.AddRange(CreateSessions(_clients));
             ConnectSockets(_sockets, _sessions);
-            _userEnvs = CreateUserEnvs(_matches.Select(m => m.Self).ToList(), _sessions, idGenerator ?? SyncedTestUserEnvironment.DefaultVarIdGenerator);
+            _userEnvs = CreateUserEnvs(_sessions, idGenerator ?? SyncedTestUserEnvironment.DefaultVarIdGenerator);
         }
 
-        private Dictionary<string, SyncedTestUserEnvironment> CreateUserEnvs(List<IUserPresence> presences, List<ISession> sessions, VarIdGenerator generator)
+        private Dictionary<string, SyncedTestUserEnvironment> CreateUserEnvs(List<ISession> sessions, VarIdGenerator generator)
         {
             var envs = new Dictionary<string, SyncedTestUserEnvironment>();
 
-            for (int i = 0; i < presences.Count; i++)
+            for (int i = 0; i < sessions.Count; i++)
             {
                 ISession session = sessions[i];
-                IUserPresence presence = presences[i];
-                envs[presence.UserId] = new SyncedTestUserEnvironment(session, presence, NumTestVars, generator);
+                envs[session.UserId] = new SyncedTestUserEnvironment(session, NumTestVars, generator);
             }
 
             return envs;

@@ -20,7 +20,7 @@ using Nakama;
 namespace NakamaSync
 {
     /// <summary>
-    /// A data-transfer object loosely corresponding to the outgoing value for a Replicated<T>.
+    /// A data-transfer object corresponding to the outgoing value for a sync var.
     /// </summary>
     internal class SyncVarValue<T>
     {
