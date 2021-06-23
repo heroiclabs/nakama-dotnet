@@ -61,25 +61,25 @@ namespace NakamaSync
         private readonly SyncedVarRegistration _registration;
         private readonly ISocket _socket;
 
-        internal static async Task<SyncedMatch> Create(ISocket socket, ISession session, SyncedOpcodes opcodes, SyncedVarRegistration registration)
+        internal static async Task<SyncedMatch> Create(ISocket socket, SyncedOpcodes opcodes, SyncedVarRegistration registration)
         {
-            var newMatch = new SyncedMatch(socket, session, opcodes, registration);
+            var newMatch = new SyncedMatch(socket, opcodes, registration);
             socket.ReceivedMatchPresence += newMatch._registration.PresenceTracker.HandlePresenceEvent;
             newMatch._registration.PresenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
             newMatch._match = await socket.CreateMatchAsync();
             return newMatch;
         }
 
-        internal static async Task<SyncedMatch> Join(ISocket socket, ISession session, SyncedOpcodes opcodes, string matchId, SyncedVarRegistration registration)
+        internal static async Task<SyncedMatch> Join(ISocket socket, SyncedOpcodes opcodes, string matchId, SyncedVarRegistration registration)
         {
-            var newMatch = new SyncedMatch(socket, session, opcodes, registration);
+            var newMatch = new SyncedMatch(socket, opcodes, registration);
             socket.ReceivedMatchPresence += newMatch._registration.PresenceTracker.HandlePresenceEvent;
             newMatch._registration.PresenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
             newMatch._match = await socket.JoinMatchAsync(matchId);
             return newMatch;
         }
 
-        private SyncedMatch(ISocket socket, ISession session, SyncedOpcodes opcodes, SyncedVarRegistration registration)
+        private SyncedMatch(ISocket socket, SyncedOpcodes opcodes, SyncedVarRegistration registration)
         {
             _socket = socket;
             _opcodes = opcodes;

@@ -28,11 +28,11 @@ namespace Nakama.Tests
 
         public int HostIndex { get; }
         public List<SyncedMatch> Matches => _matches;
-        public int NumClients { get; }
+        public int NumSessions { get; }
         public int NumTestVars { get; }
         public SyncedOpcodes Opcodes { get; }
 
-        private readonly List<IClient> _clients = new List<IClient>();
+        private readonly IClient _client;
         private readonly List<SyncedMatch> _matches = new List<SyncedMatch>();
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
@@ -47,13 +47,13 @@ namespace Nakama.Tests
             VarIdGenerator idGenerator = null)
         {
             Opcodes = opcodes;
-            NumClients = numClients;
+            NumSessions = numClients;
             NumTestVars = numTestVars;
             HostIndex = hostIndex;
 
-            _clients.AddRange(CreateClients());
-            _sockets.AddRange(CreateSockets(_clients));
-            _sessions.AddRange(CreateSessions(_clients));
+            _client = TestsUtil.FromSettingsFile();
+            _sockets.AddRange(CreateSockets(_client));
+            _sessions.AddRange(CreateSessions(_client));
             ConnectSockets(_sockets, _sessions);
             _userEnvs = CreateUserEnvs(_sessions, idGenerator ?? SyncedTestUserEnvironment.DefaultVarIdGenerator);
         }
@@ -114,12 +114,13 @@ namespace Nakama.Tests
             }
 
             var matchTasks = new List<Task<SyncedMatch>>();
-            matchTasks.Add(_sockets[HostIndex].CreateSyncedMatch(
-                _sessions[HostIndex], new SyncedOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode), new SyncedVarRegistration(_sessions[HostIndex])));
+            var opcodes = new SyncedOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode);
+            var registration = new SyncedVarRegistration(_sessions[HostIndex]);
+            matchTasks.Add(_sockets[HostIndex].CreateSyncedMatch(opcodes, registration));
 
             Task.WaitAll(matchTasks.ToArray());
 
-            for (int i = 0; i < NumClients; i++)
+            for (int i = 0; i < NumSessions; i++)
             {
                 if (i == HostIndex)
                 {
@@ -127,10 +128,8 @@ namespace Nakama.Tests
                 }
 
                 matchTasks.Add(_sockets[i].JoinSyncedMatch(
-                    _sessions[i],
                     matchTasks[0].Result.Id,
-                    new SyncedOpcodes(Opcodes.DataOpcode,
-                    Opcodes.HandshakeOpcode), new SyncedVarRegistration(_sessions[i])));
+                    opcodes, new SyncedVarRegistration(_sessions[i])));
             }
 
             Task.WaitAll(matchTasks.ToArray());
@@ -141,7 +140,7 @@ namespace Nakama.Tests
         {
             var clients = new List<IClient>();
 
-            for (int i = 0; i < NumClients; i++)
+            for (int i = 0; i < NumSessions; i++)
             {
                 clients.Add(TestsUtil.FromSettingsFile());
             }
@@ -149,13 +148,13 @@ namespace Nakama.Tests
             return clients;
         }
 
-        private IEnumerable<ISocket> CreateSockets(List<IClient> clients)
+        private IEnumerable<ISocket> CreateSockets(IClient client)
         {
             var sockets = new List<ISocket>();
 
-            for (int i = 0; i < NumClients; i++)
+            for (int i = 0; i < NumSessions; i++)
             {
-                var newSocket = Nakama.Socket.From(clients[i]);
+                var newSocket = Nakama.Socket.From(client);
                 sockets.Add(newSocket);
             }
 
@@ -166,7 +165,7 @@ namespace Nakama.Tests
         {
             var connectTasks = new List<Task>();
 
-            for (int i = 0; i < NumClients; i++)
+            for (int i = 0; i < NumSessions; i++)
             {
                 ISocket socket = sockets[i];
                 connectTasks.Add(socket.ConnectAsync(sessions[i]));
@@ -175,18 +174,20 @@ namespace Nakama.Tests
             Task.WaitAll(connectTasks.ToArray());
         }
 
-        private IEnumerable<ISession> CreateSessions(IEnumerable<IClient> clients)
+        private IEnumerable<ISession> CreateSessions(IClient client)
         {
             var authTasks = new List<Task<ISession>>();
 
-            foreach (var client in _clients)
+            for (int i = 0; i < NumSessions; i++)
             {
                 authTasks.Add(client.AuthenticateCustomAsync($"{Guid.NewGuid()}"));
             }
 
             Task.WaitAll(authTasks.ToArray());
 
-            return authTasks.Select(task => task.Result);
+            return authTasks.Select(task => {
+                return task.Result;
+            });
         }
 
         private List<IUserPresence> GetGuests()
