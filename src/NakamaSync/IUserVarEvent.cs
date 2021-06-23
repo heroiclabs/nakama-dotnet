@@ -20,7 +20,6 @@ namespace NakamaSync
 {
     public interface IUserVarEvent<T> : IVarEvent<T>
     {
-        IUserPresence Sender { get; }
         IUserPresence Target { get; }
         T OldValue { get; }
     }

@@ -56,123 +56,41 @@ namespace NakamaSync
         public int Size => _match.Size;
         public IUserPresence Self => _match.Self;
 
-        private readonly GuestHandler _guestHandler;
-        private readonly HostHandler _hostHandler;
         private IMatch _match;
         private readonly SyncedOpcodes _opcodes;
         private readonly PresenceTracker _presenceTracker;
-        private readonly ISession _session;
+        private readonly SyncedVarRegistration _registration;
         private readonly ISocket _socket;
-        private readonly VarKeys _varKeys = new VarKeys();
-        private readonly VarStore _varStore = new VarStore();
-        private HashSet<object> _registeredVars = new HashSet<object>();
 
-        public static async Task<SyncedMatch> Create(ISocket socket, ISession session, SyncedOpcodes opcodes)
+        internal static async Task<SyncedMatch> Create(ISocket socket, ISession session, SyncedOpcodes opcodes, SyncedVarRegistration registration)
         {
-            var newMatch = new SyncedMatch(socket, session, opcodes);
+            var newMatch = new SyncedMatch(socket, session, opcodes, registration);
             socket.ReceivedMatchPresence += newMatch._presenceTracker.HandlePresenceEvent;
             newMatch._presenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
             newMatch._match = await socket.CreateMatchAsync();
             return newMatch;
         }
 
-        public static async Task<SyncedMatch> Join(ISocket socket, ISession session, SyncedOpcodes opcodes, string matchId)
+        internal static async Task<SyncedMatch> Join(ISocket socket, ISession session, SyncedOpcodes opcodes, string matchId, SyncedVarRegistration registration)
         {
-            var newMatch = new SyncedMatch(socket, session, opcodes);
+            var newMatch = new SyncedMatch(socket, session, opcodes, registration);
             socket.ReceivedMatchPresence += newMatch._presenceTracker.HandlePresenceEvent;
             newMatch._presenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
             newMatch._match = await socket.JoinMatchAsync(matchId);
             return newMatch;
         }
 
-        public void RegisterBool(string id, SharedVar<bool> userBool)
+        private SyncedMatch(ISocket socket, ISession session, SyncedOpcodes opcodes, SyncedVarRegistration registration)
         {
-            var key = new VarKey(id, _session.UserId);
-            Register(key, userBool, _varStore.SharedBools, store => store.AddBool);
-        }
-
-        public void RegisterFloat(string id, SharedVar<float> userFloat)
-        {
-            var key = new VarKey(id, _session.UserId);
-            Register(key, userFloat, _varStore.SharedFloats, store => store.AddFloat);
-        }
-
-        public void RegisterInt(string id, SharedVar<int> userInt)
-        {
-            var key = new VarKey(id, _session.UserId);
-            Register(key, userInt, _varStore.SharedInts, store => store.AddInt);
-        }
-
-        public void RegisterString(string id, SharedVar<string> userString)
-        {
-            var key = new VarKey(id, _session.UserId);
-            Register(key, userString, _varStore.SharedStrings, store => store.AddString);
-        }
-
-        public void RegisterBool(string id, UserVar<bool> userBool)
-        {
-            var key = new VarKey(id, _session.UserId);
-            Register(key, userBool, _varStore.UserBools, store => store.AddBool);
-        }
-
-        public void RegisterFloat(string id, UserVar<float> userFloat)
-        {
-            var key = new VarKey(id, _session.UserId);
-            Register(key, userFloat, _varStore.UserFloats, store => store.AddFloat);
-        }
-
-        public void RegisterInt(string id, UserVar<int> userInt)
-        {
-            var key = new VarKey(id, _session.UserId);
-            Register(key, userInt, _varStore.UserInts, store => store.AddInt);
-        }
-
-        public void RegisterString(string id, UserVar<string> userString)
-        {
-            var key = new VarKey(id, _session.UserId);
-            Register(key, userString, _varStore.UserStrings, store => store.AddString);
-        }
-
-        private SyncedMatch(ISocket socket, ISession session, SyncedOpcodes opcodes)
-        {
-            _presenceTracker = new PresenceTracker(session.UserId, trackHost: true, hostHeuristic: PresenceTracker.HostHeuristic.OldestMember);
-            _session = session;
             _socket = socket;
             _opcodes = opcodes;
-            _guestHandler = new GuestHandler(_presenceTracker, _varStore, _varKeys);
-            _hostHandler = new HostHandler(_presenceTracker, _varStore, _varKeys);
+            _registration = registration;
             _socket.ReceivedMatchState += HandleReceivedMatchState;
-        }
-
-        private void Register<T>(VarKey key, SharedVar<T> var, IDictionary<VarKey, SharedVar<T>> varStore, Func<SyncVarValues, Action<SyncVarValue<T>>> getAddToQueue)
-        {
-            if (!_registeredVars.Add(var))
-            {
-                throw new ArgumentException("Tried registering the same shared var with a different id: " + key.SyncedId);
-            }
-
-            _varKeys.RegisterKey(key, var.KeyValidationStatus);
-            varStore[key] = var;
-            var.Self = _presenceTracker.GetSelf();
-            var.OnLocalValueChanged += (evt) => HandleVarChanged<T>(key, evt, getAddToQueue);
-        }
-
-        private void Register<T>(VarKey key, UserVar<T> var, IDictionary<VarKey, UserVar<T>> varStore, Func<SyncVarValues, Action<SyncVarValue<T>>> getAddToQueue)
-        {
-            if (!_registeredVars.Add(var))
-            {
-                throw new ArgumentException("Tried registering the same user var with a different id: " + key.SyncedId);
-            }
-
-            _varKeys.RegisterKey(key, var.KeyValidationStatus);
-            varStore[key] = var;
-            var.Self = _presenceTracker.GetSelf();
-            var.OnLocalValueChanged += (evt) => HandleVarChanged<T>(key, evt, getAddToQueue);
         }
 
         private void HandleGuestJoined(IUserPresence joinedGuest)
         {
-            var keysForValidation = _varKeys.GetKeys().ToList();
+            var keysForValidation = _registration.GetAllKeys();
             _socket.SendMatchStateAsync(
                 _match.Id,
                 _opcodes.HandshakeOpcode,
@@ -190,47 +108,38 @@ namespace NakamaSync
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, Encode(response), new IUserPresence[]{target});
         }
 
-        private void HandleReplicatedDataSend(IEnumerable<IUserPresence> targets, SyncVarValues values)
+        private void HandleDataSend(IEnumerable<IUserPresence> targets, SyncVarValues values)
         {
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, Encode(values), targets);
         }
-
         private void HandleReceivedMatchState(IMatchState matchState)
         {
             if (matchState.OpCode == _opcodes.DataOpcode)
             {
-                if (_presenceTracker.GetHost().UserId == _session.UserId)
+                SyncVarValues incomingStore = Decode<SyncVarValues>(matchState.State);
+
+                if (_presenceTracker.GetHost().UserId == _registration.Session.UserId)
                 {
-                    SyncVarValues incomingStore = JsonParser.FromJson<SyncVarValues>(System.Text.Encoding.UTF8.GetString(matchState.State));
-                    _hostHandler.HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
+                    _registration.HostHandler.HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
                 }
                 else
                 {
-                    SyncVarValues incomingStore = JsonParser.FromJson<SyncVarValues>(System.Text.Encoding.UTF8.GetString(matchState.State));
-                    _guestHandler.HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
+                    _registration.GuestHandler.HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
                 }
-
             }
             else if (matchState.OpCode == _opcodes.HandshakeOpcode)
             {
-                if (_presenceTracker.GetHost().UserId == _session.UserId)
+                if (_presenceTracker.GetHost().UserId == _registration.Session.UserId)
                 {
-                    string json = System.Text.Encoding.UTF8.GetString(matchState.State);
-                    var handshakeRequest = JsonParser.FromJson<HandshakeRequest>(json);
-                    _hostHandler.ReceivedHandshakeRequest(matchState.UserPresence, handshakeRequest);
+                    var handshakeRequest = Decode<HandshakeRequest>(matchState.State);
+                    _registration.HostHandler.ReceivedHandshakeRequest(matchState.UserPresence, handshakeRequest);
                 }
                 else
                 {
-                    string json = System.Text.Encoding.UTF8.GetString(matchState.State);
-                    var handshakeResponse = JsonParser.FromJson<HandshakeResponse>(json);
-                    _guestHandler.ReceivedHandshakeResponse(handshakeResponse);
+                    var handshakeResponse = Decode<HandshakeResponse>(matchState.State);
+                    _registration.GuestHandler.ReceivedHandshakeResponse(handshakeResponse);
                 }
             }
-        }
-
-        private byte[] Encode(object data)
-        {
-            return System.Text.Encoding.UTF8.GetBytes(data.ToJson());
         }
 
         private T Decode<T>(byte[] data)
@@ -238,27 +147,9 @@ namespace NakamaSync
             return Nakama.TinyJson.JsonParser.FromJson<T>(System.Text.Encoding.UTF8.GetString(data));
         }
 
-        private void HandleVarChanged<T>(VarKey key, IVarEvent<T> evt, Func<SyncVarValues, Action<SyncVarValue<T>>> getOutgoingQueue)
+        private byte[] Encode(object data)
         {
-            if (_varKeys.HasLockVersion(key))
-            {
-                _varKeys.IncrementLockVersion(key);
-            }
-            else
-            {
-                throw new KeyNotFoundException("Tried incrementing lock version for non-existent key: " + key);
-            }
-
-            if (_presenceTracker.IsSelfHost())
-            {
-                var handler = new HostHandler(_presenceTracker, _varStore, _varKeys);
-                handler.HandleLocalDataChanged<T>(key, evt.NewValue, getOutgoingQueue);
-            }
-            else
-            {
-                var handler = new GuestHandler(_presenceTracker, _varStore, _varKeys);
-                handler.HandleLocalDataChanged<T>(key, evt.NewValue, getOutgoingQueue);
-            }
+            return System.Text.Encoding.UTF8.GetBytes(data.ToJson());
         }
     }
 }

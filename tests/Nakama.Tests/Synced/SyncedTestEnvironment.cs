@@ -28,6 +28,7 @@ namespace Nakama.Tests
 
         public IUserPresence Host => _matches[HostIndex].Self;
         public int HostIndex { get; }
+        public List<SyncedMatch> Matches => _matches;
         public int NumClients { get; }
         public int NumTestVars { get; }
         public SyncedOpcodes Opcodes { get; }
@@ -36,10 +37,14 @@ namespace Nakama.Tests
         private readonly List<SyncedMatch> _matches = new List<SyncedMatch>();
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
-        private readonly Dictionary<string, SyncedTestUserEnvironment> _userEnvs = new Dictionary<string, SyncedTestUserEnvironment>();
+        private Dictionary<string, SyncedTestUserEnvironment> _userEnvs;
         private readonly Random _randomGuest = new Random(_RAND_GUEST_SEED);
 
-        public SyncedTestEnvironment(SyncedOpcodes opcodes, int numClients, int numTestVars, int hostIndex)
+        public SyncedTestEnvironment(
+            SyncedOpcodes opcodes,
+            int numClients,
+            int numTestVars,
+            int hostIndex)
         {
             Opcodes = opcodes;
             NumClients = numClients;
@@ -51,9 +56,19 @@ namespace Nakama.Tests
             _sessions.AddRange(CreateSessions(_clients));
             ConnectSockets(_sockets, _sessions);
             _matches.AddRange(CreateMatches(_sockets, _sessions));
-            _userEnvs = CreateTestEnvs(_matches, _sessions, numTestVars);
         }
 
+        public void Dispose()
+        {
+            var closeTasks = new List<Task>();
+
+            foreach (ISocket socket in _sockets)
+            {
+                closeTasks.Add(socket.CloseAsync());
+            }
+
+            Task.WaitAll(closeTasks.ToArray());
+        }
 
         public SyncedTestUserEnvironment GetHostEnv()
         {
@@ -72,23 +87,6 @@ namespace Nakama.Tests
             return _userEnvs[clientPresence.UserId];
         }
 
-        private List<IUserPresence> GetGuests()
-        {
-            var guests = new List<IUserPresence>();
-
-            for (int i = 0; i < _matches.Count; i++)
-            {
-                if (i == HostIndex)
-                {
-                    continue;
-                }
-
-                guests.Add(_matches[i].Self);
-            }
-
-            return guests;
-        }
-
         private IEnumerable<IClient> CreateClients()
         {
             var clients = new List<IClient>();
@@ -100,11 +98,12 @@ namespace Nakama.Tests
 
             return clients;
         }
-
         private IEnumerable<SyncedMatch> CreateMatches(List<ISocket> sockets, List<ISession> sessions)
         {
             var matchTasks = new List<Task<SyncedMatch>>();
-            matchTasks.Add(sockets[HostIndex].CreateSyncedMatch(_sessions[HostIndex], new SyncedOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode)));
+            matchTasks.Add(sockets[HostIndex].CreateSyncedMatch(
+                _sessions[HostIndex], new SyncedOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode), new SyncedVarRegistration(_sessions[HostIndex])));
+
             Task.WaitAll(matchTasks.ToArray());
 
             for (int i = 0; i < NumClients; i++)
@@ -114,7 +113,11 @@ namespace Nakama.Tests
                     continue;
                 }
 
-                matchTasks.Add(_sockets[i].JoinSyncedMatch(_sessions[i], matchTasks[0].Result.Id, new SyncedOpcodes(Opcodes.DataOpcode, Opcodes.HandshakeOpcode)));
+                matchTasks.Add(_sockets[i].JoinSyncedMatch(
+                    _sessions[i],
+                    matchTasks[0].Result.Id,
+                    new SyncedOpcodes(Opcodes.DataOpcode,
+                    Opcodes.HandshakeOpcode), new SyncedVarRegistration(_sessions[i])));
             }
 
             Task.WaitAll(matchTasks.ToArray());
@@ -135,6 +138,19 @@ namespace Nakama.Tests
             return sockets;
         }
 
+        private void ConnectSockets(List<ISocket> sockets, List<ISession> sessions)
+        {
+            var connectTasks = new List<Task>();
+
+            for (int i = 0; i < NumClients; i++)
+            {
+                ISocket socket = sockets[i];
+                connectTasks.Add(socket.ConnectAsync(sessions[i]));
+            }
+
+            Task.WaitAll(connectTasks.ToArray());
+        }
+
         private IEnumerable<ISession> CreateSessions(IEnumerable<IClient> clients)
         {
             var authTasks = new List<Task<ISession>>();
@@ -149,43 +165,21 @@ namespace Nakama.Tests
             return authTasks.Select(task => task.Result);
         }
 
-        private void ConnectSockets(List<ISocket> sockets, List<ISession> sessions)
+        private List<IUserPresence> GetGuests()
         {
-            var connectTasks = new List<Task>();
+            var guests = new List<IUserPresence>();
 
-            for (int i = 0; i < NumClients; i++)
+            for (int i = 0; i < _matches.Count; i++)
             {
-                ISocket socket = sockets[i];
-                connectTasks.Add(socket.ConnectAsync(sessions[i]));
+                if (i == HostIndex)
+                {
+                    continue;
+                }
+
+                guests.Add(_matches[i].Self);
             }
 
-            Task.WaitAll(connectTasks.ToArray());
-        }
-
-        private Dictionary<string, SyncedTestUserEnvironment> CreateTestEnvs(List<SyncedMatch> matches, List<ISession> sessions, int numTestVars)
-        {
-            var testEnvs = new Dictionary<string, SyncedTestUserEnvironment>();
-
-            for (int i = 0; i < matches.Count; i++)
-            {
-                IUserPresence presence = matches[i].Self;
-                var newEnv = new SyncedTestUserEnvironment(matches[i], numTestVars);
-                testEnvs.Add(presence.UserId, newEnv);
-            }
-
-            return testEnvs;
-        }
-
-        public void Dispose()
-        {
-            var closeTasks = new List<Task>();
-
-            foreach (ISocket socket in _sockets)
-            {
-                closeTasks.Add(socket.CloseAsync());
-            }
-
-            Task.WaitAll(closeTasks.ToArray());
+            return guests;
         }
     }
 }

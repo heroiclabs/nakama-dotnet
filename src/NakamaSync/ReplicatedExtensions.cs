@@ -22,14 +22,16 @@ namespace NakamaSync
     public static class ReplicatedExtensions
     {
         // todo don't require session as a parameter here since we pass it to socket.
-        public async static Task<SyncedMatch> CreateSyncedMatch(this ISocket socket, ISession session, SyncedOpcodes opcodes)
+        public async static Task<SyncedMatch> CreateSyncedMatch(
+            this ISocket socket, ISession session, SyncedOpcodes opcodes, SyncedVarRegistration registration)
         {
-            return await SyncedMatch.Create(socket, session, opcodes);
+            return await SyncedMatch.Create(socket, session, opcodes, new SyncedVarRegistration(session));
         }
 
-        public async static Task<SyncedMatch> JoinSyncedMatch(this ISocket socket, ISession session, string matchId, SyncedOpcodes opcodes)
+        public async static Task<SyncedMatch> JoinSyncedMatch(
+            this ISocket socket, ISession session, string matchId, SyncedOpcodes opcodes, SyncedVarRegistration registration)
         {
-            return await SyncedMatch.Join(socket, session, opcodes, matchId);
+            return await SyncedMatch.Join(socket, session, opcodes, matchId, registration);
 ;        }
     }
 }

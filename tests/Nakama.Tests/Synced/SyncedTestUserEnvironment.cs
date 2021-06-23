@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using NakamaSync;
 
 namespace Nakama.Tests
 {
+    public delegate SyncedTestUserEnvironment UserEnvFactory();
+
     public class SyncedTestUserEnvironment
     {
         public List<SharedVar<bool>> SharedBools { get; }
@@ -32,7 +33,7 @@ namespace Nakama.Tests
         public List<UserVar<int>> UserInts { get; }
         public List<UserVar<string>> UserStrings { get; }
 
-        public SyncedTestUserEnvironment(SyncedMatch match, int numTestVars)
+        private SyncedTestUserEnvironment(SyncedVarRegistration registration, int numTestVars)
         {
             SharedBools = new List<SharedVar<bool>>();
             SharedFloats = new List<SharedVar<float>>();
@@ -46,35 +47,35 @@ namespace Nakama.Tests
             for (int i = 0; i < numTestVars; i++)
             {
                 var newSharedBool = new SharedVar<bool>();
-                match.RegisterBool(nameof(newSharedBool) + i, newSharedBool);
+                registration.RegisterBool(nameof(newSharedBool) + i, newSharedBool);
                 SharedBools.Add(newSharedBool);
 
                 var newSharedFloat = new SharedVar<float>();
-                match.RegisterFloat(nameof(newSharedFloat) + i, newSharedFloat);
+                registration.RegisterFloat(nameof(newSharedFloat) + i, newSharedFloat);
                 SharedFloats.Add(newSharedFloat);
 
                 var newSharedInt = new SharedVar<int>();
-                match.RegisterInt(nameof(newSharedInt) + i, newSharedInt);
+                registration.RegisterInt(nameof(newSharedInt) + i, newSharedInt);
                 SharedInts.Add(newSharedInt);
 
                 var newSharedString = new SharedVar<string>();
-                match.RegisterString(nameof(newSharedString) + i, newSharedString);
+                registration.RegisterString(nameof(newSharedString) + i, newSharedString);
                 SharedStrings.Add(newSharedString);
 
                 var newUserBool = new UserVar<bool>();
-                match.RegisterBool(nameof(newUserBool) + i, newUserBool);
+                registration.RegisterBool(nameof(newUserBool) + i, newUserBool);
                 UserBools.Add(newUserBool);
 
                 var newUserFloat = new UserVar<float>();
-                match.RegisterFloat(nameof(newUserFloat) + i, newUserFloat);
+                registration.RegisterFloat(nameof(newUserFloat) + i, newUserFloat);
                 UserFloats.Add(newUserFloat);
 
                 var newUserInt = new UserVar<int>();
-                match.RegisterInt(nameof(newUserInt) + i, newUserInt);
+                registration.RegisterInt(nameof(newUserInt) + i, newUserInt);
                 UserInts.Add(newUserInt);
 
                 var newUserString = new UserVar<string>();
-                match.RegisterString(nameof(newUserString) + i, newUserString);
+                registration.RegisterString(nameof(newUserString) + i, newUserString);
                 UserStrings.Add(newUserString);
             }
         }

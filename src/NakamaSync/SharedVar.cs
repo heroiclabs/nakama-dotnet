@@ -35,20 +35,13 @@ namespace NakamaSync
         internal Action<ISharedVarEvent<T>> OnLocalValueChanged;
         public KeyValidationStatus KeyValidationStatus => _validationStatus;
 
-        internal IUserPresence Self
-        {
-            get;
-            set;
-        }
-
         private KeyValidationStatus _validationStatus;
         private T _value;
         private readonly object _valueLock = new object();
 
-
         public void SetValue(T value)
         {
-            SetValue(value, Self, _validationStatus, OnLocalValueChanged);
+            SetValue(value, _validationStatus, OnLocalValueChanged);
         }
 
         public T GetValue()
@@ -59,7 +52,7 @@ namespace NakamaSync
             }
         }
 
-        internal void SetValue(T value, IUserPresence presence, KeyValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
+        internal void SetValue(T value, KeyValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
         {
             lock (_valueLock)
             {
@@ -72,7 +65,7 @@ namespace NakamaSync
 
                 _value = value;
                 _validationStatus = validationStatus;
-                eventDispatch?.Invoke(new SharedVarEvent<T>(presence, oldValue, value));
+                eventDispatch?.Invoke(new SharedVarEvent<T>(oldValue, value));
             }
         }
 
