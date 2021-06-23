@@ -19,7 +19,7 @@ using NakamaSync;
 
 namespace Nakama.Tests
 {
-    public delegate SyncedTestUserEnvironment UserEnvFactory();
+    public delegate string VarIdGenerator(string userId, string varName, int varIndex);
 
     public class SyncedTestUserEnvironment
     {
@@ -33,8 +33,10 @@ namespace Nakama.Tests
         public List<UserVar<int>> UserInts { get; }
         public List<UserVar<string>> UserStrings { get; }
 
-        private SyncedTestUserEnvironment(SyncedVarRegistration registration, int numTestVars)
+        public SyncedTestUserEnvironment(ISession session, IUserPresence presence, int numTestVars, VarIdGenerator keyGenerator)
         {
+            var registration = new SyncedVarRegistration(session);
+
             SharedBools = new List<SharedVar<bool>>();
             SharedFloats = new List<SharedVar<float>>();
             SharedInts = new List<SharedVar<int>>();
@@ -47,37 +49,42 @@ namespace Nakama.Tests
             for (int i = 0; i < numTestVars; i++)
             {
                 var newSharedBool = new SharedVar<bool>();
-                registration.RegisterBool(nameof(newSharedBool) + i, newSharedBool);
+                registration.RegisterBool(keyGenerator(presence.UserId, nameof(newSharedBool), i), newSharedBool);
                 SharedBools.Add(newSharedBool);
 
                 var newSharedFloat = new SharedVar<float>();
-                registration.RegisterFloat(nameof(newSharedFloat) + i, newSharedFloat);
+                registration.RegisterFloat(keyGenerator(presence.UserId, nameof(newSharedFloat), i), newSharedFloat);
                 SharedFloats.Add(newSharedFloat);
 
                 var newSharedInt = new SharedVar<int>();
-                registration.RegisterInt(nameof(newSharedInt) + i, newSharedInt);
+                registration.RegisterInt(keyGenerator(presence.UserId, nameof(newSharedInt), i), newSharedInt);
                 SharedInts.Add(newSharedInt);
 
                 var newSharedString = new SharedVar<string>();
-                registration.RegisterString(nameof(newSharedString) + i, newSharedString);
+                registration.RegisterString(keyGenerator(presence.UserId, nameof(newSharedString), i), newSharedString);
                 SharedStrings.Add(newSharedString);
 
                 var newUserBool = new UserVar<bool>();
-                registration.RegisterBool(nameof(newUserBool) + i, newUserBool);
+                registration.RegisterBool(keyGenerator(presence.UserId, nameof(newUserBool), i), newUserBool);
                 UserBools.Add(newUserBool);
 
                 var newUserFloat = new UserVar<float>();
-                registration.RegisterFloat(nameof(newUserFloat) + i, newUserFloat);
+                registration.RegisterFloat(keyGenerator(presence.UserId, nameof(newUserFloat), i), newUserFloat);
                 UserFloats.Add(newUserFloat);
 
                 var newUserInt = new UserVar<int>();
-                registration.RegisterInt(nameof(newUserInt) + i, newUserInt);
+                registration.RegisterInt(keyGenerator(presence.UserId, nameof(newUserInt), i), newUserInt);
                 UserInts.Add(newUserInt);
 
                 var newUserString = new UserVar<string>();
-                registration.RegisterString(nameof(newUserString) + i, newUserString);
+                registration.RegisterString(keyGenerator(presence.UserId, nameof(newUserString), i), newUserString);
                 UserStrings.Add(newUserString);
             }
+        }
+
+        public static string DefaultVarIdGenerator(string userId, string varName, int varIndex)
+        {
+            return varName + varIndex.ToString();
         }
     }
 }

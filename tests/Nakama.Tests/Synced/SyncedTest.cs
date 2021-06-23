@@ -25,7 +25,9 @@ namespace Nakama.Tests.Socket
         private void SharedVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
-            SyncedTestUserEnvironment hostEnv = testEnv.GetUserEnv(testEnv.Host);
+            testEnv.StartMatch();
+
+            SyncedTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.SharedBools[0].SetValue(true);
             Assert.True(hostEnv.SharedBools[0].GetValue());
             testEnv.Dispose();
@@ -35,20 +37,32 @@ namespace Nakama.Tests.Socket
         private void UserVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
+            testEnv.StartMatch();
+
             SyncedTestUserEnvironment hostEnv = testEnv.GetHostEnv();
-            hostEnv.UserBools[0].SetValue(true, testEnv.Host);
-            Assert.True(hostEnv.UserBools[0].GetValue(testEnv.Host));
+            hostEnv.UserBools[0].SetValue(true, testEnv.GetHostPresence());
+            Assert.True(hostEnv.UserBools[0].GetValue(testEnv.GetHostPresence()));
             testEnv.Dispose();
         }
 
         [Fact]
         private void BadHandshakeShouldFail()
         {
+            VarIdGenerator idGenerator = (string userId, string varName, int varId) => {
+
+                // create "mismatched" keys, i.e., keys with different ids for each client, to
+                // simulate clients using different app binaries.
+                return userId + varName + varId.ToString();
+            };
+
             var mismatchedEnv = new SyncedTestEnvironment(
                 new SyncedOpcodes(handshakeOpcode: 0, dataOpcode: 1),
                 numClients: 5,
                 numTestVars: 1,
-                hostIndex: 0);
+                hostIndex: 0,
+                idGenerator);
+
+            mismatchedEnv.StartMatch();
 
             mismatchedEnv.Dispose();
         }
@@ -57,11 +71,14 @@ namespace Nakama.Tests.Socket
         private void SharedVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
+            testEnv.StartMatch();
+
             SyncedTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.SharedBools[0].SetValue(true);
 
             SyncedTestUserEnvironment guestEnv = testEnv.GetRandomGuestEnv();
             Assert.True(guestEnv.SharedBools[0].GetValue());
+
             testEnv.Dispose();
         }
 

@@ -15,7 +15,6 @@
 */
 
 using System;
-using Nakama;
 
 namespace NakamaSync
 {
@@ -52,6 +51,19 @@ namespace NakamaSync
             }
         }
 
+        // todo this should not be public!
+        public void Reset()
+        {
+            lock (_valueLock)
+            {
+                _value = default(T);
+            }
+
+            OnHostValidate = null;
+            OnLocalValueChanged = null;
+            OnRemoteValueChanged = null;
+        }
+
         internal void SetValue(T value, KeyValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
         {
             lock (_valueLock)
@@ -67,19 +79,6 @@ namespace NakamaSync
                 _validationStatus = validationStatus;
                 eventDispatch?.Invoke(new SharedVarEvent<T>(oldValue, value));
             }
-        }
-
-        // todo this should not be public!
-        public void Reset()
-        {
-            lock (_valueLock)
-            {
-                _value = default(T);
-            }
-
-            OnHostValidate = null;
-            OnLocalValueChanged = null;
-            OnRemoteValueChanged = null;
         }
     }
 }

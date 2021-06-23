@@ -26,7 +26,6 @@ namespace Nakama.Tests
     {
         private const int _RAND_GUEST_SEED = 1;
 
-        public IUserPresence Host => _matches[HostIndex].Self;
         public int HostIndex { get; }
         public List<SyncedMatch> Matches => _matches;
         public int NumClients { get; }
@@ -44,7 +43,8 @@ namespace Nakama.Tests
             SyncedOpcodes opcodes,
             int numClients,
             int numTestVars,
-            int hostIndex)
+            int hostIndex,
+            VarIdGenerator idGenerator = null)
         {
             Opcodes = opcodes;
             NumClients = numClients;
@@ -55,7 +55,21 @@ namespace Nakama.Tests
             _sockets.AddRange(CreateSockets(_clients));
             _sessions.AddRange(CreateSessions(_clients));
             ConnectSockets(_sockets, _sessions);
-            _matches.AddRange(CreateMatches(_sockets, _sessions));
+            _userEnvs = CreateUserEnvs(_matches.Select(m => m.Self).ToList(), _sessions, idGenerator ?? SyncedTestUserEnvironment.DefaultVarIdGenerator);
+        }
+
+        private Dictionary<string, SyncedTestUserEnvironment> CreateUserEnvs(List<IUserPresence> presences, List<ISession> sessions, VarIdGenerator generator)
+        {
+            var envs = new Dictionary<string, SyncedTestUserEnvironment>();
+
+            for (int i = 0; i < presences.Count; i++)
+            {
+                ISession session = sessions[i];
+                IUserPresence presence = presences[i];
+                envs[presence.UserId] = new SyncedTestUserEnvironment(session, presence, NumTestVars, generator);
+            }
+
+            return envs;
         }
 
         public void Dispose()
@@ -72,7 +86,12 @@ namespace Nakama.Tests
 
         public SyncedTestUserEnvironment GetHostEnv()
         {
-            return _userEnvs[_matches[HostIndex].Self.UserId];
+            return _userEnvs[GetHostPresence().UserId];
+        }
+
+        public IUserPresence GetHostPresence()
+        {
+            return _matches[HostIndex].Self;
         }
 
         public SyncedTestUserEnvironment GetRandomGuestEnv()
@@ -87,21 +106,16 @@ namespace Nakama.Tests
             return _userEnvs[clientPresence.UserId];
         }
 
-        private IEnumerable<IClient> CreateClients()
+        // todo make awaitable?
+        public void StartMatch()
         {
-            var clients = new List<IClient>();
-
-            for (int i = 0; i < NumClients; i++)
+            if (_matches.Any())
             {
-                clients.Add(TestsUtil.FromSettingsFile());
+                throw new InvalidOperationException("Already started matches.");
             }
 
-            return clients;
-        }
-        private IEnumerable<SyncedMatch> CreateMatches(List<ISocket> sockets, List<ISession> sessions)
-        {
             var matchTasks = new List<Task<SyncedMatch>>();
-            matchTasks.Add(sockets[HostIndex].CreateSyncedMatch(
+            matchTasks.Add(_sockets[HostIndex].CreateSyncedMatch(
                 _sessions[HostIndex], new SyncedOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode), new SyncedVarRegistration(_sessions[HostIndex])));
 
             Task.WaitAll(matchTasks.ToArray());
@@ -121,8 +135,19 @@ namespace Nakama.Tests
             }
 
             Task.WaitAll(matchTasks.ToArray());
+            _matches.AddRange(matchTasks.Select(task => task.Result));
+        }
 
-            return matchTasks.Select(task => task.Result);
+        private IEnumerable<IClient> CreateClients()
+        {
+            var clients = new List<IClient>();
+
+            for (int i = 0; i < NumClients; i++)
+            {
+                clients.Add(TestsUtil.FromSettingsFile());
+            }
+
+            return clients;
         }
 
         private IEnumerable<ISocket> CreateSockets(List<IClient> clients)

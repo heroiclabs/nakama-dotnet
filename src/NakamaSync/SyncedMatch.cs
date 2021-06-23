@@ -58,15 +58,14 @@ namespace NakamaSync
 
         private IMatch _match;
         private readonly SyncedOpcodes _opcodes;
-        private readonly PresenceTracker _presenceTracker;
         private readonly SyncedVarRegistration _registration;
         private readonly ISocket _socket;
 
         internal static async Task<SyncedMatch> Create(ISocket socket, ISession session, SyncedOpcodes opcodes, SyncedVarRegistration registration)
         {
             var newMatch = new SyncedMatch(socket, session, opcodes, registration);
-            socket.ReceivedMatchPresence += newMatch._presenceTracker.HandlePresenceEvent;
-            newMatch._presenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
+            socket.ReceivedMatchPresence += newMatch._registration.PresenceTracker.HandlePresenceEvent;
+            newMatch._registration.PresenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
             newMatch._match = await socket.CreateMatchAsync();
             return newMatch;
         }
@@ -74,8 +73,8 @@ namespace NakamaSync
         internal static async Task<SyncedMatch> Join(ISocket socket, ISession session, SyncedOpcodes opcodes, string matchId, SyncedVarRegistration registration)
         {
             var newMatch = new SyncedMatch(socket, session, opcodes, registration);
-            socket.ReceivedMatchPresence += newMatch._presenceTracker.HandlePresenceEvent;
-            newMatch._presenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
+            socket.ReceivedMatchPresence += newMatch._registration.PresenceTracker.HandlePresenceEvent;
+            newMatch._registration.PresenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
             newMatch._match = await socket.JoinMatchAsync(matchId);
             return newMatch;
         }
@@ -95,12 +94,12 @@ namespace NakamaSync
                 _match.Id,
                 _opcodes.HandshakeOpcode,
                 Encode(new HandshakeRequest(keysForValidation)),
-                new IUserPresence[]{_presenceTracker.GetHost()});
+                new IUserPresence[]{_registration.PresenceTracker.GetHost()});
         }
 
         private void HandleHandshakeRequestSend(HandshakeRequest request)
         {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, Encode(request), new IUserPresence[]{_presenceTracker.GetHost()});
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, Encode(request), new IUserPresence[]{_registration.PresenceTracker.GetHost()});
         }
 
         private void HandleHandshakeResponseSend(IUserPresence target, HandshakeResponse response)
@@ -112,13 +111,14 @@ namespace NakamaSync
         {
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, Encode(values), targets);
         }
+
         private void HandleReceivedMatchState(IMatchState matchState)
         {
             if (matchState.OpCode == _opcodes.DataOpcode)
             {
                 SyncVarValues incomingStore = Decode<SyncVarValues>(matchState.State);
 
-                if (_presenceTracker.GetHost().UserId == _registration.Session.UserId)
+                if (_registration.PresenceTracker.GetHost().UserId == _registration.Session.UserId)
                 {
                     _registration.HostHandler.HandleRemoteDataChanged(matchState.UserPresence, incomingStore);
                 }
@@ -129,7 +129,7 @@ namespace NakamaSync
             }
             else if (matchState.OpCode == _opcodes.HandshakeOpcode)
             {
-                if (_presenceTracker.GetHost().UserId == _registration.Session.UserId)
+                if (_registration.PresenceTracker.GetHost().UserId == _registration.Session.UserId)
                 {
                     var handshakeRequest = Decode<HandshakeRequest>(matchState.State);
                     _registration.HostHandler.ReceivedHandshakeRequest(matchState.UserPresence, handshakeRequest);
