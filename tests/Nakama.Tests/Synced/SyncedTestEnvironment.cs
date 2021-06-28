@@ -131,7 +131,6 @@ namespace Nakama.Tests
                 var registration = _registrations[i];
                 var socket = _sockets[i];
                 var matchTask = socket.JoinSyncedMatch(matchTasks[HostIndex].Result.Id, opcodes, registration);
-
                 matchTasks.Insert(i, matchTask);
             }
 

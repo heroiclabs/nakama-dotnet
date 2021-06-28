@@ -67,6 +67,7 @@ namespace NakamaSync
             socket.ReceivedMatchPresence += newMatch._registration.PresenceTracker.HandlePresenceEvent;
             newMatch._registration.PresenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
             newMatch._match = await socket.CreateMatchAsync();
+            newMatch._registration.PresenceTracker.HandleMatch(newMatch);
             return newMatch;
         }
 
@@ -76,6 +77,7 @@ namespace NakamaSync
             socket.ReceivedMatchPresence += newMatch._registration.PresenceTracker.HandlePresenceEvent;
             newMatch._registration.PresenceTracker.OnGuestJoined += newMatch.HandleGuestJoined;
             newMatch._match = await socket.JoinMatchAsync(matchId);
+            newMatch._registration.PresenceTracker.HandleMatch(newMatch);
             return newMatch;
         }
 
@@ -89,6 +91,7 @@ namespace NakamaSync
 
         private void HandleGuestJoined(IUserPresence joinedGuest)
         {
+            System.Console.WriteLine("handle guest joined called");
             var keysForValidation = _registration.GetAllKeys();
             _socket.SendMatchStateAsync(
                 _match.Id,

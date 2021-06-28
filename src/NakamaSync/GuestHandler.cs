@@ -48,7 +48,7 @@ namespace NakamaSync
             }
             else
             {
-                throw new Exception("Host rejected client due to mismatched app binaries.");
+                throw new InvalidOperationException("Host rejected client due to mismatched app binaries.");
             }
         }
 

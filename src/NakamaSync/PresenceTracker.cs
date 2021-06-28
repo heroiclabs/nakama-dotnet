@@ -67,36 +67,68 @@ namespace NakamaSync
             }
         }
 
+        public void HandleMatch(IMatch match)
+        {
+            lock (_presenceLock)
+            {
+                HandlePresences(match.Presences, new IUserPresence[]{});
+            }
+        }
+
         public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
+        {
+            HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
+        }
+
+        private void HandlePresences(IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
         {
             lock (_presenceLock)
             {
                 var oldPresences = _presences;
-                var newPresences = GetNewPresences(_presences, presenceEvent);
+                var newPresences = GetNewPresences(_presences, joiners, leavers);
                 _presences = newPresences;
 
                 var oldHost = GetHost();
                 var newHost = GetHost(newPresences);
 
-                foreach (var leaver in presenceEvent.Leaves)
-                {
-                    if (leaver.UserId != oldHost?.UserId)
-                    {
-                        OnGuestLeft?.Invoke(leaver);
-                    }
-                }
+                HandleJoiners(joiners, newHost);
+                HandleLeavers(leavers, oldHost);
 
-                foreach (var joiner in presenceEvent.Joins)
-                {
-                    if (joiner.UserId != newHost?.UserId)
-                    {
-                        OnGuestJoined?.Invoke(joiner);
-                    }
-                }
+                System.Console.WriteLine("user is " + _userId + "...");
+
+                System.Console.WriteLine("new host is " + _userId);
+
+
+                System.Console.WriteLine("dispatching on host changed");
 
                 if (oldHost != newHost)
                 {
                     OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
+                }
+            }
+        }
+
+        private void HandleJoiners(IEnumerable<IUserPresence> joiners, IUserPresence newHost)
+        {
+            foreach (var joiner in joiners)
+            {
+                System.Console.WriteLine("joiner is " + joiner.UserId + " , " + newHost.UserId);
+
+                if (joiner.UserId != newHost?.UserId)
+                {
+                    System.Console.WriteLine("dispatching on guest joined");
+                    OnGuestJoined?.Invoke(joiner);
+                }
+            }
+        }
+
+        private void HandleLeavers(IEnumerable<IUserPresence> leavers, IUserPresence oldhost)
+        {
+            foreach (var leaver in leavers)
+            {
+                if (leaver.UserId != oldhost?.UserId)
+                {
+                    OnGuestLeft?.Invoke(leaver);
                 }
             }
         }
@@ -118,13 +150,13 @@ namespace NakamaSync
         }
 
         private SortedList<string, IUserPresence> GetNewPresences(
-            SortedList<string, IUserPresence> oldPresences, IMatchPresenceEvent presenceEvent)
+            SortedList<string, IUserPresence> oldPresences, IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
         {
             lock (_presenceLock)
             {
                 var newPresences = new SortedList<string, IUserPresence>(oldPresences);
 
-                foreach (IUserPresence leaver in presenceEvent.Leaves)
+                foreach (IUserPresence leaver in leavers)
                 {
                     if (newPresences.ContainsKey(leaver.UserId))
                     {
@@ -136,7 +168,7 @@ namespace NakamaSync
                     }
                 }
 
-                foreach (IUserPresence joiner in presenceEvent.Joins)
+                foreach (IUserPresence joiner in joiners)
                 {
                     if (newPresences.ContainsKey(joiner.UserId))
                     {

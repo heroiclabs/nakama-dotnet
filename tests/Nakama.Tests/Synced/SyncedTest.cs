@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Threading.Tasks;
 using NakamaSync;
 using Xunit;
@@ -56,12 +57,12 @@ namespace Nakama.Tests.Socket
 
             var mismatchedEnv = new SyncedTestEnvironment(
                 new SyncedOpcodes(handshakeOpcode: 0, dataOpcode: 1),
-                numClients: 5,
+                numClients: 2,
                 numTestVars: 1,
                 hostIndex: 0,
                 idGenerator);
 
-            await mismatchedEnv.StartMatch();
+            await Assert.ThrowsAsync<InvalidOperationException>(() => mismatchedEnv.StartMatch());
 
             mismatchedEnv.Dispose();
         }
