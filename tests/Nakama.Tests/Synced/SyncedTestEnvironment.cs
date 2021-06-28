@@ -105,8 +105,7 @@ namespace Nakama.Tests
             return _userEnvs[clientPresence.UserId];
         }
 
-        // todo make awaitable?
-        public void StartMatch()
+        public async Task StartMatch()
         {
             if (_matches.Any())
             {
@@ -132,7 +131,7 @@ namespace Nakama.Tests
                     opcodes, new SyncedVarRegistration(_sessions[i])));
             }
 
-            Task.WaitAll(matchTasks.ToArray());
+            await Task.WhenAll(matchTasks.ToArray());
             _matches.AddRange(matchTasks.Select(task => task.Result));
         }
 

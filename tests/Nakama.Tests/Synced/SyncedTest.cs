@@ -22,11 +22,10 @@ namespace Nakama.Tests.Socket
     public class WebSocketSyncedTest
     {
         [Fact]
-        private void SharedVarShouldRetainData()
+        private async void SharedVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
-            testEnv.StartMatch();
-
+            await testEnv.StartMatch();
             SyncedTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.SharedBools[0].SetValue(true);
             Assert.True(hostEnv.SharedBools[0].GetValue());
@@ -34,11 +33,10 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact]
-        private void UserVarShouldRetainData()
+        private async void UserVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
-            testEnv.StartMatch();
-
+            await testEnv.StartMatch();
             SyncedTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.UserBools[0].SetValue(true, testEnv.GetHostPresence());
             Assert.True(hostEnv.UserBools[0].GetValue(testEnv.GetHostPresence()));
@@ -46,7 +44,7 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact]
-        private void BadHandshakeShouldFail()
+        private async void BadHandshakeShouldFail()
         {
             VarIdGenerator idGenerator = (string userId, string varName, int varId) => {
 
@@ -62,16 +60,16 @@ namespace Nakama.Tests.Socket
                 hostIndex: 0,
                 idGenerator);
 
-            mismatchedEnv.StartMatch();
+            await mismatchedEnv.StartMatch();
 
             mismatchedEnv.Dispose();
         }
 
         [Fact]
-        private void SharedVarShouldSyncData()
+        private async void SharedVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
-            testEnv.StartMatch();
+            await testEnv.StartMatch();
 
             SyncedTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.SharedBools[0].SetValue(true);
