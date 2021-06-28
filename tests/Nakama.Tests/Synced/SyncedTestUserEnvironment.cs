@@ -39,6 +39,7 @@ namespace Nakama.Tests
             SharedFloats = new List<SharedVar<float>>();
             SharedInts = new List<SharedVar<int>>();
             SharedStrings = new List<SharedVar<string>>();
+
             UserBools = new List<UserVar<bool>>();
             UserFloats = new List<UserVar<float>>();
             UserInts = new List<UserVar<int>>();

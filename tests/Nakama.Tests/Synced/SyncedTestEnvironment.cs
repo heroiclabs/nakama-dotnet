@@ -128,9 +128,11 @@ namespace Nakama.Tests
                     continue;
                 }
 
-                matchTasks[i] = _sockets[i].JoinSyncedMatch(
-                    matchTasks[i].Result.Id,
-                    opcodes, _registrations[i]);
+                var registration = _registrations[i];
+                var socket = _sockets[i];
+                var matchTask = socket.JoinSyncedMatch(matchTasks[HostIndex].Result.Id, opcodes, registration);
+
+                matchTasks.Insert(i, matchTask);
             }
 
             await Task.WhenAll(matchTasks.ToArray());
