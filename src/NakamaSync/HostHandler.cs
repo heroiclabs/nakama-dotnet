@@ -106,11 +106,6 @@ namespace NakamaSync
             OnReplicatedDataSend(_guests.Select(kvp => kvp.Value), _valuesToAll);
         }
 
-        private SyncVarValue<T> UserVarToValue<T>(KeyValuePair<VarKey, UserVar<T>> kvp)
-        {
-            return new SyncVarValue<T>(kvp.Key, kvp.Value.GetValue(Presence), _varKeys.GetLockVersion(kvp.Key), kvp.Value.KeyValidationStatus, Presence);
-        }
-
         public void HandleLocalDataChanged<T>(VarKey key, T newValue, Func<SyncVarValues, Action<SyncVarValue<T>>> getAddToQueue)
         {
             var status = _varKeys.GetValidationStatus(key);
@@ -184,6 +179,11 @@ namespace NakamaSync
                     localType.SetValue(remoteValue, target, source, KeyValidationStatus.None, localType.OnRemoteValueChanged);
                 break;
             }
+        }
+
+        private SyncVarValue<T> UserVarToValue<T>(KeyValuePair<VarKey, UserVar<T>> kvp)
+        {
+            return new SyncVarValue<T>(kvp.Key, kvp.Value.GetValue(Presence), _varKeys.GetLockVersion(kvp.Key), kvp.Value.KeyValidationStatus, Presence);
         }
     }
 }

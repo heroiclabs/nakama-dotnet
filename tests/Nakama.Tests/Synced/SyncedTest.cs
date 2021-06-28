@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Threading.Tasks;
 using NakamaSync;
 using Xunit;
 
@@ -21,8 +22,8 @@ namespace Nakama.Tests.Socket
 {
     public class WebSocketSyncedTest
     {
-        [Fact]
-        private async void SharedVarShouldRetainData()
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch();
@@ -32,8 +33,8 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-        [Fact]
-        private async void UserVarShouldRetainData()
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task UserVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch();
@@ -43,8 +44,8 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-        [Fact]
-        private async void BadHandshakeShouldFail()
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task BadHandshakeShouldFail()
         {
             VarIdGenerator idGenerator = (string userId, string varName, int varId) => {
 
@@ -65,8 +66,8 @@ namespace Nakama.Tests.Socket
             mismatchedEnv.Dispose();
         }
 
-        [Fact]
-        private async void SharedVarShouldSyncData()
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch();
@@ -84,7 +85,7 @@ namespace Nakama.Tests.Socket
         {
             return new SyncedTestEnvironment(
                 new SyncedOpcodes(handshakeOpcode: 0, dataOpcode: 1),
-                numClients: 5,
+                numClients: 1,
                 numTestVars: 1,
                 hostIndex: 0);
         }

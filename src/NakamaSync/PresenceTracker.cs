@@ -31,103 +31,125 @@ namespace NakamaSync
 
         private SortedList<string, IUserPresence> _presences = new SortedList<string, IUserPresence>();
         private readonly string _userId;
+        private readonly object _presenceLock = new object();
 
         public PresenceTracker(string userId)
         {
             _userId = userId;
         }
 
-        public bool IsSelfHost()
-        {
-            return _userId == GetHost()?.UserId;
-        }
-
         public IUserPresence GetHost()
         {
-            return _presences.FirstOrDefault().Value;
+            lock (_presenceLock)
+            {
+                return _presences.FirstOrDefault().Value;
+            }
         }
 
         public IUserPresence GetSelf()
         {
-            return GetPresence(_userId);
+            lock (_presenceLock)
+            {
+                return GetPresence(_userId);
+            }
         }
 
         public IUserPresence GetPresence(string userId)
         {
-            if (!_presences.ContainsKey(_userId))
+            lock (_presenceLock)
             {
-                throw new KeyNotFoundException("Could not find presnce with id: " + userId);
-            }
+                if (!_presences.ContainsKey(_userId))
+                {
+                    throw new KeyNotFoundException("Could not find presence with id: " + userId);
+                }
 
-            return _presences[userId];
+                return _presences[userId];
+            }
         }
 
         public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
         {
-            var oldPresences = _presences;
-            var newPresences = GetNewPresences(_presences, presenceEvent);
-            _presences = newPresences;
-
-            var oldHost = GetHost();
-            var newHost = GetHost(newPresences);
-
-            foreach (var leaver in presenceEvent.Leaves)
+            lock (_presenceLock)
             {
-                if (leaver.UserId != oldHost?.UserId)
+                var oldPresences = _presences;
+                var newPresences = GetNewPresences(_presences, presenceEvent);
+                _presences = newPresences;
+
+                var oldHost = GetHost();
+                var newHost = GetHost(newPresences);
+
+                foreach (var leaver in presenceEvent.Leaves)
                 {
-                    OnGuestLeft?.Invoke(leaver);
+                    if (leaver.UserId != oldHost?.UserId)
+                    {
+                        OnGuestLeft?.Invoke(leaver);
+                    }
+                }
+
+                foreach (var joiner in presenceEvent.Joins)
+                {
+                    if (joiner.UserId != newHost?.UserId)
+                    {
+                        OnGuestJoined?.Invoke(joiner);
+                    }
+                }
+
+                if (oldHost != newHost)
+                {
+                    OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
                 }
             }
+        }
 
-            foreach (var joiner in presenceEvent.Joins)
+        public bool IsSelfHost()
+        {
+            lock (_presenceLock)
             {
-                if (joiner.UserId != newHost?.UserId)
-                {
-                    OnGuestJoined?.Invoke(joiner);
-                }
-            }
-
-            if (oldHost != newHost)
-            {
-                OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
+                return _userId == GetHost()?.UserId;
             }
         }
 
         private IUserPresence GetHost(SortedList<string, IUserPresence> presences)
         {
-            return _presences.FirstOrDefault().Value;
+            lock (_presenceLock)
+            {
+                return _presences.FirstOrDefault().Value;
+            }
         }
 
         private SortedList<string, IUserPresence> GetNewPresences(
             SortedList<string, IUserPresence> oldPresences, IMatchPresenceEvent presenceEvent)
         {
-            var newPresences = new SortedList<string, IUserPresence>(oldPresences);
-
-            foreach (IUserPresence leaver in presenceEvent.Leaves)
+            lock (_presenceLock)
             {
-                if (newPresences.ContainsKey(leaver.UserId))
-                {
-                    newPresences.Remove(leaver.UserId);
-                }
-                else
-                {
-                    throw new InvalidOperationException("Leaving presence does not exist.");
-                }
-            }
+                var newPresences = new SortedList<string, IUserPresence>(oldPresences);
 
-            foreach (IUserPresence joiner in presenceEvent.Joins)
-            {
-                if (newPresences.ContainsKey(joiner.UserId))
+                foreach (IUserPresence leaver in presenceEvent.Leaves)
                 {
-                    throw new InvalidOperationException("Joining presence already exists.");
+                    if (newPresences.ContainsKey(leaver.UserId))
+                    {
+                        newPresences.Remove(leaver.UserId);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Leaving presence does not exist.");
+                    }
                 }
-                else
-                {
-                    newPresences.Add(joiner.UserId, joiner);
-                }
-            }
 
-            return newPresences;
+                foreach (IUserPresence joiner in presenceEvent.Joins)
+                {
+                    if (newPresences.ContainsKey(joiner.UserId))
+                    {
+                        throw new InvalidOperationException("Joining presence already exists.");
+                    }
+                    else
+                    {
+                        newPresences.Add(joiner.UserId, joiner);
+                    }
+                }
+
+                return newPresences;
+            }
         }
     }
 }
