@@ -46,14 +46,6 @@ namespace NakamaSync
             }
         }
 
-        public IUserPresence GetSelf()
-        {
-            lock (_presenceLock)
-            {
-                return GetPresence(_userId);
-            }
-        }
-
         public IUserPresence GetPresence(string userId)
         {
             lock (_presenceLock)
@@ -64,6 +56,14 @@ namespace NakamaSync
                 }
 
                 return _presences[userId];
+            }
+        }
+
+        public IUserPresence GetSelf()
+        {
+            lock (_presenceLock)
+            {
+                return GetPresence(_userId);
             }
         }
 

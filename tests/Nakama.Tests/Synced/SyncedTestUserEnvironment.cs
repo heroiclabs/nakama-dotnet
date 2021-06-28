@@ -33,10 +33,8 @@ namespace Nakama.Tests
         public List<UserVar<int>> UserInts { get; }
         public List<UserVar<string>> UserStrings { get; }
 
-        public SyncedTestUserEnvironment(ISession session, int numTestVars, VarIdGenerator keyGenerator)
+        public SyncedTestUserEnvironment(ISession session, SyncedVarRegistration registration, int numTestVars, VarIdGenerator keyGenerator)
         {
-            var registration = new SyncedVarRegistration(session);
-
             SharedBools = new List<SharedVar<bool>>();
             SharedFloats = new List<SharedVar<float>>();
             SharedInts = new List<SharedVar<int>>();
