@@ -39,7 +39,7 @@ namespace NakamaSync
         public SyncedVarRegistration(ISession session)
         {
             _session = session;
-            _presenceTracker = new PresenceTracker(session.UserId, trackHost: true, hostHeuristic: PresenceTracker.HostHeuristic.OldestMember);
+            _presenceTracker = new PresenceTracker(session.UserId, hostHeuristic: PresenceTracker.HostHeuristic.Alphanumeric);
             _guestHandler = new GuestHandler(_presenceTracker, _varStore, _varKeys);
             _hostHandler = new HostHandler(_presenceTracker, _varStore, _varKeys);
         }
