@@ -19,7 +19,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public static class ReplicatedExtensions
+    public static class SyncedExtensions
     {
         // todo don't require session as a parameter here since we pass it to socket.
         public async static Task<SyncedMatch> CreateSyncedMatch(

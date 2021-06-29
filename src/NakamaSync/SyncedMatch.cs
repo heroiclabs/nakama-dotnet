@@ -32,7 +32,7 @@ namespace NakamaSync
     // todo protobuf support when that is merged.
     // todo think about allowing user to not stomp socket events if they so choose, or to sequence as they see fit.
     // you will need to not pass in the socket in order to do this.
-    // todo synced composite object
+    // todo synced composite object?
     // todo synced list
     // todo potential race when creating and joining a match between the construction of this object
     // and the dispatching of presence objects off the socket.

@@ -62,7 +62,6 @@ namespace NakamaSync
         {
             lock (_presenceLock)
             {
-                System.Console.WriteLine("handle match called");
                 HandlePresences(match.Presences, new IUserPresence[]{});
             }
         }
@@ -71,38 +70,22 @@ namespace NakamaSync
         {
             lock (_presenceLock)
             {
-                System.Console.WriteLine("handle presence event called");
                 HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
             }
         }
 
         private void HandlePresences(IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
         {
-            System.Console.WriteLine("handle presences called");
-            System.Console.WriteLine("user is " + _userId + "...");
-
-            System.Console.WriteLine("orig presences is " + _presences.Count());
-
             var oldPresences = new SortedList<string, IUserPresence>(_presences);
             ApplyNewPresences(_presences, joiners, leavers);
-
-            System.Console.WriteLine("old presences..." + oldPresences.Count());
-            System.Console.WriteLine("new presences..." + _presences.Count());
-
 
             var oldHost = GetHost(oldPresences.Values);
             var newHost = GetHost(_presences.Values);
 
-            System.Console.WriteLine("old host is " + oldHost?.UserId);
-            System.Console.WriteLine("new host is " + newHost?.UserId);
-
             foreach (var joiner in joiners)
             {
-                System.Console.WriteLine("joiner is " + joiner.UserId + " , " + newHost.UserId);
-
                 if (joiner.UserId != newHost?.UserId)
                 {
-                    System.Console.WriteLine("dispatching on guest joined");
                     OnGuestJoined?.Invoke(joiner);
                 }
             }
@@ -117,7 +100,6 @@ namespace NakamaSync
 
             if (oldHost != newHost)
             {
-                System.Console.WriteLine("dispatching on host changed");
                 OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
             }
         }
@@ -163,7 +145,6 @@ namespace NakamaSync
                     }
                     else
                     {
-                        System.Console.WriteLine("adding joiner");
                         presences.Add(joiner.UserId, joiner);
                     }
                 }
