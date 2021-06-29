@@ -32,6 +32,6 @@ namespace NakamaSync
             this ISocket socket, string matchId, SyncedOpcodes opcodes, SyncedVarRegistration registration)
         {
             return await SyncedMatch.Join(socket, opcodes, matchId, registration);
-;        }
+        }
     }
 }
