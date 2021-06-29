@@ -87,6 +87,10 @@ namespace NakamaSync
             _opcodes = opcodes;
             _registration = registration;
             _socket.ReceivedMatchState += HandleReceivedMatchState;
+            _registration.HostHandler.OnHandshakeResponseReady += HandleHandshakeResponseReady;
+            _registration.HostHandler.OnSyncedDataReady += HandleSyncedDataReady;
+            _registration.GuestHandler.OnSyncedDataReady += HandleSyncedDataReady;
+
         }
 
         private void HandleGuestJoined(IUserPresence joinedGuest)
@@ -100,17 +104,14 @@ namespace NakamaSync
                 new IUserPresence[]{_registration.PresenceTracker.GetHost()});
         }
 
-        private void HandleHandshakeRequestSend(HandshakeRequest request)
-        {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, Encode(request), new IUserPresence[]{_registration.PresenceTracker.GetHost()});
-        }
 
-        private void HandleHandshakeResponseSend(IUserPresence target, HandshakeResponse response)
+        private void HandleHandshakeResponseReady(IUserPresence target, HandshakeResponse response)
         {
+            System.Console.WriteLine("sending handshake respose");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, Encode(response), new IUserPresence[]{target});
         }
 
-        private void HandleDataSend(IEnumerable<IUserPresence> targets, SyncVarValues values)
+        private void HandleSyncedDataReady(IEnumerable<IUserPresence> targets, SyncVarValues values)
         {
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, Encode(values), targets);
         }
@@ -139,6 +140,7 @@ namespace NakamaSync
                 }
                 else
                 {
+
                     var handshakeResponse = Decode<HandshakeResponse>(matchState.State);
                     _registration.GuestHandler.ReceivedHandshakeResponse(handshakeResponse);
                 }

@@ -24,8 +24,8 @@ namespace NakamaSync
 {
     internal class HostHandler
     {
-        public event Action<IUserPresence, HandshakeResponse> OnHandshakeResponseSend;
-        public event Action<IEnumerable<IUserPresence>, SyncVarValues> OnReplicatedDataSend;
+        public event Action<IUserPresence, HandshakeResponse> OnHandshakeResponseReady;
+        public event Action<IEnumerable<IUserPresence>, SyncVarValues> OnSyncedDataReady;
 
         private PresenceTracker _presenceTracker;
         public IUserPresence Presence => _presenceTracker.GetHost();
@@ -83,9 +83,9 @@ namespace NakamaSync
 
             response = new HandshakeResponse(outgoingValues, success);
 
-            if (OnHandshakeResponseSend != null)
+            if (OnHandshakeResponseReady != null)
             {
-                OnHandshakeResponseSend(requester, response);
+                OnHandshakeResponseReady(requester, response);
             }
         }
 
@@ -102,8 +102,8 @@ namespace NakamaSync
             Merge(source, _store.UserInts, remoteVals.Ints, remoteVals.AddInt);
             Merge(source, _store.UserStrings, remoteVals.Strings, remoteVals.AddString);
 
-            OnReplicatedDataSend(new IUserPresence[]{source}, _valuesToGuest[source.UserId]);
-            OnReplicatedDataSend(_guests.Select(kvp => kvp.Value), _valuesToAll);
+            OnSyncedDataReady(new IUserPresence[]{source}, _valuesToGuest[source.UserId]);
+            OnSyncedDataReady(_guests.Select(kvp => kvp.Value), _valuesToAll);
         }
 
         public void HandleLocalDataChanged<T>(VarKey key, T newValue, Func<SyncVarValues, Action<SyncVarValue<T>>> getAddToQueue)

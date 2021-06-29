@@ -22,7 +22,7 @@ namespace NakamaSync
 {
     internal class GuestHandler
     {
-        public event Action<IEnumerable<IUserPresence>, SyncVarValues> OnReplicatedDataSend;
+        public event Action<IEnumerable<IUserPresence>, SyncVarValues> OnSyncedDataReady;
 
         private readonly VarKeys _varKeys;
         private readonly PresenceTracker _presenceTracker;

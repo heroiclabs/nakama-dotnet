@@ -29,7 +29,7 @@ namespace NakamaSync
         public event Action<IUserPresence> OnGuestLeft;
         public event Action<IUserPresence> OnGuestJoined;
 
-        private SortedList<string, IUserPresence> _presences = new SortedList<string, IUserPresence>();
+        private readonly SortedList<string, IUserPresence> _presences = new SortedList<string, IUserPresence>();
         private readonly string _userId;
         private readonly object _presenceLock = new object();
 
@@ -40,76 +40,62 @@ namespace NakamaSync
 
         public IUserPresence GetHost()
         {
-            lock (_presenceLock)
-            {
-                return _presences.FirstOrDefault().Value;
-            }
+            return _presences.FirstOrDefault().Value;
         }
 
         public IUserPresence GetPresence(string userId)
         {
-            lock (_presenceLock)
+            if (!_presences.ContainsKey(_userId))
             {
-                if (!_presences.ContainsKey(_userId))
-                {
-                    throw new KeyNotFoundException("Could not find presence with id: " + userId);
-                }
-
-                return _presences[userId];
+                throw new KeyNotFoundException("Could not find presence with id: " + userId);
             }
+
+            return _presences[userId];
         }
 
         public IUserPresence GetSelf()
         {
-            lock (_presenceLock)
-            {
-                return GetPresence(_userId);
-            }
+            return GetPresence(_userId);
         }
 
         public void HandleMatch(IMatch match)
         {
             lock (_presenceLock)
             {
+                System.Console.WriteLine("handle match called");
                 HandlePresences(match.Presences, new IUserPresence[]{});
             }
         }
 
         public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
         {
-            HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
+            lock (_presenceLock)
+            {
+                System.Console.WriteLine("handle presence event called");
+                HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
+            }
         }
 
         private void HandlePresences(IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
         {
-            lock (_presenceLock)
-            {
-                var oldPresences = _presences;
-                var newPresences = GetNewPresences(_presences, joiners, leavers);
-                _presences = newPresences;
+            System.Console.WriteLine("handle presences called");
+            System.Console.WriteLine("user is " + _userId + "...");
 
-                var oldHost = GetHost();
-                var newHost = GetHost(newPresences);
+            System.Console.WriteLine("orig presences is " + _presences.Count());
 
-                HandleJoiners(joiners, newHost);
-                HandleLeavers(leavers, oldHost);
+            var oldPresences = new SortedList<string, IUserPresence>(_presences);
+            ApplyNewPresences(_presences, joiners, leavers);
 
-                System.Console.WriteLine("user is " + _userId + "...");
-
-                System.Console.WriteLine("new host is " + _userId);
+            System.Console.WriteLine("old presences..." + oldPresences.Count());
+            System.Console.WriteLine("new presences..." + _presences.Count());
 
 
-                System.Console.WriteLine("dispatching on host changed");
+            var oldHost = GetHost(oldPresences.Values);
+            var newHost = GetHost(_presences.Values);
 
-                if (oldHost != newHost)
-                {
-                    OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
-                }
-            }
-        }
+            System.Console.WriteLine("old host is " + oldHost?.UserId);
+            System.Console.WriteLine("new host is " + newHost?.UserId);
 
-        private void HandleJoiners(IEnumerable<IUserPresence> joiners, IUserPresence newHost)
-        {
             foreach (var joiner in joiners)
             {
                 System.Console.WriteLine("joiner is " + joiner.UserId + " , " + newHost.UserId);
@@ -120,16 +106,19 @@ namespace NakamaSync
                     OnGuestJoined?.Invoke(joiner);
                 }
             }
-        }
 
-        private void HandleLeavers(IEnumerable<IUserPresence> leavers, IUserPresence oldhost)
-        {
             foreach (var leaver in leavers)
             {
-                if (leaver.UserId != oldhost?.UserId)
+                if (leaver.UserId != oldHost?.UserId)
                 {
                     OnGuestLeft?.Invoke(leaver);
                 }
+            }
+
+            if (oldHost != newHost)
+            {
+                System.Console.WriteLine("dispatching on host changed");
+                OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
             }
         }
 
@@ -141,26 +130,24 @@ namespace NakamaSync
             }
         }
 
-        private IUserPresence GetHost(SortedList<string, IUserPresence> presences)
+        private IUserPresence GetHost(IEnumerable<IUserPresence> presences)
         {
             lock (_presenceLock)
             {
-                return _presences.FirstOrDefault().Value;
+                return presences.FirstOrDefault();
             }
         }
 
-        private SortedList<string, IUserPresence> GetNewPresences(
-            SortedList<string, IUserPresence> oldPresences, IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
+        private void ApplyNewPresences(
+            SortedList<string, IUserPresence> presences, IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
         {
             lock (_presenceLock)
             {
-                var newPresences = new SortedList<string, IUserPresence>(oldPresences);
-
                 foreach (IUserPresence leaver in leavers)
                 {
-                    if (newPresences.ContainsKey(leaver.UserId))
+                    if (presences.ContainsKey(leaver.UserId))
                     {
-                        newPresences.Remove(leaver.UserId);
+                        presences.Remove(leaver.UserId);
                     }
                     else
                     {
@@ -170,17 +157,16 @@ namespace NakamaSync
 
                 foreach (IUserPresence joiner in joiners)
                 {
-                    if (newPresences.ContainsKey(joiner.UserId))
+                    if (presences.ContainsKey(joiner.UserId))
                     {
                         throw new InvalidOperationException("Joining presence already exists.");
                     }
                     else
                     {
-                        newPresences.Add(joiner.UserId, joiner);
+                        System.Console.WriteLine("adding joiner");
+                        presences.Add(joiner.UserId, joiner);
                     }
                 }
-
-                return newPresences;
             }
         }
     }
