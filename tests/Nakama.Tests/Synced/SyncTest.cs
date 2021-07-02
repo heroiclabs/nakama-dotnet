@@ -21,14 +21,14 @@ using Xunit;
 
 namespace Nakama.Tests.Socket
 {
-    public class WebSocketSyncedTest
+    public class SyncTest
     {
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task SharedVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch();
-            SyncedTestUserEnvironment hostEnv = testEnv.GetHostEnv();
+            SyncTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.SharedBools[0].SetValue(true);
             Assert.True(hostEnv.SharedBools[0].GetValue());
             testEnv.Dispose();
@@ -39,7 +39,7 @@ namespace Nakama.Tests.Socket
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch();
-            SyncedTestUserEnvironment hostEnv = testEnv.GetHostEnv();
+            SyncTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.UserBools[0].SetValue(true, testEnv.GetHostPresence());
             Assert.True(hostEnv.UserBools[0].GetValue(testEnv.GetHostPresence()));
             testEnv.Dispose();
@@ -55,8 +55,8 @@ namespace Nakama.Tests.Socket
                 return userId + varName + varId.ToString();
             };
 
-            var mismatchedEnv = new SyncedTestEnvironment(
-                new SyncedOpcodes(handshakeOpcode: 0, dataOpcode: 1),
+            var mismatchedEnv = new SyncTestEnvironment(
+                new SyncOpcodes(handshakeOpcode: 0, dataOpcode: 1),
                 numClients: 2,
                 numTestVars: 1,
                 hostIndex: 0,
@@ -73,19 +73,19 @@ namespace Nakama.Tests.Socket
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch();
 
-            SyncedTestUserEnvironment hostEnv = testEnv.GetHostEnv();
+            SyncTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.SharedBools[0].SetValue(true);
 
-            SyncedTestUserEnvironment guestEnv = testEnv.GetRandomGuestEnv();
+            SyncTestUserEnvironment guestEnv = testEnv.GetRandomGuestEnv();
             Assert.True(guestEnv.SharedBools[0].GetValue());
 
             testEnv.Dispose();
         }
 
-        private SyncedTestEnvironment CreateDefaultEnvironment()
+        private SyncTestEnvironment CreateDefaultEnvironment()
         {
-            return new SyncedTestEnvironment(
-                new SyncedOpcodes(handshakeOpcode: 0, dataOpcode: 1),
+            return new SyncTestEnvironment(
+                new SyncOpcodes(handshakeOpcode: 0, dataOpcode: 1),
                 numClients: 5,
                 numTestVars: 1,
                 hostIndex: 0);

@@ -38,6 +38,11 @@ namespace NakamaSync
             _userId = userId;
         }
 
+        public IEnumerable<IUserPresence> GetGuests()
+        {
+            return _presences.Values.Except(new IUserPresence[]{GetHost()});
+        }
+
         public IUserPresence GetHost()
         {
             return _presences.FirstOrDefault().Value;

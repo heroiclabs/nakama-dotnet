@@ -22,26 +22,26 @@ using NakamaSync;
 
 namespace Nakama.Tests
 {
-    public class SyncedTestEnvironment
+    public class SyncTestEnvironment
     {
         private const int _RAND_GUEST_SEED = 1;
 
         public int HostIndex { get; }
-        public List<SyncedMatch> Matches => _matches;
+        public List<IMatch> Matches => _matches;
         public int NumSessions { get; }
         public int NumTestVars { get; }
-        public SyncedOpcodes Opcodes { get; }
+        public SyncOpcodes Opcodes { get; }
 
         private readonly IClient _client;
-        private readonly List<SyncedMatch> _matches = new List<SyncedMatch>();
-        private readonly List<SyncedVarRegistration> _registrations = new List<SyncedVarRegistration>();
+        private readonly List<IMatch> _matches = new List<IMatch>();
+        private readonly List<SyncVarRegistry> _registrations = new List<SyncVarRegistry>();
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
-        private Dictionary<string, SyncedTestUserEnvironment> _userEnvs;
+        private Dictionary<string, SyncTestUserEnvironment> _userEnvs;
         private readonly Random _randomGuest = new Random(_RAND_GUEST_SEED);
 
-        public SyncedTestEnvironment(
-            SyncedOpcodes opcodes,
+        public SyncTestEnvironment(
+            SyncOpcodes opcodes,
             int numClients,
             int numTestVars,
             int hostIndex,
@@ -57,17 +57,17 @@ namespace Nakama.Tests
             _registrations.AddRange(CreateRegistrations(_sessions));
             _sockets.AddRange(CreateSockets(_client));
             ConnectSockets(_sockets, _sessions);
-            _userEnvs = CreateUserEnvs(_sessions, _registrations, idGenerator ?? SyncedTestUserEnvironment.DefaultVarIdGenerator);
+            _userEnvs = CreateUserEnvs(_sessions, _registrations, idGenerator ?? SyncTestUserEnvironment.DefaultVarIdGenerator);
         }
 
-        private Dictionary<string, SyncedTestUserEnvironment> CreateUserEnvs(List<ISession> sessions, List<SyncedVarRegistration> registrations, VarIdGenerator generator)
+        private Dictionary<string, SyncTestUserEnvironment> CreateUserEnvs(List<ISession> sessions, List<SyncVarRegistry> registrations, VarIdGenerator generator)
         {
-            var envs = new Dictionary<string, SyncedTestUserEnvironment>();
+            var envs = new Dictionary<string, SyncTestUserEnvironment>();
 
             for (int i = 0; i < sessions.Count; i++)
             {
                 ISession session = sessions[i];
-                envs[session.UserId] = new SyncedTestUserEnvironment(session, _registrations[i], NumTestVars, generator);
+                envs[session.UserId] = new SyncTestUserEnvironment(session, _registrations[i], NumTestVars, generator);
             }
 
             return envs;
@@ -85,7 +85,7 @@ namespace Nakama.Tests
             Task.WaitAll(closeTasks.ToArray());
         }
 
-        public SyncedTestUserEnvironment GetHostEnv()
+        public SyncTestUserEnvironment GetHostEnv()
         {
             return _userEnvs[GetHostPresence().UserId];
         }
@@ -95,14 +95,14 @@ namespace Nakama.Tests
             return _matches[HostIndex].Self;
         }
 
-        public SyncedTestUserEnvironment GetRandomGuestEnv()
+        public SyncTestUserEnvironment GetRandomGuestEnv()
         {
             List<IUserPresence> guests = GetGuests();
             int randGuestIndex = _randomGuest.Next(guests.Count);
             return _userEnvs[guests[randGuestIndex].UserId];
         }
 
-        public SyncedTestUserEnvironment GetUserEnv(IUserPresence clientPresence)
+        public SyncTestUserEnvironment GetUserEnv(IUserPresence clientPresence)
         {
             return _userEnvs[clientPresence.UserId];
         }
@@ -114,10 +114,10 @@ namespace Nakama.Tests
                 throw new InvalidOperationException("Already started matches.");
             }
 
-            var matchTasks = new List<Task<SyncedMatch>>();
-            var opcodes = new SyncedOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode);
+            var matchTasks = new List<Task<IMatch>>();
+            var opcodes = new SyncOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode);
 
-            matchTasks.Insert(HostIndex, _sockets[HostIndex].CreateSyncedMatch(opcodes, _registrations[HostIndex]));
+            matchTasks.Insert(HostIndex, _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], opcodes, _registrations[HostIndex]));
 
             Task.WaitAll(matchTasks.ToArray());
 
@@ -130,7 +130,7 @@ namespace Nakama.Tests
 
                 var registration = _registrations[i];
                 var socket = _sockets[i];
-                var matchTask = socket.JoinSyncedMatch(matchTasks[HostIndex].Result.Id, opcodes, registration);
+                var matchTask = socket.JoinSyncMatch(_sessions[i], opcodes, matchTasks[HostIndex].Result.Id, registration);
                 matchTasks.Insert(i, matchTask);
             }
 
@@ -176,17 +176,17 @@ namespace Nakama.Tests
             Task.WaitAll(connectTasks.ToArray());
         }
 
-        private IEnumerable<SyncedVarRegistration> CreateRegistrations(List<ISession> sessions)
+        private IEnumerable<SyncVarRegistry> CreateRegistrations(List<ISession> sessions)
         {
-            var registrations = new List<SyncedVarRegistration>();
+            var registries = new List<SyncVarRegistry>();
 
             for (int i = 0; i < sessions.Count; i++)
             {
-                var registration = new SyncedVarRegistration(sessions[i]);
-                registrations.Insert(i, registration);
+                var registry = new SyncVarRegistry();
+                registries.Insert(i, registry);
             }
 
-            return registrations;
+            return registries;
         }
 
         private IEnumerable<ISession> CreateSessions(IClient client)

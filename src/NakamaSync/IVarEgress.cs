@@ -14,10 +14,13 @@
 * limitations under the License.
 */
 
+using Nakama;
+
 namespace NakamaSync
 {
-    public interface ISharedVarEvent<T> : IVarEvent<T>
+    internal interface IVarEgress
     {
-        T OldValue { get; }
+        void HandleLocalSharedVarChanged<T>(SyncVarKey key, T newValue, SharedVarCollections<T> collections);
+        void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarCollections<T> collections, IUserPresence target);
     }
 }

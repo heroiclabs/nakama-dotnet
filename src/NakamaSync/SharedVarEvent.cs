@@ -20,11 +20,13 @@ namespace NakamaSync
 {
     public class SharedVarEvent<T> : ISharedVarEvent<T>
     {
+        public IUserPresence Sender { get; }
         public T OldValue { get; }
         public T NewValue { get; }
 
-        internal SharedVarEvent(T oldValue, T newValue)
+        internal SharedVarEvent(IUserPresence sender, T oldValue, T newValue)
         {
+            Sender = sender;
             OldValue = oldValue;
             NewValue = newValue;
         }

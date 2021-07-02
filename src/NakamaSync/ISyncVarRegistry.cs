@@ -16,8 +16,15 @@
 
 namespace NakamaSync
 {
-    public interface ISharedVarEvent<T> : IVarEvent<T>
+    interface ISyncVarRegistry
     {
-        T OldValue { get; }
+        SyncVarDictionary<string, SharedVar<bool>> SharedBools { get; }
+        SyncVarDictionary<string, SharedVar<float>> SharedFloats { get; }
+        SyncVarDictionary<string, SharedVar<int>> SharedInts { get; }
+        SyncVarDictionary<string, SharedVar<string>> SharedStrings { get; }
+        SyncVarDictionary<string, UserVar<bool>> UserBools { get; }
+        SyncVarDictionary<string, UserVar<float>> UserFloats { get; }
+        SyncVarDictionary<string, UserVar<int>> UserInts { get; }
+        SyncVarDictionary<string, UserVar<string>> UserStrings { get; }
     }
 }

@@ -20,15 +20,15 @@ using Nakama;
 namespace NakamaSync
 {
     /// <summary>
-    /// A data-transfer object corresponding to the outgoing value for a sync var.
+    /// A data-transfer object for a sync var.
     /// </summary>
-    internal class SyncVarValue<T>
+    internal class SyncUserValue<T>
     {
         [DataMember(Name="key_validation_status"), Preserve]
         public KeyValidationStatus KeyValidationStatus { get; }
 
         [DataMember(Name="key"), Preserve]
-        public VarKey Key { get; }
+        public SyncVarKey Key { get; }
 
         [DataMember(Name="lock_version"), Preserve]
         public int LockVersion { get; }
@@ -36,12 +36,16 @@ namespace NakamaSync
         [DataMember(Name="value"), Preserve]
         public T Value { get; }
 
-        public SyncVarValue(VarKey key, T value, int lockVersion, KeyValidationStatus keyValidationStatus, IUserPresence sender)
+        [DataMember(Name="target"), Preserve]
+        public IUserPresence Target { get; }
+
+        public SyncUserValue(SyncVarKey key, T value, int lockVersion, KeyValidationStatus keyValidationStatus, IUserPresence target)
         {
             Key = key;
             Value = value;
             LockVersion = lockVersion;
             KeyValidationStatus = keyValidationStatus;
+            Target = target;
         }
     }
 }

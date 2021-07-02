@@ -14,24 +14,13 @@
 * limitations under the License.
 */
 
-using System;
+using Nakama;
 
 namespace NakamaSync
 {
-    public struct SyncedOpcodes
+    internal interface IVarIngress
     {
-        public int HandshakeOpcode { get; }
-        public int DataOpcode { get; }
-
-        public SyncedOpcodes(int handshakeOpcode, int dataOpcode)
-        {
-            if (handshakeOpcode == dataOpcode)
-            {
-                throw new ArgumentException("Data opcode and handshake opcode must be different values.");
-            }
-
-            HandshakeOpcode = handshakeOpcode;
-            DataOpcode = dataOpcode;
-        }
+        void HandleIncomingSharedVar<T>(IUserPresence source, SyncSharedValue<T> value, SharedVarCollections<T> collections);
+        void HandleIncomingUserVar<T>(IUserPresence source, SyncUserValue<T> value, UserVarCollections<T> collections);
     }
 }

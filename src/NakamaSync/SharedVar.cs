@@ -15,13 +15,14 @@
 */
 
 using System;
+using Nakama;
 
 namespace NakamaSync
 {
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// </summary>
-    public class SharedVar<T>
+    public class SharedVar<T> : ISyncVar
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then
@@ -29,7 +30,7 @@ namespace NakamaSync
         /// host who will validate and if it's validated the host will send to all clients
         /// otherwise a ReplicationValidationException will be thrown on this device.
         /// </summary>
-        public Action<ISharedVarEvent<T>> OnHostValidate;
+        public Func<ISharedVarEvent<T>, bool> OnHostValidate;
         public Action<ISharedVarEvent<T>> OnRemoteValueChanged;
         internal Action<ISharedVarEvent<T>> OnLocalValueChanged;
         public KeyValidationStatus KeyValidationStatus => _validationStatus;
@@ -38,9 +39,17 @@ namespace NakamaSync
         private T _value;
         private readonly object _valueLock = new object();
 
+        // todo throw exception if reassigning self. maybe not here?
+        // todo set this
+        internal IUserPresence Self
+        {
+            get;
+            set;
+        }
+
         public void SetValue(T value)
         {
-            SetValue(value, _validationStatus, OnLocalValueChanged);
+            SetValue(Self, value, _validationStatus, OnLocalValueChanged);
         }
 
         public T GetValue()
@@ -51,7 +60,7 @@ namespace NakamaSync
             }
         }
 
-        // todo this should not be public!
+        // todo call this find a way to make internal?
         public void Reset()
         {
             lock (_valueLock)
@@ -64,7 +73,7 @@ namespace NakamaSync
             OnRemoteValueChanged = null;
         }
 
-        internal void SetValue(T value, KeyValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
+        internal void SetValue(IUserPresence source, T value, KeyValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
         {
             lock (_valueLock)
             {
@@ -77,7 +86,7 @@ namespace NakamaSync
 
                 _value = value;
                 _validationStatus = validationStatus;
-                eventDispatch?.Invoke(new SharedVarEvent<T>(oldValue, value));
+                eventDispatch?.Invoke(new SharedVarEvent<T>(source, oldValue, value));
             }
         }
     }

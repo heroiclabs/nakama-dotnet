@@ -23,7 +23,7 @@ namespace NakamaSync
     /// <summary>
     /// A variable containing a value for each user in the match. Each value is synchronized across all users.
     /// </summary>
-    public class UserVar<T>
+    public class UserVar<T> : ISyncVar
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then
@@ -38,11 +38,14 @@ namespace NakamaSync
         public KeyValidationStatus KeyValidationStatus => _validationStatus;
 
         // todo throw exception if reassigning self. maybe not here?
+        // todo set this
         internal IUserPresence Self
         {
             get;
             set;
         }
+
+        internal IReadOnlyDictionary<string, T> Values => _values;
 
         private KeyValidationStatus _validationStatus;
         private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
@@ -97,7 +100,7 @@ namespace NakamaSync
             }
         }
 
-        // TODO this should not be public!!!
+        // TODO this should not be public...maybe make interface an abstract class.
         public void Reset()
         {
             lock (_valueLock)

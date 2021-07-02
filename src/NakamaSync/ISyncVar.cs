@@ -16,8 +16,8 @@
 
 namespace NakamaSync
 {
-    public interface ISharedVarEvent<T> : IVarEvent<T>
+    public interface ISyncVar
     {
-        T OldValue { get; }
+        void Reset();
     }
 }

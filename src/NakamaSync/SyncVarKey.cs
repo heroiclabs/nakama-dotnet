@@ -22,7 +22,7 @@ namespace NakamaSync
     /// A key that uniquely identifies a single sync var.
     /// The key is a combination of a user id and the sync var id.
     /// </summary>
-    internal struct VarKey
+    internal struct SyncVarKey
     {
         public string SyncedId => _syncedId;
         public string UserId => _userId;
@@ -33,7 +33,7 @@ namespace NakamaSync
         [DataMember(Name="user_id"), Preserve]
         private string _userId;
 
-        public VarKey(string syncedId, string userId)
+        public SyncVarKey(string syncedId, string userId)
         {
             _syncedId = syncedId;
             _userId = userId;
