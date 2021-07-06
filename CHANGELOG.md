@@ -4,19 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- The language tag for the user can be configured with the socket on connect.
+
 ## [2.9.3] - 2021-06-17
 ### Fixed
 - Fixed issue where refreshing a session with metadata threw an exception due to the key already existing.
 
 ## [2.9.2] - 2021-05-21
 ### Fixed
-- Fixed issue where `IUserPresence` objects were not being deserialized properly by the client as part
-of the `IParty` object.
+- Fixed issue where `IUserPresence` objects were not being deserialized properly by the client as part of the `IParty` object.
 
 ## [2.9.1] - 2021-05-19
 ### Added
-- The `Socket.ReceivedParty` event can now be subscribed to in order to listen for acceptance events
-from the leader of a closed party.
+- The `Socket.ReceivedParty` event can now be subscribed to in order to listen for acceptance events from the leader of a closed party.
 
 ## [2.9.0] - 2021-05-15
 ### Added

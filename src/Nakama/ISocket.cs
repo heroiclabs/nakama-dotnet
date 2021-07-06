@@ -181,9 +181,10 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="appearOnline">If the user who appear online to other users.</param>
         /// <param name="connectTimeout">The time allowed for the socket connection to be established.</param>
+        /// <param name="langTag">The language tag of the user on the connected socket.</param>
         /// <returns>A task to represent the asynchronous operation.</returns>
         Task ConnectAsync(ISession session, bool appearOnline = false,
-            int connectTimeout = Socket.DefaultConnectTimeout);
+            int connectTimeout = Socket.DefaultConnectTimeout, string langTag = "en");
 
         /// <summary>
         /// Create a multiplayer match on the server.
