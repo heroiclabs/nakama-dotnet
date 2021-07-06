@@ -240,7 +240,7 @@ namespace Nakama
 
         /// <inheritdoc cref="ConnectAsync"/>
         public Task ConnectAsync(ISession session, bool appearOnline = false,
-            int connectTimeoutSec = DefaultConnectTimeout)
+            int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en")
         {
             var tcs = new TaskCompletionSource<bool>();
             Action callback = () => tcs.TrySetResult(true);
@@ -250,7 +250,7 @@ namespace Nakama
             var uri = new UriBuilder(_baseUri)
             {
                 Path = "/ws",
-                Query = $"lang=en&status={appearOnline}&token={session.AuthToken}"
+                Query = $"lang={langTag}&status={appearOnline}&token={session.AuthToken}"
             }.Uri;
             tcs.Task.ContinueWith(_ =>
             {
