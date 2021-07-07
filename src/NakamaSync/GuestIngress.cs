@@ -30,7 +30,7 @@ namespace NakamaSync
             _presenceTracker = presenceTracker;
         }
 
-        public void HandleIncomingSharedVar<T>(SharedValue<T> incomingValue, SharedVarAccessor<T> accessor, SyncVarDictionary<SyncVarKey, SharedVar<T>> vars, IUserPresence source)
+        public void HandleIncomingSharedValue<T>(SharedValue<T> incomingValue, SharedVarAccessor<T> accessor, SyncVarDictionary<SyncVarKey, SharedVar<T>> vars, IUserPresence source)
         {
             T remoteValue = incomingValue.Value;
 
@@ -72,7 +72,7 @@ namespace NakamaSync
             localType.SetValue(source, remoteValue, KeyValidationStatus.None, localType.OnRemoteValueChanged);
         }
 
-        public void HandleIncomingUserVar<T>(UserValue<T> value, UserVarAccessor<T> accessor, SyncVarDictionary<SyncVarKey, UserVar<T>> vars, IUserPresence source)
+        public void HandleIncomingUserValue<T>(UserValue<T> value, UserVarAccessor<T> accessor, SyncVarDictionary<SyncVarKey, UserVar<T>> vars, IUserPresence source)
         {
             T remoteValue = value.Value;
 
