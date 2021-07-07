@@ -14,13 +14,20 @@
 * limitations under the License.
 */
 
-using Nakama;
+using Nakama.TinyJson;
 
 namespace NakamaSync
 {
-    internal interface IVarEgress
+    internal class SyncEncoding
     {
-        void HandleLocalSharedVarChanged<T>(SyncVarKey key, T newValue, SharedVarAccessor<T> accessor);
-        void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarAccessor<T> accessor, IUserPresence target);
+        public T Decode<T>(byte[] data)
+        {
+            return Nakama.TinyJson.JsonParser.FromJson<T>(System.Text.Encoding.UTF8.GetString(data));
+        }
+
+        public byte[] Encode(object data)
+        {
+            return System.Text.Encoding.UTF8.GetBytes(data.ToJson());
+        }
     }
 }

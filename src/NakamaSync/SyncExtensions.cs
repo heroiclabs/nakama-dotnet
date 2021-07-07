@@ -23,14 +23,15 @@ namespace NakamaSync
     {
         // todo don't require session as a parameter here since we pass it to socket.
 
+        // todo put reflection version here?
         public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, SyncVarRegistry registry)
         {
             var presenceTracker = new PresenceTracker(session.UserId);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
             IMatch match = await socket.CreateMatchAsync();
-            var syncMatch = new SyncMatch(match.Id, session, socket, opcodes, registry);
-            presenceTracker.OnGuestJoined += syncMatch.HandleGuestJoined;
-            presenceTracker.HandleMatch(match);
+            var syncSocket = new SyncSocket(socket, match, opcodes, presenceTracker);
+            var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker);
+            presenceTracker.ReceiveMatch(match);
             return match;
         }
 
@@ -39,9 +40,9 @@ namespace NakamaSync
             var presenceTracker = new PresenceTracker(session.UserId);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
             IMatch match = await socket.JoinMatchAsync(matchId);
-            var syncMatch = new SyncMatch(matchId, session, socket, opcodes, registry);
-            presenceTracker.OnGuestJoined += syncMatch.HandleGuestJoined;
-            presenceTracker.HandleMatch(match);
+            var syncSocket = new SyncSocket(socket, match, opcodes, presenceTracker);
+            var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker);
+            presenceTracker.ReceiveMatch(match);
             return match;
         }
     }

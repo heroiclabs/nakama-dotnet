@@ -15,39 +15,24 @@
 */
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using Nakama;
 
 namespace NakamaSync
 {
     internal class HostEgress : IVarEgress
     {
-        public event Action<IUserPresence, HandshakeResponse> OnHandshakeResponseReady;
-        public event Action OnSyncedDataReady;
-
+        private readonly SyncSocket _socket;
         private readonly SyncVarKeys _keys;
         private readonly PresenceTracker _presenceTracker;
 
-        public HostEgress(SyncVarKeys keys, PresenceTracker presenceTracker)
+        public HostEgress(SyncSocket socket, SyncVarKeys keys, PresenceTracker presenceTracker)
         {
+            _socket = socket;
             _keys = keys;
             _presenceTracker = presenceTracker;
         }
 
-        public void HandleValidHandshakeRequest(IUserPresence source, HandshakeRequest request, SyncCollections collections)
-        {
-            CopySharedVarToGuest(collections.SharedBoolCollections, source);
-            CopySharedVarToGuest(collections.SharedFloatCollections, source);
-            CopySharedVarToGuest(collections.SharedIntCollections, source);
-            CopySharedVarToGuest(collections.SharedStringCollections, source);
-            CopyUserVarToGuest(collections.UserBoolCollections, source);
-            CopyUserVarToGuest(collections.UserFloatCollections, source);
-            CopyUserVarToGuest(collections.UserIntCollections, source);
-            CopyUserVarToGuest(collections.UserStringCollections, source);
-        }
-
-        public void HandleLocalSharedVarChanged<T>(SyncVarKey key, T newValue, SharedVarCollections<T> collections)
+        public void HandleLocalSharedVarChanged<T>(SyncVarKey key, T newValue, SharedVarAccessor<T> accessor)
         {
             var status = _keys.GetValidationStatus(key);
 
@@ -56,10 +41,12 @@ namespace NakamaSync
                 throw new InvalidOperationException("Host should not have local key pending validation: " + key);
             }
 
-            collections.SharedValuesToAll.Add(new SyncSharedValue<T>(key, newValue, _keys.GetLockVersion(key), status));
+            SyncValues values = new SyncValues();
+            accessor(values).Add(new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status));
+            _socket.SendSyncDataToAll(values);
         }
 
-        public void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarCollections<T> collections, IUserPresence target)
+        public void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarAccessor<T> accessor, IUserPresence target)
         {
             var status = _keys.GetValidationStatus(key);
 
@@ -68,38 +55,10 @@ namespace NakamaSync
                 throw new InvalidOperationException("Host should not have local key pending validation: " + key);
             }
 
-            collections.UserValuesToGuest.Add(target.UserId, new SyncUserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target));
-        }
-
-        public bool IsValidHandshakeRequest(HandshakeRequest request)
-        {
-            return request.AllKeys.SequenceEqual(_keys.GetKeys());
-        }
-
-        private void CopySharedVarToGuest<T>(SharedVarCollections<T> collections, IUserPresence target)
-        {
-            foreach (var key in collections.SharedVars.GetKeys())
-            {
-                SharedVar<T> var = collections.SharedVars.GetSyncVar(key);
-                var value = new SyncSharedValue<T>(key, var.GetValue(), _keys.GetLockVersion(key), _keys.GetValidationStatus(key));
-                collections.SharedValuesToGuest.Add(target.UserId, value);
-            }
-        }
-
-        private void CopyUserVarToGuest<T>(UserVarCollections<T> collections, IUserPresence target)
-        {
-            foreach (var key in collections.UserVars.GetKeys())
-            {
-                UserVar<T> var = collections.UserVars.GetSyncVar(key);
-
-                foreach (KeyValuePair<string, T> kvp in var.Values)
-                {
-                    // TODO handle data for a stale user
-
-                    var value = new SyncUserValue<T>(key, var.GetValue(), _keys.GetLockVersion(key), _keys.GetValidationStatus(key), _presenceTracker.GetPresence(kvp.Key));
-                    collections.UserValuesToGuest.Add(target.UserId, value);
-                }
-            }
+            // TODO clear collection if successful send + ack
+            SyncValues values = new SyncValues();
+            accessor(values).Add(new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target));
+            _socket.SendSyncDataToAll(values);
         }
     }
 }

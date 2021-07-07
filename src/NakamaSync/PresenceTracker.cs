@@ -25,7 +25,6 @@ namespace NakamaSync
     internal class PresenceTracker
     {
         public event Action<HostChangedEvent> OnHostChanged;
-
         public event Action<IUserPresence> OnGuestLeft;
         public event Action<IUserPresence> OnGuestJoined;
 
@@ -63,7 +62,7 @@ namespace NakamaSync
             return GetPresence(_userId);
         }
 
-        public void HandleMatch(IMatch match)
+        public void ReceiveMatch(IMatch match)
         {
             lock (_presenceLock)
             {

@@ -19,46 +19,43 @@ using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
+    internal delegate List<SharedValue<T>> SharedVarAccessor<T>(SyncValues values);
+    internal delegate List<UserValue<T>> UserVarAccessor<T>(SyncValues values);
+
     internal class SyncValues
     {
-        public List<SyncSharedValue<bool>> SharedBools => _sharedBools;
-        public List<SyncSharedValue<float>> SharedFloats => _sharedFloats;
-        public List<SyncSharedValue<int>> SharedInts => _sharedInts;
-        public List<SyncSharedValue<string>> SharedStrings => _sharedStrings;
+        public List<SharedValue<bool>> SharedBools => _sharedBools;
+        public List<SharedValue<float>> SharedFloats => _sharedFloats;
+        public List<SharedValue<int>> SharedInts => _sharedInts;
+        public List<SharedValue<string>> SharedStrings => _sharedStrings;
 
-        public List<SyncUserValue<bool>> UserBools => _userBools;
-        public List<SyncUserValue<float>> UserFloats => _userFloats;
-        public List<SyncUserValue<int>> UserInts => _userInts;
-        public List<SyncUserValue<string>> UserStrings => _userStrings;
+        public List<UserValue<bool>> UserBools => _userBools;
+        public List<UserValue<float>> UserFloats => _userFloats;
+        public List<UserValue<int>> UserInts => _userInts;
+        public List<UserValue<string>> UserStrings => _userStrings;
 
         [DataMember(Name="shared_bools"), Preserve]
-        private List<SyncSharedValue<bool>> _sharedBools = new List<SyncSharedValue<bool>>();
+        private List<SharedValue<bool>> _sharedBools = new List<SharedValue<bool>>();
 
         [DataMember(Name="shared_floats"), Preserve]
-        private List<SyncSharedValue<float>> _sharedFloats = new List<SyncSharedValue<float>>();
+        private List<SharedValue<float>> _sharedFloats = new List<SharedValue<float>>();
 
         [DataMember(Name="shared_ints"), Preserve]
-        private List<SyncSharedValue<int>> _sharedInts = new List<SyncSharedValue<int>>();
+        private List<SharedValue<int>> _sharedInts = new List<SharedValue<int>>();
 
         [DataMember(Name="shared_strings"), Preserve]
-        private List<SyncSharedValue<string>> _sharedStrings = new List<SyncSharedValue<string>>();
+        private List<SharedValue<string>> _sharedStrings = new List<SharedValue<string>>();
 
         [DataMember(Name="user_bools"), Preserve]
-        private List<SyncUserValue<bool>> _userBools = new List<SyncUserValue<bool>>();
+        private List<UserValue<bool>> _userBools = new List<UserValue<bool>>();
 
         [DataMember(Name="user_floats"), Preserve]
-        private List<SyncUserValue<float>> _userFloats = new List<SyncUserValue<float>>();
+        private List<UserValue<float>> _userFloats = new List<UserValue<float>>();
 
         [DataMember(Name="user_ints"), Preserve]
-        private List<SyncUserValue<int>> _userInts = new List<SyncUserValue<int>>();
+        private List<UserValue<int>> _userInts = new List<UserValue<int>>();
 
         [DataMember(Name="user_strings"), Preserve]
-        private List<SyncUserValue<string>> _userStrings = new List<SyncUserValue<string>>();
-
-        public bool IsEmpty()
-        {
-            return SharedBools.Count + SharedFloats.Count + SharedInts.Count + SharedStrings.Count +
-               UserBools.Count + UserFloats.Count + UserStrings.Count == 0;
-        }
+        private List<UserValue<string>> _userStrings = new List<UserValue<string>>();
     }
 }

@@ -14,23 +14,22 @@
 * limitations under the License.
 */
 
-using System;
 using Nakama;
 
 namespace NakamaSync
 {
     internal class GuestEgress : IVarEgress
     {
-        public event Action OnSyncedDataReady;
+        private readonly SyncSocket _socket;
+        private readonly SyncVarKeys _keys;
 
-        private SyncVarKeys _keys;
-
-        public GuestEgress(SyncVarKeys keys)
+        public GuestEgress(SyncSocket socket, SyncVarKeys keys)
         {
+            _socket = socket;
             _keys = keys;
         }
 
-        public void HandleLocalSharedVarChanged<T>(SyncVarKey key, T newValue, SharedVarCollections<T> collections)
+        public void HandleLocalSharedVarChanged<T>(SyncVarKey key, T newValue, SharedVarAccessor<T> accessor)
         {
             var status = _keys.GetValidationStatus(key);
 
@@ -40,37 +39,47 @@ namespace NakamaSync
                 _keys.SetValidationStatus(key, status);
             }
 
-            var newSyncedValue = new SyncSharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
+            var newSyncedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
+
+            var values = new SyncValues();
+            accessor(values).Add(newSyncedValue);
 
             if (status == KeyValidationStatus.Pending)
             {
-                collections.SharedValuesToHost.Add(newSyncedValue);
+                _socket.SendSyncDataToHost(values);
             }
             else
             {
-                collections.SharedValuesToAll.Add(newSyncedValue);
+                _socket.SendSyncDataToAll(values);
             }
+
+            // todo clear on ack
         }
 
-        public void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarCollections<T> collections, IUserPresence target)
+        public void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarAccessor<T> accessor, IUserPresence target)
         {
             var status = _keys.GetValidationStatus(key);
 
+            // this value was validated and now we've
+            // modified it as a guest so revert it to pending status
             if (status == KeyValidationStatus.Validated)
             {
                 status = KeyValidationStatus.Pending;
                 _keys.SetValidationStatus(key, status);
             }
 
-            var newSyncedValue = new SyncUserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target);
+            var newSyncedValue = new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target);
+
+            var values = new SyncValues();
+            accessor(values).Add(newSyncedValue);
 
             if (status == KeyValidationStatus.Pending)
             {
-                collections.UserValuesToHost.Add(newSyncedValue);
+                _socket.SendSyncDataToHost(values);
             }
             else
             {
-                collections.UserValuesToHost.Add(newSyncedValue);
+                _socket.SendSyncDataToAll(values);
             }
         }
     }

@@ -20,7 +20,7 @@ namespace NakamaSync
 {
     internal interface IVarIngress
     {
-        void HandleIncomingSharedVar<T>(IUserPresence source, SyncSharedValue<T> value, SharedVarCollections<T> collections);
-        void HandleIncomingUserVar<T>(IUserPresence source, SyncUserValue<T> value, UserVarCollections<T> collections);
+        void HandleIncomingSharedValue<T>(SharedValue<T> value, SharedVarAccessor<T> accessor, SyncVarDictionary<SyncVarKey, SharedVar<T>> vars, IUserPresence source);
+        void HandleIncomingUserValue<T>(UserValue<T> value, UserVarAccessor<T> accessor, SyncVarDictionary<SyncVarKey, UserVar<T>> vars, IUserPresence source);
     }
 }

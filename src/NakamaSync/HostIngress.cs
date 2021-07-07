@@ -15,23 +15,25 @@
 */
 
 using System;
-using System.Linq;
 using Nakama;
 
 namespace NakamaSync
 {
     internal class HostIngress : IVarIngress
     {
+        private SyncSocket _socket;
         private readonly SyncVarKeys _keys;
 
-        public HostIngress(SyncVarKeys keys)
+        public HostIngress(SyncSocket socket, SyncVarKeys keys)
         {
+            _socket = socket;
             _keys = keys;
         }
 
-        public void HandleIncomingSharedVar<T>(IUserPresence source, SyncSharedValue<T> value, SharedVarCollections<T> collections)
+        public void HandleIncomingSharedValue<T>(SharedValue<T> value, SharedVarAccessor<T> accessor, SyncVarDictionary<SyncVarKey, SharedVar<T>> vars, IUserPresence source)
         {
-            SharedVar<T> var = collections.SharedVars.GetSyncVar(value.Key);
+            SharedVar<T> var = vars.GetSyncVar(value.Key);
+
 
             // TODO keys lock version checks
 
@@ -46,9 +48,12 @@ namespace NakamaSync
                     }
                     else
                     {
+                        var values = new SyncValues();
+
                         // one guest has incorrect value. queue a rollback for that guest.
-                        var outgoing = new SyncSharedValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated);
-                        collections.SharedValuesToAll.Add(outgoing);
+                        var outgoing = new SharedValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated);
+                        accessor(values).Add(value);
+                        _socket.SendSyncData(source, values);
                     }
                 break;
                 case KeyValidationStatus.None:
@@ -57,10 +62,10 @@ namespace NakamaSync
             }
         }
 
-        public void HandleIncomingUserVar<T>(IUserPresence source, SyncUserValue<T> value, UserVarCollections<T> collections)
+        public void HandleIncomingUserValue<T>(UserValue<T> value, UserVarAccessor<T> accessor, SyncVarDictionary<SyncVarKey, UserVar<T>> vars, IUserPresence source)
         {
             IUserPresence target = value.Target;
-            UserVar<T> var = collections.UserVars.GetSyncVar(value.Key);
+            UserVar<T> var = vars.GetSyncVar(value.Key);
 
             switch (value.KeyValidationStatus)
             {
@@ -73,9 +78,11 @@ namespace NakamaSync
                     }
                     else
                     {
+                        var values = new SyncValues();
                         // one guest has incorrect value. queue a rollback for that guest.
-                        var outgoing = new SyncUserValue<T>(value.Key, var.GetValue(target), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated, target);
-                        collections.UserValuesToGuest.Add(source.UserId, outgoing);
+                        var outgoing = new UserValue<T>(value.Key, var.GetValue(target), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated, target);
+                        accessor(values).Add(outgoing);
+                        _socket.SendSyncData(source, values);
                     }
                 break;
                 case KeyValidationStatus.None:
