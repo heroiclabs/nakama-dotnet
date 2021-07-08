@@ -15,6 +15,7 @@
 */
 
 using Nakama;
+using System;
 using System.Threading.Tasks;
 
 namespace NakamaSync
@@ -45,11 +46,18 @@ namespace NakamaSync
     // todo remove any event subscriptions in constructors.
     public class SyncMatch
     {
-        private Handshaker _handshaker;
-        private SyncSocket _socket;
+        private readonly Handshaker _handshaker;
+        private readonly SyncSocket _socket;
+        private readonly RolePresenceTracker _rolePresenceTracker;
+        private readonly PresenceTracker _presenceTracker;
+
+        private readonly SharedVarRegistry _sharedRegistry;
+        private readonly UserVarRegistry _userRegistry;
 
         internal SyncMatch(ISession session, SyncSocket socket, SyncVarRegistry registry, PresenceTracker presenceTracker, RolePresenceTracker rolePresenceTracker)
         {
+            _presenceTracker = presenceTracker;
+            _rolePresenceTracker = rolePresenceTracker;
             _socket = socket;
 
             var sharedVars = new SharedVars();
@@ -69,23 +77,35 @@ namespace NakamaSync
             var ingress = new RoleIngress(guestIngress, hostIngress, rolePresenceTracker, sharedVars, userVars);
             ingress.Subscribe(socket);
 
-            var sharedRegistry = new SharedVarRegistry(session, sharedVars, keys);
-            sharedRegistry.Register(registry);
+            _sharedRegistry = new SharedVarRegistry(session, sharedVars, keys);
+            _sharedRegistry.Register(registry);
 
-            var userRegistry = new UserVarRegistry(session, userVars, keys);
-            userRegistry.Register(registry);
+            _userRegistry = new UserVarRegistry(session, userVars, keys);
+            _userRegistry.Register(registry);
 
             var hostHandshaker = new HostHandshaker(keys, sharedVars, userVars, presenceTracker);
             hostHandshaker.ListenForHandshakes(socket);
 
             var guestHandshaker = new GuestHandshaker(keys, ingress, rolePresenceTracker);
 
+            rolePresenceTracker.OnHostChanged += HandleHostChanged;
+
             _handshaker = new Handshaker(guestHandshaker, hostHandshaker, rolePresenceTracker);
+        }
+
+        private void HandleHostChanged(HostChangedEvent evt)
+        {
+            if (evt.NewHost == _presenceTracker.GetSelf())
+            {
+                // pick up where the old host left off in terms of validating values.
+                new HostMigration().Migrate(_sharedRegistry, _userRegistry);
+            }
         }
 
         public Task Handshake()
         {
             return _handshaker.Handshake(_socket);
         }
+
     }
 }
