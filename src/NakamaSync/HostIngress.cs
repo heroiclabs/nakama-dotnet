@@ -50,7 +50,7 @@ namespace NakamaSync
                     {
                         var values = new SyncValues();
 
-                        // one guest has incorrect value. queue a rollback for that guest.
+                        // one guest has incorrect value. queue a rollback for all guests.
                         var outgoing = new SharedValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated);
                         accessor(values).Add(value);
                         _socket.SendSyncData(source, values);

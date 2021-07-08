@@ -73,14 +73,7 @@ namespace NakamaSync
             var values = new SyncValues();
             accessor(values).Add(newSyncedValue);
 
-            if (status == KeyValidationStatus.Pending)
-            {
-                _socket.SendSyncDataToHost(values);
-            }
-            else
-            {
-                _socket.SendSyncDataToAll(values);
-            }
+            _socket.SendSyncDataToAll(values);
         }
     }
 }
