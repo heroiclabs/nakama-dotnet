@@ -41,7 +41,7 @@ namespace NakamaSync
             socket.OnSyncData += HandleSyncData;
         }
 
-        public void HandleSyncData(IUserPresence source, SyncValues incomingValues)
+        public void HandleSyncData(IUserPresence source, SyncEnvelope incomingValues)
         {
             // todo clean up the redundancy here
             HandleIncomingSharedSyncValues(source, incomingValues.SharedBools, values => values.SharedBools, _sharedVars.Bools);

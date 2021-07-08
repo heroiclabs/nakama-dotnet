@@ -48,7 +48,7 @@ namespace NakamaSync
                     }
                     else
                     {
-                        var values = new SyncValues();
+                        var values = new SyncEnvelope();
 
                         // one guest has incorrect value. queue a rollback for all guests.
                         var outgoing = new SharedValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated);
@@ -78,7 +78,7 @@ namespace NakamaSync
                     }
                     else
                     {
-                        var values = new SyncValues();
+                        var values = new SyncEnvelope();
                         // one guest has incorrect value. queue a rollback for that guest.
                         var outgoing = new UserValue<T>(value.Key, var.GetValue(target), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated, target);
                         accessor(values).Add(outgoing);

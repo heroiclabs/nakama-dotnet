@@ -21,7 +21,7 @@ namespace NakamaSync
 {
     internal class SyncSocket
     {
-        public delegate void SyncDataHandler(IUserPresence source, SyncValues values);
+        public delegate void SyncDataHandler(IUserPresence source, SyncEnvelope envelope);
         public delegate void HandshakeRequestHandler(IUserPresence source, HandshakeRequest request);
         public delegate void HandshakeResponseHandler(IUserPresence source, HandshakeResponse response);
 
@@ -55,27 +55,27 @@ namespace NakamaSync
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, _encoding.Encode(response), new IUserPresence[]{target});
         }
 
-        public void SendSyncData(IUserPresence target, SyncValues values)
+        public void SendSyncData(IUserPresence target, SyncEnvelope envelope)
         {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(values), new IUserPresence[]{target});
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope), new IUserPresence[]{target});
         }
 
-        public void SendSyncDataToAll(SyncValues values)
+        public void SendSyncDataToAll(SyncEnvelope envelope)
         {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(values));
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
         }
 
-        public void SendSyncDataToHost(SyncValues values)
+        public void SendSyncDataToHost(SyncEnvelope envelope)
         {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(values), new IUserPresence[]{_presenceTracker.GetHost()});
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope), new IUserPresence[]{_presenceTracker.GetHost()});
         }
 
         private void HandleReceivedMatchState(IMatchState state)
         {
             if (state.OpCode == _opcodes.DataOpcode)
             {
-                SyncValues values = _encoding.Decode<SyncValues>(state.State);
-                OnSyncData(state.UserPresence, values);
+                SyncEnvelope envelope = _encoding.Decode<SyncEnvelope>(state.State);
+                OnSyncData(state.UserPresence, envelope);
             }
             else if (state.OpCode == _opcodes.HandshakeOpcode)
             {

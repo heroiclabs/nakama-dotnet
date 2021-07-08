@@ -42,7 +42,7 @@ namespace NakamaSync
 
         private void HandleHandshakeRequest(IUserPresence source, HandshakeRequest request, SyncSocket socket)
         {
-            var syncValues = new SyncValues();
+            var syncValues = new SyncEnvelope();
 
             bool success = request.AllKeys.SequenceEqual(_keys.GetKeys());
 

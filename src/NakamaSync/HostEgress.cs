@@ -41,9 +41,9 @@ namespace NakamaSync
                 throw new InvalidOperationException("Host should not have local key pending validation: " + key);
             }
 
-            SyncValues values = new SyncValues();
-            accessor(values).Add(new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status));
-            _socket.SendSyncDataToAll(values);
+            SyncEnvelope envelope = new SyncEnvelope();
+            accessor(envelope).Add(new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status));
+            _socket.SendSyncDataToAll(envelope);
         }
 
         public void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarAccessor<T> accessor, IUserPresence target)
@@ -56,9 +56,9 @@ namespace NakamaSync
             }
 
             // TODO clear collection if successful send + ack
-            SyncValues values = new SyncValues();
-            accessor(values).Add(new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target));
-            _socket.SendSyncDataToAll(values);
+            SyncEnvelope envelope = new SyncEnvelope();
+            accessor(envelope).Add(new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target));
+            _socket.SendSyncDataToAll(envelope);
         }
     }
 }

@@ -19,10 +19,10 @@ using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
-    internal delegate List<SharedValue<T>> SharedVarAccessor<T>(SyncValues values);
-    internal delegate List<UserValue<T>> UserVarAccessor<T>(SyncValues values);
+    internal delegate List<SharedValue<T>> SharedVarAccessor<T>(SyncEnvelope envelope);
+    internal delegate List<UserValue<T>> UserVarAccessor<T>(SyncEnvelope envelope);
 
-    internal class SyncValues
+    internal class SyncEnvelope
     {
         public List<SharedValue<bool>> SharedBools => _sharedBools;
         public List<SharedValue<float>> SharedFloats => _sharedFloats;

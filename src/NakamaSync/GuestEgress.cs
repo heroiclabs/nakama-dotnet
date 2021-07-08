@@ -41,7 +41,7 @@ namespace NakamaSync
 
             var newSyncedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
 
-            var values = new SyncValues();
+            var values = new SyncEnvelope();
             accessor(values).Add(newSyncedValue);
 
             if (status == KeyValidationStatus.Pending)
@@ -70,7 +70,7 @@ namespace NakamaSync
 
             var newSyncedValue = new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target);
 
-            var values = new SyncValues();
+            var values = new SyncEnvelope();
             accessor(values).Add(newSyncedValue);
 
             _socket.SendSyncDataToAll(values);
