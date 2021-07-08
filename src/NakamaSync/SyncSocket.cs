@@ -45,14 +45,14 @@ namespace NakamaSync
             _socket.ReceivedMatchState += HandleReceivedMatchState;
         }
 
-        public void SendHandshakeResponse(IUserPresence target, HandshakeResponse response)
-        {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, _encoding.Encode(response), new IUserPresence[]{target});
-        }
-
         public void SendHandshakeRequest(HandshakeRequest request)
         {
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, _encoding.Encode(request), new IUserPresence[]{_presenceTracker.GetHost()});
+        }
+
+        public void SendHandshakeResponse(IUserPresence target, HandshakeResponse response)
+        {
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, _encoding.Encode(response), new IUserPresence[]{target});
         }
 
         public void SendSyncData(IUserPresence target, SyncValues values)

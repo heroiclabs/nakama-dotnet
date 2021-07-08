@@ -86,7 +86,7 @@ namespace Nakama.Tests.Socket
         {
             return new SyncTestEnvironment(
                 new SyncOpcodes(handshakeOpcode: 0, dataOpcode: 1),
-                numClients: 5,
+                numClients: 4,
                 numTestVars: 1,
                 hostIndex: 0);
         }

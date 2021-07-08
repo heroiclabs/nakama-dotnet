@@ -896,6 +896,7 @@ namespace Nakama
                 _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
                 return null; // No response required.
             }
+
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
 
             lock (_lockObj)

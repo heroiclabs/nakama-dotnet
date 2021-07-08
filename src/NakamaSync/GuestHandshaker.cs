@@ -16,7 +16,8 @@
 
 using System;
 using System.Linq;
-using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
@@ -27,6 +28,8 @@ namespace NakamaSync
         private RoleIngress _ingress;
         private PresenceTracker _presenceTracker;
 
+        private TaskCompletionSource<object> _handshakeTcs;
+
         public GuestHandshaker(SyncVarKeys keys, RoleIngress ingress, PresenceTracker presenceTracker)
         {
             _keys = keys;
@@ -34,10 +37,17 @@ namespace NakamaSync
             _presenceTracker = presenceTracker;
         }
 
-        public void Subscribe(SyncSocket socket)
+        public Task DoHandshake(SyncSocket socket)
         {
+            if (_handshakeTcs != null)
+            {
+                throw new InvalidOperationException("Guest has already requested a handhake.");
+            }
+
+            _handshakeTcs = new TaskCompletionSource<object>();
             _presenceTracker.OnGuestJoined += (guest) => HandleGuestJoined(guest, socket);
             socket.OnHandshakeResponse += (source, response) => HandleHandshakeResponse(source, response, socket);
+            return _handshakeTcs.Task;
         }
 
         private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response, SyncSocket socket)
@@ -45,10 +55,11 @@ namespace NakamaSync
             if (response.Success)
             {
                 _ingress.HandleSyncData(source, response.Store);
+                _handshakeTcs.TrySetResult(null);
             }
             else
             {
-                throw new InvalidOperationException("Synced match handshake with host failed.");
+                _handshakeTcs?.TrySetException(new InvalidOperationException("Synced match handshake with host failed."));
             }
         }
 

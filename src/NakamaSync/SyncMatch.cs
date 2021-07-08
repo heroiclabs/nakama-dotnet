@@ -15,6 +15,7 @@
 */
 
 using Nakama;
+using System.Threading.Tasks;
 
 namespace NakamaSync
 {
@@ -39,12 +40,17 @@ namespace NakamaSync
     // todo rename this class?
     // todo handle host changed
     // todo handle guest left
-    // todo what happens if user id changes? can it even?
+    // todo migrate pending values when host chanes
     // override tostring
     public class SyncMatch
     {
+        private Handshaker _handshaker;
+        private SyncSocket _socket;
+
         internal SyncMatch(ISession session, SyncSocket socket, SyncVarRegistry registry, PresenceTracker presenceTracker)
         {
+            _socket = socket;
+
             var sharedVars = new SharedVars();
             var userVars = new UserVars();
 
@@ -69,11 +75,16 @@ namespace NakamaSync
             userRegistry.Register(registry);
 
             var hostHandshaker = new HostHandshaker(keys, sharedVars, userVars, presenceTracker);
-            hostHandshaker.Subscribe(socket);
+            hostHandshaker.ListenForHandshakes(socket);
 
             var guestHandshaker = new GuestHandshaker(keys, ingress, presenceTracker);
-            guestHandshaker.Subscribe(socket);
-            hostHandshaker.Subscribe(socket);
+
+            _handshaker = new Handshaker(guestHandshaker, hostHandshaker, presenceTracker);
+        }
+
+        public Task Handshake()
+        {
+            return _handshaker.Handshake(_socket);
         }
     }
 }

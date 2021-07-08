@@ -32,6 +32,7 @@ namespace NakamaSync
             var syncSocket = new SyncSocket(socket, match, opcodes, presenceTracker);
             var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker);
             presenceTracker.ReceiveMatch(match);
+            await syncMatch.Handshake();
             return match;
         }
 
@@ -43,6 +44,7 @@ namespace NakamaSync
             var syncSocket = new SyncSocket(socket, match, opcodes, presenceTracker);
             var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker);
             presenceTracker.ReceiveMatch(match);
+            await syncMatch.Handshake();
             return match;
         }
     }
