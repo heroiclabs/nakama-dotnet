@@ -15,36 +15,33 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Nakama;
 
 namespace NakamaSync
 {
-    // TODO catch presence tracker exceptions.
     internal class PresenceTracker
     {
-        public event Action<HostChangedEvent> OnHostChanged;
-        public event Action<IUserPresence> OnGuestLeft;
-        public event Action<IUserPresence> OnGuestJoined;
+        public event Action<IUserPresence> OnPresenceAdded;
+        public event Action<IUserPresence> OnPresenceRemoved;
 
         private readonly SortedList<string, IUserPresence> _presences = new SortedList<string, IUserPresence>();
         private readonly string _userId;
-        private readonly object _presenceLock = new object();
 
         public PresenceTracker(string userId)
         {
             _userId = userId;
         }
 
-        public IEnumerable<IUserPresence> GetGuests()
+        public int GetPresenceCount()
         {
-            return _presences.Values.Except(new IUserPresence[]{GetHost()});
+            return _presences.Count;
         }
 
-        public IUserPresence GetHost()
+        public List<string> GetSortedUserIds()
         {
-            return _presences.FirstOrDefault().Value;
+            return new List<string>(_presences.Keys);
         }
 
         public IUserPresence GetPresence(string userId)
@@ -57,6 +54,28 @@ namespace NakamaSync
             return _presences[userId];
         }
 
+        public IUserPresence GetPresence(int index)
+        {
+            if (GetPresenceCount() > index)
+            {
+                return _presences.Values[index];
+            }
+
+            return null;
+        }
+
+        public List<IUserPresence> GetPresences(IEnumerable<string> userIds)
+        {
+            var presences = new List<IUserPresence>();
+
+            foreach (string userId in userIds)
+            {
+                presences.Add(GetPresence(userId));
+            }
+
+            return presences;
+        }
+
         public IUserPresence GetSelf()
         {
             return GetPresence(_userId);
@@ -64,93 +83,40 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
-            lock (_presenceLock)
-            {
-                HandlePresences(match.Presences, new IUserPresence[]{});
-            }
+            HandlePresences(match.Presences, new IUserPresence[]{});
         }
 
         public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
         {
-            lock (_presenceLock)
-            {
-                HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
-            }
+            HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
         }
 
         private void HandlePresences(IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
         {
-            var oldPresences = new SortedList<string, IUserPresence>(_presences);
-            ApplyNewPresences(_presences, joiners, leavers);
-
-            var oldHost = GetHost(oldPresences.Values);
-            var newHost = GetHost(_presences.Values);
-
-            foreach (var joiner in joiners)
+            var oldPresences = new SortedList<string, IUserPresence>(_presences, StringComparer.Create(System.Globalization.CultureInfo.InvariantCulture, ignoreCase: false));
+            foreach (IUserPresence leaver in leavers)
             {
-                if (joiner.UserId != newHost?.UserId)
+                if (_presences.ContainsKey(leaver.UserId))
                 {
-                    OnGuestJoined?.Invoke(joiner);
+                    _presences.Remove(leaver.UserId);
+                    OnPresenceRemoved?.Invoke(leaver);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Leaving presence does not exist.");
                 }
             }
 
-            foreach (var leaver in leavers)
+            foreach (IUserPresence joiner in joiners)
             {
-                if (leaver.UserId != oldHost?.UserId)
+                if (_presences.ContainsKey(joiner.UserId))
                 {
-                    OnGuestLeft?.Invoke(leaver);
+                    throw new InvalidOperationException("Joining presence already exists.");
                 }
-            }
-
-            if (oldHost != newHost)
-            {
-                OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
-            }
-        }
-
-        public bool IsSelfHost()
-        {
-            lock (_presenceLock)
-            {
-                return _userId == GetHost()?.UserId;
-            }
-        }
-
-        private IUserPresence GetHost(IEnumerable<IUserPresence> presences)
-        {
-            lock (_presenceLock)
-            {
-                return presences.FirstOrDefault();
-            }
-        }
-
-        private void ApplyNewPresences(
-            SortedList<string, IUserPresence> presences, IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
-        {
-            lock (_presenceLock)
-            {
-                foreach (IUserPresence leaver in leavers)
+                else
                 {
-                    if (presences.ContainsKey(leaver.UserId))
-                    {
-                        presences.Remove(leaver.UserId);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Leaving presence does not exist.");
-                    }
-                }
-
-                foreach (IUserPresence joiner in joiners)
-                {
-                    if (presences.ContainsKey(joiner.UserId))
-                    {
-                        throw new InvalidOperationException("Joining presence already exists.");
-                    }
-                    else
-                    {
-                        presences.Add(joiner.UserId, joiner);
-                    }
+                    _presences.Add(joiner.UserId, joiner);
+                    OnPresenceAdded?.Invoke(joiner);
                 }
             }
         }

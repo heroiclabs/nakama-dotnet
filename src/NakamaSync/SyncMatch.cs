@@ -42,12 +42,13 @@ namespace NakamaSync
     // todo handle guest left
     // todo migrate pending values when host chanes
     // override tostring
+    // todo remove any event subscriptions in constructors.
     public class SyncMatch
     {
         private Handshaker _handshaker;
         private SyncSocket _socket;
 
-        internal SyncMatch(ISession session, SyncSocket socket, SyncVarRegistry registry, PresenceTracker presenceTracker)
+        internal SyncMatch(ISession session, SyncSocket socket, SyncVarRegistry registry, PresenceTracker presenceTracker, RolePresenceTracker rolePresenceTracker)
         {
             _socket = socket;
 
@@ -59,13 +60,13 @@ namespace NakamaSync
             var guestEgress = new GuestEgress(socket, keys);
             var hostEgress = new HostEgress(socket, keys, presenceTracker);
 
-            var egress = new RoleEgress(guestEgress, hostEgress, presenceTracker);
+            var egress = new RoleEgress(guestEgress, hostEgress, rolePresenceTracker);
             egress.Subscribe(sharedVars, userVars);
 
-            var guestIngress = new GuestIngress(keys, presenceTracker);
+            var guestIngress = new GuestIngress(keys, rolePresenceTracker);
             var hostIngress = new HostIngress(socket, keys);
 
-            var ingress = new RoleIngress(guestIngress, hostIngress, presenceTracker, sharedVars, userVars);
+            var ingress = new RoleIngress(guestIngress, hostIngress, rolePresenceTracker, sharedVars, userVars);
             ingress.Subscribe(socket);
 
             var sharedRegistry = new SharedVarRegistry(session, sharedVars, keys);
@@ -77,9 +78,9 @@ namespace NakamaSync
             var hostHandshaker = new HostHandshaker(keys, sharedVars, userVars, presenceTracker);
             hostHandshaker.ListenForHandshakes(socket);
 
-            var guestHandshaker = new GuestHandshaker(keys, ingress, presenceTracker);
+            var guestHandshaker = new GuestHandshaker(keys, ingress, rolePresenceTracker);
 
-            _handshaker = new Handshaker(guestHandshaker, hostHandshaker, presenceTracker);
+            _handshaker = new Handshaker(guestHandshaker, hostHandshaker, rolePresenceTracker);
         }
 
         public Task Handshake()

@@ -33,9 +33,9 @@ namespace NakamaSync
         private readonly ISocket _socket;
         private readonly IMatch _match;
         private readonly SyncOpcodes _opcodes;
-        private readonly PresenceTracker _presenceTracker;
+        private readonly RolePresenceTracker _presenceTracker;
 
-        public SyncSocket(ISocket socket, IMatch match, SyncOpcodes opcodes, PresenceTracker presenceTracker)
+        public SyncSocket(ISocket socket, IMatch match, SyncOpcodes opcodes, RolePresenceTracker presenceTracker)
         {
             _socket = socket;
             _match = match;

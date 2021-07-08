@@ -27,10 +27,11 @@ namespace NakamaSync
         public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, SyncVarRegistry registry)
         {
             var presenceTracker = new PresenceTracker(session.UserId);
+            var rolePresenceTracker = new RolePresenceTracker(presenceTracker);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
             IMatch match = await socket.CreateMatchAsync();
-            var syncSocket = new SyncSocket(socket, match, opcodes, presenceTracker);
-            var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker);
+            var syncSocket = new SyncSocket(socket, match, opcodes, rolePresenceTracker);
+            var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker, rolePresenceTracker);
             presenceTracker.ReceiveMatch(match);
             await syncMatch.Handshake();
             return match;
@@ -39,10 +40,11 @@ namespace NakamaSync
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, SyncVarRegistry registry)
         {
             var presenceTracker = new PresenceTracker(session.UserId);
+            var rolePresenceTracker = new RolePresenceTracker(presenceTracker);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
             IMatch match = await socket.JoinMatchAsync(matchId);
-            var syncSocket = new SyncSocket(socket, match, opcodes, presenceTracker);
-            var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker);
+            var syncSocket = new SyncSocket(socket, match, opcodes, rolePresenceTracker);
+            var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker, rolePresenceTracker);
             presenceTracker.ReceiveMatch(match);
             await syncMatch.Handshake();
             return match;

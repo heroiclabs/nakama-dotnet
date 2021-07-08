@@ -21,13 +21,13 @@ namespace NakamaSync
 {
     internal class RoleIngress
     {
-        private readonly PresenceTracker _presenceTracker;
+        private readonly RolePresenceTracker _presenceTracker;
         private readonly GuestIngress _guestIngress;
         private readonly HostIngress _hostIngress;
         private readonly SharedVars _sharedVars;
         private readonly UserVars _userVars;
 
-        public RoleIngress(GuestIngress guestIngress, HostIngress hostIngress, PresenceTracker presenceTracker, SharedVars sharedVars, UserVars userVars)
+        public RoleIngress(GuestIngress guestIngress, HostIngress hostIngress, RolePresenceTracker presenceTracker, SharedVars sharedVars, UserVars userVars)
         {
             _presenceTracker = presenceTracker;
             _guestIngress = guestIngress;

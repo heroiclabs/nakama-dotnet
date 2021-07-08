@@ -22,10 +22,10 @@ namespace NakamaSync
     {
         private GuestHandshaker _guestHandshaker;
         private HostHandshaker _hostHandhaker;
-        private PresenceTracker _presenceTracker;
+        private RolePresenceTracker _presenceTracker;
 
         // todo expose handshake timeout? or keep same as socket timeout?
-        public Handshaker(GuestHandshaker guestHandshaker, HostHandshaker hostHandshaker, PresenceTracker presenceTracker)
+        public Handshaker(GuestHandshaker guestHandshaker, HostHandshaker hostHandshaker, RolePresenceTracker presenceTracker)
         {
             _guestHandshaker = guestHandshaker;
             _hostHandhaker = hostHandshaker;

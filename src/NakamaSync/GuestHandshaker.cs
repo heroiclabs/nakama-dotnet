@@ -26,11 +26,11 @@ namespace NakamaSync
     {
         private SyncVarKeys _keys;
         private RoleIngress _ingress;
-        private PresenceTracker _presenceTracker;
+        private RolePresenceTracker _presenceTracker;
 
         private TaskCompletionSource<object> _handshakeTcs;
 
-        public GuestHandshaker(SyncVarKeys keys, RoleIngress ingress, PresenceTracker presenceTracker)
+        public GuestHandshaker(SyncVarKeys keys, RoleIngress ingress, RolePresenceTracker presenceTracker)
         {
             _keys = keys;
             _ingress = ingress;
