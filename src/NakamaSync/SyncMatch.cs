@@ -73,7 +73,7 @@ namespace NakamaSync
             registry.Register(_keys, presenceTracker.GetSelf());
             CreateIngresses();
             CreateEgresses();
-            CreateHandshaker(_sharedIngress, _userIngress);
+            _handshaker = CreateHandshaker(_sharedIngress, _userIngress);
         }
 
         public Task Handshake()
@@ -112,7 +112,7 @@ namespace NakamaSync
             egress.Subscribe(_registry);
         }
 
-        private void CreateHandshaker(SharedRoleIngress sharedIngress, UserRoleIngress userIngress)
+        private Handshaker CreateHandshaker(SharedRoleIngress sharedIngress, UserRoleIngress userIngress)
         {
             var hostHandshaker = new HostHandshaker(_keys, _registry, _presenceTracker);
             hostHandshaker.ListenForHandshakes(_socket);
@@ -120,7 +120,7 @@ namespace NakamaSync
             var guestHandshaker = new GuestHandshaker(_keys, sharedIngress, userIngress, _rolePresenceTracker);
             _rolePresenceTracker.OnHostChanged += HandleHostChanged;
 
-            new Handshaker(guestHandshaker, hostHandshaker, _rolePresenceTracker);
+            return new Handshaker(guestHandshaker, hostHandshaker, _rolePresenceTracker);
         }
     }
 }

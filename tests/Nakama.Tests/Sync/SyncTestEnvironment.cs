@@ -119,7 +119,7 @@ namespace Nakama.Tests
 
             matchTasks.Insert(HostIndex, _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], opcodes, _registrations[HostIndex]));
 
-            Task.WaitAll(matchTasks.ToArray());
+            await matchTasks[HostIndex];
 
             for (int i = 0; i < NumSessions; i++)
             {
