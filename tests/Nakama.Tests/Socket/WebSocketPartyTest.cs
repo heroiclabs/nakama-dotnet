@@ -383,7 +383,6 @@ namespace Nakama.Tests.Socket
 
             await socket1.CloseAsync();
             await socket2.CloseAsync();
-
         }
     }
 }
