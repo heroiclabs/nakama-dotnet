@@ -21,15 +21,15 @@ using System.Collections.Generic;
 // todo where do we even change validation status
 namespace NakamaSync
 {
-    internal class SyncVarKeys
+    internal class VarKeys
     {
-        private readonly HashSet<SyncVarKey> _keys = new HashSet<SyncVarKey>();
-        private readonly ConcurrentDictionary<SyncVarKey, int> _lockVersions = new ConcurrentDictionary<SyncVarKey, int>();
+        private readonly HashSet<string> _keys = new HashSet<string>();
+        private readonly ConcurrentDictionary<string, int> _lockVersions = new ConcurrentDictionary<string, int>();
         private readonly object _lockVersionLock = new object();
         private readonly object _registerLock = new object();
-        private readonly ConcurrentDictionary<SyncVarKey, KeyValidationStatus> _validationStatus = new ConcurrentDictionary<SyncVarKey, KeyValidationStatus>();
+        private readonly ConcurrentDictionary<string, KeyValidationStatus> _validationStatus = new ConcurrentDictionary<string, KeyValidationStatus>();
 
-        public void RegisterKey(SyncVarKey key, KeyValidationStatus status)
+        public void RegisterKey(string key, KeyValidationStatus status)
         {
             lock (_registerLock)
             {
@@ -43,17 +43,17 @@ namespace NakamaSync
             }
         }
 
-        public HashSet<SyncVarKey> GetKeys()
+        public HashSet<string> GetKeys()
         {
             return _keys;
         }
 
-        public int GetLockVersion(SyncVarKey key)
+        public int GetLockVersion(string key)
         {
             return _lockVersions[key];
         }
 
-        public KeyValidationStatus GetValidationStatus(SyncVarKey key)
+        public KeyValidationStatus GetValidationStatus(string key)
         {
             if (!_validationStatus.ContainsKey(key))
             {
@@ -63,12 +63,12 @@ namespace NakamaSync
             return _validationStatus[key];
         }
 
-        public bool HasLockVersion(SyncVarKey key)
+        public bool HasLockVersion(string key)
         {
             return _lockVersions.ContainsKey(key);
         }
 
-        public void IncrementLockVersion(SyncVarKey key)
+        public void IncrementLockVersion(string key)
         {
             lock (_lockVersionLock)
             {
@@ -76,7 +76,7 @@ namespace NakamaSync
             }
         }
 
-        public void SetValidationStatus(SyncVarKey key, KeyValidationStatus status)
+        public void SetValidationStatus(string key, KeyValidationStatus status)
         {
             if (!_validationStatus.ContainsKey(key))
             {

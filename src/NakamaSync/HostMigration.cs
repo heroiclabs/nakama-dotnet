@@ -14,50 +14,32 @@
 * limitations under the License.
 */
 
+using System.Collections.Generic;
+
 namespace NakamaSync
 {
     internal class HostMigration
     {
-        public void Migrate(SharedVarRegistry sharedRegistry, UserVarRegistry userRegistry)
+        public void Migrate(SyncVarRegistry registry)
         {
-            ValidatePendingSharedVars(sharedRegistry);
-            ValidatePendingUserVars(userRegistry);
+            ValidatePendingVars<SharedVar<bool>>(registry.SharedBools);
+            ValidatePendingVars<SharedVar<float>>(registry.SharedFloats);
+            ValidatePendingVars<SharedVar<int>>(registry.SharedInts);
+            ValidatePendingVars<SharedVar<string>>(registry.SharedStrings);
+
+            ValidatePendingVars<UserVar<bool>>(registry.UserBools);
+            ValidatePendingVars<UserVar<float>>(registry.UserFloats);
+            ValidatePendingVars<UserVar<int>>(registry.UserInts);
+            ValidatePendingVars<UserVar<string>>(registry.UserStrings);
         }
 
-        private void ValidatePendingSharedVars(SharedVarRegistry sharedRegistry)
+        private void ValidatePendingVars<TVar>(Dictionary<string, TVar> vars) where TVar : IVar
         {
-            ValidatePendingSharedVars<bool>(sharedRegistry.SharedVars.Bools);
-            ValidatePendingSharedVars<float>(sharedRegistry.SharedVars.Floats);
-            ValidatePendingSharedVars<int>(sharedRegistry.SharedVars.Ints);
-            ValidatePendingSharedVars<string>(sharedRegistry.SharedVars.Strings);
-        }
-
-        private void ValidatePendingSharedVars<T>(SyncVarDictionary<SyncVarKey, SharedVar<T>> vars)
-        {
-            foreach (SyncVarKey key in vars.GetKeys())
+            foreach (KeyValuePair<string, TVar> kvp in vars)
             {
-                if (vars.GetSyncVar(key).KeyValidationStatus == KeyValidationStatus.Pending)
+                if (vars[kvp.Key].GetValidationStatus() == KeyValidationStatus.Pending)
                 {
-
-                }
-            }
-        }
-
-        private void ValidatePendingUserVars(UserVarRegistry userRegistry)
-        {
-            ValidatePendingUserVars<bool>(userRegistry.UserVars.Bools);
-            ValidatePendingUserVars<float>(userRegistry.UserVars.Floats);
-            ValidatePendingUserVars<int>(userRegistry.UserVars.Ints);
-            ValidatePendingUserVars<string>(userRegistry.UserVars.Strings);
-        }
-
-        private void ValidatePendingUserVars<T>(SyncVarDictionary<SyncVarKey, UserVar<T>> vars)
-        {
-            foreach (SyncVarKey key in vars.GetKeys())
-            {
-                if (vars.GetSyncVar(key).KeyValidationStatus == KeyValidationStatus.Pending)
-                {
-
+                    // todo do
                 }
             }
         }

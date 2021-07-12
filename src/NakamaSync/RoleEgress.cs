@@ -1,3 +1,6 @@
+
+
+using System.Collections.Generic;
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -13,7 +16,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
 namespace NakamaSync
 {
     internal class RoleEgress
@@ -29,43 +31,51 @@ namespace NakamaSync
             _presenceTracker = presenceTracker;
         }
 
-        public void Subscribe(SharedVars sharedVars, UserVars userVars)
+        public void Subscribe(SyncVarRegistry registry)
         {
-            Subscribe(sharedVars.Bools, values => values.SharedBools);
-            Subscribe(sharedVars.Floats, values => values.SharedFloats);
-            Subscribe(sharedVars.Ints,  values => values.SharedInts);
-            Subscribe(sharedVars.Bools, values => values.SharedBools);
+            Subscribe(registry.SharedBools, values => values.SharedBools);
+            Subscribe(registry.SharedFloats, values => values.SharedFloats);
+            Subscribe(registry.SharedInts,  values => values.SharedInts);
+            Subscribe(registry.SharedBools, values => values.SharedBools);
 
-            Subscribe(userVars.Bools, values => values.UserBools);
-            Subscribe(userVars.Floats, values => values.UserFloats);
-            Subscribe(userVars.Ints,  values => values.UserInts);
-            Subscribe(userVars.Strings, values => values.UserStrings);
+            Subscribe(registry.UserBools, values => values.UserBools);
+            Subscribe(registry.UserFloats, values => values.UserFloats);
+            Subscribe(registry.UserInts,  values => values.UserInts);
+            Subscribe(registry.UserStrings, values => values.UserStrings);
         }
 
-        private void Subscribe<T>(SyncVarDictionary<SyncVarKey, SharedVar<T>> vars, SharedVarAccessor<T> accessor)
+        private void Subscribe<T>(Dictionary<string, SharedVar<T>> vars, SharedVarAccessor<T> accessor)
         {
-            foreach (var key in vars.GetKeys())
+            bool isHost = _presenceTracker.IsSelfHost();
+
+            foreach (var kvp in vars)
             {
-                vars.GetSyncVar(key).OnLocalValueChanged += evt => GetEgress().HandleLocalSharedVarChanged(key, evt.NewValue, accessor);
+                if (isHost)
+                {
+                    vars[kvp.Key].OnLocalValueChanged += evt => _hostEgress.HandleLocalSharedVarChanged(kvp.Key, evt.NewValue, accessor);
+                }
+                else
+                {
+                    vars[kvp.Key].OnLocalValueChanged += evt => _guestEgress.HandleLocalSharedVarChanged(kvp.Key, evt.NewValue, accessor);
+                }
             }
         }
 
-        private void Subscribe<T>(SyncVarDictionary<SyncVarKey, UserVar<T>> vars, UserVarAccessor<T> accessor)
+        private void Subscribe<T>(Dictionary<string, UserVar<T>> vars, UserVarAccessor<T> accessor)
         {
-            foreach (var key in vars.GetKeys())
-            {
-                vars.GetSyncVar(key).OnLocalValueChanged += evt => GetEgress().HandleLocalUserVarChanged(key, evt.NewValue, accessor, evt.Target);
-            }
-        }
+            bool isHost = _presenceTracker.IsSelfHost();
 
-        private IVarEgress GetEgress()
-        {
-            if (_presenceTracker.IsSelfHost())
+            foreach (var kvp in vars)
             {
-                return _hostEgress;
+                if (isHost)
+                {
+                    vars[kvp.Key].OnLocalValueChanged += evt => _hostEgress.HandleLocalUserVarChanged(kvp.Key, evt.NewValue, evt.Target, accessor);
+                }
+                else
+                {
+                    vars[kvp.Key].OnLocalValueChanged += evt => _guestEgress.HandleLocalUserVarChanged(kvp.Key, evt.NewValue, evt.Target, accessor);
+                }
             }
-
-            return _guestEgress;
         }
     }
 }

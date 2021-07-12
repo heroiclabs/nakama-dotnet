@@ -19,20 +19,20 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class HostEgress : IVarEgress
+    internal class HostEgress
     {
-        private readonly SyncSocket _socket;
-        private readonly SyncVarKeys _keys;
+        private readonly EnvelopeBuilder _builder;
+        private readonly VarKeys _keys;
         private readonly PresenceTracker _presenceTracker;
 
-        public HostEgress(SyncSocket socket, SyncVarKeys keys, PresenceTracker presenceTracker)
+        public HostEgress(EnvelopeBuilder builder, VarKeys keys, PresenceTracker presenceTracker)
         {
-            _socket = socket;
+            _builder = builder;
             _keys = keys;
             _presenceTracker = presenceTracker;
         }
 
-        public void HandleLocalSharedVarChanged<T>(SyncVarKey key, T newValue, SharedVarAccessor<T> accessor)
+        public void HandleLocalSharedVarChanged<T>(string key, T newValue, SharedVarAccessor<T> accessor)
         {
             var status = _keys.GetValidationStatus(key);
 
@@ -41,12 +41,12 @@ namespace NakamaSync
                 throw new InvalidOperationException("Host should not have local key pending validation: " + key);
             }
 
-            SyncEnvelope envelope = new SyncEnvelope();
-            accessor(envelope).Add(new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status));
-            _socket.SendSyncDataToAll(envelope);
+            var sharedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
+            _builder.AddSharedVar(accessor, sharedValue);
+            _builder.SendEnvelope();
         }
 
-        public void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarAccessor<T> accessor, IUserPresence target)
+        public void HandleLocalUserVarChanged<T>(string key, T newValue, IUserPresence target, UserVarAccessor<T> accessor)
         {
             var status = _keys.GetValidationStatus(key);
 
@@ -55,10 +55,8 @@ namespace NakamaSync
                 throw new InvalidOperationException("Host should not have local key pending validation: " + key);
             }
 
-            // TODO clear collection if successful send + ack
-            SyncEnvelope envelope = new SyncEnvelope();
-            accessor(envelope).Add(new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target));
-            _socket.SendSyncDataToAll(envelope);
+            _builder.AddUserVar(accessor, new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target));
+            _builder.SendEnvelope();
         }
     }
 }

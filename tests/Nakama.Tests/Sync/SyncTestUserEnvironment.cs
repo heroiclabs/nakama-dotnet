@@ -48,35 +48,35 @@ namespace Nakama.Tests
             for (int i = 0; i < numTestVars; i++)
             {
                 var newSharedBool = new SharedVar<bool>();
-                registration.SharedBools.Register(keyGenerator(session.UserId, nameof(newSharedBool), i), newSharedBool);
+                registration.SharedBools[keyGenerator(session.UserId, nameof(newSharedBool), i)] = newSharedBool;
                 SharedBools.Add(newSharedBool);
 
                 var newSharedFloat = new SharedVar<float>();
-                registration.SharedFloats.Register(keyGenerator(session.UserId, nameof(newSharedFloat), i), newSharedFloat);
+                registration.SharedFloats[keyGenerator(session.UserId, nameof(newSharedFloat), i)] = newSharedFloat;
                 SharedFloats.Add(newSharedFloat);
 
                 var newSharedInt = new SharedVar<int>();
-                registration.SharedInts.Register(keyGenerator(session.UserId, nameof(newSharedInt), i), newSharedInt);
+                registration.SharedInts[keyGenerator(session.UserId, nameof(newSharedInt), i)] = newSharedInt;
                 SharedInts.Add(newSharedInt);
 
                 var newSharedString = new SharedVar<string>();
-                registration.SharedStrings.Register(keyGenerator(session.UserId, nameof(newSharedString), i), newSharedString);
+                registration.SharedStrings[keyGenerator(session.UserId, nameof(newSharedString), i)] = newSharedString;
                 SharedStrings.Add(newSharedString);
 
                 var newUserBool = new UserVar<bool>();
-                registration.UserBools.Register(keyGenerator(session.UserId, nameof(newUserBool), i), newUserBool);
+                registration.UserBools[keyGenerator(session.UserId, nameof(newUserBool), i)] = newUserBool;
                 UserBools.Add(newUserBool);
 
                 var newUserFloat = new UserVar<float>();
-                registration.UserFloats.Register(keyGenerator(session.UserId, nameof(newUserFloat), i), newUserFloat);
+                registration.UserFloats[keyGenerator(session.UserId, nameof(newUserFloat), i)] = newUserFloat;
                 UserFloats.Add(newUserFloat);
 
                 var newUserInt = new UserVar<int>();
-                registration.UserInts.Register(keyGenerator(session.UserId, nameof(newUserInt), i), newUserInt);
+                registration.UserInts[keyGenerator(session.UserId, nameof(newUserInt), i)] = newUserInt;
                 UserInts.Add(newUserInt);
 
                 var newUserString = new UserVar<string>();
-                registration.UserStrings.Register(keyGenerator(session.UserId, nameof(newUserString), i), newUserString);
+                registration.UserStrings[keyGenerator(session.UserId, nameof(newUserString), i)] = newUserString;
                 UserStrings.Add(newUserString);
             }
         }

@@ -14,13 +14,20 @@
 * limitations under the License.
 */
 
-using Nakama;
+using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
-    internal interface IVarEgress
+    internal class ValidationAck
     {
-        void HandleLocalSharedVarChanged<T>(SyncVarKey key, T newValue, SharedVarAccessor<T> accessor);
-        void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarAccessor<T> accessor, IUserPresence target);
+        public string Key => _key;
+
+        [DataMember(Name="key"), Preserve]
+        string _key;
+
+        public ValidationAck(string key)
+        {
+            _key = key;
+        }
     }
 }

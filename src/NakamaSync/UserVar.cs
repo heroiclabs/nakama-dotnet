@@ -23,7 +23,7 @@ namespace NakamaSync
     /// <summary>
     /// A variable containing a value for each user in the match. Each value is synchronized across all users.
     /// </summary>
-    public class UserVar<T> : ISyncVar
+    public class UserVar<T> : IVar
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then
@@ -37,13 +37,13 @@ namespace NakamaSync
 
         public KeyValidationStatus KeyValidationStatus => _validationStatus;
 
-        // todo throw exception if reassigning self. maybe not here?
-        // todo set this
-        internal IUserPresence Self
+        IUserPresence IVar.Self
         {
-            get;
-            set;
+            get => _self;
+            set => _self = value;
         }
+
+        private IUserPresence _self;
 
         internal IReadOnlyDictionary<string, T> Values => _values;
 
@@ -59,12 +59,12 @@ namespace NakamaSync
 
         public void SetValue(T value, IUserPresence target)
         {
-            SetValue(value, Self, target, _validationStatus, OnLocalValueChanged);
+            SetValue(value, _self, target, _validationStatus, OnLocalValueChanged);
         }
 
         public T GetValue()
         {
-            return GetValue(Self);
+            return GetValue(_self);
         }
 
         public T GetValue(IUserPresence presence)
@@ -100,8 +100,12 @@ namespace NakamaSync
             }
         }
 
-        // TODO this should not be public...maybe make interface an abstract class.
-        public void Reset()
+        KeyValidationStatus IVar.GetValidationStatus()
+        {
+            return _validationStatus;
+        }
+
+        void IVar.Reset()
         {
             lock (_valueLock)
             {
@@ -111,7 +115,12 @@ namespace NakamaSync
             OnHostValidate = null;
             OnLocalValueChanged = null;
             OnRemoteValueChanged = null;
-            Self = null;
+            _self = null;
+        }
+
+        void IVar.SetValidationStatus(KeyValidationStatus status)
+        {
+            _validationStatus = status;
         }
     }
 }

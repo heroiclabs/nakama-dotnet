@@ -22,7 +22,7 @@ namespace NakamaSync
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// </summary>
-    public class SharedVar<T> : ISyncVar
+    public class SharedVar<T> : IVar
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then
@@ -41,15 +41,17 @@ namespace NakamaSync
 
         // todo throw exception if reassigning self. maybe not here?
         // todo set this
-        internal IUserPresence Self
+        IUserPresence IVar.Self
         {
-            get;
-            set;
+            get => _self;
+            set => _self = value;
         }
+
+        private IUserPresence _self;
 
         public void SetValue(T value)
         {
-            SetValue(Self, value, _validationStatus, OnLocalValueChanged);
+            SetValue(_self, value, _validationStatus, OnLocalValueChanged);
         }
 
         public T GetValue()
@@ -88,6 +90,16 @@ namespace NakamaSync
                 _validationStatus = validationStatus;
                 eventDispatch?.Invoke(new SharedVarEvent<T>(source, oldValue, value));
             }
+        }
+
+        void IVar.SetValidationStatus(KeyValidationStatus status)
+        {
+            _validationStatus = status;
+        }
+
+        KeyValidationStatus IVar.GetValidationStatus()
+        {
+            return _validationStatus;
         }
     }
 }

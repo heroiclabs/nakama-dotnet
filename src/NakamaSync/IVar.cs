@@ -14,17 +14,23 @@
 * limitations under the License.
 */
 
+using Nakama;
+
 namespace NakamaSync
 {
-    interface ISyncVarRegistry
+    internal interface IVar
     {
-        SyncVarDictionary<string, SharedVar<bool>> SharedBools { get; }
-        SyncVarDictionary<string, SharedVar<float>> SharedFloats { get; }
-        SyncVarDictionary<string, SharedVar<int>> SharedInts { get; }
-        SyncVarDictionary<string, SharedVar<string>> SharedStrings { get; }
-        SyncVarDictionary<string, UserVar<bool>> UserBools { get; }
-        SyncVarDictionary<string, UserVar<float>> UserFloats { get; }
-        SyncVarDictionary<string, UserVar<int>> UserInts { get; }
-        SyncVarDictionary<string, UserVar<string>> UserStrings { get; }
+        IUserPresence Self
+        {
+            get;
+            set;
+        }
+
+        void Reset();
+
+        KeyValidationStatus GetValidationStatus();
+
+        void SetValidationStatus(KeyValidationStatus status);
+
     }
 }

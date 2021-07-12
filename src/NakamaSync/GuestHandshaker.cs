@@ -16,7 +16,6 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Nakama;
 
@@ -24,16 +23,17 @@ namespace NakamaSync
 {
     internal class GuestHandshaker
     {
-        private SyncVarKeys _keys;
-        private RoleIngress _ingress;
+        private VarKeys _keys;
+        private SharedRoleIngress _sharedIngress;
+        private UserRoleIngress _userIngress;
         private RolePresenceTracker _presenceTracker;
-
         private TaskCompletionSource<object> _handshakeTcs;
 
-        public GuestHandshaker(SyncVarKeys keys, RoleIngress ingress, RolePresenceTracker presenceTracker)
+        public GuestHandshaker(VarKeys keys, SharedRoleIngress sharedIngress, UserRoleIngress userIngress, RolePresenceTracker presenceTracker)
         {
             _keys = keys;
-            _ingress = ingress;
+            _sharedIngress = sharedIngress;
+            _userIngress = userIngress;
             _presenceTracker = presenceTracker;
         }
 
@@ -54,7 +54,8 @@ namespace NakamaSync
         {
             if (response.Success)
             {
-                _ingress.HandleSyncData(source, response.Store);
+                _sharedIngress.HandleSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
+                _userIngress.HandleSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
                 _handshakeTcs.TrySetResult(null);
             }
             else

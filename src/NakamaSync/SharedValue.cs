@@ -27,7 +27,7 @@ namespace NakamaSync
         public KeyValidationStatus KeyValidationStatus { get; }
 
         [DataMember(Name="key"), Preserve]
-        public SyncVarKey Key { get; }
+        public string Key { get; }
 
         [DataMember(Name="lock_version"), Preserve]
         public int LockVersion { get; }
@@ -35,7 +35,7 @@ namespace NakamaSync
         [DataMember(Name="value"), Preserve]
         public T Value { get; }
 
-        public SharedValue(SyncVarKey key, T value, int lockVersion, KeyValidationStatus keyValidationStatus)
+        public SharedValue(string key, T value, int lockVersion, KeyValidationStatus keyValidationStatus)
         {
             Key = key;
             Value = value;

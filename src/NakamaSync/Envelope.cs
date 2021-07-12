@@ -19,10 +19,7 @@ using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
-    internal delegate List<SharedValue<T>> SharedVarAccessor<T>(SyncEnvelope envelope);
-    internal delegate List<UserValue<T>> UserVarAccessor<T>(SyncEnvelope envelope);
-
-    internal class SyncEnvelope
+    internal class Envelope
     {
         public List<SharedValue<bool>> SharedBools => _sharedBools;
         public List<SharedValue<float>> SharedFloats => _sharedFloats;
@@ -33,6 +30,16 @@ namespace NakamaSync
         public List<UserValue<float>> UserFloats => _userFloats;
         public List<UserValue<int>> UserInts => _userInts;
         public List<UserValue<string>> UserStrings => _userStrings;
+
+        public List<ValidationAck> SharedBoolAcks => _sharedBoolAcks;
+        public List<ValidationAck> SharedFloatAcks => _sharedFloatAcks;
+        public List<ValidationAck> SharedIntAcks => _sharedIntAcks;
+        public List<ValidationAck> SharedStringAcks => _sharedStringAcks;
+
+        public List<ValidationAck> UserBoolAcks => _userBoolAcks;
+        public List<ValidationAck> UserFloatAcks => _userFloatAcks;
+        public List<ValidationAck> UserIntAcks => _userIntAcks;
+        public List<ValidationAck> UserStringAcks => _userStringAcks;
 
         [DataMember(Name="shared_bools"), Preserve]
         private List<SharedValue<bool>> _sharedBools = new List<SharedValue<bool>>();
@@ -57,5 +64,29 @@ namespace NakamaSync
 
         [DataMember(Name="user_strings"), Preserve]
         private List<UserValue<string>> _userStrings = new List<UserValue<string>>();
+
+        [DataMember(Name="shared_bool_acks"), Preserve]
+        private List<ValidationAck> _sharedBoolAcks = new List<ValidationAck>();
+
+        [DataMember(Name="shared_float_acks"), Preserve]
+        private List<ValidationAck> _sharedFloatAcks = new List<ValidationAck>();
+
+        [DataMember(Name="shared_int_acks"), Preserve]
+        private List<ValidationAck> _sharedIntAcks = new List<ValidationAck>();
+
+        [DataMember(Name="shared_string_acks"), Preserve]
+        private List<ValidationAck> _sharedStringAcks = new List<ValidationAck>();
+
+        [DataMember(Name="user_bool_acks"), Preserve]
+        private List<ValidationAck> _userBoolAcks = new List<ValidationAck>();
+
+        [DataMember(Name="user_float_acks"), Preserve]
+        private List<ValidationAck> _userFloatAcks = new List<ValidationAck>();
+
+        [DataMember(Name="user_int_acks"), Preserve]
+        private List<ValidationAck> _userIntAcks = new List<ValidationAck>();
+
+        [DataMember(Name="user_string_acks"), Preserve]
+        private List<ValidationAck> _userStringAcks = new List<ValidationAck>();
     }
 }

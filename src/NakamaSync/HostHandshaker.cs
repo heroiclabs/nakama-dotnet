@@ -22,16 +22,13 @@ namespace NakamaSync
 {
     internal class HostHandshaker
     {
-        private readonly SyncVarKeys _keys;
-        private readonly SharedVars _sharedVars;
-        private readonly UserVars _userVars;
+        private readonly VarKeys _keys;
+        private readonly SyncVarRegistry _registry;
         private readonly PresenceTracker _presenceTracker;
 
-        public HostHandshaker(SyncVarKeys keys, SharedVars sharedVars, UserVars userVars, PresenceTracker presenceTracker)
+        public HostHandshaker(VarKeys keys, SyncVarRegistry registry, PresenceTracker presenceTracker)
         {
             _keys = keys;
-            _sharedVars = sharedVars;
-            _userVars = userVars;
             _presenceTracker = presenceTracker;
         }
 
@@ -42,46 +39,44 @@ namespace NakamaSync
 
         private void HandleHandshakeRequest(IUserPresence source, HandshakeRequest request, SyncSocket socket)
         {
-            var syncValues = new SyncEnvelope();
+            var syncValues = new Envelope();
 
             bool success = request.AllKeys.SequenceEqual(_keys.GetKeys());
 
             if (success)
             {
-                CopySharedVarToGuest(_sharedVars.Bools, source, syncValues.SharedBools);
-                CopySharedVarToGuest(_sharedVars.Floats, source, syncValues.SharedFloats);
-                CopySharedVarToGuest(_sharedVars.Ints, source, syncValues.SharedInts);
-                CopySharedVarToGuest(_sharedVars.Strings, source, syncValues.SharedStrings);
-                CopyUserVarToGuest(_userVars.Bools, source, syncValues.UserBools);
-                CopyUserVarToGuest(_userVars.Floats, source, syncValues.UserFloats);
-                CopyUserVarToGuest(_userVars.Ints, source, syncValues.UserInts);
-                CopyUserVarToGuest(_userVars.Strings, source, syncValues.UserStrings);
+                CopySharedVarToGuest(_registry.SharedBools, source, syncValues.SharedBools);
+                CopySharedVarToGuest(_registry.SharedFloats, source, syncValues.SharedFloats);
+                CopySharedVarToGuest(_registry.SharedInts, source, syncValues.SharedInts);
+                CopySharedVarToGuest(_registry.SharedStrings, source, syncValues.SharedStrings);
+                CopyUserVarToGuest(_registry.UserBools, source, syncValues.UserBools);
+                CopyUserVarToGuest(_registry.UserFloats, source, syncValues.UserFloats);
+                CopyUserVarToGuest(_registry.UserInts, source, syncValues.UserInts);
+                CopyUserVarToGuest(_registry.UserStrings, source, syncValues.UserStrings);
             }
 
             var response = new HandshakeResponse(syncValues, success);
             socket.SendHandshakeResponse(source, response);
         }
 
-        private void CopySharedVarToGuest<T>(SyncVarDictionary<SyncVarKey, SharedVar<T>> vars, IUserPresence target, List<SharedValue<T>> values)
+        private void CopySharedVarToGuest<T>(Dictionary<string, SharedVar<T>> vars, IUserPresence target, List<SharedValue<T>> values)
         {
-            foreach (var key in vars.GetKeys())
+            foreach (var kvp in vars)
             {
-                SharedVar<T> var = vars.GetSyncVar(key);
-                var value = new SharedValue<T>(key, var.GetValue(), _keys.GetLockVersion(key), _keys.GetValidationStatus(key));
+                SharedVar<T> var = kvp.Value;
+                var value = new SharedValue<T>(kvp.Key, var.GetValue(), _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key));
                 values.Add(value);
             }
         }
 
-        private void CopyUserVarToGuest<T>(SyncVarDictionary<SyncVarKey, UserVar<T>> vars, IUserPresence target, List<UserValue<T>> values)
+        private void CopyUserVarToGuest<T>(Dictionary<string, UserVar<T>> vars, IUserPresence target, List<UserValue<T>> values)
         {
-            foreach (var key in vars.GetKeys())
+            foreach (var kvp in vars)
             {
-                UserVar<T> var = vars.GetSyncVar(key);
-
-                foreach (KeyValuePair<string, T> kvp in var.Values)
+                foreach (KeyValuePair<string, T> innerKvp in kvp.Value.Values)
                 {
                     // TODO handle data for a stale user
-                    var value = new UserValue<T>(key, var.GetValue(), _keys.GetLockVersion(key), _keys.GetValidationStatus(key), _presenceTracker.GetPresence(kvp.Key));
+                    var value = new UserValue<T>(kvp.Key, kvp.Value.GetValue(), _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key), _presenceTracker.GetPresence(innerKvp.Key));
                     values.Add(value);
                 }
             }

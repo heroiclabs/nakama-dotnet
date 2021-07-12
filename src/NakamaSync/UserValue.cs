@@ -28,7 +28,7 @@ namespace NakamaSync
         public KeyValidationStatus KeyValidationStatus { get; }
 
         [DataMember(Name="key"), Preserve]
-        public SyncVarKey Key { get; }
+        public string Key { get; }
 
         [DataMember(Name="lock_version"), Preserve]
         public int LockVersion { get; }
@@ -39,7 +39,7 @@ namespace NakamaSync
         [DataMember(Name="target"), Preserve]
         public IUserPresence Target { get; }
 
-        public UserValue(SyncVarKey key, T value, int lockVersion, KeyValidationStatus keyValidationStatus, IUserPresence target)
+        public UserValue(string key, T value, int lockVersion, KeyValidationStatus keyValidationStatus, IUserPresence target)
         {
             Key = key;
             Value = value;

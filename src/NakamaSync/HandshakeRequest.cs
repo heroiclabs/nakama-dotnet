@@ -21,12 +21,12 @@ namespace NakamaSync
 {
     internal class HandshakeRequest
     {
-        public List<SyncVarKey> AllKeys => _allKeys;
+        public List<string> AllKeys => _allKeys;
 
         [DataMember(Name="keys"), Preserve]
-        private List<SyncVarKey> _allKeys;
+        private List<string> _allKeys;
 
-        internal HandshakeRequest(List<SyncVarKey> allKeys)
+        internal HandshakeRequest(List<string> allKeys)
         {
             _allKeys = allKeys;
         }

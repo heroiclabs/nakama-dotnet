@@ -18,18 +18,18 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class GuestEgress : IVarEgress
+    internal class GuestEgress
     {
-        private readonly SyncSocket _socket;
-        private readonly SyncVarKeys _keys;
+        private readonly VarKeys _keys;
+        private readonly EnvelopeBuilder _builder;
 
-        public GuestEgress(SyncSocket socket, SyncVarKeys keys)
+        public GuestEgress(VarKeys keys, EnvelopeBuilder builder)
         {
-            _socket = socket;
             _keys = keys;
+            _builder = builder;
         }
 
-        public void HandleLocalSharedVarChanged<T>(SyncVarKey key, T newValue, SharedVarAccessor<T> accessor)
+        public void HandleLocalSharedVarChanged<T>(string key, T newValue, SharedVarAccessor<T> accessor)
         {
             var status = _keys.GetValidationStatus(key);
 
@@ -41,22 +41,11 @@ namespace NakamaSync
 
             var newSyncedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
 
-            var values = new SyncEnvelope();
-            accessor(values).Add(newSyncedValue);
-
-            if (status == KeyValidationStatus.Pending)
-            {
-                _socket.SendSyncDataToHost(values);
-            }
-            else
-            {
-                _socket.SendSyncDataToAll(values);
-            }
-
-            // todo clear on ack
+            _builder.AddSharedVar(accessor, newSyncedValue);
+            _builder.SendEnvelope();
         }
 
-        public void HandleLocalUserVarChanged<T>(SyncVarKey key, T newValue, UserVarAccessor<T> accessor, IUserPresence target)
+        public void HandleLocalUserVarChanged<T>(string key, T newValue, IUserPresence target, UserVarAccessor<T> accessor)
         {
             var status = _keys.GetValidationStatus(key);
 
@@ -70,10 +59,8 @@ namespace NakamaSync
 
             var newSyncedValue = new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target);
 
-            var values = new SyncEnvelope();
-            accessor(values).Add(newSyncedValue);
-
-            _socket.SendSyncDataToAll(values);
+            _builder.AddUserVar(accessor, newSyncedValue);
+            _builder.SendEnvelope();
         }
     }
 }
