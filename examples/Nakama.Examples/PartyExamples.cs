@@ -39,7 +39,6 @@ namespace Nakama.Examples
                 {
                     if (presence.UserId == "<acceptid>")
                     {
-                        // TODO confirm that there is no way for leader to explicitly invite someone to party.
                         await socket.AcceptPartyMemberAsync(party.Id, presence);
                     }
                 }
@@ -77,7 +76,10 @@ namespace Nakama.Examples
 
         private async void RemovedFromParty()
         {
-            // TODO Andrei is working on an event for this
+            socket.ReceivedPartyClose += close =>
+            {
+                // user removed.
+            };
         }
 
         private async void TrackMembers()
@@ -141,8 +143,6 @@ namespace Nakama.Examples
             socket.ReceivedMatchmakerMatched += matchedAsParty =>
             {
                 matched = matchedAsParty;
-
-                // TODO confirm that we can only join match as a party through matchmaker ticket, not via match id.
                 socket.JoinMatchAsync(matched);
             };
 
