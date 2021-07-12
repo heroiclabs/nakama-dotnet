@@ -48,6 +48,7 @@ namespace NakamaSync
     // otherwise find some other way to prevent users from messing with it.
     // todo error handling checks particularly on dictionary accessing etc.
     // todo clean this class up and use explicit returns values where needed for some of these private methods
+    // should user vars have acks on a uesr by user basis?
     public class SyncMatch
     {
         private readonly Handshaker _handshaker;
@@ -85,7 +86,7 @@ namespace NakamaSync
             if (evt.NewHost == _presenceTracker.GetSelf())
             {
                 // pick up where the old host left off in terms of validating values.
-                new HostMigration().Migrate(_registry);
+                new HostMigration(_builder).Migrate(_registry);
             }
         }
 

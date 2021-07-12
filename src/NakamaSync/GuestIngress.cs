@@ -30,7 +30,7 @@ namespace NakamaSync
             _presenceTracker = presenceTracker;
         }
 
-        public void HandleValue<T>(SharedVar<T> var, IUserPresence source, SharedValue<T> value)
+        public void ProcessValue<T>(SharedVar<T> var, IUserPresence source, SharedValue<T> value)
         {
             IUserPresence target = _presenceTracker.GetPresence(value.Key);
             var.SetValue(source, value.Value, value.KeyValidationStatus, var.OnRemoteValueChanged);

@@ -42,16 +42,16 @@ namespace NakamaSync
 
         public void HandleSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
-            var bools = UserContext<bool>.Create(_registry.UserBools, envelope.UserBools, env => env.UserBools, env => env.UserBoolAcks);
+            var bools = UserContext.FromBoolValues(envelope, _registry);
             HandleSyncEnvelope(source, bools, isHost);
 
-            var floats = UserContext<float>.Create(_registry.UserFloats, envelope.UserFloats, env => env.UserFloats, env => env.UserFloatAcks);
+            var floats = UserContext.FromFloatValues(envelope, _registry);
             HandleSyncEnvelope(source, floats, isHost);
 
-            var ints = UserContext<int>.Create(_registry.UserInts, envelope.UserInts, env => env.UserInts, env => env.UserFloatAcks);
+            var ints = UserContext.FromIntValues(envelope, _registry);
             HandleSyncEnvelope(source, ints, isHost);
 
-            var strings = UserContext<string>.Create(_registry.UserStrings, envelope.UserStrings, env => env.UserStrings, env => env.UserStringAcks);
+            var strings = UserContext.FromStringValues(envelope, _registry);
             HandleSyncEnvelope(source, strings, isHost);
         }
 

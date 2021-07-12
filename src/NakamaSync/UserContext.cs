@@ -18,6 +18,9 @@ using System.Collections.Generic;
 
 namespace NakamaSync
 {
+
+    // todo I think only the ingresses use the full context? is that something that makes sense?
+    // should they be renamed to IngressContext?
     internal class UserContext<T>
     {
         public UserVar<T> Var { get; }
@@ -25,15 +28,38 @@ namespace NakamaSync
         public UserVarAccessor<T> VarAccessor { get; }
         public AckAccessor AckAccessor { get; }
 
-        private UserContext(UserVar<T> var, UserValue<T> value, UserVarAccessor<T> accessor, AckAccessor ackAccessor)
+        public UserContext(UserVar<T> var, UserValue<T> value, UserVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
             Var = var;
             Value = value;
             VarAccessor = accessor;
             AckAccessor = ackAccessor;
         }
+    }
 
-        public static List<UserContext<T>> Create(Dictionary<string, UserVar<T>> vars, List<UserValue<T>> values, UserVarAccessor<T> varAccessor, AckAccessor ackAccessor)
+    internal class UserContext
+    {
+        public static List<UserContext<bool>> FromBoolValues(Envelope envelope, SyncVarRegistry registry)
+        {
+            return UserContext.FromValues<bool>(envelope.UserBools, registry.UserBools, env => env.UserBools, env => env.UserBoolAcks);
+        }
+
+        public static List<UserContext<float>> FromFloatValues(Envelope envelope, SyncVarRegistry registry)
+        {
+            return UserContext.FromValues<float>(envelope.UserFloats, registry.UserFloats, env => env.UserFloats, env => env.UserFloatAcks);
+        }
+
+        public static List<UserContext<int>> FromIntValues(Envelope envelope, SyncVarRegistry registry)
+        {
+            return UserContext.FromValues<int>(envelope.UserInts, registry.UserInts, env => env.UserInts, env => env.UserIntAcks);
+        }
+
+        public static List<UserContext<string>> FromStringValues(Envelope envelope, SyncVarRegistry registry)
+        {
+            return UserContext.FromValues<string>(envelope.UserStrings, registry.UserStrings, env => env.UserStrings, env => env.UserStringAcks);
+        }
+
+        private static List<UserContext<T>> FromValues<T>(List<UserValue<T>> values, Dictionary<string, UserVar<T>> vars, UserVarAccessor<T> varAccessor, AckAccessor ackAccessor)
         {
             var contexts = new List<UserContext<T>>();
 

@@ -25,15 +25,43 @@ namespace NakamaSync
         public SharedVarAccessor<T> VarAccessor { get; }
         public AckAccessor AckAccessor { get; }
 
-        private SharedContext(SharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
+        public SharedContext(SharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
             Var = var;
             Value = value;
             VarAccessor = accessor;
             AckAccessor = ackAccessor;
         }
+    }
 
-        public static List<SharedContext<T>> Create(Dictionary<string, SharedVar<T>> vars, List<SharedValue<T>> values, SharedVarAccessor<T> varAccessor, AckAccessor ackAccessor)
+    internal class SharedContext
+    {
+        public static List<SharedContext<bool>> FromBoolValues(Envelope envelope, SyncVarRegistry registry)
+        {
+            return SharedContext.FromValues<bool>(envelope.SharedBools, registry.SharedBools, env => env.SharedBools, env => env.SharedBoolAcks);
+        }
+
+        public static List<SharedContext<bool>> FromBoolVars(Envelope envelope, SyncVarRegistry registry)
+        {
+            return SharedContext.FromValues<bool>(envelope.SharedBools, registry.SharedBools, env => env.SharedBools, env => env.SharedBoolAcks);
+        }
+
+        public static List<SharedContext<float>> FromFloatValues(Envelope envelope, SyncVarRegistry registry)
+        {
+            return SharedContext.FromValues<float>(envelope.SharedFloats, registry.SharedFloats, env => env.SharedFloats, env => env.SharedFloatAcks);
+        }
+
+        public static List<SharedContext<int>> FromIntValues(Envelope envelope, SyncVarRegistry registry)
+        {
+            return SharedContext.FromValues<int>(envelope.SharedInts, registry.SharedInts, env => env.SharedInts, env => env.SharedIntAcks);
+        }
+
+        public static List<SharedContext<string>> FromStringValues(Envelope envelope, SyncVarRegistry registry)
+        {
+            return FromValues(envelope.SharedStrings, registry.SharedStrings, env => env.SharedStrings, env => env.SharedStringAcks);
+        }
+
+        private static List<SharedContext<T>> FromValues<T>(List<SharedValue<T>> values, Dictionary<string, SharedVar<T>> vars, SharedVarAccessor<T> varAccessor, AckAccessor ackAccessor)
         {
             var contexts = new List<SharedContext<T>>();
 

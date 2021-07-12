@@ -36,36 +36,36 @@ namespace NakamaSync
         {
             socket.OnSyncEnvelope += (source, envelope) =>
             {
-                HandleSyncEnvelope(source, envelope, presenceTracker.IsSelfHost());
+                ReceiveSyncEnvelope(source, envelope, presenceTracker.IsSelfHost());
             };
         }
 
-        public void HandleSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
+        public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
-            var bools = SharedContext<bool>.Create(_registry.SharedBools, envelope.SharedBools, env => env.SharedBools, env => env.SharedBoolAcks);
-            HandleSyncEnvelope(source, bools, isHost);
+            var bools = SharedContext.FromBoolValues(envelope, _registry);
+            ReceiveSyncEnvelope(source, bools, isHost);
 
-            var floats = SharedContext<float>.Create(_registry.SharedFloats, envelope.SharedFloats, env => env.SharedFloats, env => env.SharedFloatAcks);
-            HandleSyncEnvelope(source, floats, isHost);
+            var floats = SharedContext.FromFloatValues(envelope, _registry);
+            ReceiveSyncEnvelope(source, floats, isHost);
 
-            var ints = SharedContext<int>.Create(_registry.SharedInts, envelope.SharedInts, env => env.SharedInts, env => env.SharedFloatAcks);
-            HandleSyncEnvelope(source, ints, isHost);
+            var ints = SharedContext.FromIntValues(envelope, _registry);
+            ReceiveSyncEnvelope(source, ints, isHost);
 
-            var strings = SharedContext<string>.Create(_registry.SharedStrings, envelope.SharedStrings, env => env.SharedStrings, env => env.SharedStringAcks);
-            HandleSyncEnvelope(source, strings, isHost);
+            var strings = SharedContext.FromStringValues(envelope, _registry);
+            ReceiveSyncEnvelope(source, strings, isHost);
         }
 
-        private void HandleSyncEnvelope<T>(IUserPresence source, List<SharedContext<T>> contexts, bool isHost)
+        private void ReceiveSyncEnvelope<T>(IUserPresence source, List<SharedContext<T>> contexts, bool isHost)
         {
             foreach (SharedContext<T> context in contexts)
             {
                 if (isHost)
                 {
-                    _sharedHostIngress.HandleValue(source, context);
+                    _sharedHostIngress.ProcessValue(source, context);
                 }
                 else
                 {
-                    _guestIngress.HandleValue(context.Var, source, context.Value);
+                    _guestIngress.ProcessValue(context.Var, source, context.Value);
                 }
             }
         }

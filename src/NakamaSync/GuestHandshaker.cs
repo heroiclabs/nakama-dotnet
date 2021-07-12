@@ -54,7 +54,7 @@ namespace NakamaSync
         {
             if (response.Success)
             {
-                _sharedIngress.HandleSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
+                _sharedIngress.ReceiveSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
                 _userIngress.HandleSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
                 _handshakeTcs.TrySetResult(null);
             }

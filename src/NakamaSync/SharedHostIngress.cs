@@ -30,7 +30,7 @@ namespace NakamaSync
             _keys = keys;
         }
 
-        public void HandleValue<T>(IUserPresence source, SharedContext<T> context)
+        public void ProcessValue<T>(IUserPresence source, SharedContext<T> context)
         {
             switch (context.Value.KeyValidationStatus)
             {

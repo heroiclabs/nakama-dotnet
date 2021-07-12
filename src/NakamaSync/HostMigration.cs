@@ -20,27 +20,41 @@ namespace NakamaSync
 {
     internal class HostMigration
     {
-        public void Migrate(SyncVarRegistry registry)
-        {
-            ValidatePendingVars<SharedVar<bool>>(registry.SharedBools);
-            ValidatePendingVars<SharedVar<float>>(registry.SharedFloats);
-            ValidatePendingVars<SharedVar<int>>(registry.SharedInts);
-            ValidatePendingVars<SharedVar<string>>(registry.SharedStrings);
+        private EnvelopeBuilder _builder;
 
-            ValidatePendingVars<UserVar<bool>>(registry.UserBools);
-            ValidatePendingVars<UserVar<float>>(registry.UserFloats);
-            ValidatePendingVars<UserVar<int>>(registry.UserInts);
-            ValidatePendingVars<UserVar<string>>(registry.UserStrings);
+        internal HostMigration(EnvelopeBuilder builder)
+        {
+            _builder = builder;
         }
 
-        private void ValidatePendingVars<TVar>(Dictionary<string, TVar> vars) where TVar : IVar
+        public void Migrate(SyncVarRegistry registry)
         {
-            foreach (KeyValuePair<string, TVar> kvp in vars)
+            ValidatePendingVars<bool>(registry.SharedBools, env => env.SharedBoolAcks);
+            ValidatePendingVars<float>(registry.SharedFloats, env => env.SharedFloatAcks);
+            ValidatePendingVars<int>(registry.SharedInts, env => env.SharedIntAcks);
+            ValidatePendingVars<string>(registry.SharedStrings, env => env.SharedStringAcks);
+
+            ValidatePendingVars<bool>(registry.UserBools, env => env.UserBoolAcks);
+            ValidatePendingVars<float>(registry.UserFloats, env => env.UserFloatAcks);
+            ValidatePendingVars<int>(registry.UserInts, env => env.UserIntAcks);
+            ValidatePendingVars<string>(registry.UserStrings, env => env.UserStringAcks);
+
+            _builder.SendEnvelope();
+        }
+
+        private void ValidatePendingVars<T>(Dictionary<string, SharedVar<T>> vars, AckAccessor ackAccessor)
+        {
+            foreach (var kvp in vars)
             {
-                if (vars[kvp.Key].GetValidationStatus() == KeyValidationStatus.Pending)
-                {
-                    // todo do
-                }
+                _builder.AddAck(ackAccessor, kvp.Key);
+            }
+        }
+
+        private void ValidatePendingVars<T>(Dictionary<string, UserVar<T>> vars, AckAccessor ackAccessor)
+        {
+            foreach (var kvp in vars)
+            {
+                _builder.AddAck(ackAccessor, kvp.Key);
             }
         }
     }
