@@ -212,7 +212,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="AddMatchmakerPartyAsync"/>
-        public Task AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount, Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null)
+        public async Task<IPartyMatchmakerTicket> AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount, Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null)
         {
             var envelope = new WebSocketMessageEnvelope
             {
@@ -228,7 +228,8 @@ namespace Nakama
                 }
             };
 
-            return SendAsync(envelope);
+            var response = await SendAsync(envelope);
+            return response.PartyMatchmakerTicket;
         }
 
         /// <inheritdoc cref="CloseAsync"/>
@@ -472,8 +473,8 @@ namespace Nakama
             return response.PartyJoinRequest;
         }
 
-        /// <inheritdoc cref="PromotePartyMember"/>
-        public Task PromotePartyMember(string partyId, IUserPresence partyMember)
+        /// <inheritdoc cref="PromotePartyMemberAsync"/>
+        public Task PromotePartyMemberAsync(string partyId, IUserPresence partyMember)
         {
             var envelope = new WebSocketMessageEnvelope
             {

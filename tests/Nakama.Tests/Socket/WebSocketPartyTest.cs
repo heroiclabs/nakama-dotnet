@@ -129,7 +129,7 @@ namespace Nakama.Tests.Socket
             var partyPresenceEvent = await partyPresenceJoinedTcs.Task;
             _testOutputHelper.WriteLine(partyPresenceEvent.ToString());
 
-            await socket1.PromotePartyMember(party.Id, partyPresenceEvent.Joins.First());
+            await socket1.PromotePartyMemberAsync(party.Id, partyPresenceEvent.Joins.First());
 
             var promotedLeader = await partyPromoteTcs.Task;
             _testOutputHelper.WriteLine(promotedLeader.ToString());
@@ -352,6 +352,37 @@ namespace Nakama.Tests.Socket
             await socket1.CloseAsync();
             await socket2.CloseAsync();
             await socket3.CloseAsync();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task LeaderAndMembersShouldReceiveTicket()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var socket1 = Nakama.Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
+
+            await socket1.ConnectAsync(session1);
+            await socket2.ConnectAsync(session2);
+
+            var party = await socket1.CreatePartyAsync(true, 1);
+
+            await socket2.JoinPartyAsync(party.Id);
+
+            var ticketTcs = new TaskCompletionSource<IPartyMatchmakerTicket>();
+
+            socket2.ReceivedPartyMatchmakerTicket += (ticket) => ticketTcs.SetResult(ticket);
+
+            var ticket = await socket1.AddMatchmakerPartyAsync(party.Id, "*", 2, 2);
+            await ticketTcs.Task;
+
+            Assert.Equal(ticketTcs.Task.Result.Ticket, ticket.Ticket);
+
+            await socket1.RemoveMatchmakerPartyAsync(party.Id, ticket.Ticket);
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
         }
     }
 }
