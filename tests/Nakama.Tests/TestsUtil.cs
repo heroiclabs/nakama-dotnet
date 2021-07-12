@@ -1,4 +1,4 @@
-// Copyright 2018 The Nakama Authors
+// Copyright 2021 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,18 +19,28 @@ namespace Nakama.Tests
     internal static class TestsUtil
     {
         public const int TIMEOUT_MILLISECONDS = 5000;
+        public const string DefaultSettingsPath = "settings.json";
 
-        private const string SettingsPath = "settings.json";
+        public static IClient FromSettingsFile()
+        {
+            return FromSettingsFile(DefaultSettingsPath);
+        }
 
-        public static IClient FromSettingsFile(string path = SettingsPath)
+        public static IClient FromSettingsFile(string path)
+        {
+            return FromSettingsFile(path, HttpRequestAdapter.WithGzip());
+        }
+
+        public static IClient FromSettingsFile(string path, IHttpAdapter adapter)
         {
             var settings = new ConfigurationBuilder().AddJsonFile(path).Build();
             var port = System.Convert.ToInt32(settings["PORT"]);
-            var client = new Client(settings["SCHEME"], settings["HOST"], port, settings["SERVER_KEY"]);
+            var client = new Client(settings["SCHEME"], settings["HOST"], port, settings["SERVER_KEY"], adapter);
             if (System.Convert.ToBoolean(settings["STDOUT"]))
             {
                 client.Logger = new StdoutLogger();
             }
+
             return client;
         }
     }
