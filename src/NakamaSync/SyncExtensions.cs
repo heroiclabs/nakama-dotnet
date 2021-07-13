@@ -28,25 +28,28 @@ namespace NakamaSync
         {
             var presenceTracker = new PresenceTracker(session.UserId);
             var rolePresenceTracker = new RolePresenceTracker(presenceTracker);
+
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
             IMatch match = await socket.CreateMatchAsync();
+            presenceTracker.ReceiveMatch(match);
             var syncSocket = new SyncSocket(socket, match, opcodes, rolePresenceTracker);
             var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker, rolePresenceTracker);
-            presenceTracker.ReceiveMatch(match);
-            await syncMatch.Handshake();
+            await syncMatch.WaitForHandshake();
             return match;
         }
 
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, SyncVarRegistry registry)
         {
+            object initLock = new object();
+
             var presenceTracker = new PresenceTracker(session.UserId);
             var rolePresenceTracker = new RolePresenceTracker(presenceTracker);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
             IMatch match = await socket.JoinMatchAsync(matchId);
+            presenceTracker.ReceiveMatch(match);
             var syncSocket = new SyncSocket(socket, match, opcodes, rolePresenceTracker);
             var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker, rolePresenceTracker);
-            presenceTracker.ReceiveMatch(match);
-            await syncMatch.Handshake();
+            await syncMatch.WaitForHandshake();
             return match;
         }
     }

@@ -34,7 +34,7 @@ namespace NakamaSync
 
         // if a new user joins and is determined host, it still must handshake...
         // how to best handle this
-        public Task Handshake(SyncSocket socket)
+        public Task WaitForHandshake()
         {
             if (_presenceTracker.IsSelfHost())
             {
@@ -42,7 +42,7 @@ namespace NakamaSync
             }
             else
             {
-                return _guestHandshaker.DoHandshake(socket);
+                return _guestHandshaker.GetHandshakeTask();
             }
         }
     }

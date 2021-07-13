@@ -15,8 +15,8 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Nakama;
 
 namespace NakamaSync
@@ -83,7 +83,7 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
-            HandlePresences(match.Presences, new IUserPresence[]{});
+            HandlePresences(match.Presences.Concat(new IUserPresence[]{match.Self}), new IUserPresence[]{});
         }
 
         public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
@@ -103,7 +103,7 @@ namespace NakamaSync
                 }
                 else
                 {
-                    throw new InvalidOperationException("Leaving presence does not exist.");
+                    throw new InvalidOperationException("Leaving presence does not exist: " + leaver.UserId);
                 }
             }
 
@@ -111,7 +111,11 @@ namespace NakamaSync
             {
                 if (_presences.ContainsKey(joiner.UserId))
                 {
-                    throw new InvalidOperationException("Joining presence already exists.");
+                    // self presence already received when match joined
+                    if (joiner.UserId != _userId)
+                    {
+                        throw new InvalidOperationException("Joining presence already exists: " + joiner.UserId);
+                    }
                 }
                 else
                 {

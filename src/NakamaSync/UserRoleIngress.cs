@@ -36,11 +36,11 @@ namespace NakamaSync
         {
             socket.OnSyncEnvelope += (source, envelope) =>
             {
-                HandleSyncEnvelope(source, envelope, presenceTracker.IsSelfHost());
+                ReceiveSyncEnvelope(source, envelope, presenceTracker.IsSelfHost());
             };
         }
 
-        public void HandleSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
+        public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
             var bools = UserContext.FromBoolValues(envelope, _registry);
             HandleSyncEnvelope(source, bools, isHost);

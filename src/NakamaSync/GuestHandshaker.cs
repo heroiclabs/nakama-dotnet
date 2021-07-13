@@ -23,30 +23,25 @@ namespace NakamaSync
 {
     internal class GuestHandshaker
     {
-        private VarKeys _keys;
-        private SharedRoleIngress _sharedIngress;
-        private UserRoleIngress _userIngress;
-        private RolePresenceTracker _presenceTracker;
-        private TaskCompletionSource<object> _handshakeTcs;
+        private readonly VarKeys _keys;
+        private readonly SharedRoleIngress _sharedIngress;
+        private readonly UserRoleIngress _userIngress;
+        private readonly RolePresenceTracker _presenceTracker;
+        private readonly TaskCompletionSource<object> _handshakeTcs;
 
-        public GuestHandshaker(VarKeys keys, SharedRoleIngress sharedIngress, UserRoleIngress userIngress, RolePresenceTracker presenceTracker)
+        public GuestHandshaker(VarKeys keys, SharedRoleIngress sharedIngress, UserRoleIngress userIngress, RolePresenceTracker presenceTracker, SyncSocket socket)
         {
             _keys = keys;
             _sharedIngress = sharedIngress;
             _userIngress = userIngress;
             _presenceTracker = presenceTracker;
-        }
-
-        public Task DoHandshake(SyncSocket socket)
-        {
-            if (_handshakeTcs != null)
-            {
-                throw new InvalidOperationException("Guest has already requested a handhake.");
-            }
-
             _handshakeTcs = new TaskCompletionSource<object>();
             _presenceTracker.OnGuestJoined += (guest) => HandleGuestJoined(guest, socket);
             socket.OnHandshakeResponse += (source, response) => HandleHandshakeResponse(source, response, socket);
+        }
+
+        public Task GetHandshakeTask()
+        {
             return _handshakeTcs.Task;
         }
 
@@ -55,12 +50,12 @@ namespace NakamaSync
             if (response.Success)
             {
                 _sharedIngress.ReceiveSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
-                _userIngress.HandleSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
+                _userIngress.ReceiveSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
                 _handshakeTcs.TrySetResult(null);
             }
             else
             {
-                _handshakeTcs?.TrySetException(new InvalidOperationException("Synced match handshake with host failed."));
+                _handshakeTcs.TrySetException(new InvalidOperationException("Synced match handshake with host failed."));
             }
         }
 
