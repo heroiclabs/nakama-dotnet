@@ -94,18 +94,28 @@ namespace NakamaSync
         private void HandlePresences(IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
         {
             var oldPresences = new SortedList<string, IUserPresence>(_presences, StringComparer.Create(System.Globalization.CultureInfo.InvariantCulture, ignoreCase: false));
+
+            var removedPresences = new List<IUserPresence>();
+
             foreach (IUserPresence leaver in leavers)
             {
                 if (_presences.ContainsKey(leaver.UserId))
                 {
+                    removedPresences.Add(leaver);
                     _presences.Remove(leaver.UserId);
-                    OnPresenceRemoved?.Invoke(leaver);
                 }
                 else
                 {
                     throw new InvalidOperationException("Leaving presence does not exist: " + leaver.UserId);
                 }
             }
+
+            foreach (var removedPresence in removedPresences)
+            {
+                OnPresenceRemoved?.Invoke(removedPresence);
+            }
+
+            var addedPresences = new List<IUserPresence>();
 
             foreach (IUserPresence joiner in joiners)
             {
@@ -114,14 +124,20 @@ namespace NakamaSync
                     // self presence already received when match joined
                     if (joiner.UserId != _userId)
                     {
+                        System.Console.WriteLine(joiner.UserId + " , " + _userId);
                         throw new InvalidOperationException("Joining presence already exists: " + joiner.UserId);
                     }
                 }
                 else
                 {
+                    addedPresences.Add(joiner);
                     _presences.Add(joiner.UserId, joiner);
-                    OnPresenceAdded?.Invoke(joiner);
                 }
+            }
+
+            foreach (IUserPresence addedPresence in addedPresences)
+            {
+                OnPresenceAdded?.Invoke(addedPresence);
             }
         }
     }
