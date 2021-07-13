@@ -45,5 +45,10 @@ namespace NakamaSync
                 return _guestHandshaker.GetHandshakeTask();
             }
         }
+
+        public void Subscribe(SyncSocket socket)
+        {
+            _hostHandhaker.Subscribe(socket);
+        }
     }
 }

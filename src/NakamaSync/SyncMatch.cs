@@ -55,11 +55,11 @@ namespace NakamaSync
         private readonly SyncSocket _socket;
         private readonly RolePresenceTracker _rolePresenceTracker;
         private readonly PresenceTracker _presenceTracker;
-        private SyncVarRegistry _registry;
-        private VarKeys _keys;
-        private EnvelopeBuilder _builder;
-        private SharedRoleIngress _sharedIngress;
-        private UserRoleIngress _userIngress;
+        private readonly SyncVarRegistry _registry;
+        private readonly VarKeys _keys;
+        private readonly EnvelopeBuilder _builder;
+        private Ingresses _ingresses;
+        private readonly RoleEgress _egress;
 
         internal SyncMatch(ISession session, SyncSocket socket, SyncVarRegistry registry, PresenceTracker presenceTracker, RolePresenceTracker rolePresenceTracker)
         {
@@ -70,18 +70,30 @@ namespace NakamaSync
             _keys = new VarKeys();
             _builder = new EnvelopeBuilder(socket);
 
-            registry.Register(_keys, presenceTracker.GetSelf());
-            CreateIngresses();
-            CreateEgresses();
 
-            _rolePresenceTracker.OnHostChanged += HandleHostChanged;
+            var guestEgress = new GuestEgress(_keys, _builder);
+            var hostEgress = new HostEgress(_builder, _keys, _presenceTracker);
 
-            _handshaker = CreateHandshaker(_sharedIngress, _userIngress);
+            _ingresses = new Ingresses(_keys, _builder, _rolePresenceTracker, _registry);
+
+            _egress = new RoleEgress(guestEgress, hostEgress, _rolePresenceTracker);
+            _handshaker = CreateHandshaker(_ingresses);
+
+            _registry.Register(_keys, _presenceTracker.GetSelf());
         }
 
         public Task WaitForHandshake()
         {
             return _handshaker.WaitForHandshake();
+        }
+
+        public void InitializeEventHandlers()
+        {
+            _rolePresenceTracker.OnHostChanged += HandleHostChanged;
+            _ingresses.SharedRoleIngress.Subscribe(_socket, _rolePresenceTracker);
+            _ingresses.UserRoleIngress.Subscribe(_socket, _rolePresenceTracker);
+            _egress.Subscribe(_registry);
+            _handshaker.Subscribe(_socket);
         }
 
         private void HandleHostChanged(HostChangedEvent evt)
@@ -93,35 +105,10 @@ namespace NakamaSync
             }
         }
 
-        private void CreateIngresses()
-        {
-            var guestIngress = new GuestIngress(_keys, _rolePresenceTracker);
-            var sharedHostIngress = new SharedHostIngress(_builder, _keys);
-            var userHostIngress = new UserHostIngress(_builder, _keys);
-
-            var sharedRoleIngress = new SharedRoleIngress(guestIngress, sharedHostIngress, _registry);
-            sharedRoleIngress.Subscribe(_socket, _rolePresenceTracker);
-
-            var userRoleIngress = new UserRoleIngress(guestIngress, userHostIngress, _registry);
-            userRoleIngress.Subscribe(_socket, _rolePresenceTracker);
-        }
-
-        private void CreateEgresses()
-        {
-            var guestEgress = new GuestEgress(_keys, _builder);
-            var hostEgress = new HostEgress(_builder, _keys, _presenceTracker);
-
-            var egress = new RoleEgress(guestEgress, hostEgress, _rolePresenceTracker);
-            egress.Subscribe(_registry);
-        }
-
-        private Handshaker CreateHandshaker(SharedRoleIngress sharedIngress, UserRoleIngress userIngress)
+        private Handshaker CreateHandshaker(Ingresses ingresses)
         {
             var hostHandshaker = new HostHandshaker(_keys, _registry, _presenceTracker);
-            hostHandshaker.ListenForHandshakes(_socket);
-
-            var guestHandshaker = new GuestHandshaker(_keys, sharedIngress, userIngress, _rolePresenceTracker, _socket);
-
+            var guestHandshaker = new GuestHandshaker(_keys, ingresses, _rolePresenceTracker, _socket);
             return new Handshaker(guestHandshaker, hostHandshaker, _rolePresenceTracker);
         }
     }

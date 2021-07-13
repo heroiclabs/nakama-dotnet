@@ -35,13 +35,13 @@ namespace NakamaSync
             var syncSocket = new SyncSocket(socket, match, opcodes, rolePresenceTracker);
             var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker, rolePresenceTracker);
             await syncMatch.WaitForHandshake();
+            syncMatch.InitializeEventHandlers();
+
             return match;
         }
 
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, SyncVarRegistry registry)
         {
-            object initLock = new object();
-
             var presenceTracker = new PresenceTracker(session.UserId);
             var rolePresenceTracker = new RolePresenceTracker(presenceTracker);
             socket.ReceivedMatchPresence += presenceTracker.HandlePresenceEvent;
@@ -49,6 +49,7 @@ namespace NakamaSync
             presenceTracker.ReceiveMatch(match);
             var syncSocket = new SyncSocket(socket, match, opcodes, rolePresenceTracker);
             var syncMatch = new SyncMatch(session, syncSocket, registry, presenceTracker, rolePresenceTracker);
+            syncMatch.InitializeEventHandlers();
             await syncMatch.WaitForHandshake();
             return match;
         }

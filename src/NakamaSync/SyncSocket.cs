@@ -31,7 +31,7 @@ namespace NakamaSync
 
         private readonly SyncEncoding _encoding = new SyncEncoding();
         private readonly ISocket _socket;
-        private readonly IMatch _match;
+        private IMatch _match;
         private readonly SyncOpcodes _opcodes;
         private readonly RolePresenceTracker _presenceTracker;
 
@@ -41,8 +41,12 @@ namespace NakamaSync
             _match = match;
             _opcodes = opcodes;
             _presenceTracker = presenceTracker;
-
             _socket.ReceivedMatchState += HandleReceivedMatchState;
+        }
+
+        public void ReceiveMatch(IMatch match)
+        {
+            _match = match;
         }
 
         public void SendHandshakeRequest(HandshakeRequest request)

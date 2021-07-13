@@ -32,7 +32,7 @@ namespace NakamaSync
             _presenceTracker = presenceTracker;
         }
 
-        public void ListenForHandshakes(SyncSocket socket)
+        public void Subscribe(SyncSocket socket)
         {
             socket.OnHandshakeRequest += (source, request) => HandleHandshakeRequest(source, request, socket);
         }

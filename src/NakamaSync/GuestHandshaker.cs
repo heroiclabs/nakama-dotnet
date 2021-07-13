@@ -24,16 +24,14 @@ namespace NakamaSync
     internal class GuestHandshaker
     {
         private readonly VarKeys _keys;
-        private readonly SharedRoleIngress _sharedIngress;
-        private readonly UserRoleIngress _userIngress;
+        private readonly Ingresses _ingresses;
         private readonly RolePresenceTracker _presenceTracker;
         private readonly TaskCompletionSource<object> _handshakeTcs;
 
-        public GuestHandshaker(VarKeys keys, SharedRoleIngress sharedIngress, UserRoleIngress userIngress, RolePresenceTracker presenceTracker, SyncSocket socket)
+        public GuestHandshaker(VarKeys keys, Ingresses ingreses, RolePresenceTracker presenceTracker, SyncSocket socket)
         {
             _keys = keys;
-            _sharedIngress = sharedIngress;
-            _userIngress = userIngress;
+            _ingresses = ingreses;
             _presenceTracker = presenceTracker;
             _handshakeTcs = new TaskCompletionSource<object>();
             _presenceTracker.OnGuestJoined += (guest) => HandleGuestJoined(guest, socket);
@@ -49,8 +47,8 @@ namespace NakamaSync
         {
             if (response.Success)
             {
-                _sharedIngress.ReceiveSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
-                _userIngress.ReceiveSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
+                _ingresses.SharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
+                _ingresses.UserRoleIngress.ReceiveSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
                 _handshakeTcs.TrySetResult(null);
             }
             else
