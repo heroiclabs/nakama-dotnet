@@ -16,44 +16,41 @@
 
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
 {
+    // todo should we await on sending on handshake
     internal class HandshakeRequester
     {
         private readonly VarKeys _keys;
         private readonly Ingresses _ingresses;
-        private readonly TaskCompletionSource<object> _handshakeTcs;
+
+        // todo handle error with sending handshake and resend if needed
+        private bool _sentHandshake;
 
         public HandshakeRequester(VarKeys keys, Ingresses ingresses)
         {
             _keys = keys;
             _ingresses = ingresses;
-            _handshakeTcs = new TaskCompletionSource<object>();
         }
 
         public void Subscribe(SyncSocket socket, RolePresenceTracker presenceTracker)
         {
-            if (presenceTracker.GetPresenceCount() <= 1)
+            presenceTracker.OnPresenceAdded += (presence) =>
             {
-                // nobody to handshake with, don't request handshake
-                _handshakeTcs.SetResult(null);
-                return;
-            }
+                if (_sentHandshake)
+                {
+                    return;
+                }
 
-            presenceTracker.OnGuestJoined += (guest) => RequestHandshake(guest, socket);
+                RequestHandshake(presence, socket);
+            };
+
             socket.OnHandshakeResponse += (source, response) =>
             {
                 HandleHandshakeResponse(source, response, presenceTracker.IsSelfHost());
             };
-
-        }
-
-        public Task WaitForResponse()
-        {
-            return _handshakeTcs.Task;
         }
 
         private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response, bool isHost)
@@ -62,11 +59,10 @@ namespace NakamaSync
             {
                 _ingresses.SharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 _ingresses.UserRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
-                _handshakeTcs.TrySetResult(null);
             }
             else
             {
-                _handshakeTcs.TrySetException(new InvalidOperationException("Synced match handshake with host failed."));
+                throw new InvalidOperationException("Synced match handshake with host failed.");
             }
         }
 
@@ -74,6 +70,7 @@ namespace NakamaSync
         {
             var keysForValidation = _keys.GetKeys();
             socket.SendHandshakeRequest(new HandshakeRequest(keysForValidation.ToList()));
+            _sentHandshake = true;
         }
     }
 }

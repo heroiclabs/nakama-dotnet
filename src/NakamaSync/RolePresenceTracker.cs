@@ -27,6 +27,17 @@ namespace NakamaSync
         public event Action<HostChangedEvent> OnHostChanged;
         public event Action<IUserPresence> OnGuestLeft;
         public event Action<IUserPresence> OnGuestJoined;
+        public event Action<IUserPresence> OnPresenceAdded
+        {
+            add
+            {
+                _presenceTracker.OnPresenceAdded += value;
+            }
+            remove
+            {
+                _presenceTracker.OnPresenceRemoved -= value;
+            }
+        }
 
         private readonly PresenceTracker _presenceTracker;
 

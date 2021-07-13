@@ -47,6 +47,7 @@ using Nakama;
 // todo error handling checks particularly on dictionary accessing etc.
 // todo clean this class up and use explicit returns values where needed for some of these private methods
 // should user vars have acks on a uesr by user basis?
+// what if clients don't agree on opcodes? how can you establish that they are on different binary versions?
 namespace NakamaSync
 {
     public static class SyncExtensions
@@ -61,19 +62,17 @@ namespace NakamaSync
             var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
             var builder = new EnvelopeBuilder(syncSocket);
             var ingresses = new Ingresses(keys, registry, builder, presenceTracker);
-            var handhakeRequester = new HandshakeRequester(keys, ingresses);
             var handshakeResponder = new HandshakeResponder(keys, registry, presenceTracker);
             var guestEgress = new GuestEgress(keys, builder);
             var hostEgress = new HostEgress(keys, builder, presenceTracker);
             var egress = new RoleEgress(guestEgress, hostEgress, presenceTracker);
-            var migrater = new HostMigrator(registry, builder);
+            var migrator = new HostMigrator(registry, builder);
 
             presenceTracker.Subscribe(socket);
-            migrater.Subscribe(presenceTracker);
+            migrator.Subscribe(presenceTracker);
             ingresses.SharedRoleIngress.Subscribe(syncSocket, presenceTracker);
             ingresses.UserRoleIngress.Subscribe(syncSocket, presenceTracker);
             egress.Subscribe(registry);
-            handhakeRequester.Subscribe(syncSocket, presenceTracker);
             handshakeResponder.Subscribe(syncSocket);
 
             IMatch match = await socket.CreateMatchAsync();
@@ -81,8 +80,6 @@ namespace NakamaSync
             registry.ReceiveMatch(keys, match);
             syncSocket.ReceiveMatch(match);
             presenceTracker.ReceiveMatch(match);
-
-            await handhakeRequester.WaitForResponse();
 
             return match;
         }
@@ -99,10 +96,10 @@ namespace NakamaSync
             var guestEgress = new GuestEgress(keys, builder);
             var hostEgress = new HostEgress(keys, builder, presenceTracker);
             var egress = new RoleEgress(guestEgress, hostEgress, presenceTracker);
-            var migrater = new HostMigrator(registry, builder);
+            var migrator = new HostMigrator(registry, builder);
 
             presenceTracker.Subscribe(socket);
-            migrater.Subscribe(presenceTracker);
+            migrator.Subscribe(presenceTracker);
             ingresses.SharedRoleIngress.Subscribe(syncSocket, presenceTracker);
             ingresses.UserRoleIngress.Subscribe(syncSocket, presenceTracker);
             egress.Subscribe(registry);
@@ -114,8 +111,6 @@ namespace NakamaSync
             registry.ReceiveMatch(keys, match);
             syncSocket.ReceiveMatch(match);
             presenceTracker.ReceiveMatch(match);
-
-            await handhakeRequester.WaitForResponse();
 
             return match;
         }
