@@ -21,13 +21,13 @@ namespace NakamaSync
 {
     internal class UserHostIngress
     {
-        private EnvelopeBuilder _builder;
         private readonly VarKeys _keys;
+        private EnvelopeBuilder _builder;
 
-        public UserHostIngress(EnvelopeBuilder builder, VarKeys keys)
+        public UserHostIngress(VarKeys keys, EnvelopeBuilder builder)
         {
-            _builder = builder;
             _keys = keys;
+            _builder = builder;
         }
 
         public void HandleValue<T>(IUserPresence source, UserContext<T> context)

@@ -23,9 +23,9 @@ namespace NakamaSync
     {
         private readonly GuestIngress _guestIngress;
         private readonly SharedHostIngress _sharedHostIngress;
-        private readonly SyncVarRegistry _registry;
+        private readonly VarRegistry _registry;
 
-        public SharedRoleIngress(GuestIngress guestIngress, SharedHostIngress sharedHostIngress, SyncVarRegistry registry)
+        public SharedRoleIngress(GuestIngress guestIngress, SharedHostIngress sharedHostIngress, VarRegistry registry)
         {
             _guestIngress = guestIngress;
             _sharedHostIngress = sharedHostIngress;

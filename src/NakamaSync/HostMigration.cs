@@ -27,7 +27,7 @@ namespace NakamaSync
             _builder = builder;
         }
 
-        public void Migrate(SyncVarRegistry registry)
+        public void Migrate(VarRegistry registry)
         {
             ValidatePendingVars<bool>(registry.SharedBools, env => env.SharedBoolAcks);
             ValidatePendingVars<float>(registry.SharedFloats, env => env.SharedFloatAcks);

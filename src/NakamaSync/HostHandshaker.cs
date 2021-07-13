@@ -23,12 +23,13 @@ namespace NakamaSync
     internal class HostHandshaker
     {
         private readonly VarKeys _keys;
-        private readonly SyncVarRegistry _registry;
-        private readonly PresenceTracker _presenceTracker;
+        private readonly VarRegistry _registry;
+        private readonly RolePresenceTracker _presenceTracker;
 
-        public HostHandshaker(VarKeys keys, SyncVarRegistry registry, PresenceTracker presenceTracker)
+        public HostHandshaker(VarKeys keys, VarRegistry registry, RolePresenceTracker presenceTracker)
         {
             _keys = keys;
+            _registry = registry;
             _presenceTracker = presenceTracker;
         }
 

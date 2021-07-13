@@ -30,13 +30,14 @@ namespace NakamaSync
 
         private readonly PresenceTracker _presenceTracker;
 
-        public RolePresenceTracker(PresenceTracker presenceTracker)
+        public RolePresenceTracker(ISession session)
         {
-            _presenceTracker = presenceTracker;
+            _presenceTracker = new PresenceTracker(session.UserId);
         }
 
-        public void ListenForPresences()
+        public void ListenForPresences(ISocket socket)
         {
+            socket.ReceivedMatchPresence += _presenceTracker.HandlePresenceEvent;
             _presenceTracker.OnPresenceAdded += HandlePresenceAdded;
             _presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
         }
@@ -105,9 +106,19 @@ namespace NakamaSync
             return _presenceTracker.GetPresence(hostId);
         }
 
+        public IUserPresence GetSelf()
+        {
+            return _presenceTracker.GetSelf();
+        }
+
         public bool IsSelfHost()
         {
             return _presenceTracker.GetSelf().UserId == GetHost()?.UserId;
+        }
+
+        public void ReceiveMatch(IMatch match)
+        {
+            _presenceTracker.ReceiveMatch(match);
         }
     }
 }

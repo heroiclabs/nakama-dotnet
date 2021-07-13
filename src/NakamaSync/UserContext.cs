@@ -39,22 +39,22 @@ namespace NakamaSync
 
     internal class UserContext
     {
-        public static List<UserContext<bool>> FromBoolValues(Envelope envelope, SyncVarRegistry registry)
+        public static List<UserContext<bool>> FromBoolValues(Envelope envelope, VarRegistry registry)
         {
             return UserContext.FromValues<bool>(envelope.UserBools, registry.UserBools, env => env.UserBools, env => env.UserBoolAcks);
         }
 
-        public static List<UserContext<float>> FromFloatValues(Envelope envelope, SyncVarRegistry registry)
+        public static List<UserContext<float>> FromFloatValues(Envelope envelope, VarRegistry registry)
         {
             return UserContext.FromValues<float>(envelope.UserFloats, registry.UserFloats, env => env.UserFloats, env => env.UserFloatAcks);
         }
 
-        public static List<UserContext<int>> FromIntValues(Envelope envelope, SyncVarRegistry registry)
+        public static List<UserContext<int>> FromIntValues(Envelope envelope, VarRegistry registry)
         {
             return UserContext.FromValues<int>(envelope.UserInts, registry.UserInts, env => env.UserInts, env => env.UserIntAcks);
         }
 
-        public static List<UserContext<string>> FromStringValues(Envelope envelope, SyncVarRegistry registry)
+        public static List<UserContext<string>> FromStringValues(Envelope envelope, VarRegistry registry)
         {
             return UserContext.FromValues<string>(envelope.UserStrings, registry.UserStrings, env => env.UserStrings, env => env.UserStringAcks);
         }

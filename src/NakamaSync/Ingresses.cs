@@ -21,11 +21,11 @@ namespace NakamaSync
         public SharedRoleIngress SharedRoleIngress { get; }
         public UserRoleIngress UserRoleIngress { get; }
 
-        public Ingresses(VarKeys keys, EnvelopeBuilder builder, RolePresenceTracker presenceTracker, SyncVarRegistry registry)
+        public Ingresses(VarKeys keys, VarRegistry registry, EnvelopeBuilder builder, RolePresenceTracker rolePresenceTracker)
         {
-            var guestIngress = new GuestIngress(keys, presenceTracker);
-            var sharedHostIngress = new SharedHostIngress(builder, keys);
-            var userHostIngress = new UserHostIngress(builder, keys);
+            var guestIngress = new GuestIngress(keys, rolePresenceTracker);
+            var sharedHostIngress = new SharedHostIngress(keys, builder);
+            var userHostIngress = new UserHostIngress(keys, builder);
             SharedRoleIngress = new SharedRoleIngress(guestIngress, sharedHostIngress, registry);
             UserRoleIngress = new UserRoleIngress(guestIngress, userHostIngress, registry);
         }

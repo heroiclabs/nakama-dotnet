@@ -36,27 +36,27 @@ namespace NakamaSync
 
     internal class SharedContext
     {
-        public static List<SharedContext<bool>> FromBoolValues(Envelope envelope, SyncVarRegistry registry)
+        public static List<SharedContext<bool>> FromBoolValues(Envelope envelope, VarRegistry registry)
         {
             return SharedContext.FromValues<bool>(envelope.SharedBools, registry.SharedBools, env => env.SharedBools, env => env.SharedBoolAcks);
         }
 
-        public static List<SharedContext<bool>> FromBoolVars(Envelope envelope, SyncVarRegistry registry)
+        public static List<SharedContext<bool>> FromBoolVars(Envelope envelope, VarRegistry registry)
         {
             return SharedContext.FromValues<bool>(envelope.SharedBools, registry.SharedBools, env => env.SharedBools, env => env.SharedBoolAcks);
         }
 
-        public static List<SharedContext<float>> FromFloatValues(Envelope envelope, SyncVarRegistry registry)
+        public static List<SharedContext<float>> FromFloatValues(Envelope envelope, VarRegistry registry)
         {
             return SharedContext.FromValues<float>(envelope.SharedFloats, registry.SharedFloats, env => env.SharedFloats, env => env.SharedFloatAcks);
         }
 
-        public static List<SharedContext<int>> FromIntValues(Envelope envelope, SyncVarRegistry registry)
+        public static List<SharedContext<int>> FromIntValues(Envelope envelope, VarRegistry registry)
         {
             return SharedContext.FromValues<int>(envelope.SharedInts, registry.SharedInts, env => env.SharedInts, env => env.SharedIntAcks);
         }
 
-        public static List<SharedContext<string>> FromStringValues(Envelope envelope, SyncVarRegistry registry)
+        public static List<SharedContext<string>> FromStringValues(Envelope envelope, VarRegistry registry)
         {
             return FromValues(envelope.SharedStrings, registry.SharedStrings, env => env.SharedStrings, env => env.SharedStringAcks);
         }

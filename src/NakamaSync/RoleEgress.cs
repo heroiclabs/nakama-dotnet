@@ -31,7 +31,7 @@ namespace NakamaSync
             _presenceTracker = presenceTracker;
         }
 
-        public void Subscribe(SyncVarRegistry registry)
+        public void Subscribe(VarRegistry registry)
         {
             Subscribe(registry.SharedBools, values => values.SharedBools);
             Subscribe(registry.SharedFloats, values => values.SharedFloats);
@@ -46,36 +46,48 @@ namespace NakamaSync
 
         private void Subscribe<T>(Dictionary<string, SharedVar<T>> vars, SharedVarAccessor<T> accessor)
         {
-            bool isHost = _presenceTracker.IsSelfHost();
-
             foreach (var kvp in vars)
             {
-                if (isHost)
-                {
-                    vars[kvp.Key].OnLocalValueChanged += evt => _hostEgress.HandleLocalSharedVarChanged(kvp.Key, evt.NewValue, accessor);
-                }
-                else
-                {
-                    vars[kvp.Key].OnLocalValueChanged += evt => _guestEgress.HandleLocalSharedVarChanged(kvp.Key, evt.NewValue, accessor);
-                }
+                vars[kvp.Key].OnLocalValueChanged += (evt) => HandleLocalSharedVarChanged(kvp.Key, evt, accessor);
+            }
+        }
+
+        private void HandleLocalSharedVarChanged<T>(string key, ISharedVarEvent<T> evt, SharedVarAccessor<T> accessor)
+        {
+            bool isHost = _presenceTracker.IsSelfHost();
+
+            if (isHost)
+            {
+                _hostEgress.HandleLocalSharedVarChanged(key, evt.NewValue, accessor);
+            }
+            else
+            {
+                _guestEgress.HandleLocalSharedVarChanged(key, evt.NewValue, accessor);
             }
         }
 
         private void Subscribe<T>(Dictionary<string, UserVar<T>> vars, UserVarAccessor<T> accessor)
         {
-            bool isHost = _presenceTracker.IsSelfHost();
-
             foreach (var kvp in vars)
             {
-                if (isHost)
-                {
-                    vars[kvp.Key].OnLocalValueChanged += evt => _hostEgress.HandleLocalUserVarChanged(kvp.Key, evt.NewValue, evt.Target, accessor);
-                }
-                else
-                {
-                    vars[kvp.Key].OnLocalValueChanged += evt => _guestEgress.HandleLocalUserVarChanged(kvp.Key, evt.NewValue, evt.Target, accessor);
-                }
+                vars[kvp.Key].OnLocalValueChanged += (evt) => HandleLocalUserVarChanged(kvp.Key, evt, accessor);
             }
         }
+
+        private void HandleLocalUserVarChanged<T>(string key, IUserVarEvent<T> evt, UserVarAccessor<T> accessor)
+        {
+            bool isHost = _presenceTracker.IsSelfHost();
+
+            if (isHost)
+            {
+                _hostEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.Target, accessor);
+            }
+            else
+            {
+                _guestEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.Target, accessor);
+            }
+        }
+
+
     }
 }

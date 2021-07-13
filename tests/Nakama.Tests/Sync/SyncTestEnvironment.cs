@@ -34,7 +34,7 @@ namespace Nakama.Tests
 
         private readonly IClient _client;
         private readonly List<IMatch> _matches = new List<IMatch>();
-        private readonly List<SyncVarRegistry> _registrations = new List<SyncVarRegistry>();
+        private readonly List<VarRegistry> _registrations = new List<VarRegistry>();
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
         private Dictionary<string, SyncTestUserEnvironment> _userEnvs;
@@ -60,7 +60,7 @@ namespace Nakama.Tests
             _userEnvs = CreateUserEnvs(_sessions, _registrations, idGenerator ?? SyncTestUserEnvironment.DefaultVarIdGenerator);
         }
 
-        private Dictionary<string, SyncTestUserEnvironment> CreateUserEnvs(List<ISession> sessions, List<SyncVarRegistry> registrations, VarIdGenerator generator)
+        private Dictionary<string, SyncTestUserEnvironment> CreateUserEnvs(List<ISession> sessions, List<VarRegistry> registrations, VarIdGenerator generator)
         {
             var envs = new Dictionary<string, SyncTestUserEnvironment>();
 
@@ -176,13 +176,13 @@ namespace Nakama.Tests
             Task.WaitAll(connectTasks.ToArray());
         }
 
-        private IEnumerable<SyncVarRegistry> CreateRegistrations(List<ISession> sessions)
+        private IEnumerable<VarRegistry> CreateRegistrations(List<ISession> sessions)
         {
-            var registries = new List<SyncVarRegistry>();
+            var registries = new List<VarRegistry>();
 
             for (int i = 0; i < sessions.Count; i++)
             {
-                var registry = new SyncVarRegistry();
+                var registry = new VarRegistry();
                 registries.Insert(i, registry);
             }
 

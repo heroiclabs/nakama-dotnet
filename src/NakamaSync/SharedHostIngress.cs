@@ -21,13 +21,13 @@ namespace NakamaSync
 {
     internal class SharedHostIngress
     {
-        private EnvelopeBuilder _builder;
         private readonly VarKeys _keys;
+        private EnvelopeBuilder _builder;
 
-        public SharedHostIngress(EnvelopeBuilder builder, VarKeys keys)
+        public SharedHostIngress(VarKeys keys, EnvelopeBuilder builder)
         {
-            _builder = builder;
             _keys = keys;
+            _builder = builder;
         }
 
         public void ProcessValue<T>(IUserPresence source, SharedContext<T> context)

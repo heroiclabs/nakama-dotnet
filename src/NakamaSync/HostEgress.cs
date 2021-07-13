@@ -21,14 +21,14 @@ namespace NakamaSync
 {
     internal class HostEgress
     {
-        private readonly EnvelopeBuilder _builder;
         private readonly VarKeys _keys;
-        private readonly PresenceTracker _presenceTracker;
+        private readonly EnvelopeBuilder _builder;
+        private readonly RolePresenceTracker _presenceTracker;
 
-        public HostEgress(EnvelopeBuilder builder, VarKeys keys, PresenceTracker presenceTracker)
+        public HostEgress(VarKeys keys, EnvelopeBuilder builder, RolePresenceTracker presenceTracker)
         {
-            _builder = builder;
             _keys = keys;
+            _builder = builder;
             _presenceTracker = presenceTracker;
         }
 

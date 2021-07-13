@@ -20,7 +20,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public class SyncVarRegistry
+    public class VarRegistry
     {
         public Dictionary<string, SharedVar<bool>> SharedBools { get; }
         public Dictionary<string, SharedVar<float>> SharedFloats { get; }
@@ -34,7 +34,7 @@ namespace NakamaSync
 
         private readonly HashSet<object> _registeredVars = new HashSet<object>();
 
-        public SyncVarRegistry()
+        public VarRegistry()
         {
             SharedBools = new Dictionary<string, SharedVar<bool>>();
             SharedFloats = new Dictionary<string, SharedVar<float>>();
