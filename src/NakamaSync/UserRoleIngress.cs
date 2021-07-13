@@ -32,7 +32,7 @@ namespace NakamaSync
             _registry = registry;
         }
 
-        public void Subscribe(SyncSocket socket, RolePresenceTracker presenceTracker)
+        public void Subscribe(SyncSocket socket, RoleTracker presenceTracker)
         {
             socket.OnSyncEnvelope += (source, envelope) =>
             {

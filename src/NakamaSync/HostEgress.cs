@@ -23,9 +23,9 @@ namespace NakamaSync
     {
         private readonly VarKeys _keys;
         private readonly EnvelopeBuilder _builder;
-        private readonly RolePresenceTracker _presenceTracker;
+        private readonly RoleTracker _presenceTracker;
 
-        public HostEgress(VarKeys keys, EnvelopeBuilder builder, RolePresenceTracker presenceTracker)
+        public HostEgress(VarKeys keys, EnvelopeBuilder builder, RoleTracker presenceTracker)
         {
             _keys = keys;
             _builder = builder;

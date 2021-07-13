@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Nakama;
 
 namespace NakamaSync
@@ -81,7 +80,12 @@ namespace NakamaSync
             return GetPresence(_userId);
         }
 
-        public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
+        public void Subscribe(ISocket socket)
+        {
+            socket.ReceivedMatchPresence += HandlePresenceEvent;
+        }
+
+        private void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
         {
             HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
         }

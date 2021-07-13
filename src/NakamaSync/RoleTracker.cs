@@ -22,40 +22,23 @@ using Nakama;
 namespace NakamaSync
 {
     // TODO catch presence tracker exceptions. and think about how to handle exceptions for the sync system in general
-    internal class RolePresenceTracker
+    internal class RoleTracker
     {
         public event Action<HostChangedEvent> OnHostChanged;
         public event Action<IUserPresence> OnGuestLeft;
         public event Action<IUserPresence> OnGuestJoined;
-        public event Action<IUserPresence> OnPresenceAdded
-        {
-            add
-            {
-                _presenceTracker.OnPresenceAdded += value;
-            }
-            remove
-            {
-                _presenceTracker.OnPresenceRemoved -= value;
-            }
-        }
 
-        private readonly PresenceTracker _presenceTracker;
+        private PresenceTracker _presenceTracker;
 
-        public RolePresenceTracker(ISession session)
+        public RoleTracker(PresenceTracker presenceTracker)
         {
-            _presenceTracker = new PresenceTracker(session.UserId);
+            _presenceTracker = presenceTracker;
         }
 
         public void Subscribe(ISocket socket)
         {
-            socket.ReceivedMatchPresence += _presenceTracker.HandlePresenceEvent;
             _presenceTracker.OnPresenceAdded += HandlePresenceAdded;
             _presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
-        }
-
-        public IUserPresence GetPresence(string userId)
-        {
-            return _presenceTracker.GetPresence(userId);
         }
 
         private void HandlePresenceRemoved(IUserPresence leaver)
@@ -117,19 +100,9 @@ namespace NakamaSync
             return _presenceTracker.GetPresence(hostId);
         }
 
-        public IUserPresence GetSelf()
-        {
-            return _presenceTracker.GetSelf();
-        }
-
         public bool IsSelfHost()
         {
             return _presenceTracker.GetSelf().UserId == GetHost()?.UserId;
-        }
-
-        public int GetPresenceCount()
-        {
-            return _presenceTracker.GetPresenceCount();
         }
     }
 }

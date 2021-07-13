@@ -29,9 +29,9 @@ namespace NakamaSync
             _builder = builder;
         }
 
-        public void Subscribe(RolePresenceTracker presenceTracker)
+        public void Subscribe(PresenceTracker presenceTracker, RoleTracker roleTracker)
         {
-            presenceTracker.OnHostChanged += (evt) =>
+            roleTracker.OnHostChanged += (evt) =>
             {
                 if (evt.NewHost == presenceTracker.GetSelf())
                 {

@@ -24,18 +24,21 @@ namespace NakamaSync
     internal class HandshakeRequester
     {
         private readonly VarKeys _keys;
-        private readonly Ingresses _ingresses;
 
         // todo handle error with sending handshake and resend if needed
         private bool _sentHandshake;
 
-        public HandshakeRequester(VarKeys keys, Ingresses ingresses)
+        private SharedRoleIngress _sharedRoleIngress;
+        private UserRoleIngress _userRoleIngress;
+
+        public HandshakeRequester(VarKeys keys, SharedRoleIngress sharedRoleIngress, UserRoleIngress userRoleIngress)
         {
             _keys = keys;
-            _ingresses = ingresses;
+            _sharedRoleIngress = sharedRoleIngress;
+            _userRoleIngress = userRoleIngress;
         }
 
-        public void Subscribe(SyncSocket socket, RolePresenceTracker presenceTracker)
+        public void Subscribe(SyncSocket socket, RoleTracker roleTracker, PresenceTracker presenceTracker)
         {
             presenceTracker.OnPresenceAdded += (presence) =>
             {
@@ -49,7 +52,7 @@ namespace NakamaSync
 
             socket.OnHandshakeResponse += (source, response) =>
             {
-                HandleHandshakeResponse(source, response, presenceTracker.IsSelfHost());
+                HandleHandshakeResponse(source, response, roleTracker.IsSelfHost());
             };
         }
 
@@ -57,8 +60,8 @@ namespace NakamaSync
         {
             if (response.Success)
             {
-                _ingresses.SharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
-                _ingresses.UserRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
+                _sharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
+                _userRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
             }
             else
             {

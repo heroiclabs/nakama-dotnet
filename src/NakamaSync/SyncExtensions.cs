@@ -55,60 +55,28 @@ namespace NakamaSync
         // todo don't require session as a parameter here since we pass it to socket.
 
         // todo put reflection version here?
-        public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, VarRegistry registry)
+        public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes)
         {
-            var keys = new VarKeys();
-            var presenceTracker = new RolePresenceTracker(session);
-            var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
-            var builder = new EnvelopeBuilder(syncSocket);
-            var ingresses = new Ingresses(keys, registry, builder, presenceTracker);
-            var handshakeResponder = new HandshakeResponder(keys, registry, presenceTracker);
-            var guestEgress = new GuestEgress(keys, builder);
-            var hostEgress = new HostEgress(keys, builder, presenceTracker);
-            var egress = new RoleEgress(guestEgress, hostEgress, presenceTracker);
-            var migrator = new HostMigrator(registry, builder);
-
-            presenceTracker.Subscribe(socket);
-            migrator.Subscribe(presenceTracker);
-            ingresses.SharedRoleIngress.Subscribe(syncSocket, presenceTracker);
-            ingresses.UserRoleIngress.Subscribe(syncSocket, presenceTracker);
-            egress.Subscribe(registry);
-            handshakeResponder.Subscribe(syncSocket);
+            var services = new SyncServices(socket, session, registry, opcodes);
+            services.Initialize();
 
             IMatch match = await socket.CreateMatchAsync();
 
-            registry.ReceiveMatch(keys, match);
-            syncSocket.ReceiveMatch(match);
+            registry.ReceiveMatch(services.VarKeys, match);
+            services.SyncSocket.ReceiveMatch(match);
 
             return match;
         }
 
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry)
         {
-            var keys = new VarKeys();
-            var presenceTracker = new RolePresenceTracker(session);
-            var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
-            var builder = new EnvelopeBuilder(syncSocket);
-            var ingresses = new Ingresses(keys, registry, builder, presenceTracker);
-            var handhakeRequester = new HandshakeRequester(keys, ingresses);
-            var handshakeResponder = new HandshakeResponder(keys, registry, presenceTracker);
-            var guestEgress = new GuestEgress(keys, builder);
-            var hostEgress = new HostEgress(keys, builder, presenceTracker);
-            var egress = new RoleEgress(guestEgress, hostEgress, presenceTracker);
-            var migrator = new HostMigrator(registry, builder);
-
-            presenceTracker.Subscribe(socket);
-            migrator.Subscribe(presenceTracker);
-            ingresses.SharedRoleIngress.Subscribe(syncSocket, presenceTracker);
-            ingresses.UserRoleIngress.Subscribe(syncSocket, presenceTracker);
-            egress.Subscribe(registry);
-            handhakeRequester.Subscribe(syncSocket, presenceTracker);
-            handshakeResponder.Subscribe(syncSocket);
+            var services = new SyncServices(socket, session, registry, opcodes);
+            services.Initialize();
 
             IMatch match = await socket.JoinMatchAsync(matchId);
 
-            registry.ReceiveMatch(keys, match);
-            syncSocket.ReceiveMatch(match);
+            registry.ReceiveMatch(services.VarKeys, match);
+            services.SyncSocket.ReceiveMatch(match);
 
             return match;
         }

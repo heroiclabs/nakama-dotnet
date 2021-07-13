@@ -20,11 +20,11 @@ namespace NakamaSync
 {
     internal class RoleEgress
     {
-        private RolePresenceTracker _presenceTracker;
+        private RoleTracker _presenceTracker;
         private HostEgress _hostEgress;
         private GuestEgress _guestEgress;
 
-        public RoleEgress(GuestEgress guestEgress, HostEgress hostEgress, RolePresenceTracker presenceTracker)
+        public RoleEgress(GuestEgress guestEgress, HostEgress hostEgress, RoleTracker presenceTracker)
         {
             _guestEgress = guestEgress;
             _hostEgress = hostEgress;

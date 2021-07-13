@@ -24,9 +24,9 @@ namespace NakamaSync
     {
         private readonly VarKeys _keys;
         private readonly VarRegistry _registry;
-        private readonly RolePresenceTracker _presenceTracker;
+        private readonly PresenceTracker _presenceTracker;
 
-        public HandshakeResponder(VarKeys keys, VarRegistry registry, RolePresenceTracker presenceTracker)
+        public HandshakeResponder(VarKeys keys, VarRegistry registry, PresenceTracker presenceTracker)
         {
             _keys = keys;
             _registry = registry;

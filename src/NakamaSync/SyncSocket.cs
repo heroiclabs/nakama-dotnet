@@ -32,10 +32,10 @@ namespace NakamaSync
         private readonly SyncEncoding _encoding = new SyncEncoding();
         private readonly ISocket _socket;
         private readonly SyncOpcodes _opcodes;
-        private readonly RolePresenceTracker _presenceTracker;
+        private readonly RoleTracker _presenceTracker;
         private IMatch _match;
 
-        public SyncSocket(ISocket socket, SyncOpcodes opcodes, RolePresenceTracker presenceTracker)
+        public SyncSocket(ISocket socket, SyncOpcodes opcodes, RoleTracker presenceTracker)
         {
             _socket = socket;
             _opcodes = opcodes;
@@ -60,11 +60,6 @@ namespace NakamaSync
 
         public void SendSyncDataToAll(Envelope envelope)
         {
-            if (_presenceTracker.GetPresenceCount() <= 1)
-            {
-                return;
-            }
-
             // clear envelope for each of these after sending?
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
         }

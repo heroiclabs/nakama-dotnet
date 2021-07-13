@@ -22,9 +22,9 @@ namespace NakamaSync
     internal class GuestIngress
     {
         private VarKeys _keys;
-        private RolePresenceTracker _presenceTracker;
+        private PresenceTracker _presenceTracker;
 
-        public GuestIngress(VarKeys keys, RolePresenceTracker presenceTracker)
+        public GuestIngress(VarKeys keys, PresenceTracker presenceTracker)
         {
             _keys = keys;
             _presenceTracker = presenceTracker;
