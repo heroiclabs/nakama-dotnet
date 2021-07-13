@@ -124,7 +124,6 @@ namespace NakamaSync
                     // self presence already received when match joined
                     if (joiner.UserId != _userId)
                     {
-                        System.Console.WriteLine(joiner.UserId + " , " + _userId);
                         throw new InvalidOperationException("Joining presence already exists: " + joiner.UserId);
                     }
                 }

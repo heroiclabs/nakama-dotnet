@@ -56,7 +56,7 @@ namespace Nakama.Tests.Socket
             };
 
             var mismatchedEnv = new SyncTestEnvironment(
-                new SyncOpcodes(handshakeOpcode: 0, dataOpcode: 1),
+                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
                 numClients: 2,
                 numTestVars: 1,
                 hostIndex: 0,
@@ -85,8 +85,8 @@ namespace Nakama.Tests.Socket
         private SyncTestEnvironment CreateDefaultEnvironment()
         {
             return new SyncTestEnvironment(
-                new SyncOpcodes(handshakeOpcode: 0, dataOpcode: 1),
-                numClients: 4,
+                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                numClients: 2,
                 numTestVars: 1,
                 hostIndex: 0);
         }

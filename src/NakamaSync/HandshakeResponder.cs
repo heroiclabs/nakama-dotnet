@@ -20,13 +20,13 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class HostHandshaker
+    internal class HandshakeResponder
     {
         private readonly VarKeys _keys;
         private readonly VarRegistry _registry;
         private readonly RolePresenceTracker _presenceTracker;
 
-        public HostHandshaker(VarKeys keys, VarRegistry registry, RolePresenceTracker presenceTracker)
+        public HandshakeResponder(VarKeys keys, VarRegistry registry, RolePresenceTracker presenceTracker)
         {
             _keys = keys;
             _registry = registry;

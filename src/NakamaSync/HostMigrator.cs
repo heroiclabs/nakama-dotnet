@@ -18,12 +18,12 @@ using System.Collections.Generic;
 
 namespace NakamaSync
 {
-    internal class HostMigrater
+    internal class HostMigrator
     {
         private VarRegistry _registry;
         private readonly EnvelopeBuilder _builder;
 
-        internal HostMigrater(VarRegistry registry, EnvelopeBuilder builder)
+        internal HostMigrator(VarRegistry registry, EnvelopeBuilder builder)
         {
             _registry = registry;
             _builder = builder;
@@ -31,7 +31,8 @@ namespace NakamaSync
 
         public void Subscribe(RolePresenceTracker presenceTracker)
         {
-            presenceTracker.OnHostChanged += (evt) => {
+            presenceTracker.OnHostChanged += (evt) =>
+            {
                 if (evt.NewHost == presenceTracker.GetSelf())
                 {
                     // pick up where the old host left off in terms of validating values.

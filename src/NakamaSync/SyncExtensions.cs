@@ -61,21 +61,20 @@ namespace NakamaSync
             var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
             var builder = new EnvelopeBuilder(syncSocket);
             var ingresses = new Ingresses(keys, registry, builder, presenceTracker);
-            var guestHandshaker = new GuestHandshaker(keys, ingresses, presenceTracker, syncSocket);
-            var hostHandshaker = new HostHandshaker(keys, registry, presenceTracker);
-            var handshaker = new Handshaker(guestHandshaker, hostHandshaker, presenceTracker);
+            var handhakeRequester = new HandshakeRequester(keys, ingresses);
+            var handshakeResponder = new HandshakeResponder(keys, registry, presenceTracker);
             var guestEgress = new GuestEgress(keys, builder);
             var hostEgress = new HostEgress(keys, builder, presenceTracker);
             var egress = new RoleEgress(guestEgress, hostEgress, presenceTracker);
-
-            var migrater = new HostMigrater(registry, builder);
+            var migrater = new HostMigrator(registry, builder);
 
             presenceTracker.Subscribe(socket);
             migrater.Subscribe(presenceTracker);
             ingresses.SharedRoleIngress.Subscribe(syncSocket, presenceTracker);
             ingresses.UserRoleIngress.Subscribe(syncSocket, presenceTracker);
             egress.Subscribe(registry);
-            handshaker.Subscribe(syncSocket);
+            handhakeRequester.Subscribe(syncSocket, presenceTracker);
+            handshakeResponder.Subscribe(syncSocket);
 
             IMatch match = await socket.CreateMatchAsync();
 
@@ -83,7 +82,7 @@ namespace NakamaSync
             syncSocket.ReceiveMatch(match);
             presenceTracker.ReceiveMatch(match);
 
-            await handshaker.WaitForHandshake();
+            await handhakeRequester.WaitForResponse();
 
             return match;
         }
@@ -95,20 +94,20 @@ namespace NakamaSync
             var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
             var builder = new EnvelopeBuilder(syncSocket);
             var ingresses = new Ingresses(keys, registry, builder, presenceTracker);
-            var guestHandshaker = new GuestHandshaker(keys, ingresses, presenceTracker, syncSocket);
-            var hostHandshaker = new HostHandshaker(keys, registry, presenceTracker);
-            var handshaker = new Handshaker(guestHandshaker, hostHandshaker, presenceTracker);
+            var handhakeRequester = new HandshakeRequester(keys, ingresses);
+            var handshakeResponder = new HandshakeResponder(keys, registry, presenceTracker);
             var guestEgress = new GuestEgress(keys, builder);
             var hostEgress = new HostEgress(keys, builder, presenceTracker);
             var egress = new RoleEgress(guestEgress, hostEgress, presenceTracker);
-            var migrater = new HostMigrater(registry, builder);
+            var migrater = new HostMigrator(registry, builder);
 
             presenceTracker.Subscribe(socket);
             migrater.Subscribe(presenceTracker);
             ingresses.SharedRoleIngress.Subscribe(syncSocket, presenceTracker);
             ingresses.UserRoleIngress.Subscribe(syncSocket, presenceTracker);
             egress.Subscribe(registry);
-            handshaker.Subscribe(syncSocket);
+            handhakeRequester.Subscribe(syncSocket, presenceTracker);
+            handshakeResponder.Subscribe(syncSocket);
 
             IMatch match = await socket.JoinMatchAsync(matchId);
 
@@ -116,7 +115,7 @@ namespace NakamaSync
             syncSocket.ReceiveMatch(match);
             presenceTracker.ReceiveMatch(match);
 
-            await handshaker.WaitForHandshake();
+            await handhakeRequester.WaitForResponse();
 
             return match;
         }

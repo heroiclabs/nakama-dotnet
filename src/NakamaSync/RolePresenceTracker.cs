@@ -120,5 +120,10 @@ namespace NakamaSync
         {
             _presenceTracker.ReceiveMatch(match);
         }
+
+        public int GetPresenceCount()
+        {
+            return _presenceTracker.GetPresenceCount();
+        }
     }
 }

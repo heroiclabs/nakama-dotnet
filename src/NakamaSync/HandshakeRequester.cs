@@ -21,34 +21,47 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class GuestHandshaker
+    internal class HandshakeRequester
     {
         private readonly VarKeys _keys;
         private readonly Ingresses _ingresses;
-        private readonly RolePresenceTracker _presenceTracker;
         private readonly TaskCompletionSource<object> _handshakeTcs;
 
-        public GuestHandshaker(VarKeys keys, Ingresses ingreses, RolePresenceTracker presenceTracker, SyncSocket socket)
+        public HandshakeRequester(VarKeys keys, Ingresses ingresses)
         {
             _keys = keys;
-            _ingresses = ingreses;
-            _presenceTracker = presenceTracker;
+            _ingresses = ingresses;
             _handshakeTcs = new TaskCompletionSource<object>();
-            _presenceTracker.OnGuestJoined += (guest) => HandleGuestJoined(guest, socket);
-            socket.OnHandshakeResponse += (source, response) => HandleHandshakeResponse(source, response, socket);
         }
 
-        public Task GetHandshakeTask()
+        public void Subscribe(SyncSocket socket, RolePresenceTracker presenceTracker)
+        {
+            if (presenceTracker.GetPresenceCount() <= 1)
+            {
+                // nobody to handshake with, don't request handshake
+                _handshakeTcs.SetResult(null);
+                return;
+            }
+
+            presenceTracker.OnGuestJoined += (guest) => RequestHandshake(guest, socket);
+            socket.OnHandshakeResponse += (source, response) =>
+            {
+                HandleHandshakeResponse(source, response, presenceTracker.IsSelfHost());
+            };
+
+        }
+
+        public Task WaitForResponse()
         {
             return _handshakeTcs.Task;
         }
 
-        private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response, SyncSocket socket)
+        private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response, bool isHost)
         {
             if (response.Success)
             {
-                _ingresses.SharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
-                _ingresses.UserRoleIngress.ReceiveSyncEnvelope(source, response.Store, _presenceTracker.IsSelfHost());
+                _ingresses.SharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
+                _ingresses.UserRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 _handshakeTcs.TrySetResult(null);
             }
             else
@@ -57,7 +70,7 @@ namespace NakamaSync
             }
         }
 
-        private void HandleGuestJoined(IUserPresence joinedGuest, SyncSocket socket)
+        private void RequestHandshake(IUserPresence self, SyncSocket socket)
         {
             var keysForValidation = _keys.GetKeys();
             socket.SendHandshakeRequest(new HandshakeRequest(keysForValidation.ToList()));

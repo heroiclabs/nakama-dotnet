@@ -115,7 +115,7 @@ namespace Nakama.Tests
             }
 
             var matchTasks = new List<Task<IMatch>>();
-            var opcodes = new SyncOpcodes(Opcodes.HandshakeOpcode, Opcodes.DataOpcode);
+            var opcodes = new SyncOpcodes(Opcodes.HandshakeRequestOpcode, Opcodes.HandshakeResponseOpcode, Opcodes.DataOpcode);
 
             matchTasks.Insert(HostIndex, _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], opcodes, _registrations[HostIndex]));
 

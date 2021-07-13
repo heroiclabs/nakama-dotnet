@@ -15,22 +15,29 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace NakamaSync
 {
     public struct SyncOpcodes
     {
-        public int HandshakeOpcode { get; }
+        public int HandshakeRequestOpcode { get; }
+        public int HandshakeResponseOpcode { get; }
         public int DataOpcode { get; }
 
-        public SyncOpcodes(int handshakeOpcode, int dataOpcode)
+        public SyncOpcodes(int handshakeRequestOpcode, int handshakeResponseOpcode, int dataOpcode)
         {
-            if (handshakeOpcode == dataOpcode)
+            HashSet<int> allCodes = new HashSet<int>();
+
+            if (!allCodes.Add(handshakeRequestOpcode) ||
+                !allCodes.Add(handshakeResponseOpcode) ||
+                !allCodes.Add(dataOpcode))
             {
-                throw new ArgumentException("Data opcode and handshake opcode must be different values.");
+                throw new ArgumentException("Each opcode must be a unique integer.");
             }
 
-            HandshakeOpcode = handshakeOpcode;
+            HandshakeRequestOpcode = handshakeRequestOpcode;
+            HandshakeResponseOpcode = handshakeResponseOpcode;
             DataOpcode = dataOpcode;
         }
     }

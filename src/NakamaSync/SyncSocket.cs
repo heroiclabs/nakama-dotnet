@@ -50,12 +50,12 @@ namespace NakamaSync
 
         public void SendHandshakeRequest(HandshakeRequest request)
         {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, _encoding.Encode(request), new IUserPresence[]{_presenceTracker.GetHost()});
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequestOpcode, _encoding.Encode(request), new IUserPresence[]{_presenceTracker.GetHost()});
         }
 
         public void SendHandshakeResponse(IUserPresence target, HandshakeResponse response)
         {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeOpcode, _encoding.Encode(response), new IUserPresence[]{target});
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponseOpcode, _encoding.Encode(response), new IUserPresence[]{target});
         }
 
         public void SendSyncData(IUserPresence target, Envelope envelope)
@@ -81,16 +81,13 @@ namespace NakamaSync
                 Envelope envelope = _encoding.Decode<Envelope>(state.State);
                 OnSyncEnvelope(state.UserPresence, envelope);
             }
-            else if (state.OpCode == _opcodes.HandshakeOpcode)
+            else if (state.OpCode == _opcodes.HandshakeRequestOpcode)
             {
-                if (_presenceTracker.IsSelfHost())
-                {
-                    OnHandshakeRequest?.Invoke(state.UserPresence, _encoding.Decode<HandshakeRequest>(state.State));
-                }
-                else
-                {
-                    OnHandshakeResponse?.Invoke(state.UserPresence, _encoding.Decode<HandshakeResponse>(state.State));
-                }
+                OnHandshakeRequest?.Invoke(state.UserPresence, _encoding.Decode<HandshakeRequest>(state.State));
+            }
+            else if (state.OpCode == _opcodes.HandshakeResponseOpcode)
+            {
+                OnHandshakeResponse?.Invoke(state.UserPresence, _encoding.Decode<HandshakeResponse>(state.State));
             }
         }
     }
