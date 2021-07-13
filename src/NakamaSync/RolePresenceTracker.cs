@@ -35,7 +35,7 @@ namespace NakamaSync
             _presenceTracker = new PresenceTracker(session.UserId);
         }
 
-        public void ListenForPresences(ISocket socket)
+        public void Subscribe(ISocket socket)
         {
             socket.ReceivedMatchPresence += _presenceTracker.HandlePresenceEvent;
             _presenceTracker.OnPresenceAdded += HandlePresenceAdded;

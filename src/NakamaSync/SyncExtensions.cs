@@ -68,8 +68,10 @@ namespace NakamaSync
             var hostEgress = new HostEgress(keys, builder, presenceTracker);
             var egress = new RoleEgress(guestEgress, hostEgress, presenceTracker);
 
-            presenceTracker.ListenForPresences(socket);
-            presenceTracker.OnHostChanged += (evt) => HandleHostChanged(registry, builder, presenceTracker, evt);
+            var migrater = new HostMigrater(registry, builder);
+
+            presenceTracker.Subscribe(socket);
+            migrater.Subscribe(presenceTracker);
             ingresses.SharedRoleIngress.Subscribe(syncSocket, presenceTracker);
             ingresses.UserRoleIngress.Subscribe(syncSocket, presenceTracker);
             egress.Subscribe(registry);
@@ -77,7 +79,7 @@ namespace NakamaSync
 
             IMatch match = await socket.CreateMatchAsync();
 
-            registry.Register(keys, match.Self);
+            registry.ReceiveMatch(keys, match);
             syncSocket.ReceiveMatch(match);
             presenceTracker.ReceiveMatch(match);
 
@@ -99,32 +101,24 @@ namespace NakamaSync
             var guestEgress = new GuestEgress(keys, builder);
             var hostEgress = new HostEgress(keys, builder, presenceTracker);
             var egress = new RoleEgress(guestEgress, hostEgress, presenceTracker);
+            var migrater = new HostMigrater(registry, builder);
 
-            presenceTracker.ListenForPresences(socket);
-            presenceTracker.OnHostChanged += (evt) => HandleHostChanged(registry, builder, presenceTracker, evt);
+            presenceTracker.Subscribe(socket);
+            migrater.Subscribe(presenceTracker);
             ingresses.SharedRoleIngress.Subscribe(syncSocket, presenceTracker);
             ingresses.UserRoleIngress.Subscribe(syncSocket, presenceTracker);
             egress.Subscribe(registry);
             handshaker.Subscribe(syncSocket);
 
-            IMatch match = await socket.JoinSyncMatch(session, opcodes, matchId, registry);
+            IMatch match = await socket.JoinMatchAsync(matchId);
 
-            registry.Register(keys, match.Self);
+            registry.ReceiveMatch(keys, match);
             syncSocket.ReceiveMatch(match);
             presenceTracker.ReceiveMatch(match);
 
             await handshaker.WaitForHandshake();
 
             return match;
-        }
-
-        private static void HandleHostChanged(VarRegistry registry, EnvelopeBuilder builder, RolePresenceTracker presenceTracker, HostChangedEvent evt)
-        {
-            if (evt.NewHost == presenceTracker.GetSelf())
-            {
-                // pick up where the old host left off in terms of validating values.
-                new HostMigration(builder).Migrate(registry);
-            }
         }
     }
 }

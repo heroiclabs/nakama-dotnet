@@ -18,16 +18,29 @@ using System.Collections.Generic;
 
 namespace NakamaSync
 {
-    internal class HostMigration
+    internal class HostMigrater
     {
-        private EnvelopeBuilder _builder;
+        private VarRegistry _registry;
+        private readonly EnvelopeBuilder _builder;
 
-        internal HostMigration(EnvelopeBuilder builder)
+        internal HostMigrater(VarRegistry registry, EnvelopeBuilder builder)
         {
+            _registry = registry;
             _builder = builder;
         }
 
-        public void Migrate(VarRegistry registry)
+        public void Subscribe(RolePresenceTracker presenceTracker)
+        {
+            presenceTracker.OnHostChanged += (evt) => {
+                if (evt.NewHost == presenceTracker.GetSelf())
+                {
+                    // pick up where the old host left off in terms of validating values.
+                    Migrate(_registry);
+                }
+            };
+        }
+
+        private void Migrate(VarRegistry registry)
         {
             ValidatePendingVars<bool>(registry.SharedBools, env => env.SharedBoolAcks);
             ValidatePendingVars<float>(registry.SharedFloats, env => env.SharedFloatAcks);

@@ -47,17 +47,17 @@ namespace NakamaSync
             UserStrings = new Dictionary<string, UserVar<string>>();
         }
 
-        internal void Register(VarKeys keys, IUserPresence self)
+        internal void ReceiveMatch(VarKeys keys, IMatch match)
         {
-            Register(keys, SharedBools, self);
-            Register(keys, SharedFloats, self);
-            Register(keys, SharedInts, self);
-            Register(keys, SharedStrings, self);
+            Register(keys, SharedBools, match.Self);
+            Register(keys, SharedFloats, match.Self);
+            Register(keys, SharedInts, match.Self);
+            Register(keys, SharedStrings, match.Self);
 
-            Register(keys, UserBools, self);
-            Register(keys, UserFloats, self);
-            Register(keys, UserInts, self);
-            Register(keys, UserStrings, self);
+            Register(keys, UserBools, match.Self);
+            Register(keys, UserFloats, match.Self);
+            Register(keys, UserInts, match.Self);
+            Register(keys, UserStrings, match.Self);
         }
 
         private void Register<TVar>(VarKeys keys, Dictionary<string, TVar> vars, IUserPresence self) where TVar : IVar

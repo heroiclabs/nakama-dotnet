@@ -87,7 +87,5 @@ namespace NakamaSync
                 _guestEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.Target, accessor);
             }
         }
-
-
     }
 }
