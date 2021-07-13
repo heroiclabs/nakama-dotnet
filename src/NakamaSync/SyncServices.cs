@@ -52,7 +52,6 @@ namespace NakamaSync
             RoleTracker = new RoleTracker(PresenceTracker);
             SyncSocket = new SyncSocket(socket, opcodes, RoleTracker);
             EnvelopeBuilder = new EnvelopeBuilder(SyncSocket);
-            HandshakeResponder = new HandshakeResponder(VarKeys, VarRegistry, PresenceTracker);
 
             GuestEgress = new GuestEgress(VarKeys, EnvelopeBuilder);
             HostEgress = new HostEgress(VarKeys, EnvelopeBuilder, RoleTracker);
@@ -65,15 +64,24 @@ namespace NakamaSync
 
             SharedRoleIngress = new SharedRoleIngress(guestIngress, sharedHostIngress, registry);
             UserRoleIngress = new UserRoleIngress(guestIngress, userHostIngress, registry);
+
+            HandshakeRequester = new HandshakeRequester(VarKeys, SharedRoleIngress, UserRoleIngress);
+            HandshakeResponder = new HandshakeResponder(VarKeys, VarRegistry, PresenceTracker);
         }
 
-        public void Initialize()
+        public void Initialize(bool isMatchCreator)
         {
             PresenceTracker.Subscribe(_socket);
             _migrator.Subscribe(PresenceTracker, RoleTracker);
             SharedRoleIngress.Subscribe(SyncSocket, RoleTracker);
             UserRoleIngress.Subscribe(SyncSocket, RoleTracker);
             RoleEgress.Subscribe(VarRegistry);
+
+            if (!isMatchCreator)
+            {
+                HandshakeRequester.Subscribe(SyncSocket, RoleTracker, PresenceTracker);
+            }
+
             HandshakeResponder.Subscribe(SyncSocket);
         }
     }

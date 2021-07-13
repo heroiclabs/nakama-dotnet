@@ -14,7 +14,6 @@
 * limitations under the License.
 */
 
-using System;
 using Nakama;
 
 namespace NakamaSync
@@ -60,7 +59,6 @@ namespace NakamaSync
 
         public void SendSyncDataToAll(Envelope envelope)
         {
-            // clear envelope for each of these after sending?
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
         }
 
