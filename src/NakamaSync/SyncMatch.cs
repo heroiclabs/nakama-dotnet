@@ -67,19 +67,12 @@ namespace NakamaSync
             _rolePresenceTracker = rolePresenceTracker;
             _socket = socket;
             _registry = registry;
+            _registry.Register(_keys, _presenceTracker.GetSelf());
             _keys = new VarKeys();
             _builder = new EnvelopeBuilder(socket);
-
-
-            var guestEgress = new GuestEgress(_keys, _builder);
-            var hostEgress = new HostEgress(_builder, _keys, _presenceTracker);
-
             _ingresses = new Ingresses(_keys, _builder, _rolePresenceTracker, _registry);
-
-            _egress = new RoleEgress(guestEgress, hostEgress, _rolePresenceTracker);
             _handshaker = CreateHandshaker(_ingresses);
-
-            _registry.Register(_keys, _presenceTracker.GetSelf());
+            _egress = CreateRoleEgress(_keys, _builder, _presenceTracker, _rolePresenceTracker);
         }
 
         public Task WaitForHandshake()
@@ -110,6 +103,14 @@ namespace NakamaSync
             var hostHandshaker = new HostHandshaker(_keys, _registry, _presenceTracker);
             var guestHandshaker = new GuestHandshaker(_keys, ingresses, _rolePresenceTracker, _socket);
             return new Handshaker(guestHandshaker, hostHandshaker, _rolePresenceTracker);
+        }
+
+        private RoleEgress CreateRoleEgress(VarKeys keys, EnvelopeBuilder builder, PresenceTracker presenceTracker, RolePresenceTracker rolePresenceTracker)
+        {
+            var guestEgress = new GuestEgress(keys, builder);
+            var hostEgress = new HostEgress(builder, keys, presenceTracker);
+
+            return new RoleEgress(guestEgress, hostEgress, rolePresenceTracker);
         }
     }
 }
