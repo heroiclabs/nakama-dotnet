@@ -127,11 +127,6 @@ namespace NakamaSync
             return _presenceTracker.GetSelf().UserId == GetHost()?.UserId;
         }
 
-        public void ReceiveMatch(IMatch match)
-        {
-            _presenceTracker.ReceiveMatch(match);
-        }
-
         public int GetPresenceCount()
         {
             return _presenceTracker.GetPresenceCount();

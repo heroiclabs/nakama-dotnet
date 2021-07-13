@@ -79,7 +79,6 @@ namespace NakamaSync
 
             registry.ReceiveMatch(keys, match);
             syncSocket.ReceiveMatch(match);
-            presenceTracker.ReceiveMatch(match);
 
             return match;
         }
@@ -110,7 +109,6 @@ namespace NakamaSync
 
             registry.ReceiveMatch(keys, match);
             syncSocket.ReceiveMatch(match);
-            presenceTracker.ReceiveMatch(match);
 
             return match;
         }

@@ -114,12 +114,12 @@ namespace Nakama.Tests
                 throw new InvalidOperationException("Already started matches.");
             }
 
-            var matchTasks = new List<Task<IMatch>>();
             var opcodes = new SyncOpcodes(Opcodes.HandshakeRequestOpcode, Opcodes.HandshakeResponseOpcode, Opcodes.DataOpcode);
 
-            matchTasks.Insert(HostIndex, _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], opcodes, _registrations[HostIndex]));
+            var createTask = _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], opcodes, _registrations[HostIndex]);
+            await createTask;
 
-            await matchTasks[HostIndex];
+            var joinTasks = new List<Task<IMatch>>();
 
             for (int i = 0; i < NumSessions; i++)
             {
@@ -130,12 +130,13 @@ namespace Nakama.Tests
 
                 var registration = _registrations[i];
                 var socket = _sockets[i];
-                var matchTask = socket.JoinSyncMatch(_sessions[i], opcodes, matchTasks[HostIndex].Result.Id, registration);
-                matchTasks.Insert(i, matchTask);
+                var matchTask = socket.JoinSyncMatch(_sessions[i], opcodes, createTask.Result.Id, registration);
+                joinTasks.Add(matchTask);
             }
 
-            await Task.WhenAll(matchTasks.ToArray());
-            _matches.AddRange(matchTasks.Select(task => task.Result));
+            await Task.WhenAll(joinTasks.ToArray());
+            _matches.Add(createTask.Result);
+            _matches.AddRange(joinTasks.Select(task => task.Result));
         }
 
         private IEnumerable<IClient> CreateClients()

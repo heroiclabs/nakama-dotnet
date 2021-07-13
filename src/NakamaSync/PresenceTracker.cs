@@ -81,11 +81,6 @@ namespace NakamaSync
             return GetPresence(_userId);
         }
 
-        public void ReceiveMatch(IMatch match)
-        {
-            HandlePresences(match.Presences.Concat(new IUserPresence[]{match.Self}), new IUserPresence[]{});
-        }
-
         public void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
         {
             HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
@@ -121,11 +116,7 @@ namespace NakamaSync
             {
                 if (_presences.ContainsKey(joiner.UserId))
                 {
-                    // self presence already received when match joined
-                    if (joiner.UserId != _userId)
-                    {
-                        throw new InvalidOperationException("Joining presence already exists: " + joiner.UserId);
-                    }
+                    throw new InvalidOperationException("Joining presence already exists: " + joiner.UserId);
                 }
                 else
                 {

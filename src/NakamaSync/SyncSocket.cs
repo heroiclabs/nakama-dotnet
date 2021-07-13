@@ -58,20 +58,15 @@ namespace NakamaSync
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponseOpcode, _encoding.Encode(response), new IUserPresence[]{target});
         }
 
-        public void SendSyncData(IUserPresence target, Envelope envelope)
-        {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope), new IUserPresence[]{target});
-        }
-
         public void SendSyncDataToAll(Envelope envelope)
         {
+            if (_presenceTracker.GetPresenceCount() <= 1)
+            {
+                return;
+            }
+
             // clear envelope for each of these after sending?
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
-        }
-
-        public void SendSyncDataToHost(Envelope envelope)
-        {
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope), new IUserPresence[]{_presenceTracker.GetHost()});
         }
 
         private void HandleReceivedMatchState(IMatchState state)
