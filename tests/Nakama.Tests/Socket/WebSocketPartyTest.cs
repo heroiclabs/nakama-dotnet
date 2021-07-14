@@ -34,7 +34,7 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public async Task ShouldCreateAndJoinParty()
+        public async Task ShouldCreateParty()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var socket = Nakama.Socket.From(_client);
@@ -46,6 +46,38 @@ namespace Nakama.Tests.Socket
             Assert.NotNull(result.Self);
             Assert.Equal(session.UserId, result.Self.UserId);
             Assert.Equal(session.Username, result.Self.Username);
+
+            await socket.CloseAsync();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldReceiveJoinEvent()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket = Nakama.Socket.From(_client);
+            await socket.ConnectAsync(session);
+
+            var createdParty = await socket.CreatePartyAsync(true, 1);
+
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket2 = Nakama.Socket.From(_client);
+            await socket2.ConnectAsync(session2);
+
+            var partyReceivedTcs = new TaskCompletionSource<IParty>();
+
+            socket2.JoinPartyAsync(createdParty.Id);
+
+            socket2.ReceivedParty += party =>
+            {
+                partyReceivedTcs.SetResult(party);
+            };
+
+            var joinedParty = await partyReceivedTcs.Task;
+
+            Assert.NotNull(joinedParty);
+            Assert.NotNull(joinedParty.Self);
+            Assert.Equal(session2.UserId, joinedParty.Self.UserId);
+            Assert.Equal(session2.Username, joinedParty.Self.Username);
 
             await socket.CloseAsync();
         }
@@ -273,12 +305,13 @@ namespace Nakama.Tests.Socket
                 memberSessions[i] = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
                 memberSockets[i] = (Nakama.Socket.From(_client));
                 await memberSockets[i].ConnectAsync(memberSessions[i]);
+
                 memberSockets[i].ReceivedParty += party => {
                     memberPartyObjects[partyObjCounter] = party;
                     Interlocked.Increment(ref partyObjCounter);
                 };
 
-                memberSockets[i].JoinPartyAsync(party.Id).Start();
+                memberSockets[i].JoinPartyAsync(party.Id);
             }
 
             while (partyObjCounter < numMembers)
