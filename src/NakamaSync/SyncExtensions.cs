@@ -49,10 +49,8 @@ using Nakama;
 // should user vars have acks on a uesr by user basis?
 // what if clients don't agree on opcodes? how can you establish that they are on different binary versions?
 // todo shouldn't have public sets on the DTOs but need it due to tinyjson
-// todo too many params in createsyncmatch and joinsyncmatch
 // todo add the reflection approach?
-// todo add overloads with syncservices param to the syncextensions?
-
+// todo too many params in sync extensions methods
 using System;
 
 namespace NakamaSync
@@ -61,7 +59,7 @@ namespace NakamaSync
     {
         // todo maybe don't require session as a parameter here since we pass it to socket.
 
-        public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes)
+        public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes, SyncErrorHandler errorHandler, ILogger logger = null)
         {
             var services = new SyncServices(socket, session, registry, opcodes);
             services.Initialize(isMatchCreator: true, errorHandler: DefaultErrorHandler, logger: null);
@@ -71,7 +69,7 @@ namespace NakamaSync
             return match;
         }
 
-        public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry)
+        public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry, SyncErrorHandler errorHandler, ILogger logger = null)
         {
             var services = new SyncServices(socket, session, registry, opcodes);
             services.Initialize(isMatchCreator: false, errorHandler: DefaultErrorHandler, logger: null);

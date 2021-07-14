@@ -24,14 +24,50 @@ namespace Nakama.Tests
 
         public static IClient FromSettingsFile(string path = SettingsPath)
         {
-            var settings = new ConfigurationBuilder().AddJsonFile(path).Build();
-            var port = System.Convert.ToInt32(settings["PORT"]);
-            var client = new Client(settings["SCHEME"], settings["HOST"], port, settings["SERVER_KEY"]);
-            if (System.Convert.ToBoolean(settings["STDOUT"]))
+            var configuration = LoadConfiguration(path);
+            return FromConfiguration(configuration);
+        }
+
+        public static IClient FromConfiguration(TestConfiguration configuration)
+        {
+            var client = new Client(configuration.Host, configuration.Scheme, configuration.Port, configuration.ServerKey);
+
+            if (configuration.Stdout)
             {
                 client.Logger = new StdoutLogger();
             }
+
             return client;
+        }
+
+        public static TestConfiguration LoadConfiguration(string path = SettingsPath)
+        {
+            var settings = new ConfigurationBuilder().AddJsonFile(path).Build();
+            return new TestConfiguration(
+                System.Convert.ToInt32(settings["PORT"]),
+                settings["SCHEME"],
+                settings["HOST"],
+                settings["SERVER_KEY"],
+                System.Convert.ToBoolean(settings["STDOUT"]));
+
+        }
+    }
+
+    internal class TestConfiguration
+    {
+        public int Port { get; }
+        public string Scheme { get; }
+        public string Host { get; }
+        public string ServerKey { get; }
+        public bool Stdout { get; }
+
+        internal TestConfiguration(int port, string scheme, string host, string serverKey, bool stdout)
+        {
+            Port = port;
+            Scheme = scheme;
+            Host = host;
+            ServerKey = serverKey;
+            Stdout = stdout;
         }
     }
 }

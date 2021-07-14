@@ -115,13 +115,13 @@ namespace NakamaSync
             _migrator = migrator;
         }
 
-        internal void ReceiveMatch(IMatch match)
+        public void ReceiveMatch(IMatch match)
         {
             _varRegistry.ReceiveMatch(_varKeys, match);
             _syncSocket.ReceiveMatch(match);
         }
 
-        internal void Initialize(bool isMatchCreator, SyncErrorHandler errorHandler, ILogger logger)
+        public void Initialize(bool isMatchCreator, SyncErrorHandler errorHandler, ILogger logger)
         {
             if (_initialized)
             {

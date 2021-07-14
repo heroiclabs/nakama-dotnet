@@ -116,7 +116,7 @@ namespace Nakama.Tests
 
             var opcodes = new SyncOpcodes(Opcodes.HandshakeRequestOpcode, Opcodes.HandshakeResponseOpcode, Opcodes.DataOpcode);
 
-            var createTask = _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], _registries[HostIndex], opcodes);
+            var createTask = _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], _registries[HostIndex], opcodes, e => throw e, new StdoutLogger());
             await createTask;
 
             var joinTasks = new List<Task<IMatch>>();
@@ -130,7 +130,9 @@ namespace Nakama.Tests
 
                 var registration = _registries[i];
                 var socket = _sockets[i];
-                var matchTask = socket.JoinSyncMatch(_sessions[i], opcodes, createTask.Result.Id, registration);
+                ILogger logger = TestsUtil.LoadConfiguration().Stdout ? null : new StdoutLogger();
+
+                var matchTask = socket.JoinSyncMatch(_sessions[i], opcodes, createTask.Result.Id, registration, e => throw e, new StdoutLogger());
                 joinTasks.Add(matchTask);
             }
 
