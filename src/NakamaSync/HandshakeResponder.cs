@@ -20,8 +20,11 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class HandshakeResponder
+    internal class HandshakeResponder : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private readonly VarKeys _keys;
         private readonly VarRegistry _registry;
         private readonly PresenceTracker _presenceTracker;

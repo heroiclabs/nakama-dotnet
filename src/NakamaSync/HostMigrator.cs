@@ -14,12 +14,16 @@
 * limitations under the License.
 */
 
+using Nakama;
 using System.Collections.Generic;
 
 namespace NakamaSync
 {
-    internal class HostMigrator
+    internal class HostMigrator : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private VarRegistry _registry;
         private readonly EnvelopeBuilder _builder;
 

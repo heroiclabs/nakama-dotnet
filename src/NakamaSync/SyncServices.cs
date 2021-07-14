@@ -22,21 +22,26 @@ namespace NakamaSync
 {
     public delegate void SyncErrorHandler(Exception e);
 
-    internal class SyncServices
+    internal class SyncServices : ISyncService
     {
-        private VarKeys _varKeys;
-        private VarRegistry _varRegistry;
-        private SyncSocket _syncSocket;
-        private PresenceTracker _presenceTracker;
-        private RoleTracker _roleTracker;
-        private SharedRoleIngress _sharedRoleIngress;
-        private UserRoleIngress _userRoleIngress;
-        private RoleEgress _roleEgress;
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
 
-        private HandshakeRequester _handshakeRequester;
-        private HandshakeResponder _handshakeResponder;
-        private ISocket _socket;
-        private HostMigrator _migrator;
+        private readonly VarKeys _varKeys;
+        private readonly VarRegistry _varRegistry;
+        private readonly SyncSocket _syncSocket;
+        private readonly PresenceTracker _presenceTracker;
+        private readonly RoleTracker _roleTracker;
+
+        private readonly LockVersionGuard _lockVersionGuard;
+        private readonly SharedRoleIngress _sharedRoleIngress;
+        private readonly UserRoleIngress _userRoleIngress;
+        private readonly RoleEgress _roleEgress;
+
+        private readonly HandshakeRequester _handshakeRequester;
+        private readonly HandshakeResponder _handshakeResponder;
+        private readonly ISocket _socket;
+        private readonly HostMigrator _migrator;
 
         private readonly List<ISyncService> _services = new List<ISyncService>();
 
@@ -50,6 +55,9 @@ namespace NakamaSync
 
             var roleTracker = new RoleTracker(presenceTracker);
             _services.Add(roleTracker);
+
+            var lockVersionGuard = new LockVersionGuard(varKeys);
+            _services.Add(lockVersionGuard);
 
             var syncSocket = new SyncSocket(socket, opcodes, roleTracker);
             _services.Add(syncSocket);
@@ -69,19 +77,22 @@ namespace NakamaSync
             var migrator = new HostMigrator(varRegistry, envelopeBuilder);
             _services.Add(migrator);
 
-            var guestIngress = new GuestIngress(varKeys, presenceTracker);
-            _services.Add(guestIngress);
+            var sharedGuestIngress = new SharedGuestIngress(varKeys, presenceTracker);
+            _services.Add(sharedGuestIngress);
 
             var sharedHostIngress = new SharedHostIngress(varKeys, envelopeBuilder);
             _services.Add(sharedHostIngress);
 
+            var userGuestIngress = new UserGuestIngress(varKeys, presenceTracker);
+            _services.Add(userGuestIngress);
+
             var userHostIngress = new UserHostIngress(varKeys, envelopeBuilder);
             _services.Add(userHostIngress);
 
-            var sharedRoleIngress = new SharedRoleIngress(guestIngress, sharedHostIngress, varRegistry);
+            var sharedRoleIngress = new SharedRoleIngress(sharedGuestIngress, sharedHostIngress, varRegistry);
             _services.Add(sharedHostIngress);
 
-            var userRoleIngress = new UserRoleIngress(guestIngress, userHostIngress, varRegistry);
+            var userRoleIngress = new UserRoleIngress(userGuestIngress, userHostIngress, varRegistry);
             _services.Add(userRoleIngress);
 
             var handshakeRequester = new HandshakeRequester(varKeys, sharedRoleIngress, userRoleIngress);
@@ -95,6 +106,7 @@ namespace NakamaSync
             _socket = socket;
             _presenceTracker = presenceTracker;
             _roleTracker = roleTracker;
+            _lockVersionGuard = lockVersionGuard;
             _sharedRoleIngress = sharedRoleIngress;
             _userRoleIngress = userRoleIngress;
             _roleEgress = roleEgress;

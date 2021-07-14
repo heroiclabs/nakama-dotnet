@@ -21,11 +21,11 @@ namespace NakamaSync
 {
     internal class SharedRoleIngress
     {
-        private readonly GuestIngress _guestIngress;
+        private readonly SharedGuestIngress _guestIngress;
         private readonly SharedHostIngress _sharedHostIngress;
         private readonly VarRegistry _registry;
 
-        public SharedRoleIngress(GuestIngress guestIngress, SharedHostIngress sharedHostIngress, VarRegistry registry)
+        public SharedRoleIngress(SharedGuestIngress guestIngress, SharedHostIngress sharedHostIngress, VarRegistry registry)
         {
             _guestIngress = guestIngress;
             _sharedHostIngress = sharedHostIngress;
@@ -42,22 +42,22 @@ namespace NakamaSync
 
         public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
-            var bools = SharedContext.FromBoolValues(envelope, _registry);
+            var bools = SharedIngressContext.FromBoolValues(envelope, _registry);
             ReceiveSyncEnvelope(source, bools, isHost);
 
-            var floats = SharedContext.FromFloatValues(envelope, _registry);
+            var floats = SharedIngressContext.FromFloatValues(envelope, _registry);
             ReceiveSyncEnvelope(source, floats, isHost);
 
-            var ints = SharedContext.FromIntValues(envelope, _registry);
+            var ints = SharedIngressContext.FromIntValues(envelope, _registry);
             ReceiveSyncEnvelope(source, ints, isHost);
 
-            var strings = SharedContext.FromStringValues(envelope, _registry);
+            var strings = SharedIngressContext.FromStringValues(envelope, _registry);
             ReceiveSyncEnvelope(source, strings, isHost);
         }
 
-        private void ReceiveSyncEnvelope<T>(IUserPresence source, List<SharedContext<T>> contexts, bool isHost)
+        private void ReceiveSyncEnvelope<T>(IUserPresence source, List<SharedIngressContext<T>> contexts, bool isHost)
         {
-            foreach (SharedContext<T> context in contexts)
+            foreach (SharedIngressContext<T> context in contexts)
             {
                 if (isHost)
                 {

@@ -64,7 +64,6 @@ namespace Nakama.Tests.Socket
                 idGenerator);
 
 
-            // todo pipe errors via services maybe, and todo fix this test!
             await mismatchedEnv.StartMatch();
 
             //await Assert.ThrowsAsync<InvalidOperationException>(() => );
@@ -89,6 +88,9 @@ namespace Nakama.Tests.Socket
 
             testEnv.Dispose();
         }
+
+        // todo test variable status is intact after user leaves and then rejoins match (should pick up from
+        // where they left.
 
         private SyncTestEnvironment CreateDefaultEnvironment()
         {

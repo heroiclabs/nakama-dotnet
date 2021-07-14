@@ -16,10 +16,16 @@ using System;
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+
+using Nakama;
+
 namespace NakamaSync
 {
-    internal class LockVersionGuard
+    internal class LockVersionGuard : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private VarKeys _keys;
 
         public LockVersionGuard(VarKeys keys)
@@ -31,7 +37,8 @@ namespace NakamaSync
         {
             if (!_keys.HasLockVersion(key))
             {
-                throw new ArgumentException($"Received unrecognized remote key: {key}");
+                ErrorHandler?.Invoke(new ArgumentException($"Received unrecognized remote key: {key}"));
+                return false;
             }
 
             // todo one client updated locally while another value was in flight
@@ -39,15 +46,11 @@ namespace NakamaSync
             // also if values are equal it doesn't matter.
             if (newLockVersion == _keys.GetLockVersion(key))
             {
-                throw new ArgumentException($"Received conflicting remote key: {key}");
-            }
-
-            if (newLockVersion < _keys.GetLockVersion(key))
-            {
+                ErrorHandler.Invoke(new ArgumentException($"Received conflicting remote key: {key}"));
                 return false;
             }
 
-            return true;
+            return newLockVersion < _keys.GetLockVersion(key);
         }
     }
 }

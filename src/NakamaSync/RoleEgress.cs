@@ -16,10 +16,16 @@ using System.Collections.Generic;
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+
+using Nakama;
+
 namespace NakamaSync
 {
-    internal class RoleEgress
+    internal class RoleEgress : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private RoleTracker _presenceTracker;
         private HostEgress _hostEgress;
         private GuestEgress _guestEgress;

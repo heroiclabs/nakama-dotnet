@@ -14,26 +14,22 @@
 * limitations under the License.
 */
 
-using System;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class GuestIngress
+    internal class UserGuestIngress : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private VarKeys _keys;
         private PresenceTracker _presenceTracker;
 
-        public GuestIngress(VarKeys keys, PresenceTracker presenceTracker)
+        public UserGuestIngress(VarKeys keys, PresenceTracker presenceTracker)
         {
             _keys = keys;
             _presenceTracker = presenceTracker;
-        }
-
-        public void ProcessValue<T>(SharedVar<T> var, IUserPresence source, SharedValue<T> value)
-        {
-            IUserPresence target = _presenceTracker.GetPresence(value.Key);
-            var.SetValue(source, value.Value, value.ValidationStatus, var.OnRemoteValueChanged);
         }
 
         public void HandleValue<T>(UserVar<T> var, IUserPresence source, UserValue<T> value)

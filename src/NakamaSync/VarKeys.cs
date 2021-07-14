@@ -17,12 +17,16 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Nakama;
 
 // todo where do we even change validation status
 namespace NakamaSync
 {
-    internal class VarKeys
+    internal class VarKeys : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private readonly HashSet<string> _keys = new HashSet<string>();
         private readonly ConcurrentDictionary<string, int> _lockVersions = new ConcurrentDictionary<string, int>();
         private readonly object _lockVersionLock = new object();
@@ -80,7 +84,8 @@ namespace NakamaSync
         {
             if (!_validationStatus.ContainsKey(key))
             {
-                throw new KeyNotFoundException($"Could not find key: {key}");
+                ErrorHandler?.Invoke(new KeyNotFoundException($"Could not find key for setting validation status: {key}"));
+                return;
             }
 
              _validationStatus[key] = status;

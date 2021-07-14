@@ -19,8 +19,11 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedHostIngress
+    internal class SharedHostIngress : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private readonly VarKeys _keys;
         private EnvelopeBuilder _builder;
 
@@ -30,7 +33,7 @@ namespace NakamaSync
             _builder = builder;
         }
 
-        public void ProcessValue<T>(IUserPresence source, SharedContext<T> context)
+        public void ProcessValue<T>(IUserPresence source, SharedIngressContext<T> context)
         {
             switch (context.Value.ValidationStatus)
             {

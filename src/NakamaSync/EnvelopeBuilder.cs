@@ -15,6 +15,7 @@
 */
 
 using System.Collections.Generic;
+using Nakama;
 
 namespace NakamaSync
 {
@@ -23,8 +24,11 @@ namespace NakamaSync
     internal delegate List<UserValue<T>> UserVarAccessor<T>(Envelope envelope);
 
     // todo this can be used to batch socket envelope sends
-    internal class EnvelopeBuilder
+    internal class EnvelopeBuilder : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private Envelope _envelope = new Envelope();
 
         private SyncSocket _socket;

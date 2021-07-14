@@ -21,8 +21,11 @@ using Nakama;
 namespace NakamaSync
 {
     // todo should we await on sending on handshake
-    internal class HandshakeRequester
+    internal class HandshakeRequester : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private readonly VarKeys _keys;
 
         // todo handle error with sending handshake and resend if needed
@@ -65,7 +68,7 @@ namespace NakamaSync
             }
             else
             {
-                throw new InvalidOperationException("Synced match handshake with host failed.");
+                ErrorHandler?.Invoke(new HandshakeException("Synced match handshake with host failed.", source));
             }
         }
 

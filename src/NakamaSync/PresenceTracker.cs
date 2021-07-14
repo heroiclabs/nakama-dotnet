@@ -20,8 +20,11 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class PresenceTracker
+    internal class PresenceTracker : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         public event Action<IUserPresence> OnPresenceAdded;
         public event Action<IUserPresence> OnPresenceRemoved;
 

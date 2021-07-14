@@ -18,8 +18,11 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class GuestEgress
+    internal class GuestEgress : ISyncService
     {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
         private readonly VarKeys _keys;
         private readonly EnvelopeBuilder _builder;
 

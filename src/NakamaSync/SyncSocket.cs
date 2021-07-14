@@ -18,7 +18,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class SyncSocket
+    internal class SyncSocket : ISyncService
     {
         public delegate void SyncEnvelopeHandler(IUserPresence source, Envelope envelope);
         public delegate void HandshakeRequestHandler(IUserPresence source, HandshakeRequest request);
@@ -27,6 +27,9 @@ namespace NakamaSync
         public event SyncEnvelopeHandler OnSyncEnvelope;
         public event HandshakeRequestHandler OnHandshakeRequest;
         public event HandshakeResponseHandler OnHandshakeResponse;
+
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
 
         private readonly SyncEncoding _encoding = new SyncEncoding();
         private readonly ISocket _socket;

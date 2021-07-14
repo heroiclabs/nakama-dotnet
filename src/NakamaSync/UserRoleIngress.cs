@@ -19,15 +19,18 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class UserRoleIngress
+    internal class UserRoleIngress : ISyncService
     {
-        private readonly GuestIngress _guestIngress;
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
+        private readonly UserGuestIngress _userGuestIngress;
         private readonly UserHostIngress _userHostIngress;
         private readonly VarRegistry _registry;
 
-        public UserRoleIngress(GuestIngress guestIngress, UserHostIngress userHostIngress, VarRegistry registry)
+        public UserRoleIngress(UserGuestIngress userGuestIngress, UserHostIngress userHostIngress, VarRegistry registry)
         {
-            _guestIngress = guestIngress;
+            _userGuestIngress = userGuestIngress;
             _userHostIngress = userHostIngress;
             _registry = registry;
         }
@@ -42,22 +45,22 @@ namespace NakamaSync
 
         public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
-            var bools = UserContext.FromBoolValues(envelope, _registry);
+            var bools = UserIngressContext.FromBoolValues(envelope, _registry);
             HandleSyncEnvelope(source, bools, isHost);
 
-            var floats = UserContext.FromFloatValues(envelope, _registry);
+            var floats = UserIngressContext.FromFloatValues(envelope, _registry);
             HandleSyncEnvelope(source, floats, isHost);
 
-            var ints = UserContext.FromIntValues(envelope, _registry);
+            var ints = UserIngressContext.FromIntValues(envelope, _registry);
             HandleSyncEnvelope(source, ints, isHost);
 
-            var strings = UserContext.FromStringValues(envelope, _registry);
+            var strings = UserIngressContext.FromStringValues(envelope, _registry);
             HandleSyncEnvelope(source, strings, isHost);
         }
 
-        private void HandleSyncEnvelope<T>(IUserPresence source, List<UserContext<T>> contexts, bool isHost)
+        private void HandleSyncEnvelope<T>(IUserPresence source, List<UserIngressContext<T>> contexts, bool isHost)
         {
-            foreach (UserContext<T> context in contexts)
+            foreach (UserIngressContext<T> context in contexts)
             {
                 if (isHost)
                 {
@@ -65,7 +68,7 @@ namespace NakamaSync
                 }
                 else
                 {
-                    _guestIngress.HandleValue(context.Var, source, context.Value);
+                    _userGuestIngress.HandleValue(context.Var, source, context.Value);
                 }
             }
         }
