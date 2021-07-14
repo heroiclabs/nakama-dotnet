@@ -64,7 +64,7 @@ namespace NakamaSync
         public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes)
         {
             var services = new SyncServices(socket, session, registry, opcodes);
-            services.Initialize(isMatchCreator: true, null, DefaultErrorHandler);
+            services.Initialize(isMatchCreator: true, errorHandler: DefaultErrorHandler, logger: null);
 
             IMatch match = await socket.CreateMatchAsync();
             services.ReceiveMatch(match);
@@ -74,7 +74,7 @@ namespace NakamaSync
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry)
         {
             var services = new SyncServices(socket, session, registry, opcodes);
-            services.Initialize(isMatchCreator: false, null, DefaultErrorHandler);
+            services.Initialize(isMatchCreator: false, errorHandler: DefaultErrorHandler, logger: null);
 
             IMatch match = await socket.JoinMatchAsync(matchId);
             services.ReceiveMatch(match);

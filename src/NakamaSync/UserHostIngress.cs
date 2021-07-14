@@ -51,7 +51,7 @@ namespace NakamaSync
                     }
                     break;
                 case KeyValidationStatus.Validated:
-                    ErrorHandler?.Invoke(throw new InvalidOperationException("Host received value that already claims to be validated."));
+                    ErrorHandler?.Invoke(new InvalidOperationException("Host received value that already claims to be validated."));
                     break;
             }
         }

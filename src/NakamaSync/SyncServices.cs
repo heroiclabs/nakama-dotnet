@@ -102,6 +102,7 @@ namespace NakamaSync
             _varKeys = varKeys;
             _varRegistry = varRegistry;
             _socket = socket;
+            _syncSocket = syncSocket;
             _presenceTracker = presenceTracker;
             _roleTracker = roleTracker;
             _lockVersionGuard = lockVersionGuard;
@@ -120,7 +121,7 @@ namespace NakamaSync
             _syncSocket.ReceiveMatch(match);
         }
 
-        internal void Initialize(bool isMatchCreator, ILogger logger, SyncErrorHandler errorHandler)
+        internal void Initialize(bool isMatchCreator, SyncErrorHandler errorHandler, ILogger logger)
         {
             if (_initialized)
             {
@@ -131,12 +132,8 @@ namespace NakamaSync
 
             foreach (ISyncService service in _services)
             {
-                service.Logger = logger;
-            }
-
-            foreach (ISyncService service in _services)
-            {
                 service.ErrorHandler = errorHandler;
+                service.Logger = logger;
             }
 
             _presenceTracker.Subscribe(_socket);
