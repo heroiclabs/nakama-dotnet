@@ -50,7 +50,7 @@ namespace NakamaSync
                 return false;
             }
 
-            return newLockVersion < _keys.GetLockVersion(key);
+            return _keys.GetLockVersion(key) < newLockVersion;
         }
     }
 }

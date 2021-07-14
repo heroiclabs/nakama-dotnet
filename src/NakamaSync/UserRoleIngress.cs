@@ -74,7 +74,7 @@ namespace NakamaSync
 
                 if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key, context.Value.LockVersion))
                 {
-                    Logger?.DebugFormat($"User role ingress received invalid lock version.");
+                    Logger?.DebugFormat($"User role ingress received invalid lock version: {context.Value.LockVersion}");
                     continue;
                 }
 

@@ -82,7 +82,7 @@ namespace NakamaSync
 
                 if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key, context.Value.LockVersion))
                 {
-                    Logger?.DebugFormat($"Shared role ingress received invalid lock version.");
+                    Logger?.DebugFormat($"Shared role ingress received invalid lock version: {context.Value.LockVersion}");
                     continue;
                 }
 
