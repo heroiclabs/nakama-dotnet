@@ -49,11 +49,6 @@ namespace NakamaSync
             accessor(_envelope).Add(new ValidationAck(key));
         }
 
-        public Envelope GetCurrentEnvelope()
-        {
-            return _envelope;
-        }
-
         public void SendEnvelope()
         {
             _socket.SendSyncDataToAll(_envelope);

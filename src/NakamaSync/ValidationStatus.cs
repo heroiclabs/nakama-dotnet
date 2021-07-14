@@ -18,8 +18,8 @@ namespace NakamaSync
 {
     public enum KeyValidationStatus
     {
-        None = 0,
-        Pending = 1,
-        Validated = 2
+        None,
+        Pending,
+        Validated
     }
 }

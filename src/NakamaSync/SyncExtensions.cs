@@ -48,6 +48,7 @@ using Nakama;
 // todo clean this class up and use explicit returns values where needed for some of these private methods
 // should user vars have acks on a uesr by user basis?
 // what if clients don't agree on opcodes? how can you establish that they are on different binary versions?
+// todo shouldn't have public sets on the DTOs but need it due to tinyjson
 namespace NakamaSync
 {
     public static class SyncExtensions

@@ -20,14 +20,12 @@ namespace NakamaSync
 {
     internal class ValidationAck
     {
-        public string Key => _key;
-
         [DataMember(Name="key"), Preserve]
-        string _key;
+        public string Key { get; set; }
 
         public ValidationAck(string key)
         {
-            _key = key;
+            Key = key;
         }
     }
 }

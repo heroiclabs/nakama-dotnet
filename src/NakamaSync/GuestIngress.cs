@@ -33,13 +33,13 @@ namespace NakamaSync
         public void ProcessValue<T>(SharedVar<T> var, IUserPresence source, SharedValue<T> value)
         {
             IUserPresence target = _presenceTracker.GetPresence(value.Key);
-            var.SetValue(source, value.Value, value.KeyValidationStatus, var.OnRemoteValueChanged);
+            var.SetValue(source, value.Value, value.ValidationStatus, var.OnRemoteValueChanged);
         }
 
         public void HandleValue<T>(UserVar<T> var, IUserPresence source, UserValue<T> value)
         {
             IUserPresence target = _presenceTracker.GetPresence(value.Key);
-            var.SetValue(value.Value, source, target, value.KeyValidationStatus, var.OnRemoteValueChanged);
+            var.SetValue(value.Value, source, target, value.ValidationStatus, var.OnRemoteValueChanged);
         }
     }
 }

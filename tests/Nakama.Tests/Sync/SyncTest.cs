@@ -83,7 +83,7 @@ namespace Nakama.Tests.Socket
 
             SyncTestUserEnvironment guestEnv = testEnv.GetRandomGuestEnv();
 
-            await Task.Delay(2000);
+            await Task.Delay(2500);
 
             Assert.True(guestEnv.SharedBools[0].GetValue());
 
@@ -94,7 +94,7 @@ namespace Nakama.Tests.Socket
         {
             return new SyncTestEnvironment(
                 new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
-                numClients: 2,
+                numClients: 5,
                 numTestVars: 1,
                 hostIndex: 0);
         }

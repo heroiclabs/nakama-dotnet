@@ -32,7 +32,7 @@ namespace NakamaSync
 
         public void ProcessValue<T>(IUserPresence source, SharedContext<T> context)
         {
-            switch (context.Value.KeyValidationStatus)
+            switch (context.Value.ValidationStatus)
             {
                 case KeyValidationStatus.None:
                     HandleNonValidatedValue(source, context.Var, context.Value);

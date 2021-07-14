@@ -21,72 +21,76 @@ namespace NakamaSync
 {
     internal class Envelope
     {
-        public List<SharedValue<bool>> SharedBools => _sharedBools;
-        public List<SharedValue<float>> SharedFloats => _sharedFloats;
-        public List<SharedValue<int>> SharedInts => _sharedInts;
-        public List<SharedValue<string>> SharedStrings => _sharedStrings;
-
-        public List<UserValue<bool>> UserBools => _userBools;
-        public List<UserValue<float>> UserFloats => _userFloats;
-        public List<UserValue<int>> UserInts => _userInts;
-        public List<UserValue<string>> UserStrings => _userStrings;
-
-        public List<ValidationAck> SharedBoolAcks => _sharedBoolAcks;
-        public List<ValidationAck> SharedFloatAcks => _sharedFloatAcks;
-        public List<ValidationAck> SharedIntAcks => _sharedIntAcks;
-        public List<ValidationAck> SharedStringAcks => _sharedStringAcks;
-
-        public List<ValidationAck> UserBoolAcks => _userBoolAcks;
-        public List<ValidationAck> UserFloatAcks => _userFloatAcks;
-        public List<ValidationAck> UserIntAcks => _userIntAcks;
-        public List<ValidationAck> UserStringAcks => _userStringAcks;
-
         [DataMember(Name="shared_bools"), Preserve]
-        private List<SharedValue<bool>> _sharedBools = new List<SharedValue<bool>>();
+        public List<SharedValue<bool>> SharedBools { get; set; }
 
         [DataMember(Name="shared_floats"), Preserve]
-        private List<SharedValue<float>> _sharedFloats = new List<SharedValue<float>>();
+        public List<SharedValue<float>> SharedFloats { get; set; }
 
         [DataMember(Name="shared_ints"), Preserve]
-        private List<SharedValue<int>> _sharedInts = new List<SharedValue<int>>();
+        public List<SharedValue<int>> SharedInts { get; set; }
 
         [DataMember(Name="shared_strings"), Preserve]
-        private List<SharedValue<string>> _sharedStrings = new List<SharedValue<string>>();
+        public List<SharedValue<string>> SharedStrings { get; set; }
 
         [DataMember(Name="user_bools"), Preserve]
-        private List<UserValue<bool>> _userBools = new List<UserValue<bool>>();
+        public List<UserValue<bool>> UserBools { get; set; }
 
         [DataMember(Name="user_floats"), Preserve]
-        private List<UserValue<float>> _userFloats = new List<UserValue<float>>();
+        public List<UserValue<float>> UserFloats { get; set; }
 
         [DataMember(Name="user_ints"), Preserve]
-        private List<UserValue<int>> _userInts = new List<UserValue<int>>();
+        public List<UserValue<int>> UserInts { get; set; }
 
         [DataMember(Name="user_strings"), Preserve]
-        private List<UserValue<string>> _userStrings = new List<UserValue<string>>();
+        public List<UserValue<string>> UserStrings { get; set; }
 
         [DataMember(Name="shared_bool_acks"), Preserve]
-        private List<ValidationAck> _sharedBoolAcks = new List<ValidationAck>();
+        public List<ValidationAck> SharedBoolAcks { get; set; }
 
         [DataMember(Name="shared_float_acks"), Preserve]
-        private List<ValidationAck> _sharedFloatAcks = new List<ValidationAck>();
+        public List<ValidationAck> SharedFloatAcks { get; set; }
 
         [DataMember(Name="shared_int_acks"), Preserve]
-        private List<ValidationAck> _sharedIntAcks = new List<ValidationAck>();
+        public List<ValidationAck> SharedIntAcks { get; set; }
 
         [DataMember(Name="shared_string_acks"), Preserve]
-        private List<ValidationAck> _sharedStringAcks = new List<ValidationAck>();
+        public List<ValidationAck> SharedStringAcks { get; set; }
 
         [DataMember(Name="user_bool_acks"), Preserve]
-        private List<ValidationAck> _userBoolAcks = new List<ValidationAck>();
+        public List<ValidationAck> UserBoolAcks { get; set; }
 
         [DataMember(Name="user_float_acks"), Preserve]
-        private List<ValidationAck> _userFloatAcks = new List<ValidationAck>();
+        public List<ValidationAck> UserFloatAcks { get; set; }
 
         [DataMember(Name="user_int_acks"), Preserve]
-        private List<ValidationAck> _userIntAcks = new List<ValidationAck>();
+        public List<ValidationAck> UserIntAcks { get; set; }
 
         [DataMember(Name="user_string_acks"), Preserve]
-        private List<ValidationAck> _userStringAcks = new List<ValidationAck>();
+        public List<ValidationAck> UserStringAcks { get; set; }
+
+        internal Envelope()
+        {
+            SharedBools = new List<SharedValue<bool>>();
+            SharedFloats = new List<SharedValue<float>>();
+            SharedInts = new List<SharedValue<int>>();
+            SharedStrings = new List<SharedValue<string>>();
+
+            UserBools = new List<UserValue<bool>>();
+            UserFloats = new List<UserValue<float>>();
+            UserInts = new List<UserValue<int>>();
+            UserStrings = new List<UserValue<string>>();
+
+            SharedBoolAcks = new List<ValidationAck>();
+            SharedFloatAcks = new List<ValidationAck>();
+            SharedIntAcks = new List<ValidationAck>();
+            SharedStringAcks = new List<ValidationAck>();
+
+            UserBoolAcks = new List<ValidationAck>();
+            UserFloatAcks = new List<ValidationAck>();
+            UserIntAcks = new List<ValidationAck>();
+            UserStringAcks = new List<ValidationAck>();
+        }
+
     }
 }

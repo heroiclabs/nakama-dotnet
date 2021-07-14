@@ -22,6 +22,7 @@ namespace NakamaSync
     {
         public VarKeys VarKeys { get; }
         public VarRegistry VarRegistry { get; }
+
         public EnvelopeBuilder EnvelopeBuilder { get; }
         public SyncSocket SyncSocket { get; }
 
@@ -44,7 +45,6 @@ namespace NakamaSync
         public SyncServices(ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes)
         {
             _socket = socket;
-
 
             VarKeys = new VarKeys();
             VarRegistry = registry;

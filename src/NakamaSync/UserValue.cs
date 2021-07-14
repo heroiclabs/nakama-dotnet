@@ -25,26 +25,26 @@ namespace NakamaSync
     internal class UserValue<T>
     {
         [DataMember(Name="key_validation_status"), Preserve]
-        public KeyValidationStatus KeyValidationStatus { get; }
+        public KeyValidationStatus ValidationStatus { get; set; }
 
         [DataMember(Name="key"), Preserve]
-        public string Key { get; }
+        public string Key { get; set; }
 
         [DataMember(Name="lock_version"), Preserve]
-        public int LockVersion { get; }
+        public int LockVersion { get; set;  }
 
         [DataMember(Name="value"), Preserve]
-        public T Value { get; }
+        public T Value { get; set; }
 
         [DataMember(Name="target"), Preserve]
-        public IUserPresence Target { get; }
+        public IUserPresence Target { get; set; }
 
         public UserValue(string key, T value, int lockVersion, KeyValidationStatus keyValidationStatus, IUserPresence target)
         {
             Key = key;
             Value = value;
             LockVersion = lockVersion;
-            KeyValidationStatus = keyValidationStatus;
+            ValidationStatus = keyValidationStatus;
             Target = target;
         }
     }
