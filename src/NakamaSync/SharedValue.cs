@@ -23,17 +23,17 @@ namespace NakamaSync
     /// </summary>
     internal class SharedValue<T>
     {
-        [DataMember(Name="key_validation_status"), Preserve]
-        public KeyValidationStatus ValidationStatus { get; set; }
-
         [DataMember(Name="key"), Preserve]
         public string Key { get; set; }
+
+        [DataMember(Name="value"), Preserve]
+        public T Value { get; set; }
 
         [DataMember(Name="lock_version"), Preserve]
         public int LockVersion { get; set; }
 
-        [DataMember(Name="value"), Preserve]
-        public T Value { get; set; }
+        [DataMember(Name="key_validation_status"), Preserve]
+        public KeyValidationStatus ValidationStatus { get; set; }
 
         public SharedValue(string key, T value, int lockVersion, KeyValidationStatus keyValidationStatus)
         {
@@ -41,6 +41,11 @@ namespace NakamaSync
             Value = value;
             LockVersion = lockVersion;
             ValidationStatus = keyValidationStatus;
+        }
+
+        public override string ToString()
+        {
+            return $"SharedValue(ValidationStatus='{ValidationStatus}', Key='{Key}', LockVersion='{LockVersion}', Value='{Value}')";
         }
     }
 }

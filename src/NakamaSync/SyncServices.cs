@@ -88,7 +88,7 @@ namespace NakamaSync
             _services.Add(userHostIngress);
 
             var sharedRoleIngress = new SharedRoleIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
-            _services.Add(sharedHostIngress);
+            _services.Add(sharedRoleIngress);
 
             var userRoleIngress = new UserRoleIngress(userGuestIngress, userHostIngress, varRegistry, lockVersionGuard);
             _services.Add(userRoleIngress);

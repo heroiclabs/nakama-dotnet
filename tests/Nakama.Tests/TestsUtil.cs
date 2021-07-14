@@ -30,7 +30,7 @@ namespace Nakama.Tests
 
         public static IClient FromConfiguration(TestConfiguration configuration)
         {
-            var client = new Client(configuration.Host, configuration.Scheme, configuration.Port, configuration.ServerKey);
+            var client = new Client(configuration.Scheme, configuration.Host, configuration.Port, configuration.ServerKey);
 
             if (configuration.Stdout)
             {
@@ -44,9 +44,9 @@ namespace Nakama.Tests
         {
             var settings = new ConfigurationBuilder().AddJsonFile(path).Build();
             return new TestConfiguration(
-                System.Convert.ToInt32(settings["PORT"]),
                 settings["SCHEME"],
                 settings["HOST"],
+                System.Convert.ToInt32(settings["PORT"]),
                 settings["SERVER_KEY"],
                 System.Convert.ToBoolean(settings["STDOUT"]));
 
@@ -55,13 +55,13 @@ namespace Nakama.Tests
 
     internal class TestConfiguration
     {
-        public int Port { get; }
         public string Scheme { get; }
         public string Host { get; }
+        public int Port { get; }
         public string ServerKey { get; }
         public bool Stdout { get; }
 
-        internal TestConfiguration(int port, string scheme, string host, string serverKey, bool stdout)
+        internal TestConfiguration(string scheme, string host, int port, string serverKey, bool stdout)
         {
             Port = port;
             Scheme = scheme;

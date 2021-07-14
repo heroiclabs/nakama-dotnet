@@ -70,6 +70,7 @@ namespace NakamaSync
             if (state.OpCode == _opcodes.DataOpcode)
             {
                 Envelope envelope = _encoding.Decode<Envelope>(state.State);
+                Logger?.InfoFormat($"Socket received sync envelope.");
                 OnSyncEnvelope(state.UserPresence, envelope);
             }
             else if (state.OpCode == _opcodes.HandshakeRequestOpcode)

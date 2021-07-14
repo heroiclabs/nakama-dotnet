@@ -47,5 +47,10 @@ namespace NakamaSync
             ValidationStatus = keyValidationStatus;
             Target = target;
         }
+
+        public override string ToString()
+        {
+            return $"UserValue(ValidationStatus='{ValidationStatus}', Key='{Key}', LockVersion='{LockVersion}', Value='{Value}', Target='{Target}')";
+        }
     }
 }

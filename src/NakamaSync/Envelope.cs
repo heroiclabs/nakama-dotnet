@@ -91,6 +91,5 @@ namespace NakamaSync
             UserIntAcks = new List<ValidationAck>();
             UserStringAcks = new List<ValidationAck>();
         }
-
     }
 }

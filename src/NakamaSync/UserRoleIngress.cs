@@ -66,19 +66,26 @@ namespace NakamaSync
 
         private void HandleSyncEnvelope<T>(IUserPresence source, List<UserIngressContext<T>> contexts, bool isHost)
         {
+            Logger?.DebugFormat($"User role ingress processing num contexts: {contexts.Count}");
+
             foreach (UserIngressContext<T> context in contexts)
             {
+                Logger?.DebugFormat($"User role ingress processing context: {context}");
+
                 if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key, context.Value.LockVersion))
                 {
+                    Logger?.DebugFormat($"User role ingress received invalid lock version.");
                     continue;
                 }
 
                 if (isHost)
                 {
+                    Logger?.InfoFormat($"Setting user value for self as host: {context.Value}");
                     _userHostIngress.HandleValue(source, context);
                 }
                 else
                 {
+                    Logger?.InfoFormat($"Setting user value for self as guest: {context.Value}");
                     _userGuestIngress.HandleValue(context.Var, source, context.Value);
                 }
             }

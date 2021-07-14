@@ -19,8 +19,20 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedRoleIngress
+    internal class SharedRoleIngress : ISyncService
     {
+        public ILogger Logger
+        {
+            get;
+            set;
+        }
+
+        public SyncErrorHandler ErrorHandler
+        {
+            get;
+            set;
+        }
+
         private readonly SharedGuestIngress _guestIngress;
         private readonly SharedHostIngress _sharedHostIngress;
         private readonly VarRegistry _registry;
@@ -45,6 +57,8 @@ namespace NakamaSync
 
         public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
+            Logger?.DebugFormat($"Shared role ingress received sync envelope.");
+
             var bools = SharedIngressContext.FromBoolValues(envelope, _registry);
             ReceiveSyncEnvelope(source, bools, isHost);
 
@@ -60,19 +74,26 @@ namespace NakamaSync
 
         private void ReceiveSyncEnvelope<T>(IUserPresence source, List<SharedIngressContext<T>> contexts, bool isHost)
         {
+            Logger?.DebugFormat($"Shared role ingress processing num contexts: {contexts.Count}");
+
             foreach (SharedIngressContext<T> context in contexts)
             {
+                Logger?.DebugFormat($"Shared role ingress processing context: {context}");
+
                 if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key, context.Value.LockVersion))
                 {
+                    Logger?.DebugFormat($"Shared role ingress received invalid lock version.");
                     continue;
                 }
 
                 if (isHost)
                 {
+                    Logger?.InfoFormat($"Setting shared value for self as host: {context.Value}");
                     _sharedHostIngress.ProcessValue(source, context);
                 }
                 else
                 {
+                    Logger?.InfoFormat($"Setting shared value for self as guest: {context.Value}");
                     _guestIngress.ProcessValue(context.Var, source, context.Value);
                 }
             }
