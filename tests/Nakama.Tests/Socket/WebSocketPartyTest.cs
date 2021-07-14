@@ -316,7 +316,6 @@ namespace Nakama.Tests.Socket
 
             while (partyObjCounter < numMembers)
             {
-                System.Console.WriteLine(partyObjCounter);
                 await Task.Delay(25);
             }
 
@@ -358,9 +357,11 @@ namespace Nakama.Tests.Socket
             var socket2PresenceTcs = new TaskCompletionSource<IUserPresence>();
 
             socket1.ReceivedPartyPresence += presences => {
-                if (!socket2PresenceTcs.Task.IsCompleted)
+
+                var session2Join = presences.Joins.FirstOrDefault(presence => presence.UserId == session2.UserId);
+                if (session2Join != null)
                 {
-                    socket2PresenceTcs.SetResult(presences.Joins.FirstOrDefault(presence => presence.UserId == session2.UserId));
+                    socket2PresenceTcs.SetResult(session2Join);
                 }
             };
 
