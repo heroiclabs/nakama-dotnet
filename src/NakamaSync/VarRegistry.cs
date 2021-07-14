@@ -66,7 +66,7 @@ namespace NakamaSync
             {
                 if (!_registeredVars.Add(kvp.Key))
                 {
-                    throw new ArgumentException("Tried registering the same shared var with a different id: " + kvp.Key);
+                    throw new ArgumentException("Tried registering the same var with a different id: " + kvp.Key);
                 }
 
                 keys.RegisterKey(kvp.Key, kvp.Value.GetValidationStatus());

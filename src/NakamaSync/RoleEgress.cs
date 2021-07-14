@@ -36,7 +36,7 @@ namespace NakamaSync
             Subscribe(registry.SharedBools, values => values.SharedBools);
             Subscribe(registry.SharedFloats, values => values.SharedFloats);
             Subscribe(registry.SharedInts,  values => values.SharedInts);
-            Subscribe(registry.SharedBools, values => values.SharedBools);
+            Subscribe(registry.SharedStrings, values => values.SharedStrings);
 
             Subscribe(registry.UserBools, values => values.UserBools);
             Subscribe(registry.UserFloats, values => values.UserFloats);

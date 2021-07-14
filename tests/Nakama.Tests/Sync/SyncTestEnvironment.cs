@@ -34,7 +34,7 @@ namespace Nakama.Tests
 
         private readonly IClient _client;
         private readonly List<IMatch> _matches = new List<IMatch>();
-        private readonly List<VarRegistry> _registrations = new List<VarRegistry>();
+        private readonly List<VarRegistry> _registries = new List<VarRegistry>();
         private readonly List<ISession> _sessions = new List<ISession>();
         private readonly List<ISocket> _sockets = new List<ISocket>();
         private Dictionary<string, SyncTestUserEnvironment> _userEnvs;
@@ -54,10 +54,10 @@ namespace Nakama.Tests
 
             _client = TestsUtil.FromSettingsFile();
             _sessions.AddRange(CreateSessions(_client));
-            _registrations.AddRange(CreateRegistrations(_sessions));
+            _registries.AddRange(CreateRegistries(_sessions));
             _sockets.AddRange(CreateSockets(_client));
             ConnectSockets(_sockets, _sessions);
-            _userEnvs = CreateUserEnvs(_sessions, _registrations, idGenerator ?? SyncTestUserEnvironment.DefaultVarIdGenerator);
+            _userEnvs = CreateUserEnvs(_sessions, _registries, idGenerator ?? SyncTestUserEnvironment.DefaultVarIdGenerator);
         }
 
         private Dictionary<string, SyncTestUserEnvironment> CreateUserEnvs(List<ISession> sessions, List<VarRegistry> registrations, VarIdGenerator generator)
@@ -67,7 +67,7 @@ namespace Nakama.Tests
             for (int i = 0; i < sessions.Count; i++)
             {
                 ISession session = sessions[i];
-                envs[session.UserId] = new SyncTestUserEnvironment(session, _registrations[i], NumTestVars, generator);
+                envs[session.UserId] = new SyncTestUserEnvironment(session, _registries[i], NumTestVars, generator);
             }
 
             return envs;
@@ -116,7 +116,7 @@ namespace Nakama.Tests
 
             var opcodes = new SyncOpcodes(Opcodes.HandshakeRequestOpcode, Opcodes.HandshakeResponseOpcode, Opcodes.DataOpcode);
 
-            var createTask = _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], _registrations[HostIndex], opcodes);
+            var createTask = _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], _registries[HostIndex], opcodes);
             await createTask;
 
             var joinTasks = new List<Task<IMatch>>();
@@ -128,7 +128,7 @@ namespace Nakama.Tests
                     continue;
                 }
 
-                var registration = _registrations[i];
+                var registration = _registries[i];
                 var socket = _sockets[i];
                 var matchTask = socket.JoinSyncMatch(_sessions[i], opcodes, createTask.Result.Id, registration);
                 joinTasks.Add(matchTask);
@@ -137,6 +137,23 @@ namespace Nakama.Tests
             await Task.WhenAll(joinTasks.ToArray());
             _matches.Add(createTask.Result);
             _matches.AddRange(joinTasks.Select(task => task.Result));
+        }
+
+        public List<IUserPresence> GetGuests()
+        {
+            var guests = new List<IUserPresence>();
+
+            for (int i = 0; i < _matches.Count; i++)
+            {
+                if (i == HostIndex)
+                {
+                    continue;
+                }
+
+                guests.Add(_matches[i].Self);
+            }
+
+            return guests;
         }
 
         private IEnumerable<IClient> CreateClients()
@@ -177,7 +194,7 @@ namespace Nakama.Tests
             Task.WaitAll(connectTasks.ToArray());
         }
 
-        private IEnumerable<VarRegistry> CreateRegistrations(List<ISession> sessions)
+        private IEnumerable<VarRegistry> CreateRegistries(List<ISession> sessions)
         {
             var registries = new List<VarRegistry>();
 
@@ -204,23 +221,6 @@ namespace Nakama.Tests
             return authTasks.Select(task => {
                 return task.Result;
             });
-        }
-
-        private List<IUserPresence> GetGuests()
-        {
-            var guests = new List<IUserPresence>();
-
-            for (int i = 0; i < _matches.Count; i++)
-            {
-                if (i == HostIndex)
-                {
-                    continue;
-                }
-
-                guests.Add(_matches[i].Self);
-            }
-
-            return guests;
         }
     }
 }
