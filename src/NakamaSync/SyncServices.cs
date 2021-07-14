@@ -22,11 +22,8 @@ namespace NakamaSync
 {
     public delegate void SyncErrorHandler(Exception e);
 
-    internal class SyncServices : ISyncService
+    internal class SyncServices
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
-        public ILogger Logger { get; set; }
-
         private readonly VarKeys _varKeys;
         private readonly VarRegistry _varRegistry;
         private readonly SyncSocket _syncSocket;
@@ -42,6 +39,7 @@ namespace NakamaSync
         private readonly HandshakeResponder _handshakeResponder;
         private readonly ISocket _socket;
         private readonly HostMigrator _migrator;
+        private bool _initialized;
 
         private readonly List<ISyncService> _services = new List<ISyncService>();
 
@@ -116,30 +114,31 @@ namespace NakamaSync
             _migrator = migrator;
         }
 
-        public void SetLogger(ILogger logger)
-        {
-            foreach (ISyncService service in _services)
-            {
-                service.Logger = logger;
-            }
-        }
-
-        public void SetErrorHandler(SyncErrorHandler errorHandler)
-        {
-            foreach (ISyncService service in _services)
-            {
-                service.ErrorHandler = errorHandler;
-            }
-        }
-
         internal void ReceiveMatch(IMatch match)
         {
             _varRegistry.ReceiveMatch(_varKeys, match);
             _syncSocket.ReceiveMatch(match);
         }
 
-        internal void Initialize(bool isMatchCreator)
+        internal void Initialize(bool isMatchCreator, ILogger logger, SyncErrorHandler errorHandler)
         {
+            if (_initialized)
+            {
+                throw new InvalidOperationException("Sync services have already been initialized.");
+            }
+
+            _initialized = true;
+
+            foreach (ISyncService service in _services)
+            {
+                service.Logger = logger;
+            }
+
+            foreach (ISyncService service in _services)
+            {
+                service.ErrorHandler = errorHandler;
+            }
+
             _presenceTracker.Subscribe(_socket);
             _migrator.Subscribe(_presenceTracker, _roleTracker);
             _sharedRoleIngress.Subscribe(_syncSocket, _roleTracker);

@@ -51,6 +51,9 @@ using Nakama;
 // todo shouldn't have public sets on the DTOs but need it due to tinyjson
 // todo too many params in createsyncmatch and joinsyncmatch
 // todo add the reflection approach?
+// todo add overloads with syncservices param to the syncextensions?
+
+using System;
 
 namespace NakamaSync
 {
@@ -61,7 +64,7 @@ namespace NakamaSync
         public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes)
         {
             var services = new SyncServices(socket, session, registry, opcodes);
-            services.Initialize(isMatchCreator: true);
+            services.Initialize(isMatchCreator: true, null, DefaultErrorHandler);
 
             IMatch match = await socket.CreateMatchAsync();
             services.ReceiveMatch(match);
@@ -71,11 +74,16 @@ namespace NakamaSync
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry)
         {
             var services = new SyncServices(socket, session, registry, opcodes);
-            services.Initialize(isMatchCreator: false);
+            services.Initialize(isMatchCreator: false, null, DefaultErrorHandler);
 
             IMatch match = await socket.JoinMatchAsync(matchId);
             services.ReceiveMatch(match);
             return match;
+        }
+
+        private static void DefaultErrorHandler(Exception e)
+        {
+            throw e;
         }
     }
 }
