@@ -50,7 +50,7 @@ namespace NakamaSync
         {
             if (!_presences.ContainsKey(_userId))
             {
-                throw new KeyNotFoundException("Could not find presence with id: " + userId);
+                ErrorHandler?.Invoke(new KeyNotFoundException("Could not find presence with id: " + userId));
             }
 
             return _presences[userId];
@@ -108,7 +108,7 @@ namespace NakamaSync
                 }
                 else
                 {
-                    throw new InvalidOperationException("Leaving presence does not exist: " + leaver.UserId);
+                    ErrorHandler?.Invoke(new InvalidOperationException("Leaving presence does not exist: " + leaver.UserId));
                 }
             }
 

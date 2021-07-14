@@ -23,7 +23,7 @@ using Nakama;
 // between clients and may pass handshake.
 // if user leaves and then rejoins do their values come back? they are still in collection but
 // are they received by that user on initial sync? I think so.
-// catch all exceptions and route them through the OnError event?
+// catch all exceptions and route them through the OnError event? have to think about ones that cannot be handled.
 // todo protobuf support when that is merged.
 // todo think about fact that user can still attach to presence handler without being able to sequence presence events as they see fit.
 // todo synced composite object?
