@@ -89,10 +89,10 @@ namespace NakamaSync
             var userHostIngress = new UserHostIngress(varKeys, envelopeBuilder);
             _services.Add(userHostIngress);
 
-            var sharedRoleIngress = new SharedRoleIngress(sharedGuestIngress, sharedHostIngress, varRegistry);
+            var sharedRoleIngress = new SharedRoleIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
             _services.Add(sharedHostIngress);
 
-            var userRoleIngress = new UserRoleIngress(userGuestIngress, userHostIngress, varRegistry);
+            var userRoleIngress = new UserRoleIngress(userGuestIngress, userHostIngress, varRegistry, lockVersionGuard);
             _services.Add(userRoleIngress);
 
             var handshakeRequester = new HandshakeRequester(varKeys, sharedRoleIngress, userRoleIngress);

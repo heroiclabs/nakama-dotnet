@@ -24,12 +24,15 @@ namespace NakamaSync
         private readonly SharedGuestIngress _guestIngress;
         private readonly SharedHostIngress _sharedHostIngress;
         private readonly VarRegistry _registry;
+        private readonly LockVersionGuard _lockVersionGuard;
 
-        public SharedRoleIngress(SharedGuestIngress guestIngress, SharedHostIngress sharedHostIngress, VarRegistry registry)
+        public SharedRoleIngress(
+            SharedGuestIngress guestIngress, SharedHostIngress sharedHostIngress, VarRegistry registry, LockVersionGuard lockVersionGuard)
         {
             _guestIngress = guestIngress;
             _sharedHostIngress = sharedHostIngress;
             _registry = registry;
+            _lockVersionGuard = lockVersionGuard;
         }
 
         public void Subscribe(SyncSocket socket, RoleTracker presenceTracker)
@@ -59,6 +62,11 @@ namespace NakamaSync
         {
             foreach (SharedIngressContext<T> context in contexts)
             {
+                if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key, context.Value.LockVersion))
+                {
+                    continue;
+                }
+
                 if (isHost)
                 {
                     _sharedHostIngress.ProcessValue(source, context);
