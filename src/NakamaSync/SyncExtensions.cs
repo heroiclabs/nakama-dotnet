@@ -49,23 +49,22 @@ using Nakama;
 // should user vars have acks on a uesr by user basis?
 // what if clients don't agree on opcodes? how can you establish that they are on different binary versions?
 // todo shouldn't have public sets on the DTOs but need it due to tinyjson
+// todo too many params in createsyncmatch and joinsyncmatch
+// todo add the reflection approach?
+
 namespace NakamaSync
 {
     public static class SyncExtensions
     {
-        // todo don't require session as a parameter here since we pass it to socket.
+        // todo maybe don't require session as a parameter here since we pass it to socket.
 
-        // todo put reflection version here?
         public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes)
         {
             var services = new SyncServices(socket, session, registry, opcodes);
             services.Initialize(isMatchCreator: true);
 
             IMatch match = await socket.CreateMatchAsync();
-
-            registry.ReceiveMatch(services.VarKeys, match);
-            services.SyncSocket.ReceiveMatch(match);
-
+            services.ReceiveMatch(match);
             return match;
         }
 
@@ -75,10 +74,7 @@ namespace NakamaSync
             services.Initialize(isMatchCreator: false);
 
             IMatch match = await socket.JoinMatchAsync(matchId);
-
-            registry.ReceiveMatch(services.VarKeys, match);
-            services.SyncSocket.ReceiveMatch(match);
-
+            services.ReceiveMatch(match);
             return match;
         }
     }
