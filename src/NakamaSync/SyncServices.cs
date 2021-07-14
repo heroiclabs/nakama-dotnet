@@ -128,8 +128,6 @@ namespace NakamaSync
                 throw new InvalidOperationException("Sync services have already been initialized.");
             }
 
-            _initialized = true;
-
             foreach (ISyncService service in _services)
             {
                 service.ErrorHandler = errorHandler;
@@ -148,6 +146,8 @@ namespace NakamaSync
             }
 
             _handshakeResponder.Subscribe(_syncSocket);
+
+            _initialized = true;
         }
     }
 }

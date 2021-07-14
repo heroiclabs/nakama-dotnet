@@ -45,6 +45,7 @@ namespace NakamaSync
                 return;
             }
 
+            _keys.IncrementLockVersion(key);
             var sharedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
             _builder.AddSharedVar(accessor, sharedValue);
             _builder.SendEnvelope();
@@ -60,6 +61,7 @@ namespace NakamaSync
                 return;
             }
 
+            _keys.IncrementLockVersion(key);
             _builder.AddUserVar(accessor, new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target));
             _builder.SendEnvelope();
         }

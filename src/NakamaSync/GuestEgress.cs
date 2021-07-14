@@ -42,6 +42,7 @@ namespace NakamaSync
                 _keys.SetValidationStatus(key, status);
             }
 
+            _keys.IncrementLockVersion(key);
             var newSyncedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
 
             _builder.AddSharedVar(accessor, newSyncedValue);
@@ -60,6 +61,7 @@ namespace NakamaSync
                 _keys.SetValidationStatus(key, status);
             }
 
+            _keys.IncrementLockVersion(key);
             var newSyncedValue = new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target);
 
             _builder.AddUserVar(accessor, newSyncedValue);
