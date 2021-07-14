@@ -27,7 +27,7 @@ namespace Nakama.Tests.Socket
         private async Task SharedVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch();
+            await testEnv.StartMatch(CreateDefaultErrorHandler());
             SyncTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.SharedBools[0].SetValue(true);
             Assert.True(hostEnv.SharedBools[0].GetValue());
@@ -38,7 +38,7 @@ namespace Nakama.Tests.Socket
         private async Task UserVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch();
+            await testEnv.StartMatch(CreateDefaultErrorHandler());
             SyncTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.UserBools[0].SetValue(true, testEnv.GetHostPresence());
             Assert.True(hostEnv.UserBools[0].GetValue(testEnv.GetHostPresence()));
@@ -64,7 +64,7 @@ namespace Nakama.Tests.Socket
                 idGenerator);
 
 
-            await mismatchedEnv.StartMatch();
+            await mismatchedEnv.StartMatch(CreateDefaultErrorHandler());
 
             //await Assert.ThrowsAsync<InvalidOperationException>(() => );
 
@@ -75,7 +75,7 @@ namespace Nakama.Tests.Socket
         private async Task SharedVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch();
+            await testEnv.StartMatch(CreateDefaultErrorHandler());
 
             SyncTestUserEnvironment hostEnv = testEnv.GetHostEnv();
             hostEnv.SharedBools[0].SetValue(true);
@@ -99,6 +99,11 @@ namespace Nakama.Tests.Socket
                 numClients: 2,
                 numTestVars: 1,
                 hostIndex: 0);
+        }
+
+        private SyncErrorHandler CreateDefaultErrorHandler()
+        {
+            return (e) => new StdoutLogger().ErrorFormat(e.Message);
         }
     }
 }

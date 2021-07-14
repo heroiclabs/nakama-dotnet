@@ -46,7 +46,7 @@ namespace NakamaSync
             // also if values are equal it doesn't matter.
             if (newLockVersion == _keys.GetLockVersion(key))
             {
-                ErrorHandler.Invoke(new ArgumentException($"Received conflicting remote key: {key}"));
+                ErrorHandler?.Invoke(new ArgumentException($"Received conflicting remote key: {key}"));
                 return false;
             }
 
