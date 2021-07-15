@@ -14,6 +14,8 @@
 * limitations under the License.
 */
 
+using System;
+using System.Linq;
 using Nakama;
 
 namespace NakamaSync
@@ -34,10 +36,10 @@ namespace NakamaSync
         private readonly SyncEncoding _encoding = new SyncEncoding();
         private readonly ISocket _socket;
         private readonly SyncOpcodes _opcodes;
-        private readonly RoleTracker _presenceTracker;
+        private readonly PresenceTracker _presenceTracker;
         private IMatch _match;
 
-        public SyncSocket(ISocket socket, SyncOpcodes opcodes, RoleTracker presenceTracker)
+        public SyncSocket(ISocket socket, SyncOpcodes opcodes, PresenceTracker presenceTracker)
         {
             _socket = socket;
             _opcodes = opcodes;
@@ -53,7 +55,12 @@ namespace NakamaSync
         public void SendHandshakeRequest(HandshakeRequest request)
         {
             Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake request.");
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequestOpcode, _encoding.Encode(request), new IUserPresence[]{_presenceTracker.GetHost()});
+            IUserPresence requestTarget = _presenceTracker.GetOthers().FirstOrDefault();
+            if (requestTarget == null)
+            {
+                ErrorHandler?.Invoke(new InvalidOperationException("Could not find user presence to send handshake to."));
+            }
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequestOpcode, _encoding.Encode(request), new IUserPresence[]{});
         }
 
         public void SendHandshakeResponse(IUserPresence target, HandshakeResponse response)

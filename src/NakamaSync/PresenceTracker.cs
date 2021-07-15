@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Nakama;
 
@@ -78,10 +79,16 @@ namespace NakamaSync
             return presences;
         }
 
+        public IEnumerable<IUserPresence> GetOthers()
+        {
+            return GetPresences(GetSortedUserIds().Except(new string[]{_userId}));
+        }
+
         public IUserPresence GetSelf()
         {
             return GetPresence(_userId);
         }
+
 
         public void Subscribe(ISocket socket)
         {

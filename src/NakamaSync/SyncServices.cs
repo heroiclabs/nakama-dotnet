@@ -57,7 +57,7 @@ namespace NakamaSync
             var lockVersionGuard = new LockVersionGuard(varKeys);
             _services.Add(lockVersionGuard);
 
-            var syncSocket = new SyncSocket(socket, opcodes, roleTracker);
+            var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
             _services.Add(syncSocket);
 
             var envelopeBuilder = new EnvelopeBuilder(syncSocket);
