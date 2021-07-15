@@ -34,8 +34,7 @@ namespace NakamaSync
 
         public void HandleValue<T>(UserVar<T> var, IUserPresence source, UserValue<T> value)
         {
-            IUserPresence target = _presenceTracker.GetPresence(value.Key);
-            var.SetValue(value.Value, source, target, value.ValidationStatus, var.OnRemoteValueChanged);
+            var.SetValue(value.Value, source, value.Target, value.ValidationStatus, var.OnRemoteValueChanged);
         }
     }
 }

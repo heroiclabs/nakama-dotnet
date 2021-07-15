@@ -29,6 +29,8 @@ namespace NakamaSync
         private readonly VarRegistry _registry;
         private readonly PresenceTracker _presenceTracker;
 
+        private readonly object _lock = new object();
+
         public HandshakeResponder(VarKeys keys, VarRegistry registry, PresenceTracker presenceTracker)
         {
             _keys = keys;
@@ -43,24 +45,27 @@ namespace NakamaSync
 
         private void HandleHandshakeRequest(IUserPresence source, HandshakeRequest request, SyncSocket socket)
         {
-            var syncValues = new Envelope();
-
-            bool success = request.AllKeys.SequenceEqual(_keys.GetKeys());
-
-            if (success)
+            lock (_lock)
             {
-                CopySharedVarToGuest(_registry.SharedBools, source, syncValues.SharedBools);
-                CopySharedVarToGuest(_registry.SharedFloats, source, syncValues.SharedFloats);
-                CopySharedVarToGuest(_registry.SharedInts, source, syncValues.SharedInts);
-                CopySharedVarToGuest(_registry.SharedStrings, source, syncValues.SharedStrings);
-                CopyUserVarToGuest(_registry.UserBools, source, syncValues.UserBools);
-                CopyUserVarToGuest(_registry.UserFloats, source, syncValues.UserFloats);
-                CopyUserVarToGuest(_registry.UserInts, source, syncValues.UserInts);
-                CopyUserVarToGuest(_registry.UserStrings, source, syncValues.UserStrings);
-            }
+                var syncValues = new Envelope();
 
-            var response = new HandshakeResponse(syncValues, success);
-            socket.SendHandshakeResponse(source, response);
+                bool success = request.AllKeys.SequenceEqual(_keys.GetKeys());
+
+                if (success)
+                {
+                    CopySharedVarToGuest(_registry.SharedBools, source, syncValues.SharedBools);
+                    CopySharedVarToGuest(_registry.SharedFloats, source, syncValues.SharedFloats);
+                    CopySharedVarToGuest(_registry.SharedInts, source, syncValues.SharedInts);
+                    CopySharedVarToGuest(_registry.SharedStrings, source, syncValues.SharedStrings);
+                    CopyUserVarToGuest(_registry.UserBools, source, syncValues.UserBools);
+                    CopyUserVarToGuest(_registry.UserFloats, source, syncValues.UserFloats);
+                    CopyUserVarToGuest(_registry.UserInts, source, syncValues.UserInts);
+                    CopyUserVarToGuest(_registry.UserStrings, source, syncValues.UserStrings);
+                }
+
+                var response = new HandshakeResponse(syncValues, success);
+                socket.SendHandshakeResponse(source, response);
+            }
         }
 
         private void CopySharedVarToGuest<T>(Dictionary<string, SharedVar<T>> vars, IUserPresence source, List<SharedValue<T>> values)
@@ -81,14 +86,18 @@ namespace NakamaSync
             {
                 UserVar<T> var = kvp.Value;
 
+                Logger?.DebugFormat($"Handshake responder scanning through user values to copy for key: {kvp.Key}");
+
                 foreach (KeyValuePair<string, T> innerKvp in kvp.Value.Values)
                 {
                     // TODO handle data for a stale user
-
+                    Logger?.DebugFormat($"Handshake responder found user value for user: {innerKvp.Key}");
 
                     IUserPresence targetPresence = _presenceTracker.GetPresence(innerKvp.Key);
+                    System.Console.WriteLine(targetPresence);
                     T rawValue = kvp.Value.GetValue(targetPresence);
                     Logger?.DebugFormat($"User variable value for initial payload: User: {targetPresence}, Raw Value: ${rawValue}");
+
                     var value = new UserValue<T>(kvp.Key, rawValue, _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key), targetPresence);
                     values.Add(value);
                 }

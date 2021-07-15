@@ -82,8 +82,10 @@ namespace NakamaSync
         public void SendSyncDataToAll(Envelope envelope)
         {
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
+
             lock (_lock)
             {
+                System.Console.WriteLine("sending match state async");
                 _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
             }
         }
@@ -94,8 +96,8 @@ namespace NakamaSync
             {
                 if (state.OpCode == _opcodes.DataOpcode)
                 {
-                    Envelope envelope = _encoding.Decode<Envelope>(state.State);
                     Logger?.InfoFormat($"Socket received sync envelope.");
+                    Envelope envelope = _encoding.Decode<Envelope>(state.State);
                     OnSyncEnvelope(state.UserPresence, envelope);
                 }
                 else if (state.OpCode == _opcodes.HandshakeRequestOpcode)
