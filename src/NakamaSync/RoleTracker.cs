@@ -32,6 +32,7 @@ namespace NakamaSync
         public ILogger Logger { get; set; }
 
         private PresenceTracker _presenceTracker;
+        private readonly object _lock = new object();
 
         public RoleTracker(PresenceTracker presenceTracker)
         {
@@ -46,67 +47,83 @@ namespace NakamaSync
 
         private void HandlePresenceRemoved(IUserPresence leaver)
         {
-            var host = GetHost();
-
-            bool leaverWasHost = string.Compare(leaver.UserId, host.UserId, StringComparison.InvariantCulture) < 0;
-
-            if (leaverWasHost)
+            lock (_lock)
             {
-                OnHostChanged?.Invoke(new HostChangedEvent(leaver, host));
-            }
-            else
-            {
-                OnGuestLeft?.Invoke(leaver);
+                var host = GetHost();
+
+                bool leaverWasHost = string.Compare(leaver.UserId, host.UserId, StringComparison.InvariantCulture) < 0;
+
+                if (leaverWasHost)
+                {
+                    OnHostChanged?.Invoke(new HostChangedEvent(leaver, host));
+                }
+                else
+                {
+                    OnGuestLeft?.Invoke(leaver);
+                }
             }
         }
 
         private void HandlePresenceAdded(IUserPresence joiner)
         {
-            IUserPresence host = GetHost();
+            lock (_lock)
+            {
+                IUserPresence host = GetHost();
 
-            if (joiner.UserId == host.UserId)
-            {
-                // get the next presence in the alphanumeric list
-                IUserPresence oldHost = _presenceTracker.GetPresence(1);
-                Logger?.InfoFormat($"Host changed from {oldHost} to {host}");
-                OnHostChanged?.Invoke(new HostChangedEvent(oldHost, host));
+                if (joiner.UserId == host.UserId)
+                {
+                    // get the next presence in the alphanumeric list
+                    IUserPresence oldHost = _presenceTracker.GetPresence(1);
+                    Logger?.InfoFormat($"Host changed from {oldHost} to {host}");
+                    OnHostChanged?.Invoke(new HostChangedEvent(oldHost, host));
+                }
+                else
+                {
+                    OnGuestJoined?.Invoke(joiner);
+                }
             }
-            else
-            {
-                OnGuestJoined?.Invoke(joiner);
-            }
+
         }
 
         public IEnumerable<IUserPresence> GetGuests()
         {
-            int presenceCount = _presenceTracker.GetPresenceCount();
-
-            if (presenceCount <= 1)
+            lock (_lock)
             {
-                return new IUserPresence[]{};
+                int presenceCount = _presenceTracker.GetPresenceCount();
+
+                if (presenceCount <= 1)
+                {
+                    return new IUserPresence[]{};
+                }
+
+                var ids = _presenceTracker.GetSortedUserIds();
+                ids.Reverse();
+                var guestIds = ids.Take(presenceCount);
+
+                return _presenceTracker.GetPresences(guestIds);
             }
-
-            var ids = _presenceTracker.GetSortedUserIds();
-            ids.Reverse();
-            var guestIds = ids.Take(presenceCount);
-
-            return _presenceTracker.GetPresences(guestIds);
         }
 
         public IUserPresence GetHost()
         {
-            if (_presenceTracker.GetPresenceCount() == 0)
+            lock (_lock)
             {
-                return null;
-            }
+                if (_presenceTracker.GetPresenceCount() == 0)
+                {
+                    return null;
+                }
 
-            string hostId = _presenceTracker.GetSortedUserIds().First();
-            return _presenceTracker.GetPresence(hostId);
+                string hostId = _presenceTracker.GetSortedUserIds().First();
+                return _presenceTracker.GetPresence(hostId);
+            }
         }
 
         public bool IsSelfHost()
         {
-            return _presenceTracker.GetSelf().UserId == GetHost()?.UserId;
+            lock (_lock)
+            {
+                return _presenceTracker.GetSelf().UserId == GetHost()?.UserId;
+            }
         }
     }
 }

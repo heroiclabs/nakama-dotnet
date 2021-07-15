@@ -80,7 +80,6 @@ namespace Nakama.Tests.Socket
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
             creatorEnv.SharedBools[0].SetValue(true);
 
-
             SyncTestUserEnvironment guestEnv = testEnv.GetGuestEnv(testEnv.GetRandomGuestPresence());
 
             await Task.Delay(2500);

@@ -97,6 +97,8 @@ namespace NakamaSync
         {
             bool isHost = _presenceTracker.IsSelfHost();
 
+            Logger?.DebugFormat($"Local user variable changed. Key: {key}, OldValue: {evt.OldValue}, Value: {evt.NewValue}, Target: {evt.Target}");
+
             if (isHost)
             {
                 _hostEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.Target, accessor);

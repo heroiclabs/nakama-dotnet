@@ -65,6 +65,7 @@ namespace NakamaSync
         {
             if (response.Success)
             {
+                Logger?.InfoFormat("Received successful handshake response.");
                 _sharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 _userRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 OnInitialStoreLoaded();

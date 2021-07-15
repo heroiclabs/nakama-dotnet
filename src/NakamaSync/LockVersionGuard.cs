@@ -49,7 +49,7 @@ namespace NakamaSync
 
             // if new lock version is zero and they are equal, that just means var hasn't been set yet by any client.
             // if lock versions are equal, find a way that user can use a callback to decide who wins?
-
+            // can default to a callback that says first one wins.
             return _keys.GetLockVersion(key) <= newLockVersion;
         }
     }

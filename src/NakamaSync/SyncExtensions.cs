@@ -57,7 +57,7 @@ using Nakama;
 // maybe it's game specific?
 // todo rename egress and ingress to local and remote changed handlers?
 // todo what happens if you set a var prior to passing it through the match? throw an exception from the var itself?
-
+// add a "HasValue" helper to the user var for a particular value
 using System;
 
 namespace NakamaSync

@@ -122,6 +122,7 @@ namespace NakamaSync
         {
             _varRegistry.ReceiveMatch(_varKeys, match);
             _syncSocket.ReceiveMatch(match);
+            _presenceTracker.ReceiveMatch(match);
         }
 
         public void Initialize(bool isMatchCreator, SyncErrorHandler errorHandler, ILogger logger)
