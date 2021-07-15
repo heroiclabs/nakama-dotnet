@@ -53,14 +53,14 @@ namespace NakamaSync
 
                 if (success)
                 {
-                    CopySharedVarToGuest(_registry.SharedBools, source, syncValues.SharedBools);
-                    CopySharedVarToGuest(_registry.SharedFloats, source, syncValues.SharedFloats);
-                    CopySharedVarToGuest(_registry.SharedInts, source, syncValues.SharedInts);
-                    CopySharedVarToGuest(_registry.SharedStrings, source, syncValues.SharedStrings);
-                    CopyUserVarToGuest(_registry.UserBools, source, syncValues.UserBools);
-                    CopyUserVarToGuest(_registry.UserFloats, source, syncValues.UserFloats);
-                    CopyUserVarToGuest(_registry.UserInts, source, syncValues.UserInts);
-                    CopyUserVarToGuest(_registry.UserStrings, source, syncValues.UserStrings);
+                    CopySharedVarToGuest(_registry.SharedBools, syncValues.SharedBools);
+                    CopySharedVarToGuest(_registry.SharedFloats, syncValues.SharedFloats);
+                    CopySharedVarToGuest(_registry.SharedInts, syncValues.SharedInts);
+                    CopySharedVarToGuest(_registry.SharedStrings, syncValues.SharedStrings);
+                    CopyUserVarToGuest(_registry.UserBools, syncValues.UserBools);
+                    CopyUserVarToGuest(_registry.UserFloats, syncValues.UserFloats);
+                    CopyUserVarToGuest(_registry.UserInts, syncValues.UserInts);
+                    CopyUserVarToGuest(_registry.UserStrings, syncValues.UserStrings);
                 }
 
                 var response = new HandshakeResponse(syncValues, success);
@@ -68,7 +68,7 @@ namespace NakamaSync
             }
         }
 
-        private void CopySharedVarToGuest<T>(Dictionary<string, SharedVar<T>> vars, IUserPresence source, List<SharedValue<T>> values)
+        private void CopySharedVarToGuest<T>(Dictionary<string, SharedVar<T>> vars, List<SharedValue<T>> values)
         {
             foreach (var kvp in vars)
             {
@@ -80,25 +80,28 @@ namespace NakamaSync
             }
         }
 
-        private void CopyUserVarToGuest<T>(Dictionary<string, UserVar<T>> vars, IUserPresence source, List<UserValue<T>> values)
+        private void CopyUserVarToGuest<T>(Dictionary<string, UserVar<T>> vars, List<UserValue<T>> values)
         {
-            foreach (var kvp in vars)
+            foreach (var varKvp in vars)
             {
-                UserVar<T> var = kvp.Value;
+                UserVar<T> var = varKvp.Value;
 
-                Logger?.DebugFormat($"Handshake responder scanning through user values to copy for key: {kvp.Key}");
+                Logger?.DebugFormat($"Handshake responder scanning through user values to copy for key: {varKvp.Key}");
 
-                foreach (KeyValuePair<string, T> innerKvp in kvp.Value.Values)
+                foreach (KeyValuePair<string, T> userKvp in var.Values)
                 {
                     // TODO handle data for a stale user
-                    Logger?.DebugFormat($"Handshake responder found user value for user: {innerKvp.Key}");
+                    Logger?.DebugFormat($"Handshake responder found user value for user: {userKvp.Key}");
 
-                    IUserPresence targetPresence = _presenceTracker.GetPresence(innerKvp.Key);
-                    System.Console.WriteLine(targetPresence);
-                    T rawValue = kvp.Value.GetValue(targetPresence);
+                    // use the var presences, not the presence tracker, in case
+                    // user has stored a value left before this handshake.
+                    IUserPresence targetPresence = var.Presences[userKvp.Key];
+
+                    T rawValue = userKvp.Value;
+
                     Logger?.DebugFormat($"User variable value for initial payload: User: {targetPresence}, Raw Value: ${rawValue}");
 
-                    var value = new UserValue<T>(kvp.Key, rawValue, _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key), targetPresence);
+                    var value = new UserValue<T>(varKvp.Key, rawValue, _keys.GetLockVersion(varKvp.Key), _keys.GetValidationStatus(varKvp.Key), targetPresence);
                     values.Add(value);
                 }
             }

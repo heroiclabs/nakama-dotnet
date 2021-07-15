@@ -46,11 +46,13 @@ namespace NakamaSync
         private IUserPresence _self;
 
         internal IReadOnlyDictionary<string, T> Values => _values;
+        internal IReadOnlyDictionary<string, IUserPresence> Presences => _presences;
 
         private KeyValidationStatus _validationStatus;
-        private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
 
+        private readonly Dictionary<string, IUserPresence> _presences = new Dictionary<string, IUserPresence>();
         private readonly object _valueLock = new object();
+        private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
 
         public void SetValue(T value, IUserPresence source, IUserPresence target)
         {
@@ -65,6 +67,14 @@ namespace NakamaSync
         public T GetValue()
         {
             return GetValue(_self);
+        }
+
+        public bool HasValue(IUserPresence presence)
+        {
+            lock (_valueLock)
+            {
+                return _values.ContainsKey(presence.UserId);
+            }
         }
 
         public T GetValue(IUserPresence presence)
@@ -94,6 +104,7 @@ namespace NakamaSync
                 }
 
                 _values[target.UserId] = value;
+                _presences[target.UserId] = target;
                 _validationStatus = validationStatus;
 
                 eventDispatch?.Invoke(new UserVarEvent<T>(source, target, oldValue, value));

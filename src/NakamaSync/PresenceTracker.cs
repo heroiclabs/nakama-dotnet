@@ -70,6 +70,11 @@ namespace NakamaSync
             }
         }
 
+        public bool HasPresence(string userId)
+        {
+            return _presences.ContainsKey(userId);
+        }
+
         public IUserPresence GetPresence(int index)
         {
             lock (_lock)
