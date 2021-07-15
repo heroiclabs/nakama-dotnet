@@ -102,6 +102,7 @@ namespace Nakama.Tests.Socket
             SyncTestUserEnvironment guestEnv = testEnv.GetUserEnv(guestPresence);
             await Task.Delay(2500);
 
+            Assert.True(guestEnv.UserBools[0].HasValue(testEnv.GetCreatorPresence()));
             Assert.True(guestEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));
 
             testEnv.Dispose();

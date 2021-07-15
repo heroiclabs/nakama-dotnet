@@ -37,7 +37,6 @@ namespace NakamaSync
 
         private KeyValidationStatus _validationStatus;
         private T _value;
-        private readonly object _valueLock = new object();
 
         // todo throw exception if reassigning self. maybe not here?
         // todo set this
@@ -56,19 +55,13 @@ namespace NakamaSync
 
         public T GetValue()
         {
-            lock (_valueLock)
-            {
-                return _value;
-            }
+            return _value;
         }
 
         // todo call this find a way to make internal?
         public void Reset()
         {
-            lock (_valueLock)
-            {
-                _value = default(T);
-            }
+            _value = default(T);
 
             OnHostValidate = null;
             OnLocalValueChanged = null;
@@ -77,19 +70,16 @@ namespace NakamaSync
 
         internal void SetValue(IUserPresence source, T value, KeyValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
         {
-            lock (_valueLock)
+            T oldValue = _value;
+
+            if (oldValue.Equals(value))
             {
-                T oldValue = _value;
-
-                if (oldValue.Equals(value))
-                {
-                    return;
-                }
-
-                _value = value;
-                _validationStatus = validationStatus;
-                eventDispatch?.Invoke(new SharedVarEvent<T>(source, oldValue, value));
+                return;
             }
+
+            _value = value;
+            _validationStatus = validationStatus;
+            eventDispatch?.Invoke(new SharedVarEvent<T>(source, oldValue, value));
         }
 
         void IVar.SetValidationStatus(KeyValidationStatus status)

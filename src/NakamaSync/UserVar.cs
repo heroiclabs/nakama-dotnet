@@ -51,7 +51,6 @@ namespace NakamaSync
         private KeyValidationStatus _validationStatus;
 
         private readonly Dictionary<string, IUserPresence> _presences = new Dictionary<string, IUserPresence>();
-        private readonly object _valueLock = new object();
         private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
 
         public void SetValue(T value, IUserPresence source, IUserPresence target)
@@ -71,44 +70,35 @@ namespace NakamaSync
 
         public bool HasValue(IUserPresence presence)
         {
-            lock (_valueLock)
-            {
                 return _values.ContainsKey(presence.UserId);
-            }
         }
 
         public T GetValue(IUserPresence presence)
         {
-            lock (_valueLock)
+            if (_values.ContainsKey(presence.UserId))
             {
-                if (_values.ContainsKey(presence.UserId))
-                {
-                    return _values[presence.UserId];
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Tried retrieving a synced value from an unrecognized user id: {presence.UserId}");
-                }
+                return _values[presence.UserId];
+            }
+            else
+            {
+                throw new InvalidOperationException($"Tried retrieving a synced value from an unrecognized user id: {presence.UserId}");
             }
         }
 
         internal void SetValue(T value, IUserPresence source, IUserPresence target, KeyValidationStatus validationStatus, Action<UserVarEvent<T>> eventDispatch)
         {
-            lock (_valueLock)
+            T oldValue = _values.ContainsKey(target.UserId) ? _values[target.UserId] : default(T);
+
+            if (oldValue.Equals(value))
             {
-                T oldValue = _values.ContainsKey(target.UserId) ? _values[target.UserId] : default(T);
-
-                if (oldValue.Equals(value))
-                {
-                    return;
-                }
-
-                _values[target.UserId] = value;
-                _presences[target.UserId] = target;
-                _validationStatus = validationStatus;
-
-                eventDispatch?.Invoke(new UserVarEvent<T>(source, target, oldValue, value));
+                return;
             }
+
+            _values[target.UserId] = value;
+            _presences[target.UserId] = target;
+            _validationStatus = validationStatus;
+
+            eventDispatch?.Invoke(new UserVarEvent<T>(source, target, oldValue, value));
         }
 
         KeyValidationStatus IVar.GetValidationStatus()
@@ -118,10 +108,7 @@ namespace NakamaSync
 
         void IVar.Reset()
         {
-            lock (_valueLock)
-            {
-                _values.Clear();
-            }
+            _values.Clear();
 
             OnHostValidate = null;
             OnLocalValueChanged = null;

@@ -61,6 +61,8 @@ namespace NakamaSync
         {
             lock (_lock)
             {
+
+                System.Console.WriteLine("trying to get presence " + userId);
                 if (!_presences.ContainsKey(userId))
                 {
                     ErrorHandler?.Invoke(new KeyNotFoundException($"User {_userId} could not find presence with id {userId}."));

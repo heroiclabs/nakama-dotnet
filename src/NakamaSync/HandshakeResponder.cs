@@ -29,8 +29,6 @@ namespace NakamaSync
         private readonly VarRegistry _registry;
         private readonly PresenceTracker _presenceTracker;
 
-        private readonly object _lock = new object();
-
         public HandshakeResponder(VarKeys keys, VarRegistry registry, PresenceTracker presenceTracker)
         {
             _keys = keys;
@@ -45,39 +43,49 @@ namespace NakamaSync
 
         private void HandleHandshakeRequest(IUserPresence source, HandshakeRequest request, SyncSocket socket)
         {
-            lock (_lock)
+            var syncValues = new Envelope();
+
+            bool success = request.AllKeys.SequenceEqual(_keys.GetKeys());
+
+
+            if (success)
             {
-                var syncValues = new Envelope();
-
-                bool success = request.AllKeys.SequenceEqual(_keys.GetKeys());
-
-                if (success)
-                {
-                    CopySharedVarToGuest(_registry.SharedBools, syncValues.SharedBools);
-                    CopySharedVarToGuest(_registry.SharedFloats, syncValues.SharedFloats);
-                    CopySharedVarToGuest(_registry.SharedInts, syncValues.SharedInts);
-                    CopySharedVarToGuest(_registry.SharedStrings, syncValues.SharedStrings);
-                    CopyUserVarToGuest(_registry.UserBools, syncValues.UserBools);
-                    CopyUserVarToGuest(_registry.UserFloats, syncValues.UserFloats);
-                    CopyUserVarToGuest(_registry.UserInts, syncValues.UserInts);
-                    CopyUserVarToGuest(_registry.UserStrings, syncValues.UserStrings);
-                }
-
-                var response = new HandshakeResponse(syncValues, success);
-                socket.SendHandshakeResponse(source, response);
+                Logger?.InfoFormat($"Remote keys from {source.UserId} match the local keys from {_presenceTracker.GetSelf().UserId}");
+                CopySharedVarToGuest(_registry.SharedBools, syncValues.SharedBools);
+                CopySharedVarToGuest(_registry.SharedFloats, syncValues.SharedFloats);
+                CopySharedVarToGuest(_registry.SharedInts, syncValues.SharedInts);
+                CopySharedVarToGuest(_registry.SharedStrings, syncValues.SharedStrings);
+                CopyUserVarToGuest(_registry.UserBools, syncValues.UserBools);
+                CopyUserVarToGuest(_registry.UserFloats, syncValues.UserFloats);
+                CopyUserVarToGuest(_registry.UserInts, syncValues.UserInts);
+                CopyUserVarToGuest(_registry.UserStrings, syncValues.UserStrings);
             }
+            else
+            {
+                Logger?.WarnFormat($"Remote keys from {source.UserId} do not match the local keys from {_presenceTracker.GetSelf().UserId}");
+            }
+
+            var response = new HandshakeResponse(syncValues, success);
+            socket.SendHandshakeResponse(source, response);
         }
 
         private void CopySharedVarToGuest<T>(Dictionary<string, SharedVar<T>> vars, List<SharedValue<T>> values)
         {
+            System.Console.WriteLine("Copy shared var called");
             foreach (var kvp in vars)
             {
-                SharedVar<T> var = kvp.Value;
+                System.Console.WriteLine("iteration");
 
-                Logger?.DebugFormat("Shared variable value for initial payload: " + var.GetValue());
-                var value = new SharedValue<T>(kvp.Key, var.GetValue(), _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key));
-                values.Add(value);
+                SharedVar<T> var = kvp.Value;
+                System.Console.WriteLine("before get value");
+                T rawValue = var.GetValue();
+                Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
+                var sharedValue = new SharedValue<T>(kvp.Key, rawValue, _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key));
+                values.Add(sharedValue);
             }
+
+                        System.Console.WriteLine("Copy shared var done called");
+
         }
 
         private void CopyUserVarToGuest<T>(Dictionary<string, UserVar<T>> vars, List<UserValue<T>> values)
