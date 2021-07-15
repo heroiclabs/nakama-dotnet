@@ -28,9 +28,9 @@ namespace Nakama.Tests.Socket
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch(CreateDefaultErrorHandler());
-            SyncTestUserEnvironment hostEnv = testEnv.GetHostEnv();
-            hostEnv.SharedBools[0].SetValue(true);
-            Assert.True(hostEnv.SharedBools[0].GetValue());
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
+            creatorEnv.SharedBools[0].SetValue(true);
+            Assert.True(creatorEnv.SharedBools[0].GetValue());
             testEnv.Dispose();
         }
 
@@ -39,9 +39,9 @@ namespace Nakama.Tests.Socket
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch(CreateDefaultErrorHandler());
-            SyncTestUserEnvironment hostEnv = testEnv.GetHostEnv();
-            hostEnv.UserBools[0].SetValue(true, testEnv.GetHostPresence());
-            Assert.True(hostEnv.UserBools[0].GetValue(testEnv.GetHostPresence()));
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
+            creatorEnv.UserBools[0].SetValue(true, testEnv.GetCreatorPresence());
+            Assert.True(creatorEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));
             testEnv.Dispose();
         }
 
@@ -60,7 +60,7 @@ namespace Nakama.Tests.Socket
                 new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
                 numClients: 2,
                 numTestVars: 1,
-                hostIndex: 0,
+                creatorIndex: 0,
                 idGenerator);
 
 
@@ -77,10 +77,11 @@ namespace Nakama.Tests.Socket
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch(CreateDefaultErrorHandler());
 
-            SyncTestUserEnvironment hostEnv = testEnv.GetHostEnv();
-            hostEnv.SharedBools[0].SetValue(true);
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
+            creatorEnv.SharedBools[0].SetValue(true);
 
-            SyncTestUserEnvironment guestEnv = testEnv.GetRandomGuestEnv();
+
+            SyncTestUserEnvironment guestEnv = testEnv.GetGuestEnv(testEnv.GetRandomGuestPresence());
 
             await Task.Delay(2500);
 
@@ -89,16 +90,34 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-        // todo test variable status is intact after user leaves and then rejoins match (should pick up from
-        // where they left.
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task UserVarShouldSyncData()
+        {
+            var testEnv = CreateDefaultEnvironment();
+            await testEnv.StartMatch(CreateDefaultErrorHandler());
 
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
+            creatorEnv.UserBools[0].SetValue(true, testEnv.GetCreatorPresence());
+
+            IUserPresence guestPresence = testEnv.GetGuests()[0];
+            SyncTestUserEnvironment guestEnv = testEnv.GetUserEnv(guestPresence);
+            await Task.Delay(2500);
+
+            Assert.True(guestEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));
+
+            testEnv.Dispose();
+        }
+
+
+        // todo test variable status is intact after user leaves and then rejoins match (should pick up from
+        // where they left off.)
         private SyncTestEnvironment CreateDefaultEnvironment()
         {
             return new SyncTestEnvironment(
                 new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
                 numClients: 2,
                 numTestVars: 1,
-                hostIndex: 0);
+                creatorIndex: 0);
         }
 
         private SyncErrorHandler CreateDefaultErrorHandler()

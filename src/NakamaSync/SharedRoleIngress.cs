@@ -47,11 +47,19 @@ namespace NakamaSync
             _lockVersionGuard = lockVersionGuard;
         }
 
-        public void Subscribe(SyncSocket socket, RoleTracker presenceTracker)
+        public void Subscribe(SyncSocket socket, RoleTracker roleTracker, HandshakeRequester requester)
+        {
+            requester.OnInitialStoreLoaded += () =>
+            {
+                Subscribe(socket, roleTracker);
+            };
+        }
+
+        public void Subscribe(SyncSocket socket, RoleTracker roleTracker)
         {
             socket.OnSyncEnvelope += (source, envelope) =>
             {
-                ReceiveSyncEnvelope(source, envelope, presenceTracker.IsSelfHost());
+                ReceiveSyncEnvelope(source, envelope, roleTracker.IsSelfHost());
             };
         }
 

@@ -86,6 +86,7 @@ namespace NakamaSync
         {
             lock (_valueLock)
             {
+                System.Console.WriteLine("SETTING VALUE!!! " + target.UserId);
                 T oldValue = _values.ContainsKey(target.UserId) ? _values[target.UserId] : default(T);
 
                 if (oldValue.Equals(value))

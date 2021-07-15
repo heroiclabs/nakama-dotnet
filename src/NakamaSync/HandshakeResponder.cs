@@ -63,24 +63,33 @@ namespace NakamaSync
             socket.SendHandshakeResponse(source, response);
         }
 
-        private void CopySharedVarToGuest<T>(Dictionary<string, SharedVar<T>> vars, IUserPresence target, List<SharedValue<T>> values)
+        private void CopySharedVarToGuest<T>(Dictionary<string, SharedVar<T>> vars, IUserPresence source, List<SharedValue<T>> values)
         {
             foreach (var kvp in vars)
             {
                 SharedVar<T> var = kvp.Value;
+
+                Logger?.DebugFormat("Shared variable value for initial payload: " + var.GetValue());
                 var value = new SharedValue<T>(kvp.Key, var.GetValue(), _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key));
                 values.Add(value);
             }
         }
 
-        private void CopyUserVarToGuest<T>(Dictionary<string, UserVar<T>> vars, IUserPresence target, List<UserValue<T>> values)
+        private void CopyUserVarToGuest<T>(Dictionary<string, UserVar<T>> vars, IUserPresence source, List<UserValue<T>> values)
         {
             foreach (var kvp in vars)
             {
+                UserVar<T> var = kvp.Value;
+
                 foreach (KeyValuePair<string, T> innerKvp in kvp.Value.Values)
                 {
                     // TODO handle data for a stale user
-                    var value = new UserValue<T>(kvp.Key, kvp.Value.GetValue(), _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key), _presenceTracker.GetPresence(innerKvp.Key));
+
+
+                    IUserPresence targetPresence = _presenceTracker.GetPresence(innerKvp.Key);
+                    T rawValue = kvp.Value.GetValue(targetPresence);
+                    Logger?.DebugFormat($"User variable value for initial payload: User: {targetPresence}, Raw Value: ${rawValue}");
+                    var value = new UserValue<T>(kvp.Key, rawValue, _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key), targetPresence);
                     values.Add(value);
                 }
             }

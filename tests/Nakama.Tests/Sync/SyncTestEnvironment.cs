@@ -26,7 +26,7 @@ namespace Nakama.Tests
     {
         private const int _RAND_GUEST_SEED = 1;
 
-        public int HostIndex { get; }
+        public int CreatorIndex { get; }
         public List<IMatch> Matches => _matches;
         public int NumSessions { get; }
         public int NumTestVars { get; }
@@ -44,13 +44,13 @@ namespace Nakama.Tests
             SyncOpcodes opcodes,
             int numClients,
             int numTestVars,
-            int hostIndex,
+            int creatorIndex,
             VarIdGenerator idGenerator = null)
         {
             Opcodes = opcodes;
             NumSessions = numClients;
             NumTestVars = numTestVars;
-            HostIndex = hostIndex;
+            CreatorIndex = creatorIndex;
 
             _client = TestsUtil.FromSettingsFile();
             _sessions.AddRange(CreateSessions(_client));
@@ -85,21 +85,28 @@ namespace Nakama.Tests
             Task.WaitAll(closeTasks.ToArray());
         }
 
-        public SyncTestUserEnvironment GetHostEnv()
+        public SyncTestUserEnvironment GetCreatorEnv()
         {
-            return _userEnvs[GetHostPresence().UserId];
+            return _userEnvs[GetCreatorPresence().UserId];
         }
 
-        public IUserPresence GetHostPresence()
+        public IUserPresence GetCreatorPresence()
         {
-            return _matches[HostIndex].Self;
+            return _matches[CreatorIndex].Self;
         }
 
-        public SyncTestUserEnvironment GetRandomGuestEnv()
+
+        public IUserPresence GetRandomGuestPresence()
         {
             List<IUserPresence> guests = GetGuests();
             int randGuestIndex = _randomGuest.Next(guests.Count);
-            return _userEnvs[guests[randGuestIndex].UserId];
+            return guests[randGuestIndex];
+        }
+
+
+        public SyncTestUserEnvironment GetGuestEnv(IUserPresence presence)
+        {
+            return _userEnvs[presence.UserId];
         }
 
         public SyncTestUserEnvironment GetUserEnv(IUserPresence clientPresence)
@@ -116,14 +123,14 @@ namespace Nakama.Tests
 
             var opcodes = new SyncOpcodes(Opcodes.HandshakeRequestOpcode, Opcodes.HandshakeResponseOpcode, Opcodes.DataOpcode);
 
-            var createTask = _sockets[HostIndex].CreateSyncMatch(_sessions[HostIndex], _registries[HostIndex], opcodes, errorHandler, new StdoutLogger());
+            var createTask = _sockets[CreatorIndex].CreateSyncMatch(_sessions[CreatorIndex], _registries[CreatorIndex], opcodes, errorHandler, new StdoutLogger());
             await createTask;
 
             var joinTasks = new List<Task<IMatch>>();
 
             for (int i = 0; i < NumSessions; i++)
             {
-                if (i == HostIndex)
+                if (i == CreatorIndex)
                 {
                     continue;
                 }
@@ -147,7 +154,7 @@ namespace Nakama.Tests
 
             for (int i = 0; i < _matches.Count; i++)
             {
-                if (i == HostIndex)
+                if (i == CreatorIndex)
                 {
                     continue;
                 }

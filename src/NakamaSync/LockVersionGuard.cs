@@ -43,14 +43,14 @@ namespace NakamaSync
 
             // todo one client updated locally while another value was in flight
             // how to handle? think about 2x2 host guest combos
-            // also if values are equal it doesn't matter.
-            if (newLockVersion == _keys.GetLockVersion(key))
-            {
-                ErrorHandler?.Invoke(new ArgumentException($"Received conflicting remote key: {key}"));
-                return false;
-            }
+            // also if values are equal it doesn't matter. (review: I don't remember what that means)
 
-            return _keys.GetLockVersion(key) < newLockVersion;
+            int localLockVersion = _keys.GetLockVersion(key);
+
+            // if new lock version is zero and they are equal, that just means var hasn't been set yet by any client.
+            // if lock versions are equal, find a way that user can use a callback to decide who wins?
+
+            return _keys.GetLockVersion(key) <= newLockVersion;
         }
     }
 }

@@ -26,6 +26,8 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
+        public event Action OnInitialStoreLoaded;
+
         private readonly VarKeys _keys;
 
         // todo handle error with sending handshake and resend if needed
@@ -65,6 +67,7 @@ namespace NakamaSync
             {
                 _sharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 _userRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
+                OnInitialStoreLoaded();
             }
             else
             {

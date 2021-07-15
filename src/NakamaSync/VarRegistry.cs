@@ -32,7 +32,7 @@ namespace NakamaSync
         public Dictionary<string, UserVar<int>> UserInts { get; }
         public Dictionary<string, UserVar<string>> UserStrings { get; }
 
-        private readonly HashSet<object> _registeredVars = new HashSet<object>();
+        private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
 
         public VarRegistry()
         {
@@ -64,7 +64,7 @@ namespace NakamaSync
         {
             foreach (KeyValuePair<string, TVar> kvp in vars)
             {
-                if (!_registeredVars.Add(kvp.Key))
+                if (!_registeredVars.Add(kvp.Value))
                 {
                     throw new ArgumentException("Tried registering the same var with a different id: " + kvp.Key);
                 }

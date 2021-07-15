@@ -21,6 +21,7 @@ using Nakama;
 
 namespace NakamaSync
 {
+    // todo split this into shared and user
     internal class RoleEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
@@ -35,6 +36,16 @@ namespace NakamaSync
             _guestEgress = guestEgress;
             _hostEgress = hostEgress;
             _presenceTracker = presenceTracker;
+        }
+
+        public void Subscribe(VarRegistry registry, HandshakeRequester requester)
+        {
+            requester.OnInitialStoreLoaded += () =>
+            {
+                // now that we have initial store loaded,
+                // listen for user modifications to sync vars.
+                Subscribe(registry);
+            };
         }
 
         public void Subscribe(VarRegistry registry)
@@ -61,6 +72,8 @@ namespace NakamaSync
         private void HandleLocalSharedVarChanged<T>(string key, ISharedVarEvent<T> evt, SharedVarAccessor<T> accessor)
         {
             bool isHost = _presenceTracker.IsSelfHost();
+
+            Logger?.DebugFormat($"Local shared variable changed. Key: {key}, OldValue: {evt.OldValue}, Value: {evt.NewValue}");
 
             if (isHost)
             {

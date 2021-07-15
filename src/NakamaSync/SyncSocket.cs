@@ -52,16 +52,19 @@ namespace NakamaSync
 
         public void SendHandshakeRequest(HandshakeRequest request)
         {
+            Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake request.");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequestOpcode, _encoding.Encode(request), new IUserPresence[]{_presenceTracker.GetHost()});
         }
 
         public void SendHandshakeResponse(IUserPresence target, HandshakeResponse response)
         {
+            Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake response.");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponseOpcode, _encoding.Encode(response), new IUserPresence[]{target});
         }
 
         public void SendSyncDataToAll(Envelope envelope)
         {
+            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
         }
 
