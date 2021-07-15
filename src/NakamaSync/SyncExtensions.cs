@@ -31,7 +31,7 @@ using Nakama;
 // todo potential race when creating and joining a match between the construction of this object
 // and the dispatching of presence objects off the socket.
 // TODO restore the default getvalue call with self
-// ~destructor definitely doesn't work, think about end match flow.
+// think about end match flow, resetting sync vars.
 // fix OnHostValdiate so that you have a better way of signalling intent that you want a var to be validated.
 // to string calls
 // expose interfaces, not concrete classes.
@@ -45,12 +45,15 @@ using Nakama;
 // todo internalize the registry so that users can't change it from the outside?
 // otherwise find some other way to prevent users from messing with it.
 // todo error handling checks particularly on dictionary accessing etc.
-// todo clean this class up and use explicit returns values where needed for some of these private methods
-// should user vars have acks on a uesr by user basis?
+// should user vars have acks on a user by user basis?
 // what if clients don't agree on opcodes? how can you establish that they are on different binary versions?
 // todo shouldn't have public sets on the DTOs but need it due to tinyjson
 // todo add the reflection approach?
 // todo too many params in sync extensions methods
+// todo add Source presence to var events.
+// todo  JoinSyncMatch should accept a matchmaker ticket as well as a match id
+// todo expose metadata to match id method.
+
 using System;
 
 namespace NakamaSync
@@ -65,6 +68,16 @@ namespace NakamaSync
             services.Initialize(isMatchCreator: true, errorHandler: errorHandler, logger: logger);
 
             IMatch match = await socket.CreateMatchAsync();
+            services.ReceiveMatch(match);
+            return match;
+        }
+
+        public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, IMatchmakerMatched matched, VarRegistry registry, SyncErrorHandler errorHandler, ILogger logger = null)
+        {
+            var services = new SyncServices(socket, session, registry, opcodes);
+            services.Initialize(isMatchCreator: false, errorHandler: errorHandler, logger: logger);
+
+            IMatch match = await socket.JoinMatchAsync(matched);
             services.ReceiveMatch(match);
             return match;
         }

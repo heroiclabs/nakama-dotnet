@@ -27,26 +27,22 @@ namespace NakamaSync
         /// The store of synced values for a local client to merge in upon
         /// receiving the handshake response.
         /// </summary>
-        public Envelope Store => _currentStore;
+        [DataMember(Name="currentStore"), Preserve]
+        public Envelope Store { get; set; }
 
         /// <summary>
         /// Whether or not the handshake was successful.
         /// </summary>
-        public bool Success => _success;
-
-        [DataMember(Name="currentStore"), Preserve]
-        private Envelope _currentStore;
-
         [DataMember(Name="success"), Preserve]
-        private bool _success;
+        public bool Success { get; set; }
 
         /// <summary>
         /// Create a handshake response from a host to a guest.
         /// </summary>
         internal HandshakeResponse(Envelope currentState, bool success)
         {
-            _currentStore = currentState;
-            _success = success;
+            Store = currentState;
+            Success = success;
         }
     }
 }
