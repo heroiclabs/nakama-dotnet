@@ -23,7 +23,7 @@ namespace NakamaSync
     /// <summary>
     /// A variable containing a value for each user in the match. Each value is synchronized across all users.
     /// </summary>
-    public class UserVar<T> : IVar
+    public class PresenceVar<T> : IVar
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then
@@ -31,9 +31,9 @@ namespace NakamaSync
         /// host who will validate and if it's validated the host will send to all clients
         /// otherwise a ReplicationValidationException will be thrown on this device.
         /// </summary>
-        public Func<IUserVarEvent<T>, bool> OnHostValidate;
-        public Action<IUserVarEvent<T>> OnRemoteValueChanged;
-        internal Action<IUserVarEvent<T>> OnLocalValueChanged;
+        public Func<IPresenceVarEvent<T>, bool> OnHostValidate;
+        public Action<IPresenceVarEvent<T>> OnRemoteValueChanged;
+        internal Action<IPresenceVarEvent<T>> OnLocalValueChanged;
 
         public ValidationStatus validationStatus => _validationStatus;
 
@@ -83,7 +83,7 @@ namespace NakamaSync
             }
         }
 
-        internal void SetValue(T value, IUserPresence source, string targetId, ValidationStatus validationStatus, Action<UserVarEvent<T>> eventDispatch)
+        internal void SetValue(T value, IUserPresence source, string targetId, ValidationStatus validationStatus, Action<PresenceVarEvent<T>> eventDispatch)
         {
             T oldValue = _values.ContainsKey(targetId) ? _values[targetId] : default(T);
 
@@ -95,7 +95,7 @@ namespace NakamaSync
             _values[targetId] = value;
             _validationStatus = validationStatus;
 
-            eventDispatch?.Invoke(new UserVarEvent<T>(source, targetId, oldValue, value));
+            eventDispatch?.Invoke(new PresenceVarEvent<T>(source, targetId, oldValue, value));
         }
 
         ValidationStatus IVar.GetValidationStatus()

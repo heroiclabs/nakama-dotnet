@@ -33,10 +33,10 @@ namespace NakamaSync
         private readonly LockVersionGuard _lockVersionGuard;
 
         private readonly SharedRoleIngress _sharedRoleIngress;
-        private readonly UserRoleIngress _userRoleIngress;
+        private readonly PresenceRoleIngress _presenceRoleIngress;
 
         private readonly SharedRoleEgress _sharedRoleEgress;
-        private readonly UserRoleEgress _userRoleEgress;
+        private readonly PresenceRoleEgress _presenceRoleEgress;
 
         private readonly HandshakeRequester _handshakeRequester;
         private readonly HandshakeResponder _handshakeResponder;
@@ -72,19 +72,19 @@ namespace NakamaSync
             var sharedHostIngress = new SharedHostIngress(varKeys, envelopeBuilder);
             _services.Add(sharedHostIngress);
 
-            var userGuestIngress = new UserGuestIngress(varKeys, presenceTracker);
-            _services.Add(userGuestIngress);
+            var presenceGuestIngress = new PresenceGuestIngress(varKeys, presenceTracker);
+            _services.Add(presenceGuestIngress);
 
-            var userHostIngress = new UserHostIngress(varKeys, envelopeBuilder);
-            _services.Add(userHostIngress);
+            var presenceHostIngress = new PresenceHostIngress(varKeys, envelopeBuilder);
+            _services.Add(presenceHostIngress);
 
             var sharedRoleIngress = new SharedRoleIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
             _services.Add(sharedRoleIngress);
 
-            var userRoleIngress = new UserRoleIngress(userGuestIngress, userHostIngress, varRegistry, lockVersionGuard);
-            _services.Add(userRoleIngress);
+            var presenceRoleIngress = new PresenceRoleIngress(presenceGuestIngress, presenceHostIngress, varRegistry, lockVersionGuard);
+            _services.Add(presenceRoleIngress);
 
-            var handshakeRequester = new HandshakeRequester(varKeys, sharedRoleIngress, userRoleIngress, session.UserId);
+            var handshakeRequester = new HandshakeRequester(varKeys, sharedRoleIngress, presenceRoleIngress, session.UserId);
             _services.Add(handshakeRequester);
 
             var handshakeResponder = new HandshakeResponder(varKeys, varRegistry, presenceTracker);
@@ -96,17 +96,17 @@ namespace NakamaSync
             var sharedHostEgress = new SharedHostEgress(varKeys, envelopeBuilder);
             _services.Add(sharedHostEgress);
 
-            var userGuestEgress = new UserGuestEgress(varKeys, envelopeBuilder);
-            _services.Add(userGuestEgress);
+            var presenceGuestEgress = new PresenceGuestEgress(varKeys, envelopeBuilder);
+            _services.Add(presenceGuestEgress);
 
-            var userHostEgress = new UserHostEgress(varKeys, envelopeBuilder);
-            _services.Add(userHostEgress);
+            var presenceHostEgress = new PresenceHostEgress(varKeys, envelopeBuilder);
+            _services.Add(presenceHostEgress);
 
             var sharedRoleEgress = new SharedRoleEgress(sharedGuestEgress, sharedHostEgress, roleTracker);
             _services.Add(sharedRoleEgress);
 
-            var userRoleEgress = new UserRoleEgress(userGuestEgress, userHostEgress, roleTracker);
-            _services.Add(userRoleEgress);
+            var presenceRoleEgress = new PresenceRoleEgress(presenceGuestEgress, presenceHostEgress, roleTracker);
+            _services.Add(presenceRoleEgress);
 
             var migrator = new HostMigrator(varRegistry, envelopeBuilder);
             _services.Add(migrator);
@@ -120,13 +120,13 @@ namespace NakamaSync
             _lockVersionGuard = lockVersionGuard;
 
             _sharedRoleIngress = sharedRoleIngress;
-            _userRoleIngress = userRoleIngress;
+            _presenceRoleIngress = presenceRoleIngress;
 
             _handshakeRequester = handshakeRequester;
             _handshakeResponder = handshakeResponder;
 
             _sharedRoleEgress = sharedRoleEgress;
-            _userRoleEgress = userRoleEgress;
+            _presenceRoleEgress = presenceRoleEgress;
 
             _socket = socket;
             _migrator = migrator;
@@ -159,7 +159,7 @@ namespace NakamaSync
             {
                 _sharedRoleEgress.Subscribe(_varRegistry);
                 _sharedRoleIngress.Subscribe(_syncSocket, _roleTracker);
-                _userRoleIngress.Subscribe(_syncSocket, _roleTracker);
+                _presenceRoleIngress.Subscribe(_syncSocket, _roleTracker);
             }
             else
             {
@@ -169,13 +169,13 @@ namespace NakamaSync
                 _handshakeRequester.Subscribe(_syncSocket, _roleTracker, _presenceTracker);
 
                 _sharedRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
-                _userRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
+                _presenceRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
 
                 _sharedRoleIngress.Subscribe(_syncSocket, _roleTracker, _handshakeRequester);
-                _userRoleIngress.Subscribe(_syncSocket, _roleTracker, _handshakeRequester);
+                _presenceRoleIngress.Subscribe(_syncSocket, _roleTracker, _handshakeRequester);
             }
 
-            _userRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
+            _presenceRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
             _sharedRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
 
             _handshakeResponder.Subscribe(_syncSocket);

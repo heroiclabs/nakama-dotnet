@@ -19,7 +19,6 @@ using Nakama;
 
 namespace NakamaSync
 {
-    // todo split this into shared and user
     internal class SharedRoleEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }

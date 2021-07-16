@@ -27,10 +27,10 @@ namespace NakamaSync
         public Dictionary<string, SharedVar<int>> SharedInts { get; }
         public Dictionary<string, SharedVar<string>> SharedStrings { get; }
 
-        public Dictionary<string, UserVar<bool>> UserBools { get; }
-        public Dictionary<string, UserVar<float>> UserFloats { get; }
-        public Dictionary<string, UserVar<int>> UserInts { get; }
-        public Dictionary<string, UserVar<string>> UserStrings { get; }
+        public Dictionary<string, PresenceVar<bool>> UserBools { get; }
+        public Dictionary<string, PresenceVar<float>> UserFloats { get; }
+        public Dictionary<string, PresenceVar<int>> UserInts { get; }
+        public Dictionary<string, PresenceVar<string>> UserStrings { get; }
 
         private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
 
@@ -41,10 +41,10 @@ namespace NakamaSync
             SharedInts = new Dictionary<string, SharedVar<int>>();
             SharedStrings = new Dictionary<string, SharedVar<string>>();
 
-            UserBools = new Dictionary<string, UserVar<bool>>();
-            UserFloats = new Dictionary<string, UserVar<float>>();
-            UserInts = new Dictionary<string, UserVar<int>>();
-            UserStrings = new Dictionary<string, UserVar<string>>();
+            UserBools = new Dictionary<string, PresenceVar<bool>>();
+            UserFloats = new Dictionary<string, PresenceVar<float>>();
+            UserInts = new Dictionary<string, PresenceVar<int>>();
+            UserStrings = new Dictionary<string, PresenceVar<string>>();
         }
 
         internal void ReceiveMatch(VarKeys keys, IMatch match)

@@ -18,7 +18,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class UserGuestEgress : ISyncService
+    internal class PresenceGuestEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -26,13 +26,13 @@ namespace NakamaSync
         private readonly VarKeys _keys;
         private readonly EnvelopeBuilder _builder;
 
-        public UserGuestEgress(VarKeys keys, EnvelopeBuilder builder)
+        public PresenceGuestEgress(VarKeys keys, EnvelopeBuilder builder)
         {
             _keys = keys;
             _builder = builder;
         }
 
-        public void HandleLocalUserVarChanged<T>(string key, T newValue, string targetId, UserVarAccessor<T> accessor)
+        public void HandleLocalPresenceVarChanged<T>(string key, T newValue, string targetId, PresenceVarAccessor<T> accessor)
         {
             var status = _keys.GetValidationStatus(key);
 
@@ -45,9 +45,9 @@ namespace NakamaSync
             }
 
             _keys.IncrementLockVersion(key);
-            var newSyncedValue = new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, targetId);
+            var newSyncedValue = new PresenceValue<T>(key, newValue, _keys.GetLockVersion(key), status, targetId);
 
-            _builder.AddUserVar(accessor, newSyncedValue);
+            _builder.AddPresenceVar(accessor, newSyncedValue);
             _builder.SendEnvelope();
         }
     }

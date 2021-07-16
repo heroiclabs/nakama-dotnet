@@ -18,14 +18,14 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class UserVarEvent<T> : IUserVarEvent<T>
+    internal class PresenceVarEvent<T> : IPresenceVarEvent<T>
     {
         public IUserPresence Sender { get; }
         public string TargetId { get; }
         public T OldValue { get; }
         public T NewValue { get; }
 
-        internal UserVarEvent(IUserPresence sender, string targetId, T oldValue, T newValue)
+        internal PresenceVarEvent(IUserPresence sender, string targetId, T oldValue, T newValue)
         {
             Sender = sender;
             TargetId = targetId;

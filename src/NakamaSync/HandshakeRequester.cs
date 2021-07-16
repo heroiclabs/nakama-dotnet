@@ -34,14 +34,14 @@ namespace NakamaSync
         private bool _sentHandshake;
 
         private SharedRoleIngress _sharedRoleIngress;
-        private UserRoleIngress _userRoleIngress;
+        private PresenceRoleIngress _presenceRoleIngress;
         private string _userId;
 
-        public HandshakeRequester(VarKeys keys, SharedRoleIngress sharedRoleIngress, UserRoleIngress userRoleIngress, string userId)
+        public HandshakeRequester(VarKeys keys, SharedRoleIngress sharedRoleIngress, PresenceRoleIngress presenceRoleIngress, string userId)
         {
             _keys = keys;
             _sharedRoleIngress = sharedRoleIngress;
-            _userRoleIngress = userRoleIngress;
+            _presenceRoleIngress = presenceRoleIngress;
             _userId = userId;
         }
 
@@ -74,7 +74,7 @@ namespace NakamaSync
             {
                 Logger?.InfoFormat("Received successful handshake response.");
                 _sharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
-                _userRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
+                _presenceRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 OnInitialStoreLoaded();
             }
             else

@@ -59,7 +59,6 @@ using Nakama;
 // debate pros and cons of user id vs user presence for user vars/values. i think we do want to use
 // userpresence, but it's just a matter of serializing interface rather than concrete type.
 // expose an OnLocalVariable changed event for users.
-// rename UserVar to PresenceVar
 // renamed SharedVar to GlobalVar?
 // TRACK VAR type for something like a ball where nobody is actually using it.
 

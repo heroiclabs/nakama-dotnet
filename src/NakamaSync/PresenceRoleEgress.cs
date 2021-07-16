@@ -22,19 +22,19 @@ using System.Collections.Generic;
 namespace NakamaSync
 {
     // todo split this into shared and user
-    internal class UserRoleEgress : ISyncService
+    internal class PresenceRoleEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private RoleTracker _roleTracker;
-        private UserGuestEgress _userGuestEgress;
-        private UserHostEgress _userHostEgress;
+        private PresenceGuestEgress _presenceGuestEgress;
+        private PresenceHostEgress _presenceHostEgress;
 
-        public UserRoleEgress(UserGuestEgress userGuestEgress, UserHostEgress userHostEgress, RoleTracker roleTracker)
+        public PresenceRoleEgress(PresenceGuestEgress presenceGuestEgress, PresenceHostEgress presenceHostEgress, RoleTracker roleTracker)
         {
-            _userGuestEgress = userGuestEgress;
-            _userHostEgress = userHostEgress;
+            _presenceGuestEgress = presenceGuestEgress;
+            _presenceHostEgress = presenceHostEgress;
             _roleTracker = roleTracker;
         }
 
@@ -50,21 +50,21 @@ namespace NakamaSync
 
         public void Subscribe(VarRegistry registry)
         {
-            Subscribe(registry.UserBools, values => values.UserBools);
-            Subscribe(registry.UserFloats, values => values.UserFloats);
-            Subscribe(registry.UserInts,  values => values.UserInts);
-            Subscribe(registry.UserStrings, values => values.UserStrings);
+            Subscribe(registry.UserBools, values => values.PresenceBools);
+            Subscribe(registry.UserFloats, values => values.PresenceFloats);
+            Subscribe(registry.UserInts,  values => values.PresenceInts);
+            Subscribe(registry.UserStrings, values => values.PResenceStrings);
         }
 
-        private void Subscribe<T>(Dictionary<string, UserVar<T>> vars, UserVarAccessor<T> accessor)
+        private void Subscribe<T>(Dictionary<string, PresenceVar<T>> vars, PresenceVarAccessor<T> accessor)
         {
             foreach (var kvp in vars)
             {
-                vars[kvp.Key].OnLocalValueChanged += (evt) => HandleLocalUserVarChanged(kvp.Key, evt, accessor);
+                vars[kvp.Key].OnLocalValueChanged += (evt) => HandleLocalPresenceVarChanged(kvp.Key, evt, accessor);
             }
         }
 
-        private void HandleLocalUserVarChanged<T>(string key, IUserVarEvent<T> evt, UserVarAccessor<T> accessor)
+        private void HandleLocalPresenceVarChanged<T>(string key, IPresenceVarEvent<T> evt, PresenceVarAccessor<T> accessor)
         {
             bool isHost = _roleTracker.IsSelfHost();
 
@@ -72,11 +72,11 @@ namespace NakamaSync
 
             if (isHost)
             {
-                _userHostEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.TargetId, accessor);
+                _presenceHostEgress.HandleLocalPresenceVarChanged(key, evt.NewValue, evt.TargetId, accessor);
             }
             else
             {
-                _userGuestEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.TargetId, accessor);
+                _presenceGuestEgress.HandleLocalPresenceVarChanged(key, evt.NewValue, evt.TargetId, accessor);
             }
         }
     }

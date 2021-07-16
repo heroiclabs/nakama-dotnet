@@ -55,10 +55,10 @@ namespace NakamaSync
                 CopySharedVarToGuest(_registry.SharedFloats, syncValues.SharedFloats);
                 CopySharedVarToGuest(_registry.SharedInts, syncValues.SharedInts);
                 CopySharedVarToGuest(_registry.SharedStrings, syncValues.SharedStrings);
-                CopyUserVarToGuest(_registry.UserBools, syncValues.UserBools);
-                CopyUserVarToGuest(_registry.UserFloats, syncValues.UserFloats);
-                CopyUserVarToGuest(_registry.UserInts, syncValues.UserInts);
-                CopyUserVarToGuest(_registry.UserStrings, syncValues.UserStrings);
+                CopyPresenceVarToGuest(_registry.UserBools, syncValues.PresenceBools);
+                CopyPresenceVarToGuest(_registry.UserFloats, syncValues.PresenceFloats);
+                CopyPresenceVarToGuest(_registry.UserInts, syncValues.PresenceInts);
+                CopyPresenceVarToGuest(_registry.UserStrings, syncValues.PResenceStrings);
             }
             else
             {
@@ -81,11 +81,11 @@ namespace NakamaSync
             }
         }
 
-        private void CopyUserVarToGuest<T>(Dictionary<string, UserVar<T>> vars, List<UserValue<T>> values)
+        private void CopyPresenceVarToGuest<T>(Dictionary<string, PresenceVar<T>> vars, List<PresenceValue<T>> values)
         {
             foreach (var varKvp in vars)
             {
-                UserVar<T> var = varKvp.Value;
+                PresenceVar<T> var = varKvp.Value;
 
                 Logger?.DebugFormat($"Handshake responder scanning through user values to copy for key: {varKvp.Key}");
 
@@ -101,7 +101,7 @@ namespace NakamaSync
 
                     Logger?.DebugFormat($"User variable value for initial payload: User: {userKvp.Key}, Raw Value: ${rawValue}");
 
-                    var value = new UserValue<T>(varKvp.Key, rawValue, _keys.GetLockVersion(varKvp.Key), _keys.GetValidationStatus(varKvp.Key), userKvp.Key);
+                    var value = new PresenceValue<T>(varKvp.Key, rawValue, _keys.GetLockVersion(varKvp.Key), _keys.GetValidationStatus(varKvp.Key), userKvp.Key);
                     values.Add(value);
                 }
             }

@@ -52,10 +52,10 @@ namespace NakamaSync
             ValidatePendingVars<int>(registry.SharedInts, env => env.SharedIntAcks);
             ValidatePendingVars<string>(registry.SharedStrings, env => env.SharedStringAcks);
 
-            ValidatePendingVars<bool>(registry.UserBools, env => env.UserBoolAcks);
-            ValidatePendingVars<float>(registry.UserFloats, env => env.UserFloatAcks);
-            ValidatePendingVars<int>(registry.UserInts, env => env.UserIntAcks);
-            ValidatePendingVars<string>(registry.UserStrings, env => env.UserStringAcks);
+            ValidatePendingVars<bool>(registry.UserBools, env => env.PresenceBoolAcks);
+            ValidatePendingVars<float>(registry.UserFloats, env => env.PresenceFloatAcks);
+            ValidatePendingVars<int>(registry.UserInts, env => env.PresenceIntAcks);
+            ValidatePendingVars<string>(registry.UserStrings, env => env.PresenceStringAcks);
 
             _builder.SendEnvelope();
         }
@@ -68,7 +68,7 @@ namespace NakamaSync
             }
         }
 
-        private void ValidatePendingVars<T>(Dictionary<string, UserVar<T>> vars, AckAccessor ackAccessor)
+        private void ValidatePendingVars<T>(Dictionary<string, PresenceVar<T>> vars, AckAccessor ackAccessor)
         {
             foreach (var kvp in vars)
             {

@@ -22,7 +22,7 @@ namespace NakamaSync
     /// <summary>
     /// A data-transfer object for a sync var.
     /// </summary>
-    internal class UserValue<T>
+    internal class PresenceValue<T>
     {
         [DataMember(Name="key_validation_status"), Preserve]
         public ValidationStatus ValidationStatus { get; set; }
@@ -39,7 +39,7 @@ namespace NakamaSync
         [DataMember(Name="target"), Preserve]
         public string TargetId { get; set; }
 
-        public UserValue(string key, T value, int lockVersion, ValidationStatus validationStatus, string target)
+        public PresenceValue(string key, T value, int lockVersion, ValidationStatus validationStatus, string target)
         {
             Key = key;
             Value = value;

@@ -18,7 +18,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class UserGuestIngress : ISyncService
+    internal class PresenceGuestIngress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -26,13 +26,13 @@ namespace NakamaSync
         private VarKeys _keys;
         private PresenceTracker _presenceTracker;
 
-        public UserGuestIngress(VarKeys keys, PresenceTracker presenceTracker)
+        public PresenceGuestIngress(VarKeys keys, PresenceTracker presenceTracker)
         {
             _keys = keys;
             _presenceTracker = presenceTracker;
         }
 
-        public void HandleValue<T>(UserVar<T> var, IUserPresence source, UserValue<T> value)
+        public void HandleValue<T>(PresenceVar<T> var, IUserPresence source, PresenceValue<T> value)
         {
             var.SetValue(value.Value, source, value.TargetId, value.ValidationStatus, var.OnRemoteValueChanged);
         }

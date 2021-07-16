@@ -34,7 +34,7 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private async Task UserVarShouldRetainData()
+        private async Task PresenceVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
@@ -89,7 +89,7 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private async Task UserVarShouldSyncData()
+        private async Task PresenceVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);

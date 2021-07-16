@@ -16,7 +16,7 @@
 
 namespace NakamaSync
 {
-    public interface IUserVarEvent<T> : IVarEvent<T>
+    public interface IPresenceVarEvent<T> : IVarEvent<T>
     {
         string TargetId { get; }
         T OldValue { get; }
