@@ -52,7 +52,10 @@ namespace NakamaSync
                     return;
                 }
 
-                RequestHandshake(presence, socket);
+                if (presence.UserId != presenceTracker.GetSelf().UserId)
+                {
+                    RequestHandshake(presence, socket);
+                }
             };
 
             socket.OnHandshakeResponse += (source, response) =>

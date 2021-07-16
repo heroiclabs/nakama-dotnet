@@ -23,7 +23,7 @@ namespace Nakama.Tests.Socket
 {
     public class SyncTest
     {
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task SharedVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
@@ -34,7 +34,7 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task UserVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
@@ -46,7 +46,7 @@ namespace Nakama.Tests.Socket
         }
 
         //todo unskip test
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS, Skip = "todo fix this")]
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS, Skip = "todo fix this")]
         private async Task BadHandshakeShouldFail()
         {
             VarIdGenerator idGenerator = (string userId, string varName, int varId) => {
@@ -71,7 +71,7 @@ namespace Nakama.Tests.Socket
             mismatchedEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task SharedVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
@@ -89,7 +89,7 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task UserVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
