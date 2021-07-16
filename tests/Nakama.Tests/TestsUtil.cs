@@ -49,7 +49,7 @@ namespace Nakama.Tests
 
             LogLevel logLevel;
 
-            if (!Enum.TryParse<LogLevel>(settings["LOG_LEVEL"] , ignoreCase: true, out logLevel))
+            if (!Enum.TryParse<LogLevel>(settings["LOG_LEVEL"], ignoreCase: true, out logLevel))
             {
                 logLevel = LogLevel.Info;
             }
@@ -61,7 +61,6 @@ namespace Nakama.Tests
                 settings["SERVER_KEY"],
                 System.Convert.ToBoolean(settings["STDOUT"]),
                 logLevel);
-
         }
     }
 }
