@@ -33,14 +33,14 @@ namespace NakamaSync
         public int LockVersion { get; set; }
 
         [DataMember(Name="key_validation_status"), Preserve]
-        public KeyValidationStatus ValidationStatus { get; set; }
+        public ValidationStatus ValidationStatus { get; set; }
 
-        public SharedValue(string key, T value, int lockVersion, KeyValidationStatus keyValidationStatus)
+        public SharedValue(string key, T value, int lockVersion, ValidationStatus validationStatus)
         {
             Key = key;
             Value = value;
             LockVersion = lockVersion;
-            ValidationStatus = keyValidationStatus;
+            ValidationStatus = validationStatus;
         }
 
         public override string ToString()

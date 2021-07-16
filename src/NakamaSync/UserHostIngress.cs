@@ -37,10 +37,10 @@ namespace NakamaSync
         {
             switch (context.Value.ValidationStatus)
             {
-                case KeyValidationStatus.None:
+                case ValidationStatus.None:
                     HandleNonValidatedValue(source, context.Var, context.Value, context.Value.TargetId);
                     break;
-                case KeyValidationStatus.Pending:
+                case ValidationStatus.Pending:
                     if (context.Var.OnHostValidate(new UserVarEvent<T>(source, context.Value.TargetId, context.Var.GetValue(context.Value.TargetId), context.Value.Value)))
                     {
                         AcceptPendingValue<T>(source, context.Var, context.Value, context.VarAccessor, context.AckAccessor);
@@ -50,7 +50,7 @@ namespace NakamaSync
                         RollbackPendingValue<T>(context.Var, context.Value, context.VarAccessor);
                     }
                     break;
-                case KeyValidationStatus.Validated:
+                case ValidationStatus.Validated:
                     ErrorHandler?.Invoke(new InvalidOperationException("Host received value that already claims to be validated."));
                     break;
             }
@@ -60,14 +60,14 @@ namespace NakamaSync
         {
             // one guest has incorrect value. queue a rollback for all guests.
             _keys.IncrementLockVersion(value.Key);
-            var outgoing = new UserValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated, value.TargetId);
+            var outgoing = new UserValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), ValidationStatus.Validated, value.TargetId);
             _builder.AddUserVar(accessor, value);
             _builder.SendEnvelope();
         }
 
         private void AcceptPendingValue<T>(IUserPresence source, UserVar<T> var, UserValue<T> value, UserVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
-            var.SetValue(value.Value, source, value.TargetId, KeyValidationStatus.Validated, var.OnRemoteValueChanged);
+            var.SetValue(value.Value, source, value.TargetId, ValidationStatus.Validated, var.OnRemoteValueChanged);
             _builder.AddUserVar(accessor, value);
             _builder.AddAck(ackAccessor, value.Key);
             _builder.SendEnvelope();

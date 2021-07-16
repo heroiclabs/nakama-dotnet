@@ -37,10 +37,10 @@ namespace NakamaSync
         {
             switch (context.Value.ValidationStatus)
             {
-                case KeyValidationStatus.None:
+                case ValidationStatus.None:
                     HandleNonValidatedValue(source, context.Var, context.Value);
                     break;
-                case KeyValidationStatus.Pending:
+                case ValidationStatus.Pending:
                     if (context.Var.OnHostValidate(new SharedVarEvent<T>(source, context.Var.GetValue(), context.Value.Value)))
                     {
                         AcceptPendingValue<T>(source, context.Var, context.Value, context.VarAccessor, context.AckAccessor);
@@ -50,7 +50,7 @@ namespace NakamaSync
                         RollbackPendingValue<T>(context.Var, context.Value, context.VarAccessor);
                     }
                     break;
-                case KeyValidationStatus.Validated:
+                case ValidationStatus.Validated:
                     ErrorHandler?.Invoke(new InvalidOperationException("Host received value that already claims to be validated."));
                     break;
             }
@@ -60,14 +60,14 @@ namespace NakamaSync
         {
             // one guest has incorrect value. queue a rollback for all guests.
             _keys.IncrementLockVersion(value.Key);
-            var outgoing = new SharedValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated);
+            var outgoing = new SharedValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), ValidationStatus.Validated);
             _builder.AddSharedVar(accessor, value);
             _builder.SendEnvelope();
         }
 
         private void AcceptPendingValue<T>(IUserPresence source, SharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
-            var.SetValue(source, value.Value, KeyValidationStatus.Validated, var.OnRemoteValueChanged);
+            var.SetValue(source, value.Value, ValidationStatus.Validated, var.OnRemoteValueChanged);
             _builder.AddSharedVar(accessor, value);
             _builder.AddAck(ackAccessor, value.Key);
             _builder.SendEnvelope();
@@ -75,7 +75,7 @@ namespace NakamaSync
 
         private void HandleNonValidatedValue<T>(IUserPresence source, SharedVar<T> var, SharedValue<T> value)
         {
-            var.SetValue(source, value.Value, KeyValidationStatus.None, var.OnRemoteValueChanged);
+            var.SetValue(source, value.Value, ValidationStatus.None, var.OnRemoteValueChanged);
         }
     }
 }

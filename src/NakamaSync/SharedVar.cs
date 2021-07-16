@@ -33,9 +33,9 @@ namespace NakamaSync
         public Func<ISharedVarEvent<T>, bool> OnHostValidate;
         public Action<ISharedVarEvent<T>> OnRemoteValueChanged;
         internal Action<ISharedVarEvent<T>> OnLocalValueChanged;
-        public KeyValidationStatus KeyValidationStatus => _validationStatus;
+        public ValidationStatus validationStatus => _validationStatus;
 
-        private KeyValidationStatus _validationStatus;
+        private ValidationStatus _validationStatus;
         private T _value;
 
         // todo throw exception if reassigning self. maybe not here?
@@ -68,7 +68,7 @@ namespace NakamaSync
             OnRemoteValueChanged = null;
         }
 
-        internal void SetValue(IUserPresence source, T value, KeyValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
+        internal void SetValue(IUserPresence source, T value, ValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
         {
             T oldValue = _value;
 
@@ -82,12 +82,12 @@ namespace NakamaSync
             eventDispatch?.Invoke(new SharedVarEvent<T>(source, oldValue, value));
         }
 
-        void IVar.SetValidationStatus(KeyValidationStatus status)
+        void IVar.SetValidationStatus(ValidationStatus status)
         {
             _validationStatus = status;
         }
 
-        KeyValidationStatus IVar.GetValidationStatus()
+        ValidationStatus IVar.GetValidationStatus()
         {
             return _validationStatus;
         }

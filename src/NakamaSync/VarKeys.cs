@@ -31,9 +31,9 @@ namespace NakamaSync
         private readonly ConcurrentDictionary<string, int> _lockVersions = new ConcurrentDictionary<string, int>();
         private readonly object _lockVersionLock = new object();
         private readonly object _registerLock = new object();
-        private readonly ConcurrentDictionary<string, KeyValidationStatus> _validationStatus = new ConcurrentDictionary<string, KeyValidationStatus>();
+        private readonly ConcurrentDictionary<string, ValidationStatus> _validationStatus = new ConcurrentDictionary<string, ValidationStatus>();
 
-        public void RegisterKey(string key, KeyValidationStatus status)
+        public void RegisterKey(string key, ValidationStatus status)
         {
             lock (_registerLock)
             {
@@ -57,7 +57,7 @@ namespace NakamaSync
             return _lockVersions[key];
         }
 
-        public KeyValidationStatus GetValidationStatus(string key)
+        public ValidationStatus GetValidationStatus(string key)
         {
             if (!_validationStatus.ContainsKey(key))
             {
@@ -80,7 +80,7 @@ namespace NakamaSync
             }
         }
 
-        public void SetValidationStatus(string key, KeyValidationStatus status)
+        public void SetValidationStatus(string key, ValidationStatus status)
         {
             if (!_validationStatus.ContainsKey(key))
             {

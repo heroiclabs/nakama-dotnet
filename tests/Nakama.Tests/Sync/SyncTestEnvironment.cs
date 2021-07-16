@@ -149,7 +149,7 @@ namespace Nakama.Tests
 
                 for (int i = 0; i < NumSessions; i++)
                 {
-                    ILogger logger = TestsUtil.LoadConfiguration().Stdout ? null : new StdoutLogger();
+                    ILogger logger = TestsUtil.LoadConfiguration().StdOut ? null : new StdoutLogger();
 
                     var joinTask = _sockets[i].JoinSyncMatch(_sessions[i], opcodes, matchedTasks[i].Result, _registries[i], errorHandler, new StdoutLogger());
                     joinTasks.Add(joinTask);
@@ -174,7 +174,7 @@ namespace Nakama.Tests
 
                     var registry = _registries[i];
                     var socket = _sockets[i];
-                    ILogger logger = TestsUtil.LoadConfiguration().Stdout ? null : new StdoutLogger();
+                    ILogger logger = TestsUtil.LoadConfiguration().StdOut ? null : new StdoutLogger();
 
                     var matchTask = socket.JoinSyncMatch(_sessions[i], opcodes, createTask.Result.Id, registry, errorHandler, new StdoutLogger());
                     joinTasks.Add(matchTask);

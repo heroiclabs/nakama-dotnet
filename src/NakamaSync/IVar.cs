@@ -28,9 +28,9 @@ namespace NakamaSync
 
         void Reset();
 
-        KeyValidationStatus GetValidationStatus();
+        ValidationStatus GetValidationStatus();
 
-        void SetValidationStatus(KeyValidationStatus status);
+        void SetValidationStatus(ValidationStatus status);
 
     }
 }

@@ -36,9 +36,9 @@ namespace NakamaSync
         {
             var status = _keys.GetValidationStatus(key);
 
-            if (status == KeyValidationStatus.Validated)
+            if (status == ValidationStatus.Validated)
             {
-                status = KeyValidationStatus.Pending;
+                status = ValidationStatus.Pending;
                 _keys.SetValidationStatus(key, status);
             }
 
@@ -55,9 +55,9 @@ namespace NakamaSync
 
             // this value was validated and now we've
             // modified it as a guest so revert it to pending status
-            if (status == KeyValidationStatus.Validated)
+            if (status == ValidationStatus.Validated)
             {
-                status = KeyValidationStatus.Pending;
+                status = ValidationStatus.Pending;
                 _keys.SetValidationStatus(key, status);
             }
 

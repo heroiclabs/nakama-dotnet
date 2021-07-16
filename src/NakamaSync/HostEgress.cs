@@ -39,7 +39,7 @@ namespace NakamaSync
         {
             var status = _keys.GetValidationStatus(key);
 
-            if (status == KeyValidationStatus.Pending)
+            if (status == ValidationStatus.Pending)
             {
                 ErrorHandler?.Invoke(new InvalidOperationException("Host should not have local key pending validation: " + key));
                 return;
@@ -55,7 +55,7 @@ namespace NakamaSync
         {
             var status = _keys.GetValidationStatus(key);
 
-            if (status == KeyValidationStatus.Pending)
+            if (status == ValidationStatus.Pending)
             {
                 ErrorHandler?.Invoke(new InvalidOperationException("Host should not have local key pending validation: " + key));
                 return;

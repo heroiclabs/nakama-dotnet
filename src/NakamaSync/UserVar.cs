@@ -35,7 +35,7 @@ namespace NakamaSync
         public Action<IUserVarEvent<T>> OnRemoteValueChanged;
         internal Action<IUserVarEvent<T>> OnLocalValueChanged;
 
-        public KeyValidationStatus KeyValidationStatus => _validationStatus;
+        public ValidationStatus validationStatus => _validationStatus;
 
         IUserPresence IVar.Self
         {
@@ -47,7 +47,7 @@ namespace NakamaSync
 
         internal IReadOnlyDictionary<string, T> Values => _values;
 
-        private KeyValidationStatus _validationStatus;
+        private ValidationStatus _validationStatus;
 
         private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
 
@@ -83,7 +83,7 @@ namespace NakamaSync
             }
         }
 
-        internal void SetValue(T value, IUserPresence source, string targetId, KeyValidationStatus validationStatus, Action<UserVarEvent<T>> eventDispatch)
+        internal void SetValue(T value, IUserPresence source, string targetId, ValidationStatus validationStatus, Action<UserVarEvent<T>> eventDispatch)
         {
             T oldValue = _values.ContainsKey(targetId) ? _values[targetId] : default(T);
 
@@ -98,7 +98,7 @@ namespace NakamaSync
             eventDispatch?.Invoke(new UserVarEvent<T>(source, targetId, oldValue, value));
         }
 
-        KeyValidationStatus IVar.GetValidationStatus()
+        ValidationStatus IVar.GetValidationStatus()
         {
             return _validationStatus;
         }
@@ -113,7 +113,7 @@ namespace NakamaSync
             _self = null;
         }
 
-        void IVar.SetValidationStatus(KeyValidationStatus status)
+        void IVar.SetValidationStatus(ValidationStatus status)
         {
             _validationStatus = status;
         }

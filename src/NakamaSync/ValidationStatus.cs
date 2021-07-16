@@ -16,7 +16,7 @@
 
 namespace NakamaSync
 {
-    public enum KeyValidationStatus
+    public enum ValidationStatus
     {
         None,
         Pending,
