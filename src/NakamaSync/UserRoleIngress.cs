@@ -59,6 +59,8 @@ namespace NakamaSync
 
         public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
+            Logger?.DebugFormat($"User role ingress received sync envelope.");
+
             var bools = UserIngressContext.FromBoolValues(envelope, _registry);
             HandleSyncEnvelope(source, bools, isHost);
 

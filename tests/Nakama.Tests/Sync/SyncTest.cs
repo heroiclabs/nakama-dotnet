@@ -89,7 +89,7 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = 100000)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task UserVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
@@ -100,14 +100,13 @@ namespace Nakama.Tests.Socket
 
             IUserPresence guestPresence = testEnv.GetGuests()[0];
             SyncTestUserEnvironment guestEnv = testEnv.GetUserEnv(guestPresence);
-            await Task.Delay(5000);
+            await Task.Delay(2500);
 
             Assert.True(guestEnv.UserBools[0].HasValue(testEnv.GetCreatorPresence()));
             Assert.True(guestEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));
 
             testEnv.Dispose();
         }
-
 
         // todo test variable status is intact after user leaves and then rejoins match (should pick up from
         // where they left off.)

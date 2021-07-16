@@ -72,7 +72,7 @@ namespace NakamaSync
         {
             T oldValue = _value;
 
-            if (oldValue.Equals(value))
+            if (oldValue != null && oldValue.Equals(value))
             {
                 return;
             }

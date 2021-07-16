@@ -78,6 +78,8 @@ namespace NakamaSync
 
             var strings = SharedIngressContext.FromStringValues(envelope, _registry);
             ReceiveSyncEnvelope(source, strings, isHost);
+
+            Logger?.DebugFormat($"Shared role ingress done processing sync envelope.");
         }
 
         private void ReceiveSyncEnvelope<T>(IUserPresence source, List<SharedIngressContext<T>> contexts, bool isHost)

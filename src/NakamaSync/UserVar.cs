@@ -92,7 +92,7 @@ namespace NakamaSync
         {
             T oldValue = _values.ContainsKey(targetId) ? _values[targetId] : default(T);
 
-            if (oldValue.Equals(value))
+            if (oldValue != null && oldValue.Equals(value))
             {
                 return;
             }

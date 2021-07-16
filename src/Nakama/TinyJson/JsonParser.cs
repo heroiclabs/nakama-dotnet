@@ -423,7 +423,6 @@ namespace Nakama.TinyJson
                 if (elems[i].Length <= 2)
                     continue;
                 var key = elems[i].Substring(1, elems[i].Length - 2);
-                System.Console.WriteLine(key);
                 var value = elems[i + 1];
 
                 FieldInfo fieldInfo;
