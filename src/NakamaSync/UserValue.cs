@@ -37,20 +37,20 @@ namespace NakamaSync
         public T Value { get; set; }
 
         [DataMember(Name="target"), Preserve]
-        public IUserPresence Target { get; set; }
+        public string TargetId { get; set; }
 
-        public UserValue(string key, T value, int lockVersion, KeyValidationStatus keyValidationStatus, IUserPresence target)
+        public UserValue(string key, T value, int lockVersion, KeyValidationStatus keyValidationStatus, string target)
         {
             Key = key;
             Value = value;
             LockVersion = lockVersion;
             ValidationStatus = keyValidationStatus;
-            Target = target;
+            TargetId = target;
         }
 
         public override string ToString()
         {
-            return $"UserValue(ValidationStatus='{ValidationStatus}', Key='{Key}', LockVersion='{LockVersion}', Value='{Value}', Target='{Target}')";
+            return $"UserValue(ValidationStatus='{ValidationStatus}', Key='{Key}', LockVersion='{LockVersion}', Value='{Value}', Target='{TargetId}')";
         }
     }
 }

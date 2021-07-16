@@ -32,7 +32,6 @@ namespace NakamaSync
         public ILogger Logger { get; set; }
 
         private PresenceTracker _presenceTracker;
-        private readonly object _lock = new object();
 
         public RoleTracker(PresenceTracker presenceTracker)
         {
@@ -47,27 +46,22 @@ namespace NakamaSync
 
         private void HandlePresenceRemoved(IUserPresence leaver)
         {
-            lock (_lock)
+            var host = GetHost();
+
+            bool leaverWasHost = string.Compare(leaver.UserId, host.UserId, StringComparison.InvariantCulture) < 0;
+
+            if (leaverWasHost)
             {
-                var host = GetHost();
-
-                bool leaverWasHost = string.Compare(leaver.UserId, host.UserId, StringComparison.InvariantCulture) < 0;
-
-                if (leaverWasHost)
-                {
-                    OnHostChanged?.Invoke(new HostChangedEvent(leaver, host));
-                }
-                else
-                {
-                    OnGuestLeft?.Invoke(leaver);
-                }
+                OnHostChanged?.Invoke(new HostChangedEvent(leaver, host));
+            }
+            else
+            {
+                OnGuestLeft?.Invoke(leaver);
             }
         }
 
         private void HandlePresenceAdded(IUserPresence joiner)
         {
-            lock (_lock)
-            {
                 IUserPresence host = GetHost();
 
                 if (joiner.UserId == host.UserId)
@@ -81,49 +75,39 @@ namespace NakamaSync
                 {
                     OnGuestJoined?.Invoke(joiner);
                 }
-            }
 
         }
 
         public IEnumerable<IUserPresence> GetGuests()
         {
-            lock (_lock)
+            int presenceCount = _presenceTracker.GetPresenceCount();
+
+            if (presenceCount <= 1)
             {
-                int presenceCount = _presenceTracker.GetPresenceCount();
-
-                if (presenceCount <= 1)
-                {
-                    return new IUserPresence[]{};
-                }
-
-                var ids = _presenceTracker.GetSortedUserIds();
-                ids.Reverse();
-                var guestIds = ids.Take(presenceCount);
-
-                return _presenceTracker.GetPresences(guestIds);
+                return new IUserPresence[]{};
             }
+
+            var ids = _presenceTracker.GetSortedUserIds();
+            ids.Reverse();
+            var guestIds = ids.Take(presenceCount);
+
+            return _presenceTracker.GetPresences(guestIds);
         }
 
         public IUserPresence GetHost()
         {
-            lock (_lock)
+            if (_presenceTracker.GetPresenceCount() == 0)
             {
-                if (_presenceTracker.GetPresenceCount() == 0)
-                {
-                    return null;
-                }
-
-                string hostId = _presenceTracker.GetSortedUserIds().First();
-                return _presenceTracker.GetPresence(hostId);
+                return null;
             }
+
+            string hostId = _presenceTracker.GetSortedUserIds().First();
+            return _presenceTracker.GetPresence(hostId);
         }
 
         public bool IsSelfHost()
         {
-            lock (_lock)
-            {
-                return _presenceTracker.GetSelf().UserId == GetHost()?.UserId;
-            }
+            return _presenceTracker.GetSelf().UserId == GetHost()?.UserId;
         }
     }
 }

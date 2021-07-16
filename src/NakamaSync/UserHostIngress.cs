@@ -38,10 +38,10 @@ namespace NakamaSync
             switch (context.Value.ValidationStatus)
             {
                 case KeyValidationStatus.None:
-                    HandleNonValidatedValue(source, context.Var, context.Value, context.Value.Target);
+                    HandleNonValidatedValue(source, context.Var, context.Value, context.Value.TargetId);
                     break;
                 case KeyValidationStatus.Pending:
-                    if (context.Var.OnHostValidate(new UserVarEvent<T>(source, context.Value.Target, context.Var.GetValue(context.Value.Target), context.Value.Value)))
+                    if (context.Var.OnHostValidate(new UserVarEvent<T>(source, context.Value.TargetId, context.Var.GetValue(context.Value.TargetId), context.Value.Value)))
                     {
                         AcceptPendingValue<T>(source, context.Var, context.Value, context.VarAccessor, context.AckAccessor);
                     }
@@ -60,22 +60,22 @@ namespace NakamaSync
         {
             // one guest has incorrect value. queue a rollback for all guests.
             _keys.IncrementLockVersion(value.Key);
-            var outgoing = new UserValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated, value.Target);
+            var outgoing = new UserValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), KeyValidationStatus.Validated, value.TargetId);
             _builder.AddUserVar(accessor, value);
             _builder.SendEnvelope();
         }
 
         private void AcceptPendingValue<T>(IUserPresence source, UserVar<T> var, UserValue<T> value, UserVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
-            var.SetValue(value.Value, source, value.Target, KeyValidationStatus.Validated, var.OnRemoteValueChanged);
+            var.SetValue(value.Value, source, value.TargetId, KeyValidationStatus.Validated, var.OnRemoteValueChanged);
             _builder.AddUserVar(accessor, value);
             _builder.AddAck(ackAccessor, value.Key);
             _builder.SendEnvelope();
         }
 
-        private void HandleNonValidatedValue<T>(IUserPresence source, UserVar<T> var, UserValue<T> value, IUserPresence target)
+        private void HandleNonValidatedValue<T>(IUserPresence source, UserVar<T> var, UserValue<T> value, string targetId)
         {
-            var.SetValue(value.Value, source, target);
+            var.SetValue(value.Value, source, targetId);
         }
     }
 }

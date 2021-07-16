@@ -14,13 +14,11 @@
 * limitations under the License.
 */
 
-using Nakama;
-
 namespace NakamaSync
 {
     public interface IUserVarEvent<T> : IVarEvent<T>
     {
-        IUserPresence Target { get; }
+        string TargetId { get; }
         T OldValue { get; }
     }
 }

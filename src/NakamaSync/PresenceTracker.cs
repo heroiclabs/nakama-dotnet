@@ -26,13 +26,14 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
+
         public event Action<IUserPresence> OnPresenceAdded;
         public event Action<IUserPresence> OnPresenceRemoved;
 
+        public string UserId => _userId;
+
         private readonly SortedList<string, IUserPresence> _presences = new SortedList<string, IUserPresence>();
         private readonly string _userId;
-
-        private readonly object _lock = new object();
 
         public PresenceTracker(string userId)
         {
@@ -41,10 +42,7 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
-            lock (_lock)
-            {
-                HandlePresences(match.Presences, new IUserPresence[]{});
-            }
+            HandlePresences(match.Presences, new IUserPresence[]{});
         }
 
         public int GetPresenceCount()
@@ -59,17 +57,13 @@ namespace NakamaSync
 
         public IUserPresence GetPresence(string userId)
         {
-            lock (_lock)
+
+            if (!_presences.ContainsKey(userId))
             {
-
-                System.Console.WriteLine("trying to get presence " + userId);
-                if (!_presences.ContainsKey(userId))
-                {
-                    ErrorHandler?.Invoke(new KeyNotFoundException($"User {_userId} could not find presence with id {userId}."));
-                }
-
-                return _presences[userId];
+                ErrorHandler?.Invoke(new KeyNotFoundException($"User {_userId} could not find presence with id {userId}."));
             }
+
+            return _presences[userId];
         }
 
         public bool HasPresence(string userId)
@@ -79,12 +73,9 @@ namespace NakamaSync
 
         public IUserPresence GetPresence(int index)
         {
-            lock (_lock)
+            if (GetPresenceCount() > index)
             {
-                if (GetPresenceCount() > index)
-                {
-                    return _presences.Values[index];
-                }
+                return _presences.Values[index];
             }
 
             return null;
@@ -92,26 +83,20 @@ namespace NakamaSync
 
         public List<IUserPresence> GetPresences(IEnumerable<string> userIds)
         {
-            lock (_lock)
+            var presences = new List<IUserPresence>();
+
+            foreach (string userId in userIds)
             {
-                var presences = new List<IUserPresence>();
-
-                foreach (string userId in userIds)
-                {
-                    presences.Add(GetPresence(userId));
-                }
-
-                return presences;
+                presences.Add(GetPresence(userId));
             }
+
+            return presences;
         }
 
         public IEnumerable<IUserPresence> GetOthers()
         {
-            lock (_lock)
-            {
-                var otherIds = GetSortedUserIds().Except(new string[]{_userId});
-                return GetPresences(otherIds);
-            }
+            var otherIds = GetSortedUserIds().Except(new string[]{_userId});
+            return GetPresences(otherIds);
         }
 
         public IUserPresence GetSelf()
@@ -126,61 +111,55 @@ namespace NakamaSync
 
         private void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
         {
-            lock (_lock)
-            {
                 HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
-            }
         }
 
         private void HandlePresences(IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
         {
-            lock (_lock)
+            var oldPresences = new SortedList<string, IUserPresence>(_presences, StringComparer.Create(System.Globalization.CultureInfo.InvariantCulture, ignoreCase: false));
+
+            var removedPresences = new List<IUserPresence>();
+
+            foreach (IUserPresence leaver in leavers)
             {
-                var oldPresences = new SortedList<string, IUserPresence>(_presences, StringComparer.Create(System.Globalization.CultureInfo.InvariantCulture, ignoreCase: false));
-
-                var removedPresences = new List<IUserPresence>();
-
-                foreach (IUserPresence leaver in leavers)
+                if (_presences.ContainsKey(leaver.UserId))
                 {
-                    if (_presences.ContainsKey(leaver.UserId))
-                    {
-                        Logger?.DebugFormat($"User {_userId} is removing leaving presence {leaver}");
-                        removedPresences.Add(leaver);
-                        _presences.Remove(leaver.UserId);
-                        Logger?.DebugFormat($"Num presences after removal: {_presences.Count}");
-                    }
-                    else
-                    {
-                        ErrorHandler?.Invoke(new InvalidOperationException("Leaving presence does not exist: " + leaver.UserId));
-                    }
+                    Logger?.DebugFormat($"User {_userId} is removing leaving presence {leaver}");
+                    removedPresences.Add(leaver);
+                    _presences.Remove(leaver.UserId);
+                    Logger?.DebugFormat($"Num presences after removal: {_presences.Count}");
                 }
-
-                foreach (var removedPresence in removedPresences)
+                else
                 {
-                    OnPresenceRemoved?.Invoke(removedPresence);
+                    ErrorHandler?.Invoke(new InvalidOperationException("Leaving presence does not exist: " + leaver.UserId));
                 }
+            }
 
-                var addedPresences = new List<IUserPresence>();
+            foreach (var removedPresence in removedPresences)
+            {
+                OnPresenceRemoved?.Invoke(removedPresence);
+            }
 
-                foreach (IUserPresence joiner in joiners)
+            var addedPresences = new List<IUserPresence>();
+
+            foreach (IUserPresence joiner in joiners)
+            {
+                if (_presences.ContainsKey(joiner.UserId))
                 {
-                    if (_presences.ContainsKey(joiner.UserId))
-                    {
-                        throw new InvalidOperationException("Joining presence already exists: " + joiner.UserId);
-                    }
-                    else
-                    {
-                        Logger?.DebugFormat($"User {_userId} is adding joining presence {joiner}");
-                        addedPresences.Add(joiner);
-                        _presences.Add(joiner.UserId, joiner);
-                        Logger?.DebugFormat($"Num presences after add: {_presences.Count}");
-                    }
+                    throw new InvalidOperationException("Joining presence already exists: " + joiner.UserId);
                 }
-
-                foreach (IUserPresence addedPresence in addedPresences)
+                else
                 {
-                    OnPresenceAdded?.Invoke(addedPresence);
+                    Logger?.DebugFormat($"User {_userId} is adding joining presence {joiner}");
+                    addedPresences.Add(joiner);
+                    _presences.Add(joiner.UserId, joiner);
+                    Logger?.DebugFormat($"Num presences after add: {_presences.Count}");
                 }
+            }
+
+            foreach (IUserPresence addedPresence in addedPresences)
+            {
+                OnPresenceAdded?.Invoke(addedPresence);
             }
         }
     }

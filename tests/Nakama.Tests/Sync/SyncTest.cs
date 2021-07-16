@@ -40,7 +40,7 @@ namespace Nakama.Tests.Socket
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch(CreateDefaultErrorHandler());
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
-            creatorEnv.UserBools[0].SetValue(true, testEnv.GetCreatorPresence());
+            creatorEnv.UserBools[0].SetValue(true, testEnv.GetCreatorPresence().UserId);
             Assert.True(creatorEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));
             testEnv.Dispose();
         }
@@ -89,18 +89,18 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = 100000)]
         private async Task UserVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
             await testEnv.StartMatch(CreateDefaultErrorHandler());
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
-            creatorEnv.UserBools[0].SetValue(true, testEnv.GetCreatorPresence());
+            creatorEnv.UserBools[0].SetValue(true, testEnv.GetCreatorPresence().UserId);
 
             IUserPresence guestPresence = testEnv.GetGuests()[0];
             SyncTestUserEnvironment guestEnv = testEnv.GetUserEnv(guestPresence);
-            await Task.Delay(2500);
+            await Task.Delay(5000);
 
             Assert.True(guestEnv.UserBools[0].HasValue(testEnv.GetCreatorPresence()));
             Assert.True(guestEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));

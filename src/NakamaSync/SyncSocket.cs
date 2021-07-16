@@ -38,7 +38,6 @@ namespace NakamaSync
         private readonly SyncOpcodes _opcodes;
         private readonly PresenceTracker _presenceTracker;
         private IMatch _match;
-        private readonly object _lock = new object();
 
         public SyncSocket(ISocket socket, SyncOpcodes opcodes, PresenceTracker presenceTracker)
         {
@@ -57,58 +56,76 @@ namespace NakamaSync
         {
             Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake request.");
 
-            lock (_lock)
+            IUserPresence requestTarget = _presenceTracker.GetOthers().FirstOrDefault();
+
+            if (requestTarget == null)
             {
-                IUserPresence requestTarget = _presenceTracker.GetOthers().FirstOrDefault();
-
-                if (requestTarget == null)
-                {
-                    ErrorHandler?.Invoke(new InvalidOperationException($"User {_match.Self.UserId} could not find user presence to send handshake to."));
-                }
-
-                _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequestOpcode, _encoding.Encode(request), new IUserPresence[]{});
+                ErrorHandler?.Invoke(new InvalidOperationException($"User {_match.Self.UserId} could not find user presence to send handshake to."));
             }
+
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequestOpcode, _encoding.Encode(request), new IUserPresence[]{});
         }
 
         public void SendHandshakeResponse(IUserPresence target, HandshakeResponse response)
         {
             Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake response.");
-            lock (_lock)
-            {
-                _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponseOpcode, _encoding.Encode(response), new IUserPresence[]{target});
-            }
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponseOpcode, _encoding.Encode(response), new IUserPresence[]{target});
         }
 
         public void SendSyncDataToAll(Envelope envelope)
         {
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
-
-            lock (_lock)
-            {
-                System.Console.WriteLine("sending match state async");
-                _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
-            }
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
         }
 
         private void HandleReceivedMatchState(IMatchState state)
         {
-            lock (_lock)
+            if (state.OpCode == _opcodes.DataOpcode)
             {
-                if (state.OpCode == _opcodes.DataOpcode)
+                Logger?.InfoFormat($"Socket for {_match.Self.UserId} received sync envelope.");
+
+                Envelope envelope = null;
+
+                try
                 {
-                    Logger?.InfoFormat($"Socket received sync envelope.");
-                    Envelope envelope = _encoding.Decode<Envelope>(state.State);
+                    envelope = _encoding.Decode<Envelope>(state.State);
                     OnSyncEnvelope(state.UserPresence, envelope);
                 }
-                else if (state.OpCode == _opcodes.HandshakeRequestOpcode)
+                catch (Exception e)
                 {
-                    Logger?.InfoFormat("Socket received handshake request.");
-                    OnHandshakeRequest?.Invoke(state.UserPresence, _encoding.Decode<HandshakeRequest>(state.State));
+                    ErrorHandler?.Invoke(e);
                 }
-                else if (state.OpCode == _opcodes.HandshakeResponseOpcode)
+            }
+            else if (state.OpCode == _opcodes.HandshakeRequestOpcode)
+            {
+                Logger?.InfoFormat($"Socket for {_match.Self.UserId} received handshake request.");
+
+                HandshakeRequest request = null;
+
+                try
                 {
-                    Logger?.InfoFormat("Socket received handshake response.");
-                    OnHandshakeResponse?.Invoke(state.UserPresence, _encoding.Decode<HandshakeResponse>(state.State));
+                    request = _encoding.Decode<HandshakeRequest>(state.State);
+                    OnHandshakeRequest?.Invoke(state.UserPresence, request);
+                }
+                catch (Exception e)
+                {
+                    ErrorHandler?.Invoke(e);
+                }
+            }
+            else if (state.OpCode == _opcodes.HandshakeResponseOpcode)
+            {
+                Logger?.InfoFormat($"Socket for {_match.Self.UserId} received handshake response.");
+
+                HandshakeResponse response = null;
+
+                try
+                {
+                    response = _encoding.Decode<HandshakeResponse>(state.State);
+                    OnHandshakeResponse?.Invoke(state.UserPresence, response);
+                }
+                catch (Exception e)
+                {
+                    ErrorHandler?.Invoke(e);
                 }
             }
         }

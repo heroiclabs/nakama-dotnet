@@ -71,21 +71,14 @@ namespace NakamaSync
 
         private void CopySharedVarToGuest<T>(Dictionary<string, SharedVar<T>> vars, List<SharedValue<T>> values)
         {
-            System.Console.WriteLine("Copy shared var called");
             foreach (var kvp in vars)
             {
-                System.Console.WriteLine("iteration");
-
                 SharedVar<T> var = kvp.Value;
-                System.Console.WriteLine("before get value");
                 T rawValue = var.GetValue();
                 Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
                 var sharedValue = new SharedValue<T>(kvp.Key, rawValue, _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key));
                 values.Add(sharedValue);
             }
-
-                        System.Console.WriteLine("Copy shared var done called");
-
         }
 
         private void CopyUserVarToGuest<T>(Dictionary<string, UserVar<T>> vars, List<UserValue<T>> values)
@@ -103,13 +96,12 @@ namespace NakamaSync
 
                     // use the var presences, not the presence tracker, in case
                     // user has stored a value left before this handshake.
-                    IUserPresence targetPresence = var.Presences[userKvp.Key];
 
                     T rawValue = userKvp.Value;
 
-                    Logger?.DebugFormat($"User variable value for initial payload: User: {targetPresence}, Raw Value: ${rawValue}");
+                    Logger?.DebugFormat($"User variable value for initial payload: User: {userKvp.Key}, Raw Value: ${rawValue}");
 
-                    var value = new UserValue<T>(varKvp.Key, rawValue, _keys.GetLockVersion(varKvp.Key), _keys.GetValidationStatus(varKvp.Key), targetPresence);
+                    var value = new UserValue<T>(varKvp.Key, rawValue, _keys.GetLockVersion(varKvp.Key), _keys.GetValidationStatus(varKvp.Key), userKvp.Key);
                     values.Add(value);
                 }
             }

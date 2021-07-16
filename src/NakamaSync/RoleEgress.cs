@@ -97,15 +97,15 @@ namespace NakamaSync
         {
             bool isHost = _presenceTracker.IsSelfHost();
 
-            Logger?.DebugFormat($"Local user variable changed. Key: {key}, OldValue: {evt.OldValue}, Value: {evt.NewValue}, Target: {evt.Target}");
+            Logger?.DebugFormat($"Local user variable changed. Key: {key}, OldValue: {evt.OldValue}, Value: {evt.NewValue}, Target: {evt.TargetId}");
 
             if (isHost)
             {
-                _hostEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.Target, accessor);
+                _hostEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.TargetId, accessor);
             }
             else
             {
-                _guestEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.Target, accessor);
+                _guestEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.TargetId, accessor);
             }
         }
     }

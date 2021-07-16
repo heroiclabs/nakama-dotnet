@@ -21,14 +21,14 @@ namespace NakamaSync
     internal class UserVarEvent<T> : IUserVarEvent<T>
     {
         public IUserPresence Sender { get; }
-        public IUserPresence Target { get; }
+        public string TargetId { get; }
         public T OldValue { get; }
         public T NewValue { get; }
 
-        internal UserVarEvent(IUserPresence sender, IUserPresence target, T oldValue, T newValue)
+        internal UserVarEvent(IUserPresence sender, string targetId, T oldValue, T newValue)
         {
             Sender = sender;
-            Target = target;
+            TargetId = targetId;
             OldValue = oldValue;
             NewValue = newValue;
         }

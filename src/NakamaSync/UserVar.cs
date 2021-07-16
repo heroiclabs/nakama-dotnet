@@ -46,21 +46,19 @@ namespace NakamaSync
         private IUserPresence _self;
 
         internal IReadOnlyDictionary<string, T> Values => _values;
-        internal IReadOnlyDictionary<string, IUserPresence> Presences => _presences;
 
         private KeyValidationStatus _validationStatus;
 
-        private readonly Dictionary<string, IUserPresence> _presences = new Dictionary<string, IUserPresence>();
         private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
 
-        public void SetValue(T value, IUserPresence source, IUserPresence target)
+        public void SetValue(T value, IUserPresence source, string targetId)
         {
-            SetValue(value, source, target, _validationStatus, OnLocalValueChanged);
+            SetValue(value, source, targetId, _validationStatus, OnLocalValueChanged);
         }
 
-        public void SetValue(T value, IUserPresence target)
+        public void SetValue(T value, string targetId)
         {
-            SetValue(value, _self, target, _validationStatus, OnLocalValueChanged);
+            SetValue(value, _self, targetId, _validationStatus, OnLocalValueChanged);
         }
 
         public T GetValue()
@@ -70,35 +68,39 @@ namespace NakamaSync
 
         public bool HasValue(IUserPresence presence)
         {
-                return _values.ContainsKey(presence.UserId);
+            return _values.ContainsKey(presence.UserId);
         }
 
         public T GetValue(IUserPresence presence)
         {
-            if (_values.ContainsKey(presence.UserId))
+            return GetValue(presence.UserId);
+        }
+
+        internal T GetValue(string presenceId)
+        {
+            if (_values.ContainsKey(presenceId))
             {
-                return _values[presence.UserId];
+                return _values[presenceId];
             }
             else
             {
-                throw new InvalidOperationException($"Tried retrieving a synced value from an unrecognized user id: {presence.UserId}");
+                throw new InvalidOperationException($"Tried retrieving a synced value from an unrecognized user id: {presenceId}");
             }
         }
 
-        internal void SetValue(T value, IUserPresence source, IUserPresence target, KeyValidationStatus validationStatus, Action<UserVarEvent<T>> eventDispatch)
+        internal void SetValue(T value, IUserPresence source, string targetId, KeyValidationStatus validationStatus, Action<UserVarEvent<T>> eventDispatch)
         {
-            T oldValue = _values.ContainsKey(target.UserId) ? _values[target.UserId] : default(T);
+            T oldValue = _values.ContainsKey(targetId) ? _values[targetId] : default(T);
 
             if (oldValue.Equals(value))
             {
                 return;
             }
 
-            _values[target.UserId] = value;
-            _presences[target.UserId] = target;
+            _values[targetId] = value;
             _validationStatus = validationStatus;
 
-            eventDispatch?.Invoke(new UserVarEvent<T>(source, target, oldValue, value));
+            eventDispatch?.Invoke(new UserVarEvent<T>(source, targetId, oldValue, value));
         }
 
         KeyValidationStatus IVar.GetValidationStatus()

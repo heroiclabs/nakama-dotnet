@@ -49,7 +49,7 @@ namespace NakamaSync
             _builder.SendEnvelope();
         }
 
-        public void HandleLocalUserVarChanged<T>(string key, T newValue, IUserPresence target, UserVarAccessor<T> accessor)
+        public void HandleLocalUserVarChanged<T>(string key, T newValue, string targetId, UserVarAccessor<T> accessor)
         {
             var status = _keys.GetValidationStatus(key);
 
@@ -62,7 +62,7 @@ namespace NakamaSync
             }
 
             _keys.IncrementLockVersion(key);
-            var newSyncedValue = new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, target);
+            var newSyncedValue = new UserValue<T>(key, newValue, _keys.GetLockVersion(key), status, targetId);
 
             _builder.AddUserVar(accessor, newSyncedValue);
             _builder.SendEnvelope();

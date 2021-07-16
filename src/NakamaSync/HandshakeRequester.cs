@@ -59,6 +59,8 @@ namespace NakamaSync
             {
                 HandleHandshakeResponse(source, response, roleTracker.IsSelfHost());
             };
+
+            Logger?.DebugFormat($"User {presenceTracker.UserId} subscribed to socket and presence tracker.");
         }
 
         private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response, bool isHost)
