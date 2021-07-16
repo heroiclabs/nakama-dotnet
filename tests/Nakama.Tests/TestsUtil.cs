@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Microsoft.Extensions.Configuration;
 
 namespace Nakama.Tests
@@ -33,9 +34,10 @@ namespace Nakama.Tests
         {
             var client = new Client(configuration.Scheme, configuration.Host, configuration.Port, configuration.ServerKey);
 
-            if (configuration.Stdout)
+            if (configuration.StdOut)
             {
                 client.Logger = new StdoutLogger();
+                client.Logger.LogLevel = configuration.LogLevel;
             }
 
             return client;
@@ -44,31 +46,22 @@ namespace Nakama.Tests
         public static TestConfiguration LoadConfiguration(string path = SettingsPath)
         {
             var settings = new ConfigurationBuilder().AddJsonFile(path).Build();
+
+            LogLevel logLevel;
+
+            if (!Enum.TryParse<LogLevel>(settings["LOG_LEVEL"] , ignoreCase: true, out logLevel))
+            {
+                logLevel = LogLevel.Info;
+            }
+
             return new TestConfiguration(
                 settings["SCHEME"],
                 settings["HOST"],
                 System.Convert.ToInt32(settings["PORT"]),
                 settings["SERVER_KEY"],
-                System.Convert.ToBoolean(settings["STDOUT"]));
+                System.Convert.ToBoolean(settings["STDOUT"]),
+                logLevel);
 
-        }
-    }
-
-    internal class TestConfiguration
-    {
-        public string Scheme { get; }
-        public string Host { get; }
-        public int Port { get; }
-        public string ServerKey { get; }
-        public bool Stdout { get; }
-
-        internal TestConfiguration(string scheme, string host, int port, string serverKey, bool stdout)
-        {
-            Port = port;
-            Scheme = scheme;
-            Host = host;
-            ServerKey = serverKey;
-            Stdout = stdout;
         }
     }
 }

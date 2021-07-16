@@ -18,24 +18,55 @@ namespace Nakama.Tests
 {
     public class StdoutLogger : ILogger
     {
+        public LogLevel LogLevel
+        {
+            get;
+            set;
+        }
+
         public void DebugFormat(string format, params object[] args)
         {
+            if (!CanLogAtLevel(LogLevel, LogLevel.Debug))
+            {
+                return;
+            }
+
             System.Console.WriteLine(string.Concat("[DEBUG] ", format), args);
         }
 
         public void ErrorFormat(string format, params object[] args)
         {
+            if (!CanLogAtLevel(LogLevel, LogLevel.Error))
+            {
+                return;
+            }
+
             System.Console.WriteLine(string.Concat("[ERROR] ", format), args);
         }
 
         public void InfoFormat(string format, params object[] args)
         {
+            if (!CanLogAtLevel(LogLevel, LogLevel.Info))
+            {
+                return;
+            }
+
             System.Console.WriteLine(string.Concat("[INFO] ", format), args);
         }
 
         public void WarnFormat(string format, params object[] args)
         {
+            if (!CanLogAtLevel(LogLevel, LogLevel.Warn))
+            {
+                return;
+            }
+
             System.Console.WriteLine(string.Concat("[WARN] ", format), args);
+        }
+
+        private bool CanLogAtLevel(LogLevel currentLevel, LogLevel desiredLevel)
+        {
+            return (int) currentLevel <= (int) desiredLevel;
         }
     }
 }

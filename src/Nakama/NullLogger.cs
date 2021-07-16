@@ -25,6 +25,12 @@ namespace Nakama
         {
         }
 
+        public LogLevel LogLevel
+        {
+            get;
+            set;
+        }
+
         /// <inheritdoc cref="ILogger.DebugFormat"/>
         public void DebugFormat(string format, params object[] args)
         {

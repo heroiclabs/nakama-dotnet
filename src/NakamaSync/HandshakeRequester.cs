@@ -35,12 +35,14 @@ namespace NakamaSync
 
         private SharedRoleIngress _sharedRoleIngress;
         private UserRoleIngress _userRoleIngress;
+        private string _userId;
 
-        public HandshakeRequester(VarKeys keys, SharedRoleIngress sharedRoleIngress, UserRoleIngress userRoleIngress)
+        public HandshakeRequester(VarKeys keys, SharedRoleIngress sharedRoleIngress, UserRoleIngress userRoleIngress, string userId)
         {
             _keys = keys;
             _sharedRoleIngress = sharedRoleIngress;
             _userRoleIngress = userRoleIngress;
+            _userId = userId;
         }
 
         public void Subscribe(SyncSocket socket, RoleTracker roleTracker, PresenceTracker presenceTracker)
@@ -52,7 +54,7 @@ namespace NakamaSync
                     return;
                 }
 
-                if (presence.UserId != presenceTracker.GetSelf().UserId)
+                if (presence.UserId != _userId)
                 {
                     RequestHandshake(presence, socket);
                 }

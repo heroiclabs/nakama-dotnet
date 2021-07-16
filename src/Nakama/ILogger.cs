@@ -20,6 +20,15 @@ namespace Nakama
     public interface ILogger
     {
         /// <summary>
+        /// The log level with which to filter logs.
+        /// </summary>
+        LogLevel LogLevel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Logs a formatted string with the DEBUG level.
         /// </summary>
         /// <param name="format">A string with zero or more format items.</param>
@@ -46,5 +55,13 @@ namespace Nakama
         /// <param name="format">A string with zero or more format items.</param>
         /// <param name="args">An object array with zero or more objects to format.</param>
         void WarnFormat(string format, params object[] args);
+    }
+
+    public enum LogLevel
+    {
+        Debug = 0,
+        Info = 1,
+        Warn = 2,
+        Error = 3,
     }
 }

@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Nakama;
 
 // todo entire concurrency pass on all this
-// enforce key ids should be unique across types
+// should var registry have a dictionary or should it have methods?
 // TODO what if someone changes the type collection that the key is in, will try to send to the incorrect type
 // between clients and may pass handshake.
 // if user leaves and then rejoins do their values come back? they are still in collection but
@@ -35,7 +35,6 @@ using Nakama;
 // fix OnHostValdiate so that you have a better way of signalling intent that you want a var to be validated.
 // to string calls
 // expose interfaces, not concrete classes.
-// todo rename this class?
 // todo handle host changed
 // todo handle guest left
 // todo migrate pending values when host chanes
@@ -61,6 +60,10 @@ using Nakama;
 // debate pros and cons of user id vs user presence for user vars/values. i think we do want to use
 // userpresence, but it's just a matter of serializing interface rather than concrete type.
 // expose an OnLocalVariable changed event for users.
+// rename UserVar to PresenceVar
+// renamed SharedVar to GlobalVar?
+// TRACK VAR type for something like a ball where nobody is actually using it.
+
 using System;
 
 namespace NakamaSync

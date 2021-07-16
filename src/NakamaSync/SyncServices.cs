@@ -81,7 +81,7 @@ namespace NakamaSync
             var userRoleIngress = new UserRoleIngress(userGuestIngress, userHostIngress, varRegistry, lockVersionGuard);
             _services.Add(userRoleIngress);
 
-            var handshakeRequester = new HandshakeRequester(varKeys, sharedRoleIngress, userRoleIngress);
+            var handshakeRequester = new HandshakeRequester(varKeys, sharedRoleIngress, userRoleIngress, session.UserId);
             _services.Add(handshakeRequester);
 
             var handshakeResponder = new HandshakeResponder(varKeys, varRegistry, presenceTracker);
