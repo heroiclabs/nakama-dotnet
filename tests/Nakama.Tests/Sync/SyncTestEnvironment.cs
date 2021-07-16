@@ -114,7 +114,7 @@ namespace Nakama.Tests
             return _userEnvs[clientPresence.UserId];
         }
 
-        public async Task StartMatch(SyncErrorHandler errorHandler)
+        public async Task StartMatch(SyncErrorHandler errorHandler, bool viaMatchmaker)
         {
             if (_matches.Any())
             {
@@ -123,29 +123,68 @@ namespace Nakama.Tests
 
             var opcodes = new SyncOpcodes(Opcodes.HandshakeRequestOpcode, Opcodes.HandshakeResponseOpcode, Opcodes.DataOpcode);
 
-            var createTask = _sockets[CreatorIndex].CreateSyncMatch(_sessions[CreatorIndex], _registries[CreatorIndex], opcodes, errorHandler, new StdoutLogger());
-            await createTask;
-
-            var joinTasks = new List<Task<IMatch>>();
-
-            for (int i = 0; i < NumSessions; i++)
+            if (viaMatchmaker)
             {
-                if (i == CreatorIndex)
+                var matchedTasks = new List<Task<IMatchmakerMatched>>();
+                var joinTasks = new List<Task<IMatch>>();
+
+                for (int i = 0; i < NumSessions; i++)
                 {
-                    continue;
+                    var registration = _registries[i];
+                    var socket = _sockets[i];
+
+                    socket.AddMatchmakerAsync("*", minCount: _sockets.Count, maxCount: _sockets.Count);
+
+                    var matchedTcs = new TaskCompletionSource<IMatchmakerMatched>();
+
+                    socket.ReceivedMatchmakerMatched += (matched) =>
+                    {
+                        matchedTcs.SetResult(matched);
+                    };
+
+                    matchedTasks.Add(matchedTcs.Task);
                 }
 
-                var registration = _registries[i];
-                var socket = _sockets[i];
-                ILogger logger = TestsUtil.LoadConfiguration().Stdout ? null : new StdoutLogger();
+                await Task.WhenAll(matchedTasks.ToArray());
 
-                var matchTask = socket.JoinSyncMatch(_sessions[i], opcodes, createTask.Result.Id, registration, errorHandler, new StdoutLogger());
-                joinTasks.Add(matchTask);
+                for (int i = 0; i < NumSessions; i++)
+                {
+                    ILogger logger = TestsUtil.LoadConfiguration().Stdout ? null : new StdoutLogger();
+
+                    var joinTask = _sockets[i].JoinSyncMatch(_sessions[i], opcodes, matchedTasks[i].Result, _registries[i], errorHandler, new StdoutLogger());
+                    joinTasks.Add(joinTask);
+                }
+
+                await Task.WhenAll(joinTasks.ToArray());
+                _matches.AddRange(joinTasks.Select(task => task.Result));
+            }
+            else
+            {
+                var createTask = _sockets[CreatorIndex].CreateSyncMatch(_sessions[CreatorIndex], _registries[CreatorIndex], opcodes, errorHandler, new StdoutLogger());
+                await createTask;
+
+                var joinTasks = new List<Task<IMatch>>();
+
+                for (int i = 0; i < NumSessions; i++)
+                {
+                    if (i == CreatorIndex)
+                    {
+                        continue;
+                    }
+
+                    var registry = _registries[i];
+                    var socket = _sockets[i];
+                    ILogger logger = TestsUtil.LoadConfiguration().Stdout ? null : new StdoutLogger();
+
+                    var matchTask = socket.JoinSyncMatch(_sessions[i], opcodes, createTask.Result.Id, registry, errorHandler, new StdoutLogger());
+                    joinTasks.Add(matchTask);
+                }
+
+                await Task.WhenAll(joinTasks.ToArray());
+                _matches.Add(createTask.Result);
+                _matches.AddRange(joinTasks.Select(task => task.Result));
             }
 
-            await Task.WhenAll(joinTasks.ToArray());
-            _matches.Add(createTask.Result);
-            _matches.AddRange(joinTasks.Select(task => task.Result));
         }
 
         public List<IUserPresence> GetGuests()

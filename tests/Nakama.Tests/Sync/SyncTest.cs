@@ -27,7 +27,7 @@ namespace Nakama.Tests.Socket
         private async Task SharedVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch(CreateDefaultErrorHandler());
+            await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
             creatorEnv.SharedBools[0].SetValue(true);
             Assert.True(creatorEnv.SharedBools[0].GetValue());
@@ -38,9 +38,9 @@ namespace Nakama.Tests.Socket
         private async Task UserVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch(CreateDefaultErrorHandler());
+            await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
-            creatorEnv.UserBools[0].SetValue(true, testEnv.GetCreatorPresence().UserId);
+            creatorEnv.UserBools[0].SetValue(true);
             Assert.True(creatorEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));
             testEnv.Dispose();
         }
@@ -64,7 +64,7 @@ namespace Nakama.Tests.Socket
                 idGenerator);
 
 
-            await mismatchedEnv.StartMatch(CreateDefaultErrorHandler());
+            await mismatchedEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
 
             //await Assert.ThrowsAsync<InvalidOperationException>(() => );
 
@@ -75,7 +75,7 @@ namespace Nakama.Tests.Socket
         private async Task SharedVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch(CreateDefaultErrorHandler());
+            await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
             creatorEnv.SharedBools[0].SetValue(true);
@@ -93,10 +93,10 @@ namespace Nakama.Tests.Socket
         private async Task UserVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch(CreateDefaultErrorHandler());
+            await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
-            creatorEnv.UserBools[0].SetValue(true, testEnv.GetCreatorPresence().UserId);
+            creatorEnv.UserBools[0].SetValue(true);
 
             IUserPresence guestPresence = testEnv.GetGuests()[0];
             SyncTestUserEnvironment guestEnv = testEnv.GetUserEnv(guestPresence);

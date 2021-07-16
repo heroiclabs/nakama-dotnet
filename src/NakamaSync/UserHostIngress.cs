@@ -75,7 +75,7 @@ namespace NakamaSync
 
         private void HandleNonValidatedValue<T>(IUserPresence source, UserVar<T> var, UserValue<T> value, string targetId)
         {
-            var.SetValue(value.Value, source, targetId);
+            var.SetValue(value.Value, source, targetId, value.ValidationStatus, var.OnRemoteValueChanged);
         }
     }
 }

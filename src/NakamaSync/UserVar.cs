@@ -51,14 +51,9 @@ namespace NakamaSync
 
         private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
 
-        public void SetValue(T value, IUserPresence source, string targetId)
+        public void SetValue(T value)
         {
-            SetValue(value, source, targetId, _validationStatus, OnLocalValueChanged);
-        }
-
-        public void SetValue(T value, string targetId)
-        {
-            SetValue(value, _self, targetId, _validationStatus, OnLocalValueChanged);
+            SetValue(value, _self, _self.UserId, _validationStatus, OnLocalValueChanged);
         }
 
         public T GetValue()

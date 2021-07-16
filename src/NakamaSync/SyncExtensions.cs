@@ -51,14 +51,16 @@ using Nakama;
 // todo add the reflection approach?
 // todo too many params in sync extensions methods
 // todo add Source presence to var events.
-// todo  JoinSyncMatch should accept a matchmaker ticket as well as a match id
+// todo JoinSyncMatch should accept a matchmaker ticket as well as a match id
 // todo expose metadata to match id method.
 // think about what should happen to local changes that occur before the initial store is synced from handshake.
 // maybe it's game specific?
 // todo rename egress and ingress to local and remote changed handlers?
 // todo what happens if you set a var prior to passing it through the match? throw an exception from the var itself?
 // add a "HasValue" helper to the user var for a particular value
-// debate pros and cons of user id vs user presence for user vars/values
+// debate pros and cons of user id vs user presence for user vars/values. i think we do want to use
+// userpresence, but it's just a matter of serializing interface rather than concrete type.
+// expose an OnLocalVariable changed event for users.
 using System;
 
 namespace NakamaSync
