@@ -1,6 +1,3 @@
-
-
-using System.Collections.Generic;
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -17,25 +14,26 @@ using System.Collections.Generic;
 * limitations under the License.
 */
 
+using System.Collections.Generic;
 using Nakama;
 
 namespace NakamaSync
 {
     // todo split this into shared and user
-    internal class RoleEgress : ISyncService
+    internal class SharedRoleEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private RoleTracker _presenceTracker;
-        private HostEgress _hostEgress;
-        private GuestEgress _guestEgress;
+        private RoleTracker _roleTracker;
+        private SharedGuestEgress _sharedGuestEgress;
+        private SharedHostEgress _sharedHostEgress;
 
-        public RoleEgress(GuestEgress guestEgress, HostEgress hostEgress, RoleTracker presenceTracker)
+        public SharedRoleEgress(SharedGuestEgress sharedGuestEgress, SharedHostEgress sharedHostEgress, RoleTracker roleTracker)
         {
-            _guestEgress = guestEgress;
-            _hostEgress = hostEgress;
-            _presenceTracker = presenceTracker;
+            _sharedGuestEgress = sharedGuestEgress;
+            _sharedHostEgress = sharedHostEgress;
+            _roleTracker = roleTracker;
         }
 
         public void Subscribe(VarRegistry registry, HandshakeRequester requester)
@@ -54,11 +52,6 @@ namespace NakamaSync
             Subscribe(registry.SharedFloats, values => values.SharedFloats);
             Subscribe(registry.SharedInts,  values => values.SharedInts);
             Subscribe(registry.SharedStrings, values => values.SharedStrings);
-
-            Subscribe(registry.UserBools, values => values.UserBools);
-            Subscribe(registry.UserFloats, values => values.UserFloats);
-            Subscribe(registry.UserInts,  values => values.UserInts);
-            Subscribe(registry.UserStrings, values => values.UserStrings);
         }
 
         private void Subscribe<T>(Dictionary<string, SharedVar<T>> vars, SharedVarAccessor<T> accessor)
@@ -71,41 +64,17 @@ namespace NakamaSync
 
         private void HandleLocalSharedVarChanged<T>(string key, ISharedVarEvent<T> evt, SharedVarAccessor<T> accessor)
         {
-            bool isHost = _presenceTracker.IsSelfHost();
+            bool isHost = _roleTracker.IsSelfHost();
 
             Logger?.DebugFormat($"Local shared variable changed. Key: {key}, OldValue: {evt.OldValue}, Value: {evt.NewValue}");
 
             if (isHost)
             {
-                _hostEgress.HandleLocalSharedVarChanged(key, evt.NewValue, accessor);
+                _sharedHostEgress.HandleLocalSharedVarChanged(key, evt.NewValue, accessor);
             }
             else
             {
-                _guestEgress.HandleLocalSharedVarChanged(key, evt.NewValue, accessor);
-            }
-        }
-
-        private void Subscribe<T>(Dictionary<string, UserVar<T>> vars, UserVarAccessor<T> accessor)
-        {
-            foreach (var kvp in vars)
-            {
-                vars[kvp.Key].OnLocalValueChanged += (evt) => HandleLocalUserVarChanged(kvp.Key, evt, accessor);
-            }
-        }
-
-        private void HandleLocalUserVarChanged<T>(string key, IUserVarEvent<T> evt, UserVarAccessor<T> accessor)
-        {
-            bool isHost = _presenceTracker.IsSelfHost();
-
-            Logger?.DebugFormat($"Local user variable changed. Key: {key}, OldValue: {evt.OldValue}, Value: {evt.NewValue}, Target: {evt.TargetId}");
-
-            if (isHost)
-            {
-                _hostEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.TargetId, accessor);
-            }
-            else
-            {
-                _guestEgress.HandleLocalUserVarChanged(key, evt.NewValue, evt.TargetId, accessor);
+                _sharedGuestEgress.HandleLocalSharedVarChanged(key, evt.NewValue, accessor);
             }
         }
     }

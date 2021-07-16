@@ -19,36 +19,18 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class HostEgress : ISyncService
+    internal class UserHostEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly VarKeys _keys;
         private readonly EnvelopeBuilder _builder;
-        private readonly RoleTracker _presenceTracker;
 
-        public HostEgress(VarKeys keys, EnvelopeBuilder builder, RoleTracker presenceTracker)
+        public UserHostEgress(VarKeys keys, EnvelopeBuilder builder)
         {
             _keys = keys;
             _builder = builder;
-            _presenceTracker = presenceTracker;
-        }
-
-        public void HandleLocalSharedVarChanged<T>(string key, T newValue, SharedVarAccessor<T> accessor)
-        {
-            var status = _keys.GetValidationStatus(key);
-
-            if (status == ValidationStatus.Pending)
-            {
-                ErrorHandler?.Invoke(new InvalidOperationException("Host should not have local key pending validation: " + key));
-                return;
-            }
-
-            _keys.IncrementLockVersion(key);
-            var sharedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
-            _builder.AddSharedVar(accessor, sharedValue);
-            _builder.SendEnvelope();
         }
 
         public void HandleLocalUserVarChanged<T>(string key, T newValue, string targetId, UserVarAccessor<T> accessor)

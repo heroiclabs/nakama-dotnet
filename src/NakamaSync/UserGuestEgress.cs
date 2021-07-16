@@ -18,7 +18,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class GuestEgress : ISyncService
+    internal class UserGuestEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -26,27 +26,10 @@ namespace NakamaSync
         private readonly VarKeys _keys;
         private readonly EnvelopeBuilder _builder;
 
-        public GuestEgress(VarKeys keys, EnvelopeBuilder builder)
+        public UserGuestEgress(VarKeys keys, EnvelopeBuilder builder)
         {
             _keys = keys;
             _builder = builder;
-        }
-
-        public void HandleLocalSharedVarChanged<T>(string key, T newValue, SharedVarAccessor<T> accessor)
-        {
-            var status = _keys.GetValidationStatus(key);
-
-            if (status == ValidationStatus.Validated)
-            {
-                status = ValidationStatus.Pending;
-                _keys.SetValidationStatus(key, status);
-            }
-
-            _keys.IncrementLockVersion(key);
-            var newSyncedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
-
-            _builder.AddSharedVar(accessor, newSyncedValue);
-            _builder.SendEnvelope();
         }
 
         public void HandleLocalUserVarChanged<T>(string key, T newValue, string targetId, UserVarAccessor<T> accessor)
