@@ -47,14 +47,14 @@ namespace NakamaSync
 
                     ValidationStatus oldStatus = context.Var.ValidationStatus;
                     ValidationStatus newStatus;
-                    if (context.Var.HostValidationHandler == null)
+                    if (context.Var.RequiresValidation)
                     {
-                        newStatus = oldStatus;
-                        ErrorHandler?.Invoke(new InvalidOperationException("Pending value has no host validation handler."));
+                        newStatus = context.Var.InvokeValidationHandler(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
                     }
                     else
                     {
-                        newStatus = context.Var.HostValidationHandler(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
+                        newStatus = oldStatus;
+                        ErrorHandler?.Invoke(new InvalidOperationException("Pending value has no host validation handler."));
                     }
 
                     if (newStatus == ValidationStatus.Validated || newStatus == ValidationStatus.Pending)

@@ -19,44 +19,24 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public delegate bool SharedVarValidationHandler<T>(IUserPresence source, ValueChange<T> change);
-
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// </summary>
-    public class SharedVar<T> : IVar
+    public class SharedVar<T> : SyncVar<T>
     {
         public event Action<ISharedVarEvent<T>> OnValueChanged;
-        public ValidationStatus ValidationStatus => _validationStatus;
-
-        internal SharedVarValidationHandler<T> HostValidationHandler;
-
-        private ValidationStatus _validationStatus;
-        private T _value;
-
-        IUserPresence IVar.Self
-        {
-            get => _self;
-            set => _self = value;
-        }
-
-        private IUserPresence _self;
 
         public void SetValue(T value)
         {
-            SetValue(_self, value, _validationStatus);
+            SetValue(Self, value, _validationStatus);
         }
 
-        public T GetValue()
+        internal override void Reset()
         {
-            return _value;
-        }
-
-        void IVar.Reset()
-        {
+            Self = null;
             _value = default(T);
-
-            HostValidationHandler = null;
+            _validationHandler = null;
+            _validationStatus = ValidationStatus.None;
             OnValueChanged = null;
         }
 
@@ -72,16 +52,6 @@ namespace NakamaSync
             var statusChange = new ValidationChange(oldStatus, _validationStatus);
 
             OnValueChanged?.Invoke(new SharedVarEvent<T>(source, valueChange, statusChange));
-        }
-
-        void IVar.SetValidationStatus(ValidationStatus status)
-        {
-            _validationStatus = status;
-        }
-
-        ValidationStatus IVar.GetValidationStatus()
-        {
-            return _validationStatus;
         }
     }
 }

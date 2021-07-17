@@ -48,14 +48,14 @@ namespace NakamaSync
 
                     ValidationStatus oldStatus = context.Var.ValidationStatus;
                     ValidationStatus newStatus;
-                    if (context.Var.HostValidationHandler == null)
+                    if (context.Var.RequiresValidation)
                     {
-                        newStatus = oldStatus;
-                        ErrorHandler?.Invoke(new InvalidOperationException("Pending value has no host validation handler."));
+                        newStatus = context.Var.InvokeValidationHandler(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
                     }
                     else
                     {
-                        newStatus = context.Var.HostValidationHandler(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
+                        newStatus = oldStatus;
+                        ErrorHandler?.Invoke(new InvalidOperationException("Pending value has no host validation handler."));
                     }
 
                     if (newStatus == ValidationStatus.Validated || newStatus == ValidationStatus.Pending)
@@ -85,7 +85,7 @@ namespace NakamaSync
 
         private void AcceptPendingValue<T>(IUserPresence source, PresenceVar<T> var, PresenceValue<T> value, PresenceVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
-            var.SetValue(value.Value, source, ValidationStatus.Validated);
+            var.SetValue(value.Value, ValidationStatus.Validated);
             _builder.AddPresenceVar(accessor, value);
             _builder.AddAck(ackAccessor, value.Key);
             _builder.SendEnvelope();
@@ -93,7 +93,7 @@ namespace NakamaSync
 
         private void HandleNonValidatedValue<T>(IUserPresence source, PresenceVar<T> var, PresenceValue<T> value)
         {
-            var.SetValue(value.Value, source, value.ValidationStatus);
+            var.SetValue(value.Value, value.ValidationStatus);
         }
     }
 }

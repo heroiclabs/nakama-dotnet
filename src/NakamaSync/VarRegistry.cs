@@ -32,7 +32,7 @@ namespace NakamaSync
         public Dictionary<string, PresenceVar<int>> UserInts { get; }
         public Dictionary<string, PresenceVar<string>> UserStrings { get; }
 
-        private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
+        private readonly HashSet<object> _registeredVars = new HashSet<object>();
 
         public VarRegistry()
         {
@@ -49,18 +49,18 @@ namespace NakamaSync
 
         internal void ReceiveMatch(VarKeys keys, IMatch match)
         {
-            Register(keys, SharedBools, match.Self);
-            Register(keys, SharedFloats, match.Self);
-            Register(keys, SharedInts, match.Self);
-            Register(keys, SharedStrings, match.Self);
+            Register<bool, SharedVar<bool>>(keys, SharedBools, match.Self);
+            Register<float, SharedVar<float>>(keys, SharedFloats, match.Self);
+            Register<int, SharedVar<int>>(keys, SharedInts, match.Self);
+            Register<string, SharedVar<string>>(keys, SharedStrings, match.Self);
 
-            Register(keys, UserBools, match.Self);
-            Register(keys, UserFloats, match.Self);
-            Register(keys, UserInts, match.Self);
-            Register(keys, UserStrings, match.Self);
+            Register<bool, PresenceVar<bool>>(keys, UserBools, match.Self);
+            Register<float, PresenceVar<float>>(keys, UserFloats, match.Self);
+            Register<int, PresenceVar<int>>(keys, UserInts, match.Self);
+            Register<string, PresenceVar<string>>(keys, UserStrings, match.Self);
         }
 
-        private void Register<TVar>(VarKeys keys, Dictionary<string, TVar> vars, IUserPresence self) where TVar : IVar
+        private void Register<T, TVar>(VarKeys keys, Dictionary<string, TVar> vars, IUserPresence self) where TVar : Var<T>
         {
             foreach (KeyValuePair<string, TVar> kvp in vars)
             {
@@ -69,7 +69,7 @@ namespace NakamaSync
                     throw new ArgumentException("Tried registering the same var with a different id: " + kvp.Key);
                 }
 
-                keys.RegisterKey(kvp.Key, kvp.Value.GetValidationStatus());
+                keys.RegisterKey(kvp.Key, kvp.Value.ValidationStatus);
                 kvp.Value.Self = self;
             }
         }

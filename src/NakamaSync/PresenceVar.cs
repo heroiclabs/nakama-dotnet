@@ -19,14 +19,13 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public delegate bool PresenceVarValidationHandler<T>(IUserPresence source, ValueChange<T> change);
     public delegate void PresenceChangedHandler(PresenceChange presenceChange);
 
     /// <summary>
     /// A variable containing a value for a user in the match. The value is synchronized across all users
     /// but can only be set by the associated user.
     /// </summary>
-    public class PresenceVar<T> : IVar
+    public class PresenceVar<T> : SyncVar<T>
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then
@@ -34,63 +33,33 @@ namespace NakamaSync
         /// host who will validate and if it's validated the host will send to all clients
         /// otherwise a ReplicationValidationException will be thrown on this device.
         /// </summary>
-        public PresenceVarValidationHandler<T> HostValidationHandler;
         public event Action<IPresenceVarEvent<T>> OnValueChanged;
 
-        public ValidationStatus ValidationStatus => _validationStatus;
-
         public event PresenceChangedHandler OnPresenceChanged;
-        public IUserPresence Owner => _owner;
+        public IUserPresence Owner { get; internal set; }
 
-        IUserPresence IVar.Self
-        {
-            get => _self;
-            set => _self = value;
-        }
-
-        private IUserPresence _self;
-
-        private ValidationStatus _validationStatus;
-
-        private T _value;
-
-        private IUserPresence _owner;
-
-        public T GetValue()
-        {
-            return _value;
-        }
-
-        internal void SetValue(T value, IUserPresence source, ValidationStatus validationStatus)
+        internal void SetValue(T value, ValidationStatus validationStatus)
         {
             T oldValue = _value;
             _value = value;
 
-            ValidationStatus oldStatus = _validationStatus;
-            _validationStatus = validationStatus;
+            ValidationStatus oldStatus = ValidationStatus;
+            ValidationStatus = validationStatus;
 
             var valueChange = new ValueChange<T>(oldValue, value);
-            var statusChange = new ValidationChange(oldStatus, _validationStatus);
+            var statusChange = new ValidationChange(oldStatus, validationStatus);
 
-            OnValueChanged?.Invoke(new PresenceVarEvent<T>(source, valueChange, statusChange));
+            OnValueChanged?.Invoke(new PresenceVarEvent<T>(Owner, valueChange, statusChange));
         }
 
-        ValidationStatus IVar.GetValidationStatus()
+        internal override void Reset()
         {
-            return _validationStatus;
-        }
-
-        void IVar.Reset()
-        {
-            _owner = null;
+            Owner = null;
+            Self = null;
             _value = default(T);
-            HostValidationHandler = null;
+            _validationHandler = null;
+            _validationStatus = ValidationStatus.None;
             OnValueChanged = null;
-        }
-
-        void IVar.SetValidationStatus(ValidationStatus status)
-        {
-            _validationStatus = status;
         }
     }
 }
