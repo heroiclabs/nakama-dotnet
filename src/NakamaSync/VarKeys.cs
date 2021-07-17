@@ -29,22 +29,17 @@ namespace NakamaSync
 
         private readonly HashSet<string> _keys = new HashSet<string>();
         private readonly ConcurrentDictionary<string, int> _lockVersions = new ConcurrentDictionary<string, int>();
-        private readonly object _lockVersionLock = new object();
-        private readonly object _registerLock = new object();
         private readonly ConcurrentDictionary<string, ValidationStatus> _validationStatus = new ConcurrentDictionary<string, ValidationStatus>();
 
         public void RegisterKey(string key, ValidationStatus status)
         {
-            lock (_registerLock)
+            if (!_keys.Add(key))
             {
-                if (!_keys.Add(key))
-                {
-                    throw new ArgumentException("Failed to register duplicate key: " + key);
-                }
-
-                _lockVersions[key] = 0;
-                _validationStatus[key] = status;
+                throw new ArgumentException("Failed to register duplicate key: " + key);
             }
+
+            _lockVersions[key] = 0;
+            _validationStatus[key] = status;
         }
 
         public HashSet<string> GetKeys()
@@ -74,10 +69,7 @@ namespace NakamaSync
 
         public void IncrementLockVersion(string key)
         {
-            lock (_lockVersionLock)
-            {
-                _lockVersions[key]++;
-            }
+            _lockVersions[key]++;
         }
 
         public void SetValidationStatus(string key, ValidationStatus status)
@@ -88,7 +80,7 @@ namespace NakamaSync
                 return;
             }
 
-             _validationStatus[key] = status;
+            _validationStatus[key] = status;
         }
     }
 }

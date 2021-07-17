@@ -54,10 +54,10 @@ namespace NakamaSync
                 CopySharedVarToGuest(_registry.SharedFloats, syncValues.SharedFloats);
                 CopySharedVarToGuest(_registry.SharedInts, syncValues.SharedInts);
                 CopySharedVarToGuest(_registry.SharedStrings, syncValues.SharedStrings);
-                CopyPresenceVarToGuest(_registry.UserBools, syncValues.PresenceBools);
-                CopyPresenceVarToGuest(_registry.UserFloats, syncValues.PresenceFloats);
-                CopyPresenceVarToGuest(_registry.UserInts, syncValues.PresenceInts);
-                CopyPresenceVarToGuest(_registry.UserStrings, syncValues.PResenceStrings);
+                CopyPresenceVarToGuest(_registry.PresenceBools, syncValues.PresenceBools);
+                CopyPresenceVarToGuest(_registry.PresenceFloats, syncValues.PresenceFloats);
+                CopyPresenceVarToGuest(_registry.PresenceInts, syncValues.PresenceInts);
+                CopyPresenceVarToGuest(_registry.PresenceStrings, syncValues.PResenceStrings);
             }
             else
             {

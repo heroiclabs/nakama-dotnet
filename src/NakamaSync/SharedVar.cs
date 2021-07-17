@@ -22,7 +22,7 @@ namespace NakamaSync
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// </summary>
-    public class SharedVar<T> : SyncVar<T>
+    public class SharedVar<T> : Var<T>
     {
         public event Action<ISharedVarEvent<T>> OnValueChanged;
 

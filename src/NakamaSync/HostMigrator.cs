@@ -52,10 +52,10 @@ namespace NakamaSync
             ValidatePendingVars<int>(registry.SharedInts, env => env.SharedIntAcks);
             ValidatePendingVars<string>(registry.SharedStrings, env => env.SharedStringAcks);
 
-            ValidatePendingVars<bool>(registry.UserBools, env => env.PresenceBoolAcks);
-            ValidatePendingVars<float>(registry.UserFloats, env => env.PresenceFloatAcks);
-            ValidatePendingVars<int>(registry.UserInts, env => env.PresenceIntAcks);
-            ValidatePendingVars<string>(registry.UserStrings, env => env.PresenceStringAcks);
+            ValidatePendingVars<bool>(registry.PresenceBools, env => env.PresenceBoolAcks);
+            ValidatePendingVars<float>(registry.PresenceFloats, env => env.PresenceFloatAcks);
+            ValidatePendingVars<int>(registry.PresenceInts, env => env.PresenceIntAcks);
+            ValidatePendingVars<string>(registry.PresenceStrings, env => env.PresenceStringAcks);
 
             _builder.SendEnvelope();
         }

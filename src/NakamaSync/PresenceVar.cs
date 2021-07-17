@@ -25,7 +25,7 @@ namespace NakamaSync
     /// A variable containing a value for a user in the match. The value is synchronized across all users
     /// but can only be set by the associated user.
     /// </summary>
-    public class PresenceVar<T> : SyncVar<T>
+    public class PresenceVar<T> : Var<T>
     {
         /// <summary>
         /// If this delegate is set and the current client is a guest, then

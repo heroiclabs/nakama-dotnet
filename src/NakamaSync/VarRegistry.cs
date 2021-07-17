@@ -22,32 +22,32 @@ namespace NakamaSync
 {
     public class VarRegistry
     {
+        internal VarKeys VarKeys => _keys;
+
         internal Dictionary<string, SharedVar<bool>> SharedBools { get; }
         internal Dictionary<string, SharedVar<float>> SharedFloats { get; }
         internal Dictionary<string, SharedVar<int>> SharedInts { get; }
         internal Dictionary<string, SharedVar<string>> SharedStrings { get; }
 
-        internal Dictionary<string, PresenceVar<bool>> UserBools { get; }
-        internal Dictionary<string, PresenceVar<float>> UserFloats { get; }
-        internal Dictionary<string, PresenceVar<int>> UserInts { get; }
-        public Dictionary<string, PresenceVar<string>> UserStrings { get; }
+        internal Dictionary<string, PresenceVar<bool>> PresenceBools { get; }
+        internal Dictionary<string, PresenceVar<float>> PresenceFloats { get; }
+        internal Dictionary<string, PresenceVar<int>> PresenceInts { get; }
+        internal Dictionary<string, PresenceVar<string>> PresenceStrings { get; }
 
+        private readonly VarKeys _keys = new VarKeys();
         private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
-        private VarKeys _keys;
 
-        internal VarRegistry(VarKeys keys)
+        public VarRegistry()
         {
-            _keys = keys;
-
             SharedBools = new Dictionary<string, SharedVar<bool>>();
             SharedFloats = new Dictionary<string, SharedVar<float>>();
             SharedInts = new Dictionary<string, SharedVar<int>>();
             SharedStrings = new Dictionary<string, SharedVar<string>>();
 
-            UserBools = new Dictionary<string, PresenceVar<bool>>();
-            UserFloats = new Dictionary<string, PresenceVar<float>>();
-            UserInts = new Dictionary<string, PresenceVar<int>>();
-            UserStrings = new Dictionary<string, PresenceVar<string>>();
+            PresenceBools = new Dictionary<string, PresenceVar<bool>>();
+            PresenceFloats = new Dictionary<string, PresenceVar<float>>();
+            PresenceInts = new Dictionary<string, PresenceVar<int>>();
+            PresenceStrings = new Dictionary<string, PresenceVar<string>>();
         }
 
         internal void ReceiveMatch(IMatch match)
@@ -60,45 +60,45 @@ namespace NakamaSync
 
         public void Register(string id, SharedVar<bool> sharedBool)
         {
-            Register<bool, SharedVar<bool>>(id, sharedBool);
+            Register<bool, SharedVar<bool>>(id, sharedBool, SharedBools);
         }
 
         public void Register(string id, SharedVar<int> sharedInt)
         {
-            Register<int, SharedVar<int>>(id, sharedInt);
+            Register<int, SharedVar<int>>(id, sharedInt, SharedInts);
         }
 
         public void Register(string id, SharedVar<float> sharedFloat)
         {
-            Register<float, SharedVar<float>>(id, sharedFloat);
+            Register<float, SharedVar<float>>(id, sharedFloat, SharedFloats);
         }
 
         public void Register(string id, SharedVar<string> sharedString)
         {
-            Register<string, SharedVar<string>>(id, sharedString);
+            Register<string, SharedVar<string>>(id, sharedString, SharedStrings);
         }
 
-        public void Register(string id, PresenceVar<bool> presenceString)
+        public void Register(string id, PresenceVar<bool> presenceBool)
         {
-            Register<bool, PresenceVar<bool>>(id, presenceString);
+            Register<bool, PresenceVar<bool>>(id, presenceBool, PresenceBools);
         }
 
         public void Register(string id, PresenceVar<float> presenceFloat)
         {
-            Register<float, PresenceVar<float>>(id, presenceFloat);
+            Register<float, PresenceVar<float>>(id, presenceFloat, PresenceFloats);
         }
 
         public void Register(string id, PresenceVar<int> presenceInt)
         {
-            Register<int, PresenceVar<int>>(id, presenceInt);
+            Register<int, PresenceVar<int>>(id, presenceInt, PresenceInts);
         }
 
         public void Register(string id, PresenceVar<string> presenceString)
         {
-            Register<string, PresenceVar<string>>(id, presenceString);
+            Register<string, PresenceVar<string>>(id, presenceString, PresenceStrings);
         }
 
-        private void Register<T, TVar>(string key, TVar var) where TVar : Var<T>
+        private void Register<T, TVar>(string key, TVar var, Dictionary<string, TVar> dict) where TVar : Var<T>
         {
             if (!_registeredVars.Add(var))
             {
@@ -106,6 +106,7 @@ namespace NakamaSync
             }
 
             _keys.RegisterKey(key, var.ValidationStatus);
+            dict.Add(key,var);
         }
     }
 }

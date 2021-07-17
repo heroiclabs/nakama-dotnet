@@ -38,22 +38,22 @@ namespace NakamaSync
     {
         public static List<PresenceVarIngressContext<bool>> FromBoolValues(Envelope envelope, VarRegistry registry)
         {
-            return UserIngressContext.FromValues<bool>(envelope.PresenceBools, registry.UserBools, env => env.PresenceBools, env => env.PresenceBoolAcks);
+            return UserIngressContext.FromValues<bool>(envelope.PresenceBools, registry.PresenceBools, env => env.PresenceBools, env => env.PresenceBoolAcks);
         }
 
         public static List<PresenceVarIngressContext<float>> FromFloatValues(Envelope envelope, VarRegistry registry)
         {
-            return UserIngressContext.FromValues<float>(envelope.PresenceFloats, registry.UserFloats, env => env.PresenceFloats, env => env.PresenceFloatAcks);
+            return UserIngressContext.FromValues<float>(envelope.PresenceFloats, registry.PresenceFloats, env => env.PresenceFloats, env => env.PresenceFloatAcks);
         }
 
         public static List<PresenceVarIngressContext<int>> FromIntValues(Envelope envelope, VarRegistry registry)
         {
-            return UserIngressContext.FromValues<int>(envelope.PresenceInts, registry.UserInts, env => env.PresenceInts, env => env.PresenceIntAcks);
+            return UserIngressContext.FromValues<int>(envelope.PresenceInts, registry.PresenceInts, env => env.PresenceInts, env => env.PresenceIntAcks);
         }
 
         public static List<PresenceVarIngressContext<string>> FromStringValues(Envelope envelope, VarRegistry registry)
         {
-            return UserIngressContext.FromValues<string>(envelope.PResenceStrings, registry.UserStrings, env => env.PResenceStrings, env => env.PresenceStringAcks);
+            return UserIngressContext.FromValues<string>(envelope.PResenceStrings, registry.PresenceStrings, env => env.PResenceStrings, env => env.PresenceStringAcks);
         }
 
         private static List<PresenceVarIngressContext<T>> FromValues<T>(List<PresenceValue<T>> values, Dictionary<string, PresenceVar<T>> vars, PresenceVarAccessor<T> varAccessor, AckAccessor ackAccessor)

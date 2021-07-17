@@ -49,7 +49,8 @@ namespace NakamaSync
 
         public SyncServices(ISocket socket, ISession session, VarRegistry varRegistry, SyncOpcodes opcodes)
         {
-            var varKeys = new VarKeys();
+            // todo odd/annoying that these are coupled together in this manner.
+            var varKeys = varRegistry.VarKeys;
             _services.Add(varKeys);
 
             var presenceTracker = new PresenceTracker(session.UserId);
