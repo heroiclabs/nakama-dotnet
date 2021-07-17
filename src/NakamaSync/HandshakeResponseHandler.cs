@@ -54,8 +54,5 @@ namespace NakamaSync
         {
             return _handshakeTcs.Task;
         }
-
-
     }
-
 }
