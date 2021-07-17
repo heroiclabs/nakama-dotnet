@@ -19,24 +19,24 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class PresenceRoleIngress : ISyncService
+    internal class PresenceVarIngress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private readonly PresenceGuestIngress _presenceGuestIngress;
-        private readonly PresenceHostIngress _presenceHostIngress;
+        private readonly PresenceVarGuestIngress _presenceVarGuestIngress;
+        private readonly PresenceVarHostIngress _presenceVarHostIngress;
         private readonly VarRegistry _registry;
         private LockVersionGuard _lockVersionGuard;
 
-        public PresenceRoleIngress(
-            PresenceGuestIngress presenceGuestIngress,
-            PresenceHostIngress presenceHostIngress,
+        public PresenceVarIngress(
+            PresenceVarGuestIngress presenceVarGuestIngress,
+            PresenceVarHostIngress presenceVarHostIngress,
             VarRegistry registry,
             LockVersionGuard lockVersionGuard)
         {
-            _presenceGuestIngress = presenceGuestIngress;
-            _presenceHostIngress = presenceHostIngress;
+            _presenceVarGuestIngress = presenceVarGuestIngress;
+            _presenceVarHostIngress = presenceVarHostIngress;
             _registry = registry;
             _lockVersionGuard = lockVersionGuard;
         }
@@ -66,11 +66,11 @@ namespace NakamaSync
             HandleSyncEnvelope(source, strings, isHost);
         }
 
-        private void HandleSyncEnvelope<T>(IUserPresence source, List<PresenceIngressContext<T>> contexts, bool isHost)
+        private void HandleSyncEnvelope<T>(IUserPresence source, List<PresenceVarIngressContext<T>> contexts, bool isHost)
         {
             Logger?.DebugFormat($"User role ingress processing num contexts: {contexts.Count}");
 
-            foreach (PresenceIngressContext<T> context in contexts)
+            foreach (PresenceVarIngressContext<T> context in contexts)
             {
                 Logger?.DebugFormat($"User role ingress processing context: {context}");
 
@@ -83,12 +83,12 @@ namespace NakamaSync
                 if (isHost)
                 {
                     Logger?.InfoFormat($"Setting user value for self as host: {context.Value}");
-                    _presenceHostIngress.HandleValue(source, context);
+                    _presenceVarHostIngress.HandleValue(source, context);
                 }
                 else
                 {
                     Logger?.InfoFormat($"Setting user value for self as guest: {context.Value}");
-                    _presenceGuestIngress.HandleValue(context.Var, source, context.Value);
+                    _presenceVarGuestIngress.HandleValue(context.Var, source, context.Value);
                 }
             }
         }

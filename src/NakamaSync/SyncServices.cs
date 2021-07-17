@@ -34,7 +34,7 @@ namespace NakamaSync
         private readonly LockVersionGuard _lockVersionGuard;
 
         private readonly SharedVarIngress _sharedVarGuestIngress;
-        private readonly PresenceRoleIngress _presenceRoleIngress;
+        private readonly PresenceVarIngress _presenceRoleIngress;
 
         private readonly SharedVarEgress _sharedVarHostEgress;
 
@@ -73,16 +73,16 @@ namespace NakamaSync
             var sharedHostIngress = new SharedVarHostIngress(varKeys, envelopeBuilder);
             _services.Add(sharedHostIngress);
 
-            var presenceGuestIngress = new PresenceGuestIngress(varKeys, presenceTracker);
-            _services.Add(presenceGuestIngress);
+            var presenceVarGuestIngress = new PresenceVarGuestIngress(varKeys, presenceTracker);
+            _services.Add(presenceVarGuestIngress);
 
-            var presenceHostIngress = new PresenceHostIngress(varKeys, envelopeBuilder);
-            _services.Add(presenceHostIngress);
+            var presenceVarHostIngress = new PresenceVarHostIngress(varKeys, envelopeBuilder);
+            _services.Add(presenceVarHostIngress);
 
             var sharedVarGuestIngress = new SharedVarIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
             _services.Add(sharedVarGuestIngress);
 
-            var presenceRoleIngress = new PresenceRoleIngress(presenceGuestIngress, presenceHostIngress, varRegistry, lockVersionGuard);
+            var presenceRoleIngress = new PresenceVarIngress(presenceVarGuestIngress, presenceVarHostIngress, varRegistry, lockVersionGuard);
             _services.Add(presenceRoleIngress);
 
             var handshakeRequester = new HandshakeRequester(varKeys, sharedVarGuestIngress, presenceRoleIngress, session.UserId);

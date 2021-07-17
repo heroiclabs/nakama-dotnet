@@ -35,10 +35,10 @@ namespace NakamaSync
         private bool _sentHandshake;
 
         private SharedVarIngress _sharedVarGuestIngress;
-        private PresenceRoleIngress _presenceRoleIngress;
+        private PresenceVarIngress _presenceRoleIngress;
         private string _userId;
 
-        public HandshakeRequester(VarKeys keys, SharedVarIngress sharedVarGuestIngress, PresenceRoleIngress presenceRoleIngress, string userId)
+        public HandshakeRequester(VarKeys keys, SharedVarIngress sharedVarGuestIngress, PresenceVarIngress presenceRoleIngress, string userId)
         {
             _keys = keys;
             _sharedVarGuestIngress = sharedVarGuestIngress;

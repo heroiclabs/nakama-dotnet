@@ -19,7 +19,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class PresenceHostIngress : ISyncService
+    internal class PresenceVarHostIngress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -27,13 +27,13 @@ namespace NakamaSync
         private readonly VarKeys _keys;
         private EnvelopeBuilder _builder;
 
-        public PresenceHostIngress(VarKeys keys, EnvelopeBuilder builder)
+        public PresenceVarHostIngress(VarKeys keys, EnvelopeBuilder builder)
         {
             _keys = keys;
             _builder = builder;
         }
 
-        public void HandleValue<T>(IUserPresence source, PresenceIngressContext<T> context)
+        public void HandleValue<T>(IUserPresence source, PresenceVarIngressContext<T> context)
         {
             switch (context.Value.ValidationStatus)
             {

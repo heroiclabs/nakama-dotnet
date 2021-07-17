@@ -27,9 +27,9 @@ namespace NakamaSync
 
         private readonly TaskCompletionSource<object> _handshakeTcs = new TaskCompletionSource<object>();
         private SharedVarIngress _sharedVarGuestIngress;
-        private PresenceRoleIngress _presenceRoleIngress;
+        private PresenceVarIngress _presenceRoleIngress;
 
-        public HandshakeResponseHandler(SharedVarIngress sharedVarGuestEgress, PresenceRoleIngress presenceRoleIngress)
+        public HandshakeResponseHandler(SharedVarIngress sharedVarGuestEgress, PresenceVarIngress presenceRoleIngress)
         {
             _sharedVarGuestIngress = sharedVarGuestEgress;
             _presenceRoleIngress = presenceRoleIngress;
