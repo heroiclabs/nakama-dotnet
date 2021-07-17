@@ -16,9 +16,10 @@
 
 namespace NakamaSync
 {
-    public interface IPresenceVarEvent<T> : IVarEvent<T>
+    public enum ValueChangeSource
     {
-        string TargetId { get; }
-        T OldValue { get; }
+        None,
+        Local,
+        Remote
     }
 }

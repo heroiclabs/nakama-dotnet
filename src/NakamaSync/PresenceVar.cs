@@ -15,13 +15,16 @@
 */
 
 using System;
-using System.Collections.Generic;
 using Nakama;
 
 namespace NakamaSync
 {
+    public delegate bool PresenceVarValidationHandler<T>(IUserPresence source, ValueChange<T> change);
+    public delegate void PresenceChangedHandler(PresenceChange presenceChange);
+
     /// <summary>
-    /// A variable containing a value for each user in the match. Each value is synchronized across all users.
+    /// A variable containing a value for a user in the match. The value is synchronized across all users
+    /// but can only be set by the associated user.
     /// </summary>
     public class PresenceVar<T> : IVar
     {
@@ -31,11 +34,13 @@ namespace NakamaSync
         /// host who will validate and if it's validated the host will send to all clients
         /// otherwise a ReplicationValidationException will be thrown on this device.
         /// </summary>
-        public Func<IPresenceVarEvent<T>, bool> OnHostValidate;
-        public Action<IPresenceVarEvent<T>> OnRemoteValueChanged;
-        internal Action<IPresenceVarEvent<T>> OnLocalValueChanged;
+        public PresenceVarValidationHandler<T> HostValidationHandler;
+        public event Action<IPresenceVarEvent<T>> OnValueChanged;
 
-        public ValidationStatus validationStatus => _validationStatus;
+        public ValidationStatus ValidationStatus => _validationStatus;
+
+        public event PresenceChangedHandler OnPresenceChanged;
+        public IUserPresence Owner => _owner;
 
         IUserPresence IVar.Self
         {
@@ -45,57 +50,29 @@ namespace NakamaSync
 
         private IUserPresence _self;
 
-        internal IReadOnlyDictionary<string, T> Values => _values;
-
         private ValidationStatus _validationStatus;
 
-        private readonly Dictionary<string, T> _values = new Dictionary<string, T>();
+        private T _value;
 
-        public void SetValue(T value)
-        {
-            SetValue(value, _self, _self.UserId, _validationStatus, OnLocalValueChanged);
-        }
+        private IUserPresence _owner;
 
         public T GetValue()
         {
-            return GetValue(_self);
+            return _value;
         }
 
-        public bool HasValue(IUserPresence presence)
+        internal void SetValue(T value, IUserPresence source, ValidationStatus validationStatus)
         {
-            return _values.ContainsKey(presence.UserId);
-        }
+            T oldValue = _value;
+            _value = value;
 
-        public T GetValue(IUserPresence presence)
-        {
-            return GetValue(presence.UserId);
-        }
-
-        internal T GetValue(string presenceId)
-        {
-            if (_values.ContainsKey(presenceId))
-            {
-                return _values[presenceId];
-            }
-            else
-            {
-                throw new InvalidOperationException($"Tried retrieving a synced value from an unrecognized user id: {presenceId}");
-            }
-        }
-
-        internal void SetValue(T value, IUserPresence source, string targetId, ValidationStatus validationStatus, Action<PresenceVarEvent<T>> eventDispatch)
-        {
-            T oldValue = _values.ContainsKey(targetId) ? _values[targetId] : default(T);
-
-            if (oldValue != null && oldValue.Equals(value))
-            {
-                return;
-            }
-
-            _values[targetId] = value;
+            ValidationStatus oldStatus = _validationStatus;
             _validationStatus = validationStatus;
 
-            eventDispatch?.Invoke(new PresenceVarEvent<T>(source, targetId, oldValue, value));
+            var valueChange = new ValueChange<T>(oldValue, value);
+            var statusChange = new ValidationChange(oldStatus, _validationStatus);
+
+            OnValueChanged?.Invoke(new PresenceVarEvent<T>(source, valueChange, statusChange));
         }
 
         ValidationStatus IVar.GetValidationStatus()
@@ -105,12 +82,10 @@ namespace NakamaSync
 
         void IVar.Reset()
         {
-            _values.Clear();
-
-            OnHostValidate = null;
-            OnLocalValueChanged = null;
-            OnRemoteValueChanged = null;
-            _self = null;
+            _owner = null;
+            _value = default(T);
+            HostValidationHandler = null;
+            OnValueChanged = null;
         }
 
         void IVar.SetValidationStatus(ValidationStatus status)

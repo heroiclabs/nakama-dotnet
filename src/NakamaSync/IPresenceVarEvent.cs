@@ -18,18 +18,10 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal interface IVar
+    public interface IPresenceVarEvent<T>
     {
-        IUserPresence Self
-        {
-            get;
-            set;
-        }
-
-        void Reset();
-
-        ValidationStatus GetValidationStatus();
-        void SetValidationStatus(ValidationStatus status);
-
+        IUserPresence Source { get; }
+        ValueChange<T> ValueChange { get; }
+        ValidationChange ValidationChange { get; }
     }
 }

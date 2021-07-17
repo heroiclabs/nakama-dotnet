@@ -1,3 +1,6 @@
+
+
+using Nakama;
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -13,11 +16,25 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
 namespace NakamaSync
 {
-    public interface IVarEvent<T>
+    // TODO implement this
+    internal class SyncCleanup : ISyncService
     {
-        T NewValue { get; }
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
+        private IMatch _match;
+
+        public void ReceiveMatch(IMatch match)
+        {
+
+        }
+
+        public void Subscribe(ISocket socket)
+        {
+
+        }
     }
+
 }

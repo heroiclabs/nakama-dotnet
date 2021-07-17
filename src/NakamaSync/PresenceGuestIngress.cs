@@ -34,7 +34,7 @@ namespace NakamaSync
 
         public void HandleValue<T>(PresenceVar<T> var, IUserPresence source, PresenceValue<T> value)
         {
-            var.SetValue(value.Value, source, value.TargetId, value.ValidationStatus, var.OnRemoteValueChanged);
+            var.SetValue(value.Value, source, value.ValidationStatus);
         }
     }
 }

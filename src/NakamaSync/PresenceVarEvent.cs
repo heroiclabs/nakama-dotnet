@@ -20,17 +20,15 @@ namespace NakamaSync
 {
     internal class PresenceVarEvent<T> : IPresenceVarEvent<T>
     {
-        public IUserPresence Sender { get; }
-        public string TargetId { get; }
-        public T OldValue { get; }
-        public T NewValue { get; }
+        public IUserPresence Source { get; }
+        public ValueChange<T> ValueChange { get; }
+        public ValidationChange ValidationChange { get; }
 
-        internal PresenceVarEvent(IUserPresence sender, string targetId, T oldValue, T newValue)
+        internal PresenceVarEvent(IUserPresence source, ValueChange<T> valueChange, ValidationChange validationChange)
         {
-            Sender = sender;
-            TargetId = targetId;
-            OldValue = oldValue;
-            NewValue = newValue;
+            Source = source;
+            ValueChange = valueChange;
+            ValidationChange = validationChange;
         }
     }
 }

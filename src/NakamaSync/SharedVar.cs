@@ -19,27 +19,21 @@ using Nakama;
 
 namespace NakamaSync
 {
+    public delegate bool SharedVarValidationHandler<T>(IUserPresence source, ValueChange<T> change);
+
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// </summary>
     public class SharedVar<T> : IVar
     {
-        /// <summary>
-        /// If this delegate is set and the current client is a guest, then
-        /// when a synced value is set, this client will reach out to the
-        /// host who will validate and if it's validated the host will send to all clients
-        /// otherwise a ReplicationValidationException will be thrown on this device.
-        /// </summary>
-        public Func<ISharedVarEvent<T>, bool> OnHostValidate;
-        public Action<ISharedVarEvent<T>> OnRemoteValueChanged;
-        internal Action<ISharedVarEvent<T>> OnLocalValueChanged;
-        public ValidationStatus validationStatus => _validationStatus;
+        public event Action<ISharedVarEvent<T>> OnValueChanged;
+        public ValidationStatus ValidationStatus => _validationStatus;
+
+        internal SharedVarValidationHandler<T> HostValidationHandler;
 
         private ValidationStatus _validationStatus;
         private T _value;
 
-        // todo throw exception if reassigning self. maybe not here?
-        // todo set this
         IUserPresence IVar.Self
         {
             get => _self;
@@ -50,7 +44,7 @@ namespace NakamaSync
 
         public void SetValue(T value)
         {
-            SetValue(_self, value, _validationStatus, OnLocalValueChanged);
+            SetValue(_self, value, _validationStatus);
         }
 
         public T GetValue()
@@ -58,28 +52,26 @@ namespace NakamaSync
             return _value;
         }
 
-        // todo call this find a way to make internal?
-        public void Reset()
+        void IVar.Reset()
         {
             _value = default(T);
 
-            OnHostValidate = null;
-            OnLocalValueChanged = null;
-            OnRemoteValueChanged = null;
+            HostValidationHandler = null;
+            OnValueChanged = null;
         }
 
-        internal void SetValue(IUserPresence source, T value, ValidationStatus validationStatus, Action<SharedVarEvent<T>> eventDispatch)
+        internal void SetValue(IUserPresence source, T value, ValidationStatus validationStatus)
         {
             T oldValue = _value;
-
-            if (oldValue != null && oldValue.Equals(value))
-            {
-                return;
-            }
-
             _value = value;
+
+            ValidationStatus oldStatus = _validationStatus;
             _validationStatus = validationStatus;
-            eventDispatch?.Invoke(new SharedVarEvent<T>(source, oldValue, value));
+
+            var valueChange = new ValueChange<T>(oldValue, value);
+            var statusChange = new ValidationChange(oldStatus, _validationStatus);
+
+            OnValueChanged?.Invoke(new SharedVarEvent<T>(source, valueChange, statusChange));
         }
 
         void IVar.SetValidationStatus(ValidationStatus status)

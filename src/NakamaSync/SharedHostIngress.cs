@@ -41,7 +41,23 @@ namespace NakamaSync
                     HandleNonValidatedValue(source, context.Var, context.Value);
                     break;
                 case ValidationStatus.Pending:
-                    if (context.Var.OnHostValidate(new SharedVarEvent<T>(source, context.Var.GetValue(), context.Value.Value)))
+                    T oldValue = context.Var.GetValue();
+                    T newValue = context.Value.Value;
+                    var valueChange = new ValueChange<T>(oldValue, newValue);
+
+                    ValidationStatus oldStatus = context.Var.ValidationStatus;
+                    ValidationStatus newStatus;
+                    if (context.Var.HostValidationHandler == null)
+                    {
+                        newStatus = oldStatus;
+                        ErrorHandler?.Invoke(new InvalidOperationException("Pending value has no host validation handler."));
+                    }
+                    else
+                    {
+                        newStatus = context.Var.HostValidationHandler(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
+                    }
+
+                    if (newStatus == ValidationStatus.Validated || newStatus == ValidationStatus.Pending)
                     {
                         AcceptPendingValue<T>(source, context.Var, context.Value, context.VarAccessor, context.AckAccessor);
                     }
@@ -67,7 +83,7 @@ namespace NakamaSync
 
         private void AcceptPendingValue<T>(IUserPresence source, SharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
-            var.SetValue(source, value.Value, ValidationStatus.Validated, var.OnRemoteValueChanged);
+            var.SetValue(source, value.Value, ValidationStatus.Validated);
             _builder.AddSharedVar(accessor, value);
             _builder.AddAck(ackAccessor, value.Key);
             _builder.SendEnvelope();
@@ -75,7 +91,7 @@ namespace NakamaSync
 
         private void HandleNonValidatedValue<T>(IUserPresence source, SharedVar<T> var, SharedValue<T> value)
         {
-            var.SetValue(source, value.Value, ValidationStatus.None, var.OnRemoteValueChanged);
+            var.SetValue(source, value.Value, ValidationStatus.None);
         }
     }
 }

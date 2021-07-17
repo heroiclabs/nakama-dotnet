@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
@@ -28,7 +29,7 @@ namespace NakamaSync
         private readonly VarRegistry _varRegistry;
         private readonly SyncSocket _syncSocket;
         private readonly PresenceTracker _presenceTracker;
-        private readonly RoleTracker _roleTracker;
+        private readonly HostTracker _hostTracker;
 
         private readonly LockVersionGuard _lockVersionGuard;
 
@@ -36,10 +37,10 @@ namespace NakamaSync
         private readonly PresenceRoleIngress _presenceRoleIngress;
 
         private readonly SharedRoleEgress _sharedRoleEgress;
-        private readonly PresenceRoleEgress _presenceRoleEgress;
 
         private readonly HandshakeRequester _handshakeRequester;
         private readonly HandshakeResponder _handshakeResponder;
+        private readonly HandshakeResponseHandler _handshakeResponseHandler;
         private readonly ISocket _socket;
         private readonly HostMigrator _migrator;
         private bool _initialized;
@@ -54,8 +55,8 @@ namespace NakamaSync
             var presenceTracker = new PresenceTracker(session.UserId);
             _services.Add(presenceTracker);
 
-            var roleTracker = new RoleTracker(presenceTracker);
-            _services.Add(roleTracker);
+            var hostTracker = new HostTracker(presenceTracker);
+            _services.Add(hostTracker);
 
             var lockVersionGuard = new LockVersionGuard(varKeys);
             _services.Add(lockVersionGuard);
@@ -90,23 +91,17 @@ namespace NakamaSync
             var handshakeResponder = new HandshakeResponder(varKeys, varRegistry, presenceTracker);
             _services.Add(handshakeResponder);
 
+            var handshakeResponseHandler = new HandshakeResponseHandler(sharedRoleIngress, presenceRoleIngress);
+            _services.Add(handshakeResponseHandler);
+
             var sharedGuestEgress = new SharedGuestEgress(varKeys, envelopeBuilder);
             _services.Add(sharedGuestEgress);
 
             var sharedHostEgress = new SharedHostEgress(varKeys, envelopeBuilder);
             _services.Add(sharedHostEgress);
 
-            var presenceGuestEgress = new PresenceGuestEgress(varKeys, envelopeBuilder);
-            _services.Add(presenceGuestEgress);
-
-            var presenceHostEgress = new PresenceHostEgress(varKeys, envelopeBuilder);
-            _services.Add(presenceHostEgress);
-
-            var sharedRoleEgress = new SharedRoleEgress(sharedGuestEgress, sharedHostEgress, roleTracker);
+            var sharedRoleEgress = new SharedRoleEgress(sharedGuestEgress, sharedHostEgress, hostTracker);
             _services.Add(sharedRoleEgress);
-
-            var presenceRoleEgress = new PresenceRoleEgress(presenceGuestEgress, presenceHostEgress, roleTracker);
-            _services.Add(presenceRoleEgress);
 
             var migrator = new HostMigrator(varRegistry, envelopeBuilder);
             _services.Add(migrator);
@@ -116,7 +111,7 @@ namespace NakamaSync
             _socket = socket;
             _syncSocket = syncSocket;
             _presenceTracker = presenceTracker;
-            _roleTracker = roleTracker;
+            _hostTracker = hostTracker;
             _lockVersionGuard = lockVersionGuard;
 
             _sharedRoleIngress = sharedRoleIngress;
@@ -124,12 +119,18 @@ namespace NakamaSync
 
             _handshakeRequester = handshakeRequester;
             _handshakeResponder = handshakeResponder;
+            _handshakeResponseHandler = handshakeResponseHandler;
 
             _sharedRoleEgress = sharedRoleEgress;
-            _presenceRoleEgress = presenceRoleEgress;
 
             _socket = socket;
             _migrator = migrator;
+        }
+
+        public Task GetHandshakeTask()
+        {
+             // todo handshake timeout? put it in the handshake requester.
+            return _handshakeResponseHandler.GetHandshakeTask();
         }
 
         public void ReceiveMatch(IMatch match)
@@ -153,33 +154,29 @@ namespace NakamaSync
             }
 
             _presenceTracker.Subscribe(_socket);
-            _migrator.Subscribe(_presenceTracker, _roleTracker);
+            _migrator.Subscribe(_presenceTracker, _hostTracker);
 
             if (isMatchCreator)
             {
                 _sharedRoleEgress.Subscribe(_varRegistry);
-                _sharedRoleIngress.Subscribe(_syncSocket, _roleTracker);
-                _presenceRoleIngress.Subscribe(_syncSocket, _roleTracker);
+                _sharedRoleIngress.Subscribe(_syncSocket, _hostTracker);
+                _presenceRoleIngress.Subscribe(_syncSocket, _hostTracker);
             }
             else
             {
                 // delay receiving and sending new values until initial store is synced
                 // todo just expose the anonymous lambdas outside here, no need to hide it in
                 // another subscribe call
-                _handshakeRequester.Subscribe(_syncSocket, _roleTracker, _presenceTracker);
+                _handshakeRequester.Subscribe(_syncSocket, _hostTracker, _presenceTracker);
 
                 _sharedRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
-                _presenceRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
-
-                _sharedRoleIngress.Subscribe(_syncSocket, _roleTracker, _handshakeRequester);
-                _presenceRoleIngress.Subscribe(_syncSocket, _roleTracker, _handshakeRequester);
             }
 
-            _presenceRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
             _sharedRoleEgress.Subscribe(_varRegistry, _handshakeRequester);
 
             _handshakeResponder.Subscribe(_syncSocket);
 
+            _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
             _initialized = true;
         }
     }

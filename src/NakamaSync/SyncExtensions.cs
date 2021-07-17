@@ -61,6 +61,9 @@ using Nakama;
 // expose an OnLocalVariable changed event for users.
 // renamed SharedVar to GlobalVar?
 // TRACK VAR type for something like a ball where nobody is actually using it.
+// think about if leavematch should clear all variables as opposed to being dropped from a match
+// which would keep the variables there?
+// todo should logic for sharedvars and presencevars be combined in places?
 
 using System;
 
@@ -87,6 +90,7 @@ namespace NakamaSync
 
             IMatch match = await socket.JoinMatchAsync(matched);
             services.ReceiveMatch(match);
+            await services.GetHandshakeTask();
             return match;
         }
 
@@ -97,6 +101,7 @@ namespace NakamaSync
 
             IMatch match = await socket.JoinMatchAsync(matchId);
             services.ReceiveMatch(match);
+            await services.GetHandshakeTask();
             return match;
         }
 

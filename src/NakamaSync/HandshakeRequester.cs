@@ -26,7 +26,8 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        public event Action OnInitialStoreLoaded;
+        public event Action OnHandshakeSuccess;
+        public event Action OnHandshakeFailure;
 
         private readonly VarKeys _keys;
 
@@ -45,7 +46,7 @@ namespace NakamaSync
             _userId = userId;
         }
 
-        public void Subscribe(SyncSocket socket, RoleTracker roleTracker, PresenceTracker presenceTracker)
+        public void Subscribe(SyncSocket socket, HostTracker hostTracker, PresenceTracker presenceTracker)
         {
             presenceTracker.OnPresenceAdded += (presence) =>
             {
@@ -62,7 +63,7 @@ namespace NakamaSync
 
             socket.OnHandshakeResponse += (source, response) =>
             {
-                HandleHandshakeResponse(source, response, roleTracker.IsSelfHost());
+                HandleHandshakeResponse(source, response, hostTracker.IsSelfHost());
             };
 
             Logger?.DebugFormat($"User {presenceTracker.UserId} subscribed to socket and presence tracker.");
@@ -75,11 +76,11 @@ namespace NakamaSync
                 Logger?.InfoFormat("Received successful handshake response.");
                 _sharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 _presenceRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
-                OnInitialStoreLoaded();
+                OnHandshakeSuccess();
             }
             else
             {
-                ErrorHandler?.Invoke(new HandshakeException("Synced match handshake with host failed.", source));
+                OnHandshakeFailure();
             }
         }
 

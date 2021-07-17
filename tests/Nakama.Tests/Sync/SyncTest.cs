@@ -33,7 +33,7 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+       /* [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task PresenceVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
@@ -42,7 +42,7 @@ namespace Nakama.Tests.Socket
             creatorEnv.UserBools[0].SetValue(true);
             Assert.True(creatorEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));
             testEnv.Dispose();
-        }
+        }*/
 
         //todo unskip test
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS, Skip = "todo fix this")]
@@ -79,16 +79,15 @@ namespace Nakama.Tests.Socket
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
             creatorEnv.SharedBools[0].SetValue(true);
 
-            SyncTestUserEnvironment guestEnv = testEnv.GetGuestEnv(testEnv.GetRandomGuestPresence());
-
             await Task.Delay(2500);
 
+            SyncTestUserEnvironment guestEnv = testEnv.GetGuestEnv(testEnv.GetRandomGuestPresence());
             Assert.True(guestEnv.SharedBools[0].GetValue());
 
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+       /*[Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task PresenceVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
@@ -102,10 +101,10 @@ namespace Nakama.Tests.Socket
             await Task.Delay(2500);
 
             Assert.True(guestEnv.UserBools[0].HasValue(testEnv.GetCreatorPresence()));
-            Assert.True(guestEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));
+            Assert.True(guestEnv.UserBools[0].GetValue());
 
             testEnv.Dispose();
-        }
+        }*/
 
         // todo test variable status is intact after user leaves and then rejoins match (should pick up from
         // where they left off.)

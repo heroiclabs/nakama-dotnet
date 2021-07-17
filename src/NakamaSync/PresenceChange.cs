@@ -18,18 +18,15 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal interface IVar
+    public class PresenceChange
     {
-        IUserPresence Self
+        public IUserPresence OldPresence { get; }
+        public IUserPresence NewPresence { get; }
+
+        public PresenceChange(IUserPresence oldPresence, IUserPresence newPresence)
         {
-            get;
-            set;
+            OldPresence = oldPresence;
+            NewPresence = newPresence;
         }
-
-        void Reset();
-
-        ValidationStatus GetValidationStatus();
-        void SetValidationStatus(ValidationStatus status);
-
     }
 }

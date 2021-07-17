@@ -14,22 +14,17 @@
 * limitations under the License.
 */
 
-using Nakama;
-
 namespace NakamaSync
 {
-    internal interface IVar
+    public class ValueChange<T>
     {
-        IUserPresence Self
+        public T OldValue { get; }
+        public T NewValue { get; }
+
+        public ValueChange(T oldValue, T newValue)
         {
-            get;
-            set;
+            OldValue = oldValue;
+            NewValue = newValue;
         }
-
-        void Reset();
-
-        ValidationStatus GetValidationStatus();
-        void SetValidationStatus(ValidationStatus status);
-
     }
 }

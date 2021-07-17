@@ -47,7 +47,6 @@ namespace NakamaSync
 
             bool success = request.AllKeys.SequenceEqual(_keys.GetKeys());
 
-
             if (success)
             {
                 Logger?.InfoFormat($"Remote keys from {source.UserId} match the local keys from {_presenceTracker.GetSelf().UserId}");
@@ -89,21 +88,17 @@ namespace NakamaSync
 
                 Logger?.DebugFormat($"Handshake responder scanning through user values to copy for key: {varKvp.Key}");
 
-                foreach (KeyValuePair<string, T> userKvp in var.Values)
-                {
-                    // TODO handle data for a stale user
-                    Logger?.DebugFormat($"Handshake responder found user value for user: {userKvp.Key}");
+                // TODO handle data for a stale user
 
-                    // use the var presences, not the presence tracker, in case
-                    // user has stored a value left before this handshake.
+                // use the var presences, not the presence tracker, in case
+                // user has stored a value left before this handshake.
 
-                    T rawValue = userKvp.Value;
+                T rawValue = varKvp.Value.GetValue();
 
-                    Logger?.DebugFormat($"User variable value for initial payload: User: {userKvp.Key}, Raw Value: ${rawValue}");
+                Logger?.DebugFormat($"User variable value for initial payload: User: {varKvp.Key}, Raw Value: ${rawValue}");
 
-                    var value = new PresenceValue<T>(varKvp.Key, rawValue, _keys.GetLockVersion(varKvp.Key), _keys.GetValidationStatus(varKvp.Key), userKvp.Key);
-                    values.Add(value);
-                }
+                var value = new PresenceValue<T>(varKvp.Key, rawValue, _keys.GetLockVersion(varKvp.Key), _keys.GetValidationStatus(varKvp.Key));
+                values.Add(value);
             }
         }
     }

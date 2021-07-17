@@ -24,20 +24,20 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private RoleTracker _roleTracker;
+        private HostTracker _hostTracker;
         private SharedGuestEgress _sharedGuestEgress;
         private SharedHostEgress _sharedHostEgress;
 
-        public SharedRoleEgress(SharedGuestEgress sharedGuestEgress, SharedHostEgress sharedHostEgress, RoleTracker roleTracker)
+        public SharedRoleEgress(SharedGuestEgress sharedGuestEgress, SharedHostEgress sharedHostEgress, HostTracker hostTracker)
         {
             _sharedGuestEgress = sharedGuestEgress;
             _sharedHostEgress = sharedHostEgress;
-            _roleTracker = roleTracker;
+            _hostTracker = hostTracker;
         }
 
         public void Subscribe(VarRegistry registry, HandshakeRequester requester)
         {
-            requester.OnInitialStoreLoaded += () =>
+            requester.OnHandshakeSuccess += () =>
             {
                 // now that we have initial store loaded,
                 // listen for user modifications to sync vars.
@@ -57,23 +57,24 @@ namespace NakamaSync
         {
             foreach (var kvp in vars)
             {
-                vars[kvp.Key].OnLocalValueChanged += (evt) => HandleLocalSharedVarChanged(kvp.Key, evt, accessor);
+                Logger?.DebugFormat($"Subscribing to shared variable with key {kvp.Key}");
+                vars[kvp.Key].OnValueChanged += (evt) => HandleLocalSharedVarChanged(kvp.Key, evt, accessor);
             }
         }
 
         private void HandleLocalSharedVarChanged<T>(string key, ISharedVarEvent<T> evt, SharedVarAccessor<T> accessor)
         {
-            bool isHost = _roleTracker.IsSelfHost();
+            bool isHost = _hostTracker.IsSelfHost();
 
-            Logger?.DebugFormat($"Local shared variable changed. Key: {key}, OldValue: {evt.OldValue}, Value: {evt.NewValue}");
+            Logger?.DebugFormat($"Local shared variable changed. Key: {key}, OldValue: {evt.ValueChange.OldValue}, Value: {evt.ValueChange.NewValue}");
 
             if (isHost)
             {
-                _sharedHostEgress.HandleLocalSharedVarChanged(key, evt.NewValue, accessor);
+                _sharedHostEgress.HandleLocalSharedVarChanged(key, evt.ValueChange.NewValue, accessor);
             }
             else
             {
-                _sharedGuestEgress.HandleLocalSharedVarChanged(key, evt.NewValue, accessor);
+                _sharedGuestEgress.HandleLocalSharedVarChanged(key, evt.ValueChange.NewValue, accessor);
             }
         }
     }

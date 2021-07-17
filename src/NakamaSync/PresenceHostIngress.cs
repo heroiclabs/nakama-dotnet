@@ -38,10 +38,27 @@ namespace NakamaSync
             switch (context.Value.ValidationStatus)
             {
                 case ValidationStatus.None:
-                    HandleNonValidatedValue(source, context.Var, context.Value, context.Value.TargetId);
+                    HandleNonValidatedValue(source, context.Var, context.Value);
                     break;
                 case ValidationStatus.Pending:
-                    if (context.Var.OnHostValidate(new PresenceVarEvent<T>(source, context.Value.TargetId, context.Var.GetValue(context.Value.TargetId), context.Value.Value)))
+
+                    T oldValue = context.Var.GetValue();
+                    T newValue = context.Value.Value;
+                    var valueChange = new ValueChange<T>(oldValue, newValue);
+
+                    ValidationStatus oldStatus = context.Var.ValidationStatus;
+                    ValidationStatus newStatus;
+                    if (context.Var.HostValidationHandler == null)
+                    {
+                        newStatus = oldStatus;
+                        ErrorHandler?.Invoke(new InvalidOperationException("Pending value has no host validation handler."));
+                    }
+                    else
+                    {
+                        newStatus = context.Var.HostValidationHandler(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
+                    }
+
+                    if (newStatus == ValidationStatus.Validated || newStatus == ValidationStatus.Pending)
                     {
                         AcceptPendingValue<T>(source, context.Var, context.Value, context.VarAccessor, context.AckAccessor);
                     }
@@ -49,6 +66,7 @@ namespace NakamaSync
                     {
                         RollbackPendingValue<T>(context.Var, context.Value, context.VarAccessor);
                     }
+
                     break;
                 case ValidationStatus.Validated:
                     ErrorHandler?.Invoke(new InvalidOperationException("Host received value that already claims to be validated."));
@@ -60,22 +78,22 @@ namespace NakamaSync
         {
             // one guest has incorrect value. queue a rollback for all guests.
             _keys.IncrementLockVersion(value.Key);
-            var outgoing = new PresenceValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), ValidationStatus.Validated, value.TargetId);
+            var outgoing = new PresenceValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), ValidationStatus.Validated);
             _builder.AddPresenceVar(accessor, value);
             _builder.SendEnvelope();
         }
 
         private void AcceptPendingValue<T>(IUserPresence source, PresenceVar<T> var, PresenceValue<T> value, PresenceVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
-            var.SetValue(value.Value, source, value.TargetId, ValidationStatus.Validated, var.OnRemoteValueChanged);
+            var.SetValue(value.Value, source, ValidationStatus.Validated);
             _builder.AddPresenceVar(accessor, value);
             _builder.AddAck(ackAccessor, value.Key);
             _builder.SendEnvelope();
         }
 
-        private void HandleNonValidatedValue<T>(IUserPresence source, PresenceVar<T> var, PresenceValue<T> value, string targetId)
+        private void HandleNonValidatedValue<T>(IUserPresence source, PresenceVar<T> var, PresenceValue<T> value)
         {
-            var.SetValue(value.Value, source, targetId, value.ValidationStatus, var.OnRemoteValueChanged);
+            var.SetValue(value.Value, source, value.ValidationStatus);
         }
     }
 }

@@ -14,10 +14,14 @@
 * limitations under the License.
 */
 
+using Nakama;
+
 namespace NakamaSync
 {
-    public interface ISharedVarEvent<T> : IVarEvent<T>
+    public interface ISharedVarEvent<T>
     {
-        T OldValue { get; }
+        IUserPresence Source { get; }
+        ValueChange<T> ValueChange { get; }
+        ValidationChange ValidationChange { get; }
     }
 }

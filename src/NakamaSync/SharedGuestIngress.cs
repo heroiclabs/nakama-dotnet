@@ -34,7 +34,7 @@ namespace NakamaSync
 
         public void ProcessValue<T>(SharedVar<T> var, IUserPresence source, SharedValue<T> value)
         {
-            var.SetValue(source, value.Value, value.ValidationStatus, var.OnRemoteValueChanged);
+            var.SetValue(source, value.Value, value.ValidationStatus);
         }
     }
 }
