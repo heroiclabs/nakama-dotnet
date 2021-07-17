@@ -19,18 +19,18 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedRoleEgress : ISyncService
+    internal class SharedVarEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private HostTracker _hostTracker;
-        private SharedGuestEgress _sharedGuestEgress;
-        private SharedHostEgress _sharedHostEgress;
+        private SharedVarGuestEgress _sharedVarGuestEgress;
+        private SharedVarHostEgress _sharedHostEgress;
 
-        public SharedRoleEgress(SharedGuestEgress sharedGuestEgress, SharedHostEgress sharedHostEgress, HostTracker hostTracker)
+        public SharedVarEgress(SharedVarGuestEgress sharedVarGuestEgress, SharedVarHostEgress sharedHostEgress, HostTracker hostTracker)
         {
-            _sharedGuestEgress = sharedGuestEgress;
+            _sharedVarGuestEgress = sharedVarGuestEgress;
             _sharedHostEgress = sharedHostEgress;
             _hostTracker = hostTracker;
         }
@@ -74,7 +74,7 @@ namespace NakamaSync
             }
             else
             {
-                _sharedGuestEgress.HandleLocalSharedVarChanged(key, evt.ValueChange.NewValue, accessor);
+                _sharedVarGuestEgress.HandleLocalSharedVarChanged(key, evt.ValueChange.NewValue, accessor);
             }
         }
     }

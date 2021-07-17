@@ -19,7 +19,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedRoleIngress : ISyncService
+    internal class SharedVarIngress : ISyncService
     {
         public ILogger Logger
         {
@@ -33,13 +33,13 @@ namespace NakamaSync
             set;
         }
 
-        private readonly SharedGuestIngress _guestIngress;
-        private readonly SharedHostIngress _sharedHostIngress;
+        private readonly SharedVarGuestIngress _guestIngress;
+        private readonly SharedVarHostIngress _sharedHostIngress;
         private readonly VarRegistry _registry;
         private readonly LockVersionGuard _lockVersionGuard;
 
-        public SharedRoleIngress(
-            SharedGuestIngress guestIngress, SharedHostIngress sharedHostIngress, VarRegistry registry, LockVersionGuard lockVersionGuard)
+        public SharedVarIngress(
+            SharedVarGuestIngress guestIngress, SharedVarHostIngress sharedHostIngress, VarRegistry registry, LockVersionGuard lockVersionGuard)
         {
             _guestIngress = guestIngress;
             _sharedHostIngress = sharedHostIngress;
@@ -59,26 +59,26 @@ namespace NakamaSync
         {
             Logger?.DebugFormat($"Shared role ingress received sync envelope.");
 
-            var bools = SharedIngressContext.FromBoolValues(envelope, _registry);
+            var bools = SharedVarIngressContext.FromBoolValues(envelope, _registry);
             ReceiveSyncEnvelope(source, bools, isHost);
 
-            var floats = SharedIngressContext.FromFloatValues(envelope, _registry);
+            var floats = SharedVarIngressContext.FromFloatValues(envelope, _registry);
             ReceiveSyncEnvelope(source, floats, isHost);
 
-            var ints = SharedIngressContext.FromIntValues(envelope, _registry);
+            var ints = SharedVarIngressContext.FromIntValues(envelope, _registry);
             ReceiveSyncEnvelope(source, ints, isHost);
 
-            var strings = SharedIngressContext.FromStringValues(envelope, _registry);
+            var strings = SharedVarIngressContext.FromStringValues(envelope, _registry);
             ReceiveSyncEnvelope(source, strings, isHost);
 
             Logger?.DebugFormat($"Shared role ingress done processing sync envelope.");
         }
 
-        private void ReceiveSyncEnvelope<T>(IUserPresence source, List<SharedIngressContext<T>> contexts, bool isHost)
+        private void ReceiveSyncEnvelope<T>(IUserPresence source, List<SharedVarIngressContext<T>> contexts, bool isHost)
         {
             Logger?.DebugFormat($"Shared role ingress processing num contexts: {contexts.Count}");
 
-            foreach (SharedIngressContext<T> context in contexts)
+            foreach (SharedVarIngressContext<T> context in contexts)
             {
                 Logger?.DebugFormat($"Shared role ingress processing context: {context}");
 

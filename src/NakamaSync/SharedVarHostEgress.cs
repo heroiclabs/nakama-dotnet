@@ -1,4 +1,3 @@
-
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -15,11 +14,12 @@
 * limitations under the License.
 */
 
+using System;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedGuestEgress : ISyncService
+    internal class SharedVarHostEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -27,7 +27,7 @@ namespace NakamaSync
         private readonly VarKeys _keys;
         private readonly EnvelopeBuilder _builder;
 
-        public SharedGuestEgress(VarKeys keys, EnvelopeBuilder builder)
+        public SharedVarHostEgress(VarKeys keys, EnvelopeBuilder builder)
         {
             _keys = keys;
             _builder = builder;
@@ -37,16 +37,15 @@ namespace NakamaSync
         {
             var status = _keys.GetValidationStatus(key);
 
-            if (status == ValidationStatus.Validated)
+            if (status == ValidationStatus.Pending)
             {
-                status = ValidationStatus.Pending;
-                _keys.SetValidationStatus(key, status);
+                ErrorHandler?.Invoke(new InvalidOperationException("Host should not have local key pending validation: " + key));
+                return;
             }
 
             _keys.IncrementLockVersion(key);
-            var newSyncedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
-
-            _builder.AddSharedVar(accessor, newSyncedValue);
+            var sharedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
+            _builder.AddSharedVar(accessor, sharedValue);
             _builder.SendEnvelope();
         }
     }

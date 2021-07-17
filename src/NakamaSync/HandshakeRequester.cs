@@ -34,14 +34,14 @@ namespace NakamaSync
         // todo handle error with sending handshake and resend if needed
         private bool _sentHandshake;
 
-        private SharedRoleIngress _sharedRoleIngress;
+        private SharedVarIngress _sharedVarGuestIngress;
         private PresenceRoleIngress _presenceRoleIngress;
         private string _userId;
 
-        public HandshakeRequester(VarKeys keys, SharedRoleIngress sharedRoleIngress, PresenceRoleIngress presenceRoleIngress, string userId)
+        public HandshakeRequester(VarKeys keys, SharedVarIngress sharedVarGuestIngress, PresenceRoleIngress presenceRoleIngress, string userId)
         {
             _keys = keys;
-            _sharedRoleIngress = sharedRoleIngress;
+            _sharedVarGuestIngress = sharedVarGuestIngress;
             _presenceRoleIngress = presenceRoleIngress;
             _userId = userId;
         }
@@ -74,7 +74,7 @@ namespace NakamaSync
             if (response.Success)
             {
                 Logger?.InfoFormat("Received successful handshake response.");
-                _sharedRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
+                _sharedVarGuestIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 _presenceRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 OnHandshakeSuccess();
             }
