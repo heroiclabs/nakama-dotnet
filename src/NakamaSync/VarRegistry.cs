@@ -22,20 +22,23 @@ namespace NakamaSync
 {
     public class VarRegistry
     {
-        public Dictionary<string, SharedVar<bool>> SharedBools { get; }
-        public Dictionary<string, SharedVar<float>> SharedFloats { get; }
-        public Dictionary<string, SharedVar<int>> SharedInts { get; }
-        public Dictionary<string, SharedVar<string>> SharedStrings { get; }
+        internal Dictionary<string, SharedVar<bool>> SharedBools { get; }
+        internal Dictionary<string, SharedVar<float>> SharedFloats { get; }
+        internal Dictionary<string, SharedVar<int>> SharedInts { get; }
+        internal Dictionary<string, SharedVar<string>> SharedStrings { get; }
 
-        public Dictionary<string, PresenceVar<bool>> UserBools { get; }
-        public Dictionary<string, PresenceVar<float>> UserFloats { get; }
-        public Dictionary<string, PresenceVar<int>> UserInts { get; }
+        internal Dictionary<string, PresenceVar<bool>> UserBools { get; }
+        internal Dictionary<string, PresenceVar<float>> UserFloats { get; }
+        internal Dictionary<string, PresenceVar<int>> UserInts { get; }
         public Dictionary<string, PresenceVar<string>> UserStrings { get; }
 
-        private readonly HashSet<object> _registeredVars = new HashSet<object>();
+        private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
+        private VarKeys _keys;
 
-        public VarRegistry()
+        internal VarRegistry(VarKeys keys)
         {
+            _keys = keys;
+
             SharedBools = new Dictionary<string, SharedVar<bool>>();
             SharedFloats = new Dictionary<string, SharedVar<float>>();
             SharedInts = new Dictionary<string, SharedVar<int>>();
@@ -47,31 +50,62 @@ namespace NakamaSync
             UserStrings = new Dictionary<string, PresenceVar<string>>();
         }
 
-        internal void ReceiveMatch(VarKeys keys, IMatch match)
+        internal void ReceiveMatch(IMatch match)
         {
-            Register<bool, SharedVar<bool>>(keys, SharedBools, match.Self);
-            Register<float, SharedVar<float>>(keys, SharedFloats, match.Self);
-            Register<int, SharedVar<int>>(keys, SharedInts, match.Self);
-            Register<string, SharedVar<string>>(keys, SharedStrings, match.Self);
-
-            Register<bool, PresenceVar<bool>>(keys, UserBools, match.Self);
-            Register<float, PresenceVar<float>>(keys, UserFloats, match.Self);
-            Register<int, PresenceVar<int>>(keys, UserInts, match.Self);
-            Register<string, PresenceVar<string>>(keys, UserStrings, match.Self);
+            foreach (IVar var in _registeredVars)
+            {
+                var.Self = match.Self;
+            }
         }
 
-        private void Register<T, TVar>(VarKeys keys, Dictionary<string, TVar> vars, IUserPresence self) where TVar : Var<T>
+        public void Register(string id, SharedVar<bool> sharedBool)
         {
-            foreach (KeyValuePair<string, TVar> kvp in vars)
-            {
-                if (!_registeredVars.Add(kvp.Value))
-                {
-                    throw new ArgumentException("Tried registering the same var with a different id: " + kvp.Key);
-                }
+            Register<bool, SharedVar<bool>>(id, sharedBool);
+        }
 
-                keys.RegisterKey(kvp.Key, kvp.Value.ValidationStatus);
-                kvp.Value.Self = self;
+        public void Register(string id, SharedVar<int> sharedInt)
+        {
+            Register<int, SharedVar<int>>(id, sharedInt);
+        }
+
+        public void Register(string id, SharedVar<float> sharedFloat)
+        {
+            Register<float, SharedVar<float>>(id, sharedFloat);
+        }
+
+        public void Register(string id, SharedVar<string> sharedString)
+        {
+            Register<string, SharedVar<string>>(id, sharedString);
+        }
+
+        public void Register(string id, PresenceVar<bool> presenceString)
+        {
+            Register<bool, PresenceVar<bool>>(id, presenceString);
+        }
+
+        public void Register(string id, PresenceVar<float> presenceFloat)
+        {
+            Register<float, PresenceVar<float>>(id, presenceFloat);
+        }
+
+        public void Register(string id, PresenceVar<int> presenceInt)
+        {
+            Register<int, PresenceVar<int>>(id, presenceInt);
+        }
+
+        public void Register(string id, PresenceVar<string> presenceString)
+        {
+            Register<string, PresenceVar<string>>(id, presenceString);
+        }
+
+        private void Register<T, TVar>(string key, TVar var) where TVar : Var<T>
+        {
+            if (!_registeredVars.Add(var))
+            {
+                throw new ArgumentException("Tried registering the same var with a different id: " + key);
             }
+
+            _keys.RegisterKey(key, var.ValidationStatus);
         }
     }
 }

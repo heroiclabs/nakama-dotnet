@@ -135,7 +135,7 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
-            _varRegistry.ReceiveMatch(_varKeys, match);
+            _varRegistry.ReceiveMatch(match);
             _syncSocket.ReceiveMatch(match);
             _presenceTracker.ReceiveMatch(match);
         }

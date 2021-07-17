@@ -20,7 +20,7 @@ namespace NakamaSync
 {
     public delegate bool ValidationHandler<T>(IUserPresence source, ValueChange<T> change);
 
-    public abstract class Var<T>
+    public abstract class Var<T> : IVar
     {
         public bool RequiresValidation
         {
@@ -32,6 +32,12 @@ namespace NakamaSync
         {
             get;
             set;
+        }
+
+        IUserPresence IVar.Self
+        {
+            get => Self;
+            set => Self = value;
         }
 
         public ValidationStatus ValidationStatus
