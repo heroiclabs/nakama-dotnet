@@ -16,12 +16,12 @@
 
 namespace NakamaSync
 {
-    internal class SelfPresenceVarEvent<T> : ISelfPresenceVarEvent<T>
+    internal class SelfVarEvent<T> : ISelfVarEvent<T>
     {
         public ValueChange<T> ValueChange { get; }
         public ValidationChange ValidationChange { get; }
 
-        public SelfPresenceVarEvent(ValueChange<T> valueChange, ValidationChange validationChange)
+        public SelfVarEvent(ValueChange<T> valueChange, ValidationChange validationChange)
         {
             ValueChange = valueChange;
             ValidationChange = validationChange;

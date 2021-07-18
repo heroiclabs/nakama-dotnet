@@ -22,9 +22,9 @@ namespace NakamaSync
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// </summary>
-    public class SelfPresenceVar<T> : Var<T>
+    public class SelfVar<T> : Var<T>
     {
-        public event Action<ISelfPresenceVarEvent<T>> OnValueChanged;
+        public event Action<ISelfVarEvent<T>> OnValueChanged;
 
         public void SetValue(T value)
         {
@@ -51,7 +51,7 @@ namespace NakamaSync
             var valueChange = new ValueChange<T>(oldValue, value);
             var statusChange = new ValidationChange(oldStatus, _validationStatus);
 
-            OnValueChanged?.Invoke(new SelfPresenceVarEvent<T>(valueChange, statusChange));
+            OnValueChanged?.Invoke(new SelfVarEvent<T>(valueChange, statusChange));
         }
     }
 }

@@ -21,15 +21,15 @@ namespace NakamaSync
 {
     internal class PresenceVarCollection<T>
     {
-        public SelfPresenceVar<T> SelfPresenceVar => _selfPresenceVar;
+        public SelfVar<T> SelfVar => _selfVar;
         public List<PresenceVar<T>> PresenceVars => _presenceVars;
 
-        private readonly SelfPresenceVar<T> _selfPresenceVar;
+        private readonly SelfVar<T> _selfVar;
         private readonly List<PresenceVar<T>> _presenceVars = new List<PresenceVar<T>>();
 
-        public PresenceVarCollection(SelfPresenceVar<T> selfPresenceVar, IEnumerable<PresenceVar<T>> presenceVars)
+        public PresenceVarCollection(SelfVar<T> selfVar, IEnumerable<PresenceVar<T>> presenceVars)
         {
-            _selfPresenceVar = selfPresenceVar;
+            _selfVar = selfVar;
 
             // copy to internal representation
             foreach (var presenceVar in presenceVars)

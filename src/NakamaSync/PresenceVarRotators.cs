@@ -47,43 +47,43 @@ namespace NakamaSync
         {
             foreach (var kvp in registry.PresenceBools)
             {
-                AddBool(kvp.Key, kvp.Value.SelfPresenceVar, kvp.Value.PresenceVars);
+                AddBool(kvp.Key, kvp.Value.SelfVar, kvp.Value.PresenceVars);
             }
 
             foreach (var kvp in registry.PresenceFloats)
             {
-                AddFloat(kvp.Key, kvp.Value.SelfPresenceVar, kvp.Value.PresenceVars);
+                AddFloat(kvp.Key, kvp.Value.SelfVar, kvp.Value.PresenceVars);
             }
 
             foreach (var kvp in registry.PresenceInts)
             {
-                AddInt(kvp.Key, kvp.Value.SelfPresenceVar, kvp.Value.PresenceVars);
+                AddInt(kvp.Key, kvp.Value.SelfVar, kvp.Value.PresenceVars);
             }
 
             foreach (var kvp in registry.PresenceStrings)
             {
-                AddString(kvp.Key, kvp.Value.SelfPresenceVar, kvp.Value.PresenceVars);
+                AddString(kvp.Key, kvp.Value.SelfVar, kvp.Value.PresenceVars);
             }
         }
 
-        private void AddBool(string key, SelfPresenceVar<bool> selfPresenceVar, IEnumerable<PresenceVar<bool>> presenceVars)
+        private void AddBool(string key, SelfVar<bool> selfVar, IEnumerable<PresenceVar<bool>> presenceVars)
         {
-            Add(key, selfPresenceVar, presenceVars, _boolRotators);
+            Add(key, selfVar, presenceVars, _boolRotators);
         }
 
-        private void AddFloat(string key, SelfPresenceVar<float> selfPresenceVar, IEnumerable<PresenceVar<float>> presenceVars)
+        private void AddFloat(string key, SelfVar<float> selfVar, IEnumerable<PresenceVar<float>> presenceVars)
         {
-            Add(key, selfPresenceVar, presenceVars, _floatRotators);
+            Add(key, selfVar, presenceVars, _floatRotators);
         }
 
-        private void AddInt(string key, SelfPresenceVar<int> selfPresenceVar, IEnumerable<PresenceVar<int>> presenceVars)
+        private void AddInt(string key, SelfVar<int> selfVar, IEnumerable<PresenceVar<int>> presenceVars)
         {
-            Add(key, selfPresenceVar, presenceVars, _intRotators);
+            Add(key, selfVar, presenceVars, _intRotators);
         }
 
-        private void AddString(string key, SelfPresenceVar<string> selfPresenceVar, IEnumerable<PresenceVar<string>> presenceVars)
+        private void AddString(string key, SelfVar<string> selfVar, IEnumerable<PresenceVar<string>> presenceVars)
         {
-            Add(key, selfPresenceVar, presenceVars, _stringRotators);
+            Add(key, selfVar, presenceVars, _stringRotators);
         }
 
         public void ReceiveMatch(IMatch match)
@@ -104,7 +104,7 @@ namespace NakamaSync
 
         private void Add<T>(
             string key,
-            SelfPresenceVar<T> selfPresenceVar,
+            SelfVar<T> selfVar,
             IEnumerable<PresenceVar<T>> presenceVars,
             Dictionary<string, PresenceVarRotator<T>> rotators)
         {

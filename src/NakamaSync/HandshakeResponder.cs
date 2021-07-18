@@ -106,11 +106,11 @@ namespace NakamaSync
                     values.Add(value);
                 }
 
-                T rawSelfValue = varKvp.Value.SelfPresenceVar.GetValue();
+                T rawSelfValue = varKvp.Value.SelfVar.GetValue();
 
                 Logger?.DebugFormat($"User variable value for initial payload: User: {varKvp.Key}, Raw Value: ${rawSelfValue}");
 
-                var selfValue = new PresenceValue<T>(new PresenceVarKey(varKey, varKvp.Value.SelfPresenceVar.Self.UserId), rawSelfValue, _lockVersionGuard.GetLockVersion(varKvp.Key), varKvp.Value.SelfPresenceVar.ValidationStatus);
+                var selfValue = new PresenceValue<T>(new PresenceVarKey(varKey, varKvp.Value.SelfVar.Self.UserId), rawSelfValue, _lockVersionGuard.GetLockVersion(varKvp.Key), varKvp.Value.SelfVar.ValidationStatus);
                 values.Add(selfValue);
             }
         }
