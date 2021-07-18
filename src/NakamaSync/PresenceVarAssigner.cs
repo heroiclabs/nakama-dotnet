@@ -1,0 +1,88 @@
+/**
+* Copyright 2021 The Nakama Authors
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+using System;
+using System.Collections.Generic;
+using Nakama;
+
+namespace NakamaSync
+{
+    // todo add some enum or option on how you would like the presence vars to be assigned.
+    // like, do they all need to be filled or what.
+    internal class PresenceVarAssigner<T> : ISyncService
+    {
+        public SyncErrorHandler ErrorHandler { get; set; }
+        public ILogger Logger { get; set; }
+
+        private readonly Queue<PresenceVar<T>> _unassignedPresenceVars = new Queue<PresenceVar<T>>();
+        private readonly Dictionary<string, PresenceVar<T>> _assignedPresenceVars = new Dictionary<string, PresenceVar<T>>();
+        private readonly SelfPresenceVar<T> _selfPresenceVar;
+
+        public PresenceVarAssigner(SelfPresenceVar<T> selfPresenceVar)
+        {
+            _selfPresenceVar = selfPresenceVar;
+        }
+
+        public void Subscribe(PresenceTracker presenceTracker)
+        {
+            presenceTracker.OnPresenceAdded += HandlePresenceAdded;
+            presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
+        }
+
+        public void AddPresenceVar(PresenceVar<T> presenceVar)
+        {
+            if (presenceVar.Owner == null)
+            {
+                _unassignedPresenceVars.Enqueue(presenceVar);
+            }
+            else
+            {
+                _assignedPresenceVars.Add(presenceVar.Owner.UserId, presenceVar);
+            }
+        }
+
+        private void HandlePresenceAdded(IUserPresence presence)
+        {
+            if (_unassignedPresenceVars.Count == 0)
+            {
+                ErrorHandler?.Invoke(new InvalidOperationException($"Not enough presence vars to handle presence."));
+            }
+            else if (_assignedPresenceVars.ContainsKey(presence.UserId))
+            {
+                ErrorHandler?.Invoke(new InvalidOperationException($"User {presence.UserId} already has var assigned."));
+            }
+            else
+            {
+                _assignedPresenceVars.Add(presence.UserId, _unassignedPresenceVars.Dequeue());
+            }
+        }
+
+        private void HandlePresenceRemoved(IUserPresence presence)
+        {
+            if (!_assignedPresenceVars.ContainsKey(presence.UserId))
+            {
+                // todo I don't think this is an error...
+                // user presence left that hadn't been assigned to any vars.
+                return;
+            }
+
+            PresenceVar<T> varToRemove = _assignedPresenceVars[presence.UserId];
+            varToRemove.Owner = null;
+            _assignedPresenceVars.Remove(presence.UserId);
+            _unassignedPresenceVars.Enqueue(varToRemove);
+        }
+    }
+}
