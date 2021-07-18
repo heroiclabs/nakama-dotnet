@@ -58,6 +58,7 @@ namespace NakamaSync
         public void MarkRequiresValidation(ValidationHandler<T> validationHandler)
         {
             _validationHandler = validationHandler;
+            // todo set validation status to pending here?
         }
 
         internal bool InvokeValidationHandler(IUserPresence source, ValueChange<T> change)

@@ -47,37 +47,55 @@ namespace Nakama.Tests
 
             for (int i = 0; i < numTestVars; i++)
             {
-                var newSharedBool = new SharedVar<bool>();
-                registry.Register(keyGenerator(session.UserId, nameof(newSharedBool), i),  newSharedBool);
-                SharedBools.Add(newSharedBool);
+                var sharedBool = new SharedVar<bool>();
+                registry.Register(keyGenerator(session.UserId, nameof(sharedBool), i),  sharedBool);
+                SharedBools.Add(sharedBool);
 
-                var newSharedFloat = new SharedVar<float>();
-                registry.Register(keyGenerator(session.UserId, nameof(newSharedFloat), i), newSharedFloat);
-                SharedFloats.Add(newSharedFloat);
+                var sharedFloat = new SharedVar<float>();
+                registry.Register(keyGenerator(session.UserId, nameof(sharedFloat), i), sharedFloat);
+                SharedFloats.Add(sharedFloat);
 
-                var newSharedInt = new SharedVar<int>();
-                registry.Register(keyGenerator(session.UserId, nameof(newSharedInt), i), newSharedInt);
-                SharedInts.Add(newSharedInt);
+                var sharedInt = new SharedVar<int>();
+                registry.Register(keyGenerator(session.UserId, nameof(sharedInt), i), sharedInt);
+                SharedInts.Add(sharedInt);
 
-                var newSharedString = new SharedVar<string>();
-                registry.Register(keyGenerator(session.UserId, nameof(newSharedString), i), newSharedString);
-                SharedStrings.Add(newSharedString);
+                var sharedString = new SharedVar<string>();
+                registry.Register(keyGenerator(session.UserId, nameof(sharedString), i), sharedString);
+                SharedStrings.Add(sharedString);
+            }
 
-                var newPresenceBool = new PresenceVar<bool>();
-                registry.Register(keyGenerator(session.UserId, nameof(newPresenceBool), i), newPresenceBool);
-                UserBools.Add(newPresenceBool);
+            var selfBool = new SelfVar<bool>();
+            var selfFloat = new SelfVar<float>();
+            var selfInt = new SelfVar<int>();
+            var selfString = new SelfVar<string>();
 
-                var newPresenceFloat = new PresenceVar<float>();
-                registry.Register(keyGenerator(session.UserId, nameof(newPresenceFloat), i), newPresenceFloat);
-                UserFloats.Add(newPresenceFloat);
+            var presenceBools = new List<PresenceVar<bool>>();
+            var presenceFloats = new List<PresenceVar<float>>();
+            var presenceInts = new List<PresenceVar<int>>();
+            var presenceStrings = new List<PresenceVar<string>>();
 
-                var newPresenceInt = new PresenceVar<int>();
-                registry.Register(keyGenerator(session.UserId, nameof(newPresenceInt), i), newPresenceInt);
-                UserInts.Add(newPresenceInt);
+            for (int i = 0; i < numTestVars; i++)
+            {
+                var presenceBool = new PresenceVar<bool>();
+                presenceBools.Add(presenceBool);
 
-                var newPresenceString = new PresenceVar<string>();
-                registry.Register(keyGenerator(session.UserId, nameof(newPresenceString), i), newPresenceString);
-                UserStrings.Add(newPresenceString);
+                var presenceFloat = new PresenceVar<float>();
+                presenceFloats.Add(presenceFloat);
+
+                var presenceInt = new PresenceVar<int>();
+                presenceInts.Add(presenceInt);
+
+                var presenceString = new PresenceVar<string>();
+                presenceStrings.Add(presenceString);
+            }
+
+            // todo key generator doesn't affect presence/self vars.
+            if (numTestVars != 0)
+            {
+                registry.Register("presenceBools", selfBool, presenceBools);
+                registry.Register("presenceFloats", selfFloat, presenceFloats);
+                registry.Register("presenceInts", selfInt, presenceInts);
+                registry.Register("presenceStrings", selfString, presenceStrings);
             }
         }
 
