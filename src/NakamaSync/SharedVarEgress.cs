@@ -35,7 +35,7 @@ namespace NakamaSync
             _hostTracker = hostTracker;
         }
 
-        public void Subscribe(VarRegistry registry, HandshakeRequester requester)
+        public void Subscribe(SharedVarRegistry registry, HandshakeRequester requester)
         {
             requester.OnHandshakeSuccess += () =>
             {
@@ -45,7 +45,7 @@ namespace NakamaSync
             };
         }
 
-        public void Subscribe(VarRegistry registry)
+        public void Subscribe(SharedVarRegistry registry)
         {
             Subscribe(registry.SharedBools, values => values.SharedBools);
             Subscribe(registry.SharedFloats, values => values.SharedFloats);
@@ -70,11 +70,11 @@ namespace NakamaSync
 
             if (isHost)
             {
-                _sharedHostEgress.HandleLocalSharedVarChanged(key, evt.ValueChange.NewValue, accessor);
+                _sharedHostEgress.HandleLocalSharedVarChanged(key, evt.Var, evt.ValueChange.NewValue, accessor);
             }
             else
             {
-                _sharedVarGuestEgress.HandleLocalSharedVarChanged(key, evt.ValueChange.NewValue, accessor);
+                _sharedVarGuestEgress.HandleLocalSharedVarChanged(key, evt.Var, evt.ValueChange.NewValue, accessor);
             }
         }
     }

@@ -92,7 +92,7 @@ namespace Nakama
         public override string ToString()
         {
             return
-                $"UserPresence(Persistence={Persistence}, SessionId='{SessionId}', Status='{Status}', Username='{Username}', UserId='{UserId}')";
+                $"UserPresence(Persistence='{Persistence}', SessionId='{SessionId}', Status='{Status}', Username='{Username}', UserId='{UserId}')";
         }
     }
 }

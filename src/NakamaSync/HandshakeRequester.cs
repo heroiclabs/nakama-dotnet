@@ -29,7 +29,7 @@ namespace NakamaSync
         public event Action OnHandshakeSuccess;
         public event Action OnHandshakeFailure;
 
-        private readonly VarKeys _keys;
+        private readonly VarRegistry _registry;
 
         // todo handle error with sending handshake and resend if needed
         private bool _sentHandshake;
@@ -38,9 +38,9 @@ namespace NakamaSync
         private PresenceVarIngress _presenceRoleIngress;
         private string _userId;
 
-        public HandshakeRequester(VarKeys keys, SharedVarIngress sharedVarGuestIngress, PresenceVarIngress presenceRoleIngress, string userId)
+        public HandshakeRequester(VarRegistry registry, SharedVarIngress sharedVarGuestIngress, PresenceVarIngress presenceRoleIngress, string userId)
         {
-            _keys = keys;
+            _registry = registry;
             _sharedVarGuestIngress = sharedVarGuestIngress;
             _presenceRoleIngress = presenceRoleIngress;
             _userId = userId;
@@ -86,7 +86,7 @@ namespace NakamaSync
 
         private void RequestHandshake(IUserPresence self, SyncSocket socket)
         {
-            var keysForValidation = _keys.GetKeys();
+            var keysForValidation = _registry.GetAllKeys();
             socket.SendHandshakeRequest(new HandshakeRequest(keysForValidation.ToList()));
             _sentHandshake = true;
         }

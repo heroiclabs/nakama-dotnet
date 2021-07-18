@@ -25,7 +25,6 @@ namespace NakamaSync
 
     internal class SyncServices
     {
-        private readonly VarKeys _varKeys;
         private readonly VarRegistry _varRegistry;
         private readonly SyncSocket _syncSocket;
         private readonly PresenceTracker _presenceTracker;
@@ -43,23 +42,22 @@ namespace NakamaSync
         private readonly HandshakeResponseHandler _handshakeResponseHandler;
         private readonly ISocket _socket;
         private readonly HostMigrator _migrator;
+
+        private readonly PresenceVarRotators _presenceVarRotators;
+
         private bool _initialized;
 
         private readonly List<ISyncService> _services = new List<ISyncService>();
 
         public SyncServices(ISocket socket, ISession session, VarRegistry varRegistry, SyncOpcodes opcodes)
         {
-            // todo odd/annoying that these are coupled together in this manner.
-            var varKeys = varRegistry.VarKeys;
-            _services.Add(varKeys);
-
             var presenceTracker = new PresenceTracker(session.UserId);
             _services.Add(presenceTracker);
 
             var hostTracker = new HostTracker(presenceTracker);
             _services.Add(hostTracker);
 
-            var lockVersionGuard = new LockVersionGuard(varKeys);
+            var lockVersionGuard = new LockVersionGuard();
             _services.Add(lockVersionGuard);
 
             var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
@@ -68,16 +66,16 @@ namespace NakamaSync
             var envelopeBuilder = new EnvelopeBuilder(syncSocket);
             _services.Add(envelopeBuilder);
 
-            var sharedGuestIngress = new SharedVarGuestIngress(varKeys, presenceTracker);
+            var sharedGuestIngress = new SharedVarGuestIngress(presenceTracker);
             _services.Add(sharedGuestIngress);
 
-            var sharedHostIngress = new SharedVarHostIngress(varKeys, envelopeBuilder);
+            var sharedHostIngress = new SharedVarHostIngress(lockVersionGuard, envelopeBuilder);
             _services.Add(sharedHostIngress);
 
-            var presenceVarGuestIngress = new PresenceVarGuestIngress(varKeys, presenceTracker);
+            var presenceVarGuestIngress = new PresenceVarGuestIngress(presenceTracker);
             _services.Add(presenceVarGuestIngress);
 
-            var presenceVarHostIngress = new PresenceVarHostIngress(varKeys, envelopeBuilder);
+            var presenceVarHostIngress = new PresenceVarHostIngress(lockVersionGuard, envelopeBuilder);
             _services.Add(presenceVarHostIngress);
 
             var sharedVarGuestIngress = new SharedVarIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
@@ -86,19 +84,19 @@ namespace NakamaSync
             var presenceRoleIngress = new PresenceVarIngress(presenceVarGuestIngress, presenceVarHostIngress, varRegistry, lockVersionGuard);
             _services.Add(presenceRoleIngress);
 
-            var handshakeRequester = new HandshakeRequester(varKeys, sharedVarGuestIngress, presenceRoleIngress, session.UserId);
+            var handshakeRequester = new HandshakeRequester(varRegistry, sharedVarGuestIngress, presenceRoleIngress, session.UserId);
             _services.Add(handshakeRequester);
 
-            var handshakeResponder = new HandshakeResponder(varKeys, varRegistry, presenceTracker);
+            var handshakeResponder = new HandshakeResponder(lockVersionGuard, varRegistry, presenceTracker);
             _services.Add(handshakeResponder);
 
             var handshakeResponseHandler = new HandshakeResponseHandler(sharedVarGuestIngress, presenceRoleIngress);
             _services.Add(handshakeResponseHandler);
 
-            var sharedVarGuestEgress = new SharedVarGuestEgress(varKeys, envelopeBuilder);
+            var sharedVarGuestEgress = new SharedVarGuestEgress(lockVersionGuard, envelopeBuilder);
             _services.Add(sharedVarGuestIngress);
 
-            var sharedHostEgress = new SharedVarHostEgress(varKeys, envelopeBuilder);
+            var sharedHostEgress = new SharedVarHostEgress(lockVersionGuard, envelopeBuilder);
             _services.Add(sharedHostEgress);
 
             var sharedVarHostEgress = new SharedVarEgress(sharedVarGuestEgress, sharedHostEgress, hostTracker);
@@ -107,7 +105,9 @@ namespace NakamaSync
             var migrator = new HostMigrator(varRegistry, envelopeBuilder);
             _services.Add(migrator);
 
-            _varKeys = varKeys;
+            var presenceVarRotators = new PresenceVarRotators(presenceTracker);
+            _services.Add(presenceVarRotators);
+
             _varRegistry = varRegistry;
             _socket = socket;
             _syncSocket = syncSocket;
@@ -139,6 +139,7 @@ namespace NakamaSync
             _varRegistry.ReceiveMatch(match);
             _syncSocket.ReceiveMatch(match);
             _presenceTracker.ReceiveMatch(match);
+            _presenceVarRotators.ReceiveMatch(match);
         }
 
         public void Initialize(bool isMatchCreator, SyncErrorHandler errorHandler, ILogger logger)
@@ -159,7 +160,7 @@ namespace NakamaSync
 
             if (isMatchCreator)
             {
-                _sharedVarHostEgress.Subscribe(_varRegistry);
+                _sharedVarHostEgress.Subscribe(_varRegistry.SharedVarRegistry);
                 _sharedVarGuestIngress.Subscribe(_syncSocket, _hostTracker);
                 _presenceRoleIngress.Subscribe(_syncSocket, _hostTracker);
             }
@@ -170,14 +171,15 @@ namespace NakamaSync
                 // another subscribe call
                 _handshakeRequester.Subscribe(_syncSocket, _hostTracker, _presenceTracker);
 
-                _sharedVarHostEgress.Subscribe(_varRegistry, _handshakeRequester);
+                _sharedVarHostEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
             }
 
-            _sharedVarHostEgress.Subscribe(_varRegistry, _handshakeRequester);
+            _sharedVarHostEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
 
             _handshakeResponder.Subscribe(_syncSocket);
 
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
+            _presenceVarRotators.Register(_varRegistry.PresenceVarRegistry);
             _initialized = true;
         }
     }

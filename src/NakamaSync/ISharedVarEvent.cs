@@ -21,6 +21,8 @@ namespace NakamaSync
     public interface ISharedVarEvent<T>
     {
         IUserPresence Source { get; }
+        // todo add this property to presence var event as well?
+        SharedVar<T> Var { get; }
         ValueChange<T> ValueChange { get; }
         ValidationChange ValidationChange { get; }
     }

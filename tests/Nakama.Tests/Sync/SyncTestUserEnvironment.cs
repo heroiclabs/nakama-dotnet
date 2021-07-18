@@ -63,21 +63,21 @@ namespace Nakama.Tests
                 registry.Register(keyGenerator(session.UserId, nameof(newSharedString), i), newSharedString);
                 SharedStrings.Add(newSharedString);
 
-                var newUserBool = new PresenceVar<bool>();
-                registry.Register(keyGenerator(session.UserId, nameof(newUserBool), i), newUserBool);
-                UserBools.Add(newUserBool);
+                var newPresenceBool = new PresenceVar<bool>();
+                registry.Register(keyGenerator(session.UserId, nameof(newPresenceBool), i), newPresenceBool);
+                UserBools.Add(newPresenceBool);
 
-                var newUserFloat = new PresenceVar<float>();
-                registry.Register(keyGenerator(session.UserId, nameof(newUserFloat), i), newUserFloat);
-                UserFloats.Add(newUserFloat);
+                var newPresenceFloat = new PresenceVar<float>();
+                registry.Register(keyGenerator(session.UserId, nameof(newPresenceFloat), i), newPresenceFloat);
+                UserFloats.Add(newPresenceFloat);
 
-                var newUserInt = new PresenceVar<int>();
-                registry.Register(keyGenerator(session.UserId, nameof(newUserInt), i), newUserInt);
-                UserInts.Add(newUserInt);
+                var newPresenceInt = new PresenceVar<int>();
+                registry.Register(keyGenerator(session.UserId, nameof(newPresenceInt), i), newPresenceInt);
+                UserInts.Add(newPresenceInt);
 
-                var newUserString = new PresenceVar<string>();
-                registry.Register(keyGenerator(session.UserId, nameof(newUserString), i), newUserString);
-                UserStrings.Add(newUserString);
+                var newPresenceString = new PresenceVar<string>();
+                registry.Register(keyGenerator(session.UserId, nameof(newPresenceString), i), newPresenceString);
+                UserStrings.Add(newPresenceString);
             }
         }
 

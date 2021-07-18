@@ -27,16 +27,13 @@ namespace NakamaSync
     /// </summary>
     public class PresenceVar<T> : Var<T>
     {
-        /// <summary>
-        /// If this delegate is set and the current client is a guest, then
-        /// when a synced value is set, this client will reach out to the
-        /// host who will validate and if it's validated the host will send to all clients
-        /// otherwise a ReplicationValidationException will be thrown on this device.
-        /// </summary>
+        public event PresenceChangedHandler OnPresenceChanged;
+
         public event Action<IPresenceVarEvent<T>> OnValueChanged;
 
-        public event PresenceChangedHandler OnPresenceChanged;
-        public IUserPresence Owner { get; internal set; }
+        public IUserPresence Presence => _presence;
+
+        private IUserPresence _presence;
 
         internal void SetValue(T value, ValidationStatus validationStatus)
         {
@@ -49,17 +46,31 @@ namespace NakamaSync
             var valueChange = new ValueChange<T>(oldValue, value);
             var statusChange = new ValidationChange(oldStatus, validationStatus);
 
-            OnValueChanged?.Invoke(new PresenceVarEvent<T>(Owner, valueChange, statusChange));
+            OnValueChanged?.Invoke(new PresenceVarEvent<T>(Presence, valueChange, statusChange));
         }
 
         internal override void Reset()
         {
-            Owner = null;
+            SetPresence(null);
+            OnPresenceChanged = null;
             Self = null;
             _value = default(T);
             _validationHandler = null;
             _validationStatus = ValidationStatus.None;
             OnValueChanged = null;
+        }
+
+        internal void SetPresence(IUserPresence presence)
+        {
+            if (presence == _presence)
+            {
+                // todo log warning here?
+                return;
+            }
+
+            var oldOwner = _presence;
+            var presenceChange = new PresenceChange(oldOwner, presence);
+            OnPresenceChanged?.Invoke(presenceChange);
         }
     }
 }

@@ -24,18 +24,18 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private readonly VarKeys _keys;
+        private readonly LockVersionGuard _lockVersionGuard;
         private readonly EnvelopeBuilder _builder;
 
-        public SharedVarHostEgress(VarKeys keys, EnvelopeBuilder builder)
+        public SharedVarHostEgress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
         {
-            _keys = keys;
+            _lockVersionGuard = lockVersionGuard;
             _builder = builder;
         }
 
-        public void HandleLocalSharedVarChanged<T>(string key, T newValue, SharedVarAccessor<T> accessor)
+        public void HandleLocalSharedVarChanged<T>(string key, SharedVar<T> var, T newValue, SharedVarAccessor<T> accessor)
         {
-            var status = _keys.GetValidationStatus(key);
+            var status = var.ValidationStatus;
 
             if (status == ValidationStatus.Pending)
             {
@@ -43,8 +43,8 @@ namespace NakamaSync
                 return;
             }
 
-            _keys.IncrementLockVersion(key);
-            var sharedValue = new SharedValue<T>(key, newValue, _keys.GetLockVersion(key), status);
+            _lockVersionGuard.IncrementLockVersion(key);
+            var sharedValue = new SharedValue<T>(key, newValue, _lockVersionGuard.GetLockVersion(key), status);
             _builder.AddSharedVar(accessor, sharedValue);
             _builder.SendEnvelope();
         }

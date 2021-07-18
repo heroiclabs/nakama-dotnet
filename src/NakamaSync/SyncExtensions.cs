@@ -64,7 +64,8 @@ using Nakama;
 // think about if leavematch should clear all variables as opposed to being dropped from a match
 // which would keep the variables there?
 // todo should logic for sharedvars and presencevars be combined in places?
-
+// todo create a syncmatch struct and expose presences.
+// add null checks for inputs and maybe more input validation
 using System;
 
 namespace NakamaSync

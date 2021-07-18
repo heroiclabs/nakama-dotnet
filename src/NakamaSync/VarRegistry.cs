@@ -22,32 +22,101 @@ namespace NakamaSync
 {
     public class VarRegistry
     {
-        internal VarKeys VarKeys => _keys;
+        internal SharedVarRegistry SharedVarRegistry => _sharedVarRegistry;
+        internal PresenceVarRegistry PresenceVarRegistry => _presenceVarRegistry;
 
-        internal Dictionary<string, SharedVar<bool>> SharedBools { get; }
-        internal Dictionary<string, SharedVar<float>> SharedFloats { get; }
-        internal Dictionary<string, SharedVar<int>> SharedInts { get; }
-        internal Dictionary<string, SharedVar<string>> SharedStrings { get; }
-
-        internal Dictionary<string, PresenceVar<bool>> PresenceBools { get; }
-        internal Dictionary<string, PresenceVar<float>> PresenceFloats { get; }
-        internal Dictionary<string, PresenceVar<int>> PresenceInts { get; }
-        internal Dictionary<string, PresenceVar<string>> PresenceStrings { get; }
-
-        private readonly VarKeys _keys = new VarKeys();
+        private readonly SharedVarRegistry _sharedVarRegistry;
+        private readonly PresenceVarRegistry _presenceVarRegistry;
         private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
+        private readonly HashSet<string> _registeredKeys = new HashSet<string>();
 
         public VarRegistry()
         {
-            SharedBools = new Dictionary<string, SharedVar<bool>>();
-            SharedFloats = new Dictionary<string, SharedVar<float>>();
-            SharedInts = new Dictionary<string, SharedVar<int>>();
-            SharedStrings = new Dictionary<string, SharedVar<string>>();
+            _sharedVarRegistry = new SharedVarRegistry();
+            _presenceVarRegistry = new PresenceVarRegistry();
+        }
 
-            PresenceBools = new Dictionary<string, PresenceVar<bool>>();
-            PresenceFloats = new Dictionary<string, PresenceVar<float>>();
-            PresenceInts = new Dictionary<string, PresenceVar<int>>();
-            PresenceStrings = new Dictionary<string, PresenceVar<string>>();
+        public void Register(string key, SharedVar<bool> sharedBool)
+        {
+            Register<bool>(key, sharedBool, _sharedVarRegistry.SharedBools);
+        }
+
+        public void Register(string key, SharedVar<int> sharedInt)
+        {
+            Register<int>(key, sharedInt, _sharedVarRegistry.SharedInts);
+        }
+
+        public void Register(string key, SharedVar<float> sharedFloat)
+        {
+            Register<float>(key, sharedFloat, _sharedVarRegistry.SharedFloats);
+        }
+
+        public void Register(string key, SharedVar<string> sharedString)
+        {
+            Register<string>(key, sharedString, _sharedVarRegistry.SharedStrings);
+        }
+
+        public void Register(string key, SelfPresenceVar<bool> selfPresenceBool, IEnumerable<PresenceVar<bool>> presenceBools)
+        {
+            Register<bool>(key, selfPresenceBool, presenceBools, _presenceVarRegistry.PresenceBools);
+        }
+
+        public void Register(string key, SelfPresenceVar<float> selfPresenceFloat, IEnumerable<PresenceVar<float>> presenceFloats)
+        {
+            Register<float>(key, selfPresenceFloat, presenceFloats, _presenceVarRegistry.PresenceFloats);
+        }
+
+        public void Register(string key, SelfPresenceVar<int> selfPresenceInt, IEnumerable<PresenceVar<int>> presenceInts)
+        {
+            Register<int>(key, selfPresenceInt, presenceInts, _presenceVarRegistry.PresenceInts);
+        }
+
+        public void Register(string key, SelfPresenceVar<string> selfPresenceString, IEnumerable<PresenceVar<string>> presenceStrings)
+        {
+            Register<string>(key, selfPresenceString, presenceStrings, _presenceVarRegistry.PresenceStrings);
+        }
+
+        private void Register<T>(string key, SharedVar<T> var, Dictionary<string, SharedVar<T>> varDict)
+        {
+            if (!_registeredKeys.Add(key))
+            {
+                throw new InvalidOperationException($"Attempted to register duplicate key {key}");
+            }
+
+            if (!_registeredVars.Add(var))
+            {
+                throw new InvalidOperationException($"Attempted to register duplicate var {var}");
+            }
+
+            varDict.Add(key, var);
+        }
+
+        private void Register<T>(string key, SelfPresenceVar<T> selfPresenceVar, IEnumerable<PresenceVar<T>> presenceVars, Dictionary<string, PresenceVarCollection<T>> varDict)
+        {
+            if (!_registeredKeys.Add(key))
+            {
+                throw new InvalidOperationException($"Attempted to register duplicate key {key}");
+            }
+
+            if (!_registeredVars.Add(selfPresenceVar))
+            {
+                throw new InvalidOperationException($"Attempted to register duplicate var {selfPresenceVar}");
+            }
+
+            foreach (var presenceVar in presenceVars)
+            {
+                if (!_registeredVars.Add(selfPresenceVar))
+                {
+                    throw new InvalidOperationException($"Attempted to register duplicate var {presenceVar}");
+                }
+            }
+
+            varDict[key] = new PresenceVarCollection<T>(selfPresenceVar, presenceVars);
+        }
+
+        public HashSet<string> GetAllKeys()
+        {
+            return _registeredKeys;
         }
 
         internal void ReceiveMatch(IMatch match)
@@ -56,57 +125,6 @@ namespace NakamaSync
             {
                 var.Self = match.Self;
             }
-        }
-
-        public void Register(string id, SharedVar<bool> sharedBool)
-        {
-            Register<bool, SharedVar<bool>>(id, sharedBool, SharedBools);
-        }
-
-        public void Register(string id, SharedVar<int> sharedInt)
-        {
-            Register<int, SharedVar<int>>(id, sharedInt, SharedInts);
-        }
-
-        public void Register(string id, SharedVar<float> sharedFloat)
-        {
-            Register<float, SharedVar<float>>(id, sharedFloat, SharedFloats);
-        }
-
-        public void Register(string id, SharedVar<string> sharedString)
-        {
-            Register<string, SharedVar<string>>(id, sharedString, SharedStrings);
-        }
-
-        public void Register(string id, PresenceVar<bool> presenceBool)
-        {
-            Register<bool, PresenceVar<bool>>(id, presenceBool, PresenceBools);
-        }
-
-        public void Register(string id, PresenceVar<float> presenceFloat)
-        {
-            Register<float, PresenceVar<float>>(id, presenceFloat, PresenceFloats);
-        }
-
-        public void Register(string id, PresenceVar<int> presenceInt)
-        {
-            Register<int, PresenceVar<int>>(id, presenceInt, PresenceInts);
-        }
-
-        public void Register(string id, PresenceVar<string> presenceString)
-        {
-            Register<string, PresenceVar<string>>(id, presenceString, PresenceStrings);
-        }
-
-        private void Register<T, TVar>(string key, TVar var, Dictionary<string, TVar> dict) where TVar : Var<T>
-        {
-            if (!_registeredVars.Add(var))
-            {
-                throw new ArgumentException("Tried registering the same var with a different id: " + key);
-            }
-
-            _keys.RegisterKey(key, var.ValidationStatus);
-            dict.Add(key,var);
         }
     }
 }

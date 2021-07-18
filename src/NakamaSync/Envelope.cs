@@ -43,7 +43,7 @@ namespace NakamaSync
         public List<PresenceValue<int>> PresenceInts { get; set; }
 
         [DataMember(Name="user_strings"), Preserve]
-        public List<PresenceValue<string>> PResenceStrings { get; set; }
+        public List<PresenceValue<string>> PresenceStrings { get; set; }
 
         [DataMember(Name="shared_bool_acks"), Preserve]
         public List<ValidationAck> SharedBoolAcks { get; set; }
@@ -79,7 +79,7 @@ namespace NakamaSync
             PresenceBools = new List<PresenceValue<bool>>();
             PresenceFloats = new List<PresenceValue<float>>();
             PresenceInts = new List<PresenceValue<int>>();
-            PResenceStrings = new List<PresenceValue<string>>();
+            PresenceStrings = new List<PresenceValue<string>>();
 
             SharedBoolAcks = new List<ValidationAck>();
             SharedFloatAcks = new List<ValidationAck>();

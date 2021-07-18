@@ -25,13 +25,13 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private readonly VarKeys _keys;
+        private readonly LockVersionGuard _lockVersionGuard;
         private readonly VarRegistry _registry;
         private readonly PresenceTracker _presenceTracker;
 
-        public HandshakeResponder(VarKeys keys, VarRegistry registry, PresenceTracker presenceTracker)
+        public HandshakeResponder(LockVersionGuard lockVersionGuard, VarRegistry registry, PresenceTracker presenceTracker)
         {
-            _keys = keys;
+            _lockVersionGuard = lockVersionGuard;
             _registry = registry;
             _presenceTracker = presenceTracker;
         }
@@ -45,19 +45,19 @@ namespace NakamaSync
         {
             var syncValues = new Envelope();
 
-            bool success = request.AllKeys.SequenceEqual(_keys.GetKeys());
+            bool success = request.AllKeys.SequenceEqual(_registry.GetAllKeys());
 
             if (success)
             {
                 Logger?.InfoFormat($"Remote keys from {source.UserId} match the local keys from {_presenceTracker.GetSelf().UserId}");
-                CopySharedVarToGuest(_registry.SharedBools, syncValues.SharedBools);
-                CopySharedVarToGuest(_registry.SharedFloats, syncValues.SharedFloats);
-                CopySharedVarToGuest(_registry.SharedInts, syncValues.SharedInts);
-                CopySharedVarToGuest(_registry.SharedStrings, syncValues.SharedStrings);
-                CopyPresenceVarToGuest(_registry.PresenceBools, syncValues.PresenceBools);
-                CopyPresenceVarToGuest(_registry.PresenceFloats, syncValues.PresenceFloats);
-                CopyPresenceVarToGuest(_registry.PresenceInts, syncValues.PresenceInts);
-                CopyPresenceVarToGuest(_registry.PresenceStrings, syncValues.PResenceStrings);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedBools, syncValues.SharedBools);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedFloats, syncValues.SharedFloats);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedInts, syncValues.SharedInts);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedStrings, syncValues.SharedStrings);
+                CopyToGuestResponse(_registry.PresenceVarRegistry.PresenceBools, syncValues.PresenceBools);
+                CopyToGuestResponse(_registry.PresenceVarRegistry.PresenceFloats, syncValues.PresenceFloats);
+                CopyToGuestResponse(_registry.PresenceVarRegistry.PresenceInts, syncValues.PresenceInts);
+                CopyToGuestResponse(_registry.PresenceVarRegistry.PresenceStrings, syncValues.PresenceStrings);
             }
             else
             {
@@ -68,37 +68,50 @@ namespace NakamaSync
             socket.SendHandshakeResponse(source, response);
         }
 
-        private void CopySharedVarToGuest<T>(Dictionary<string, SharedVar<T>> vars, List<SharedValue<T>> values)
+        private void CopyToGuestResponse<T>(Dictionary<string, SharedVar<T>> vars, List<SharedValue<T>> values)
         {
             foreach (var kvp in vars)
             {
                 SharedVar<T> var = kvp.Value;
                 T rawValue = var.GetValue();
                 Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
-                var sharedValue = new SharedValue<T>(kvp.Key, rawValue, _keys.GetLockVersion(kvp.Key), _keys.GetValidationStatus(kvp.Key));
+                var sharedValue = new SharedValue<T>(kvp.Key, rawValue, _lockVersionGuard.GetLockVersion(kvp.Key), kvp.Value.ValidationStatus);
                 values.Add(sharedValue);
             }
         }
 
-        private void CopyPresenceVarToGuest<T>(Dictionary<string, PresenceVar<T>> vars, List<PresenceValue<T>> values)
+        private void CopyToGuestResponse<T>(Dictionary<string, PresenceVarCollection<T>> varsByKey, List<PresenceValue<T>> values)
         {
-            foreach (var varKvp in vars)
+            foreach (var varKvp in varsByKey)
             {
-                PresenceVar<T> var = varKvp.Value;
+                string varKey = varKvp.Key;
+                List<PresenceVar<T>> vars = varKvp.Value.PresenceVars;
 
                 Logger?.DebugFormat($"Handshake responder scanning through user values to copy for key: {varKvp.Key}");
 
-                // TODO handle data for a stale user
+                foreach (PresenceVar<T> var in vars)
+                {
+                    // TODO handle data for a stale user?
+                    if (var.Presence == null)
+                    {
+                        // this is a valid case
+                        continue;
+                    }
 
-                // use the var presences, not the presence tracker, in case
-                // user has stored a value left before this handshake.
+                    T rawValue = var.GetValue();
 
-                T rawValue = varKvp.Value.GetValue();
+                    Logger?.DebugFormat($"User variable value for initial payload: User: {varKvp.Key}, Raw Value: ${rawValue}");
 
-                Logger?.DebugFormat($"User variable value for initial payload: User: {varKvp.Key}, Raw Value: ${rawValue}");
+                    var value = new PresenceValue<T>(new PresenceVarKey(varKey, var.Presence.UserId), rawValue, _lockVersionGuard.GetLockVersion(varKvp.Key), var.ValidationStatus);
+                    values.Add(value);
+                }
 
-                var value = new PresenceValue<T>(varKvp.Key, rawValue, _keys.GetLockVersion(varKvp.Key), _keys.GetValidationStatus(varKvp.Key));
-                values.Add(value);
+                T rawSelfValue = varKvp.Value.SelfPresenceVar.GetValue();
+
+                Logger?.DebugFormat($"User variable value for initial payload: User: {varKvp.Key}, Raw Value: ${rawSelfValue}");
+
+                var selfValue = new PresenceValue<T>(new PresenceVarKey(varKey, varKvp.Value.SelfPresenceVar.Self.UserId), rawSelfValue, _lockVersionGuard.GetLockVersion(varKvp.Key), varKvp.Value.SelfPresenceVar.ValidationStatus);
+                values.Add(selfValue);
             }
         }
     }

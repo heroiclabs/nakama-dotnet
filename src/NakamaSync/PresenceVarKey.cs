@@ -14,25 +14,28 @@
 * limitations under the License.
 */
 
-using Nakama;
+using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
-    internal class SharedVarGuestIngress : ISyncService
+    // use a struct for bit-by-bit equality comparisons.
+    internal struct PresenceVarKey
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
-        public ILogger Logger { get; set; }
+        [DataMember(Name="key"), Preserve]
+        public string Key { get; set; }
 
-        private PresenceTracker _presenceTracker;
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
 
-        public SharedVarGuestIngress(PresenceTracker presenceTracker)
+        public PresenceVarKey(string key, string userId)
         {
-            _presenceTracker = presenceTracker;
+            Key = key;
+            UserId = userId;
         }
 
-        public void ProcessValue<T>(SharedVar<T> var, IUserPresence source, SharedValue<T> value)
+        public override string ToString()
         {
-            var.SetValue(source, value.Value, value.ValidationStatus);
+            return $"PresenceValueKey(Key='{Key}', UserId='{UserId}'";
         }
     }
 }

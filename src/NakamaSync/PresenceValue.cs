@@ -28,7 +28,7 @@ namespace NakamaSync
         public ValidationStatus ValidationStatus { get; set; }
 
         [DataMember(Name="key"), Preserve]
-        public string Key { get; set; }
+        public PresenceVarKey Key { get; set; }
 
         [DataMember(Name="lock_version"), Preserve]
         public int LockVersion { get; set;  }
@@ -36,7 +36,7 @@ namespace NakamaSync
         [DataMember(Name="value"), Preserve]
         public T Value { get; set; }
 
-        public PresenceValue(string key, T value, int lockVersion, ValidationStatus validationStatus)
+        public PresenceValue(PresenceVarKey key, T value, int lockVersion, ValidationStatus validationStatus)
         {
             Key = key;
             Value = value;

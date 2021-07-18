@@ -51,7 +51,7 @@ namespace NakamaSync
             var valueChange = new ValueChange<T>(oldValue, value);
             var statusChange = new ValidationChange(oldStatus, _validationStatus);
 
-            OnValueChanged?.Invoke(new SharedVarEvent<T>(source, valueChange, statusChange));
+            OnValueChanged?.Invoke(new SharedVarEvent<T>(source, this, valueChange, statusChange));
         }
     }
 }

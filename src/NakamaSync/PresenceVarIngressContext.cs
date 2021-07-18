@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 
 namespace NakamaSync
@@ -34,36 +35,47 @@ namespace NakamaSync
         }
     }
 
-    internal class UserIngressContext
+    internal class PresenceVarIngressContext
     {
-        public static List<PresenceVarIngressContext<bool>> FromBoolValues(Envelope envelope, VarRegistry registry)
+        public static List<PresenceVarIngressContext<bool>> FromBoolValues(Envelope envelope, PresenceVarRegistry registry)
         {
-            return UserIngressContext.FromValues<bool>(envelope.PresenceBools, registry.PresenceBools, env => env.PresenceBools, env => env.PresenceBoolAcks);
+            return PresenceVarIngressContext.FromValues<bool>(envelope.PresenceBools, registry.PresenceBools, env => env.PresenceBools, env => env.PresenceBoolAcks);
         }
 
-        public static List<PresenceVarIngressContext<float>> FromFloatValues(Envelope envelope, VarRegistry registry)
+        public static List<PresenceVarIngressContext<float>> FromFloatValues(Envelope envelope, PresenceVarRegistry registry)
         {
-            return UserIngressContext.FromValues<float>(envelope.PresenceFloats, registry.PresenceFloats, env => env.PresenceFloats, env => env.PresenceFloatAcks);
+            return PresenceVarIngressContext.FromValues<float>(envelope.PresenceFloats, registry.PresenceFloats, env => env.PresenceFloats, env => env.PresenceFloatAcks);
         }
 
-        public static List<PresenceVarIngressContext<int>> FromIntValues(Envelope envelope, VarRegistry registry)
+        public static List<PresenceVarIngressContext<int>> FromIntValues(Envelope envelope, PresenceVarRegistry registry)
         {
-            return UserIngressContext.FromValues<int>(envelope.PresenceInts, registry.PresenceInts, env => env.PresenceInts, env => env.PresenceIntAcks);
+            return PresenceVarIngressContext.FromValues<int>(envelope.PresenceInts, registry.PresenceInts, env => env.PresenceInts, env => env.PresenceIntAcks);
         }
 
-        public static List<PresenceVarIngressContext<string>> FromStringValues(Envelope envelope, VarRegistry registry)
+        public static List<PresenceVarIngressContext<string>> FromStringValues(Envelope envelope, PresenceVarRegistry registry)
         {
-            return UserIngressContext.FromValues<string>(envelope.PResenceStrings, registry.PresenceStrings, env => env.PResenceStrings, env => env.PresenceStringAcks);
+            return PresenceVarIngressContext.FromValues<string>(envelope.PresenceStrings, registry.PresenceStrings, env => env.PresenceStrings, env => env.PresenceStringAcks);
         }
 
-        private static List<PresenceVarIngressContext<T>> FromValues<T>(List<PresenceValue<T>> values, Dictionary<string, PresenceVar<T>> vars, PresenceVarAccessor<T> varAccessor, AckAccessor ackAccessor)
+        private static List<PresenceVarIngressContext<T>> FromValues<T>(List<PresenceValue<T>> values, Dictionary<string, PresenceVarCollection<T>> vars, PresenceVarAccessor<T> varAccessor, AckAccessor ackAccessor)
         {
             var contexts = new List<PresenceVarIngressContext<T>>();
 
             foreach (PresenceValue<T> value in values)
             {
-                var context = new PresenceVarIngressContext<T>(vars[value.Key], value, varAccessor, ackAccessor);
-                contexts.Add(context);
+                if (!vars.ContainsKey(value.Key.Key))
+                {
+                    // todo find a way to continue looping but still bubble up exception.
+                    throw new InvalidOperationException($"No var found with key {value.Key.Key}");
+                }
+
+                List<PresenceVar<T>> varList = vars[value.Key.ToString()].PresenceVars;
+
+                foreach (PresenceVar<T> var in varList)
+                {
+                    var context = new PresenceVarIngressContext<T>(var, value, varAccessor, ackAccessor);
+                    contexts.Add(context);
+                }
             }
 
             return contexts;

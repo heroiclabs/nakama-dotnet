@@ -22,35 +22,38 @@ namespace NakamaSync
 {
     // todo add some enum or option on how you would like the presence vars to be assigned.
     // like, do they all need to be filled or what.
-    internal class PresenceVarAssigner<T> : ISyncService
+    // todo assign errorhandler and logger to this
+    internal class PresenceVarRotator<T> : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly Queue<PresenceVar<T>> _unassignedPresenceVars = new Queue<PresenceVar<T>>();
         private readonly Dictionary<string, PresenceVar<T>> _assignedPresenceVars = new Dictionary<string, PresenceVar<T>>();
-        private readonly SelfPresenceVar<T> _selfPresenceVar;
+        private IUserPresence _self;
+        private readonly PresenceTracker _presenceTracker;
 
-        public PresenceVarAssigner(SelfPresenceVar<T> selfPresenceVar)
+        public PresenceVarRotator(PresenceTracker presenceTracker)
         {
-            _selfPresenceVar = selfPresenceVar;
+            _presenceTracker = presenceTracker;
         }
 
-        public void Subscribe(PresenceTracker presenceTracker)
+        public void ReceiveMatch(IMatch match)
         {
-            presenceTracker.OnPresenceAdded += HandlePresenceAdded;
-            presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
+            _self = match.Self;
+            _presenceTracker.OnPresenceAdded -= HandlePresenceAdded;
+            _presenceTracker.OnPresenceRemoved -= HandlePresenceRemoved;
         }
 
         public void AddPresenceVar(PresenceVar<T> presenceVar)
         {
-            if (presenceVar.Owner == null)
+            if (presenceVar.Presence == null)
             {
                 _unassignedPresenceVars.Enqueue(presenceVar);
             }
             else
             {
-                _assignedPresenceVars.Add(presenceVar.Owner.UserId, presenceVar);
+                _assignedPresenceVars.Add(presenceVar.Presence.UserId, presenceVar);
             }
         }
 
@@ -80,7 +83,7 @@ namespace NakamaSync
             }
 
             PresenceVar<T> varToRemove = _assignedPresenceVars[presence.UserId];
-            varToRemove.Owner = null;
+            varToRemove.SetPresence(null);
             _assignedPresenceVars.Remove(presence.UserId);
             _unassignedPresenceVars.Enqueue(varToRemove);
         }

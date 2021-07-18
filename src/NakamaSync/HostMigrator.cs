@@ -16,6 +16,7 @@
 
 using Nakama;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NakamaSync
 {
@@ -47,15 +48,15 @@ namespace NakamaSync
 
         private void Migrate(VarRegistry registry)
         {
-            ValidatePendingVars<bool>(registry.SharedBools, env => env.SharedBoolAcks);
-            ValidatePendingVars<float>(registry.SharedFloats, env => env.SharedFloatAcks);
-            ValidatePendingVars<int>(registry.SharedInts, env => env.SharedIntAcks);
-            ValidatePendingVars<string>(registry.SharedStrings, env => env.SharedStringAcks);
+            ValidatePendingVars<bool>(registry.SharedVarRegistry.SharedBools, env => env.SharedBoolAcks);
+            ValidatePendingVars<float>(registry.SharedVarRegistry.SharedFloats, env => env.SharedFloatAcks);
+            ValidatePendingVars<int>(registry.SharedVarRegistry.SharedInts, env => env.SharedIntAcks);
+            ValidatePendingVars<string>(registry.SharedVarRegistry.SharedStrings, env => env.SharedStringAcks);
 
-            ValidatePendingVars<bool>(registry.PresenceBools, env => env.PresenceBoolAcks);
-            ValidatePendingVars<float>(registry.PresenceFloats, env => env.PresenceFloatAcks);
-            ValidatePendingVars<int>(registry.PresenceInts, env => env.PresenceIntAcks);
-            ValidatePendingVars<string>(registry.PresenceStrings, env => env.PresenceStringAcks);
+            ValidatePendingVars<bool>(registry.PresenceVarRegistry.PresenceBools, env => env.PresenceBoolAcks);
+            ValidatePendingVars<float>(registry.PresenceVarRegistry.PresenceFloats, env => env.PresenceFloatAcks);
+            ValidatePendingVars<int>(registry.PresenceVarRegistry.PresenceInts, env => env.PresenceIntAcks);
+            ValidatePendingVars<string>(registry.PresenceVarRegistry.PresenceStrings, env => env.PresenceStringAcks);
 
             _builder.SendEnvelope();
         }
@@ -68,8 +69,9 @@ namespace NakamaSync
             }
         }
 
-        private void ValidatePendingVars<T>(Dictionary<string, PresenceVar<T>> vars, AckAccessor ackAccessor)
+        private void ValidatePendingVars<T>(Dictionary<string, PresenceVarCollection<T>> vars, AckAccessor ackAccessor)
         {
+            // TODO validate each var individually.
             foreach (var kvp in vars)
             {
                 _builder.AddAck(ackAccessor, kvp.Key);

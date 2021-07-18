@@ -24,12 +24,12 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private readonly VarKeys _keys;
+        private readonly LockVersionGuard _lockVersionGuard;
         private EnvelopeBuilder _builder;
 
-        public SharedVarHostIngress(VarKeys keys, EnvelopeBuilder builder)
+        public SharedVarHostIngress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
         {
-            _keys = keys;
+            _lockVersionGuard = lockVersionGuard;
             _builder = builder;
         }
 
@@ -75,8 +75,8 @@ namespace NakamaSync
         private void RollbackPendingValue<T>(SharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor)
         {
             // one guest has incorrect value. queue a rollback for all guests.
-            _keys.IncrementLockVersion(value.Key);
-            var outgoing = new SharedValue<T>(value.Key, var.GetValue(), _keys.GetLockVersion(value.Key), ValidationStatus.Validated);
+            _lockVersionGuard.IncrementLockVersion(value.Key);
+            var outgoing = new SharedValue<T>(value.Key, var.GetValue(), _lockVersionGuard.GetLockVersion(value.Key), ValidationStatus.Validated);
             _builder.AddSharedVar(accessor, value);
             _builder.SendEnvelope();
         }

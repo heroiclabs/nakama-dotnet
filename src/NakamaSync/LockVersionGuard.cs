@@ -1,6 +1,3 @@
-
-
-using System;
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -17,6 +14,8 @@ using System;
 * limitations under the License.
 */
 
+using System;
+using System.Collections.Concurrent;
 using Nakama;
 
 namespace NakamaSync
@@ -26,16 +25,11 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private VarKeys _keys;
-
-        public LockVersionGuard(VarKeys keys)
-        {
-            _keys = keys;
-        }
+        private readonly ConcurrentDictionary<string, int> _lockVersions = new ConcurrentDictionary<string, int>();
 
         public bool IsValidLockVersion(string key, int newLockVersion)
         {
-            if (!_keys.HasLockVersion(key))
+            if (!_lockVersions.ContainsKey(key))
             {
                 ErrorHandler?.Invoke(new ArgumentException($"Received unrecognized remote key: {key}"));
                 return false;
@@ -45,12 +39,27 @@ namespace NakamaSync
             // how to handle? think about 2x2 host guest combos
             // also if values are equal it doesn't matter. (review: I don't remember what that means)
 
-            int localLockVersion = _keys.GetLockVersion(key);
+            int localLockVersion = GetLockVersion(key);
 
             // if new lock version is zero and they are equal, that just means var hasn't been set yet by any client.
             // if lock versions are equal, find a way that user can use a callback to decide who wins?
             // can default to a callback that says first one wins.
-            return _keys.GetLockVersion(key) <= newLockVersion;
+            return localLockVersion <= newLockVersion;
+        }
+
+        public int GetLockVersion(string key)
+        {
+            return _lockVersions[key];
+        }
+
+        public bool HasLockVersion(string key)
+        {
+            return _lockVersions.ContainsKey(key);
+        }
+
+        public void IncrementLockVersion(string key)
+        {
+            _lockVersions[key]++;
         }
     }
 }

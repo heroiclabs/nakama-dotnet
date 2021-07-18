@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using Nakama;
 
@@ -53,17 +54,24 @@ namespace NakamaSync
         {
             Logger?.DebugFormat($"User role ingress received sync envelope.");
 
-            var bools = UserIngressContext.FromBoolValues(envelope, _registry);
-            HandleSyncEnvelope(source, bools, isHost);
+            try
+            {
+                var bools = PresenceVarIngressContext.FromBoolValues(envelope, _registry.PresenceVarRegistry);
+                HandleSyncEnvelope(source, bools, isHost);
 
-            var floats = UserIngressContext.FromFloatValues(envelope, _registry);
-            HandleSyncEnvelope(source, floats, isHost);
+                var floats = PresenceVarIngressContext.FromFloatValues(envelope, _registry.PresenceVarRegistry);
+                HandleSyncEnvelope(source, floats, isHost);
 
-            var ints = UserIngressContext.FromIntValues(envelope, _registry);
-            HandleSyncEnvelope(source, ints, isHost);
+                var ints = PresenceVarIngressContext.FromIntValues(envelope, _registry.PresenceVarRegistry);
+                HandleSyncEnvelope(source, ints, isHost);
 
-            var strings = UserIngressContext.FromStringValues(envelope, _registry);
-            HandleSyncEnvelope(source, strings, isHost);
+                var strings = PresenceVarIngressContext.FromStringValues(envelope, _registry.PresenceVarRegistry);
+                HandleSyncEnvelope(source, strings, isHost);
+            }
+            catch (Exception e)
+            {
+                ErrorHandler?.Invoke(e);
+            }
         }
 
         private void HandleSyncEnvelope<T>(IUserPresence source, List<PresenceVarIngressContext<T>> contexts, bool isHost)
@@ -74,7 +82,7 @@ namespace NakamaSync
             {
                 Logger?.DebugFormat($"User role ingress processing context: {context}");
 
-                if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key, context.Value.LockVersion))
+                if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key.ToString(), context.Value.LockVersion))
                 {
                     Logger?.DebugFormat($"User role ingress received invalid lock version: {context.Value.LockVersion}");
                     continue;

@@ -23,12 +23,10 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private VarKeys _keys;
         private PresenceTracker _presenceTracker;
 
-        public PresenceVarGuestIngress(VarKeys keys, PresenceTracker presenceTracker)
+        public PresenceVarGuestIngress(PresenceTracker presenceTracker)
         {
-            _keys = keys;
             _presenceTracker = presenceTracker;
         }
 
