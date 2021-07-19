@@ -29,7 +29,7 @@ namespace Nakama.Tests
         public int CreatorIndex { get; }
 
         private readonly Random _randomGuestGenerator = new Random(_RAND_GUEST_SEED);
-        private readonly List<SyncTestUserEnvironment> _syncTestUserEnvironments;
+        private readonly List<SyncTestUserEnvironment> _syncTestUserEnvironments = new List<SyncTestUserEnvironment>();
 
         public SyncTestEnvironment(
             SyncOpcodes opcodes,
@@ -40,21 +40,15 @@ namespace Nakama.Tests
         {
             CreatorIndex = creatorIndex;
 
-            var envs = new Dictionary<string, SyncTestUserEnvironment>();
-
             for (int i = 0; i < numClients; i++)
             {
-                ISession session = _syncTestUserEnvironments[i].Session;
-                envs[session.UserId] = new SyncTestUserEnvironment($"{Guid.NewGuid()}", opcodes, numClients, idGenerator ?? SyncTestSharedVars.DefaultVarIdGenerator);
+                idGenerator = idGenerator ?? SyncTestSharedVars.DefaultVarIdGenerator;
+                var env = new SyncTestUserEnvironment($"{Guid.NewGuid()}", opcodes, numClients, idGenerator);
+                _syncTestUserEnvironments.Add(env);
             }
         }
 
-        public async Task StartViaMatchmaker()
-        {
-
-        }
-
-        public void Start()
+        public void StartViaMatchmaker()
         {
             var parallelTasks = new List<Task>();
 
@@ -65,6 +59,21 @@ namespace Nakama.Tests
             }
 
             Task.WaitAll(parallelTasks.ToArray());
+        }
+
+        public async Task Start()
+        {
+            var match = await _syncTestUserEnvironments[CreatorIndex].CreateMatch();
+
+            for (int i = 0; i < _syncTestUserEnvironments.Count; i++)
+            {
+                if (i == CreatorIndex)
+                {
+                    continue;
+                }
+
+                await _syncTestUserEnvironments[i].JoinMatch(match.Id);
+            }
         }
 
         public void Dispose()

@@ -69,6 +69,7 @@ namespace NakamaSync
             }
 
             var oldOwner = _presence;
+            _presence = presence;
             var presenceChange = new PresenceChange(oldOwner, presence);
             OnPresenceChanged?.Invoke(presenceChange);
         }

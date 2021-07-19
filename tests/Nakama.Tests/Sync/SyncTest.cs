@@ -26,7 +26,7 @@ namespace Nakama.Tests.Socket
         private void SharedVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
-            testEnv.Start();
+            testEnv.StartViaMatchmaker();
             SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
             creatorEnv.SharedBools[0].SetValue(true);
             Assert.True(creatorEnv.SharedBools[0].GetValue());
@@ -63,7 +63,7 @@ namespace Nakama.Tests.Socket
                 idGenerator);
 
 
-            mismatchedEnv.Start();
+            await mismatchedEnv.Start();
 
             //await Assert.ThrowsAsync<InvalidOperationException>(() => );
 
@@ -74,7 +74,7 @@ namespace Nakama.Tests.Socket
         private async Task SharedVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
-            testEnv.Start();
+            await testEnv.Start();
 
             SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
             creatorEnv.SharedBools[0].SetValue(true);

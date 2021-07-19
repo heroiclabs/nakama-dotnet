@@ -32,12 +32,11 @@ using Nakama;
 // and the dispatching of presence objects off the socket.
 // TODO restore the default getvalue call with self
 // think about end match flow, resetting sync vars.
-// fix OnHostValdiate so that you have a better way of signalling intent that you want a var to be validated.
 // to string calls
 // expose interfaces, not concrete classes.
 // todo handle host changed
 // todo handle guest left
-// todo migrate pending values when host chanes
+// todo migrate pending values when host changes
 // override tostring
 // todo remove any event subscriptions in constructors.
 // todo parameter ordering
@@ -49,8 +48,6 @@ using Nakama;
 // todo shouldn't have public sets on the DTOs but need it due to tinyjson
 // todo add the reflection approach?
 // todo too many params in sync extensions methods
-// todo add Source presence to var events.
-// todo JoinSyncMatch should accept a matchmaker ticket as well as a match id
 // todo expose metadata to match id method.
 // think about what should happen to local changes that occur before the initial store is synced from handshake.
 // maybe it's game specific?
@@ -63,9 +60,10 @@ using Nakama;
 // TRACK VAR type for something like a ball where nobody is actually using it.
 // think about if leavematch should clear all variables as opposed to being dropped from a match
 // which would keep the variables there?
-// todo should logic for sharedvars and presencevars be combined in places?
 // todo create a syncmatch struct and expose presences.
 // add null checks for inputs and maybe more input validation
+// todo lock versions for presence vars should probably be tracked on a var-by-var rather than for the
+// whole presencevarcollection?
 using System;
 
 namespace NakamaSync

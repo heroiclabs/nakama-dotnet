@@ -26,7 +26,6 @@ namespace NakamaSync
         public ILogger Logger { get; set; }
 
         private SyncErrorHandler _errorHandler;
-        private ILogger _logger;
 
         private Dictionary<string, PresenceVarRotator<bool>> _boolRotators;
         private Dictionary<string, PresenceVarRotator<float>> _floatRotators;
@@ -41,6 +40,7 @@ namespace NakamaSync
             _floatRotators = new Dictionary<string, PresenceVarRotator<float>>();
             _intRotators = new Dictionary<string, PresenceVarRotator<int>>();
             _stringRotators = new Dictionary<string, PresenceVarRotator<string>>();
+            _presenceTracker = presenceTracker;
         }
 
         public void Register(PresenceVarRegistry registry)

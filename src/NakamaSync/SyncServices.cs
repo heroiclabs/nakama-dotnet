@@ -25,6 +25,9 @@ namespace NakamaSync
 
     internal class SyncServices
     {
+
+        private ILogger _logger;
+
         private readonly VarRegistry _varRegistry;
         private readonly SyncSocket _syncSocket;
         private readonly PresenceTracker _presenceTracker;
@@ -57,7 +60,7 @@ namespace NakamaSync
             var hostTracker = new HostTracker(presenceTracker);
             _services.Add(hostTracker);
 
-            var lockVersionGuard = new LockVersionGuard();
+            var lockVersionGuard = new LockVersionGuard(varRegistry);
             _services.Add(lockVersionGuard);
 
             var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
@@ -126,20 +129,13 @@ namespace NakamaSync
 
             _socket = socket;
             _migrator = migrator;
+            _presenceVarRotators = presenceVarRotators;
         }
 
         public Task GetHandshakeTask()
         {
              // todo handshake timeout? put it in the handshake requester.
             return _handshakeResponseHandler.GetHandshakeTask();
-        }
-
-        public void ReceiveMatch(IMatch match)
-        {
-            _varRegistry.ReceiveMatch(match);
-            _syncSocket.ReceiveMatch(match);
-            _presenceTracker.ReceiveMatch(match);
-            _presenceVarRotators.ReceiveMatch(match);
         }
 
         public void Initialize(bool isMatchCreator, SyncErrorHandler errorHandler, ILogger logger)
@@ -149,11 +145,15 @@ namespace NakamaSync
                 throw new InvalidOperationException("Sync services have already been initialized.");
             }
 
+            _logger = logger;
+
             foreach (ISyncService service in _services)
             {
                 service.ErrorHandler = errorHandler;
                 service.Logger = logger;
             }
+
+            _logger?.DebugFormat("Sync services initializing...");
 
             _presenceTracker.Subscribe(_socket);
             _migrator.Subscribe(_presenceTracker, _hostTracker);
@@ -181,6 +181,20 @@ namespace NakamaSync
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
             _presenceVarRotators.Register(_varRegistry.PresenceVarRegistry);
             _initialized = true;
+            _logger?.DebugFormat("Sync services initialized.");
+        }
+
+        public void ReceiveMatch(IMatch match)
+        {
+            _logger?.DebugFormat("Sync services are receiving match...");
+
+            _varRegistry.ReceiveMatch(match);
+            _syncSocket.ReceiveMatch(match);
+            _presenceTracker.ReceiveMatch(match);
+            _presenceVarRotators.ReceiveMatch(match);
+
+            _logger?.DebugFormat("Sync services received match.");
+
         }
     }
 }

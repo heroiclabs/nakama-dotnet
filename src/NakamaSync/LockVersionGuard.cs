@@ -27,6 +27,14 @@ namespace NakamaSync
 
         private readonly ConcurrentDictionary<string, int> _lockVersions = new ConcurrentDictionary<string, int>();
 
+        public LockVersionGuard(VarRegistry registry)
+        {
+            foreach (var key in registry.GetAllKeys())
+            {
+                Register(key);
+            }
+        }
+
         public bool IsValidLockVersion(string key, int newLockVersion)
         {
             if (!_lockVersions.ContainsKey(key))
@@ -60,6 +68,11 @@ namespace NakamaSync
         public void IncrementLockVersion(string key)
         {
             _lockVersions[key]++;
+        }
+
+        private void Register(string key)
+        {
+            _lockVersions[key] = 0;
         }
     }
 }

@@ -50,17 +50,12 @@ namespace Nakama.Tests
             _logger = TestsUtil.LoadConfiguration().StdOut ? null : new StdoutLogger();
             _varIdGenerator = varIdGenerator;
             _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, _numSharedVars, _varIdGenerator);
-        }
-
-        public async Task Connect()
-        {
-            _session = await _client.AuthenticateCustomAsync(_userId);
             _socket = new Nakama.Socket();
-            await _socket.ConnectAsync(_session);
         }
 
         public async Task StartMatchViaMatchmaker(int count, SyncErrorHandler errorHandler)
         {
+            await Connect();
             await _socket.AddMatchmakerAsync("*", minCount: count, maxCount: count);
 
             var matchedTcs = new TaskCompletionSource<IMatchmakerMatched>();
@@ -75,19 +70,28 @@ namespace Nakama.Tests
             _match = await _socket.JoinSyncMatch(_session, _opcodes, matchedTcs.Task.Result, _varRegistry, errorHandler, new StdoutLogger());
         }
 
-        public async Task CreateMatch()
+        public async Task<IMatch> CreateMatch()
         {
+            await Connect();
             _match = await _socket.CreateSyncMatch(_session, _varRegistry, _opcodes, _errorHandler, _logger);
+            return _match;
         }
 
         public async Task JoinMatch(string matchId)
         {
+            await Connect();
             await _socket.JoinSyncMatch(_session, _opcodes, matchId, _varRegistry, _errorHandler, _logger);
         }
 
         public async Task Dispose()
         {
             await _socket.CloseAsync();
+        }
+
+        private async Task Connect()
+        {
+            _session = await _client.AuthenticateCustomAsync(_userId);
+            await _socket.ConnectAsync(_session);
         }
     }
 }
