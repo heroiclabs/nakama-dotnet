@@ -19,19 +19,20 @@ using NakamaSync;
 
 namespace Nakama.Tests
 {
+    // todo apply varid generator to presence var collections
     public class SyncTestPresenceVars
     {
-        public List<PresenceVarCollection<bool>> PresenceBools { get; }
-        public List<PresenceVarCollection<float>> PresenceFloats { get; }
-        public List<PresenceVarCollection<int>> PresenceInts { get; }
-        public List<PresenceVarCollection<string>> PresenceStrings { get; }
+        public List<PresenceVarCollection<bool>> PresenceBoolCollections { get; }
+        public List<PresenceVarCollection<float>> PresenceFloatCollections { get; }
+        public List<PresenceVarCollection<int>> PresenceIntCollections { get; }
+        public List<PresenceVarCollection<string>> PresenceStringCollections { get; }
 
         public SyncTestPresenceVars(VarRegistry varRegistry, int numVarCollections, int presenceVarsPerCollection)
         {
-            PresenceBools = new List<PresenceVarCollection<bool>>();
-            PresenceFloats = new List<PresenceVarCollection<float>>();
-            PresenceInts = new List<PresenceVarCollection<int>>();
-            PresenceStrings = new List<PresenceVarCollection<string>>();
+            PresenceBoolCollections = new List<PresenceVarCollection<bool>>();
+            PresenceFloatCollections = new List<PresenceVarCollection<float>>();
+            PresenceIntCollections = new List<PresenceVarCollection<int>>();
+            PresenceStringCollections = new List<PresenceVarCollection<string>>();
 
             for (int i = 0; i < numVarCollections; i++)
             {
@@ -60,10 +61,21 @@ namespace Nakama.Tests
                     presenceStrings.Add(presenceString);
                 }
 
-                varRegistry.Register("presenceBools_" + i, new PresenceVarCollection<bool>(selfBool, presenceBools));
-                varRegistry.Register("presenceFloats_" + i, new PresenceVarCollection<float>(selfFloat, presenceFloats));
-                varRegistry.Register("presenceInts_" + i, new PresenceVarCollection<int>(selfInt, presenceInts));
-                varRegistry.Register("presenceStrings_" + i, new PresenceVarCollection<string>(selfString, presenceStrings));
+                var boolCollection = new PresenceVarCollection<bool>(selfBool, presenceBools);
+                PresenceBoolCollections.Add(boolCollection);
+                varRegistry.Register("presenceBools_" + i, boolCollection);
+
+                var floatCollection = new PresenceVarCollection<float>(selfFloat, presenceFloats);
+                PresenceFloatCollections.Add(floatCollection);
+                varRegistry.Register("presenceFloats_" + i, floatCollection);
+
+                var intCollection = new PresenceVarCollection<int>(selfInt, presenceInts);
+                PresenceIntCollections.Add(intCollection);
+                varRegistry.Register("presenceInts_" + i, intCollection);
+
+                var stringCollection = new PresenceVarCollection<string>(selfString, presenceStrings);
+                PresenceStringCollections.Add(stringCollection);
+                varRegistry.Register("presenceStrings_" + i, stringCollection);
             }
         }
     }

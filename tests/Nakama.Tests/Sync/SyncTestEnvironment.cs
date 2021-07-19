@@ -43,7 +43,25 @@ namespace Nakama.Tests
             for (int i = 0; i < numClients; i++)
             {
                 idGenerator = idGenerator ?? SyncTestSharedVars.DefaultVarIdGenerator;
-                var env = new SyncTestUserEnvironment($"{Guid.NewGuid()}", opcodes, numClients, idGenerator);
+                var env = new SyncTestUserEnvironment($"{Guid.NewGuid()}", opcodes, idGenerator, numSharedVars);
+                _syncTestUserEnvironments.Add(env);
+            }
+        }
+
+        public SyncTestEnvironment(
+            SyncOpcodes opcodes,
+            int numClients,
+            int numPresenceVarCollections,
+            int numPresenceVarsPerCollection,
+            int creatorIndex,
+            VarIdGenerator idGenerator = null)
+        {
+            CreatorIndex = creatorIndex;
+
+            for (int i = 0; i < numClients; i++)
+            {
+                idGenerator = idGenerator ?? SyncTestSharedVars.DefaultVarIdGenerator;
+                var env = new SyncTestUserEnvironment($"{Guid.NewGuid()}", opcodes, null, numPresenceVarCollections, numPresenceVarsPerCollection);
                 _syncTestUserEnvironments.Add(env);
             }
         }

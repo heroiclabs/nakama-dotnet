@@ -32,7 +32,6 @@ namespace Nakama.Tests
         private readonly SyncOpcodes _opcodes;
         private SyncTestPresenceVars _presenceVars;
         private SyncTestSharedVars _sharedVars;
-        private readonly int _numSharedVars;
         private readonly SyncErrorHandler _errorHandler;
         private readonly ILogger _logger;
         private readonly VarIdGenerator _varIdGenerator;
@@ -41,15 +40,23 @@ namespace Nakama.Tests
         private ISession _session;
         private ISocket _socket;
 
-        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, int numSharedVars, VarIdGenerator varIdGenerator)
+        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numPresenceVarCollections, int numPresenceVarsPerCollection) : this(userId, opcodes, varIdGenerator)
+        {
+            _presenceVars = new SyncTestPresenceVars(_varRegistry, numPresenceVarCollections, numPresenceVarsPerCollection);
+        }
+
+        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numSharedVars) : this(userId, opcodes, varIdGenerator)
+        {
+            _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, numSharedVars, _varIdGenerator);
+        }
+
+        private SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator)
         {
             _userId = userId;
             _opcodes = opcodes;
-            _numSharedVars = numSharedVars;
             _client = TestsUtil.FromSettingsFile();
             _logger = TestsUtil.LoadConfiguration().StdOut ? new StdoutLogger() : null;
             _varIdGenerator = varIdGenerator;
-            _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, _numSharedVars, _varIdGenerator);
             _socket = Nakama.Socket.From(_client);
         }
 

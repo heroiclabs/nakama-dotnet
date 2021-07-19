@@ -25,7 +25,12 @@ namespace Nakama.Tests.Socket
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private void SharedVarShouldRetainData()
         {
-            var testEnv = CreateDefaultEnvironment();
+            var testEnv = new SyncTestEnvironment(
+                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0);
+
             testEnv.StartViaMatchmaker();
             SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
             creatorEnv.SharedBools[0].SetValue(true);
@@ -33,16 +38,22 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-       /* [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private async Task PresenceVarShouldRetainData()
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        private void PresenceVarShouldRetainData()
         {
-            var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
-            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
-            creatorEnv.UserBools[0].SetValue(true);
-            Assert.True(creatorEnv.UserBools[0].GetValue(testEnv.GetCreatorPresence()));
+            var testEnv = new SyncTestEnvironment(
+                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                numClients: 2,
+                numPresenceVarCollections: 1,
+                numPresenceVarsPerCollection: 1,
+                creatorIndex: 0);
+
+            testEnv.StartViaMatchmaker();
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
+            creatorEnv.PresenceVars.PresenceBoolCollections[0].SelfVar.SetValue(true);
+            Assert.True(creatorEnv.PresenceVars.PresenceBoolCollections[0].SelfVar.GetValue());
             testEnv.Dispose();
-        }*/
+        }
 
         //todo unskip test
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS, Skip = "todo fix this")]
@@ -73,7 +84,12 @@ namespace Nakama.Tests.Socket
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task SharedVarShouldSyncData()
         {
-            var testEnv = CreateDefaultEnvironment();
+            var testEnv = new SyncTestEnvironment(
+                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0);
+
             testEnv.StartViaMatchmaker();
 
             SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
@@ -87,34 +103,30 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-       /*[Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task PresenceVarShouldSyncData()
         {
-            var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
-
-            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
-            creatorEnv.UserBools[0].SetValue(true);
-
-            IUserPresence guestPresence = testEnv.GetGuests()[0];
-            SyncTestUserEnvironment guestEnv = testEnv.GetUserEnv(guestPresence);
-            await Task.Delay(2500);
-
-            Assert.True(guestEnv.UserBools[0].HasValue(testEnv.GetCreatorPresence()));
-            Assert.True(guestEnv.UserBools[0].GetValue());
-
-            testEnv.Dispose();
-        }*/
-
-        // todo test variable status is intact after user leaves and then rejoins match (should pick up from
-        // where they left off.)
-        private SyncTestEnvironment CreateDefaultEnvironment()
-        {
-            return new SyncTestEnvironment(
+            var testEnv = new SyncTestEnvironment(
                 new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
                 numClients: 2,
-                numSharedVars: 1,
+                numPresenceVarCollections: 1,
+                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0);
+
+            testEnv.StartViaMatchmaker();
+
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
+            creatorEnv.PresenceVars.PresenceBoolCollections[0].SelfVar.SetValue(true);
+
+            await Task.Delay(2500);
+
+            IUserPresence guestPresence = testEnv.GetRandomGuestPresence();
+
+            var guestEnv = testEnv.GetUserEnv(guestPresence);
+
+            Assert.True(creatorEnv.PresenceVars.PresenceBoolCollections[1].PresenceVars[0].GetValue());
+
+            testEnv.Dispose();
         }
 
         private SyncErrorHandler CreateDefaultErrorHandler()
