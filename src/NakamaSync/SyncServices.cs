@@ -170,16 +170,15 @@ namespace NakamaSync
                 // todo just expose the anonymous lambdas outside here, no need to hide it in
                 // another subscribe call
                 _handshakeRequester.Subscribe(_syncSocket, _hostTracker, _presenceTracker);
-
                 _sharedVarHostEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
             }
 
             _sharedVarHostEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
-
             _handshakeResponder.Subscribe(_syncSocket);
-
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
+
             _presenceVarRotators.Register(_varRegistry.PresenceVarRegistry);
+
             _initialized = true;
             _logger?.DebugFormat("Sync services initialized.");
         }

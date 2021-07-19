@@ -79,9 +79,7 @@ namespace Nakama.Tests.Socket
             SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
             creatorEnv.SharedBools[0].SetValue(true);
 
-            System.Console.WriteLine("setting shared bool to true");
-
-            await Task.Delay(2500);
+            await Task.Delay(3000);
 
             SyncTestSharedVars guestEnv = testEnv.GetGuestEnv(testEnv.GetRandomGuestPresence()).SharedVars;
             Assert.True(guestEnv.SharedBools[0].GetValue());

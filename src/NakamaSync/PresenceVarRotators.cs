@@ -66,6 +66,14 @@ namespace NakamaSync
             }
         }
 
+        public void ReceiveMatch(IMatch match)
+        {
+            ReceiveMatch(match, _boolRotators);
+            ReceiveMatch(match, _floatRotators);
+            ReceiveMatch(match, _intRotators);
+            ReceiveMatch(match, _stringRotators);
+        }
+
         private void AddBool(string key, SelfVar<bool> selfVar, IEnumerable<PresenceVar<bool>> presenceVars)
         {
             Add(key, selfVar, presenceVars, _boolRotators);
@@ -84,22 +92,6 @@ namespace NakamaSync
         private void AddString(string key, SelfVar<string> selfVar, IEnumerable<PresenceVar<string>> presenceVars)
         {
             Add(key, selfVar, presenceVars, _stringRotators);
-        }
-
-        public void ReceiveMatch(IMatch match)
-        {
-            ReceiveMatch(match, _boolRotators);
-            ReceiveMatch(match, _floatRotators);
-            ReceiveMatch(match, _intRotators);
-            ReceiveMatch(match, _stringRotators);
-        }
-
-        private void ReceiveMatch<T>(IMatch match, Dictionary<string, PresenceVarRotator<T>> rotators)
-        {
-            foreach (PresenceVarRotator<T> rotator in rotators.Values)
-            {
-                rotator.ReceiveMatch(match);
-            }
         }
 
         private void Add<T>(
@@ -124,6 +116,14 @@ namespace NakamaSync
             }
 
             rotators.Add(key, rotator);
+        }
+
+        private void ReceiveMatch<T>(IMatch match, Dictionary<string, PresenceVarRotator<T>> rotators)
+        {
+            foreach (PresenceVarRotator<T> rotator in rotators.Values)
+            {
+                rotator.ReceiveMatch(match);
+            }
         }
     }
 }

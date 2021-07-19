@@ -60,7 +60,7 @@ namespace Nakama.Tests
 
             var matchedTcs = new TaskCompletionSource<IMatchmakerMatched>();
 
-            _socket.ReceivedMatchmakerMatched += (matched) =>
+            _socket.ReceivedMatchmakerMatched += matched =>
             {
                 matchedTcs.SetResult(matched);
             };

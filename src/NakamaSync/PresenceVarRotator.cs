@@ -30,19 +30,12 @@ namespace NakamaSync
 
         private readonly Queue<PresenceVar<T>> _unassignedPresenceVars = new Queue<PresenceVar<T>>();
         private readonly Dictionary<string, PresenceVar<T>> _assignedPresenceVars = new Dictionary<string, PresenceVar<T>>();
-        private IUserPresence _self;
         private readonly PresenceTracker _presenceTracker;
+        private IUserPresence _self;
 
         public PresenceVarRotator(PresenceTracker presenceTracker)
         {
             _presenceTracker = presenceTracker;
-        }
-
-        public void ReceiveMatch(IMatch match)
-        {
-            _self = match.Self;
-            _presenceTracker.OnPresenceAdded -= HandlePresenceAdded;
-            _presenceTracker.OnPresenceRemoved -= HandlePresenceRemoved;
         }
 
         public void AddPresenceVar(PresenceVar<T> presenceVar)
@@ -55,6 +48,13 @@ namespace NakamaSync
             {
                 _assignedPresenceVars.Add(presenceVar.Presence.UserId, presenceVar);
             }
+        }
+
+        public void ReceiveMatch(IMatch match)
+        {
+            _self = match.Self;
+            _presenceTracker.OnPresenceAdded -= HandlePresenceAdded;
+            _presenceTracker.OnPresenceRemoved -= HandlePresenceRemoved;
         }
 
         private void HandlePresenceAdded(IUserPresence presence)
@@ -77,8 +77,8 @@ namespace NakamaSync
         {
             if (!_assignedPresenceVars.ContainsKey(presence.UserId))
             {
-                // todo I don't think this is an error...
                 // user presence left that hadn't been assigned to any vars.
+                // this is perfectly valid.
                 return;
             }
 

@@ -57,7 +57,6 @@ namespace NakamaSync
 
         public IUserPresence GetPresence(string userId)
         {
-
             if (!_presences.ContainsKey(userId))
             {
                 ErrorHandler?.Invoke(new KeyNotFoundException($"User {_userId} could not find presence with id {userId}."));
@@ -111,7 +110,7 @@ namespace NakamaSync
 
         private void HandlePresenceEvent(IMatchPresenceEvent presenceEvent)
         {
-                HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
+            HandlePresences(presenceEvent.Joins, presenceEvent.Leaves);
         }
 
         private void HandlePresences(IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
@@ -131,7 +130,7 @@ namespace NakamaSync
                 }
                 else
                 {
-                    ErrorHandler?.Invoke(new InvalidOperationException("Leaving presence does not exist: " + leaver.UserId));
+                    ErrorHandler?.Invoke(new InvalidOperationException($"For user {_userId} leaving presence does not exist: " + leaver.UserId));
                 }
             }
 
@@ -146,7 +145,7 @@ namespace NakamaSync
             {
                 if (_presences.ContainsKey(joiner.UserId))
                 {
-                    throw new InvalidOperationException("Joining presence already exists: " + joiner.UserId);
+                    throw new InvalidOperationException($"For user {_userId}, joining presence already exists: " + joiner.UserId);
                 }
                 else
                 {
