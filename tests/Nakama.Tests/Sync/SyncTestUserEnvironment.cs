@@ -47,10 +47,10 @@ namespace Nakama.Tests
             _opcodes = opcodes;
             _numSharedVars = numSharedVars;
             _client = TestsUtil.FromSettingsFile();
-            _logger = TestsUtil.LoadConfiguration().StdOut ? null : new StdoutLogger();
+            _logger = TestsUtil.LoadConfiguration().StdOut ? new StdoutLogger() : null;
             _varIdGenerator = varIdGenerator;
             _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, _numSharedVars, _varIdGenerator);
-            _socket = new Nakama.Socket();
+            _socket = Nakama.Socket.From(_client);
         }
 
         public async Task StartMatchViaMatchmaker(int count, SyncErrorHandler errorHandler)
@@ -67,7 +67,7 @@ namespace Nakama.Tests
 
             await matchedTcs.Task;
 
-            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchedTcs.Task.Result, _varRegistry, errorHandler, new StdoutLogger());
+            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchedTcs.Task.Result, _varRegistry, errorHandler, _logger);
         }
 
         public async Task<IMatch> CreateMatch()

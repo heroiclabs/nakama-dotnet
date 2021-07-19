@@ -3,6 +3,6 @@
   "PORT": 7350,
   "SCHEME": "http",
   "SERVER_KEY": "defaultkey",
-  "STDOUT": true,
+  "STDOUT": false,
   "LOG_LEVEL": "DEBUG"
 }

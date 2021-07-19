@@ -24,14 +24,16 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
+        private PresenceTracker _presenceTracker;
         private HostTracker _hostTracker;
         private SharedVarGuestEgress _sharedVarGuestEgress;
         private SharedVarHostEgress _sharedHostEgress;
 
-        public SharedVarEgress(SharedVarGuestEgress sharedVarGuestEgress, SharedVarHostEgress sharedHostEgress, HostTracker hostTracker)
+        public SharedVarEgress(SharedVarGuestEgress sharedVarGuestEgress, SharedVarHostEgress sharedHostEgress, PresenceTracker presenceTracker, HostTracker hostTracker)
         {
             _sharedVarGuestEgress = sharedVarGuestEgress;
             _sharedHostEgress = sharedHostEgress;
+            _presenceTracker = presenceTracker;
             _hostTracker = hostTracker;
         }
 
@@ -64,6 +66,12 @@ namespace NakamaSync
 
         private void HandleLocalSharedVarChanged<T>(string key, ISharedVarEvent<T> evt, SharedVarAccessor<T> accessor)
         {
+            if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
+            {
+                // ingress should only send out changes initated by self.
+                return;
+            }
+
             bool isHost = _hostTracker.IsSelfHost();
 
             Logger?.DebugFormat($"Local shared variable changed. Key: {key}, OldValue: {evt.ValueChange.OldValue}, Value: {evt.ValueChange.NewValue}");

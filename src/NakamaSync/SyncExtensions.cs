@@ -74,6 +74,8 @@ namespace NakamaSync
 
         public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes, SyncErrorHandler errorHandler, ILogger logger = null)
         {
+            logger?.DebugFormat($"User {session.UserId} is creating sync match.");
+
             var services = new SyncServices(socket, session, registry, opcodes);
             services.Initialize(isMatchCreator: true, errorHandler: errorHandler, logger: logger);
 
@@ -84,6 +86,8 @@ namespace NakamaSync
 
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, IMatchmakerMatched matched, VarRegistry registry, SyncErrorHandler errorHandler, ILogger logger = null)
         {
+            logger?.DebugFormat($"User {session.UserId} is joining sync match via matchmaker.");
+
             var services = new SyncServices(socket, session, registry, opcodes);
             services.Initialize(isMatchCreator: false, errorHandler: errorHandler, logger: logger);
 
@@ -95,6 +99,8 @@ namespace NakamaSync
 
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry, SyncErrorHandler errorHandler, ILogger logger = null)
         {
+            logger?.DebugFormat($"User {session.UserId} is joining sync match: {matchId}.");
+
             var services = new SyncServices(socket, session, registry, opcodes);
             services.Initialize(isMatchCreator: false, errorHandler: errorHandler, logger: logger);
 

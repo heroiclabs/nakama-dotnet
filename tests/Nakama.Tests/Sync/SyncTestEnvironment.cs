@@ -50,17 +50,18 @@ namespace Nakama.Tests
 
         public void StartViaMatchmaker()
         {
-            var parallelTasks = new List<Task>();
+            var matchmakerTasks = new List<Task>();
 
             for (int i = 0; i < _syncTestUserEnvironments.Count; i++)
             {
                 var matchmakerTask = _syncTestUserEnvironments[i].StartMatchViaMatchmaker(_syncTestUserEnvironments.Count, DefaultErrorHandler());
-                parallelTasks.Add(matchmakerTask);
+                matchmakerTasks.Add(matchmakerTask);
             }
 
-            Task.WaitAll(parallelTasks.ToArray());
+            Task.WaitAll(matchmakerTasks.ToArray());
         }
 
+        // todo fix this
         public async Task Start()
         {
             var match = await _syncTestUserEnvironments[CreatorIndex].CreateMatch();

@@ -74,7 +74,7 @@ namespace Nakama.Examples
             await socket.ClosePartyAsync(partyId);
         }
 
-        private async void RemovedFromParty()
+        private void RemovedFromParty()
         {
             socket.ReceivedPartyClose += close =>
             {
@@ -82,7 +82,7 @@ namespace Nakama.Examples
             };
         }
 
-        private async void TrackMembers()
+        private void TrackMembers()
         {
             var partyMembers = new Dictionary<string, IUserPresence>();
 
@@ -128,7 +128,7 @@ namespace Nakama.Examples
             await socket.SendPartyDataAsync(partyId: "<partyid>", opCode: 1, data: System.Text.Encoding.UTF8.GetBytes("{\"hello\": \"world\"}"));
         }
 
-        private async void ReceivePartyData()
+        private void ReceivePartyData()
         {
             socket.ReceivedPartyData += data =>
             {

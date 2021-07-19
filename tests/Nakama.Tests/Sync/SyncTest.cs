@@ -74,10 +74,12 @@ namespace Nakama.Tests.Socket
         private async Task SharedVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.Start();
+            testEnv.StartViaMatchmaker();
 
             SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
             creatorEnv.SharedBools[0].SetValue(true);
+
+            System.Console.WriteLine("setting shared bool to true");
 
             await Task.Delay(2500);
 

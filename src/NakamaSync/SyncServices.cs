@@ -102,7 +102,7 @@ namespace NakamaSync
             var sharedHostEgress = new SharedVarHostEgress(lockVersionGuard, envelopeBuilder);
             _services.Add(sharedHostEgress);
 
-            var sharedVarHostEgress = new SharedVarEgress(sharedVarGuestEgress, sharedHostEgress, hostTracker);
+            var sharedVarHostEgress = new SharedVarEgress(sharedVarGuestEgress, sharedHostEgress, presenceTracker, hostTracker);
             _services.Add(sharedVarHostEgress);
 
             var migrator = new HostMigrator(varRegistry, envelopeBuilder);
