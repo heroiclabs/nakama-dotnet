@@ -19,7 +19,8 @@ using System.Collections.Generic;
 
 namespace NakamaSync
 {
-    internal class PresenceVarCollection<T>
+    // todo should this be internal if possible?
+    public class PresenceVarCollection<T>
     {
         public SelfVar<T> SelfVar => _selfVar;
         public List<PresenceVar<T>> PresenceVars => _presenceVars;

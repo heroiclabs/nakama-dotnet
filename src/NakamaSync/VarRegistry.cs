@@ -56,24 +56,24 @@ namespace NakamaSync
             Register<string>(key, sharedString, _sharedVarRegistry.SharedStrings);
         }
 
-        public void Register(string key, SelfVar<bool> selfPresenceBool, IEnumerable<PresenceVar<bool>> presenceBools)
+        public void Register(string key, PresenceVarCollection<bool> presenceVarCollection)
         {
-            Register<bool>(key, selfPresenceBool, presenceBools, _presenceVarRegistry.PresenceBools);
+            Register<bool>(key, presenceVarCollection, _presenceVarRegistry.PresenceBools);
         }
 
-        public void Register(string key, SelfVar<float> selfPresenceFloat, IEnumerable<PresenceVar<float>> presenceFloats)
+        public void Register(string key, PresenceVarCollection<float> presenceVarCollection)
         {
-            Register<float>(key, selfPresenceFloat, presenceFloats, _presenceVarRegistry.PresenceFloats);
+            Register<float>(key, presenceVarCollection, _presenceVarRegistry.PresenceFloats);
         }
 
-        public void Register(string key, SelfVar<int> selfPresenceInt, IEnumerable<PresenceVar<int>> presenceInts)
+        public void Register(string key, PresenceVarCollection<int> presenceVarCollection)
         {
-            Register<int>(key, selfPresenceInt, presenceInts, _presenceVarRegistry.PresenceInts);
+            Register<int>(key, presenceVarCollection, _presenceVarRegistry.PresenceInts);
         }
 
-        public void Register(string key, SelfVar<string> selfPresenceString, IEnumerable<PresenceVar<string>> presenceStrings)
+        public void Register(string key, PresenceVarCollection<string> presenceVarCollection)
         {
-            Register<string>(key, selfPresenceString, presenceStrings, _presenceVarRegistry.PresenceStrings);
+            Register<string>(key, presenceVarCollection, _presenceVarRegistry.PresenceStrings);
         }
 
         private void Register<T>(string key, SharedVar<T> var, Dictionary<string, SharedVar<T>> varDict)
@@ -91,27 +91,27 @@ namespace NakamaSync
             varDict.Add(key, var);
         }
 
-        private void Register<T>(string key, SelfVar<T> selfVar, IEnumerable<PresenceVar<T>> presenceVars, Dictionary<string, PresenceVarCollection<T>> varDict)
+        private void Register<T>(string key, PresenceVarCollection<T> presenceVarCollection, Dictionary<string, PresenceVarCollection<T>> varDict)
         {
             if (!_registeredKeys.Add(key))
             {
                 throw new InvalidOperationException($"Attempted to register duplicate key {key}");
             }
 
-            if (!_registeredVars.Add(selfVar))
+            if (!_registeredVars.Add(presenceVarCollection.SelfVar))
             {
-                throw new InvalidOperationException($"Attempted to register duplicate var {selfVar}");
+                throw new InvalidOperationException($"Attempted to register duplicate var {presenceVarCollection.SelfVar}");
             }
 
-            foreach (var presenceVar in presenceVars)
+            foreach (var presenceVar in presenceVarCollection.PresenceVars)
             {
-                if (!_registeredVars.Add(selfVar))
+                if (!_registeredVars.Add(presenceVar))
                 {
                     throw new InvalidOperationException($"Attempted to register duplicate var {presenceVar}");
                 }
             }
 
-            varDict[key] = new PresenceVarCollection<T>(selfVar, presenceVars);
+            varDict[key] = presenceVarCollection;
         }
 
         public HashSet<string> GetAllKeys()

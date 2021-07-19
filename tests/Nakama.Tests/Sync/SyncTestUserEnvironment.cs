@@ -14,94 +14,80 @@
  * limitations under the License.
  */
 
-using System.Collections.Generic;
 using NakamaSync;
+using System.Threading.Tasks;
 
 namespace Nakama.Tests
 {
-    public delegate string VarIdGenerator(string userId, string varName, int varIndex);
-
     public class SyncTestUserEnvironment
     {
-        public List<SharedVar<bool>> SharedBools { get; }
-        public List<SharedVar<float>> SharedFloats { get; }
-        public List<SharedVar<int>> SharedInts { get; }
-        public List<SharedVar<string>> SharedStrings { get; }
+        public IUserPresence Self => _match.Self;
+        public ISession Session => _session;
+        public SyncTestSharedVars SharedVars => _sharedVars;
+        public SyncTestPresenceVars PresenceVars => _presenceVars;
 
-        public List<PresenceVar<bool>> UserBools { get; }
-        public List<PresenceVar<float>> UserFloats { get; }
-        public List<PresenceVar<int>> UserInts { get; }
-        public List<PresenceVar<string>> UserStrings { get; }
+        private readonly string _userId;
+        private readonly IClient _client;
+        private readonly VarRegistry _varRegistry = new VarRegistry();
+        private readonly SyncOpcodes _opcodes;
+        private SyncTestPresenceVars _presenceVars;
+        private SyncTestSharedVars _sharedVars;
+        private readonly int _numSharedVars;
+        private readonly SyncErrorHandler _errorHandler;
+        private readonly ILogger _logger;
+        private readonly VarIdGenerator _varIdGenerator;
 
-        public SyncTestUserEnvironment(ISession session, VarRegistry registry, int numTestVars, VarIdGenerator keyGenerator)
+        private IMatch _match;
+        private ISession _session;
+        private ISocket _socket;
+
+        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, int numSharedVars, VarIdGenerator varIdGenerator)
         {
-            SharedBools = new List<SharedVar<bool>>();
-            SharedFloats = new List<SharedVar<float>>();
-            SharedInts = new List<SharedVar<int>>();
-            SharedStrings = new List<SharedVar<string>>();
-
-            UserBools = new List<PresenceVar<bool>>();
-            UserFloats = new List<PresenceVar<float>>();
-            UserInts = new List<PresenceVar<int>>();
-            UserStrings = new List<PresenceVar<string>>();
-
-            for (int i = 0; i < numTestVars; i++)
-            {
-                var sharedBool = new SharedVar<bool>();
-                registry.Register(keyGenerator(session.UserId, nameof(sharedBool), i),  sharedBool);
-                SharedBools.Add(sharedBool);
-
-                var sharedFloat = new SharedVar<float>();
-                registry.Register(keyGenerator(session.UserId, nameof(sharedFloat), i), sharedFloat);
-                SharedFloats.Add(sharedFloat);
-
-                var sharedInt = new SharedVar<int>();
-                registry.Register(keyGenerator(session.UserId, nameof(sharedInt), i), sharedInt);
-                SharedInts.Add(sharedInt);
-
-                var sharedString = new SharedVar<string>();
-                registry.Register(keyGenerator(session.UserId, nameof(sharedString), i), sharedString);
-                SharedStrings.Add(sharedString);
-            }
-
-            var selfBool = new SelfVar<bool>();
-            var selfFloat = new SelfVar<float>();
-            var selfInt = new SelfVar<int>();
-            var selfString = new SelfVar<string>();
-
-            var presenceBools = new List<PresenceVar<bool>>();
-            var presenceFloats = new List<PresenceVar<float>>();
-            var presenceInts = new List<PresenceVar<int>>();
-            var presenceStrings = new List<PresenceVar<string>>();
-
-            for (int i = 0; i < numTestVars; i++)
-            {
-                var presenceBool = new PresenceVar<bool>();
-                presenceBools.Add(presenceBool);
-
-                var presenceFloat = new PresenceVar<float>();
-                presenceFloats.Add(presenceFloat);
-
-                var presenceInt = new PresenceVar<int>();
-                presenceInts.Add(presenceInt);
-
-                var presenceString = new PresenceVar<string>();
-                presenceStrings.Add(presenceString);
-            }
-
-            // todo key generator doesn't affect presence/self vars.
-            if (numTestVars != 0)
-            {
-                registry.Register("presenceBools", selfBool, presenceBools);
-                registry.Register("presenceFloats", selfFloat, presenceFloats);
-                registry.Register("presenceInts", selfInt, presenceInts);
-                registry.Register("presenceStrings", selfString, presenceStrings);
-            }
+            _userId = userId;
+            _opcodes = opcodes;
+            _numSharedVars = numSharedVars;
+            _client = TestsUtil.FromSettingsFile();
+            _logger = TestsUtil.LoadConfiguration().StdOut ? null : new StdoutLogger();
+            _varIdGenerator = varIdGenerator;
+            _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, _numSharedVars, _varIdGenerator);
         }
 
-        public static string DefaultVarIdGenerator(string userId, string varName, int varIndex)
+        public async Task Connect()
         {
-            return varName + varIndex.ToString();
+            _session = await _client.AuthenticateCustomAsync(_userId);
+            _socket = new Nakama.Socket();
+            await _socket.ConnectAsync(_session);
+        }
+
+        public async Task StartMatchViaMatchmaker(int count, SyncErrorHandler errorHandler)
+        {
+            await _socket.AddMatchmakerAsync("*", minCount: count, maxCount: count);
+
+            var matchedTcs = new TaskCompletionSource<IMatchmakerMatched>();
+
+            _socket.ReceivedMatchmakerMatched += (matched) =>
+            {
+                matchedTcs.SetResult(matched);
+            };
+
+            await matchedTcs.Task;
+
+            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchedTcs.Task.Result, _varRegistry, errorHandler, new StdoutLogger());
+        }
+
+        public async Task CreateMatch()
+        {
+            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _opcodes, _errorHandler, _logger);
+        }
+
+        public async Task JoinMatch(string matchId)
+        {
+            await _socket.JoinSyncMatch(_session, _opcodes, matchId, _varRegistry, _errorHandler, _logger);
+        }
+
+        public async Task Dispose()
+        {
+            await _socket.CloseAsync();
         }
     }
 }

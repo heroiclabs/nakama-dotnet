@@ -23,11 +23,11 @@ namespace Nakama.Tests.Socket
     public class SyncTest
     {
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private async Task SharedVarShouldRetainData()
+        private void SharedVarShouldRetainData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
-            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
+            testEnv.Start();
+            SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
             creatorEnv.SharedBools[0].SetValue(true);
             Assert.True(creatorEnv.SharedBools[0].GetValue());
             testEnv.Dispose();
@@ -58,12 +58,12 @@ namespace Nakama.Tests.Socket
             var mismatchedEnv = new SyncTestEnvironment(
                 new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
                 numClients: 2,
-                numTestVars: 1,
+                numSharedVars: 1,
                 creatorIndex: 0,
                 idGenerator);
 
 
-            await mismatchedEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
+            mismatchedEnv.Start();
 
             //await Assert.ThrowsAsync<InvalidOperationException>(() => );
 
@@ -74,14 +74,14 @@ namespace Nakama.Tests.Socket
         private async Task SharedVarShouldSyncData()
         {
             var testEnv = CreateDefaultEnvironment();
-            await testEnv.StartMatch(CreateDefaultErrorHandler(), viaMatchmaker: true);
+            testEnv.Start();
 
-            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
+            SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
             creatorEnv.SharedBools[0].SetValue(true);
 
             await Task.Delay(2500);
 
-            SyncTestUserEnvironment guestEnv = testEnv.GetGuestEnv(testEnv.GetRandomGuestPresence());
+            SyncTestSharedVars guestEnv = testEnv.GetGuestEnv(testEnv.GetRandomGuestPresence()).SharedVars;
             Assert.True(guestEnv.SharedBools[0].GetValue());
 
             testEnv.Dispose();
@@ -113,7 +113,7 @@ namespace Nakama.Tests.Socket
             return new SyncTestEnvironment(
                 new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
                 numClients: 2,
-                numTestVars: 1,
+                numSharedVars: 1,
                 creatorIndex: 0);
         }
 
