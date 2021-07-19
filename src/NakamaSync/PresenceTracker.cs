@@ -145,7 +145,9 @@ namespace NakamaSync
             {
                 if (_presences.ContainsKey(joiner.UserId))
                 {
-                    throw new InvalidOperationException($"For user {_userId}, joining presence already exists: " + joiner.UserId);
+                    // sometimes duplicate presences can be returned from the server depending the timing
+                    // of when players simulatenously join.
+                    continue;
                 }
                 else
                 {
