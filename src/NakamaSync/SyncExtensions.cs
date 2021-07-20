@@ -34,6 +34,7 @@ using Nakama;
 // think about end match flow, resetting sync vars.
 // to string calls
 // expose interfaces, not concrete classes.
+// todo create hostvar.
 // todo handle host changed
 // todo handle guest left
 // todo migrate pending values when host changes
@@ -93,7 +94,10 @@ namespace NakamaSync
 
             IMatch match = await socket.JoinMatchAsync(matched);
             services.ReceiveMatch(match);
+            System.Console.WriteLine("waiting for handshake");
             await services.GetHandshakeTask();
+            System.Console.WriteLine("done waiting for handshake");
+
             return match;
         }
 
@@ -106,9 +110,7 @@ namespace NakamaSync
 
             IMatch match = await socket.JoinMatchAsync(matchId);
             services.ReceiveMatch(match);
-            System.Console.WriteLine("waiting for handshake");
             await services.GetHandshakeTask();
-            System.Console.WriteLine("done waiting for handshake");
             return match;
         }
 

@@ -49,8 +49,10 @@ namespace NakamaSync
                 Logger?.DebugFormat($"Rotator is adding unassigned presence var: {presenceVar}");
                 _unassignedPresenceVars.Add(presenceVar);
             }
-            else
+            else if (_assignedPresenceVars.ContainsKey(presenceVar.Presence.UserId))
             {
+                Logger?.DebugFormat($"Rotator is adding assigned presence var: {presenceVar}");
+                // todo not really sure what situation this could occur in but I suppose it's okay to support it.
                 _assignedPresenceVars.Add(presenceVar.Presence.UserId, presenceVar);
             }
         }
@@ -58,6 +60,12 @@ namespace NakamaSync
         public void ReceiveMatch(IMatch match)
         {
             _self = match.Self;
+
+            foreach (IUserPresence joiner in match.Presences)
+            {
+                HandlePresenceAdded(joiner);
+            }
+
             _presenceTracker.OnPresenceAdded += HandlePresenceAdded;
             _presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
         }
@@ -70,15 +78,12 @@ namespace NakamaSync
             {
                 ErrorHandler?.Invoke(new InvalidOperationException($"Not enough presence vars to handle presence."));
             }
-            else if (_assignedPresenceVars.ContainsKey(presence.UserId))
+            // normal for server to send duplicate presence additions in very specific situations.
+            else if (!_assignedPresenceVars.ContainsKey(presence.UserId))
             {
-                ErrorHandler?.Invoke(new InvalidOperationException($"User {presence.UserId} already has var assigned."));
-            }
-            else
-            {
+                Logger?.DebugFormat($"Presence var rotator for assigning presence: {presence.UserId}");
                 var varToAssign = _unassignedPresenceVars.First();
                 varToAssign.SetPresence(presence);
-                Logger?.DebugFormat($"Presence var rotator received presence: {presence.UserId}");
                 _assignedPresenceVars.Add(presence.UserId, varToAssign);
             }
         }
