@@ -93,11 +93,6 @@ namespace NakamaSync
 
         private void Register<T>(string key, PresenceVarCollection<T> presenceVarCollection, Dictionary<string, PresenceVarCollection<T>> varDict)
         {
-            if (!_registeredKeys.Add(key))
-            {
-                throw new InvalidOperationException($"Attempted to register duplicate key {key}");
-            }
-
             if (!_registeredVars.Add(presenceVarCollection.SelfVar))
             {
                 throw new InvalidOperationException($"Attempted to register duplicate var {presenceVarCollection.SelfVar}");
@@ -111,10 +106,20 @@ namespace NakamaSync
                 }
             }
 
+            var keys = PresenceVarKey.Create<T>(key, presenceVarCollection);
+
+            foreach (var presenceKey in keys)
+            {
+                if (!_registeredKeys.Add(presenceKey.ToString()))
+                {
+                    throw new InvalidOperationException($"Attempted to register duplicate key {key}");
+                }
+            }
+
             varDict[key] = presenceVarCollection;
         }
 
-        public HashSet<string> GetAllKeys()
+        internal HashSet<string> GetAllKeys()
         {
             return _registeredKeys;
         }

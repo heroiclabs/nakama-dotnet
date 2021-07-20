@@ -14,28 +14,45 @@
 * limitations under the License.
 */
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
-    // use a struct for bit-by-bit equality comparisons.
-    internal struct PresenceVarKey
+    internal class PresenceVarKey
     {
         [DataMember(Name="key"), Preserve]
-        public string Key { get; set; }
+        public string CollectionKey { get; set; }
 
-        [DataMember(Name="user_id"), Preserve]
-        public string UserId { get; set; }
+        [DataMember(Name="index"), Preserve]
+        public int Index { get; set; }
 
-        public PresenceVarKey(string key, string userId)
+        public PresenceVarKey(string key, int index)
         {
-            Key = key;
-            UserId = userId;
+            CollectionKey = key;
+            Index = index;
+        }
+
+        public static List<PresenceVarKey> Create<T>(string collectionKey, PresenceVarCollection<T> collection)
+        {
+            var selfVar = collection.SelfVar;
+            var presenceVar = collection.PresenceVars;
+
+            var keys = new List<PresenceVarKey>();
+
+            keys.Add(new PresenceVarKey(collectionKey, 0));
+
+            for (int i = 0; i < collection.PresenceVars.Count; i++)
+            {
+                keys.Add(new PresenceVarKey(collectionKey, i + 1));
+            }
+
+            return keys;
         }
 
         public override string ToString()
         {
-            return $"PresenceValueKey(Key='{Key}', UserId='{UserId}'";
+            return $"PresenceVarKey(Key='{CollectionKey}', Index='{Index})'";
         }
     }
 }

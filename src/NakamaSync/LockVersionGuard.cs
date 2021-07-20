@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Nakama;
 
 namespace NakamaSync
@@ -37,7 +38,7 @@ namespace NakamaSync
 
         public bool IsValidLockVersion(string key, int newLockVersion)
         {
-            if (!_lockVersions.ContainsKey(key))
+            if (!HasLockVersion(key))
             {
                 ErrorHandler?.Invoke(new ArgumentException($"Received unrecognized remote key: {key}"));
                 return false;
@@ -57,6 +58,11 @@ namespace NakamaSync
 
         public int GetLockVersion(string key)
         {
+            if (!HasLockVersion(key))
+            {
+                ErrorHandler?.Invoke(new KeyNotFoundException($"Lock version guard could not find key when getting lock version: {key}"));
+            }
+
             return _lockVersions[key];
         }
 
@@ -67,6 +73,11 @@ namespace NakamaSync
 
         public void IncrementLockVersion(string key)
         {
+            if (!HasLockVersion(key))
+            {
+                ErrorHandler?.Invoke(new KeyNotFoundException($"Lock version guard could not find key when incrementing lock version: {key}"));
+            }
+
             _lockVersions[key]++;
         }
 

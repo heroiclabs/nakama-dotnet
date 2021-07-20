@@ -62,7 +62,6 @@ using Nakama;
 // which would keep the variables there?
 // todo create a syncmatch struct and expose presences.
 // add null checks for inputs and maybe more input validation
-// todo lock versions for presence vars should probably be tracked on a var-by-var rather than for the
 // whole presencevarcollection?
 using System;
 

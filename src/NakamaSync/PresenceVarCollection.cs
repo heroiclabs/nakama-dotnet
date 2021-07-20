@@ -22,15 +22,14 @@ namespace NakamaSync
     // todo should this be internal if possible?
     public class PresenceVarCollection<T>
     {
-        public SelfVar<T> SelfVar => _selfVar;
+        public SelfVar<T> SelfVar { get; set; }
         public List<PresenceVar<T>> PresenceVars => _presenceVars;
 
-        private readonly SelfVar<T> _selfVar;
         private readonly List<PresenceVar<T>> _presenceVars = new List<PresenceVar<T>>();
 
         public PresenceVarCollection(SelfVar<T> selfVar, IEnumerable<PresenceVar<T>> presenceVars)
         {
-            _selfVar = selfVar;
+            SelfVar = selfVar;
 
             // copy to internal representation
             foreach (var presenceVar in presenceVars)

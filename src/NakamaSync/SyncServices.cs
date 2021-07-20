@@ -35,10 +35,11 @@ namespace NakamaSync
 
         private readonly LockVersionGuard _lockVersionGuard;
 
-        private readonly SharedVarIngress _sharedVarGuestIngress;
-        private readonly PresenceVarIngress _presenceRoleIngress;
+        private readonly SharedVarIngress _sharedVarIngress;
+        private readonly PresenceVarIngress _presenceVarIngress;
 
-        private readonly SharedVarEgress _sharedVarHostEgress;
+        private readonly SharedVarEgress _sharedVarEgress;
+        private readonly SelfVarEgress _selfVarEgress;
 
         private readonly HandshakeRequester _handshakeRequester;
         private readonly HandshakeResponder _handshakeResponder;
@@ -74,6 +75,15 @@ namespace NakamaSync
 
             var sharedHostIngress = new SharedVarHostIngress(lockVersionGuard, envelopeBuilder);
             _services.Add(sharedHostIngress);
+
+            var selfVarGuestEgress = new SelfVarGuestEgress(lockVersionGuard, envelopeBuilder);
+            _services.Add(selfVarGuestEgress);
+
+            var selfVarHostEgress = new SelfVarHostEgress(lockVersionGuard, envelopeBuilder);
+            _services.Add(selfVarHostEgress);
+
+            var selfVarEgress = new SelfVarEgress(selfVarGuestEgress, selfVarHostEgress, presenceTracker, hostTracker);
+            _services.Add(selfVarEgress);
 
             var presenceVarGuestIngress = new PresenceVarGuestIngress(presenceTracker);
             _services.Add(presenceVarGuestIngress);
@@ -118,14 +128,15 @@ namespace NakamaSync
             _hostTracker = hostTracker;
             _lockVersionGuard = lockVersionGuard;
 
-            _sharedVarGuestIngress = sharedVarGuestIngress;
-            _presenceRoleIngress = presenceRoleIngress;
+            _sharedVarIngress = sharedVarGuestIngress;
+            _presenceVarIngress = presenceRoleIngress;
 
             _handshakeRequester = handshakeRequester;
             _handshakeResponder = handshakeResponder;
             _handshakeResponseHandler = handshakeResponseHandler;
 
-            _sharedVarHostEgress = sharedVarHostEgress;
+            _sharedVarEgress = sharedVarHostEgress;
+            _selfVarEgress = selfVarEgress;
 
             _socket = socket;
             _migrator = migrator;
@@ -160,9 +171,10 @@ namespace NakamaSync
 
             if (isMatchCreator)
             {
-                _sharedVarHostEgress.Subscribe(_varRegistry.SharedVarRegistry);
-                _sharedVarGuestIngress.Subscribe(_syncSocket, _hostTracker);
-                _presenceRoleIngress.Subscribe(_syncSocket, _hostTracker);
+                _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry);
+                _sharedVarIngress.Subscribe(_syncSocket, _hostTracker);
+                _presenceVarIngress.Subscribe(_syncSocket, _hostTracker);
+                _selfVarEgress.Subscribe(_varRegistry.PresenceVarRegistry);
             }
             else
             {
@@ -170,10 +182,11 @@ namespace NakamaSync
                 // todo just expose the anonymous lambdas outside here, no need to hide it in
                 // another subscribe call
                 _handshakeRequester.Subscribe(_syncSocket, _hostTracker, _presenceTracker);
-                _sharedVarHostEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
+                _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
+                _selfVarEgress.Subscribe(_varRegistry.PresenceVarRegistry, _handshakeRequester);
             }
 
-            _sharedVarHostEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
+            _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
             _handshakeResponder.Subscribe(_syncSocket);
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
 

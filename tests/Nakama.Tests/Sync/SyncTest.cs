@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Linq;
 using System.Threading.Tasks;
 using NakamaSync;
 using Xunit;
@@ -116,6 +117,7 @@ namespace Nakama.Tests.Socket
             testEnv.StartViaMatchmaker();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
+            System.Console.WriteLine("SETTING VALUE");
             creatorEnv.PresenceVars.PresenceBoolCollections[0].SelfVar.SetValue(true);
 
             await Task.Delay(2500);
@@ -124,8 +126,10 @@ namespace Nakama.Tests.Socket
 
             var guestEnv = testEnv.GetUserEnv(guestPresence);
 
-            Assert.True(creatorEnv.PresenceVars.PresenceBoolCollections[1].PresenceVars[0].GetValue());
-
+            string creatorId = creatorEnv.Self.UserId;
+            var matchingGuestCollection = guestEnv.PresenceVars.PresenceBoolCollections[0];
+            var creatorPresenceVarInGuest = matchingGuestCollection.PresenceVars.First(var => var.Presence.UserId == creatorId);
+            Assert.True(matchingGuestCollection.PresenceVars[0].GetValue());
             testEnv.Dispose();
         }
 

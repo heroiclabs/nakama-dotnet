@@ -42,6 +42,7 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
+            Logger?.DebugFormat("Presence tracker received match.");
             HandlePresences(match.Presences, new IUserPresence[]{});
         }
 
@@ -146,7 +147,7 @@ namespace NakamaSync
                 if (_presences.ContainsKey(joiner.UserId))
                 {
                     // sometimes duplicate presences can be returned from the server depending the timing
-                    // of when players simulatenously join.
+                    // of when players simultaneously join.
                     continue;
                 }
                 else

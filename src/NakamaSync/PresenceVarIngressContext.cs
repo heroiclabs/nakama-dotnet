@@ -63,18 +63,20 @@ namespace NakamaSync
 
             foreach (PresenceValue<T> value in values)
             {
-                if (!vars.ContainsKey(value.Key.Key))
+                if (!vars.ContainsKey(value.Key.CollectionKey))
                 {
                     // todo find a way to continue looping but still bubble up exception.
-                    throw new InvalidOperationException($"No var found with key {value.Key.Key}");
+                    throw new InvalidOperationException($"No var found with key {value.Key.CollectionKey}");
                 }
 
-                List<PresenceVar<T>> varList = vars[value.Key.ToString()].PresenceVars;
+                PresenceVarCollection<T> collection = vars[value.Key.CollectionKey];
+
+                List<PresenceVar<T>> varList = collection.PresenceVars;
 
                 foreach (PresenceVar<T> var in varList)
                 {
-                    var context = new PresenceVarIngressContext<T>(var, value, varAccessor, ackAccessor);
-                    contexts.Add(context);
+                    var presenceContext = new PresenceVarIngressContext<T>(var, value, varAccessor, ackAccessor);
+                    contexts.Add(presenceContext);
                 }
             }
 

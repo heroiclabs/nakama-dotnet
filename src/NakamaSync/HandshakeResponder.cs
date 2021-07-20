@@ -80,17 +80,27 @@ namespace NakamaSync
             }
         }
 
-        private void CopyToGuestResponse<T>(Dictionary<string, PresenceVarCollection<T>> varsByKey, List<PresenceValue<T>> values)
+        private void CopyToGuestResponse<T>(Dictionary<string, PresenceVarCollection<T>> collectionsByKey, List<PresenceValue<T>> values)
         {
-            foreach (var varKvp in varsByKey)
+            foreach (var varKvp in collectionsByKey)
             {
-                string varKey = varKvp.Key;
+                string collectionKey = varKvp.Key;
+
+                T rawSelfValue = varKvp.Value.SelfVar.GetValue();
+
+                Logger?.DebugFormat($"PresenceVar value for initial payload: CollectionKey: {varKvp.Key}, Raw Value: ${rawSelfValue}");
+
+                var selfVarKey = new PresenceVarKey(collectionKey, 0);
+                var selfValue = new PresenceValue<T>(selfVarKey, rawSelfValue, _lockVersionGuard.GetLockVersion(selfVarKey.ToString()), varKvp.Value.SelfVar.ValidationStatus);
+                values.Add(selfValue);
+
                 List<PresenceVar<T>> vars = varKvp.Value.PresenceVars;
 
                 Logger?.DebugFormat($"Handshake responder scanning through user values to copy for key: {varKvp.Key}");
 
-                foreach (PresenceVar<T> var in vars)
+                for (int i = 0; i < vars.Count; i++)
                 {
+                    PresenceVar<T> var = vars[i];
                     // TODO handle data for a stale user?
                     if (var.Presence == null)
                     {
@@ -100,18 +110,12 @@ namespace NakamaSync
 
                     T rawValue = var.GetValue();
 
-                    Logger?.DebugFormat($"User variable value for initial payload: User: {varKvp.Key}, Raw Value: ${rawValue}");
+                    Logger?.DebugFormat($"Presence value for initial payload: CollectionKey: {varKvp.Key}, Raw Value: {rawValue}");
 
-                    var value = new PresenceValue<T>(new PresenceVarKey(varKey, var.Presence.UserId), rawValue, _lockVersionGuard.GetLockVersion(varKvp.Key), var.ValidationStatus);
+                    var presenceVarKey = new PresenceVarKey(collectionKey, i + 1);
+                    var value = new PresenceValue<T>(presenceVarKey, rawValue, _lockVersionGuard.GetLockVersion(presenceVarKey.ToString()), var.ValidationStatus);
                     values.Add(value);
                 }
-
-                T rawSelfValue = varKvp.Value.SelfVar.GetValue();
-
-                Logger?.DebugFormat($"User variable value for initial payload: User: {varKvp.Key}, Raw Value: ${rawSelfValue}");
-
-                var selfValue = new PresenceValue<T>(new PresenceVarKey(varKey, varKvp.Value.SelfVar.Self.UserId), rawSelfValue, _lockVersionGuard.GetLockVersion(varKvp.Key), varKvp.Value.SelfVar.ValidationStatus);
-                values.Add(selfValue);
             }
         }
     }

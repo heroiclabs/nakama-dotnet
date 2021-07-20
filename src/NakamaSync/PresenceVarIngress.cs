@@ -52,7 +52,7 @@ namespace NakamaSync
 
         public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
-            Logger?.DebugFormat($"User role ingress received sync envelope.");
+            Logger?.DebugFormat($"PresenceVarIngress received sync envelope.");
 
             try
             {
@@ -76,15 +76,15 @@ namespace NakamaSync
 
         private void HandleSyncEnvelope<T>(IUserPresence source, List<PresenceVarIngressContext<T>> contexts, bool isHost)
         {
-            Logger?.DebugFormat($"User role ingress processing num contexts: {contexts.Count}");
+            Logger?.DebugFormat($"PresenceVarIngress processing num contexts: {contexts.Count}");
 
             foreach (PresenceVarIngressContext<T> context in contexts)
             {
-                Logger?.DebugFormat($"User role ingress processing context: {context}");
+                Logger?.DebugFormat($"PresenceVarIngress processing context: {context}");
 
                 if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key.ToString(), context.Value.LockVersion))
                 {
-                    Logger?.DebugFormat($"User role ingress received invalid lock version: {context.Value.LockVersion}");
+                    Logger?.DebugFormat($"PresenceVarIngress received invalid lock version: {context.Value.LockVersion}");
                     continue;
                 }
 
