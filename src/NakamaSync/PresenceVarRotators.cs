@@ -20,6 +20,8 @@ using Nakama;
 
 namespace NakamaSync
 {
+    internal delegate PresenceVarRotator<T> PresenceVarRotatorAccessor<T>(string collectionKey);
+
     internal class PresenceVarRotators : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
@@ -73,6 +75,26 @@ namespace NakamaSync
             ReceiveMatch(match, _floatRotators);
             ReceiveMatch(match, _intRotators);
             ReceiveMatch(match, _stringRotators);
+        }
+
+        public PresenceVarRotator<bool> GetPresenceBoolRotator(string collectionKey)
+        {
+            return _boolRotators[collectionKey];
+        }
+
+        public PresenceVarRotator<float> GetPresenceFloatRotator(string collectionKey)
+        {
+            return _floatRotators[collectionKey];
+        }
+
+        public PresenceVarRotator<int> GetPresenceIntRotator(string collectionKey)
+        {
+            return _intRotators[collectionKey];
+        }
+
+        public PresenceVarRotator<string> GetPresenceStringRotator(string collectionKey)
+        {
+            return _stringRotators[collectionKey];
         }
 
         private void AddBool(string key, SelfVar<bool> selfVar, IEnumerable<PresenceVar<bool>> presenceVars)

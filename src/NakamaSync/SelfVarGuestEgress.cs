@@ -24,12 +24,10 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private readonly LockVersionGuard _lockVersionGuard;
         private readonly EnvelopeBuilder _builder;
 
-        public SelfVarGuestEgress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
+        public SelfVarGuestEgress(EnvelopeBuilder builder)
         {
-            _lockVersionGuard = lockVersionGuard;
             _builder = builder;
         }
 
@@ -43,8 +41,7 @@ namespace NakamaSync
                 var.ValidationStatus = status;
             }
 
-            _lockVersionGuard.IncrementLockVersion(key.ToString());
-            var newSyncedValue = new PresenceValue<T>(key, newValue, _lockVersionGuard.GetLockVersion(key.ToString()), status);
+            var newSyncedValue = new PresenceValue<T>(key, newValue, status);
 
             _builder.AddPresenceVar(accessor, newSyncedValue);
             _builder.SendEnvelope();

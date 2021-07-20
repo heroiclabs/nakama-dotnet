@@ -20,6 +20,7 @@ using Nakama;
 
 namespace NakamaSync
 {
+    // todo block registration after match has started.
     public class VarRegistry
     {
         internal SharedVarRegistry SharedVarRegistry => _sharedVarRegistry;
@@ -56,6 +57,9 @@ namespace NakamaSync
             Register<string>(key, sharedString, _sharedVarRegistry.SharedStrings);
         }
 
+        // todo allow registration one-by-one and then validate each collection afterwards.
+        // do this validation and batching after the match starts with an internal method in sync services or
+        // somewhere.
         public void Register(string key, PresenceVarCollection<bool> presenceVarCollection)
         {
             Register<bool>(key, presenceVarCollection, _presenceVarRegistry.PresenceBools);
@@ -106,14 +110,9 @@ namespace NakamaSync
                 }
             }
 
-            var keys = PresenceVarKey.Create<T>(key, presenceVarCollection);
-
-            foreach (var presenceKey in keys)
+            if (!_registeredKeys.Add(key))
             {
-                if (!_registeredKeys.Add(presenceKey.ToString()))
-                {
-                    throw new InvalidOperationException($"Attempted to register duplicate key {key}");
-                }
+                throw new InvalidOperationException($"Attempted to register duplicate key {key}");
             }
 
             varDict[key] = presenceVarCollection;

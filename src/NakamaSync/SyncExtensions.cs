@@ -63,6 +63,7 @@ using Nakama;
 // todo create a syncmatch struct and expose presences.
 // add null checks for inputs and maybe more input validation
 // whole presencevarcollection?
+// todo make sure you can
 using System;
 
 namespace NakamaSync
@@ -105,7 +106,9 @@ namespace NakamaSync
 
             IMatch match = await socket.JoinMatchAsync(matchId);
             services.ReceiveMatch(match);
+            System.Console.WriteLine("waiting for handshake");
             await services.GetHandshakeTask();
+            System.Console.WriteLine("done waiting for handshake");
             return match;
         }
 

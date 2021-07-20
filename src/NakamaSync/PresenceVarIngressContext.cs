@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using Nakama;
 
 namespace NakamaSync
 {
@@ -37,27 +38,27 @@ namespace NakamaSync
 
     internal class PresenceVarIngressContext
     {
-        public static List<PresenceVarIngressContext<bool>> FromBoolValues(Envelope envelope, PresenceVarRegistry registry)
+        public static List<PresenceVarIngressContext<bool>> FromBoolValues(Envelope envelope, PresenceVarRegistry registry, PresenceVarRotators presenceVarRotators)
         {
-            return PresenceVarIngressContext.FromValues<bool>(envelope.PresenceBools, registry.PresenceBools, env => env.PresenceBools, env => env.PresenceBoolAcks);
+            return PresenceVarIngressContext.FromValues<bool>(envelope.PresenceBools, registry.PresenceBools, env => env.PresenceBools, env => env.PresenceBoolAcks, presenceVarRotators.GetPresenceBoolRotator);
         }
 
-        public static List<PresenceVarIngressContext<float>> FromFloatValues(Envelope envelope, PresenceVarRegistry registry)
+        public static List<PresenceVarIngressContext<float>> FromFloatValues(Envelope envelope, PresenceVarRegistry registry, PresenceVarRotators presenceVarRotators)
         {
-            return PresenceVarIngressContext.FromValues<float>(envelope.PresenceFloats, registry.PresenceFloats, env => env.PresenceFloats, env => env.PresenceFloatAcks);
+            return PresenceVarIngressContext.FromValues<float>(envelope.PresenceFloats, registry.PresenceFloats, env => env.PresenceFloats, env => env.PresenceFloatAcks, presenceVarRotators.GetPresenceFloatRotator);
         }
 
-        public static List<PresenceVarIngressContext<int>> FromIntValues(Envelope envelope, PresenceVarRegistry registry)
+        public static List<PresenceVarIngressContext<int>> FromIntValues(Envelope envelope, PresenceVarRegistry registry, PresenceVarRotators presenceVarRotators)
         {
-            return PresenceVarIngressContext.FromValues<int>(envelope.PresenceInts, registry.PresenceInts, env => env.PresenceInts, env => env.PresenceIntAcks);
+            return PresenceVarIngressContext.FromValues<int>(envelope.PresenceInts, registry.PresenceInts, env => env.PresenceInts, env => env.PresenceIntAcks, presenceVarRotators.GetPresenceIntRotator);
         }
 
-        public static List<PresenceVarIngressContext<string>> FromStringValues(Envelope envelope, PresenceVarRegistry registry)
+        public static List<PresenceVarIngressContext<string>> FromStringValues(Envelope envelope, PresenceVarRegistry registry, PresenceVarRotators presenceVarRotators)
         {
-            return PresenceVarIngressContext.FromValues<string>(envelope.PresenceStrings, registry.PresenceStrings, env => env.PresenceStrings, env => env.PresenceStringAcks);
+            return PresenceVarIngressContext.FromValues<string>(envelope.PresenceStrings, registry.PresenceStrings, env => env.PresenceStrings, env => env.PresenceStringAcks, presenceVarRotators.GetPresenceStringRotator);
         }
 
-        private static List<PresenceVarIngressContext<T>> FromValues<T>(List<PresenceValue<T>> values, Dictionary<string, PresenceVarCollection<T>> vars, PresenceVarAccessor<T> varAccessor, AckAccessor ackAccessor)
+        private static List<PresenceVarIngressContext<T>> FromValues<T>(List<PresenceValue<T>> values, Dictionary<string, PresenceVarCollection<T>> vars, PresenceVarAccessor<T> varAccessor, AckAccessor ackAccessor, PresenceVarRotatorAccessor<T> rotatorAccessor)
         {
             var contexts = new List<PresenceVarIngressContext<T>>();
 
@@ -66,18 +67,22 @@ namespace NakamaSync
                 if (!vars.ContainsKey(value.Key.CollectionKey))
                 {
                     // todo find a way to continue looping but still bubble up exception.
-                    throw new InvalidOperationException($"No var found with key {value.Key.CollectionKey}");
+                    throw new InvalidOperationException($"No var found with collection key {value.Key.CollectionKey}");
                 }
 
                 PresenceVarCollection<T> collection = vars[value.Key.CollectionKey];
+                PresenceVarRotator<T> presenceVarRotator = rotatorAccessor(value.Key.CollectionKey);
 
-                List<PresenceVar<T>> varList = collection.PresenceVars;
-
-                foreach (PresenceVar<T> var in varList)
+                if (presenceVarRotator.AssignedPresenceVars.ContainsKey(value.Key.UserId))
                 {
-                    var presenceContext = new PresenceVarIngressContext<T>(var, value, varAccessor, ackAccessor);
-                    contexts.Add(presenceContext);
+                    var assignedPresenceVar = presenceVarRotator.AssignedPresenceVars[value.Key.UserId];
+                    assignedPresenceVar.SetValue(value.Value, value.ValidationStatus);
                 }
+                else
+                {
+                    throw new InvalidOperationException($"Presence var rotator did not recognize value with user id: {value.Key.UserId}");
+                }
+
             }
 
             return contexts;

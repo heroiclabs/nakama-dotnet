@@ -77,8 +77,7 @@ namespace NakamaSync
         private void RollbackPendingValue<T>(PresenceVar<T> var, PresenceValue<T> value, PresenceVarAccessor<T> accessor)
         {
             // one guest has incorrect value. queue a rollback for all guests.
-            _lockVersionGuard.IncrementLockVersion(value.Key.ToString());
-            var outgoing = new PresenceValue<T>(value.Key, var.GetValue(), _lockVersionGuard.GetLockVersion(value.Key.ToString()), ValidationStatus.Validated);
+            var outgoing = new PresenceValue<T>(value.Key, var.GetValue(), ValidationStatus.Validated);
             _builder.AddPresenceVar(accessor, value);
             _builder.SendEnvelope();
         }

@@ -61,7 +61,7 @@ namespace NakamaSync
         {
             foreach (var selfVarKvp in vars)
             {
-                var selfVarKey = new PresenceVarKey(selfVarKvp.Key, 0);
+                var selfVarKey = new PresenceVarKey(selfVarKvp.Key, _presenceTracker.GetSelf().UserId);
                 var selfVar = selfVarKvp.Value.SelfVar;
                 Logger?.DebugFormat($"Subscribing to self variable.");
                 selfVarKvp.Value.SelfVar.OnValueChanged += (evt) => HandleLocalSelfVarChanged(selfVarKey, evt, accessor);

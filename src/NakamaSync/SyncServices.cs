@@ -58,6 +58,9 @@ namespace NakamaSync
             var presenceTracker = new PresenceTracker(session.UserId);
             _services.Add(presenceTracker);
 
+            var presenceVarRotators = new PresenceVarRotators(presenceTracker);
+            _services.Add(presenceVarRotators);
+
             var hostTracker = new HostTracker(presenceTracker);
             _services.Add(hostTracker);
 
@@ -76,10 +79,10 @@ namespace NakamaSync
             var sharedHostIngress = new SharedVarHostIngress(lockVersionGuard, envelopeBuilder);
             _services.Add(sharedHostIngress);
 
-            var selfVarGuestEgress = new SelfVarGuestEgress(lockVersionGuard, envelopeBuilder);
+            var selfVarGuestEgress = new SelfVarGuestEgress(envelopeBuilder);
             _services.Add(selfVarGuestEgress);
 
-            var selfVarHostEgress = new SelfVarHostEgress(lockVersionGuard, envelopeBuilder);
+            var selfVarHostEgress = new SelfVarHostEgress(envelopeBuilder);
             _services.Add(selfVarHostEgress);
 
             var selfVarEgress = new SelfVarEgress(selfVarGuestEgress, selfVarHostEgress, presenceTracker, hostTracker);
@@ -94,7 +97,7 @@ namespace NakamaSync
             var sharedVarGuestIngress = new SharedVarIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
             _services.Add(sharedVarGuestIngress);
 
-            var presenceRoleIngress = new PresenceVarIngress(presenceVarGuestIngress, presenceVarHostIngress, varRegistry, lockVersionGuard);
+            var presenceRoleIngress = new PresenceVarIngress(varRegistry, presenceVarRotators, presenceVarGuestIngress, presenceVarHostIngress);
             _services.Add(presenceRoleIngress);
 
             var handshakeRequester = new HandshakeRequester(varRegistry, sharedVarGuestIngress, presenceRoleIngress, session.UserId);
@@ -117,9 +120,6 @@ namespace NakamaSync
 
             var migrator = new HostMigrator(varRegistry, envelopeBuilder);
             _services.Add(migrator);
-
-            var presenceVarRotators = new PresenceVarRotators(presenceTracker);
-            _services.Add(presenceVarRotators);
 
             _varRegistry = varRegistry;
             _socket = socket;

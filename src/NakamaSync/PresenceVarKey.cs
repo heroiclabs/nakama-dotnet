@@ -21,38 +21,21 @@ namespace NakamaSync
 {
     internal class PresenceVarKey
     {
-        [DataMember(Name="key"), Preserve]
+        [DataMember(Name="collectionKey"), Preserve]
         public string CollectionKey { get; set; }
 
-        [DataMember(Name="index"), Preserve]
-        public int Index { get; set; }
+        [DataMember(Name="userId"), Preserve]
+        public string UserId { get; set; }
 
-        public PresenceVarKey(string key, int index)
+        public PresenceVarKey(string collectionKey, string userId)
         {
-            CollectionKey = key;
-            Index = index;
-        }
-
-        public static List<PresenceVarKey> Create<T>(string collectionKey, PresenceVarCollection<T> collection)
-        {
-            var selfVar = collection.SelfVar;
-            var presenceVar = collection.PresenceVars;
-
-            var keys = new List<PresenceVarKey>();
-
-            keys.Add(new PresenceVarKey(collectionKey, 0));
-
-            for (int i = 0; i < collection.PresenceVars.Count; i++)
-            {
-                keys.Add(new PresenceVarKey(collectionKey, i + 1));
-            }
-
-            return keys;
+            CollectionKey = collectionKey;
+            UserId = userId;
         }
 
         public override string ToString()
         {
-            return $"PresenceVarKey(Key='{CollectionKey}', Index='{Index})'";
+            return $"PresenceVarKey(Key='{CollectionKey}', Index='{UserId})'";
         }
     }
 }

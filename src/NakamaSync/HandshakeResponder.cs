@@ -90,8 +90,8 @@ namespace NakamaSync
 
                 Logger?.DebugFormat($"PresenceVar value for initial payload: CollectionKey: {varKvp.Key}, Raw Value: ${rawSelfValue}");
 
-                var selfVarKey = new PresenceVarKey(collectionKey, 0);
-                var selfValue = new PresenceValue<T>(selfVarKey, rawSelfValue, _lockVersionGuard.GetLockVersion(selfVarKey.ToString()), varKvp.Value.SelfVar.ValidationStatus);
+                var selfVarKey = new PresenceVarKey(collectionKey, _presenceTracker.GetSelf().UserId);
+                var selfValue = new PresenceValue<T>(selfVarKey, rawSelfValue, varKvp.Value.SelfVar.ValidationStatus);
                 values.Add(selfValue);
 
                 List<PresenceVar<T>> vars = varKvp.Value.PresenceVars;
@@ -112,8 +112,8 @@ namespace NakamaSync
 
                     Logger?.DebugFormat($"Presence value for initial payload: CollectionKey: {varKvp.Key}, Raw Value: {rawValue}");
 
-                    var presenceVarKey = new PresenceVarKey(collectionKey, i + 1);
-                    var value = new PresenceValue<T>(presenceVarKey, rawValue, _lockVersionGuard.GetLockVersion(presenceVarKey.ToString()), var.ValidationStatus);
+                    var presenceVarKey = new PresenceVarKey(collectionKey, var.Presence.UserId);
+                    var value = new PresenceValue<T>(presenceVarKey, rawValue, var.ValidationStatus);
                     values.Add(value);
                 }
             }

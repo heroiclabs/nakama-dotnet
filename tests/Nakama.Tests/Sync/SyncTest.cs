@@ -128,7 +128,10 @@ namespace Nakama.Tests.Socket
 
             string creatorId = creatorEnv.Self.UserId;
             var matchingGuestCollection = guestEnv.PresenceVars.PresenceBoolCollections[0];
-            var creatorPresenceVarInGuest = matchingGuestCollection.PresenceVars.First(var => var.Presence.UserId == creatorId);
+            var creatorPresenceVarInGuest = matchingGuestCollection.PresenceVars.First(var => {
+                System.Console.WriteLine("checking if " + var.Presence.UserId + " , " + creatorId);
+                return var.Presence.UserId == creatorId;
+            });
             Assert.True(matchingGuestCollection.PresenceVars[0].GetValue());
             testEnv.Dispose();
         }

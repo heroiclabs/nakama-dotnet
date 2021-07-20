@@ -29,17 +29,18 @@ namespace NakamaSync
         private readonly PresenceVarHostIngress _presenceVarHostIngress;
         private readonly VarRegistry _registry;
         private LockVersionGuard _lockVersionGuard;
+        private readonly PresenceVarRotators _presenceVarRotators;
 
         public PresenceVarIngress(
-            PresenceVarGuestIngress presenceVarGuestIngress,
-            PresenceVarHostIngress presenceVarHostIngress,
             VarRegistry registry,
-            LockVersionGuard lockVersionGuard)
+            PresenceVarRotators presenceVarRotators,
+            PresenceVarGuestIngress presenceVarGuestIngress,
+            PresenceVarHostIngress presenceVarHostIngress)
         {
+            _registry = registry;
             _presenceVarGuestIngress = presenceVarGuestIngress;
             _presenceVarHostIngress = presenceVarHostIngress;
-            _registry = registry;
-            _lockVersionGuard = lockVersionGuard;
+            _presenceVarRotators = presenceVarRotators;
         }
 
         public void Subscribe(SyncSocket socket, HostTracker hostTracker)
@@ -56,16 +57,16 @@ namespace NakamaSync
 
             try
             {
-                var bools = PresenceVarIngressContext.FromBoolValues(envelope, _registry.PresenceVarRegistry);
+                var bools = PresenceVarIngressContext.FromBoolValues(envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
                 HandleSyncEnvelope(source, bools, isHost);
 
-                var floats = PresenceVarIngressContext.FromFloatValues(envelope, _registry.PresenceVarRegistry);
+                var floats = PresenceVarIngressContext.FromFloatValues(envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
                 HandleSyncEnvelope(source, floats, isHost);
 
-                var ints = PresenceVarIngressContext.FromIntValues(envelope, _registry.PresenceVarRegistry);
+                var ints = PresenceVarIngressContext.FromIntValues(envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
                 HandleSyncEnvelope(source, ints, isHost);
 
-                var strings = PresenceVarIngressContext.FromStringValues(envelope, _registry.PresenceVarRegistry);
+                var strings = PresenceVarIngressContext.FromStringValues(envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
                 HandleSyncEnvelope(source, strings, isHost);
             }
             catch (Exception e)
@@ -81,12 +82,6 @@ namespace NakamaSync
             foreach (PresenceVarIngressContext<T> context in contexts)
             {
                 Logger?.DebugFormat($"PresenceVarIngress processing context: {context}");
-
-                if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key.ToString(), context.Value.LockVersion))
-                {
-                    Logger?.DebugFormat($"PresenceVarIngress received invalid lock version: {context.Value.LockVersion}");
-                    continue;
-                }
 
                 if (isHost)
                 {
