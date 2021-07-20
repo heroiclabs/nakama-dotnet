@@ -52,18 +52,11 @@ namespace NakamaSync
             _match = match;
         }
 
-        public void SendHandshakeRequest(HandshakeRequest request)
+        public void SendHandshakeRequest(HandshakeRequest request, IUserPresence target)
         {
             Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake request.");
 
-            IUserPresence requestTarget = _presenceTracker.GetOthers().FirstOrDefault();
-
-            if (requestTarget == null)
-            {
-                ErrorHandler?.Invoke(new InvalidOperationException($"User {_match.Self.UserId} could not find user presence to send handshake to."));
-            }
-
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequestOpcode, _encoding.Encode(request), new IUserPresence[]{});
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequestOpcode, _encoding.Encode(request), new IUserPresence[]{target});
         }
 
         public void SendHandshakeResponse(IUserPresence target, HandshakeResponse response)

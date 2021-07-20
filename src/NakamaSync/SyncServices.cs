@@ -100,7 +100,7 @@ namespace NakamaSync
             var presenceRoleIngress = new PresenceVarIngress(varRegistry, presenceVarRotators, presenceVarGuestIngress, presenceVarHostIngress);
             _services.Add(presenceRoleIngress);
 
-            var handshakeRequester = new HandshakeRequester(varRegistry, sharedVarGuestIngress, presenceRoleIngress, session.UserId);
+            var handshakeRequester = new HandshakeRequester(varRegistry, presenceTracker, syncSocket, sharedVarGuestIngress, presenceRoleIngress, session.UserId);
             _services.Add(handshakeRequester);
 
             var handshakeResponder = new HandshakeResponder(lockVersionGuard, varRegistry, presenceTracker);
@@ -181,7 +181,7 @@ namespace NakamaSync
                 // delay receiving and sending new values until initial store is synced
                 // todo just expose the anonymous lambdas outside here, no need to hide it in
                 // another subscribe call
-                _handshakeRequester.Subscribe(_syncSocket, _hostTracker, _presenceTracker);
+                _handshakeRequester.Subscribe(_hostTracker);
                 _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
                 _selfVarEgress.Subscribe(_varRegistry.PresenceVarRegistry, _handshakeRequester);
             }
@@ -204,6 +204,7 @@ namespace NakamaSync
             _syncSocket.ReceiveMatch(match);
             _presenceTracker.ReceiveMatch(match);
             _presenceVarRotators.ReceiveMatch(match);
+            _handshakeRequester.ReceiveMatch(match);
 
             _logger?.DebugFormat("Sync services received match.");
 

@@ -31,42 +31,68 @@ namespace NakamaSync
 
         private readonly VarRegistry _registry;
 
+        private PresenceTracker _presenceTracker;
         // todo handle error with sending handshake and resend if needed
         private bool _sentHandshake;
 
-        private SharedVarIngress _sharedVarGuestIngress;
-        private PresenceVarIngress _presenceRoleIngress;
-        private string _userId;
+        private readonly SharedVarIngress _sharedVarGuestIngress;
+        private readonly PresenceVarIngress _presenceRoleIngress;
+        private readonly SyncSocket _socket;
+        private readonly string _userId;
 
-        public HandshakeRequester(VarRegistry registry, SharedVarIngress sharedVarGuestIngress, PresenceVarIngress presenceRoleIngress, string userId)
+        public HandshakeRequester(VarRegistry registry, PresenceTracker presenceTracker, SyncSocket socket, SharedVarIngress sharedVarGuestIngress, PresenceVarIngress presenceRoleIngress, string userId)
         {
             _registry = registry;
+            _presenceTracker = presenceTracker;
+            _socket = socket;
             _sharedVarGuestIngress = sharedVarGuestIngress;
             _presenceRoleIngress = presenceRoleIngress;
             _userId = userId;
         }
 
-        public void Subscribe(SyncSocket socket, HostTracker hostTracker, PresenceTracker presenceTracker)
+        public void Subscribe(HostTracker hostTracker)
         {
-            presenceTracker.OnPresenceAdded += (presence) =>
+            _presenceTracker.OnPresenceAdded += (presence) =>
             {
+                Logger?.DebugFormat($"Handshake requester for {_userId} saw presence added: {presence.UserId}");
+
                 if (_sentHandshake)
                 {
+                    Logger?.DebugFormat($"Handshake requester for {_userId} already sent handshake.");
                     return;
                 }
 
                 if (presence.UserId != _userId)
                 {
-                    RequestHandshake(presence, socket);
+                    RequestHandshake(_socket, presence);
                 }
             };
 
-            socket.OnHandshakeResponse += (source, response) =>
+            _socket.OnHandshakeResponse += (source, response) =>
             {
                 HandleHandshakeResponse(source, response, hostTracker.IsSelfHost());
             };
 
-            Logger?.DebugFormat($"User {presenceTracker.UserId} subscribed to socket and presence tracker.");
+            Logger?.DebugFormat($"User {_presenceTracker.UserId} subscribed to socket and presence tracker.");
+        }
+
+        public void ReceiveMatch(IMatch match)
+        {
+            Logger?.DebugFormat($"Handshake requester for {_userId} received match.");
+
+            if (_sentHandshake)
+            {
+                Logger?.DebugFormat($"Handshake requester for {_userId} already sent handshake.");
+                return;
+            }
+
+            // todo randomize?
+            var otherUser = _presenceTracker.GetOthers().FirstOrDefault();
+
+            if (!_sentHandshake && otherUser != null)
+            {
+                RequestHandshake(_socket, otherUser);
+            }
         }
 
         private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response, bool isHost)
@@ -84,10 +110,10 @@ namespace NakamaSync
             }
         }
 
-        private void RequestHandshake(IUserPresence self, SyncSocket socket)
+        private void RequestHandshake(SyncSocket socket, IUserPresence target)
         {
             var keysForValidation = _registry.GetAllKeys();
-            socket.SendHandshakeRequest(new HandshakeRequest(keysForValidation.ToList()));
+            socket.SendHandshakeRequest(new HandshakeRequest(keysForValidation.ToList()), target);
             _sentHandshake = true;
         }
     }

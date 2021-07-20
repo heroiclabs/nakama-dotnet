@@ -28,7 +28,6 @@ namespace NakamaSync
         private readonly PresenceVarGuestIngress _presenceVarGuestIngress;
         private readonly PresenceVarHostIngress _presenceVarHostIngress;
         private readonly VarRegistry _registry;
-        private LockVersionGuard _lockVersionGuard;
         private readonly PresenceVarRotators _presenceVarRotators;
 
         public PresenceVarIngress(
