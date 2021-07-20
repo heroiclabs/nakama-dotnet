@@ -22,8 +22,9 @@ namespace NakamaSync
         public ValueChange<T> ValueChange { get; }
         public ValidationChange ValidationChange { get; }
 
-        public SelfVarEvent(ValueChange<T> valueChange, ValidationChange validationChange)
+        public SelfVarEvent(SelfVar<T> var, ValueChange<T> valueChange, ValidationChange validationChange)
         {
+            Var = var;
             ValueChange = valueChange;
             ValidationChange = validationChange;
         }

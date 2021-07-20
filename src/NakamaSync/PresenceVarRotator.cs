@@ -42,6 +42,7 @@ namespace NakamaSync
         {
             if (presenceVar.Presence == null)
             {
+                Logger?.DebugFormat($"Rotator is adding unassigned presence var: {presenceVar}");
                 _unassignedPresenceVars.Enqueue(presenceVar);
             }
             else
@@ -53,12 +54,13 @@ namespace NakamaSync
         public void ReceiveMatch(IMatch match)
         {
             _self = match.Self;
-            _presenceTracker.OnPresenceAdded -= HandlePresenceAdded;
-            _presenceTracker.OnPresenceRemoved -= HandlePresenceRemoved;
+            _presenceTracker.OnPresenceAdded += HandlePresenceAdded;
+            _presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
         }
 
         private void HandlePresenceAdded(IUserPresence presence)
         {
+            Logger?.DebugFormat($"Presence var rotator notified of added presence: {presence}");
             if (_unassignedPresenceVars.Count == 0)
             {
                 ErrorHandler?.Invoke(new InvalidOperationException($"Not enough presence vars to handle presence."));
@@ -69,7 +71,10 @@ namespace NakamaSync
             }
             else
             {
-                _assignedPresenceVars.Add(presence.UserId, _unassignedPresenceVars.Dequeue());
+                var varToAssign = _unassignedPresenceVars.Dequeue();
+                varToAssign.SetPresence(presence);
+                Logger?.DebugFormat($"Presence var rotator received presence: {presence.UserId}");
+                _assignedPresenceVars.Add(presence.UserId, varToAssign);
             }
         }
 

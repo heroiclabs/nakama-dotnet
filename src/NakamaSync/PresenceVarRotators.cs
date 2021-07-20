@@ -111,9 +111,9 @@ namespace NakamaSync
 
             foreach (var presenceVar in presenceVars)
             {
-                rotator.AddPresenceVar(presenceVar);
                 rotator.ErrorHandler = ErrorHandler;
                 rotator.Logger = Logger;
+                rotator.AddPresenceVar(presenceVar);
             }
 
             rotators.Add(key, rotator);
