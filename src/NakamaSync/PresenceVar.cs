@@ -62,10 +62,15 @@ namespace NakamaSync
 
         internal void SetPresence(IUserPresence presence)
         {
-            if (presence == _presence)
+            if (presence?.UserId == _presence?.UserId)
             {
                 // todo log warning here?
                 return;
+            }
+
+            if (presence?.UserId == Self?.UserId)
+            {
+                throw new InvalidOperationException("PresenceVar cannot have a presence id equal to self id.");
             }
 
             var oldOwner = _presence;

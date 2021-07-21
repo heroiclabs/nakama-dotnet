@@ -84,12 +84,12 @@ namespace NakamaSync
 
                 if (isHost)
                 {
-                    Logger?.InfoFormat($"Setting user value for self as host: {context.Value}");
+                    Logger?.InfoFormat($"Setting user value for {context.Var.Presence.UserId} as host: {context.Value}");
                     _presenceVarHostIngress.HandleValue(source, context);
                 }
                 else
                 {
-                    Logger?.InfoFormat($"Setting user value for self as guest: {context.Value}");
+                    Logger?.InfoFormat($"Setting user value for {context.Var.Presence.UserId} as guest: {context.Value}");
                     _presenceVarGuestIngress.HandleValue(context.Var, source, context.Value);
                 }
             }

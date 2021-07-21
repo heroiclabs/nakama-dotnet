@@ -94,9 +94,7 @@ namespace NakamaSync
 
             IMatch match = await socket.JoinMatchAsync(matched);
             services.ReceiveMatch(match);
-            System.Console.WriteLine($"{session.UserId} waiting for handshake");
             await services.GetHandshakeTask();
-            System.Console.WriteLine("{session.UserId} done waiting for handshake");
 
             return match;
         }

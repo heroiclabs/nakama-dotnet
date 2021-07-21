@@ -77,6 +77,7 @@ namespace NakamaSync
                 {
                     var assignedPresenceVar = presenceVarRotator.AssignedPresenceVars[value.Key.UserId];
                     assignedPresenceVar.SetValue(value.Value, value.ValidationStatus);
+                    contexts.Add(new PresenceVarIngressContext<T>(assignedPresenceVar, value, varAccessor, ackAccessor));
                 }
                 else
                 {

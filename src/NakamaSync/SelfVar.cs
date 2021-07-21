@@ -41,7 +41,6 @@ namespace NakamaSync
 
         internal void SetValue(T value, ValidationStatus validationStatus)
         {
-            System.Console.WriteLine("set value called");
             T oldValue = _value;
             _value = value;
 

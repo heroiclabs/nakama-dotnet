@@ -98,7 +98,7 @@ namespace Nakama.Tests.Socket
 
             await Task.Delay(3000);
 
-            SyncTestSharedVars guestEnv = testEnv.GetGuestEnv(testEnv.GetRandomGuestPresence()).SharedVars;
+            SyncTestSharedVars guestEnv = testEnv.GetTestEnvironment(testEnv.GetRandomNonCreatorPresence()).SharedVars;
             Assert.True(guestEnv.SharedBools[0].GetValue());
 
             testEnv.Dispose();
@@ -117,22 +117,28 @@ namespace Nakama.Tests.Socket
             testEnv.StartViaMatchmaker();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            System.Console.WriteLine("SETTING VALUE");
             creatorEnv.PresenceVars.PresenceBoolCollections[0].SelfVar.SetValue(true);
 
             await Task.Delay(2500);
 
-            IUserPresence guestPresence = testEnv.GetRandomGuestPresence();
+            IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
 
-            var guestEnv = testEnv.GetUserEnv(guestPresence);
+            var nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
 
             string creatorId = creatorEnv.Self.UserId;
-            var matchingGuestCollection = guestEnv.PresenceVars.PresenceBoolCollections[0];
-            var creatorPresenceVarInGuest = matchingGuestCollection.PresenceVars.First(var => {
-                System.Console.WriteLine("checking if " + var.Presence.UserId + " , " + creatorId);
+            string nonCreatorId = nonCreatorEnv.Self.UserId;
+            System.Console.WriteLine($"Creator id {creatorId}");
+            System.Console.WriteLine($"Non creator id {nonCreatorId}");
+
+            var matchingNonCreatorCollection = nonCreatorEnv.PresenceVars.PresenceBoolCollections[0];
+
+            var creatorPresenceVarInGuest = matchingNonCreatorCollection.PresenceVars.First(var => {
+                System.Console.WriteLine($"Var presence id: {var.Presence.UserId}");
+
                 return var.Presence.UserId == creatorId;
             });
-            Assert.True(matchingGuestCollection.PresenceVars[0].GetValue());
+
+            Assert.True(matchingNonCreatorCollection.PresenceVars[0].GetValue());
             testEnv.Dispose();
         }
 

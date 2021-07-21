@@ -117,34 +117,29 @@ namespace Nakama.Tests
             return _syncTestUserEnvironments[CreatorIndex].Self;
         }
 
-        public IUserPresence GetRandomGuestPresence()
+        public IUserPresence GetRandomNonCreatorPresence()
         {
-            List<IUserPresence> guests = GetGuestPresences();
+            List<IUserPresence> guests = GetNonCreatorPresences();
             int randGuestIndex = _randomGuestGenerator.Next(guests.Count);
             return guests[randGuestIndex];
         }
 
-        public SyncTestUserEnvironment GetGuestEnv(IUserPresence presence)
+        public SyncTestUserEnvironment GetTestEnvironment(IUserPresence presence)
         {
             for (int i = 0; i < _syncTestUserEnvironments.Count; i++)
             {
-                if (i == CreatorIndex)
-                {
-                    continue;
-                }
+                var testEnvironment = _syncTestUserEnvironments[i];
 
-                var env = _syncTestUserEnvironments[i];
-
-                if (env.Self.UserId == presence.UserId)
+                if (testEnvironment.Self.UserId == presence.UserId)
                 {
-                    return env;
+                    return testEnvironment;
                 }
             }
 
             throw new InvalidOperationException($"Could not obtain guest environment with presence {presence.UserId}.");
         }
 
-        private List<IUserPresence> GetGuestPresences()
+        private List<IUserPresence> GetNonCreatorPresences()
         {
             var guests = new List<IUserPresence>();
 
