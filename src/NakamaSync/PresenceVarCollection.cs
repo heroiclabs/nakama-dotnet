@@ -20,22 +20,10 @@ using System.Collections.Generic;
 namespace NakamaSync
 {
     // todo should this be internal if possible?
-    public class PresenceVarCollection<T>
+    internal class PresenceVarCollection<T>
     {
         public SelfVar<T> SelfVar { get; set; }
         public List<PresenceVar<T>> PresenceVars => _presenceVars;
-
         private readonly List<PresenceVar<T>> _presenceVars = new List<PresenceVar<T>>();
-
-        public PresenceVarCollection(SelfVar<T> selfVar, IEnumerable<PresenceVar<T>> presenceVars)
-        {
-            SelfVar = selfVar;
-
-            // copy to internal representation
-            foreach (var presenceVar in presenceVars)
-            {
-                _presenceVars.Add(presenceVar);
-            }
-        }
     }
 }
