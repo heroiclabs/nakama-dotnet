@@ -82,12 +82,15 @@ namespace NakamaSync
                 try
                 {
                     envelope = _encoding.Decode<Envelope>(state.State);
-                    OnSyncEnvelope(state.UserPresence, envelope);
                 }
                 catch (Exception e)
                 {
                     ErrorHandler?.Invoke(e);
                 }
+
+                Logger?.DebugFormat($"Envelope decoded.");
+
+                OnSyncEnvelope?.Invoke(state.UserPresence, envelope);
             }
             else if (state.OpCode == _opcodes.HandshakeRequestOpcode)
             {

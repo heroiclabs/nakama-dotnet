@@ -65,6 +65,7 @@ using Nakama;
 // add null checks for inputs and maybe more input validation
 // whole presencevarcollection?
 // todo make sure you can
+// does usemainthread need to be true? test with both
 using System;
 
 namespace NakamaSync
@@ -76,7 +77,7 @@ namespace NakamaSync
         public static async Task<IMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes, SyncErrorHandler errorHandler, ILogger logger = null)
         {
             logger?.DebugFormat($"User {session.UserId} is creating sync match.");
-
+            AssertValidInputs(registry, errorHandler);
             var services = new SyncServices(socket, session, registry, opcodes);
             services.Initialize(isMatchCreator: true, errorHandler: errorHandler, logger: logger);
 
@@ -87,6 +88,7 @@ namespace NakamaSync
 
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, IMatchmakerMatched matched, VarRegistry registry, SyncErrorHandler errorHandler, ILogger logger = null)
         {
+            AssertValidInputs(registry, errorHandler);
             logger?.DebugFormat($"User {session.UserId} is joining sync match via matchmaker.");
 
             var services = new SyncServices(socket, session, registry, opcodes);
@@ -101,6 +103,7 @@ namespace NakamaSync
 
         public static async Task<IMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry, SyncErrorHandler errorHandler, ILogger logger = null)
         {
+            AssertValidInputs(registry, errorHandler);
             logger?.DebugFormat($"User {session.UserId} is joining sync match: {matchId}.");
 
             var services = new SyncServices(socket, session, registry, opcodes);
@@ -110,6 +113,19 @@ namespace NakamaSync
             services.ReceiveMatch(match);
             await services.GetHandshakeTask();
             return match;
+        }
+
+        private static void AssertValidInputs(VarRegistry registry, SyncErrorHandler errorHandler)
+        {
+            if (registry == null)
+            {
+                throw new NullReferenceException("Var registry cannot be null.");
+            }
+
+            if (errorHandler == null)
+            {
+                throw new NullReferenceException("Sync error handler cannot be null.");
+            }
         }
 
         private static void DefaultErrorHandler(Exception e)
