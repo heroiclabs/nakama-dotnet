@@ -62,20 +62,19 @@ namespace NakamaSync
 
         private void HandlePresenceAdded(IUserPresence joiner)
         {
-                IUserPresence host = GetHost();
+            IUserPresence host = GetHost();
 
-                if (joiner.UserId == host.UserId)
-                {
-                    // get the next presence in the alphanumeric list
-                    IUserPresence oldHost = _presenceTracker.GetPresence(1);
-                    Logger?.InfoFormat($"Host changed from {oldHost} to {host}");
-                    OnHostChanged?.Invoke(new HostChangedEvent(oldHost, host));
-                }
-                else
-                {
-                    OnGuestJoined?.Invoke(joiner);
-                }
-
+            if (joiner.UserId == host.UserId)
+            {
+                // get the next presence in the alphanumeric list
+                IUserPresence oldHost = _presenceTracker.GetPresence(1);
+                Logger?.InfoFormat($"Host changed from {oldHost} to {host}");
+                OnHostChanged?.Invoke(new HostChangedEvent(oldHost, host));
+            }
+            else
+            {
+                OnGuestJoined?.Invoke(joiner);
+            }
         }
 
         public IEnumerable<IUserPresence> GetGuests()

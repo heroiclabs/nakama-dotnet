@@ -46,6 +46,12 @@ namespace NakamaSync
             internal set;
         }
 
+        public bool IsHost
+        {
+            get;
+            internal set;
+        }
+
         protected ValidationStatus _validationStatus;
         protected T _value;
         protected ValidationHandler<T> _validationHandler;
