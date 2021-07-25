@@ -58,7 +58,6 @@ using Nakama;
 // userpresence, but it's just a matter of serializing interface rather than concrete type.
 // expose an OnLocalVariable changed event for users.
 // renamed SharedVar to GlobalVar?
-// TRACK VAR type for something like a ball where nobody is actually using it.
 // think about if leavematch should clear all variables as opposed to being dropped from a match
 // which would keep the variables there?
 // todo create a syncmatch struct and expose presences.

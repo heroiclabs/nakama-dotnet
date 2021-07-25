@@ -38,6 +38,7 @@ namespace NakamaSync
             _validationHandler = null;
             _validationStatus = ValidationStatus.None;
             OnValueChanged = null;
+            IsHost = false;
         }
 
         internal void SetValue(IUserPresence source, T value, ValidationStatus validationStatus)
