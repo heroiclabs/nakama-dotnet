@@ -1,6 +1,3 @@
-
-
-using Nakama;
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -16,6 +13,10 @@ using Nakama;
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+
+using System.Collections.Generic;
+using Nakama;
+
 namespace NakamaSync
 {
     // TODO implement this
@@ -24,17 +25,54 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private IMatch _match;
+        private readonly string _userId;
+        private readonly VarRegistry _varRegistry;
 
-        public void ReceiveMatch(IMatch match)
+        public SyncCleanup(string userId, VarRegistry varRegistry)
         {
-
+            _userId = userId;
+            _varRegistry = varRegistry;
         }
 
-        public void Subscribe(ISocket socket)
+        public void Subscribe(PresenceTracker presenceTracker)
         {
+            presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
+        }
 
+        private void HandlePresenceRemoved(IUserPresence leaver)
+        {
+            if (leaver.UserId == _userId)
+            {
+                ResetVars(_varRegistry.SharedVarRegistry.SharedBools);
+                ResetVars(_varRegistry.SharedVarRegistry.SharedFloats);
+                ResetVars(_varRegistry.SharedVarRegistry.SharedInts);
+                ResetVars(_varRegistry.SharedVarRegistry.SharedStrings);
+                ResetVars(_varRegistry.PresenceVarRegistry.PresenceBools);
+                ResetVars(_varRegistry.PresenceVarRegistry.PresenceFloats);
+                ResetVars(_varRegistry.PresenceVarRegistry.PresenceInts);
+                ResetVars(_varRegistry.PresenceVarRegistry.PresenceStrings);
+            }
+        }
+
+        private void ResetVars<T>(Dictionary<string, SharedVar<T>> vars)
+        {
+            foreach (var var in vars.Values)
+            {
+                var.Reset();
+            }
+        }
+
+        private void ResetVars<T>(Dictionary<string, PresenceVarCollection<T>> presenceVarCollections)
+        {
+            foreach (var presenceVarCollection in presenceVarCollections.Values)
+            {
+                presenceVarCollection.SelfVar.Reset();
+
+                foreach (var presenceVar in presenceVarCollection.PresenceVars)
+                {
+                    presenceVar.Reset();
+                }
+            }
         }
     }
-
 }

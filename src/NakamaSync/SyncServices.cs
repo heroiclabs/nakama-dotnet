@@ -25,7 +25,6 @@ namespace NakamaSync
 
     internal class SyncServices
     {
-
         private ILogger _logger;
 
         private readonly VarRegistry _varRegistry;
@@ -48,6 +47,8 @@ namespace NakamaSync
         private readonly HostMigrator _migrator;
 
         private readonly PresenceVarRotators _presenceVarRotators;
+
+        private readonly SyncCleanup _syncCleanup;
 
         private bool _initialized;
 
@@ -121,6 +122,9 @@ namespace NakamaSync
             var migrator = new HostMigrator(varRegistry, envelopeBuilder);
             _services.Add(migrator);
 
+            var syncCleanup = new SyncCleanup(session.UserId, varRegistry);
+            _services.Add(syncCleanup);
+
             _varRegistry = varRegistry;
             _socket = socket;
             _syncSocket = syncSocket;
@@ -191,6 +195,7 @@ namespace NakamaSync
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
 
             _presenceVarRotators.Register(_varRegistry.PresenceVarRegistry);
+            _syncCleanup.Subscribe(_presenceTracker);
 
             _initialized = true;
             _logger?.DebugFormat("Sync services initialized.");
