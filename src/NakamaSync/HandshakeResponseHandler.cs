@@ -44,9 +44,9 @@ namespace NakamaSync
                 _handshakeTcs.SetResult(null);
             };
 
-            handshakeRequester.OnHandshakeFailure += () =>
+            handshakeRequester.OnHandshakeFailure += (source) =>
             {
-                _handshakeTcs.SetException(new InvalidOperationException("Handshake requester received handshake failure"));
+                _handshakeTcs.SetException(new HandshakeFailedException("Handshake requester received handshake failure", source));
             };
         }
 

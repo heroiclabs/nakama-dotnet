@@ -95,7 +95,15 @@ namespace NakamaSync
 
             IMatch match = await socket.JoinMatchAsync(matched);
             services.ReceiveMatch(match);
-            await services.GetHandshakeTask();
+
+            try
+            {
+                await services.GetHandshakeTask();
+            }
+            catch (HandshakeFailedException e)
+            {
+                errorHandler?.Invoke(e);
+            }
 
             return match;
         }
@@ -110,7 +118,16 @@ namespace NakamaSync
 
             IMatch match = await socket.JoinMatchAsync(matchId);
             services.ReceiveMatch(match);
-            await services.GetHandshakeTask();
+
+            try
+            {
+                await services.GetHandshakeTask();
+            }
+            catch (HandshakeFailedException e)
+            {
+                errorHandler?.Invoke(e);
+            }
+
             return match;
         }
 

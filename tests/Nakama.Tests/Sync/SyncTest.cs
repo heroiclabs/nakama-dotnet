@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using NakamaSync;
@@ -57,7 +58,7 @@ namespace Nakama.Tests.Socket
         }
 
         //todo unskip test
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS, Skip = "todo fix this")]
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task BadHandshakeShouldFail()
         {
             VarIdGenerator idGenerator = (string userId, string varName, int varId) => {
@@ -65,6 +66,16 @@ namespace Nakama.Tests.Socket
                 // create "mismatched" keys, i.e., keys with different ids for each client, to
                 // simulate clients using different app binaries.
                 return userId + varName + varId.ToString();
+            };
+
+            bool threwError = false;
+
+            SyncErrorHandler errorHandler = e =>
+            {
+                if (e is HandshakeFailedException)
+                {
+                    threwError = true;
+                }
             };
 
             var mismatchedEnv = new SyncTestEnvironment(
@@ -75,10 +86,10 @@ namespace Nakama.Tests.Socket
                 idGenerator);
 
 
-            await mismatchedEnv.Start();
+            mismatchedEnv.StartViaMatchmaker(errorHandler);
 
-            //await Assert.ThrowsAsync<InvalidOperationException>(() => );
-
+            await Task.Delay(2000);
+            Assert.True(threwError);
             mismatchedEnv.Dispose();
         }
 

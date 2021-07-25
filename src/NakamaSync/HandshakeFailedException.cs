@@ -19,11 +19,11 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public class HandshakeException : Exception
+    public class HandshakeFailedException : Exception
     {
         public IUserPresence SourcePresence { get; }
 
-        public HandshakeException(string msg, IUserPresence source) : base(msg)
+        public HandshakeFailedException(string msg, IUserPresence source) : base(msg)
         {
             SourcePresence = source;
         }

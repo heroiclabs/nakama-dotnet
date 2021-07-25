@@ -27,7 +27,7 @@ namespace NakamaSync
         public ILogger Logger { get; set; }
 
         public event Action OnHandshakeSuccess;
-        public event Action OnHandshakeFailure;
+        public event Action<IUserPresence> OnHandshakeFailure;
 
         private readonly VarRegistry _registry;
 
@@ -106,7 +106,7 @@ namespace NakamaSync
             }
             else
             {
-                OnHandshakeFailure();
+                OnHandshakeFailure(source);
             }
         }
 

@@ -66,13 +66,13 @@ namespace Nakama.Tests
             }
         }
 
-        public void StartViaMatchmaker()
+        public void StartViaMatchmaker(SyncErrorHandler errorHandler = null)
         {
             var matchmakerTasks = new List<Task>();
 
             for (int i = 0; i < _syncTestUserEnvironments.Count; i++)
             {
-                var matchmakerTask = _syncTestUserEnvironments[i].StartMatchViaMatchmaker(_syncTestUserEnvironments.Count, DefaultErrorHandler());
+                var matchmakerTask = _syncTestUserEnvironments[i].StartMatchViaMatchmaker(_syncTestUserEnvironments.Count, errorHandler ?? DefaultErrorHandler());
                 matchmakerTasks.Add(matchmakerTask);
             }
 

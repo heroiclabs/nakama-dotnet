@@ -123,6 +123,7 @@ namespace NakamaSync
             _services.Add(migrator);
 
             var syncCleanup = new SyncCleanup(session.UserId, varRegistry);
+            _syncCleanup = syncCleanup;
             _services.Add(syncCleanup);
 
             _varRegistry = varRegistry;
