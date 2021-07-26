@@ -18,8 +18,8 @@ namespace NakamaSync
 {
     public class ValidationChange
     {
-        ValidationStatus OldStatus { get; }
-        ValidationStatus NewStatus { get; }
+        public ValidationStatus OldStatus { get; }
+        public ValidationStatus NewStatus { get; }
 
         public ValidationChange(ValidationStatus oldStatus, ValidationStatus newStatus)
         {
