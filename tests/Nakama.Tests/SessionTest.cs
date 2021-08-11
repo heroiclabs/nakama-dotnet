@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Nakama.Tests
@@ -128,6 +129,36 @@ namespace Nakama.Tests
             Assert.Equal(1616347976, session.RefreshExpireTime);
             Assert.NotInRange(session.RefreshExpireTime, 0, 0);
             Assert.True(session.IsRefreshExpired);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async void Refresh_MetadataVar_DoesNotThrow()
+        {
+            var client = TestsUtil.FromSettingsFile();
+
+            const int numVars = 5;
+
+            var initialVars = new Dictionary<string, string>();
+
+            for (int i = 0; i < numVars; i++)
+            {
+                initialVars[$"{Guid.NewGuid()}"] = $"{Guid.NewGuid()}";
+            }
+
+            var session = await client.AuthenticateCustomAsync("${Guid.NewGuid()}", null, true, initialVars);
+
+            var newVars = new Dictionary<string, string>(session.Vars);
+
+            foreach (KeyValuePair<string, string> var in newVars)
+            {
+                newVars[var.Key] = $"{Guid.NewGuid()}";
+            }
+
+            session = await client.SessionRefreshAsync(session, newVars);
+
+            Assert.Equal(session.Vars.Count, numVars);
+            Assert.True(newVars.Keys.All(initialVars.Keys.Contains));
+            Assert.True(newVars.Values.All((val) => !initialVars.Values.Contains(val)));
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]

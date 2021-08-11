@@ -57,7 +57,7 @@ namespace Nakama.Tests.Api
             var account = await _client.GetAccountAsync(session);
 
             Assert.NotNull(account);
-            Assert.Equal(account.Devices.Count(d => d.Id == deviceid), 1);
+            Assert.Equal(1, account.Devices.Count(d => d.Id == deviceid));
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]

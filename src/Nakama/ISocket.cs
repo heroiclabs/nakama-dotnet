@@ -159,7 +159,7 @@ namespace Nakama
         /// <param name="stringProperties">String properties.</param>
         /// <param name="numericProperties">Numeric properties.</param>
         /// <returns>A task which resolves to a party matchmaker ticket object.</returns>
-        Task AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount,
+        Task<IPartyMatchmakerTicket> AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount,
             Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null);
 
         /// <summary>
@@ -181,9 +181,10 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="appearOnline">If the user who appear online to other users.</param>
         /// <param name="connectTimeout">The time allowed for the socket connection to be established.</param>
+        /// <param name="langTag">The language tag of the user on the connected socket.</param>
         /// <returns>A task to represent the asynchronous operation.</returns>
         Task ConnectAsync(ISession session, bool appearOnline = false,
-            int connectTimeout = Socket.DefaultConnectTimeout);
+            int connectTimeout = Socket.DefaultConnectTimeout, string langTag = "en");
 
         /// <summary>
         /// Create a multiplayer match on the server.
@@ -294,7 +295,7 @@ namespace Nakama
         /// <param name="partyId">Party ID.</param>
         /// <param name="partyMember">The presence of an existing party member to promote as the new leader.</param>
         /// <returns>A task which resolves to an announcement of a new party leader.</returns>
-        Task PromotePartyMember(string partyId, IUserPresence partyMember);
+        Task PromotePartyMemberAsync(string partyId, IUserPresence partyMember);
 
         /// <summary>
         /// Remove a chat message from a chat channel on the server.
