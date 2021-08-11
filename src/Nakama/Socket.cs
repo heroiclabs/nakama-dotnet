@@ -103,6 +103,7 @@ namespace Nakama
         public ILogger Logger { get; set; }
 
         private readonly ISocketAdapter _adapter;
+        private readonly bool _autoReconnect;
         private readonly Uri _baseUri;
         private readonly Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
 
@@ -119,7 +120,7 @@ namespace Nakama
         /// <summary>
         /// A new socket with default options.
         /// </summary>
-        public Socket() : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort, new WebSocketAdapter())
+        public Socket() : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort, new WebSocketAdapter(), autoReconnect: true)
         {
         }
 
@@ -128,7 +129,7 @@ namespace Nakama
         /// </summary>
         /// <param name="adapter">The adapter for use with the socket.</param>
         public Socket(ISocketAdapter adapter) : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort,
-            adapter)
+            adapter, autoReconnect: true)
         {
         }
 
@@ -139,10 +140,12 @@ namespace Nakama
         /// <param name="host">The host address of the server.</param>
         /// <param name="port">The port number of the server.</param>
         /// <param name="adapter">The adapter for use with the socket.</param>
-        public Socket(string scheme, string host, int port, ISocketAdapter adapter)
+        /// <param name="autoReconnect">Whether or not the socket should reconnect upon a transient disconnect.</param>
+        public Socket(string scheme, string host, int port, ISocketAdapter adapter, bool autoReconnect)
         {
             Logger = NullLogger.Instance;
             _adapter = adapter;
+            _autoReconnect = autoReconnect;
             _baseUri = new UriBuilder(scheme, host, port).Uri;
             _responses = new Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
 
