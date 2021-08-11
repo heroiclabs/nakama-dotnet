@@ -759,7 +759,7 @@ namespace Nakama
         {
             var scheme = client.Scheme.ToLower().Equals("http") ? "ws" : "wss";
             // TODO improve how logger is passed into socket object.
-            return new Socket(scheme, client.Host, client.Port, adapter) {Logger = (client as Client)?.Logger};
+            return new Socket(scheme, client.Host, client.Port, adapter, autoReconnect: false) {Logger = (client as Client)?.Logger};
         }
 
         private void ReceivedMessage(ArraySegment<byte> buffer)
