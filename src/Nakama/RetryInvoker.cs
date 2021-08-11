@@ -16,7 +16,6 @@
 
 using System;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -28,12 +27,9 @@ namespace Nakama
     {
         public int JitterSeed { get; private set; }
 
-        private readonly Random _random;
-
         public RetryInvoker(int jitterSeed = 0)
         {
             JitterSeed = jitterSeed;
-            _random = new Random(JitterSeed);
         }
 
         public async Task<T> InvokeWithRetry<T>(Func<Task<T>> request, RetryHistory history)
@@ -88,7 +84,7 @@ namespace Nakama
         private Retry CreateNewRetry(RetryHistory history)
         {
             int expoBackoff = System.Convert.ToInt32(Math.Pow(history.Configuration.BaseDelay, history.Retries.Count + 1));
-            int jitteredBackoff = history.Configuration.Jitter(history.Retries, expoBackoff, this._random);
+            int jitteredBackoff = history.Configuration.Jitter(history.Retries, expoBackoff, new Random(JitterSeed));
             return new Retry(expoBackoff, jitteredBackoff);
         }
 
