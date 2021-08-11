@@ -170,7 +170,6 @@ namespace Nakama
                 {
                     lock (_lockObj)
                     {
-
                         foreach (var response in _responses)
                         {
                             response.Value.TrySetCanceled();
@@ -257,8 +256,6 @@ namespace Nakama
             _adapter.Close();
             return Task.CompletedTask;
         }
-
-
 
         /// <inheritdoc cref="ClosePartyAsync"/>
         public Task ClosePartyAsync(string partyId)
@@ -930,10 +927,34 @@ namespace Nakama
         private Task ConnectAsync(ISession session, bool appearOnline, int connectTimeoutSec, string langTag)
         {
             var tcs = new TaskCompletionSource<bool>();
-            Action callback = () => tcs.TrySetResult(true);
-            Action<Exception> errback = e => tcs.TrySetException(e);
-            _adapter.Connected += callback;
-            _adapter.ReceivedError += errback;
+
+            Action<Exception> retryCallback = e => {
+
+                if (!_adapter.IsConnected)
+                {
+                    // TODO under what exceptions, if any, should we not reconnect?
+                    ConnectAsync(session, appearOnline, connectTimeoutSec, langTag);
+                }
+            };
+
+            Action onConnectSuccess = () => {
+
+                if (_autoReconnect)
+                {
+                    _adapter.ReceivedError += retryCallback;
+                }
+
+                tcs.TrySetResult(true);
+            };
+
+            Action<Exception> onConnectFailure = e => {
+                tcs.TrySetException(e);
+            };
+
+            _adapter.Connected += onConnectSuccess;
+            _adapter.Closed += () => _adapter.ReceivedError -= retryCallback;
+            _adapter.ReceivedError += onConnectFailure;
+
             var uri = new UriBuilder(_baseUri)
             {
                 Path = "/ws",
@@ -942,8 +963,8 @@ namespace Nakama
             tcs.Task.ContinueWith(_ =>
             {
                 // NOTE Not fired in Unity WebGL builds.
-                _adapter.Connected -= callback;
-                _adapter.ReceivedError -= errback;
+                _adapter.Connected -= onConnectSuccess;
+                _adapter.ReceivedError -= onConnectFailure;
             });
             _adapter.Connect(uri, connectTimeoutSec);
             return tcs.Task;
