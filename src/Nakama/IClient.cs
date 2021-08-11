@@ -72,7 +72,7 @@ namespace Nakama
         /// <param name="usernames">The usernames of the users to add as friends.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RequestConfiguration requestConfiguration = null);
+        Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Add one or more users to the group.
@@ -82,7 +82,7 @@ namespace Nakama
         /// <param name="ids">The ids of the users to add or invite to the group.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RequestConfiguration requestConfiguration = null);
+        Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Authenticate a user with an Apple ID against the server.
@@ -93,7 +93,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RequestConfiguration requestConfiguration = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Authenticate a user with a custom id.
@@ -105,7 +105,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RequestConfiguration requestConfiguration = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Authenticate a user with a device id.
@@ -117,7 +117,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RequestConfiguration requestConfiguration = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Authenticate a user with an email and password.
@@ -130,7 +130,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateEmailAsync(string email, string password, string username = null,
-            bool create = true, Dictionary<string, string> vars = null, RequestConfiguration requestConfiguration = null);
+            bool create = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Authenticate a user with a Facebook auth token.
@@ -143,7 +143,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
-            bool import = true, Dictionary<string, string> vars = null, RequestConfiguration requestConfiguration = null);
+            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Authenticate a user with Apple Game Center.
@@ -161,7 +161,7 @@ namespace Nakama
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
             string signature, string timestamp, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RequestConfiguration requestConfiguration = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Authenticate a user with a Google auth token.
@@ -173,7 +173,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RequestConfiguration requestConfiguration = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Authenticate a user with a Steam auth token.
@@ -186,7 +186,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true,
-            bool import = true, Dictionary<string, string> vars = null, RequestConfiguration requestConfiguration = null);
+            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Ban a set of users from a group.
@@ -196,7 +196,7 @@ namespace Nakama
         /// <param name="usernames">The usernames of the users to ban.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames, RequestConfiguration requestConfiguration = null);
+        Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Block one or more friends by id or username.
@@ -206,7 +206,7 @@ namespace Nakama
         /// <param name="usernames">The usernames of the users to block.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RequestConfiguration requestConfiguration = null);
+        Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Create a group.
@@ -221,7 +221,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a new group object.</returns>
         Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description = "",
-            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100, RequestConfiguration requestConfiguration = null);
+            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Delete one more or users by id or username from friends.
@@ -231,7 +231,7 @@ namespace Nakama
         /// <param name="usernames">The usernames to remove as friends.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RequestConfiguration requestConfiguration = null);
+        Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Delete a group by id.
@@ -240,7 +240,7 @@ namespace Nakama
         /// <param name="groupId">The group id to to remove.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteGroupAsync(ISession session, string groupId, RequestConfiguration requestConfiguration = null);
+        Task DeleteGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Delete a leaderboard record.
@@ -249,7 +249,7 @@ namespace Nakama
         /// <param name="leaderboardId">The id of the leaderboard with the record to be deleted.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId, RequestConfiguration requestConfiguration = null);
+        Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Delete one or more notifications by id.
@@ -258,7 +258,7 @@ namespace Nakama
         /// <param name="ids">The notification ids to remove.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids, RequestConfiguration requestConfiguration = null);
+        Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Delete one or more storage objects.
@@ -267,7 +267,7 @@ namespace Nakama
         /// <param name="ids">The ids of the objects to delete.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids, RequestConfiguration requestConfiguration = null);
+        Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Demote a set of users in a group to the next role down.
@@ -277,7 +277,7 @@ namespace Nakama
         /// <remarks>Members who are already at the lowest rank will be skipped.</remarks>
         /// <returns>A task which represents the asynchronous operation.</returns>
         /// </summary>
-        Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> userIds, RequestConfiguration requestConfiguration = null);
+        Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> userIds, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Submit an event for processing in the server's registered runtime custom events handler.
@@ -287,7 +287,7 @@ namespace Nakama
         /// <param name="properties">The properties of the event.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task EventAsync(ISession session, string name, Dictionary<string, string> properties, RequestConfiguration requestConfiguration = null);
+        Task EventAsync(ISession session, string name, Dictionary<string, string> properties, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Fetch the user account owned by the session.
@@ -295,7 +295,7 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the account object.</returns>
-        Task<IApiAccount> GetAccountAsync(ISession session, RequestConfiguration requestConfiguration = null);
+        Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Fetch one or more users by id, usernames, and Facebook ids.
@@ -307,7 +307,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a collection of user objects.</returns>
         Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null,
-            IEnumerable<string> facebookIds = null, RequestConfiguration requestConfiguration = null);
+            IEnumerable<string> facebookIds = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Import Facebook friends and add them to the user's account.
@@ -321,7 +321,7 @@ namespace Nakama
         /// <param name="reset">If the Facebook friend import for the user should be reset.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null, RequestConfiguration requestConfiguration = null);
+        Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Import Steam friends and add them to the user's account.
@@ -335,7 +335,7 @@ namespace Nakama
         /// <param name="reset">If the Steam friend import for the user should be reset.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null, RequestConfiguration requestConfiguration = null);
+        Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Join a group if it has open membership or request to join it.
@@ -344,7 +344,7 @@ namespace Nakama
         /// <param name="groupId">The ID of the group to join.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task JoinGroupAsync(ISession session, string groupId, RequestConfiguration requestConfiguration = null);
+        Task JoinGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Join a tournament by ID.
@@ -353,7 +353,7 @@ namespace Nakama
         /// <param name="tournamentId">The ID of the tournament to join.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task JoinTournamentAsync(ISession session, string tournamentId, RequestConfiguration requestConfiguration = null);
+        Task JoinTournamentAsync(ISession session, string tournamentId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Kick one or more users from the group.
@@ -363,7 +363,7 @@ namespace Nakama
         /// <param name="ids">The IDs of the users to kick.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RequestConfiguration requestConfiguration = null);
+        Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Leave a group by ID.
@@ -372,7 +372,7 @@ namespace Nakama
         /// <param name="groupId">The ID of the group to leave.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LeaveGroupAsync(ISession session, string groupId, RequestConfiguration requestConfiguration = null);
+        Task LeaveGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Link an Apple ID to the social profiles on the current user's account.
@@ -381,7 +381,7 @@ namespace Nakama
         /// <param name="token">The ID token received from Apple to validate.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkAppleAsync(ISession session, string token, RequestConfiguration requestConfiguration = null);
+        Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Link a custom ID to the user account owned by the session.
@@ -390,7 +390,7 @@ namespace Nakama
         /// <param name="id">A custom identifier usually obtained from an external authentication service.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkCustomAsync(ISession session, string id, RequestConfiguration requestConfiguration = null);
+        Task LinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Link a device ID to the user account owned by the session.
@@ -399,7 +399,7 @@ namespace Nakama
         /// <param name="id">A device identifier usually obtained from a platform API.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkDeviceAsync(ISession session, string id, RequestConfiguration requestConfiguration = null);
+        Task LinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Link an email with password to the user account owned by the session.
@@ -409,7 +409,7 @@ namespace Nakama
         /// <param name="password">The password for the user.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkEmailAsync(ISession session, string email, string password, RequestConfiguration requestConfiguration = null);
+        Task LinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Link a Facebook profile to a user account.
@@ -419,7 +419,7 @@ namespace Nakama
         /// <param name="import">If the Facebook friends should be imported.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkFacebookAsync(ISession session, string token, bool? import = true, RequestConfiguration requestConfiguration = null);
+        Task LinkFacebookAsync(ISession session, string token, bool? import = true, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Link a Game Center profile to a user account.
@@ -434,7 +434,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, RequestConfiguration requestConfiguration = null);
+            string signature, string timestamp, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Link a Google profile to a user account.
@@ -443,7 +443,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <param name="token">An OAuth access token from the Google SDK.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkGoogleAsync(ISession session, string token, RequestConfiguration requestConfiguration = null);
+        Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Link a Steam profile to a user account.
@@ -453,7 +453,7 @@ namespace Nakama
         /// <param name="import">If the Steam friends should be imported.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkSteamAsync(ISession session, string token, bool import, RequestConfiguration requestConfiguration = null);
+        Task LinkSteamAsync(ISession session, string token, bool import, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List messages from a chat channel.
@@ -461,12 +461,12 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="channel">The chat channel object.</param>
         /// <param name="limit">The number of chat messages to list.</param>
-        /// <param name="forward">Fetch messages forward from the current cursor (or the start, RequestConfiguration requestConfiguration = null).</param>
+        /// <param name="forward">Fetch messages forward from the current cursor (or the start, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null).</param>
         /// <param name="cursor">A cursor for the current position in the messages history to list.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the channel message list object.</returns>
         Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, IChannel channel, int limit = 1,
-            bool forward = true, string cursor = null, RequestConfiguration requestConfiguration = null);
+            bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List messages from a chat channel.
@@ -474,12 +474,12 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="channelId">A channel identifier.</param>
         /// <param name="limit">The number of chat messages to list.</param>
-        /// <param name="forward">Fetch messages forward from the current cursor (or the start, RequestConfiguration requestConfiguration = null).</param>
+        /// <param name="forward">Fetch messages forward from the current cursor (or the start, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null).</param>
         /// <param name="cursor">A cursor for the current position in the messages history to list.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the channel message list object.</returns>
         Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit = 1,
-            bool forward = true, string cursor = null, RequestConfiguration requestConfiguration = null);
+            bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List of friends of the current user.
@@ -490,7 +490,7 @@ namespace Nakama
         /// <param name="cursor">A cursor for the current position in the friends list.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the friend objects.</returns>
-        Task<IApiFriendList> ListFriendsAsync(ISession session, int? state = null, int limit = 1, string cursor = null, RequestConfiguration requestConfiguration = null);
+        Task<IApiFriendList> ListFriendsAsync(ISession session, int? state = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List all users part of the group.
@@ -503,7 +503,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the group user objects.</returns>
         Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state = null, int limit = 1,
-            string cursor = null, RequestConfiguration requestConfiguration = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List groups on the server.
@@ -514,7 +514,7 @@ namespace Nakama
         /// <param name="cursor">A cursor for the current position in the groups to list.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task to resolve group objects.</returns>
-        Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1, string cursor = null, RequestConfiguration requestConfiguration = null);
+        Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List records from a leaderboard.
@@ -528,7 +528,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the leaderboard record objects.</returns>
         Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
-            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RequestConfiguration requestConfiguration = null);
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List leaderboard records that belong to a user.
@@ -541,7 +541,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the leaderboard record objects.</returns>
         Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session, string leaderboardId,
-            string ownerId, long? expiry = null, int limit = 1, RequestConfiguration requestConfiguration = null);
+            string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Fetch a list of matches active on the server.
@@ -556,7 +556,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the match list object.</returns>
         Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
-            string label, string query, RequestConfiguration requestConfiguration = null);
+            string label, string query, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List notifications for the user with an optional cursor.
@@ -567,11 +567,11 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task to resolve notifications objects.</returns>
         Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
-            string cacheableCursor = null, RequestConfiguration requestConfiguration = null);
+            string cacheableCursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         [Obsolete("ListStorageObjects is obsolete, please use ListStorageObjectsAsync instead.", false)]
         Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit = 1,
-            string cursor = null, RequestConfiguration requestConfiguration = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List storage objects in a collection which have public read access.
@@ -583,7 +583,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection, int limit = 1,
-            string cursor = null, RequestConfiguration requestConfiguration = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List tournament records around the owner.
@@ -596,7 +596,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the tournament record list object.</returns>
         Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session, string tournamentId,
-            string ownerId, long? expiry = null, int limit = 1, RequestConfiguration requestConfiguration = null);
+            string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List records from a tournament.
@@ -610,7 +610,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the list of tournament records.</returns>
         Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
-            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RequestConfiguration requestConfiguration = null);
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List current or upcoming tournaments.
@@ -618,14 +618,14 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="categoryStart">The start of the category of tournaments to include.</param>
         /// <param name="categoryEnd">The end of the category of tournaments to include.</param>
-        /// <param name="startTime">The start time of the tournaments. (UNIX timestamp, RequestConfiguration requestConfiguration = null). If null, tournaments will not be filtered by start time.</param>
-        /// <param name="endTime">The end time of the tournaments. (UNIX timestamp, RequestConfiguration requestConfiguration = null). If null, tournaments will not be filtered by end time.</param>
+        /// <param name="startTime">The start time of the tournaments. (UNIX timestamp, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null). If null, tournaments will not be filtered by start time.</param>
+        /// <param name="endTime">The end time of the tournaments. (UNIX timestamp, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null). If null, tournaments will not be filtered by end time.</param>
         /// <param name="limit">The number of tournaments to list.</param>
         /// <param name="cursor">An optional cursor for the next page of tournaments.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the list of tournament objects.</returns>
         Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
-            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null, RequestConfiguration requestConfiguration = null);
+            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List of groups the current user is a member of.
@@ -637,7 +637,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the group list object.</returns>
         Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state = null, int limit = 1,
-            string cursor = null, RequestConfiguration requestConfiguration = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List groups a user is a member of.
@@ -650,7 +650,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the group list object.</returns>
         Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state = null, int limit = 1,
-            string cursor = null, RequestConfiguration requestConfiguration = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List storage objects in a collection which belong to a specific user and have public read access.
@@ -663,7 +663,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
-            int limit = 1, string cursor = null, RequestConfiguration requestConfiguration = null);
+            int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Promote one or more users in the group.
@@ -673,7 +673,7 @@ namespace Nakama
         /// <param name="ids">The IDs of the users to promote.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RequestConfiguration requestConfiguration = null);
+        Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Read one or more objects from the storage engine.
@@ -682,7 +682,7 @@ namespace Nakama
         /// <param name="ids">The objects to read.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the storage batch object.</returns>
-        Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session, IApiReadStorageObjectId[] ids, RequestConfiguration requestConfiguration = null);
+        Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session, IApiReadStorageObjectId[] ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Execute a function with an input payload on the server.
@@ -692,7 +692,7 @@ namespace Nakama
         /// <param name="payload">The payload to send with the function call.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the RPC response.</returns>
-        Task<IApiRpc> RpcAsync(ISession session, string id, string payload, RequestConfiguration requestConfiguration = null);
+        Task<IApiRpc> RpcAsync(ISession session, string id, string payload, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Execute a function on the server.
@@ -701,7 +701,7 @@ namespace Nakama
         /// <param name="id">The ID of the function to execute on the server.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the RPC response.</returns>
-        Task<IApiRpc> RpcAsync(ISession session, string id, RequestConfiguration requestConfiguration = null);
+        Task<IApiRpc> RpcAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Execute a function on the server without a session.
@@ -714,7 +714,7 @@ namespace Nakama
         /// <param name="payload">A payload to send with the function call.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task to resolve an RPC response.</returns>
-        Task<IApiRpc> RpcAsync(string httpKey, string id, string payload = null, RequestConfiguration requestConfiguration = null);
+        Task<IApiRpc> RpcAsync(string httpKey, string id, string payload = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Log out a session which invalidates the authorization and refresh token.
@@ -722,7 +722,7 @@ namespace Nakama
         /// <param name="session">The session to logout.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task SessionLogoutAsync(ISession session, RequestConfiguration requestConfiguration = null);
+        Task SessionLogoutAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Log out a session which optionally invalidates the authorization and/or refresh tokens.
@@ -731,7 +731,7 @@ namespace Nakama
         /// <param name="refreshToken">The refresh token to invalidate, may be <c>null</c>.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task SessionLogoutAsync(string authToken, string refreshToken, RequestConfiguration requestConfiguration = null);
+        Task SessionLogoutAsync(string authToken, string refreshToken, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Refresh the session unless the current refresh token has expired. If vars are specified they will replace
@@ -741,7 +741,7 @@ namespace Nakama
         /// <param name="vars">Extra information which should be bundled inside the session token.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a new session object.</returns>
-        Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null, RequestConfiguration requestConfiguration = null);
+        Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Remove the Apple ID from the social profiles on the current user's account.
@@ -750,7 +750,7 @@ namespace Nakama
         /// <param name="token">The ID token received from Apple.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to a new session object.</returns>
-        Task UnlinkAppleAsync(ISession session, string token, RequestConfiguration requestConfiguration = null);
+        Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Unlink a custom ID from the user account owned by the session.
@@ -759,7 +759,7 @@ namespace Nakama
         /// <param name="id">A custom identifier usually obtained from an external authentication service.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkCustomAsync(ISession session, string id, RequestConfiguration requestConfiguration = null);
+        Task UnlinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Unlink a device ID from the user account owned by the session.
@@ -768,7 +768,7 @@ namespace Nakama
         /// <param name="id">A device identifier usually obtained from a platform API.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkDeviceAsync(ISession session, string id, RequestConfiguration requestConfiguration = null);
+        Task UnlinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Unlink an email with password from the user account owned by the session.
@@ -778,7 +778,7 @@ namespace Nakama
         /// <param name="password">The password for the user.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkEmailAsync(ISession session, string email, string password, RequestConfiguration requestConfiguration = null);
+        Task UnlinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Unlink a Facebook profile from the user account owned by the session.
@@ -787,7 +787,7 @@ namespace Nakama
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkFacebookAsync(ISession session, string token, RequestConfiguration requestConfiguration = null);
+        Task UnlinkFacebookAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Unlink a Game Center profile from the user account owned by the session.
@@ -802,7 +802,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, RequestConfiguration requestConfiguration = null);
+            string signature, string timestamp, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Unlink a Google profile from the user account owned by the session.
@@ -811,7 +811,7 @@ namespace Nakama
         /// <param name="token">An OAuth access token from the Google SDK.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkGoogleAsync(ISession session, string token, RequestConfiguration requestConfiguration = null);
+        Task UnlinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Unlink a Steam profile from the user account owned by the session.
@@ -820,7 +820,7 @@ namespace Nakama
         /// <param name="token">An authentication token from the Steam network.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkSteamAsync(ISession session, string token, RequestConfiguration requestConfiguration = null);
+        Task UnlinkSteamAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Update the current user's account on the server.
@@ -835,7 +835,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UpdateAccountAsync(ISession session, string username, string displayName = null,
-            string avatarUrl = null, string langTag = null, string location = null, string timezone = null, RequestConfiguration requestConfiguration = null);
+            string avatarUrl = null, string langTag = null, string location = null, string timezone = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Update a group.
@@ -853,7 +853,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UpdateGroupAsync(ISession session, string groupId, string name, bool open, string description = null,
-            string avatarUrl = null, string langTag = null, RequestConfiguration requestConfiguration = null);
+            string avatarUrl = null, string langTag = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Validate a purchase receipt against the Apple App Store.
@@ -862,7 +862,7 @@ namespace Nakama
         /// <param name="receipt">The purchase receipt to be validated.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RequestConfiguration requestConfiguration = null);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Validate a purchase receipt against the Google Play Store.
@@ -871,7 +871,7 @@ namespace Nakama
         /// <param name="receipt">The purchase receipt to be validated.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RequestConfiguration requestConfiguration = null);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Validate a purchase receipt against the Huawei AppGallery.
@@ -882,7 +882,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
         Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
-            string signature, RequestConfiguration requestConfiguration = null);
+            string signature, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Write a record to a leaderboard.
@@ -895,7 +895,7 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the leaderboard record object written.</returns>
         Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
-            long subScore = 0L, string metadata = null, RequestConfiguration requestConfiguration = null);
+            long subScore = 0L, string metadata = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Write objects to the storage engine.
@@ -904,7 +904,7 @@ namespace Nakama
         /// <param name="objects">The objects to write.</param>
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the storage write acknowledgements.</returns>
-        Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session, IApiWriteStorageObject[] objects, RequestConfiguration requestConfiguration = null);
+        Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session, IApiWriteStorageObject[] objects, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Write a record to a tournament.
@@ -917,6 +917,6 @@ namespace Nakama
         /// <param name="requestConfiguration">The request configuration. See <see cref="RequestConfiguration"/></param>
         /// <returns>A task which resolves to the tournament record object written.</returns>
         Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
-            long subScore = 0L, string metadata = null, RequestConfiguration requestConfiguration = null);
+            long subScore = 0L, string metadata = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
     }
 }

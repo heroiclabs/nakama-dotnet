@@ -29,7 +29,7 @@ namespace Nakama.Tests
 
             var canceller = new CancellationTokenSource();
 
-            Task<ISession> authTask = client.AuthenticateCustomAsync("test_id", null, true, null, new RequestConfiguration(canceller));
+            Task<ISession> authTask = client.AuthenticateCustomAsync("test_id", null, true, null, null, canceller);
             canceller.Cancel();
             await Assert.ThrowsAsync<TaskCanceledException>(async () => await authTask);
         }
@@ -53,9 +53,8 @@ namespace Nakama.Tests
                 canceller.Cancel();
             };
 
-            var requestConfiguration = new RequestConfiguration(new RetryConfiguration(100, 2, retryListener), canceller);
 
-            Task<ISession> authTask = client.AuthenticateCustomAsync("test_id", null, true, null, requestConfiguration);
+            Task<ISession> authTask = client.AuthenticateCustomAsync("test_id", null, true, null, new RetryConfiguration(100, 2, retryListener), canceller);
             await Assert.ThrowsAsync<TaskCanceledException>(async () => await authTask);
         }
     }
