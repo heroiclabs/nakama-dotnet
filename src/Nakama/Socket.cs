@@ -108,6 +108,14 @@ namespace Nakama
 
         private Object _lockObj = new Object();
 
+        private readonly RetryConfiguration _defaultConnectRetryConfig = new RetryConfiguration(
+            baseDelay: 500,
+            jitter: RetryJitter.FullJitter,
+            listener: null,
+            maxRetries: 4);
+
+        private readonly RetryInvoker _retryInvoker = new RetryInvoker();
+
         /// <summary>
         /// A new socket with default options.
         /// </summary>
@@ -175,6 +183,14 @@ namespace Nakama
             _adapter.Received += ReceivedMessage;
         }
 
+        /// <inheritdoc cref="ConnectAsync"/>
+        public Task ConnectAsync(ISession session, bool appearOnline = false,
+            int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en", RetryConfiguration retryConfiguration = null)
+            {
+                var history = new RetryHistory(retryConfiguration ?? _defaultConnectRetryConfig, userCancelToken: null);
+                return _retryInvoker.InvokeWithRetry(() => ConnectAsync(session, appearOnline, connectTimeoutSec, langTag, retryConfiguration), history);
+            }
+
         /// <inheritdoc cref="AcceptPartyMemberAsync"/>
         public Task AcceptPartyMemberAsync(string partyId, IUserPresence presence)
         {
@@ -239,29 +255,7 @@ namespace Nakama
             return Task.CompletedTask;
         }
 
-        /// <inheritdoc cref="ConnectAsync"/>
-        public Task ConnectAsync(ISession session, bool appearOnline = false,
-            int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en")
-        {
-            var tcs = new TaskCompletionSource<bool>();
-            Action callback = () => tcs.TrySetResult(true);
-            Action<Exception> errback = e => tcs.TrySetException(e);
-            _adapter.Connected += callback;
-            _adapter.ReceivedError += errback;
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = "/ws",
-                Query = $"lang={langTag}&status={appearOnline}&token={session.AuthToken}"
-            }.Uri;
-            tcs.Task.ContinueWith(_ =>
-            {
-                // NOTE Not fired in Unity WebGL builds.
-                _adapter.Connected -= callback;
-                _adapter.ReceivedError -= errback;
-            });
-            _adapter.Connect(uri, connectTimeoutSec);
-            return tcs.Task;
-        }
+
 
         /// <inheritdoc cref="ClosePartyAsync"/>
         public Task ClosePartyAsync(string partyId)
@@ -928,6 +922,28 @@ namespace Nakama
             }
 
             return presenceList;
+        }
+
+        private Task ConnectAsync(ISession session, bool appearOnline, int connectTimeoutSec, string langTag)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+            Action callback = () => tcs.TrySetResult(true);
+            Action<Exception> errback = e => tcs.TrySetException(e);
+            _adapter.Connected += callback;
+            _adapter.ReceivedError += errback;
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = "/ws",
+                Query = $"lang={langTag}&status={appearOnline}&token={session.AuthToken}"
+            }.Uri;
+            tcs.Task.ContinueWith(_ =>
+            {
+                // NOTE Not fired in Unity WebGL builds.
+                _adapter.Connected -= callback;
+                _adapter.ReceivedError -= errback;
+            });
+            _adapter.Connect(uri, connectTimeoutSec);
+            return tcs.Task;
         }
     }
 }
