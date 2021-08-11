@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2021-08-11
+### Added
+- Added ability for user to retry requests if they fail due to a transient network error.
+- Added ability for user to cancel requests that are in-flight.
+
 ## [3.0.0] - 2021-07-14
 ### Added
 - The language tag for the user can be configured with the socket on connect.
@@ -23,6 +28,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 - AddMatchmakerPartyAsync now returns an IPartyMatchmakerTicket.
 - Renamed PromotePartyMember to PromotePartyMemberAsync.
+>>>>>>> master
 
 ## [2.9.1] - 2021-05-19
 ### Added
