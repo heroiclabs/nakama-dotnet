@@ -190,7 +190,7 @@ namespace Nakama
             int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en", RetryConfiguration retryConfiguration = null)
             {
                 var history = new RetryHistory(retryConfiguration ?? _defaultConnectRetryConfig, userCancelToken: null);
-                return _retryInvoker.InvokeWithRetry(() => ConnectAsync(session, appearOnline, connectTimeoutSec, langTag, retryConfiguration), history);
+                return _retryInvoker.InvokeWithRetry(() => ConnectAsyncOnce(session, appearOnline, connectTimeoutSec, langTag, retryConfiguration), history);
             }
 
         /// <inheritdoc cref="AcceptPartyMemberAsync"/>
@@ -924,7 +924,7 @@ namespace Nakama
             return presenceList;
         }
 
-        private Task ConnectAsync(ISession session, bool appearOnline, int connectTimeoutSec, string langTag)
+        private Task ConnectAsyncOnce(ISession session, bool appearOnline, int connectTimeoutSec, string langTag, RetryConfiguration retryConfiguration)
         {
             var tcs = new TaskCompletionSource<bool>();
 
@@ -932,8 +932,11 @@ namespace Nakama
 
                 if (!_adapter.IsConnected)
                 {
-                    // TODO under what exceptions, if any, should we not reconnect?
-                    ConnectAsync(session, appearOnline, connectTimeoutSec, langTag);
+                    // thrown by TCP NetworkStream if service is not reachable for Websockets
+                    if (e is System.IO.IOException)
+                    {
+                        ConnectAsync(session, appearOnline, connectTimeoutSec, langTag);
+                    }
                 }
             };
 

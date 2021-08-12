@@ -81,8 +81,7 @@ namespace Nakama
         {
             return (e is ApiResponseException apiException && apiException.StatusCode >= 500)
             || e is HttpRequestException
-            || e is SocketException
-            || e is System.IO.EndOfStreamException;
+            || e is System.IO.IOException; // thrown if error during socket handshake (AsyncProtocolRequest)
         }
 
         private Retry CreateNewRetry(RetryHistory history)
