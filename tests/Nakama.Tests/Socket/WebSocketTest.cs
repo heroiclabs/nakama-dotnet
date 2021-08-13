@@ -88,5 +88,21 @@ namespace Nakama.Tests.Socket
             Assert.True(_socket.IsConnected);
             await Assert.ThrowsAsync<SocketException>(() => _socket.ConnectAsync(session));
         }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task SocketRetriesAfterConnectFailure()
+        {
+            var adapter =  new TransientExceptionSocketAdapter(new TransientExceptionSocketAdapter.NetworkSchedule(new TransientAdapterResponseType[]{TransientAdapterResponseType.TransientError, TransientAdapterResponseType.ServerOk}));
+            _socket = Nakama.Socket.From(_client, adapter);
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            int numInvocations = 0;
+            var retryConfiguration = new RetryConfiguration(1, 1, delegate {
+                numInvocations++;
+            });
+
+            await _socket.ConnectAsync(session, appearOnline: false, connectTimeout: 30, langTag: "en", retryConfiguration);
+            Assert.Equal(1, numInvocations);
+        }
     }
 }

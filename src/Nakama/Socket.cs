@@ -1,4 +1,4 @@
-// Copyright 2019 The Nakama Authors
+// Copyright 2021 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -186,12 +186,40 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ConnectAsync"/>
-        public Task ConnectAsync(ISession session, bool appearOnline = false,
-            int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en", RetryConfiguration retryConfiguration = null)
+        public async Task ConnectAsync(ISession session, bool appearOnline = false,
+            int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en", RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null)
             {
-                var history = new RetryHistory(retryConfiguration ?? _defaultConnectRetryConfig, userCancelToken: null);
-                return _retryInvoker.InvokeWithRetry(() => ConnectAsyncOnce(session, appearOnline, connectTimeoutSec, langTag, retryConfiguration), history);
+                var uri = new UriBuilder(_baseUri)
+                {
+                    Path = "/ws",
+                    Query = $"lang={langTag}&status={appearOnline}&token={session.AuthToken}"
+                }.Uri;
+
+
+            var history = new RetryHistory(retryConfiguration ?? _defaultConnectRetryConfig, userCancelToken: canceller?.Token);
+
+            Task retry = _retryInvoker.InvokeWithRetry(() => ConnectAsync(uri, connectTimeoutSec, canceller), history);
+
+            await retry;
+
+            if (!retry.IsFaulted)
+            {
+                Action<Exception> retryCallback = e =>
+                {
+                    if (!_adapter.IsConnected)
+                    {
+                        // thrown by TCP NetworkStream if service is not reachable for WebSockets
+                        if (e is System.IO.IOException)
+                        {
+                            Task.Run(() => ConnectAsync(uri, connectTimeoutSec, canceller));
+                        }
+                    }
+                };
+
+                _adapter.ReceivedError += retryCallback;
+                _adapter.Closed += () => _adapter.ReceivedError -= retryCallback;
             }
+        }
 
         /// <inheritdoc cref="AcceptPartyMemberAsync"/>
         public Task AcceptPartyMemberAsync(string partyId, IUserPresence presence)
@@ -924,29 +952,12 @@ namespace Nakama
             return presenceList;
         }
 
-        private Task ConnectAsyncOnce(ISession session, bool appearOnline, int connectTimeoutSec, string langTag, RetryConfiguration retryConfiguration)
+        // wrap the socket adapter events into a task.
+        private Task ConnectAsync(Uri uri, int timeout, CancellationTokenSource canceller)
         {
             var tcs = new TaskCompletionSource<bool>();
 
-            Action<Exception> retryCallback = e => {
-
-                if (!_adapter.IsConnected)
-                {
-                    // thrown by TCP NetworkStream if service is not reachable for Websockets
-                    if (e is System.IO.IOException)
-                    {
-                        ConnectAsync(session, appearOnline, connectTimeoutSec, langTag);
-                    }
-                }
-            };
-
             Action onConnectSuccess = () => {
-
-                if (_autoReconnect)
-                {
-                    _adapter.ReceivedError += retryCallback;
-                }
-
                 tcs.TrySetResult(true);
             };
 
@@ -955,21 +966,17 @@ namespace Nakama
             };
 
             _adapter.Connected += onConnectSuccess;
-            _adapter.Closed += () => _adapter.ReceivedError -= retryCallback;
             _adapter.ReceivedError += onConnectFailure;
 
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = "/ws",
-                Query = $"lang={langTag}&status={appearOnline}&token={session.AuthToken}"
-            }.Uri;
+            _adapter.Connect(uri, timeout, canceller);
+
             tcs.Task.ContinueWith(_ =>
             {
                 // NOTE Not fired in Unity WebGL builds.
                 _adapter.Connected -= onConnectSuccess;
                 _adapter.ReceivedError -= onConnectFailure;
             });
-            _adapter.Connect(uri, connectTimeoutSec);
+
             return tcs.Task;
         }
     }

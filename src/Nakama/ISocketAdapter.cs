@@ -64,7 +64,8 @@ namespace Nakama
         /// </summary>
         /// <param name="uri">The URI of the server.</param>
         /// <param name="timeout">The timeout for the connect attempt on the socket.</param>
-        void Connect(Uri uri, int timeout);
+        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the connection request while mid-flight.</param>
+        void Connect(Uri uri, int timeout, CancellationTokenSource canceller);
 
         /// <summary>
         /// Send data to the server with an asynchronous operation.
