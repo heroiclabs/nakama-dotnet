@@ -17,6 +17,7 @@
 namespace Nakama.Tests.Socket
 {
     using System;
+    using System.Collections.Generic;
     using System.Net.Sockets;
     using System.Threading.Tasks;
     using Xunit;
@@ -90,6 +91,12 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task SocketCancelsWhileConnecting()
+        {
+
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task SocketRetriesAfterConnectFailure()
         {
             var adapter =  new TransientExceptionSocketAdapter(new TransientExceptionSocketAdapter.NetworkSchedule(new TransientAdapterResponseType[]{TransientAdapterResponseType.TransientError, TransientAdapterResponseType.ServerOk}));
@@ -103,6 +110,52 @@ namespace Nakama.Tests.Socket
 
             await _socket.ConnectAsync(session, appearOnline: false, connectTimeout: 30, langTag: "en", retryConfiguration);
             Assert.Equal(1, numInvocations);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task SocketRetriesAfterBrokenConnection()
+        {
+            var connectSchedule = new TransientAdapterResponseType[]{TransientAdapterResponseType.ServerOk};
+
+            var firstBreak = new Tuple<TimeSpan, TransientAdapterResponseType>(TimeSpan.FromMilliseconds(150), TransientAdapterResponseType.TransientError);
+
+            var reconnectSchedule = new List<Tuple<TimeSpan, TransientAdapterResponseType>>();
+            reconnectSchedule.Add(firstBreak);
+
+            var schedule = new TransientExceptionSocketAdapter.NetworkSchedule(connectSchedule, reconnectSchedule);
+            var adapter =  new TransientExceptionSocketAdapter(schedule);
+
+            _socket = Nakama.Socket.From(_client, adapter);
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var connectedTwiceTask = new TaskCompletionSource();
+            var closedOnceTask = new TaskCompletionSource();
+
+            int numConnects = 0;
+            _socket.Connected += () =>
+            {
+                numConnects++;
+                if (numConnects == 2)
+                {
+                    connectedTwiceTask.SetResult();
+                }
+            };
+
+            int numCloses = 0;
+
+            _socket.Closed += () =>
+            {
+                numCloses++;
+                closedOnceTask.SetResult();
+            };
+
+            var retryConfiguration = new RetryConfiguration(1, 1);
+
+            await _socket.ConnectAsync(session, appearOnline: false, connectTimeout: 30, langTag: "en");
+            await connectedTwiceTask.Task;
+            await closedOnceTask.Task;
+            Assert.Equal(2, numConnects);
+            Assert.Equal(1, numCloses);
         }
     }
 }

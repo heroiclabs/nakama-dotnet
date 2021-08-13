@@ -54,7 +54,7 @@ namespace Nakama.Tests
         public event Action<ArraySegment<byte>> Received;
 
         private NetworkSchedule _schedule;
-        private int _numConnectAttempts;
+        private int _consecutiveConnectAttempts;
 
         public TransientExceptionSocketAdapter(NetworkSchedule schedule)
         {
@@ -63,23 +63,23 @@ namespace Nakama.Tests
 
         public void Close()
         {
+            _consecutiveConnectAttempts = 0;
             Closed?.Invoke();
         }
 
         public async void Connect(Uri uri, int timeout, CancellationTokenSource canceller)
         {
-            canceller.Token.ThrowIfCancellationRequested();
+            canceller?.Token.ThrowIfCancellationRequested();
 
-            if (_schedule.ConnectResponses[_numConnectAttempts] == TransientAdapterResponseType.ServerOk)
+            if (_schedule.ConnectResponses[_consecutiveConnectAttempts] == TransientAdapterResponseType.ServerOk)
             {
-                _numConnectAttempts++;
+                _consecutiveConnectAttempts++;
                 IsConnected = true;
                 Connected?.Invoke();
             }
             else
             {
-                System.Console.WriteLine("throwing a connect exception");
-                _numConnectAttempts++;
+                _consecutiveConnectAttempts++;
                 ReceivedError?.Invoke(new System.IO.IOException("Connect exception."));
             }
 
@@ -89,7 +89,9 @@ namespace Nakama.Tests
 
                 if (postConnect.Item2 == TransientAdapterResponseType.TransientError)
                 {
+                    IsConnected = false;
                     ReceivedError?.Invoke(new System.IO.IOException("Post connect exception."));
+                    Close();
                 }
             }
         }
