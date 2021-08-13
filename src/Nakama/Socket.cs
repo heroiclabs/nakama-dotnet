@@ -198,11 +198,11 @@ namespace Nakama
 
             var history = new RetryHistory(retryConfiguration ?? _defaultConnectRetryConfig, userCancelToken: canceller?.Token);
 
-            Task retry = _retryInvoker.InvokeWithRetry(() => ConnectAsync(uri, connectTimeoutSec, canceller), history);
+            Task connect = _retryInvoker.InvokeWithRetry(() => ConnectAsync(uri, connectTimeoutSec, canceller), history);
 
-            await retry;
+            await connect;
 
-            if (!retry.IsFaulted)
+            if (!connect.IsFaulted)
             {
                 Action<Exception> retryCallback = e =>
                 {
