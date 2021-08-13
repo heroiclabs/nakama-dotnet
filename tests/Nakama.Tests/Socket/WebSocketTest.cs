@@ -19,6 +19,7 @@ namespace Nakama.Tests.Socket
     using System;
     using System.Collections.Generic;
     using System.Net.Sockets;
+    using System.Threading;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -93,7 +94,14 @@ namespace Nakama.Tests.Socket
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task SocketCancelsWhileConnecting()
         {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var canceller = new CancellationTokenSource();
 
+            var connectTask = _socket.ConnectAsync(session, false, 30, "en", null, canceller);
+            canceller.Cancel();
+
+            await Assert.ThrowsAsync<Nakama.Ninja.WebSockets.Exceptions.WebSocketHandshakeFailedException>(async () => await connectTask);
+            Assert.False(_socket.IsConnected);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
@@ -142,18 +150,16 @@ namespace Nakama.Tests.Socket
             };
 
             int numCloses = 0;
-
             _socket.Closed += () =>
             {
                 numCloses++;
                 closedOnceTask.SetResult();
             };
 
-            var retryConfiguration = new RetryConfiguration(1, 1);
-
             await _socket.ConnectAsync(session, appearOnline: false, connectTimeout: 30, langTag: "en");
             await connectedTwiceTask.Task;
             await closedOnceTask.Task;
+
             Assert.Equal(2, numConnects);
             Assert.Equal(1, numCloses);
         }
