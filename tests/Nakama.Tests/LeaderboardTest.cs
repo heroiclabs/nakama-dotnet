@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Xunit;
+using Nakama.TinyJson;
+
 namespace Nakama.Tests.Api
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Xunit;
-    using TinyJson;
 
     public class LeaderboardTest : IAsyncLifetime
     {
@@ -32,7 +34,7 @@ namespace Nakama.Tests.Api
 
         public LeaderboardTest()
         {
-            _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
+            _client = new Client("http", "127.0.0.1", 7350, "defaultkey", NetHttpAdapter.HttpRequestAdapter.WithGzip());
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]

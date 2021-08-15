@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Microsoft.Extensions.Configuration;
+using Nakama.NetHttpAdapter;
 
 namespace Nakama.Tests
 {

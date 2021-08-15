@@ -1,17 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" Condition="'$(OS)'!='Windows_NT'" PrivateAssets="All" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net46'" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
   </PropertyGroup>
-
   <PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
     <Authors>Nakama Authors &amp; contributors</Authors>
     <Company>Heroic Labs</Company>

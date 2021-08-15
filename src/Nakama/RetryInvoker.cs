@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -78,7 +77,7 @@ namespace Nakama
         /// </summary>
         private bool IsTransientException(Exception e)
         {
-            return (e is ApiResponseException apiException && apiException.StatusCode >= 500) || e is HttpRequestException;
+            return (e is ApiResponseException apiException && apiException.StatusCode >= 500) || e is TimeoutException;
         }
 
         private Retry CreateNewRetry(RetryHistory history)

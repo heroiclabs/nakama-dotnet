@@ -23,7 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Nakama.TinyJson;
 
-namespace Nakama
+namespace Nakama.NetHttpAdapter
 {
     /// <summary>
     /// HTTP Request adapter which uses the .NET HttpClient to send requests.

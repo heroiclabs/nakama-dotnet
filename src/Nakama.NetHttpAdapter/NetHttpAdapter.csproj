@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" Condition="'$(OS)'!='Windows_NT'" PrivateAssets="All" />
+      <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net46'" />
+    <ProjectReference Include="..\..\src\Nakama\Nakama.csproj" />
+    </ItemGroup>
+    <PropertyGroup>
+      <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+    </PropertyGroup>
+    <PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
+      <Authors>Nakama Authors &amp; contributors</Authors>
+      <Company>Heroic Labs</Company>
+      <Description>NetHttpAdapter is the standard .NET http adapter for Nakama, an open-source server designed to power modern games and apps.</Description>
+      <PackageId>NakamaHttpAdapter</PackageId>
+      <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+      <PackageTags>clientsdk;nakama;gameserver;backend;restapi</PackageTags>
+      <RepositoryUrl>https://github.com/heroiclabs/nakama-dotnet</RepositoryUrl>
+    </PropertyGroup>
+
+  </Project>

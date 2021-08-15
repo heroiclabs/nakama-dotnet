@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Nakama.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Nakama.NetHttpAdapter;
+
     public enum TransientAdapterResponseType
     {
         ServerOk,

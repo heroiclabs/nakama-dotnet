@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
+using Nakama.NetHttpAdapter;
+using System;
+using System.Threading.Tasks;
+using Xunit;
+
 namespace Nakama.Tests.Api
 {
-    using System;
-    using System.Threading.Tasks;
-    using Xunit;
-
     // NOTE: Requires Lua modules from server repo.
 
     public class RpcTest
@@ -30,7 +31,7 @@ namespace Nakama.Tests.Api
 
         public RpcTest()
         {
-            _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
+            _client = new Client("http", "127.0.0.1", 7350, "defaultkey", HttpRequestAdapter.WithGzip());
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
