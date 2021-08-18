@@ -93,20 +93,17 @@ namespace Nakama
 
         private const int DefaultTimeout = 15;
 
-        public Client(string serverKey, bool autoRefreshSession = true) : this(serverKey, HttpRequestAdapter.WithGzip(),
-            autoRefreshSession)
+        public Client(string serverKey) : this(serverKey, HttpRequestAdapter.WithGzip())
         {
         }
 
-        public Client(string serverKey, IHttpAdapter adapter, bool autoRefreshSession = true) : this(DefaultScheme,
-            DefaultHost, DefaultPort, serverKey,
-            adapter, autoRefreshSession)
+        public Client(string serverKey, IHttpAdapter adapter) : this(DefaultScheme,
+            DefaultHost, DefaultPort, serverKey,  adapter)
         {
         }
 
-        public Client(string scheme, string host, int port, string serverKey, bool autoRefreshSession = true) : this(
-            scheme, host, port, serverKey,
-            HttpRequestAdapter.WithGzip(), autoRefreshSession)
+        public Client(string scheme, string host, int port, string serverKey) : this(
+            scheme, host, port, serverKey, HttpRequestAdapter.WithGzip())
         {
         }
 
