@@ -216,23 +216,47 @@ namespace Nakama.Ninja.WebSockets
                 // NOTE Workaround for Mono runtime issue #8692
                 // https://github.com/mono/mono/issues/8692
                 var hostAddresses = Dns.GetHostAddresses(host);
-                var isConnected = false;
+                var ipv4Addresses = new List<IPAddress>();
+                var ipv6Addresses = new List<IPAddress>();
                 foreach (var hostAddress in hostAddresses)
                 {
-                    var addressFamily = hostAddress.AddressFamily == AddressFamily.InterNetworkV6
-                        ? AddressFamily.InterNetworkV6
-                        : AddressFamily.InterNetwork;
-                    tcpClient = new TcpClient(addressFamily);
-                    tcpClient.NoDelay = noDelay;
+                    if (hostAddress.AddressFamily == AddressFamily.InterNetwork)
+                        ipv4Addresses.Add(hostAddress);
+                    else if (hostAddress.AddressFamily == AddressFamily.InterNetworkV6)
+                        ipv6Addresses.Add(hostAddress);
+                }
+
+                var isConnected = false;
+                foreach (var address in ipv4Addresses)
+                {
                     try
                     {
-                        await tcpClient.ConnectAsync(hostAddress, port);
+                        await tcpClient.ConnectAsync(address, port);
                         isConnected = true;
                         break;
                     }
                     catch (Exception)
                     {
-                        // ignored
+                        // Ignored.
+                    }
+                }
+
+                if (!isConnected)
+                {
+                    tcpClient = new TcpClient(AddressFamily.InterNetworkV6);
+                    tcpClient.NoDelay = noDelay;
+                    foreach (var address in ipv6Addresses)
+                    {
+                        try
+                        {
+                            await tcpClient.ConnectAsync(address, port);
+                            isConnected = true;
+                            break;
+                        }
+                        catch (Exception)
+                        {
+                            // Ignored.
+                        }
                     }
                 }
 
