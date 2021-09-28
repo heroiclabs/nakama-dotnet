@@ -216,22 +216,24 @@ namespace Nakama.Ninja.WebSockets
                 // NOTE Workaround for Mono runtime issue #8692
                 // https://github.com/mono/mono/issues/8692
                 var hostAddresses = Dns.GetHostAddresses(host);
-                IPAddress ipv4Address = null;
-                foreach (var address in hostAddresses)
+                Array.Sort(hostAddresses, Comparer<IPAddress>.Create((x, y) =>
                 {
-                    if (address.AddressFamily != AddressFamily.InterNetwork) continue;
-                    ipv4Address = address;
-                    break;
-                }
-
-                if (ipv4Address != null)
+                    if (x.AddressFamily == y.AddressFamily)
+                        return 0;
+                    return x.AddressFamily == AddressFamily.InterNetwork ? -1 : 1;
+                }));
+                foreach (var hostAddress in hostAddresses)
                 {
-                    await tcpClient.ConnectAsync(ipv4Address, port);
+                    try
+                    {
+                        await tcpClient.ConnectAsync(hostAddress, port);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
                 }
-                else
-                {
-                    await tcpClient.ConnectAsync(host, port);
-                }
+                await tcpClient.ConnectAsync(host, port);
             }
 
             cancellationToken.ThrowIfCancellationRequested();
