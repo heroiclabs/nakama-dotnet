@@ -216,14 +216,6 @@ namespace Nakama.Ninja.WebSockets
                 // NOTE Workaround for Mono runtime issue #8692
                 // https://github.com/mono/mono/issues/8692
                 var hostAddresses = Dns.GetHostAddresses(host);
-/*
-                Array.Sort(hostAddresses, Comparer<IPAddress>.Create((x, y) =>
-                {
-                    if (x.AddressFamily == y.AddressFamily)
-                        return 0;
-                    return x.AddressFamily == AddressFamily.InterNetwork ? -1 : 1;
-                }));
-*/
                 var isConnected = false;
                 foreach (var hostAddress in hostAddresses)
                 {
