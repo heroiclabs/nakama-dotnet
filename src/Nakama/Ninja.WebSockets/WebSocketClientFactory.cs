@@ -219,13 +219,13 @@ namespace Nakama.Ninja.WebSockets
                 var isConnected = false;
                 foreach (var hostAddress in hostAddresses)
                 {
+                    var addressFamily = hostAddress.AddressFamily == AddressFamily.InterNetworkV6
+                        ? AddressFamily.InterNetworkV6
+                        : AddressFamily.InterNetwork;
+                    tcpClient = new TcpClient(addressFamily);
+                    tcpClient.NoDelay = noDelay;
                     try
                     {
-                        var addressFamily = hostAddress.AddressFamily == AddressFamily.InterNetworkV6
-                            ? AddressFamily.InterNetworkV6
-                            : AddressFamily.InterNetwork;
-                        tcpClient = new TcpClient(addressFamily);
-                        tcpClient.NoDelay = noDelay;
                         await tcpClient.ConnectAsync(hostAddress, port);
                         isConnected = true;
                         break;
