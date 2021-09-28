@@ -205,7 +205,8 @@ namespace Nakama.Ninja.WebSockets
         /// <returns>A connected and open stream</returns>
         protected virtual async Task<System.IO.Stream> GetStream(Guid loggingGuid, bool isSecure, bool noDelay, string host, int port, CancellationToken cancellationToken)
         {
-            var tcpClient = new TcpClient {NoDelay = noDelay};
+            var tcpClient = new TcpClient(AddressFamily.InterNetworkV6);
+            tcpClient.NoDelay = noDelay;
             IPAddress ipAddress;
             if (IPAddress.TryParse(host, out ipAddress))
             {
@@ -243,8 +244,6 @@ namespace Nakama.Ninja.WebSockets
 
                 if (!isConnected)
                 {
-                    tcpClient = new TcpClient(AddressFamily.InterNetworkV6);
-                    tcpClient.NoDelay = noDelay;
                     foreach (var address in ipv6Addresses)
                     {
                         try
