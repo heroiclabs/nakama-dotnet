@@ -998,6 +998,6 @@ namespace Nakama
         /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the tournament record object written.</returns>
         Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
-            long subScore = 0L, string metadata = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            long subScore = 0L, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
     }
 }
