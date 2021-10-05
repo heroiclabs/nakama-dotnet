@@ -552,10 +552,13 @@ namespace Nakama
         /// <param name="name">The name filter to apply to the group list.</param>
         /// <param name="limit">The number of groups to list.</param>
         /// <param name="cursor">A cursor for the current position in the groups to list.</param>
+        /// <param name="langTag">The language tag filter to apply to the group list.</param>
+        /// <param name="members">The number of group members filter to apply to the group list.</param>
+        /// <param name="open">The open/closed filter to apply to the group list.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task to resolve group objects.</returns>
-        Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1, string cursor = null, string langTag = null, int? members = null, bool? open = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List records from a leaderboard.
