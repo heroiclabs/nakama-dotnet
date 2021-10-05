@@ -965,11 +965,12 @@ namespace Nakama
         /// <param name="score">The score for the leaderboard record.</param>
         /// <param name="subScore">The sub score for the leaderboard record.</param>
         /// <param name="metadata">The metadata for the leaderboard record.</param>
+        /// <param name="operator"> The operator for the record that can be used to override the one set in the leaderboard.
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the leaderboard record object written.</returns>
         Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
-            long subScore = 0L, string metadata = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            long subScore = 0L, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Write objects to the storage engine.
@@ -989,6 +990,7 @@ namespace Nakama
         /// <param name="score">The score of the tournament record.</param>
         /// <param name="subScore">The sub score for the tournament record.</param>
         /// <param name="metadata">The metadata for the tournament record.</param>
+        /// <param name="operator"> The operator for the record that can be used to override the one set in the tournament.
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the tournament record object written.</returns>

@@ -1097,7 +1097,7 @@ namespace Nakama
 
         /// <inheritdoc cref="WriteLeaderboardRecordAsync"/>
         public async Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId,
-            long score, long subScore = 0, string metadata = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null)
+            long score, long subScore = 0, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1111,7 +1111,8 @@ namespace Nakama
                 {
                     Metadata = metadata,
                     Score = score.ToString(),
-                    Subscore = subScore.ToString()
+                    Subscore = subScore.ToString(),
+                    _operator = apiOperator
                 }, canceller?.Token), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller?.Token));
         }
 
@@ -1145,7 +1146,7 @@ namespace Nakama
 
         /// <inheritdoc cref="WriteTournamentRecordAsync"/>
         public async Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId,
-            long score, long subScore = 0, string metadata = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null)
+            long score, long subScore = 0, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1159,7 +1160,8 @@ namespace Nakama
                 {
                     Metadata = metadata,
                     Score = score.ToString(),
-                    Subscore = subScore.ToString()
+                    Subscore = subScore.ToString(),
+                    _operator = apiOperator
                 }, canceller?.Token), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller?.Token));
         }
     }
