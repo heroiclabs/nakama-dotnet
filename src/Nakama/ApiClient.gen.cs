@@ -4991,11 +4991,11 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5068,11 +5068,11 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5105,11 +5105,11 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5383,7 +5383,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5421,7 +5421,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5463,7 +5463,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5534,7 +5534,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5605,7 +5605,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5830,7 +5830,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "owner_ids=", Uri.EscapeDataString(elem), "&");
             }
             if (limit != null) {
                 queryParams = string.Concat(queryParams, "limit=", limit, "&");
@@ -6013,7 +6013,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -6467,7 +6467,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "owner_ids=", Uri.EscapeDataString(elem), "&");
             }
             if (limit != null) {
                 queryParams = string.Concat(queryParams, "limit=", limit, "&");
@@ -6674,15 +6674,15 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in facebookIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "facebook_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "facebook_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)

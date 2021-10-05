@@ -363,7 +363,11 @@ namespace Nakama
                 {{- else if eq $parameter.Type "array" }}
             foreach (var elem in {{ $parameter.Name | snakeToCamel }} ?? new {{ $parameter.Items.Type }}[0])
             {
+                {{- if eq $parameter.Items.Type "string" }}
+                queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", Uri.EscapeDataString(elem), "&");
+                    {{- else }}
                 queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", elem, "&");
+                    {{- end }}
             }
                 {{- else }}
             {{ $parameter }} // ERROR
