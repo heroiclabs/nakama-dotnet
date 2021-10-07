@@ -552,10 +552,13 @@ namespace Nakama
         /// <param name="name">The name filter to apply to the group list.</param>
         /// <param name="limit">The number of groups to list.</param>
         /// <param name="cursor">A cursor for the current position in the groups to list.</param>
+        /// <param name="langTag">The language tag filter to apply to the group list.</param>
+        /// <param name="members">The number of group members filter to apply to the group list.</param>
+        /// <param name="open">The open/closed filter to apply to the group list.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task to resolve group objects.</returns>
-        Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1, string cursor = null, string langTag = null, int? members = null, bool? open = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// List records from a leaderboard.
@@ -965,11 +968,12 @@ namespace Nakama
         /// <param name="score">The score for the leaderboard record.</param>
         /// <param name="subScore">The sub score for the leaderboard record.</param>
         /// <param name="metadata">The metadata for the leaderboard record.</param>
+        /// <param name="operator"> The operator for the record that can be used to override the one set in the leaderboard.
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the leaderboard record object written.</returns>
         Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
-            long subScore = 0L, string metadata = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            long subScore = 0L, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Write objects to the storage engine.
@@ -989,10 +993,11 @@ namespace Nakama
         /// <param name="score">The score of the tournament record.</param>
         /// <param name="subScore">The sub score for the tournament record.</param>
         /// <param name="metadata">The metadata for the tournament record.</param>
+        /// <param name="operator"> The operator for the record that can be used to override the one set in the tournament.
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the tournament record object written.</returns>
         Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
-            long subScore = 0L, string metadata = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            long subScore = 0L, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
     }
 }

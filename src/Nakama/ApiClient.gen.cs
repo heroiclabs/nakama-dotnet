@@ -168,6 +168,11 @@ namespace Nakama
         string Metadata { get; }
 
         /// <summary>
+        /// Operator override.
+        /// </summary>
+        ApiOperator Operator { get; }
+
+        /// <summary>
         /// The score value to submit.
         /// </summary>
         string Score { get; }
@@ -187,6 +192,11 @@ namespace Nakama
         public string Metadata { get; set; }
 
         /// <inheritdoc />
+        public ApiOperator Operator => _operator;
+        [DataMember(Name="operator"), Preserve]
+        public ApiOperator _operator { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="score"), Preserve]
         public string Score { get; set; }
 
@@ -198,6 +208,7 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "Metadata: ", Metadata, ", ");
+            output = string.Concat(output, "Operator: ", Operator, ", ");
             output = string.Concat(output, "Score: ", Score, ", ");
             output = string.Concat(output, "Subscore: ", Subscore, ", ");
             return output;
@@ -214,6 +225,11 @@ namespace Nakama
         /// A JSON object of additional properties (optional).
         /// </summary>
         string Metadata { get; }
+
+        /// <summary>
+        /// Operator override.
+        /// </summary>
+        ApiOperator Operator { get; }
 
         /// <summary>
         /// The score value to submit.
@@ -235,6 +251,11 @@ namespace Nakama
         public string Metadata { get; set; }
 
         /// <inheritdoc />
+        public ApiOperator Operator => _operator;
+        [DataMember(Name="operator"), Preserve]
+        public ApiOperator _operator { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="score"), Preserve]
         public string Score { get; set; }
 
@@ -246,6 +267,7 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "Metadata: ", Metadata, ", ");
+            output = string.Concat(output, "Operator: ", Operator, ", ");
             output = string.Concat(output, "Score: ", Score, ", ");
             output = string.Concat(output, "Subscore: ", Subscore, ", ");
             return output;
@@ -2010,6 +2032,33 @@ namespace Nakama
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public enum ApiOperator
+    {
+        /// <summary>
+        /// Operator that can be used to override the one set in the leaderboard.
+        /// </summary>
+        NO_OVERRIDE = 0,
+        /// <summary>
+        /// 
+        /// </summary>
+        BEST = 1,
+        /// <summary>
+        ///  - NO_OVERRIDE: Do not override the leaderboard operator.
+        /// </summary>
+        SET = 2,
+        /// <summary>
+        ///  - BEST: Override the leaderboard operator with BEST.
+        /// </summary>
+        INCREMENT = 3,
+        /// <summary>
+        ///  - SET: Override the leaderboard operator with SET.
+        /// </summary>
+        DECREMENT = 4,
+    }
+
+    /// <summary>
     /// Storage objects to get.
     /// </summary>
     public interface IApiReadStorageObjectId
@@ -2595,12 +2644,22 @@ namespace Nakama
         int NextReset { get; }
 
         /// <summary>
+        /// Operator.
+        /// </summary>
+        ApiOperator Operator { get; }
+
+        /// <summary>
+        /// The UNIX time when the tournament was last reset. A computed value.
+        /// </summary>
+        int PrevReset { get; }
+
+        /// <summary>
         /// The current number of players in the tournament.
         /// </summary>
         int Size { get; }
 
         /// <summary>
-        /// ASC or DESC sort mode of scores in the tournament.
+        /// ASC (0) or DESC (1) sort mode of scores in the tournament.
         /// </summary>
         int SortOrder { get; }
 
@@ -2673,6 +2732,15 @@ namespace Nakama
         public int NextReset { get; set; }
 
         /// <inheritdoc />
+        public ApiOperator Operator => _operator;
+        [DataMember(Name="operator"), Preserve]
+        public ApiOperator _operator { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_reset"), Preserve]
+        public int PrevReset { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="size"), Preserve]
         public int Size { get; set; }
 
@@ -2707,6 +2775,8 @@ namespace Nakama
             output = string.Concat(output, "MaxSize: ", MaxSize, ", ");
             output = string.Concat(output, "Metadata: ", Metadata, ", ");
             output = string.Concat(output, "NextReset: ", NextReset, ", ");
+            output = string.Concat(output, "Operator: ", Operator, ", ");
+            output = string.Concat(output, "PrevReset: ", PrevReset, ", ");
             output = string.Concat(output, "Size: ", Size, ", ");
             output = string.Concat(output, "SortOrder: ", SortOrder, ", ");
             output = string.Concat(output, "StartActive: ", StartActive, ", ");
@@ -4921,11 +4991,11 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -4998,11 +5068,11 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5035,11 +5105,11 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5141,6 +5211,9 @@ namespace Nakama
             string name,
             string cursor,
             int? limit,
+            string langTag,
+            int? members,
+            bool? open,
             CancellationToken? cancellationToken)
         {
 
@@ -5155,6 +5228,15 @@ namespace Nakama
             }
             if (limit != null) {
                 queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (langTag != null) {
+                queryParams = string.Concat(queryParams, "lang_tag=", Uri.EscapeDataString(langTag), "&");
+            }
+            if (members != null) {
+                queryParams = string.Concat(queryParams, "members=", members, "&");
+            }
+            if (open != null) {
+                queryParams = string.Concat(queryParams, "open=", open.ToString().ToLower(), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5301,7 +5383,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5339,7 +5421,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5381,7 +5463,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5452,7 +5534,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5523,7 +5605,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5748,7 +5830,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "owner_ids=", Uri.EscapeDataString(elem), "&");
             }
             if (limit != null) {
                 queryParams = string.Concat(queryParams, "limit=", limit, "&");
@@ -5931,7 +6013,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -6385,7 +6467,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "owner_ids=", Uri.EscapeDataString(elem), "&");
             }
             if (limit != null) {
                 queryParams = string.Concat(queryParams, "limit=", limit, "&");
@@ -6411,6 +6493,47 @@ namespace Nakama
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiTournamentRecordList>();
+        }
+
+        /// <summary>
+        /// Write a record to a tournament.
+        /// </summary>
+        public async Task<IApiLeaderboardRecord> WriteTournamentRecord2Async(
+            string bearerToken,
+            string tournamentId,
+            WriteTournamentRecordRequestTournamentRecordWrite body,
+            CancellationToken? cancellationToken)
+        {
+            if (tournamentId == null)
+            {
+                throw new ArgumentException("'tournamentId' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/tournament/{tournamentId}";
+            urlpath = urlpath.Replace("{tournamentId}", Uri.EscapeDataString(tournamentId));
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiLeaderboardRecord>();
         }
 
         /// <summary>
@@ -6551,15 +6674,15 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in facebookIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "facebook_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "facebook_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
