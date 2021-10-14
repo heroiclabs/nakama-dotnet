@@ -58,6 +58,7 @@ namespace Nakama
                 NoDelay = true
             }, sendTimeoutSec)
         {
+
         }
 
         public WebSocketAdapter(WebSocketClientOptions options, int sendTimeoutSec)
