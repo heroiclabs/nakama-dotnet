@@ -16,6 +16,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Nakama
 {
@@ -64,7 +65,7 @@ namespace Nakama
         /// </summary>
         /// <param name="uri">The URI of the server.</param>
         /// <param name="timeout">The timeout for the connect attempt on the socket.</param>
-        void Connect(Uri uri, int timeout);
+        Task Connect(Uri uri, int timeout);
 
         /// <summary>
         /// Send data to the server with an asynchronous operation.
@@ -72,6 +73,6 @@ namespace Nakama
         /// <param name="buffer">The buffer with the message to send.</param>
         /// <param name="cancellationToken">A cancellation token used to propagate when the operation should be canceled.</param>
         /// <param name="reliable">If the message should be sent reliably (will be ignored by some protocols).</param>
-        void Send(ArraySegment<byte> buffer, CancellationToken cancellationToken, bool reliable = true);
+        Task Send(ArraySegment<byte> buffer, CancellationToken cancellationToken, bool reliable = true);
     }
 }

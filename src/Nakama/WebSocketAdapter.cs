@@ -89,7 +89,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.Connect"/>
-        public async void Connect(Uri uri, int timeout)
+        public async Task Connect(Uri uri, int timeout)
         {
             if (_webSocket != null)
             {
@@ -140,7 +140,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.Send"/>
-        public async void Send(ArraySegment<byte> buffer, CancellationToken cancellationToken,
+        public async Task Send(ArraySegment<byte> buffer, CancellationToken cancellationToken,
             bool reliable = true)
         {
             if (_webSocket == null)
