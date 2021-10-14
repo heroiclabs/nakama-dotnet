@@ -44,16 +44,6 @@ namespace Nakama
         /// <inheritdoc cref="ISocketAdapter.Received"/>
         public event Action<ArraySegment<byte>> Received;
 
-        /// <summary>
-        /// If the WebSocket is connected.
-        /// </summary>
-        public bool IsConnected { get; private set; }
-
-        /// <summary>
-        /// If the WebSocket is connecting.
-        /// </summary>
-        public bool IsConnecting { get; private set; }
-
         private readonly WebSocketClientOptions _options;
         private readonly TimeSpan _sendTimeoutSec;
         private CancellationTokenSource _cancellationSource;
@@ -84,8 +74,6 @@ namespace Nakama
             if (_webSocket == null) return;
             _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
             _webSocket = null;
-            IsConnecting = false;
-            IsConnected = false;
         }
 
         /// <inheritdoc cref="ISocketAdapter.Connect"/>
@@ -99,7 +87,6 @@ namespace Nakama
 
             _cancellationSource = new CancellationTokenSource();
             _uri = uri;
-            IsConnecting = true;
 
             var clientFactory = new WebSocketClientFactory();
             try
@@ -108,8 +95,6 @@ namespace Nakama
                 var lcts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
                 using (_webSocket = await clientFactory.ConnectAsync(_uri, _options, lcts.Token))
                 {
-                    IsConnected = true;
-                    IsConnecting = false;
                     Connected?.Invoke();
 
                     await ReceiveLoop(_webSocket, _cancellationSource.Token);
@@ -164,7 +149,7 @@ namespace Nakama
         public override string ToString()
         {
             return
-                $"WebSocketDriver(IsConnected={IsConnected}, IsConnecting={IsConnecting}, MaxMessageSize={MaxMessageSize}, Uri='{_uri}')";
+                $"WebSocketDriver(MaxMessageSize={MaxMessageSize}, Uri='{_uri}')";
         }
 
         private async Task ReceiveLoop(WebSocket webSocket, CancellationToken cancellationToken)

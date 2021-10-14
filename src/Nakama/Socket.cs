@@ -92,10 +92,10 @@ namespace Nakama
         public event Action<IPartyMatchmakerTicket> ReceivedPartyMatchmakerTicket;
 
         /// <inheritdoc cref="IsConnected"/>
-        public bool IsConnected => _adapter.IsConnected;
+        public bool IsConnected { get; private set; }
 
         /// <inheritdoc cref="IsConnecting"/>
-        public bool IsConnecting => _adapter.IsConnecting;
+        public bool IsConnecting { get; private set; }
 
         /// <summary>
         /// The logger to use with the socket.
@@ -138,7 +138,6 @@ namespace Nakama
             _baseUri = new UriBuilder(scheme, host, port).Uri;
             _responses = new Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
 
-            _adapter.Connected += () => Connected?.Invoke();
             _adapter.Closed += () =>
             {
                 lock (_lockObj)
@@ -155,7 +154,7 @@ namespace Nakama
             };
             _adapter.ReceivedError += e =>
             {
-                if (!_adapter.IsConnected)
+                if (!IsConnected)
                 {
                     lock (_lockObj)
                     {
@@ -240,27 +239,33 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ConnectAsync"/>
-        public Task ConnectAsync(ISession session, bool appearOnline = false,
+        public async Task ConnectAsync(ISession session, bool appearOnline = false,
             int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en")
         {
+            if (IsConnected)
+            {
+                Logger?.WarnFormat("Tried connecting to an already-connected socket.");
+                return;
+            }
+
+            if (IsConnecting)
+            {
+                Logger?.WarnFormat("Tried connecting to an already-connecting socket.");
+                return;
+            }
+
             var tcs = new TaskCompletionSource<bool>();
-            Action callback = () => tcs.TrySetResult(true);
-            Action<Exception> errback = e => tcs.TrySetException(e);
-            _adapter.Connected += callback;
-            _adapter.ReceivedError += errback;
             var uri = new UriBuilder(_baseUri)
             {
                 Path = "/ws",
                 Query = $"lang={langTag}&status={appearOnline}&token={session.AuthToken}"
             }.Uri;
-            tcs.Task.ContinueWith(_ =>
-            {
-                // NOTE Not fired in Unity WebGL builds.
-                _adapter.Connected -= callback;
-                _adapter.ReceivedError -= errback;
-            });
-            _adapter.Connect(uri, connectTimeoutSec);
-            return tcs.Task;
+
+            IsConnecting = true;
+            await _adapter.Connect(uri, connectTimeoutSec);
+            IsConnecting = false;
+            IsConnected = true;
+            Connected?.Invoke();
         }
 
         /// <inheritdoc cref="ClosePartyAsync"/>

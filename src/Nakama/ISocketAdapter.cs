@@ -26,11 +26,6 @@ namespace Nakama
     public interface ISocketAdapter : IDisposable
     {
         /// <summary>
-        /// An event dispatched when the socket is connected.
-        /// </summary>
-        event Action Connected;
-
-        /// <summary>
         /// An event dispatched when the socket is disconnected.
         /// </summary>
         event Action Closed;
@@ -44,16 +39,6 @@ namespace Nakama
         /// An event dispatched when the socket receives a message.
         /// </summary>
         event Action<ArraySegment<byte>> Received;
-
-        /// <summary>
-        /// If the socket is connected.
-        /// </summary>
-        bool IsConnected { get; }
-
-        /// <summary>
-        /// If the socket is connecting.
-        /// </summary>
-        bool IsConnecting { get; }
 
         /// <summary>
         /// Close the socket with an asynchronous operation.
