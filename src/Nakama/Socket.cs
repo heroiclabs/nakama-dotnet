@@ -924,6 +924,7 @@ namespace Nakama
             });
 
             await _adapter.Send(new ArraySegment<byte>(buffer), timeoutToken);
+
             return await completer.Task;
         }
 

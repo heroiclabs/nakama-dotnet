@@ -81,12 +81,12 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public async Task MultipleConnectAttemptsThrowException()
+        public async Task MultipleConnectAttemptsDoNotThrowException()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             await _socket.ConnectAsync(session);
             Assert.True(_socket.IsConnected);
-            await Assert.ThrowsAsync<SocketException>(() => _socket.ConnectAsync(session));
+            await _socket.ConnectAsync(session);
         }
     }
 }
