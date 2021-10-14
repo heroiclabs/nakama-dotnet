@@ -33,7 +33,6 @@ namespace Nakama.Tests
 
         public void Dispose()
         {
-            _socket.Dispose();
             _client = null;
         }
 

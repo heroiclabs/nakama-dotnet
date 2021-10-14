@@ -23,7 +23,7 @@ namespace Nakama
     /// <summary>
     /// An adapter which implements a socket with a protocol supported by Nakama.
     /// </summary>
-    public interface ISocketAdapter : IDisposable
+    public interface ISocketAdapter
     {
         /// <summary>
         /// An event dispatched when the socket is disconnected.

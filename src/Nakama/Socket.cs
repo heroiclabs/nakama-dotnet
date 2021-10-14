@@ -34,6 +34,11 @@ namespace Nakama
         /// </summary>
         public const int DefaultConnectTimeout = 30;
 
+        /// <summary>
+        /// The default timeout for when the socket sends a message.
+        /// </summary>
+        public const int DefaultSendTimeout = 10;
+
         /// <inheritdoc cref="Closed"/>
         public event Action Closed;
 
@@ -105,7 +110,7 @@ namespace Nakama
         private readonly ISocketAdapter _adapter;
         private readonly Uri _baseUri;
         private readonly Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
-
+        private readonly int _sendTimeoutSec;
         private Object _lockObj = new Object();
 
         /// <summary>
@@ -131,13 +136,13 @@ namespace Nakama
         /// <param name="host">The host address of the server.</param>
         /// <param name="port">The port number of the server.</param>
         /// <param name="adapter">The adapter for use with the socket.</param>
-        public Socket(string scheme, string host, int port, ISocketAdapter adapter)
+        public Socket(string scheme, string host, int port, ISocketAdapter adapter, int sendTimeoutSec = DefaultSendTimeout)
         {
             Logger = NullLogger.Instance;
             _adapter = adapter;
             _baseUri = new UriBuilder(scheme, host, port).Uri;
             _responses = new Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
-
+            _sendTimeoutSec = sendTimeoutSec;
             _adapter.Closed += () =>
             {
                 lock (_lockObj)
@@ -315,18 +320,6 @@ namespace Nakama
 
             var response = await SendAsync(envelope);
             return response.Party;
-        }
-
-        /// <summary>
-        /// Dispose will destroy the active socket and clean up all associated resources.
-        /// </summary>
-        /// <remarks>
-        /// NOTE: This method will block to close the socket if it is open when called. Use <c>CloseAsync</c> instead
-        /// wherever possible.
-        /// </remarks>
-        public void Dispose()
-        {
-            _adapter.Dispose();
         }
 
         /// <inheritdoc cref="FollowUsersAsync(System.Collections.Generic.IEnumerable{Nakama.IApiUser})"/>
@@ -617,8 +610,8 @@ namespace Nakama
                     State = Convert.ToBase64String(state.Array, state.Offset, state.Count)
                 }
             };
-            SendAsync(envelope);
-            return Task.CompletedTask;
+
+            return SendAsync(envelope);
         }
 
         /// <inheritdoc cref="SendMatchStateAsync(string,long,string,System.Collections.Generic.IEnumerable{Nakama.IUserPresence})"/>
@@ -640,8 +633,7 @@ namespace Nakama
                     State = Convert.ToBase64String(state)
                 }
             };
-            SendAsync(envelope);
-            return Task.CompletedTask;
+            return SendAsync(envelope);
         }
 
         /// <inheritdoc cref="SendPartyDataAsync(string,long,ArraySegment{byte})"/>
@@ -657,8 +649,7 @@ namespace Nakama
                 }
             };
 
-            SendAsync(envelope);
-            return Task.CompletedTask;
+            return SendAsync(envelope);
         }
 
         /// <inheritdoc cref="SendPartyDataAsync(string,long,string)"/>
@@ -678,8 +669,7 @@ namespace Nakama
                 }
             };
 
-            SendAsync(envelope);
-            return Task.CompletedTask;
+            return SendAsync(envelope);
         }
 
         public override string ToString()
@@ -897,18 +887,30 @@ namespace Nakama
             }
         }
 
-        private Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope envelope)
+        private async Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope envelope)
         {
+            if (!IsConnected)
+            {
+                Logger?.WarnFormat("Tried sending message on a socket that is not connected.");
+                return null;
+            }
+
             var json = envelope.ToJson();
 
             Logger?.DebugFormat("Sending JSON over web socket: {0}", json);
 
             var buffer = System.Text.Encoding.UTF8.GetBytes(json);
+
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(_sendTimeoutSec * 1000);
+
             if (string.IsNullOrEmpty(envelope.Cid))
             {
-                _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
-                return null; // No response required.
+                await _adapter.Send(new ArraySegment<byte>(buffer), cts.Token);
+                return null;
             }
+
+
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
 
             lock (_lockObj)
@@ -916,8 +918,14 @@ namespace Nakama
                 _responses[envelope.Cid] = completer;
             }
 
-            _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
-            return completer.Task;
+            var timeoutToken = cts.Token;
+
+            timeoutToken.Register(() => {
+                completer.TrySetCanceled();
+            });
+
+            await _adapter.Send(new ArraySegment<byte>(buffer), timeoutToken);
+            return await completer.Task;
         }
 
         private static List<UserPresence> BuildPresenceList(IEnumerable<IUserPresence> presences)

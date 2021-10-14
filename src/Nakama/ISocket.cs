@@ -21,7 +21,7 @@ namespace Nakama
     /// <summary>
     /// A socket to interact with Nakama server.
     /// </summary>
-    public interface ISocket : IDisposable
+    public interface ISocket
     {
         /// <summary>
         /// Received when a socket is closed.
