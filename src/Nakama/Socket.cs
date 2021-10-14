@@ -237,18 +237,17 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="CloseAsync"/>
-        public Task CloseAsync()
+        public async Task CloseAsync()
         {
-            if (!IsConnected && !IsConnecting)
+            if (IsConnected || IsConnecting)
             {
-                _adapter.Close();
+                await _adapter.Close();
+                IsConnected = false;
             }
             else
             {
                 Logger?.WarnFormat("Tried closing an already-closed socket");
             }
-
-            return Task.CompletedTask;
         }
 
         /// <inheritdoc cref="ConnectAsync"/>

@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,6 +43,7 @@ namespace Nakama
         private readonly WebSocketClientOptions _options;
         private readonly CancellationTokenSource _closeTcs = new CancellationTokenSource();
         private readonly Queue<SendOperation> _sendBuffers = new Queue<SendOperation>();
+        private Task _updateLoop = Task.CompletedTask;
 
         private readonly object _sendBufferLock = new object();
 
@@ -63,9 +63,10 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.Close"/>
-        public void Close()
+        public Task Close()
         {
             _closeTcs?.Cancel();
+            return _updateLoop;
         }
 
         /// <inheritdoc cref="ISocketAdapter.Connect"/>
@@ -78,13 +79,16 @@ namespace Nakama
                 var lcts = CancellationTokenSource.CreateLinkedTokenSource(_closeTcs.Token, cts.Token);
                 using (WebSocket webSocket = await clientFactory.ConnectAsync(uri, _options, lcts.Token))
                 {
-
-                    await Task.Run(() => UpdateLoop(webSocket, _closeTcs.Token));
+                    _updateLoop = Task.Run(() => UpdateLoop(webSocket, _closeTcs.Token));
                 }
             }
             catch (TaskCanceledException)
             {
                 // No error, the socket got closed via the cancellation signal.
+            }
+            catch (ObjectDisposedException)
+            {
+                // No error, the socket got closed.
             }
             catch (Exception e)
             {
@@ -92,7 +96,7 @@ namespace Nakama
             }
             finally
             {
-
+                _updateLoop = Task.CompletedTask;
             }
         }
 
@@ -100,7 +104,6 @@ namespace Nakama
         public Task Send(ArraySegment<byte> buffer, CancellationToken cancellationToken, bool reliable = true)
         {
             var operation = new SendOperation(buffer, cancellationToken);
-
 
             var tcs = new TaskCompletionSource<bool>();
             cancellationToken.Register(() => {
@@ -128,10 +131,21 @@ namespace Nakama
 
             while (true)
             {
+                // todo should this be separated into a send loop and a receive loop
+
+                SendOperation sendOperation = null;
+
                 lock (_sendBufferLock)
                 {
-                    SendOperation sendOperation = _sendBuffers.Dequeue();
-                    var sendTask = webSocket.SendAsync(sendOperation.Bytes, WebSocketMessageType.Text, true, sendOperation.CancellationToken);
+                    if (_sendBuffers.Count > 0)
+                    {
+                        sendOperation = _sendBuffers.Dequeue();
+                    }
+                }
+
+                if (sendOperation != null)
+                {
+                    await webSocket.SendAsync(sendOperation.Bytes, WebSocketMessageType.Text, true, sendOperation.CancellationToken);
                 }
 
                 var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken)

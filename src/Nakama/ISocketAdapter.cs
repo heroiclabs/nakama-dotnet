@@ -43,7 +43,7 @@ namespace Nakama
         /// <summary>
         /// Close the socket with an asynchronous operation.
         /// </summary>
-        void Close();
+        Task Close();
 
         /// <summary>
         /// Connect to the server with an asynchronous operation.
