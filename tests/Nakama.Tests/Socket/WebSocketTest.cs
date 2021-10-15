@@ -56,7 +56,7 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public async Task ShouldCreateSocketAndDisconnect()
+        public async Task ShouldCreateSocketAndDisconnectWithEvent()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var completer = new TaskCompletionSource<bool>();

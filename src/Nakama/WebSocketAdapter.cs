@@ -41,8 +41,8 @@ namespace Nakama
         public event Action<ArraySegment<byte>> Received;
 
         private readonly WebSocketClientOptions _options;
-        private readonly CancellationTokenSource _closeTcs = new CancellationTokenSource();
-        private readonly Queue<SendOperation> _sendBuffers = new Queue<SendOperation>();
+        private CancellationTokenSource _closeTcs = new CancellationTokenSource();
+        private readonly Queue<SendOperation> _queuedSends = new Queue<SendOperation>();
 
         private readonly object _sendBufferLock = new object();
 
@@ -65,6 +65,8 @@ namespace Nakama
         public Task Close()
         {
             _closeTcs?.Cancel();
+            _closeTcs?.Dispose();
+            _closeTcs = new CancellationTokenSource();
             return Task.CompletedTask;
         }
 
@@ -102,7 +104,7 @@ namespace Nakama
 
             lock (_sendBufferLock)
             {
-                _sendBuffers.Enqueue(operation);
+                _queuedSends.Enqueue(operation);
             }
 
             return Task.CompletedTask;
@@ -115,19 +117,19 @@ namespace Nakama
                 $"WebSocketDriver(MaxMessageSize={MaxMessageReadSize})";
         }
 
-        private void LaunchSendLoop(WebSocket webSocket, CancellationToken cancellationToken)
+        private void LaunchSendLoop(WebSocket webSocket, CancellationToken closeCancellationToken)
         {
            Task.Run(async() =>
            {
-                while (true)
+                while (!closeCancellationToken.IsCancellationRequested)
                 {
                     SendOperation sendOperation = null;
 
                     lock (_sendBufferLock)
                     {
-                        if (_sendBuffers.Count > 0)
+                        if (_queuedSends.Count > 0)
                         {
-                            sendOperation = _sendBuffers.Dequeue();
+                            sendOperation = _queuedSends.Dequeue();
                         }
                     }
 
@@ -136,18 +138,20 @@ namespace Nakama
                         await webSocket.SendAsync(sendOperation.Bytes, WebSocketMessageType.Text, true, sendOperation.CancellationToken);
                     }
                 }
-           });
+           }, closeCancellationToken);
         }
 
-        private void LaunchReceiveLoop(WebSocket webSocket, CancellationToken cancellationToken)
+        private void LaunchReceiveLoop(WebSocket webSocket, CancellationToken closeCancellationToken)
         {
             Task.Run(async() =>
             {
                 var buffer = new byte[MaxMessageReadSize];
 
-                while (true)
+                // in case cancellation requested prior to socket reading from stream
+                while (!closeCancellationToken.IsCancellationRequested)
                 {
-                    var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken)
+                    var result = await webSocket
+                        .ReceiveAsync(new ArraySegment<byte>(buffer), closeCancellationToken)
                         .ConfigureAwait(false);
 
                     if (result == null || result.MessageType == WebSocketMessageType.Close)
@@ -168,7 +172,7 @@ namespace Nakama
                 await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
                 webSocket.Dispose();
                 Closed?.Invoke();
-            });
+            }, closeCancellationToken);
         }
 
         private async Task<ArraySegment<byte>> ReadFrames(WebSocketReceiveResult result, WebSocket webSocket,
