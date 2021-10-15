@@ -51,7 +51,7 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public async void Socket_AwaitedTasksAfterDisconnect_AreCanceled()
+        public async void Socket_AwaitedTasksAfterDisconnect_AreSilent()
         {
             var id = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(id);
@@ -60,8 +60,7 @@ namespace Nakama.Tests
             await _socket.CloseAsync();
             var statusTask1 = _socket.FollowUsersAsync(new[] {session.UserId});
             var statusTask2 = _socket.FollowUsersAsync(new[] {session.UserId});
-
-            await Assert.ThrowsAsync<TaskCanceledException>(() => Task.WhenAll(statusTask1, statusTask2));
+            await Task.WhenAll(statusTask1, statusTask2);
         }
     }
 }
