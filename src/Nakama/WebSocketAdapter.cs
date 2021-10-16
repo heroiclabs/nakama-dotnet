@@ -41,7 +41,7 @@ namespace Nakama
         public event Action<ArraySegment<byte>> Received;
 
         private readonly WebSocketClientOptions _options;
-        private CancellationTokenSource _closeTcs = new CancellationTokenSource();
+        private CancellationTokenSource _closeSource = new CancellationTokenSource();
         private readonly Queue<SendOperation> _queuedSends = new Queue<SendOperation>();
 
         private readonly object _sendBufferLock = new object();
@@ -64,43 +64,41 @@ namespace Nakama
         /// <inheritdoc cref="ISocketAdapter.Close"/>
         public Task Close()
         {
-            _closeTcs?.Cancel();
-            _closeTcs?.Dispose();
-            _closeTcs = new CancellationTokenSource();
+            _closeSource?.Cancel();
+            _closeSource?.Dispose();
+            _closeSource = new CancellationTokenSource();
             return Task.CompletedTask;
         }
 
         /// <inheritdoc cref="ISocketAdapter.Connect"/>
-        public async Task Connect(Uri uri, int timeout)
+        public Task Connect(Uri uri, int timeout)
         {
             var clientFactory = new WebSocketClientFactory();
 
             try
             {
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
-                var lcts = CancellationTokenSource.CreateLinkedTokenSource(_closeTcs.Token, cts.Token);
-                WebSocket webSocket = await clientFactory.ConnectAsync(uri, _options, lcts.Token);
-                LaunchReceiveLoop(webSocket, _closeTcs.Token);
-                LaunchSendLoop(webSocket, _closeTcs.Token);
+                var lcts = CancellationTokenSource.CreateLinkedTokenSource(_closeSource.Token, cts.Token);
+                Task<WebSocket> connectTask = clientFactory.ConnectAsync(uri, _options, lcts.Token);
+                Task.Run(() => LaunchLoops(connectTask));
+                return connectTask;
             }
             catch (TaskCanceledException)
             {
                 // No error, the socket got closed via the cancellation signal.
             }
-            catch (ObjectDisposedException)
-            {
-                // No error, the socket got closed.
-            }
             catch (Exception e)
             {
                 ReceivedError?.Invoke(e);
             }
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc cref="ISocketAdapter.Send"/>
-        public Task Send(ArraySegment<byte> buffer, CancellationToken cancellationToken, bool reliable = true)
+        public Task Send(ArraySegment<byte> buffer, CancellationToken cancelSendToken, bool reliable = true)
         {
-            var operation = new SendOperation(buffer, cancellationToken);
+            var operation = new SendOperation(buffer, cancelSendToken);
 
             lock (_sendBufferLock)
             {
@@ -114,99 +112,107 @@ namespace Nakama
         {
             // todo add other state here.
             return
-                $"WebSocketDriver(MaxMessageSize={MaxMessageReadSize})";
+                $"WebSocketAdapter(MaxMessageReadSize={MaxMessageReadSize})";
         }
 
-        private void LaunchSendLoop(WebSocket webSocket, CancellationToken closeCancellationToken)
+        private async Task SendLoop(WebSocket webSocket, CancellationToken closeToken)
         {
-           Task.Run(async() =>
-           {
-                while (!closeCancellationToken.IsCancellationRequested)
+            while (!closeToken.IsCancellationRequested)
+            {
+                SendOperation sendOperation = null;
+
+                lock (_sendBufferLock)
                 {
-                    SendOperation sendOperation = null;
-
-                    lock (_sendBufferLock)
+                    if (_queuedSends.Count > 0)
                     {
-                        if (_queuedSends.Count > 0)
-                        {
-                            sendOperation = _queuedSends.Dequeue();
-                        }
-                    }
-
-                    if (sendOperation != null)
-                    {
-                        await webSocket.SendAsync(sendOperation.Bytes, WebSocketMessageType.Text, true, sendOperation.CancellationToken);
+                        sendOperation = _queuedSends.Dequeue();
                     }
                 }
-           }, closeCancellationToken);
+
+                if (sendOperation != null)
+                {
+                    await webSocket.SendAsync(sendOperation.Bytes, WebSocketMessageType.Text, true, sendOperation.CancelSendToken);
+                }
+            }
         }
 
-        private void LaunchReceiveLoop(WebSocket webSocket, CancellationToken closeCancellationToken)
+        private async Task ReceiveLoop(WebSocket webSocket, CancellationToken closeToken)
         {
-            Task.Run(async() =>
+            var buffer = new byte[MaxMessageReadSize];
+            int bufferReadCount = 0;
+
+            while (!closeToken.IsCancellationRequested)
             {
-                var buffer = new byte[MaxMessageReadSize];
+                // in case cancellation requested prior to beginning loop
+                closeToken.ThrowIfCancellationRequested();
 
-                // in case cancellation requested prior to socket reading from stream
-                while (!closeCancellationToken.IsCancellationRequested)
+                var bufferSegment = new ArraySegment<byte>(buffer, bufferReadCount, MaxMessageReadSize - bufferReadCount);
+
+                var result = await webSocket
+                    .ReceiveAsync(bufferSegment, closeToken)
+                    .ConfigureAwait(false);
+
+                if (result == null || result.MessageType == WebSocketMessageType.Close)
                 {
-                    var result = await webSocket
-                        .ReceiveAsync(new ArraySegment<byte>(buffer), closeCancellationToken)
-                        .ConfigureAwait(false);
-
-                    if (result == null || result.MessageType == WebSocketMessageType.Close)
-                    {
-                        break;
-                    }
-
-                    var data = await ReadFrames(result, webSocket, buffer);
-
-                    if (data.Count == 0)
-                    {
-                        break;
-                    }
-
-                    Received?.Invoke(data);
+                    break;
                 }
 
-                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
-                webSocket.Dispose();
-                Closed?.Invoke();
-            }, closeCancellationToken);
-        }
+                bufferReadCount += result.Count;
 
-        private async Task<ArraySegment<byte>> ReadFrames(WebSocketReceiveResult result, WebSocket webSocket,
-            byte[] buffer)
-        {
-            var count = result.Count;
-            while (!result.EndOfMessage)
-            {
-                if (count >= MaxMessageReadSize)
+                if (result.EndOfMessage)
+                {
+                    bufferReadCount = 0;
+                    Received?.Invoke(new ArraySegment<byte>(buffer));
+                }
+                else if (result.Count == 0)  // not enough space to write to the buffer segment
                 {
                     var closeMessage = $"Maximum message size {MaxMessageReadSize} bytes reached.";
-                    await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage,
-                        CancellationToken.None);
-                    ReceivedError?.Invoke(new WebSocketException(WebSocketError.HeaderError));
-                    return new ArraySegment<byte>();
+                    await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, CancellationToken.None);
+                    throw new WebSocketException(WebSocketError.HeaderError);
                 }
-
-                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer, count, MaxMessageReadSize - count),
-                    CancellationToken.None).ConfigureAwait(false);
-                count += result.Count;
             }
 
-            return new ArraySegment<byte>(buffer, 0, count);
+            System.Console.WriteLine("read loop ended");
+        }
+
+        private async Task LaunchLoops(Task<WebSocket> webSocketTask)
+        {
+            using (WebSocket webSocket = await webSocketTask)
+            {
+                try
+                {
+                    CancellationToken receiveToken = _closeSource.Token;
+                    CancellationToken sendToken = _closeSource.Token;
+
+                    Task.WaitAll(new Task[]{ReceiveLoop(webSocket, receiveToken), SendLoop(webSocket, sendToken)});
+                }
+                catch (Exception e)
+                {
+                    ReceivedError?.Invoke(e);
+                }
+
+                try
+                {
+                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                }
+                catch (Exception e)
+                {
+                    ReceivedError?.Invoke(e);
+                }
+
+                Closed?.Invoke();
+            }
         }
 
         private class SendOperation
         {
             public ArraySegment<byte> Bytes { get; }
-            public CancellationToken CancellationToken { get; }
+            public CancellationToken CancelSendToken { get; }
 
             public SendOperation(ArraySegment<byte> bytes, CancellationToken cancellationToken)
             {
                 Bytes = bytes;
-                CancellationToken = cancellationToken;
+                CancelSendToken = cancellationToken;
             }
         }
     }

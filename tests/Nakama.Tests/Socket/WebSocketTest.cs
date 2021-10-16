@@ -32,6 +32,8 @@ namespace Nakama.Tests.Socket
         {
             _client = TestsUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
+            var logger = new StdoutLogger();
+            _socket.ReceivedError += e => logger.ErrorFormat(e.Message);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
