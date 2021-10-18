@@ -163,7 +163,6 @@ namespace Nakama
                 {
                     lock (_lockObj)
                     {
-
                         foreach (var response in _responses)
                         {
                             response.Value.TrySetCanceled();
@@ -773,12 +772,12 @@ namespace Nakama
         private void ReceivedMessage(ArraySegment<byte> buffer)
         {
             var contents = System.Text.Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
-
             Logger?.DebugFormat("Received JSON over web socket: {0}", contents);
 
-            var envelope = contents.FromJson<WebSocketMessageEnvelope>();
             try
             {
+                var envelope = contents.FromJson<WebSocketMessageEnvelope>();
+
                 if (!string.IsNullOrEmpty(envelope.Cid))
                 {
                     lock (_lockObj)

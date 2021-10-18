@@ -25,7 +25,7 @@ namespace Nakama.Tests
 
         public void ErrorFormat(string format, params object[] args)
         {
-            System.Console.WriteLine(string.Concat("[ERROR] ", format), args);
+            System.Console.Error.WriteLine(string.Concat("[ERROR] ", format), args);
         }
 
         public void InfoFormat(string format, params object[] args)

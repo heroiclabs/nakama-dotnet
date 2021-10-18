@@ -1,5 +1,5 @@
 /**
- * Copyright 2019 The Nakama Authors
+ * Copyright 2021 The Nakama Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ namespace Nakama
     {
         private const int KeepAliveIntervalSec = 15;
         private const int MaxMessageReadSize = 1024 * 256;
+        private const string CloseStatusKey = "CloseStatus";
 
         /// <inheritdoc cref="ISocketAdapter.Closed"/>
         public event Action Closed;
@@ -40,11 +41,11 @@ namespace Nakama
         /// <inheritdoc cref="ISocketAdapter.Received"/>
         public event Action<ArraySegment<byte>> Received;
 
+        private CancellationTokenSource _closeTcs = new CancellationTokenSource();
         private readonly WebSocketClientOptions _options;
-        private CancellationTokenSource _closeSource = new CancellationTokenSource();
         private readonly Queue<SendOperation> _queuedSends = new Queue<SendOperation>();
-
         private readonly object _sendBufferLock = new object();
+
 
         public WebSocketAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec) :
             this(new WebSocketClientOptions
@@ -64,35 +65,21 @@ namespace Nakama
         /// <inheritdoc cref="ISocketAdapter.Close"/>
         public Task Close()
         {
-            _closeSource?.Cancel();
-            _closeSource?.Dispose();
-            _closeSource = new CancellationTokenSource();
+            _closeTcs.Cancel();
             return Task.CompletedTask;
         }
 
         /// <inheritdoc cref="ISocketAdapter.Connect"/>
         public Task Connect(Uri uri, int timeout)
         {
-            var clientFactory = new WebSocketClientFactory();
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
+            var connectTimeout = cts.Token;
 
-            try
-            {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
-                var lcts = CancellationTokenSource.CreateLinkedTokenSource(_closeSource.Token, cts.Token);
-                Task<WebSocket> connectTask = clientFactory.ConnectAsync(uri, _options, lcts.Token);
-                Task.Run(() => LaunchLoops(connectTask));
-                return connectTask;
-            }
-            catch (TaskCanceledException)
-            {
-                // No error, the socket got closed via the cancellation signal.
-            }
-            catch (Exception e)
-            {
-                ReceivedError?.Invoke(e);
-            }
+            var tcs = new TaskCompletionSource<bool>();
+            // todo be sure this doesn't leak
+            Task.Run(() => RunWorkerTasks(uri, connectTimeout, tcs));
 
-            return Task.CompletedTask;
+            return tcs.Task;
         }
 
         /// <inheritdoc cref="ISocketAdapter.Send"/>
@@ -117,8 +104,10 @@ namespace Nakama
 
         private async Task SendLoop(WebSocket webSocket, CancellationToken closeToken)
         {
-            while (!closeToken.IsCancellationRequested)
+            while (true)
             {
+                closeToken.ThrowIfCancellationRequested();
+
                 SendOperation sendOperation = null;
 
                 lock (_sendBufferLock)
@@ -141,16 +130,18 @@ namespace Nakama
             var buffer = new byte[MaxMessageReadSize];
             int bufferReadCount = 0;
 
-            while (!closeToken.IsCancellationRequested)
+            while (true)
             {
-                // in case cancellation requested prior to beginning loop
-                closeToken.ThrowIfCancellationRequested();
-
                 var bufferSegment = new ArraySegment<byte>(buffer, bufferReadCount, MaxMessageReadSize - bufferReadCount);
+
+                closeToken.ThrowIfCancellationRequested();
 
                 var result = await webSocket
                     .ReceiveAsync(bufferSegment, closeToken)
+                    // todo figure out why we configure await. do we care where the continuation is marshaled back to?
+                    // does unity sync context not like if we try to marshal continuation back to it via ConfigureAwait(true)?
                     .ConfigureAwait(false);
+
 
                 if (result == null || result.MessageType == WebSocketMessageType.Close)
                 {
@@ -161,45 +152,79 @@ namespace Nakama
 
                 if (result.EndOfMessage)
                 {
+                    Received?.Invoke(new ArraySegment<byte>(buffer, 0, bufferReadCount));
                     bufferReadCount = 0;
-                    Received?.Invoke(new ArraySegment<byte>(buffer));
                 }
                 else if (result.Count == 0)  // not enough space to write to the buffer segment
                 {
-                    var closeMessage = $"Maximum message size {MaxMessageReadSize} bytes reached.";
-                    await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, CancellationToken.None);
-                    throw new WebSocketException(WebSocketError.HeaderError);
+                    // todo add this change in behavior to changelog
+                    // e.g., if you were relying on previous exception now use this
+                    var e = new WebSocketException($"Maximum message size {MaxMessageReadSize} bytes reached.");
+                    e.Data[CloseStatusKey] = WebSocketCloseStatus.MessageTooBig;
+                    throw e;
                 }
             }
-
-            System.Console.WriteLine("read loop ended");
         }
 
-        private async Task LaunchLoops(Task<WebSocket> webSocketTask)
+        private async Task RunWorkerTasks(Uri uri, CancellationToken connectCancel, TaskCompletionSource<bool> connectCompleteSource)
         {
-            using (WebSocket webSocket = await webSocketTask)
+            var clientFactory = new WebSocketClientFactory();
+            WebSocket webSocket = null;
+
+            try
             {
-                try
-                {
-                    CancellationToken receiveToken = _closeSource.Token;
-                    CancellationToken sendToken = _closeSource.Token;
+                webSocket = await clientFactory.ConnectAsync(uri, _options, connectCancel);
+                connectCompleteSource.SetResult(true);
+            }
+            catch (Exception e)
+            {
+                connectCompleteSource.SetException(e);
+                webSocket?.Dispose();
+                return;
+            }
 
-                    Task.WaitAll(new Task[]{ReceiveLoop(webSocket, receiveToken), SendLoop(webSocket, sendToken)});
-                }
-                catch (Exception e)
+            var closeStatus = WebSocketCloseStatus.Empty;
+            var closeMessage = "";
+
+            try
+            {
+                var receiveToken = _closeTcs.Token;
+                var sendToken = _closeTcs.Token;
+                await Task.WhenAny(new Task[]{ReceiveLoop(webSocket,receiveToken), SendLoop(webSocket, sendToken)});
+            }
+            // todo what about task cancelled exception
+            catch (Exception e)
+            {
+                if (e.Data.Contains(CloseStatusKey))
                 {
-                    ReceivedError?.Invoke(e);
+                    closeStatus = (WebSocketCloseStatus) e.Data[CloseStatusKey];
                 }
 
-                try
-                {
-                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
-                }
-                catch (Exception e)
-                {
-                    ReceivedError?.Invoke(e);
-                }
+                closeMessage = e.Message;
+                ReceivedError?.Invoke(e);
+            }
+            finally
+            {
+                await CloseInternal(webSocket, closeMessage, closeStatus);
+            }
+        }
 
+        private async Task CloseInternal(WebSocket webSocket, string closeMessage, WebSocketCloseStatus closeStatus)
+        {
+            try
+            {
+                await webSocket.CloseAsync(closeStatus, "", CancellationToken.None);
+            }
+            catch (Exception e)
+            {
+                ReceivedError?.Invoke(e);
+            }
+            finally
+            {
+                // create a fresh cancellation token source for closing
+                _closeTcs.Dispose();
+                _closeTcs = new CancellationTokenSource();
+                webSocket?.Dispose();
                 Closed?.Invoke();
             }
         }
