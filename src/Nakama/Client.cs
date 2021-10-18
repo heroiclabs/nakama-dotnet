@@ -228,7 +228,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="BanGroupUsersAsync"/>
-        public async Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null)
+        public async Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -236,7 +236,7 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.BanGroupUsersAsync(session.AuthToken, groupId, usernames, canceller?.Token), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller?.Token));
+            await  _retryInvoker.InvokeWithRetry(() => _apiClient.BanGroupUsersAsync(session.AuthToken, groupId, ids, canceller?.Token), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller?.Token));
         }
 
         /// <inheritdoc cref="BlockFriendsAsync"/>
