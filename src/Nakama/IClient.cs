@@ -203,11 +203,11 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="groupId">The group to ban the users from.</param>
-        /// <param name="usernames">The usernames of the users to ban.</param>
+        /// <param name="ids">The ids of the users to ban.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Block one or more friends by id or username.
