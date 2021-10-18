@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -51,16 +52,29 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public async void Socket_AwaitedTasksAfterDisconnect_AreSilent()
+        public async void Socket_AwaitedTasksAfterDisconnect_ThrowsException()
         {
             var id = Guid.NewGuid().ToString();
             var session = await _client.AuthenticateCustomAsync(id);
             await _socket.ConnectAsync(session);
 
             await _socket.CloseAsync();
-            var statusTask1 = _socket.FollowUsersAsync(new[] {session.UserId});
-            var statusTask2 = _socket.FollowUsersAsync(new[] {session.UserId});
-            await Task.WhenAll(statusTask1, statusTask2);
+
+            WebSocketException sendException = null;
+
+            try
+            {
+                var statusTask1 = _socket.FollowUsersAsync(new[]{session.UserId});
+                var statusTask2 = _socket.FollowUsersAsync(new[]{session.UserId});
+                await Task.WhenAll(statusTask1, statusTask2);
+            }
+            catch (WebSocketException e)
+            {
+                sendException = e;
+            }
+
+            Assert.NotNull(sendException);
+            Assert.True(sendException.WebSocketErrorCode == WebSocketError.InvalidState);
         }
     }
 }

@@ -889,8 +889,7 @@ namespace Nakama
         {
             if (!IsConnected)
             {
-                Logger?.WarnFormat("Tried sending message on a socket that is not connected.");
-                return null;
+                throw new WebSocketException(WebSocketError.InvalidState, "Tried sending message on a socket that is not connected.");
             }
 
             var json = envelope.ToJson();
