@@ -166,6 +166,7 @@ namespace Nakama
 
                         if (result == null || result.MessageType == WebSocketMessageType.Close)
                         {
+                            receiveTask = null;
                             break;
                         }
 
