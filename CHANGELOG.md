@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+- Refactored the web socket. Changes should be backwards compatible except for the following:
+    - Exceptions occuring in the socket that were previously left unobserved are now observable via the `ReceivedError` event.
+    - Users who were catching `WebSocketException` to check if an incoming frame size was too large for the socket receive buffer should now catch `InternalBufferOverflowException` instead.
+    - Users who try to send data over a disconnected socket will now receive a `WebSocketException`.
+
 ## [3.2.0] - 2021-10-11
 ### Added
 - Added additional group listing filters.
