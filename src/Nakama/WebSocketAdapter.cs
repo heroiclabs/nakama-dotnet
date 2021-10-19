@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading;
@@ -89,7 +90,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.Connect"/>
-        public async void Connect(Uri uri, int timeout)
+        public async void Connect(Uri uri, int timeout, CancellationTokenSource userCanceller)
         {
             if (_webSocket != null)
             {
@@ -104,8 +105,22 @@ namespace Nakama
             var clientFactory = new WebSocketClientFactory();
             try
             {
+
+                // timeout cancellation token
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
-                var lcts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
+
+                var linkedTokens = new List<CancellationToken>();
+                linkedTokens.Add(cts.Token);
+                linkedTokens.Add(_cancellationSource.Token);
+
+                if (userCanceller != null)
+                {
+                    linkedTokens.Add(userCanceller.Token);
+                }
+
+                // socket connection cancellation token
+                var lcts = CancellationTokenSource.CreateLinkedTokenSource(linkedTokens.ToArray());
+
                 using (_webSocket = await clientFactory.ConnectAsync(_uri, _options, lcts.Token))
                 {
                     IsConnected = true;

@@ -16,6 +16,7 @@
 
 using System;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -78,7 +79,9 @@ namespace Nakama
         /// </summary>
         private bool IsTransientException(Exception e)
         {
-            return (e is ApiResponseException apiException && apiException.StatusCode >= 500) || e is HttpRequestException;
+            return (e is ApiResponseException apiException && apiException.StatusCode >= 500)
+            || e is HttpRequestException
+            || e is System.IO.IOException; // thrown if error during socket handshake (AsyncProtocolRequest)
         }
 
         private Retry CreateNewRetry(RetryHistory history)

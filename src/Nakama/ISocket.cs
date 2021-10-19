@@ -1,4 +1,4 @@
-// Copyright 2019 The Nakama Authors
+// Copyright 2021 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -182,9 +183,11 @@ namespace Nakama
         /// <param name="appearOnline">If the user who appear online to other users.</param>
         /// <param name="connectTimeout">The time allowed for the socket connection to be established.</param>
         /// <param name="langTag">The language tag of the user on the connected socket.</param>
+        /// <param name="retryConfiguration">The <see cref="RetryConfiguration"/> to use if the socket connection fails due to a transient network error.</param>
+        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the connection request while mid-flight.</param>
         /// <returns>A task to represent the asynchronous operation.</returns>
         Task ConnectAsync(ISession session, bool appearOnline = false,
-            int connectTimeout = Socket.DefaultConnectTimeout, string langTag = "en");
+            int connectTimeout = Socket.DefaultConnectTimeout, string langTag = "en", RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
 
         /// <summary>
         /// Create a multiplayer match on the server.

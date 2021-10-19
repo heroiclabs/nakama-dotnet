@@ -1,4 +1,4 @@
-// Copyright 2019 The Nakama Authors
+// Copyright 2021 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -103,15 +103,24 @@ namespace Nakama
         public ILogger Logger { get; set; }
 
         private readonly ISocketAdapter _adapter;
+        private readonly bool _autoReconnect;
         private readonly Uri _baseUri;
         private readonly Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
 
         private Object _lockObj = new Object();
 
+        private readonly RetryConfiguration _defaultConnectRetryConfig = new RetryConfiguration(
+            baseDelay: 500,
+            jitter: RetryJitter.FullJitter,
+            listener: null,
+            maxRetries: 4);
+
+        private readonly RetryInvoker _retryInvoker = new RetryInvoker();
+
         /// <summary>
         /// A new socket with default options.
         /// </summary>
-        public Socket() : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort, new WebSocketAdapter())
+        public Socket() : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort, new WebSocketAdapter(), autoReconnect: false)
         {
         }
 
@@ -120,7 +129,7 @@ namespace Nakama
         /// </summary>
         /// <param name="adapter">The adapter for use with the socket.</param>
         public Socket(ISocketAdapter adapter) : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort,
-            adapter)
+            adapter, autoReconnect: false)
         {
         }
 
@@ -131,10 +140,12 @@ namespace Nakama
         /// <param name="host">The host address of the server.</param>
         /// <param name="port">The port number of the server.</param>
         /// <param name="adapter">The adapter for use with the socket.</param>
-        public Socket(string scheme, string host, int port, ISocketAdapter adapter)
+        /// <param name="autoReconnect">Whether or not the socket should reconnect upon a transient disconnect.</param>
+        public Socket(string scheme, string host, int port, ISocketAdapter adapter, bool autoReconnect)
         {
             Logger = NullLogger.Instance;
             _adapter = adapter;
+            _autoReconnect = autoReconnect;
             _baseUri = new UriBuilder(scheme, host, port).Uri;
             _responses = new Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
 
@@ -159,7 +170,6 @@ namespace Nakama
                 {
                     lock (_lockObj)
                     {
-
                         foreach (var response in _responses)
                         {
                             response.Value.TrySetCanceled();
@@ -173,6 +183,42 @@ namespace Nakama
             };
 
             _adapter.Received += ReceivedMessage;
+        }
+
+        /// <inheritdoc cref="ConnectAsync"/>
+        public async Task ConnectAsync(ISession session, bool appearOnline = false,
+            int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en", RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null)
+            {
+                var uri = new UriBuilder(_baseUri)
+                {
+                    Path = "/ws",
+                    Query = $"lang={langTag}&status={appearOnline}&token={session.AuthToken}"
+                }.Uri;
+
+
+            var history = new RetryHistory(retryConfiguration ?? _defaultConnectRetryConfig, userCancelToken: canceller?.Token);
+
+            Task connect = _retryInvoker.InvokeWithRetry(() => ConnectAsync(uri, connectTimeoutSec, canceller), history);
+
+            await connect;
+
+            if (!connect.IsFaulted)
+            {
+                Action<Exception> retryCallback = e =>
+                {
+                    if (!_adapter.IsConnected)
+                    {
+                        // thrown by TCP NetworkStream if service is not reachable for WebSockets
+                        if (e is System.IO.IOException)
+                        {
+                            Task.Run(() => ConnectAsync(uri, connectTimeoutSec, canceller));
+                        }
+                    }
+                };
+
+                _adapter.ReceivedError += retryCallback;
+                _adapter.Closed += () => _adapter.ReceivedError -= retryCallback;
+            }
         }
 
         /// <inheritdoc cref="AcceptPartyMemberAsync"/>
@@ -237,30 +283,6 @@ namespace Nakama
         {
             _adapter.Close();
             return Task.CompletedTask;
-        }
-
-        /// <inheritdoc cref="ConnectAsync"/>
-        public Task ConnectAsync(ISession session, bool appearOnline = false,
-            int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en")
-        {
-            var tcs = new TaskCompletionSource<bool>();
-            Action callback = () => tcs.TrySetResult(true);
-            Action<Exception> errback = e => tcs.TrySetException(e);
-            _adapter.Connected += callback;
-            _adapter.ReceivedError += errback;
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = "/ws",
-                Query = $"lang={langTag}&status={appearOnline}&token={session.AuthToken}"
-            }.Uri;
-            tcs.Task.ContinueWith(_ =>
-            {
-                // NOTE Not fired in Unity WebGL builds.
-                _adapter.Connected -= callback;
-                _adapter.ReceivedError -= errback;
-            });
-            _adapter.Connect(uri, connectTimeoutSec);
-            return tcs.Task;
         }
 
         /// <inheritdoc cref="ClosePartyAsync"/>
@@ -765,7 +787,7 @@ namespace Nakama
         {
             var scheme = client.Scheme.ToLower().Equals("http") ? "ws" : "wss";
             // TODO improve how logger is passed into socket object.
-            return new Socket(scheme, client.Host, client.Port, adapter) {Logger = (client as Client)?.Logger};
+            return new Socket(scheme, client.Host, client.Port, adapter, autoReconnect: false) {Logger = (client as Client)?.Logger};
         }
 
         private void ReceivedMessage(ArraySegment<byte> buffer)
@@ -928,6 +950,34 @@ namespace Nakama
             }
 
             return presenceList;
+        }
+
+        // wrap the socket adapter events into a task.
+        private Task ConnectAsync(Uri uri, int timeout, CancellationTokenSource canceller)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            Action onConnectSuccess = () => {
+                tcs.TrySetResult(true);
+            };
+
+            Action<Exception> onConnectFailure = e => {
+                tcs.TrySetException(e);
+            };
+
+            _adapter.Connected += onConnectSuccess;
+            _adapter.ReceivedError += onConnectFailure;
+
+            _adapter.Connect(uri, timeout, canceller);
+
+            tcs.Task.ContinueWith(_ =>
+            {
+                // NOTE Not fired in Unity WebGL builds.
+                _adapter.Connected -= onConnectSuccess;
+                _adapter.ReceivedError -= onConnectFailure;
+            });
+
+            return tcs.Task;
         }
     }
 }
