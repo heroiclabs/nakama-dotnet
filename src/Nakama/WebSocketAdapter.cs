@@ -141,7 +141,6 @@ namespace Nakama
                         webSocket.SendAsync(sendOperation.Bytes, WebSocketMessageType.Text, true, sendOperation.CancelSendToken);
                     }
 
-                    // todo what if the last param goes negative
                     var bufferSegment = new ArraySegment<byte>(buffer, bufferReadCount, MaxMessageReadSize - bufferReadCount);
 
                     if (receiveTask == null)
