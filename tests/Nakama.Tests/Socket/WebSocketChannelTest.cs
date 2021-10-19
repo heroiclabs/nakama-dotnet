@@ -31,7 +31,7 @@ namespace Nakama.Tests.Socket
         {
             _client = TestsUtil.FromSettingsFile();
             _socket = Nakama.Socket.From(_client);
-            _socket.ReceivedError += (e) => throw e;
+            _socket.ReceivedError += e => System.Console.WriteLine(e.Message);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
