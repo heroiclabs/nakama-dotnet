@@ -155,21 +155,21 @@ namespace Nakama
                     _responses.Clear();
                 }
 
+                IsConnected = false;
+
                 Closed?.Invoke();
             };
+
             _adapter.ReceivedError += e =>
             {
-                if (!IsConnected)
+                lock (_lockObj)
                 {
-                    lock (_lockObj)
+                    foreach (var response in _responses)
                     {
-                        foreach (var response in _responses)
-                        {
-                            response.Value.TrySetCanceled();
-                        }
-
-                        _responses.Clear();
+                        response.Value.TrySetCanceled();
                     }
+
+                    _responses.Clear();
                 }
 
                 ReceivedError?.Invoke(e);
@@ -906,7 +906,6 @@ namespace Nakama
                 await _adapter.Send(new ArraySegment<byte>(buffer), cts.Token);
                 return null;
             }
-
 
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
 
