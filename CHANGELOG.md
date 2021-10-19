@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
     - Exceptions occuring in the socket that were previously left unobserved are now observable via the `ReceivedError` event.
     - Users who were catching `WebSocketException` to check if an incoming frame size was too large for the socket receive buffer should now catch `InternalBufferOverflowException` instead.
     - Users who try to send data over a disconnected socket will now receive a `WebSocketException`.
+    - Users who try to connect to an already-connected socket will no longer receive an exception. Instead
+    a warning will be printed and the connect will return early.
 
 ## [3.2.0] - 2021-10-11
 ### Added
