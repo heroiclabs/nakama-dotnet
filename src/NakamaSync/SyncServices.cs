@@ -172,8 +172,8 @@ namespace NakamaSync
             _logger?.DebugFormat("Sync services initializing...");
 
             _presenceTracker.Subscribe(_socket);
+            _hostTracker.Subscribe(_socket);
             _migrator.Subscribe(_presenceTracker, _hostTracker);
-
             if (isMatchCreator)
             {
                 _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry);
@@ -202,7 +202,7 @@ namespace NakamaSync
             _logger?.DebugFormat("Sync services initialized.");
         }
 
-        public void ReceiveMatch(IMatch match)
+        public SyncMatch ReceiveMatch(IMatch match)
         {
             _logger?.DebugFormat("Sync services are receiving match...");
 
@@ -211,9 +211,9 @@ namespace NakamaSync
             _presenceTracker.ReceiveMatch(match);
             _presenceVarRotators.ReceiveMatch(match);
             _handshakeRequester.ReceiveMatch(match);
-
             _logger?.DebugFormat("Sync services received match.");
 
+            return new SyncMatch(match, _hostTracker);
         }
     }
 }

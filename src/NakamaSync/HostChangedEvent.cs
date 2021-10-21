@@ -18,7 +18,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class HostChangedEvent
+    public class HostChangedEvent
     {
         internal IUserPresence OldHost { get; }
         internal IUserPresence NewHost { get; }

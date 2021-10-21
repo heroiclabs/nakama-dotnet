@@ -152,6 +152,22 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        private void HostShouldBeChosen()
+        {
+            var testEnv = new SyncTestEnvironment(
+                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0);
+
+            testEnv.StartViaMatchmaker();
+            SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
+            creatorEnv.SharedBools[0].SetValue(true);
+            Assert.True(creatorEnv.SharedBools[0].GetValue());
+            testEnv.Dispose();
+        }
+
         private SyncErrorHandler CreateDefaultErrorHandler()
         {
             return (e) => new StdoutLogger().ErrorFormat(e.Message);

@@ -46,6 +46,9 @@ namespace NakamaSync
 
         private void HandlePresenceRemoved(IUserPresence leaver)
         {
+
+            Logger?.DebugFormat($"Host tracker for {_presenceTracker.UserId} saw leaver: {leaver.UserId}");
+
             var host = GetHost();
 
             bool leaverWasHost = string.Compare(leaver.UserId, host.UserId, StringComparison.InvariantCulture) < 0;
@@ -62,13 +65,15 @@ namespace NakamaSync
 
         private void HandlePresenceAdded(IUserPresence joiner)
         {
+            Logger?.DebugFormat($"Host tracker for {_presenceTracker.UserId} saw joiner added: {joiner.UserId}");
+
             IUserPresence host = GetHost();
 
             if (joiner.UserId == host.UserId)
             {
                 // get the next presence in the alphanumeric list
                 IUserPresence oldHost = _presenceTracker.GetPresence(1);
-                Logger?.DebugFormat($"Host changed from {oldHost} to {host}");
+                Logger?.DebugFormat($"Host tracker changing host from {oldHost?.UserId} to {host.UserId}");
                 OnHostChanged?.Invoke(new HostChangedEvent(oldHost, host));
             }
             else

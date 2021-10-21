@@ -46,10 +46,10 @@ namespace NakamaSync
             internal set;
         }
 
-        public bool IsHost
+        internal bool IsHost
         {
             get;
-            internal set;
+            set;
         }
 
         protected ValidationStatus _validationStatus;
