@@ -29,13 +29,16 @@ namespace NakamaSync
         private readonly PresenceVarHostIngress _presenceVarHostIngress;
         private readonly VarRegistry _registry;
         private readonly PresenceVarRotators _presenceVarRotators;
+        private readonly string _userId;
 
         public PresenceVarIngress(
+            string userId,
             VarRegistry registry,
             PresenceVarRotators presenceVarRotators,
             PresenceVarGuestIngress presenceVarGuestIngress,
             PresenceVarHostIngress presenceVarHostIngress)
         {
+            _userId = userId;
             _registry = registry;
             _presenceVarGuestIngress = presenceVarGuestIngress;
             _presenceVarHostIngress = presenceVarHostIngress;
@@ -56,21 +59,21 @@ namespace NakamaSync
 
             try
             {
-                var bools = PresenceVarIngressContext.FromBoolValues(envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
+                var bools = PresenceVarIngressContext.FromBoolValues(_userId, envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
                 HandleSyncEnvelope(source, bools, isHost);
 
-                var floats = PresenceVarIngressContext.FromFloatValues(envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
+                var floats = PresenceVarIngressContext.FromFloatValues(_userId, envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
                 HandleSyncEnvelope(source, floats, isHost);
 
-                var ints = PresenceVarIngressContext.FromIntValues(envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
+                var ints = PresenceVarIngressContext.FromIntValues(_userId, envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
                 HandleSyncEnvelope(source, ints, isHost);
 
-                var strings = PresenceVarIngressContext.FromStringValues(envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
+                var strings = PresenceVarIngressContext.FromStringValues(_userId, envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
                 HandleSyncEnvelope(source, strings, isHost);
             }
             catch (Exception e)
             {
-                ErrorHandler?.Invoke(e);
+                ErrorHandler?.Invoke(new Exception($"{_userId} could not process sync envelope: {e.Message}"));
             }
         }
 

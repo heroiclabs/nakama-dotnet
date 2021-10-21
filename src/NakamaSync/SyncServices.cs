@@ -98,7 +98,7 @@ namespace NakamaSync
             var sharedVarGuestIngress = new SharedVarIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
             _services.Add(sharedVarGuestIngress);
 
-            var presenceRoleIngress = new PresenceVarIngress(varRegistry, presenceVarRotators, presenceVarGuestIngress, presenceVarHostIngress);
+            var presenceRoleIngress = new PresenceVarIngress(session.UserId, varRegistry, presenceVarRotators, presenceVarGuestIngress, presenceVarHostIngress);
             _services.Add(presenceRoleIngress);
 
             var handshakeRequester = new HandshakeRequester(varRegistry, presenceTracker, syncSocket, sharedVarGuestIngress, presenceRoleIngress, session.UserId);
