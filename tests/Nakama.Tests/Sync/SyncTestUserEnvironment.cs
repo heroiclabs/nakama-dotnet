@@ -19,6 +19,9 @@ using System.Threading.Tasks;
 
 namespace Nakama.Tests
 {
+    /// <summary>
+    // A test environment representing a single user's view of a sync match.
+    /// </summary>
     public class SyncTestUserEnvironment
     {
         public IUserPresence Self => _match.Self;

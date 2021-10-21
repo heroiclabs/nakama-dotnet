@@ -82,6 +82,7 @@ namespace Nakama.Tests.Socket
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0,
+                null,
                 idGenerator);
 
 

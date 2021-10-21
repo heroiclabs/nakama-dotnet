@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using NakamaSync;
 
 namespace Nakama.Tests
 {
-    public delegate string VarIdGenerator(string userId, string varName, int varIndex);
-
     public class SyncTestSharedVars
     {
         public List<SharedVar<bool>> SharedBools { get; }
@@ -53,11 +52,6 @@ namespace Nakama.Tests
                 registry.Register(keyGenerator(userId, nameof(sharedString), i), sharedString);
                 SharedStrings.Add(sharedString);
             }
-        }
-
-        public static string DefaultVarIdGenerator(string userId, string varName, int varIndex)
-        {
-            return varName + varIndex.ToString();
         }
     }
 }

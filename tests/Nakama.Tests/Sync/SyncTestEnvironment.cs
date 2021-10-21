@@ -22,6 +22,13 @@ using NakamaSync;
 
 namespace Nakama.Tests
 {
+
+    public delegate string UserIdGenerator(int userIndex);
+    public delegate string VarIdGenerator(string userId, string varName, int varIndex);
+
+    /// <summary>
+    // A test environment within which multiple users sync their vars with one another.
+    /// </summary>
     public class SyncTestEnvironment
     {
         private const int _RAND_GUEST_SEED = 1;
@@ -36,14 +43,17 @@ namespace Nakama.Tests
             int numClients,
             int numSharedVars,
             int creatorIndex,
-            VarIdGenerator idGenerator = null)
+            UserIdGenerator userIdGenerator = null,
+            VarIdGenerator varIdGenerator = null)
         {
             CreatorIndex = creatorIndex;
+            userIdGenerator = userIdGenerator ?? DefaultUserIdGenerator;
+            varIdGenerator = varIdGenerator ?? DefaultVarIdGenerator;
 
             for (int i = 0; i < numClients; i++)
             {
-                idGenerator = idGenerator ?? SyncTestSharedVars.DefaultVarIdGenerator;
-                var env = new SyncTestUserEnvironment($"{Guid.NewGuid()}", opcodes, idGenerator, numSharedVars);
+                string userId = userIdGenerator(i);
+                var env = new SyncTestUserEnvironment(userId, opcodes, varIdGenerator, numSharedVars);
                 _syncTestUserEnvironments.Add(env);
             }
         }
@@ -54,17 +64,17 @@ namespace Nakama.Tests
             int numPresenceVarCollections,
             int numPresenceVarsPerCollection,
             int creatorIndex,
-            string userId = null,
+            UserIdGenerator userIdGenerator = null,
             VarIdGenerator varIdGenerator = null)
         {
             CreatorIndex = creatorIndex;
-
-            userId = userId ?? $"{Guid.NewGuid()}";
+            userIdGenerator = userIdGenerator ?? DefaultUserIdGenerator;
+            varIdGenerator = varIdGenerator ?? DefaultVarIdGenerator;
 
             for (int i = 0; i < numClients; i++)
             {
-                varIdGenerator = varIdGenerator ?? SyncTestSharedVars.DefaultVarIdGenerator;
-                var env = new SyncTestUserEnvironment(userId, opcodes, null, numPresenceVarCollections, numPresenceVarsPerCollection);
+                string userId = userIdGenerator(i);
+                var env = new SyncTestUserEnvironment(userId, opcodes, varIdGenerator, numPresenceVarCollections, numPresenceVarsPerCollection);
                 _syncTestUserEnvironments.Add(env);
             }
         }
@@ -167,6 +177,16 @@ namespace Nakama.Tests
         private SyncErrorHandler DefaultErrorHandler()
         {
             return e => new StdoutLogger().ErrorFormat(e.Message);
+        }
+
+        private static string DefaultVarIdGenerator(string userId, string varName, int varIndex)
+        {
+            return varName + varIndex.ToString();
+        }
+
+        private static string DefaultUserIdGenerator(int userIndex)
+        {
+            return Guid.NewGuid().ToString();
         }
     }
 }
