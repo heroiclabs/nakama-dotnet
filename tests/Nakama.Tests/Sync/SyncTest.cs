@@ -57,7 +57,6 @@ namespace Nakama.Tests.Socket
             testEnv.Dispose();
         }
 
-        //todo unskip test
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task BadHandshakeShouldFail()
         {

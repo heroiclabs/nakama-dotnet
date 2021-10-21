@@ -42,7 +42,7 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
-            Logger?.DebugFormat("Presence tracker received match.");
+            Logger?.DebugFormat($"Presence tracker for {_userId} received match.");
             HandlePresences(match.Presences, new IUserPresence[]{});
         }
 
@@ -60,7 +60,7 @@ namespace NakamaSync
         {
             if (!_presences.ContainsKey(userId))
             {
-                ErrorHandler?.Invoke(new KeyNotFoundException($"User {_userId} could not find presence with id {userId}."));
+                ErrorHandler?.Invoke(new KeyNotFoundException($"User{_userId} could not find presence with id {userId}."));
             }
 
             return _presences[userId];
@@ -152,7 +152,7 @@ namespace NakamaSync
                 }
                 else
                 {
-                    Logger?.DebugFormat($"User {_userId} is adding joining presence {joiner}");
+                    Logger?.DebugFormat($"User {_userId} is adding joining presence {joiner.UserId}");
                     addedPresences.Add(joiner);
                     _presences.Add(joiner.UserId, joiner);
                     Logger?.DebugFormat($"Num presences after add: {_presences.Count}");

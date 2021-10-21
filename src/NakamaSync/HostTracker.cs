@@ -68,7 +68,7 @@ namespace NakamaSync
             {
                 // get the next presence in the alphanumeric list
                 IUserPresence oldHost = _presenceTracker.GetPresence(1);
-                Logger?.InfoFormat($"Host changed from {oldHost} to {host}");
+                Logger?.DebugFormat($"Host changed from {oldHost} to {host}");
                 OnHostChanged?.Invoke(new HostChangedEvent(oldHost, host));
             }
             else

@@ -70,7 +70,7 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
-            Logger?.DebugFormat("Presence var rotators received match.");
+            Logger?.DebugFormat($"Presence var rotators for {_presenceTracker.UserId} received match.");
             ReceiveMatch(match, _boolRotators);
             ReceiveMatch(match, _floatRotators);
             ReceiveMatch(match, _intRotators);

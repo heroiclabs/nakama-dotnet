@@ -72,7 +72,7 @@ namespace NakamaSync
 
         private void HandlePresenceAdded(IUserPresence presence)
         {
-            Logger?.DebugFormat($"Presence var rotator notified of added presence: {presence}");
+            Logger?.DebugFormat($"Presence var rotator for {_presenceTracker.UserId} notified of added presence: {presence.UserId}");
 
             if (_unassignedPresenceVars.Count == 0)
             {
