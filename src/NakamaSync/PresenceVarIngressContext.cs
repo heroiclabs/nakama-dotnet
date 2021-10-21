@@ -81,7 +81,7 @@ namespace NakamaSync
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Presence var rotator did not recognize value with user id: {value.Key.UserId}");
+                    throw new InvalidOperationException($"Presence var rotator for did not recognize value belonging to user id: {value.Key.UserId}");
                 }
 
             }

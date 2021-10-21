@@ -49,10 +49,9 @@ namespace NakamaSync
                 Logger?.DebugFormat($"Rotator is adding unassigned presence var: {presenceVar}");
                 _unassignedPresenceVars.Add(presenceVar);
             }
-            else if (_assignedPresenceVars.ContainsKey(presenceVar.Presence.UserId))
+            else
             {
                 Logger?.DebugFormat($"Rotator is adding assigned presence var: {presenceVar}");
-                // todo not really sure what situation this could occur in but I suppose it's okay to support it.
                 _assignedPresenceVars.Add(presenceVar.Presence.UserId, presenceVar);
             }
         }
@@ -81,9 +80,10 @@ namespace NakamaSync
             // normal for server to send duplicate presence additions in very specific situations.
             else if (!_assignedPresenceVars.ContainsKey(presence.UserId))
             {
-                Logger?.DebugFormat($"Presence var rotator for assigning presence: {presence.UserId}");
+                Logger?.DebugFormat($"Presence var rotator for {_self.UserId} is moving var from unassigned to assigned for presence: {presence.UserId} ");
                 var varToAssign = _unassignedPresenceVars.First();
                 varToAssign.SetPresence(presence);
+                _unassignedPresenceVars.Remove(varToAssign);
                 _assignedPresenceVars.Add(presence.UserId, varToAssign);
             }
         }

@@ -52,7 +52,7 @@ namespace NakamaSync
 
         public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
-            Logger?.DebugFormat($"PresenceVarIngress received sync envelope.");
+            Logger?.DebugFormat($"PresenceVarIngress received sync envelope from source: {source.UserId}");
 
             try
             {
