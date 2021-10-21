@@ -48,7 +48,7 @@ namespace Nakama
 
         /// <inheritdoc cref="IHttpAdapter"/>
         public async Task<string> SendAsync(string method, Uri uri, IDictionary<string, string> headers, byte[] body,
-            int timeout)
+            int timeout, CancellationToken? userCancelToken)
         {
             var request = new HttpRequestMessage
             {
@@ -70,12 +70,20 @@ namespace Nakama
                 request.Content = new ByteArrayContent(body);
             }
 
-            var timeoutToken = new CancellationTokenSource();
-            timeoutToken.CancelAfter(TimeSpan.FromSeconds(timeout));
+            var timeoutTokenSource = new CancellationTokenSource();
+            CancellationToken timeoutToken = timeoutTokenSource.Token;
+            timeoutTokenSource.CancelAfter(TimeSpan.FromSeconds(timeout));
+
+            CancellationTokenSource linkedSource = null;
+
+            if (userCancelToken.HasValue)
+            {
+                linkedSource = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken, userCancelToken.Value);
+            }
 
             Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri, body);
 
-            var response = await _httpClient.SendAsync(request, timeoutToken.Token);
+            var response = await _httpClient.SendAsync(request, linkedSource == null ? timeoutToken : linkedSource.Token);
             var contents = await response.Content.ReadAsStringAsync();
             response.Content?.Dispose();
 

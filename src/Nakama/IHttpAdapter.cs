@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -38,7 +39,8 @@ namespace Nakama
         /// <param name="headers">Request headers to set.</param>
         /// <param name="body">Request content body to set.</param>
         /// <param name="timeoutSec">Request timeout.</param>
+        /// <param name="userCancelToken">A user-generated token that can be used to cancel the request.</param>
         /// <returns>A task which resolves to the contents of the response.</returns>
-        Task<string> SendAsync(string method, Uri uri, IDictionary<string, string> headers, byte[] body, int timeoutSec = 3);
+        Task<string> SendAsync(string method, Uri uri, IDictionary<string, string> headers, byte[] body, int timeoutSec = 3, CancellationToken? userCancelToken = null);
     }
 }

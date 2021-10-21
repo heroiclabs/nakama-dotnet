@@ -12,6 +12,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 - If you have implemented a custom `ILogger` for Nakama, you must now implement the required `LogLevel` field of the `ILogger` interface.
 
+## [3.2.0] - 2021-10-11
+### Added
+- Added additional group listing filters.
+- Added ability to overwrite leaderboard/tournament ranking operators from the client.
+
+### Fixed
+- Fixed url-safe encoding of query params that were passed to the client as arrays of strings.
+
+## [3.1.1] - 2021-08-19
+### Changed
+- Removed `autoRefreshSession` from overloaded `Client` constructors. This can still be customized with the base `Client`
+constructor. This is a workaround for an internal compiler error in Unity's WebGL toolchain.
+
+## [3.1.0] - 2021-08-11
+### Added
+- Added ability for user to retry requests if they fail due to a transient network error.
+- Added ability for user to cancel requests that are in-flight.
+
 ## [3.0.0] - 2021-07-14
 ### Added
 - The language tag for the user can be configured with the socket on connect.
@@ -31,6 +49,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 - AddMatchmakerPartyAsync now returns an IPartyMatchmakerTicket.
 - Renamed PromotePartyMember to PromotePartyMemberAsync.
+>>>>>>> master
 
 ## [2.9.1] - 2021-05-19
 ### Added

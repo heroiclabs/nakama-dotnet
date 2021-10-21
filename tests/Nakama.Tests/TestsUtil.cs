@@ -1,4 +1,4 @@
-// Copyright 2018 The Nakama Authors
+// Copyright 2021 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,10 +21,19 @@ namespace Nakama.Tests
     {
         public const int TIMEOUT_MILLISECONDS = 5000;
         public const int MATCHMAKER_TIMEOUT_MILLISECONDS = 25000;
+        public const string DefaultSettingsPath = "settings.json";
 
-        private const string SettingsPath = "settings.json";
+        public static IClient FromSettingsFile()
+        {
+            return FromSettingsFile(DefaultSettingsPath);
+        }
 
-        public static IClient FromSettingsFile(string path = SettingsPath)
+        public static IClient FromSettingsFile(string path)
+        {
+            return FromSettingsFile(path, HttpRequestAdapter.WithGzip());
+        }
+
+        public static IClient FromSettingsFile(string path, IHttpAdapter adapter)
         {
             var configuration = LoadConfiguration(path);
             return FromConfiguration(configuration);
@@ -34,7 +43,6 @@ namespace Nakama.Tests
         {
             var client = new Client(configuration.Scheme, configuration.Host, configuration.Port, configuration.ServerKey);
 
-            if (configuration.StdOut)
             {
                 client.Logger = new StdoutLogger();
                 client.Logger.LogLevel = configuration.LogLevel;
@@ -43,7 +51,7 @@ namespace Nakama.Tests
             return client;
         }
 
-        public static TestConfiguration LoadConfiguration(string path = SettingsPath)
+        public static TestConfiguration LoadConfiguration(string path = DefaultSettingsPath)
         {
             var settings = new ConfigurationBuilder().AddJsonFile(path).Build();
 

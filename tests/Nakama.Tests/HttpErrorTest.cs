@@ -31,7 +31,7 @@ namespace Nakama.Tests.Api
 
         public HttpErrorTest()
         {
-            _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
+            _client = TestsUtil.FromSettingsFile();
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]

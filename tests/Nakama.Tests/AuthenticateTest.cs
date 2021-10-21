@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -29,7 +28,7 @@ namespace Nakama.Tests.Api
 
         public AuthenticateTest()
         {
-            _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
+            _client = TestsUtil.FromSettingsFile();
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]

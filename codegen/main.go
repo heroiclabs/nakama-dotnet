@@ -38,6 +38,7 @@ namespace Nakama
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using TinyJson;
 
@@ -321,7 +322,8 @@ namespace Nakama
             {{ $parameter.Type }} {{ $parameter.Name }}
         {{- end }}
         {{- $isPreviousParam = true}}
-        {{- end }})
+        {{- end }},
+            CancellationToken? cancellationToken)
         {
             {{- range $parameter := $operation.Parameters }}
             {{- if $parameter.Required }}
@@ -361,7 +363,11 @@ namespace Nakama
                 {{- else if eq $parameter.Type "array" }}
             foreach (var elem in {{ $parameter.Name | snakeToCamel }} ?? new {{ $parameter.Items.Type }}[0])
             {
+                {{- if eq $parameter.Items.Type "string" }}
+                queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", Uri.EscapeDataString(elem), "&");
+                    {{- else }}
                 queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", elem, "&");
+                    {{- end }}
             }
                 {{- else }}
             {{ $parameter }} // ERROR
@@ -409,10 +415,10 @@ namespace Nakama
             {{- end }}
 
             {{- if $operation.Responses.Ok.Schema.Ref }}
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>();
             {{- else }}
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             {{- end}}
         }
         {{- end }}

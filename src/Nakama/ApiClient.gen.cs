@@ -5,6 +5,7 @@ namespace Nakama
     using System.Collections.Generic;
     using System.Runtime.Serialization;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using TinyJson;
 
@@ -167,6 +168,11 @@ namespace Nakama
         string Metadata { get; }
 
         /// <summary>
+        /// Operator override.
+        /// </summary>
+        ApiOperator Operator { get; }
+
+        /// <summary>
         /// The score value to submit.
         /// </summary>
         string Score { get; }
@@ -186,6 +192,11 @@ namespace Nakama
         public string Metadata { get; set; }
 
         /// <inheritdoc />
+        public ApiOperator Operator => _operator;
+        [DataMember(Name="operator"), Preserve]
+        public ApiOperator _operator { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="score"), Preserve]
         public string Score { get; set; }
 
@@ -197,6 +208,7 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "Metadata: ", Metadata, ", ");
+            output = string.Concat(output, "Operator: ", Operator, ", ");
             output = string.Concat(output, "Score: ", Score, ", ");
             output = string.Concat(output, "Subscore: ", Subscore, ", ");
             return output;
@@ -213,6 +225,11 @@ namespace Nakama
         /// A JSON object of additional properties (optional).
         /// </summary>
         string Metadata { get; }
+
+        /// <summary>
+        /// Operator override.
+        /// </summary>
+        ApiOperator Operator { get; }
 
         /// <summary>
         /// The score value to submit.
@@ -234,6 +251,11 @@ namespace Nakama
         public string Metadata { get; set; }
 
         /// <inheritdoc />
+        public ApiOperator Operator => _operator;
+        [DataMember(Name="operator"), Preserve]
+        public ApiOperator _operator { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="score"), Preserve]
         public string Score { get; set; }
 
@@ -245,6 +267,7 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "Metadata: ", Metadata, ", ");
+            output = string.Concat(output, "Operator: ", Operator, ", ");
             output = string.Concat(output, "Score: ", Score, ", ");
             output = string.Concat(output, "Subscore: ", Subscore, ", ");
             return output;
@@ -2009,6 +2032,33 @@ namespace Nakama
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public enum ApiOperator
+    {
+        /// <summary>
+        /// Operator that can be used to override the one set in the leaderboard.
+        /// </summary>
+        NO_OVERRIDE = 0,
+        /// <summary>
+        /// 
+        /// </summary>
+        BEST = 1,
+        /// <summary>
+        ///  - NO_OVERRIDE: Do not override the leaderboard operator.
+        /// </summary>
+        SET = 2,
+        /// <summary>
+        ///  - BEST: Override the leaderboard operator with BEST.
+        /// </summary>
+        INCREMENT = 3,
+        /// <summary>
+        ///  - SET: Override the leaderboard operator with SET.
+        /// </summary>
+        DECREMENT = 4,
+    }
+
+    /// <summary>
     /// Storage objects to get.
     /// </summary>
     public interface IApiReadStorageObjectId
@@ -2594,12 +2644,22 @@ namespace Nakama
         int NextReset { get; }
 
         /// <summary>
+        /// Operator.
+        /// </summary>
+        ApiOperator Operator { get; }
+
+        /// <summary>
+        /// The UNIX time when the tournament was last reset. A computed value.
+        /// </summary>
+        int PrevReset { get; }
+
+        /// <summary>
         /// The current number of players in the tournament.
         /// </summary>
         int Size { get; }
 
         /// <summary>
-        /// ASC or DESC sort mode of scores in the tournament.
+        /// ASC (0) or DESC (1) sort mode of scores in the tournament.
         /// </summary>
         int SortOrder { get; }
 
@@ -2672,6 +2732,15 @@ namespace Nakama
         public int NextReset { get; set; }
 
         /// <inheritdoc />
+        public ApiOperator Operator => _operator;
+        [DataMember(Name="operator"), Preserve]
+        public ApiOperator _operator { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_reset"), Preserve]
+        public int PrevReset { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="size"), Preserve]
         public int Size { get; set; }
 
@@ -2706,6 +2775,8 @@ namespace Nakama
             output = string.Concat(output, "MaxSize: ", MaxSize, ", ");
             output = string.Concat(output, "Metadata: ", Metadata, ", ");
             output = string.Concat(output, "NextReset: ", NextReset, ", ");
+            output = string.Concat(output, "Operator: ", Operator, ", ");
+            output = string.Concat(output, "PrevReset: ", PrevReset, ", ");
             output = string.Concat(output, "Size: ", Size, ", ");
             output = string.Concat(output, "SortOrder: ", SortOrder, ", ");
             output = string.Concat(output, "StartActive: ", StartActive, ", ");
@@ -3674,7 +3745,8 @@ namespace Nakama
         /// A healthcheck which load balancers can use to check the service.
         /// </summary>
         public async Task HealthcheckAsync(
-            string bearerToken)
+            string bearerToken,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/healthcheck";
@@ -3693,14 +3765,15 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
         /// Fetch the current user's account.
         /// </summary>
         public async Task<IApiAccount> GetAccountAsync(
-            string bearerToken)
+            string bearerToken,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/account";
@@ -3719,7 +3792,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiAccount>();
         }
 
@@ -3728,7 +3801,8 @@ namespace Nakama
         /// </summary>
         public async Task UpdateAccountAsync(
             string bearerToken,
-            ApiUpdateAccountRequest body)
+            ApiUpdateAccountRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3753,7 +3827,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -3764,7 +3838,8 @@ namespace Nakama
             string basicAuthPassword,
             ApiAccountApple body,
             bool? create,
-            string username)
+            string username,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3796,7 +3871,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -3808,7 +3883,8 @@ namespace Nakama
             string basicAuthPassword,
             ApiAccountCustom body,
             bool? create,
-            string username)
+            string username,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3840,7 +3916,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -3852,7 +3928,8 @@ namespace Nakama
             string basicAuthPassword,
             ApiAccountDevice body,
             bool? create,
-            string username)
+            string username,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3884,7 +3961,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -3896,7 +3973,8 @@ namespace Nakama
             string basicAuthPassword,
             ApiAccountEmail body,
             bool? create,
-            string username)
+            string username,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3928,7 +4006,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -3941,7 +4019,8 @@ namespace Nakama
             ApiAccountFacebook body,
             bool? create,
             string username,
-            bool? sync)
+            bool? sync,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -3976,7 +4055,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -3988,7 +4067,8 @@ namespace Nakama
             string basicAuthPassword,
             ApiAccountFacebookInstantGame body,
             bool? create,
-            string username)
+            string username,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4020,7 +4100,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4032,7 +4112,8 @@ namespace Nakama
             string basicAuthPassword,
             ApiAccountGameCenter body,
             bool? create,
-            string username)
+            string username,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4064,7 +4145,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4076,7 +4157,8 @@ namespace Nakama
             string basicAuthPassword,
             ApiAccountGoogle body,
             bool? create,
-            string username)
+            string username,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4108,7 +4190,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4121,7 +4203,8 @@ namespace Nakama
             ApiAccountSteam body,
             bool? create,
             string username,
-            bool? sync)
+            bool? sync,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4156,7 +4239,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4165,7 +4248,8 @@ namespace Nakama
         /// </summary>
         public async Task LinkAppleAsync(
             string bearerToken,
-            ApiAccountApple body)
+            ApiAccountApple body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4190,7 +4274,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4198,7 +4282,8 @@ namespace Nakama
         /// </summary>
         public async Task LinkCustomAsync(
             string bearerToken,
-            ApiAccountCustom body)
+            ApiAccountCustom body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4223,7 +4308,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4231,7 +4316,8 @@ namespace Nakama
         /// </summary>
         public async Task LinkDeviceAsync(
             string bearerToken,
-            ApiAccountDevice body)
+            ApiAccountDevice body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4256,7 +4342,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4264,7 +4350,8 @@ namespace Nakama
         /// </summary>
         public async Task LinkEmailAsync(
             string bearerToken,
-            ApiAccountEmail body)
+            ApiAccountEmail body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4289,7 +4376,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4298,7 +4385,8 @@ namespace Nakama
         public async Task LinkFacebookAsync(
             string bearerToken,
             ApiAccountFacebook body,
-            bool? sync)
+            bool? sync,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4326,7 +4414,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4334,7 +4422,8 @@ namespace Nakama
         /// </summary>
         public async Task LinkFacebookInstantGameAsync(
             string bearerToken,
-            ApiAccountFacebookInstantGame body)
+            ApiAccountFacebookInstantGame body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4359,7 +4448,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4367,7 +4456,8 @@ namespace Nakama
         /// </summary>
         public async Task LinkGameCenterAsync(
             string bearerToken,
-            ApiAccountGameCenter body)
+            ApiAccountGameCenter body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4392,7 +4482,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4400,7 +4490,8 @@ namespace Nakama
         /// </summary>
         public async Task LinkGoogleAsync(
             string bearerToken,
-            ApiAccountGoogle body)
+            ApiAccountGoogle body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4425,7 +4516,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4433,7 +4524,8 @@ namespace Nakama
         /// </summary>
         public async Task LinkSteamAsync(
             string bearerToken,
-            ApiLinkSteamRequest body)
+            ApiLinkSteamRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4458,7 +4550,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4467,7 +4559,8 @@ namespace Nakama
         public async Task<IApiSession> SessionRefreshAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiSessionRefreshRequest body)
+            ApiSessionRefreshRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4493,7 +4586,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4502,7 +4595,8 @@ namespace Nakama
         /// </summary>
         public async Task UnlinkAppleAsync(
             string bearerToken,
-            ApiAccountApple body)
+            ApiAccountApple body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4527,7 +4621,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4535,7 +4629,8 @@ namespace Nakama
         /// </summary>
         public async Task UnlinkCustomAsync(
             string bearerToken,
-            ApiAccountCustom body)
+            ApiAccountCustom body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4560,7 +4655,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4568,7 +4663,8 @@ namespace Nakama
         /// </summary>
         public async Task UnlinkDeviceAsync(
             string bearerToken,
-            ApiAccountDevice body)
+            ApiAccountDevice body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4593,7 +4689,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4601,7 +4697,8 @@ namespace Nakama
         /// </summary>
         public async Task UnlinkEmailAsync(
             string bearerToken,
-            ApiAccountEmail body)
+            ApiAccountEmail body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4626,7 +4723,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4634,7 +4731,8 @@ namespace Nakama
         /// </summary>
         public async Task UnlinkFacebookAsync(
             string bearerToken,
-            ApiAccountFacebook body)
+            ApiAccountFacebook body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4659,7 +4757,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4667,7 +4765,8 @@ namespace Nakama
         /// </summary>
         public async Task UnlinkFacebookInstantGameAsync(
             string bearerToken,
-            ApiAccountFacebookInstantGame body)
+            ApiAccountFacebookInstantGame body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4692,7 +4791,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4700,7 +4799,8 @@ namespace Nakama
         /// </summary>
         public async Task UnlinkGameCenterAsync(
             string bearerToken,
-            ApiAccountGameCenter body)
+            ApiAccountGameCenter body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4725,7 +4825,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4733,7 +4833,8 @@ namespace Nakama
         /// </summary>
         public async Task UnlinkGoogleAsync(
             string bearerToken,
-            ApiAccountGoogle body)
+            ApiAccountGoogle body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4758,7 +4859,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4766,7 +4867,8 @@ namespace Nakama
         /// </summary>
         public async Task UnlinkSteamAsync(
             string bearerToken,
-            ApiAccountSteam body)
+            ApiAccountSteam body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4791,7 +4893,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4802,7 +4904,8 @@ namespace Nakama
             string channelId,
             int? limit,
             bool? forward,
-            string cursor)
+            string cursor,
+            CancellationToken? cancellationToken)
         {
             if (channelId == null)
             {
@@ -4835,7 +4938,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiChannelMessageList>();
         }
 
@@ -4844,7 +4947,8 @@ namespace Nakama
         /// </summary>
         public async Task EventAsync(
             string bearerToken,
-            ApiEvent body)
+            ApiEvent body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -4869,7 +4973,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4878,7 +4982,8 @@ namespace Nakama
         public async Task DeleteFriendsAsync(
             string bearerToken,
             IEnumerable<string> ids,
-            IEnumerable<string> usernames)
+            IEnumerable<string> usernames,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/friend";
@@ -4886,11 +4991,11 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -4905,7 +5010,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4915,7 +5020,8 @@ namespace Nakama
             string bearerToken,
             int? limit,
             int? state,
-            string cursor)
+            string cursor,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/friend";
@@ -4943,7 +5049,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiFriendList>();
         }
 
@@ -4953,7 +5059,8 @@ namespace Nakama
         public async Task AddFriendsAsync(
             string bearerToken,
             IEnumerable<string> ids,
-            IEnumerable<string> usernames)
+            IEnumerable<string> usernames,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/friend";
@@ -4961,11 +5068,11 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -4980,7 +5087,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4989,7 +5096,8 @@ namespace Nakama
         public async Task BlockFriendsAsync(
             string bearerToken,
             IEnumerable<string> ids,
-            IEnumerable<string> usernames)
+            IEnumerable<string> usernames,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/friend/block";
@@ -4997,11 +5105,11 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5016,7 +5124,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5025,7 +5133,8 @@ namespace Nakama
         public async Task ImportFacebookFriendsAsync(
             string bearerToken,
             ApiAccountFacebook body,
-            bool? reset)
+            bool? reset,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5053,7 +5162,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5062,7 +5171,8 @@ namespace Nakama
         public async Task ImportSteamFriendsAsync(
             string bearerToken,
             ApiAccountSteam body,
-            bool? reset)
+            bool? reset,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5090,7 +5200,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5100,7 +5210,11 @@ namespace Nakama
             string bearerToken,
             string name,
             string cursor,
-            int? limit)
+            int? limit,
+            string langTag,
+            int? members,
+            bool? open,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/group";
@@ -5115,6 +5229,15 @@ namespace Nakama
             if (limit != null) {
                 queryParams = string.Concat(queryParams, "limit=", limit, "&");
             }
+            if (langTag != null) {
+                queryParams = string.Concat(queryParams, "lang_tag=", Uri.EscapeDataString(langTag), "&");
+            }
+            if (members != null) {
+                queryParams = string.Concat(queryParams, "members=", members, "&");
+            }
+            if (open != null) {
+                queryParams = string.Concat(queryParams, "open=", open.ToString().ToLower(), "&");
+            }
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -5128,7 +5251,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiGroupList>();
         }
 
@@ -5137,7 +5260,8 @@ namespace Nakama
         /// </summary>
         public async Task<IApiGroup> CreateGroupAsync(
             string bearerToken,
-            ApiCreateGroupRequest body)
+            ApiCreateGroupRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5162,7 +5286,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiGroup>();
         }
 
@@ -5171,7 +5295,8 @@ namespace Nakama
         /// </summary>
         public async Task DeleteGroupAsync(
             string bearerToken,
-            string groupId)
+            string groupId,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5195,7 +5320,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5204,7 +5329,8 @@ namespace Nakama
         public async Task UpdateGroupAsync(
             string bearerToken,
             string groupId,
-            ApiUpdateGroupRequest body)
+            ApiUpdateGroupRequest body,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5234,7 +5360,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5243,7 +5369,8 @@ namespace Nakama
         public async Task AddGroupUsersAsync(
             string bearerToken,
             string groupId,
-            IEnumerable<string> userIds)
+            IEnumerable<string> userIds,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5256,7 +5383,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5271,7 +5398,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5280,7 +5407,8 @@ namespace Nakama
         public async Task BanGroupUsersAsync(
             string bearerToken,
             string groupId,
-            IEnumerable<string> userIds)
+            IEnumerable<string> userIds,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5293,7 +5421,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5308,7 +5436,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5317,7 +5445,8 @@ namespace Nakama
         public async Task DemoteGroupUsersAsync(
             string bearerToken,
             string groupId,
-            IEnumerable<string> userIds)
+            IEnumerable<string> userIds,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5334,7 +5463,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5349,7 +5478,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5357,7 +5486,8 @@ namespace Nakama
         /// </summary>
         public async Task JoinGroupAsync(
             string bearerToken,
-            string groupId)
+            string groupId,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5381,7 +5511,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5390,7 +5520,8 @@ namespace Nakama
         public async Task KickGroupUsersAsync(
             string bearerToken,
             string groupId,
-            IEnumerable<string> userIds)
+            IEnumerable<string> userIds,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5403,7 +5534,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5418,7 +5549,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5426,7 +5557,8 @@ namespace Nakama
         /// </summary>
         public async Task LeaveGroupAsync(
             string bearerToken,
-            string groupId)
+            string groupId,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5450,7 +5582,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5459,7 +5591,8 @@ namespace Nakama
         public async Task PromoteGroupUsersAsync(
             string bearerToken,
             string groupId,
-            IEnumerable<string> userIds)
+            IEnumerable<string> userIds,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5472,7 +5605,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in userIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "user_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5487,7 +5620,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5498,7 +5631,8 @@ namespace Nakama
             string groupId,
             int? limit,
             int? state,
-            string cursor)
+            string cursor,
+            CancellationToken? cancellationToken)
         {
             if (groupId == null)
             {
@@ -5531,7 +5665,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiGroupUserList>();
         }
 
@@ -5540,7 +5674,8 @@ namespace Nakama
         /// </summary>
         public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(
             string bearerToken,
-            ApiValidatePurchaseAppleRequest body)
+            ApiValidatePurchaseAppleRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5565,7 +5700,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatePurchaseResponse>();
         }
 
@@ -5574,7 +5709,8 @@ namespace Nakama
         /// </summary>
         public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(
             string bearerToken,
-            ApiValidatePurchaseGoogleRequest body)
+            ApiValidatePurchaseGoogleRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5599,7 +5735,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatePurchaseResponse>();
         }
 
@@ -5608,7 +5744,8 @@ namespace Nakama
         /// </summary>
         public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(
             string bearerToken,
-            ApiValidatePurchaseHuaweiRequest body)
+            ApiValidatePurchaseHuaweiRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -5633,7 +5770,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatePurchaseResponse>();
         }
 
@@ -5642,7 +5779,8 @@ namespace Nakama
         /// </summary>
         public async Task DeleteLeaderboardRecordAsync(
             string bearerToken,
-            string leaderboardId)
+            string leaderboardId,
+            CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
             {
@@ -5666,7 +5804,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5678,7 +5816,8 @@ namespace Nakama
             IEnumerable<string> ownerIds,
             int? limit,
             string cursor,
-            string expiry)
+            string expiry,
+            CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
             {
@@ -5691,7 +5830,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "owner_ids=", Uri.EscapeDataString(elem), "&");
             }
             if (limit != null) {
                 queryParams = string.Concat(queryParams, "limit=", limit, "&");
@@ -5715,7 +5854,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecordList>();
         }
 
@@ -5725,7 +5864,8 @@ namespace Nakama
         public async Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(
             string bearerToken,
             string leaderboardId,
-            WriteLeaderboardRecordRequestLeaderboardRecordWrite body)
+            WriteLeaderboardRecordRequestLeaderboardRecordWrite body,
+            CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
             {
@@ -5755,7 +5895,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecord>();
         }
 
@@ -5767,7 +5907,8 @@ namespace Nakama
             string leaderboardId,
             string ownerId,
             int? limit,
-            string expiry)
+            string expiry,
+            CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
             {
@@ -5802,7 +5943,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecordList>();
         }
 
@@ -5816,7 +5957,8 @@ namespace Nakama
             string label,
             int? minSize,
             int? maxSize,
-            string query)
+            string query,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/match";
@@ -5853,7 +5995,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiMatchList>();
         }
 
@@ -5862,7 +6004,8 @@ namespace Nakama
         /// </summary>
         public async Task DeleteNotificationsAsync(
             string bearerToken,
-            IEnumerable<string> ids)
+            IEnumerable<string> ids,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/notification";
@@ -5870,7 +6013,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -5885,7 +6028,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5894,7 +6037,8 @@ namespace Nakama
         public async Task<IApiNotificationList> ListNotificationsAsync(
             string bearerToken,
             int? limit,
-            string cacheableCursor)
+            string cacheableCursor,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/notification";
@@ -5919,7 +6063,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiNotificationList>();
         }
 
@@ -5930,7 +6074,8 @@ namespace Nakama
             string bearerToken,
             string id,
             string payload,
-            string httpKey)
+            string httpKey,
+            CancellationToken? cancellationToken)
         {
             if (id == null)
             {
@@ -5963,7 +6108,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiRpc>();
         }
 
@@ -5974,7 +6119,8 @@ namespace Nakama
             string bearerToken,
             string id,
             string body,
-            string httpKey)
+            string httpKey,
+            CancellationToken? cancellationToken)
         {
             if (id == null)
             {
@@ -6010,7 +6156,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiRpc>();
         }
 
@@ -6019,7 +6165,8 @@ namespace Nakama
         /// </summary>
         public async Task SessionLogoutAsync(
             string bearerToken,
-            ApiSessionLogoutRequest body)
+            ApiSessionLogoutRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -6044,7 +6191,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6052,7 +6199,8 @@ namespace Nakama
         /// </summary>
         public async Task<IApiStorageObjects> ReadStorageObjectsAsync(
             string bearerToken,
-            ApiReadStorageObjectsRequest body)
+            ApiReadStorageObjectsRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -6077,7 +6225,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiStorageObjects>();
         }
 
@@ -6086,7 +6234,8 @@ namespace Nakama
         /// </summary>
         public async Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(
             string bearerToken,
-            ApiWriteStorageObjectsRequest body)
+            ApiWriteStorageObjectsRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -6111,7 +6260,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiStorageObjectAcks>();
         }
 
@@ -6120,7 +6269,8 @@ namespace Nakama
         /// </summary>
         public async Task DeleteStorageObjectsAsync(
             string bearerToken,
-            ApiDeleteStorageObjectsRequest body)
+            ApiDeleteStorageObjectsRequest body,
+            CancellationToken? cancellationToken)
         {
             if (body == null)
             {
@@ -6145,7 +6295,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6156,7 +6306,8 @@ namespace Nakama
             string collection,
             string userId,
             int? limit,
-            string cursor)
+            string cursor,
+            CancellationToken? cancellationToken)
         {
             if (collection == null)
             {
@@ -6189,7 +6340,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiStorageObjectList>();
         }
 
@@ -6201,7 +6352,8 @@ namespace Nakama
             string collection,
             string userId,
             int? limit,
-            string cursor)
+            string cursor,
+            CancellationToken? cancellationToken)
         {
             if (collection == null)
             {
@@ -6236,7 +6388,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiStorageObjectList>();
         }
 
@@ -6250,7 +6402,8 @@ namespace Nakama
             int? startTime,
             int? endTime,
             int? limit,
-            string cursor)
+            string cursor,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/tournament";
@@ -6287,7 +6440,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiTournamentList>();
         }
 
@@ -6300,7 +6453,8 @@ namespace Nakama
             IEnumerable<string> ownerIds,
             int? limit,
             string cursor,
-            string expiry)
+            string expiry,
+            CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
@@ -6313,7 +6467,7 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "owner_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "owner_ids=", Uri.EscapeDataString(elem), "&");
             }
             if (limit != null) {
                 queryParams = string.Concat(queryParams, "limit=", limit, "&");
@@ -6337,8 +6491,49 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiTournamentRecordList>();
+        }
+
+        /// <summary>
+        /// Write a record to a tournament.
+        /// </summary>
+        public async Task<IApiLeaderboardRecord> WriteTournamentRecord2Async(
+            string bearerToken,
+            string tournamentId,
+            WriteTournamentRecordRequestTournamentRecordWrite body,
+            CancellationToken? cancellationToken)
+        {
+            if (tournamentId == null)
+            {
+                throw new ArgumentException("'tournamentId' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/tournament/{tournamentId}";
+            urlpath = urlpath.Replace("{tournamentId}", Uri.EscapeDataString(tournamentId));
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiLeaderboardRecord>();
         }
 
         /// <summary>
@@ -6347,7 +6542,8 @@ namespace Nakama
         public async Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(
             string bearerToken,
             string tournamentId,
-            WriteTournamentRecordRequestTournamentRecordWrite body)
+            WriteTournamentRecordRequestTournamentRecordWrite body,
+            CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
@@ -6377,7 +6573,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecord>();
         }
 
@@ -6386,7 +6582,8 @@ namespace Nakama
         /// </summary>
         public async Task JoinTournamentAsync(
             string bearerToken,
-            string tournamentId)
+            string tournamentId,
+            CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
@@ -6410,7 +6607,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6421,7 +6618,8 @@ namespace Nakama
             string tournamentId,
             string ownerId,
             int? limit,
-            string expiry)
+            string expiry,
+            CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
@@ -6456,7 +6654,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiTournamentRecordList>();
         }
 
@@ -6467,7 +6665,8 @@ namespace Nakama
             string bearerToken,
             IEnumerable<string> ids,
             IEnumerable<string> usernames,
-            IEnumerable<string> facebookIds)
+            IEnumerable<string> facebookIds,
+            CancellationToken? cancellationToken)
         {
 
             var urlpath = "/v2/user";
@@ -6475,15 +6674,15 @@ namespace Nakama
             var queryParams = "";
             foreach (var elem in ids ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in usernames ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "usernames=", elem, "&");
+                queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
             foreach (var elem in facebookIds ?? new string[0])
             {
-                queryParams = string.Concat(queryParams, "facebook_ids=", elem, "&");
+                queryParams = string.Concat(queryParams, "facebook_ids=", Uri.EscapeDataString(elem), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -6498,7 +6697,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiUsers>();
         }
 
@@ -6510,7 +6709,8 @@ namespace Nakama
             string userId,
             int? limit,
             int? state,
-            string cursor)
+            string cursor,
+            CancellationToken? cancellationToken)
         {
             if (userId == null)
             {
@@ -6543,7 +6743,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiUserGroupList>();
         }
     }
