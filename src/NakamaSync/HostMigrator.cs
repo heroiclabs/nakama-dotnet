@@ -37,7 +37,7 @@ namespace NakamaSync
         {
             hostTracker.OnHostChanged += (evt) =>
             {
-                var self =  presenceTracker.GetSelf();
+                var self = presenceTracker.GetSelf();
                 if (evt.NewHost?.UserId == self.UserId)
                 {
                     // pick up where the old host left off in terms of validating values.

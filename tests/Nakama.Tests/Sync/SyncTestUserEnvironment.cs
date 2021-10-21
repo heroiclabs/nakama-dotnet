@@ -28,6 +28,7 @@ namespace Nakama.Tests
         public ISession Session => _session;
         public SyncTestSharedVars SharedVars => _sharedVars;
         public SyncTestPresenceVars PresenceVars => _presenceVars;
+        public SyncMatch Match => _match;
 
         private readonly string _userId;
         private readonly IClient _client;
@@ -39,7 +40,7 @@ namespace Nakama.Tests
         private readonly ILogger _logger;
         private readonly VarIdGenerator _varIdGenerator;
 
-        private IMatch _match;
+        private SyncMatch _match;
         private ISession _session;
         private ISocket _socket;
 

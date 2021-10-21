@@ -42,8 +42,10 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
+            HandlePresences(new IUserPresence[]{match.Self}, new IUserPresence[]{});
             Logger?.DebugFormat($"Presence tracker for {_userId} received match.");
             HandlePresences(match.Presences, new IUserPresence[]{});
+
         }
 
         public int GetPresenceCount()
@@ -61,6 +63,7 @@ namespace NakamaSync
             if (!_presences.ContainsKey(userId))
             {
                 ErrorHandler?.Invoke(new KeyNotFoundException($"User{_userId} could not find presence with id {userId}."));
+                return null;
             }
 
             return _presences[userId];

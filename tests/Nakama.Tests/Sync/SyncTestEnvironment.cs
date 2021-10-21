@@ -120,6 +120,16 @@ namespace Nakama.Tests
             Task.WaitAll(disposeTasks.ToArray());
         }
 
+        public List<SyncTestUserEnvironment> GetAllEnvs()
+        {
+            return new List<SyncTestUserEnvironment>(_syncTestUserEnvironments);
+        }
+
+        public SyncTestUserEnvironment GetUserEnv(IUserPresence clientPresence)
+        {
+            return _syncTestUserEnvironments.First(env => env.Self.UserId == clientPresence.UserId);
+        }
+
         public SyncTestUserEnvironment GetCreator()
         {
             return _syncTestUserEnvironments[CreatorIndex];
@@ -167,11 +177,6 @@ namespace Nakama.Tests
             }
 
             return guests;
-        }
-
-        public SyncTestUserEnvironment GetUserEnv(IUserPresence clientPresence)
-        {
-            return _syncTestUserEnvironments.First(env => env.Self.UserId == clientPresence.UserId);
         }
 
         private SyncErrorHandler DefaultErrorHandler()

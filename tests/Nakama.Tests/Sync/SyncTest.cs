@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NakamaSync;
@@ -154,6 +154,25 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        private void EnvsShouldBeSeparate()
+        {
+            var testEnv = new SyncTestEnvironment(
+                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0);
+
+            testEnv.StartViaMatchmaker();
+
+            List<SyncTestUserEnvironment> allEnvs = testEnv.GetAllEnvs();
+            var env1 = allEnvs[0];
+            var env2 = allEnvs[1];
+            Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
+            testEnv.Dispose();
+        }
+
+
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private void HostShouldBeChosen()
         {
             var testEnv = new SyncTestEnvironment(
@@ -163,11 +182,13 @@ namespace Nakama.Tests.Socket
                 creatorIndex: 0);
 
             testEnv.StartViaMatchmaker();
-            SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
-            creatorEnv.SharedBools[0].SetValue(true);
-            Assert.True(creatorEnv.SharedBools[0].GetValue());
+            var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
+            var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
+            Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
+            Assert.True(env1.Match.IsSelfHost() || env2.Match.IsSelfHost());
             testEnv.Dispose();
         }
+
 
         private SyncErrorHandler CreateDefaultErrorHandler()
         {
