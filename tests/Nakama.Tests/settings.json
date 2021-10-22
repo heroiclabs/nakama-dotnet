@@ -3,6 +3,6 @@
   "PORT": 443,
   "SCHEME": "https",
   "SERVER_KEY": "we4INqzP5e1E",
-  "STDOUT": true,
+  "STDOUT": false,
   "LOG_LEVEL": "DEBUG"
 }

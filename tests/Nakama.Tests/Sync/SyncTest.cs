@@ -110,7 +110,7 @@ namespace Nakama.Tests.Socket
 
             await Task.Delay(1000);
 
-            Assert.Equal(allEnvs[1].SharedVars.SharedInts[0].GetValue(), 5);
+            Assert.Equal(5, allEnvs[1].SharedVars.SharedInts[0].GetValue());
 
             testEnv.Dispose();
         }

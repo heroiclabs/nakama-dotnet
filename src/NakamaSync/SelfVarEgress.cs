@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using Nakama;
 
@@ -37,20 +38,8 @@ namespace NakamaSync
             _hostTracker = hostTracker;
         }
 
-        public void Subscribe(PresenceVarRegistry registry, HandshakeRequester requester)
-        {
-            requester.OnHandshakeSuccess += () =>
-            {
-                // now that we have initial store loaded,
-                // listen for user modifications to sync vars.
-                Subscribe(registry);
-            };
-        }
-
         public void Subscribe(PresenceVarRegistry registry)
         {
-            // if you're match creator just fast-track to immediate subscription, don't
-            // wait for handshake
             Subscribe(registry.PresenceBools, values => values.PresenceBools);
             Subscribe(registry.PresenceFloats, values => values.PresenceFloats);
             Subscribe(registry.PresenceInts,  values => values.PresenceInts);
@@ -61,7 +50,7 @@ namespace NakamaSync
         {
             foreach (var selfVarKvp in vars)
             {
-                var selfVarKey = new PresenceVarKey(selfVarKvp.Key, _presenceTracker.GetSelf().UserId);
+                var selfVarKey = new PresenceVarKey(selfVarKvp.Key, _presenceTracker.UserId);
                 var selfVar = selfVarKvp.Value.SelfVar;
                 Logger?.DebugFormat($"Subscribing to self variable.");
                 selfVarKvp.Value.SelfVar.OnValueChanged += (evt) => HandleLocalSelfVarChanged(selfVarKey, evt, accessor);

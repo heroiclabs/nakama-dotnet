@@ -180,20 +180,16 @@ namespace NakamaSync
                 var.Logger = logger;
             }
 
-            if (isMatchCreator)
-            {
-                _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry);
-                _selfVarEgress.Subscribe(_varRegistry.PresenceVarRegistry);
-            }
-            else
-            {
-                _handshakeRequester.Subscribe(_hostTracker);
-                _selfVarEgress.Subscribe(_varRegistry.PresenceVarRegistry, _handshakeRequester);
-            }
-
             _sharedVarIngress.Subscribe(_syncSocket, _hostTracker);
+            _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry);
+
+            // no self var ingress because only self can set a presence var
+            _selfVarEgress.Subscribe(_varRegistry.PresenceVarRegistry);
+
+            // no presence var egress because self cannot set a presence var
             _presenceVarIngress.Subscribe(_syncSocket, _hostTracker);
 
+            _handshakeRequester.Subscribe(_hostTracker);
             _handshakeResponder.Subscribe(_syncSocket);
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
 
