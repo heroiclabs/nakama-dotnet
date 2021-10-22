@@ -23,6 +23,8 @@ namespace NakamaSync
     // todo block registration after match has started.
     public class VarRegistry
     {
+        internal IEnumerable<IVar> RegisteredVars => new HashSet<IVar>(_registeredVars);
+
         internal SharedVarRegistry SharedVarRegistry => _sharedVarRegistry;
         internal PresenceVarRegistry PresenceVarRegistry => _presenceVarRegistry;
 

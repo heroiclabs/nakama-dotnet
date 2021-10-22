@@ -43,9 +43,10 @@ namespace NakamaSync
 
         internal void SetValue(IUserPresence source, T value, ValidationStatus validationStatus)
         {
+            Logger?.DebugFormat($"Setting shared value. Source: {source.UserId}, Value: {value}, NumHandlers {OnValueChanged?.GetInvocationList().Length}");
+
             T oldValue = _value;
             _value = value;
-
             ValidationStatus oldStatus = _validationStatus;
             _validationStatus = validationStatus;
 

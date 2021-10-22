@@ -14,9 +14,6 @@
 * limitations under the License.
 */
 
-using System.Threading.Tasks;
-using Nakama;
-
 // todo entire concurrency pass on all this
 // should var registry have a dictionary or should it have methods?
 // TODO what if someone changes the type collection that the key is in, will try to send to the incorrect type
@@ -65,7 +62,10 @@ using Nakama;
 // whole presencevarcollection?
 // todo make sure you can
 // does usemainthread need to be true? test with both
+
 using System;
+using System.Threading.Tasks;
+using Nakama;
 
 namespace NakamaSync
 {

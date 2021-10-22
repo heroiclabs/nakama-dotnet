@@ -37,16 +37,6 @@ namespace NakamaSync
             _hostTracker = hostTracker;
         }
 
-        public void Subscribe(SharedVarRegistry registry, HandshakeRequester requester)
-        {
-            requester.OnHandshakeSuccess += () =>
-            {
-                // now that we have initial store loaded,
-                // listen for user modifications to sync vars.
-                Subscribe(registry);
-            };
-        }
-
         public void Subscribe(SharedVarRegistry registry)
         {
             Subscribe(registry.SharedBools, values => values.SharedBools);
@@ -69,6 +59,7 @@ namespace NakamaSync
             if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
             {
                 // ingress should only send out changes initated by self.
+                Logger?.DebugFormat($"Egress for {_presenceTracker.UserId} is ignoring local shared var change.");
                 return;
             }
 

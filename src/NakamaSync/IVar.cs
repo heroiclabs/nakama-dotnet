@@ -25,6 +25,12 @@ namespace NakamaSync
             get;
             set;
         }
+
+        ILogger Logger
+        {
+            get;
+            set;
+        }
     }
 
 }

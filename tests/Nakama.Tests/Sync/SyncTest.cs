@@ -104,13 +104,13 @@ namespace Nakama.Tests.Socket
 
             testEnv.StartViaMatchmaker();
 
-            SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
-            creatorEnv.SharedBools[0].SetValue(true);
+            var allEnvs = testEnv.GetAllEnvs();
 
-            await Task.Delay(3000);
+            allEnvs[0].SharedVars.SharedInts[0].SetValue(5);
 
-            SyncTestSharedVars guestEnv = testEnv.GetTestEnvironment(testEnv.GetRandomNonCreatorPresence()).SharedVars;
-            Assert.True(guestEnv.SharedBools[0].GetValue());
+            await Task.Delay(1000);
+
+            Assert.Equal(allEnvs[1].SharedVars.SharedInts[0].GetValue(), 5);
 
             testEnv.Dispose();
         }
@@ -138,14 +138,10 @@ namespace Nakama.Tests.Socket
 
             string creatorId = creatorEnv.Self.UserId;
             string nonCreatorId = nonCreatorEnv.Self.UserId;
-            System.Console.WriteLine($"Creator id {creatorId}");
-            System.Console.WriteLine($"Non creator id {nonCreatorId}");
 
             var nonCreatorPresenceBools = nonCreatorEnv.PresenceVars.BoolPresenceVars["presenceBools_0"];
 
             var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
-                System.Console.WriteLine($"Var presence id: {var.Presence.UserId}");
-
                 return var.Presence.UserId == creatorId;
             });
 

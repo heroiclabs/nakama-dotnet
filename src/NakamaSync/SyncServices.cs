@@ -174,24 +174,26 @@ namespace NakamaSync
             _presenceTracker.Subscribe(_socket);
             _hostTracker.Subscribe(_socket);
             _migrator.Subscribe(_presenceTracker, _hostTracker);
+
+            foreach (IVar var in _varRegistry.RegisteredVars)
+            {
+                var.Logger = logger;
+            }
+
             if (isMatchCreator)
             {
                 _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry);
-                _sharedVarIngress.Subscribe(_syncSocket, _hostTracker);
-                _presenceVarIngress.Subscribe(_syncSocket, _hostTracker);
                 _selfVarEgress.Subscribe(_varRegistry.PresenceVarRegistry);
             }
             else
             {
-                // delay receiving and sending new values until initial store is synced
-                // todo just expose the anonymous lambdas outside here, no need to hide it in
-                // another subscribe call
                 _handshakeRequester.Subscribe(_hostTracker);
-                _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
                 _selfVarEgress.Subscribe(_varRegistry.PresenceVarRegistry, _handshakeRequester);
             }
 
-            _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry, _handshakeRequester);
+            _sharedVarIngress.Subscribe(_syncSocket, _hostTracker);
+            _presenceVarIngress.Subscribe(_syncSocket, _hostTracker);
+
             _handshakeResponder.Subscribe(_syncSocket);
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
 

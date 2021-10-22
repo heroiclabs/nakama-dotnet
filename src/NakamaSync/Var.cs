@@ -52,6 +52,18 @@ namespace NakamaSync
             set;
         }
 
+        internal ILogger Logger
+        {
+            get;
+            set;
+        }
+
+        ILogger IVar.Logger
+        {
+            get => Logger;
+            set => Logger = value;
+        }
+
         protected ValidationStatus _validationStatus;
         protected T _value;
         protected ValidationHandler<T> _validationHandler;
