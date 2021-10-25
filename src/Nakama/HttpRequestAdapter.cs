@@ -36,6 +36,9 @@ namespace Nakama
         /// <inheritdoc cref="IHttpAdapter.Logger"/>
         public ILogger Logger { get; set; }
 
+        //
+        public TransientExceptionDelegate TransientExceptionDelegate => IsTransientException;
+
         private readonly HttpClient _httpClient;
 
         public HttpRequestAdapter(HttpClient httpClient)
@@ -128,6 +131,11 @@ namespace Nakama
             var client =
                 new HttpClient(compression ? (HttpMessageHandler) new GZipHttpClientHandler(handler) : handler);
             return new HttpRequestAdapter(client);
+        }
+
+        private bool IsTransientException(Exception e)
+        {
+            return (e is ApiResponseException apiException && apiException.StatusCode >= 500) || e is HttpRequestException;
         }
     }
 }
