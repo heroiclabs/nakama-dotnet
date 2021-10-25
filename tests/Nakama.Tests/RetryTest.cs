@@ -286,5 +286,20 @@ namespace Nakama.Tests
                 throw e;
             }
         }
+
+        [Fact]
+        public async void RetryConfiguration_NonTransientError_Throws()
+        {
+            var adapterSchedule = new TransientAdapterResponseType[1] {
+                TransientAdapterResponseType.NonTransientError,
+            };
+
+            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
+            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
+
+            client.GlobalRetryConfiguration = new RetryConfiguration(baseDelay: 1, maxRetries: 3);
+
+            ApiResponseException e = await Assert.ThrowsAsync<ApiResponseException>(async () => await client.AuthenticateCustomAsync("test_id"));
+        }
     }
 }
