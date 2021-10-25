@@ -257,5 +257,34 @@ namespace Nakama.Tests
 
             await Assert.ThrowsAsync<ApiResponseException>(async () => await client.AuthenticateCustomAsync("test_id"));
         }
+
+        [Fact]
+        public async void RetryConfiguration_NoRetries_ThrowsBaseApiResponseException()
+        {
+            var adapterSchedule = new TransientAdapterResponseType[3] {
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+            };
+
+            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
+            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
+
+            client.GlobalRetryConfiguration = new RetryConfiguration(baseDelay: 1, maxRetries: 0);
+
+            try
+            {
+                await client.AuthenticateCustomAsync("test_id");
+                throw new Exception("Test failed due to not throwing an exception");
+            }
+            catch (TaskCanceledException e)
+            {
+                Assert.True(e.GetBaseException() != null && e.GetBaseException() is ApiResponseException);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }
