@@ -107,9 +107,8 @@ namespace Nakama.Tests
                 lastNumRetry = numRetry;
             };
 
-            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
+            var config = new RetryConfiguration(baseDelayMs: 500, maxRetries: 3, retryListener);
             client.GlobalRetryConfiguration = config;
-
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
