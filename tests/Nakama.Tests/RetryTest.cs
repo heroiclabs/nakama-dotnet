@@ -240,5 +240,22 @@ namespace Nakama.Tests
             // actual will be slightly higher due to cpu elapsed time
             Assert.True(expectedElapsedTime < actualElapsedTime);
         }
+
+        [Fact]
+        public async void RetryConfiguration_NullConfiguration_DoesNotThrowNullRef()
+        {
+            var adapterSchedule = new TransientAdapterResponseType[3] {
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+            };
+
+            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
+            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
+
+            client.GlobalRetryConfiguration = null;
+
+            await Assert.ThrowsAsync<ApiResponseException>(async () => await client.AuthenticateCustomAsync("test_id"));
+        }
     }
 }

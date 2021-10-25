@@ -40,7 +40,7 @@ namespace Nakama
             }
             catch (Exception e)
             {
-                if (IsTransientException(e))
+                if (history.Configuration != null && IsTransientException(e))
                 {
                     await Backoff(history, e);
                     return await InvokeWithRetry<T>(request, history);
@@ -60,7 +60,7 @@ namespace Nakama
             }
             catch (Exception e)
             {
-                if (IsTransientException(e))
+                if (history.Configuration != null && IsTransientException(e))
                 {
                     await Backoff(history, e);
                     await InvokeWithRetry(request, history);
