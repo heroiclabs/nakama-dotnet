@@ -197,8 +197,8 @@ namespace Nakama.Tests
             Assert.NotNull(session);
 
             Assert.Equal(10, retries[0].ExponentialBackoff);
-            Assert.Equal(100, retries[1].ExponentialBackoff);
-            Assert.Equal(1000, retries[2].ExponentialBackoff);
+            Assert.Equal(20, retries[1].ExponentialBackoff);
+            Assert.Equal(40, retries[2].ExponentialBackoff);
         }
 
         [Fact]

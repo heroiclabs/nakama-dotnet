@@ -35,7 +35,7 @@ namespace Nakama.Tests
     {
         public ILogger Logger { get; set; }
 
-        public TransientExceptionDelegate TransientExceptionDelegate => throw new NotImplementedException();
+        public TransientExceptionDelegate TransientExceptionDelegate => IsTransientException;
 
         private int _sendAttempts = 0;
         private readonly TransientAdapterResponseType[] _sendSchedule;
