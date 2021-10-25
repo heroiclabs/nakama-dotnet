@@ -83,7 +83,7 @@ namespace Nakama
 
         private Retry CreateNewRetry(RetryHistory history)
         {
-            int expoBackoff = System.Convert.ToInt32(Math.Pow(history.Configuration.BaseDelay, history.Retries.Count + 1));
+            int expoBackoff = System.Convert.ToInt32(Math.Pow(history.Configuration.BaseDelayMs, history.Retries.Count + 1));
             int jitteredBackoff = history.Configuration.Jitter(history.Retries, expoBackoff, new Random(JitterSeed));
             return new Retry(expoBackoff, jitteredBackoff);
         }

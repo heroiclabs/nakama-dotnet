@@ -97,7 +97,7 @@ Requests can be supplied with a retry configurations in cases of transient netwo
 A single configuration can be used to control all request retry behavior:
 
 ```csharp
-var retryConfiguration = new RetryConfiguration(baseDelay: 1, maxRetries: 5, delegate { System.Console.Writeline("about to retry."); });
+var retryConfiguration = new RetryConfiguration(baseDelayMs: 1000, maxRetries: 5, delegate { System.Console.Writeline("about to retry."); });
 
 client.GlobalRetryConfiguration = retryConfiguration;
 var account = await client.GetAccountAsync(session);
@@ -107,7 +107,7 @@ Or, the configuration can be supplied on a per-request basis:
 
 ```csharp
 
-var retryConfiguration = new RetryConfiguration(baseDelay: 1, maxRetries: 5, delegate { System.Console.Writeline("about to retry."); });
+var retryConfiguration = new RetryConfiguration(baseDelayMs: 1000, maxRetries: 5, delegate { System.Console.Writeline("about to retry."); });
 
 var account = await client.GetAccountAsync(session, retryConfiguration);
 
