@@ -39,7 +39,6 @@ namespace Nakama.Tests.Sync
         private SyncTestSharedVars _sharedVars;
         private SyncTestPresenceVars _presenceVars;
         private SyncTestRpcs _rpcs;
-        private readonly SyncErrorHandler _errorHandler;
         private readonly ILogger _logger;
         private readonly VarIdGenerator _varIdGenerator;
 
@@ -87,18 +86,18 @@ namespace Nakama.Tests.Sync
             _rpcs.ReceiveMatch(_match);
         }
 
-        public async Task<IMatch> CreateMatch()
+        public async Task<IMatch> CreateMatch(SyncErrorHandler errorHandler)
         {
             await Connect();
-            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _rpcTargetRegistry, _opcodes, _errorHandler, _logger);
+            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _rpcTargetRegistry, _opcodes, errorHandler, _logger);
             _rpcs.ReceiveMatch(_match);
             return _match;
         }
 
-        public async Task<IMatch> JoinMatch(string matchId)
+        public async Task<IMatch> JoinMatch(string matchId, SyncErrorHandler errorHandler)
         {
             await Connect();
-            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchId, _varRegistry, _rpcTargetRegistry, _errorHandler, _logger);
+            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchId, _varRegistry, _rpcTargetRegistry, errorHandler, _logger);
             _rpcs.ReceiveMatch(_match);
             return _match;
         }
