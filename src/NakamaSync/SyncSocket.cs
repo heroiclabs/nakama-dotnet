@@ -15,7 +15,7 @@
 */
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using Nakama;
 
 namespace NakamaSync
@@ -25,10 +25,12 @@ namespace NakamaSync
         public delegate void SyncEnvelopeHandler(IUserPresence source, Envelope envelope);
         public delegate void HandshakeRequestHandler(IUserPresence source, HandshakeRequest request);
         public delegate void HandshakeResponseHandler(IUserPresence source, HandshakeResponse response);
+        public delegate void RpcEnvelopeHandler(IUserPresence source, RpcEnvelope response);
 
         public event SyncEnvelopeHandler OnSyncEnvelope;
         public event HandshakeRequestHandler OnHandshakeRequest;
         public event HandshakeResponseHandler OnHandshakeResponse;
+        public event RpcEnvelopeHandler OnRpcEnvelope;
 
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -69,6 +71,18 @@ namespace NakamaSync
         {
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
+        }
+
+        public void SendRpc(RpcEnvelope envelope, IEnumerable<IUserPresence> targets)
+        {
+            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.RpcOpcode, _encoding.Encode(envelope), targets);
+        }
+
+        public void SendRpc(RpcEnvelope envelope)
+        {
+            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.RpcOpcode, _encoding.Encode(envelope));
         }
 
         private void HandleReceivedMatchState(IMatchState state)
@@ -118,6 +132,22 @@ namespace NakamaSync
                 {
                     response = _encoding.Decode<HandshakeResponse>(state.State);
                     OnHandshakeResponse?.Invoke(state.UserPresence, response);
+                }
+                catch (Exception e)
+                {
+                    ErrorHandler?.Invoke(e);
+                }
+            }
+            else if (state.OpCode == _opcodes.RpcOpcode)
+            {
+                Logger?.InfoFormat($"Socket for {_match.Self.UserId} received rpc.");
+
+                RpcEnvelope response = null;
+
+                try
+                {
+                    response = _encoding.Decode<RpcEnvelope>(state.State);
+                    OnRpcEnvelope?.Invoke(state.UserPresence, response);
                 }
                 catch (Exception e)
                 {

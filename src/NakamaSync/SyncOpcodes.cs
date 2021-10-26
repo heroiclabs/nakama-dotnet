@@ -24,14 +24,16 @@ namespace NakamaSync
         public int HandshakeRequestOpcode { get; }
         public int HandshakeResponseOpcode { get; }
         public int DataOpcode { get; }
+        public int RpcOpcode { get;}
 
-        public SyncOpcodes(int handshakeRequestOpcode, int handshakeResponseOpcode, int dataOpcode)
+        public SyncOpcodes(int handshakeRequestOpcode, int handshakeResponseOpcode, int dataOpcode, int rpcOpcode)
         {
             HashSet<int> allCodes = new HashSet<int>();
 
             if (!allCodes.Add(handshakeRequestOpcode) ||
                 !allCodes.Add(handshakeResponseOpcode) ||
-                !allCodes.Add(dataOpcode))
+                !allCodes.Add(dataOpcode) ||
+                !allCodes.Add(rpcOpcode))
             {
                 throw new ArgumentException("Each opcode must be a unique integer.");
             }
@@ -39,6 +41,7 @@ namespace NakamaSync
             HandshakeRequestOpcode = handshakeRequestOpcode;
             HandshakeResponseOpcode = handshakeResponseOpcode;
             DataOpcode = dataOpcode;
+            RpcOpcode = rpcOpcode;
         }
     }
 }

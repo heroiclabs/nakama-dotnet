@@ -17,7 +17,7 @@
 using System.Collections.Generic;
 using NakamaSync;
 
-namespace Nakama.Tests
+namespace Nakama.Tests.Sync
 {
     // todo apply varid generator to presence var collections
     public class SyncTestPresenceVars

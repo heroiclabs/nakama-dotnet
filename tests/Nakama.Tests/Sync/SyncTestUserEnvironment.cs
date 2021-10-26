@@ -17,7 +17,7 @@
 using NakamaSync;
 using System.Threading.Tasks;
 
-namespace Nakama.Tests
+namespace Nakama.Tests.Sync
 {
     /// <summary>
     // A test environment representing a single user's view of a sync match.
@@ -28,14 +28,17 @@ namespace Nakama.Tests
         public ISession Session => _session;
         public SyncTestSharedVars SharedVars => _sharedVars;
         public SyncTestPresenceVars PresenceVars => _presenceVars;
+        public SyncTestRpcs Rpcs => _rpcs;
         public SyncMatch Match => _match;
 
         private readonly string _userId;
         private readonly IClient _client;
         private readonly VarRegistry _varRegistry = new VarRegistry();
+        private readonly RpcTargetRegistry _rpcTargetRegistry = new RpcTargetRegistry();
         private readonly SyncOpcodes _opcodes;
-        private SyncTestPresenceVars _presenceVars;
         private SyncTestSharedVars _sharedVars;
+        private SyncTestPresenceVars _presenceVars;
+        private SyncTestRpcs _rpcs;
         private readonly SyncErrorHandler _errorHandler;
         private readonly ILogger _logger;
         private readonly VarIdGenerator _varIdGenerator;
@@ -44,24 +47,26 @@ namespace Nakama.Tests
         private ISession _session;
         private ISocket _socket;
 
-        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numPresenceVarCollections, int numPresenceVarsPerCollection) : this(userId, opcodes, varIdGenerator)
+        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numPresenceVarCollections, int numPresenceVarsPerCollection) : this(userId, opcodes)
         {
+            _varIdGenerator = varIdGenerator;
             _presenceVars = new SyncTestPresenceVars(_varRegistry, numPresenceVarCollections, numPresenceVarsPerCollection);
         }
 
-        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numSharedVars) : this(userId, opcodes, varIdGenerator)
+        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numSharedVars) : this(userId, opcodes)
         {
+            _varIdGenerator = varIdGenerator;
             _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, numSharedVars, _varIdGenerator);
         }
 
-        private SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator)
+        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes)
         {
             _userId = userId;
             _opcodes = opcodes;
             _client = TestsUtil.FromSettingsFile();
             _logger = TestsUtil.LoadConfiguration().StdOut ? new StdoutLogger() : null;
-            _varIdGenerator = varIdGenerator;
             _socket = Nakama.Socket.From(_client);
+            _rpcs = new SyncTestRpcs(_rpcTargetRegistry);
         }
 
         public async Task StartMatchViaMatchmaker(int count, SyncErrorHandler errorHandler)
@@ -78,20 +83,24 @@ namespace Nakama.Tests
 
             await matchedTcs.Task;
 
-            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchedTcs.Task.Result, _varRegistry, errorHandler, _logger);
+            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchedTcs.Task.Result, _varRegistry, _rpcTargetRegistry, errorHandler, _logger);
+            _rpcs.ReceiveMatch(_match);
         }
 
         public async Task<IMatch> CreateMatch()
         {
             await Connect();
-            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _opcodes, _errorHandler, _logger);
+            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _rpcTargetRegistry, _opcodes, _errorHandler, _logger);
+            _rpcs.ReceiveMatch(_match);
             return _match;
         }
 
-        public async Task JoinMatch(string matchId)
+        public async Task<IMatch> JoinMatch(string matchId)
         {
             await Connect();
-            await _socket.JoinSyncMatch(_session, _opcodes, matchId, _varRegistry, _errorHandler, _logger);
+            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchId, _varRegistry, _rpcTargetRegistry, _errorHandler, _logger);
+            _rpcs.ReceiveMatch(_match);
+            return _match;
         }
 
         public async Task Dispose()

@@ -20,11 +20,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using NakamaSync;
 
-namespace Nakama.Tests
+namespace Nakama.Tests.Sync
 {
-
     public delegate string UserIdGenerator(int userIndex);
     public delegate string VarIdGenerator(string userId, string varName, int varIndex);
+    public delegate string RpcIdGenerator(int rpcIndex);
 
     /// <summary>
     // A test environment within which multiple users sync their vars with one another.
@@ -38,7 +38,7 @@ namespace Nakama.Tests
         private readonly Random _randomGuestGenerator = new Random(_RAND_GUEST_SEED);
         private readonly List<SyncTestUserEnvironment> _syncTestUserEnvironments = new List<SyncTestUserEnvironment>();
 
-        public SyncTestEnvironment(
+       public SyncTestEnvironment(
             SyncOpcodes opcodes,
             int numClients,
             int numSharedVars,
@@ -54,6 +54,23 @@ namespace Nakama.Tests
             {
                 string userId = userIdGenerator(i);
                 var env = new SyncTestUserEnvironment(userId, opcodes, varIdGenerator, numSharedVars);
+                _syncTestUserEnvironments.Add(env);
+            }
+        }
+
+        public SyncTestEnvironment(
+            SyncOpcodes opcodes,
+            int numClients,
+            int creatorIndex,
+            UserIdGenerator userIdGenerator = null)
+        {
+            CreatorIndex = creatorIndex;
+            userIdGenerator = userIdGenerator ?? DefaultUserIdGenerator;
+
+            for (int i = 0; i < numClients; i++)
+            {
+                string userId = userIdGenerator(i);
+                var env = new SyncTestUserEnvironment(userId, opcodes);
                 _syncTestUserEnvironments.Add(env);
             }
         }
@@ -192,6 +209,11 @@ namespace Nakama.Tests
         private static string DefaultUserIdGenerator(int userIndex)
         {
             return Guid.NewGuid().ToString();
+        }
+
+        private static string DefaultRpcIdGenerator(int rpcIndex)
+        {
+            return $"rpc_{rpcIndex}";
         }
     }
 }

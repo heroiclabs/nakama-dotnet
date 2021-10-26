@@ -43,16 +43,34 @@ namespace NakamaSync
 
         private HostTracker _hostTracker;
         private readonly IMatch _match;
+        private readonly SyncSocket _socket;
 
-        internal SyncMatch(IMatch match, HostTracker hostTracker)
+        internal SyncMatch(IMatch match, HostTracker hostTracker, SyncSocket socket)
         {
             _match = match;
             _hostTracker = hostTracker;
+            _socket = socket;
         }
 
         public bool IsSelfHost()
         {
             return _hostTracker.IsSelfHost();
+        }
+
+        public void SendRpc(IEnumerable<IUserPresence> targetPresences, string rpcId, string targetId, params object[] parameters)
+        {
+            var envelope = new RpcEnvelope();
+            envelope.Parameters = parameters;
+            envelope.RpcKey = new RpcKey(rpcId, targetId);
+            _socket.SendRpc(envelope, targetPresences);
+        }
+
+        public void SendRpc(string rpcId, string targetId, params object[] parameters)
+        {
+            var envelope = new RpcEnvelope();
+            envelope.Parameters = parameters;
+            envelope.RpcKey = new RpcKey(rpcId, targetId);
+            _socket.SendRpc(envelope);
         }
     }
 }

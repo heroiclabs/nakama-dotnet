@@ -48,13 +48,15 @@ namespace NakamaSync
 
         private readonly PresenceVarRotators _presenceVarRotators;
 
+        private RpcIngress _rpcIngress;
+
         private readonly SyncCleanup _syncCleanup;
 
         private bool _initialized;
 
         private readonly List<ISyncService> _services = new List<ISyncService>();
 
-        public SyncServices(ISocket socket, ISession session, VarRegistry varRegistry, SyncOpcodes opcodes)
+        public SyncServices(ISocket socket, ISession session, VarRegistry varRegistry, RpcTargetRegistry rpcTargetRegistry, SyncOpcodes opcodes)
         {
             var presenceTracker = new PresenceTracker(session.UserId);
             _services.Add(presenceTracker);
@@ -122,7 +124,12 @@ namespace NakamaSync
             var migrator = new HostMigrator(varRegistry, envelopeBuilder);
             _services.Add(migrator);
 
-            var syncCleanup = new SyncCleanup(session.UserId, varRegistry);
+            _services.Add(rpcTargetRegistry);
+
+            var rpcIngress = new RpcIngress(rpcTargetRegistry);
+            _services.Add(rpcIngress);
+
+            var syncCleanup = new SyncCleanup(session.UserId, varRegistry, rpcTargetRegistry);
             _syncCleanup = syncCleanup;
             _services.Add(syncCleanup);
 
@@ -146,6 +153,7 @@ namespace NakamaSync
             _socket = socket;
             _migrator = migrator;
             _presenceVarRotators = presenceVarRotators;
+            _rpcIngress = rpcIngress;
         }
 
         public Task GetHandshakeTask()
@@ -194,7 +202,9 @@ namespace NakamaSync
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
 
             _presenceVarRotators.Register(_varRegistry.PresenceVarRegistry);
+            _rpcIngress.Subscribe(_syncSocket);
             _syncCleanup.Subscribe(_presenceTracker);
+
 
             _initialized = true;
             _logger?.DebugFormat("Sync services initialized.");
@@ -211,7 +221,7 @@ namespace NakamaSync
             _handshakeRequester.ReceiveMatch(match);
             _logger?.DebugFormat("Sync services received match.");
 
-            return new SyncMatch(match, _hostTracker);
+            return new SyncMatch(match, _hostTracker, _syncSocket);
         }
     }
 }

@@ -27,11 +27,13 @@ namespace NakamaSync
 
         private readonly string _userId;
         private readonly VarRegistry _varRegistry;
+        private readonly RpcTargetRegistry _registry;
 
-        public SyncCleanup(string userId, VarRegistry varRegistry)
+        public SyncCleanup(string userId, VarRegistry varRegistry, RpcTargetRegistry registry)
         {
             _userId = userId;
             _varRegistry = varRegistry;
+            _registry = registry;
         }
 
         public void Subscribe(PresenceTracker presenceTracker)

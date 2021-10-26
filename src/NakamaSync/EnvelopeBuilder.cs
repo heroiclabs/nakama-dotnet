@@ -24,6 +24,7 @@ namespace NakamaSync
     internal delegate List<PresenceValue<T>> PresenceVarAccessor<T>(Envelope envelope);
 
     // todo this can be used to batch socket envelope sends
+    // todo make this more like the rpcenvelopebuilder?
     internal class EnvelopeBuilder : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }

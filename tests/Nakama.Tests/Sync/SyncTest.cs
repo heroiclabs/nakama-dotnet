@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using NakamaSync;
 using Xunit;
 
-namespace Nakama.Tests.Socket
+namespace Nakama.Tests.Sync
 {
     public class SyncTest
     {
@@ -28,7 +28,7 @@ namespace Nakama.Tests.Socket
         private void SharedVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
-                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0);
@@ -44,7 +44,7 @@ namespace Nakama.Tests.Socket
         private void PresenceVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
-                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numPresenceVarCollections: 1,
                 numPresenceVarsPerCollection: 1,
@@ -78,7 +78,7 @@ namespace Nakama.Tests.Socket
             };
 
             var mismatchedEnv = new SyncTestEnvironment(
-                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0,
@@ -97,7 +97,7 @@ namespace Nakama.Tests.Socket
         private async Task SharedVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
-                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0);
@@ -119,7 +119,7 @@ namespace Nakama.Tests.Socket
         private async Task PresenceVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
-                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numPresenceVarCollections: 1,
                 numPresenceVarsPerCollection: 1,
@@ -153,7 +153,7 @@ namespace Nakama.Tests.Socket
         private void EnvsShouldBeSeparate()
         {
             var testEnv = new SyncTestEnvironment(
-                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0);
@@ -172,7 +172,7 @@ namespace Nakama.Tests.Socket
         private void HostShouldBeChosen()
         {
             var testEnv = new SyncTestEnvironment(
-                new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2),
+                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0);
@@ -183,12 +183,6 @@ namespace Nakama.Tests.Socket
             Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
             Assert.True(env1.Match.IsSelfHost() || env2.Match.IsSelfHost());
             testEnv.Dispose();
-        }
-
-
-        private SyncErrorHandler CreateDefaultErrorHandler()
-        {
-            return (e) => new StdoutLogger().ErrorFormat(e.Message);
         }
     }
 }

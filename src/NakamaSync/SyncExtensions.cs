@@ -73,11 +73,11 @@ namespace NakamaSync
     {
         // todo maybe don't require session as a parameter here since we pass it to socket.
 
-        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes, SyncErrorHandler errorHandler, ILogger logger = null)
+        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, RpcTargetRegistry rpcTargetRegistry, SyncOpcodes opcodes, SyncErrorHandler errorHandler, ILogger logger = null)
         {
             logger?.DebugFormat($"User {session.UserId} is creating sync match.");
             AssertValidInputs(registry, errorHandler);
-            var services = new SyncServices(socket, session, registry, opcodes);
+            var services = new SyncServices(socket, session, registry, rpcTargetRegistry, opcodes);
             services.Initialize(isMatchCreator: true, errorHandler: errorHandler, logger: logger);
 
             IMatch match = await socket.CreateMatchAsync();
@@ -85,12 +85,12 @@ namespace NakamaSync
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, IMatchmakerMatched matched, VarRegistry registry, SyncErrorHandler errorHandler, ILogger logger = null)
+        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, IMatchmakerMatched matched, VarRegistry registry, RpcTargetRegistry rpcTargetRegistry, SyncErrorHandler errorHandler, ILogger logger = null)
         {
             AssertValidInputs(registry, errorHandler);
             logger?.DebugFormat($"User {session.UserId} is joining sync match via matchmaker.");
 
-            var services = new SyncServices(socket, session, registry, opcodes);
+            var services = new SyncServices(socket, session, registry, rpcTargetRegistry, opcodes);
             services.Initialize(isMatchCreator: false, errorHandler: errorHandler, logger: logger);
 
             IMatch match = await socket.JoinMatchAsync(matched);
@@ -108,12 +108,12 @@ namespace NakamaSync
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry, SyncErrorHandler errorHandler, ILogger logger = null)
+        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry, RpcTargetRegistry rpcTargetRegistry, SyncErrorHandler errorHandler, ILogger logger = null)
         {
             AssertValidInputs(registry, errorHandler);
             logger?.DebugFormat($"User {session.UserId} is joining sync match: {matchId}.");
 
-            var services = new SyncServices(socket, session, registry, opcodes);
+            var services = new SyncServices(socket, session, registry, rpcTargetRegistry, opcodes);
             services.Initialize(isMatchCreator: false, errorHandler: errorHandler, logger: logger);
 
             IMatch match = await socket.JoinMatchAsync(matchId);

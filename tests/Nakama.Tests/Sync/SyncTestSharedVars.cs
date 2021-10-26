@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using NakamaSync;
 
-namespace Nakama.Tests
+namespace Nakama.Tests.Sync
 {
     public class SyncTestSharedVars
     {
