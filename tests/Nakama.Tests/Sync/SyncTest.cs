@@ -25,7 +25,7 @@ namespace Nakama.Tests.Sync
     public class SyncTest
     {
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private void SharedVarShouldRetainData()
+        private async void SharedVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
                 SyncTestsUtil.DefaultOpcodes(),
@@ -33,7 +33,7 @@ namespace Nakama.Tests.Sync
                 numSharedVars: 1,
                 creatorIndex: 0);
 
-            testEnv.StartViaMatchmaker();
+            await testEnv.Start();
             SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
             creatorEnv.SharedBools[0].SetValue(true);
             Assert.True(creatorEnv.SharedBools[0].GetValue());
@@ -41,7 +41,7 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private void PresenceVarShouldRetainData()
+        private async void PresenceVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
                 SyncTestsUtil.DefaultOpcodes(),
@@ -50,7 +50,7 @@ namespace Nakama.Tests.Sync
                 numPresenceVarsPerCollection: 1,
                 creatorIndex: 0);
 
-            testEnv.StartViaMatchmaker();
+            await testEnv.Start();
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
             creatorEnv.PresenceVars.BoolSelfVars["presenceBools_0"].SetValue(true);
             Assert.True(creatorEnv.PresenceVars.BoolSelfVars["presenceBools_0"].GetValue());
@@ -86,7 +86,7 @@ namespace Nakama.Tests.Sync
                 idGenerator);
 
 
-            mismatchedEnv.StartViaMatchmaker(errorHandler);
+            await mismatchedEnv.Start(errorHandler);
 
             await Task.Delay(2000);
             Assert.True(threwError);
@@ -102,7 +102,7 @@ namespace Nakama.Tests.Sync
                 numSharedVars: 1,
                 creatorIndex: 0);
 
-            testEnv.StartViaMatchmaker();
+            await testEnv.Start();
 
             var allEnvs = testEnv.GetAllEnvs();
 
@@ -125,7 +125,7 @@ namespace Nakama.Tests.Sync
                 numPresenceVarsPerCollection: 1,
                 creatorIndex: 0);
 
-            testEnv.StartViaMatchmaker();
+            await testEnv.Start();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
             creatorEnv.PresenceVars.BoolSelfVars["presenceBools_0"].SetValue(true);
@@ -150,7 +150,7 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private void EnvsShouldBeSeparate()
+        private async void EnvsShouldBeSeparate()
         {
             var testEnv = new SyncTestEnvironment(
                 SyncTestsUtil.DefaultOpcodes(),
@@ -158,7 +158,7 @@ namespace Nakama.Tests.Sync
                 numSharedVars: 1,
                 creatorIndex: 0);
 
-            testEnv.StartViaMatchmaker();
+            await testEnv.Start();
 
             List<SyncTestUserEnvironment> allEnvs = testEnv.GetAllEnvs();
             var env1 = allEnvs[0];
@@ -169,7 +169,7 @@ namespace Nakama.Tests.Sync
 
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private void HostShouldBeChosen()
+        private async void HostShouldBeChosen()
         {
             var testEnv = new SyncTestEnvironment(
                 SyncTestsUtil.DefaultOpcodes(),
@@ -177,7 +177,7 @@ namespace Nakama.Tests.Sync
                 numSharedVars: 1,
                 creatorIndex: 0);
 
-            testEnv.StartViaMatchmaker();
+            await testEnv.Start();
             var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
             var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
             Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
