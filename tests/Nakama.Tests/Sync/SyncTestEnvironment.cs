@@ -198,7 +198,7 @@ namespace Nakama.Tests.Sync
 
         private SyncErrorHandler DefaultErrorHandler()
         {
-            return e => new StdoutLogger().ErrorFormat(e.Message);
+            return e => new StdoutLogger().ErrorFormat($"{e.Message}{e.StackTrace}");
         }
 
         private static string DefaultVarIdGenerator(string userId, string varName, int varIndex)

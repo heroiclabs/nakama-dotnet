@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
 using NakamaSync;
 
 namespace Nakama.Tests.Sync
@@ -23,6 +24,7 @@ namespace Nakama.Tests.Sync
         public string Param1Result { get; private set; }
         public int Param2Result { get; private set; }
         public bool Param3Result { get; private set; }
+        public SyncTestRpcObject Param4Result { get; private set; }
 
         private SyncMatch _syncMatch;
 
@@ -40,14 +42,23 @@ namespace Nakama.Tests.Sync
 
         public void Invoke()
         {
-            _syncMatch.SendRpc("TestRpcDelegate", ObjectId, "param1", 1, true);
+            var testObj = new SyncTestRpcObject();
+            testObj.TestMember = "testMember";
+            _syncMatch.SendRpc("TestRpcDelegate", ObjectId, "param1", 1, true, testObj);
         }
 
-        private void TestRpcDelegate(string param1, int param2, bool param3)
+        private void TestRpcDelegate(string param1, int param2, bool param3, SyncTestRpcObject param4)
         {
             Param1Result = param1;
             Param2Result = param2;
             Param3Result = param3;
+            Param4Result = param4;
         }
+    }
+
+    public class SyncTestRpcObject
+    {
+        [DataMember(Name="TestMember")]
+        public string TestMember { get; set; }
     }
 }

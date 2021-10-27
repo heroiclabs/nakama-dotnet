@@ -47,6 +47,7 @@ namespace Nakama.Tests.Sync
             Assert.Equal("param1", allEnvs[1].Rpcs.Param1Result);
             Assert.Equal(1, allEnvs[1].Rpcs.Param2Result);
             Assert.Equal(true, allEnvs[1].Rpcs.Param3Result);
+            Assert.Equal("testMember", allEnvs[1].Rpcs.Param4Result.TestMember);
         }
     }
 }

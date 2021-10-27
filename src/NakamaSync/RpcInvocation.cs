@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace NakamaSync
@@ -50,7 +51,39 @@ namespace NakamaSync
 
         public void Invoke()
         {
-            _method.Invoke(_target, _parameters);
+            var processedParameters = new object[_parameters.Length];
+
+            ParameterInfo[] methodParams = _method.GetParameters();
+
+            for (int i = 0; i < methodParams.Length; i++)
+            {
+                ParameterInfo methodParam = methodParams[i];
+                object processedParam = _parameters[i];
+
+                bool serializedAsGenericDict = _parameters[i] is IDictionary<string,object>;
+                bool rpcExpectGenericDict = methodParam.ParameterType == typeof(IDictionary<string, object>);
+
+                if (serializedAsGenericDict && !rpcExpectGenericDict)
+                {
+                    processedParam = ParamToObject(_parameters[i] as IDictionary<string, object>, methodParam.ParameterType);
+                }
+
+                processedParameters[i] = processedParam;
+            }
+
+            _method.Invoke(_target, processedParameters);
+        }
+
+        private static object ParamToObject(IDictionary<string, object> parameter, Type t)
+        {
+            var obj = System.Activator.CreateInstance(t);
+
+            foreach (var item in parameter)
+            {
+                t.GetProperty(item.Key).SetValue(obj, item.Value, null);
+            }
+
+            return obj;
         }
     }
 }
