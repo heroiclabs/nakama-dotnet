@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 namespace NakamaSync
 {
-    public struct SyncOpcodes
+    public class SyncOpcodes
     {
         public int HandshakeRequestOpcode { get; }
         public int HandshakeResponseOpcode { get; }
