@@ -58,36 +58,36 @@ namespace NakamaSync
         {
             Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake request.");
 
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequestOpcode, _encoding.Encode(request), new IUserPresence[]{target});
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequest, _encoding.Encode(request), new IUserPresence[]{target});
         }
 
         public void SendHandshakeResponse(IUserPresence target, HandshakeResponse response)
         {
             Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake response.");
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponseOpcode, _encoding.Encode(response), new IUserPresence[]{target});
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponse, _encoding.Encode(response), new IUserPresence[]{target});
         }
 
         public void SendSyncDataToAll(Envelope envelope)
         {
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.DataOpcode, _encoding.Encode(envelope));
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.Data, _encoding.Encode(envelope));
         }
 
         public void SendRpc(RpcEnvelope envelope, IEnumerable<IUserPresence> targets)
         {
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.RpcOpcode, _encoding.Encode(envelope), targets);
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.Rpc, _encoding.Encode(envelope), targets);
         }
 
         public void SendRpc(RpcEnvelope envelope)
         {
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.RpcOpcode, _encoding.Encode(envelope));
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.Rpc, _encoding.Encode(envelope));
         }
 
         private void HandleReceivedMatchState(IMatchState state)
         {
-            if (state.OpCode == _opcodes.DataOpcode)
+            if (state.OpCode == _opcodes.Data)
             {
                 Logger?.InfoFormat($"Socket for {_match.Self.UserId} received sync envelope.");
 
@@ -106,7 +106,7 @@ namespace NakamaSync
 
                 OnSyncEnvelope?.Invoke(state.UserPresence, envelope);
             }
-            else if (state.OpCode == _opcodes.HandshakeRequestOpcode)
+            else if (state.OpCode == _opcodes.HandshakeRequest)
             {
                 Logger?.InfoFormat($"Socket for {_match.Self.UserId} received handshake request.");
 
@@ -122,7 +122,7 @@ namespace NakamaSync
                     ErrorHandler?.Invoke(e);
                 }
             }
-            else if (state.OpCode == _opcodes.HandshakeResponseOpcode)
+            else if (state.OpCode == _opcodes.HandshakeResponse)
             {
                 Logger?.InfoFormat($"Socket for {_match.Self.UserId} received handshake response.");
 
@@ -138,7 +138,7 @@ namespace NakamaSync
                     ErrorHandler?.Invoke(e);
                 }
             }
-            else if (state.OpCode == _opcodes.RpcOpcode)
+            else if (state.OpCode == _opcodes.Rpc)
             {
                 Logger?.InfoFormat($"Socket for {_match.Self.UserId} received rpc.");
 

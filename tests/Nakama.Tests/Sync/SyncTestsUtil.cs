@@ -22,7 +22,7 @@ namespace Nakama.Tests.Sync
     {
         public static SyncOpcodes DefaultOpcodes()
         {
-            return new SyncOpcodes(handshakeRequestOpcode: 0, handshakeResponseOpcode: 1, dataOpcode: 2, rpcOpcode: 3);
+            return new SyncOpcodes(handshakeRequest: 0, handshakeResponse: 1, data: 2, rpc: 3);
         }
 
         public static SyncErrorHandler CreateDefaultErrorHandler()

@@ -21,27 +21,27 @@ namespace NakamaSync
 {
     public class SyncOpcodes
     {
-        public int HandshakeRequestOpcode { get; }
-        public int HandshakeResponseOpcode { get; }
-        public int DataOpcode { get; }
-        public int RpcOpcode { get;}
+        public int HandshakeRequest { get; }
+        public int HandshakeResponse { get; }
+        public int Data { get; }
+        public int Rpc { get;}
 
-        public SyncOpcodes(int handshakeRequestOpcode, int handshakeResponseOpcode, int dataOpcode, int rpcOpcode)
+        public SyncOpcodes(int handshakeRequest, int handshakeResponse, int data, int rpc)
         {
             HashSet<int> allCodes = new HashSet<int>();
 
-            if (!allCodes.Add(handshakeRequestOpcode) ||
-                !allCodes.Add(handshakeResponseOpcode) ||
-                !allCodes.Add(dataOpcode) ||
-                !allCodes.Add(rpcOpcode))
+            if (!allCodes.Add(handshakeRequest) ||
+                !allCodes.Add(handshakeResponse) ||
+                !allCodes.Add(data) ||
+                !allCodes.Add(rpc))
             {
                 throw new ArgumentException("Each opcode must be a unique integer.");
             }
 
-            HandshakeRequestOpcode = handshakeRequestOpcode;
-            HandshakeResponseOpcode = handshakeResponseOpcode;
-            DataOpcode = dataOpcode;
-            RpcOpcode = rpcOpcode;
+            HandshakeRequest = handshakeRequest;
+            HandshakeResponse = handshakeResponse;
+            Data = data;
+            Rpc = rpc;
         }
     }
 }
