@@ -28,6 +28,7 @@ namespace NakamaSync
         public IEnumerable<IUserPresence> Presences => _match.Presences;
         public int Size => _match.Size;
         public IUserPresence Self => _match.Self;
+        public IUserPresence Host => _hostTracker.GetHost();
 
         public event Action<HostChangedEvent> OnHostChanged
         {
