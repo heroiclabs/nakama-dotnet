@@ -63,6 +63,7 @@ namespace NakamaSync
                 bool serializedAsGenericDict = _parameters[i] is IDictionary<string,object>;
                 bool rpcExpectGenericDict = methodParam.ParameterType == typeof(IDictionary<string, object>);
 
+                // tinyjson processes anonymous objects as dictionaries
                 if (serializedAsGenericDict && !rpcExpectGenericDict)
                 {
                     processedParam = ParamToObject(_parameters[i] as IDictionary<string, object>, methodParam.ParameterType);

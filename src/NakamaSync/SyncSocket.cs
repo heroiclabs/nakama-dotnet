@@ -44,6 +44,21 @@ namespace NakamaSync
 
         public SyncSocket(ISocket socket, SyncOpcodes opcodes, PresenceTracker presenceTracker)
         {
+            if (_socket == null)
+            {
+                throw new ArgumentException("Null socket provided to sync socket.");
+            }
+
+            if (_opcodes == null)
+            {
+                throw new ArgumentException("Null opcodes provided to sync socket.");
+            }
+
+            if (_presenceTracker == null)
+            {
+                throw new ArgumentException("Null presence tracker provided to sync socket.");
+            }
+
             _socket = socket;
             _opcodes = opcodes;
             _presenceTracker = presenceTracker;
@@ -58,7 +73,6 @@ namespace NakamaSync
         public void SendHandshakeRequest(HandshakeRequest request, IUserPresence target)
         {
             Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake request.");
-
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequest, _encoding.Encode(request), new IUserPresence[]{target});
         }
 
@@ -70,6 +84,10 @@ namespace NakamaSync
 
         public void SendSyncDataToAll(Envelope envelope)
         {
+            if (_match == null)
+            {
+                throw new NullReferenceException("Tried sending data before match was received");
+            }
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.Data, _encoding.Encode(envelope));
         }
