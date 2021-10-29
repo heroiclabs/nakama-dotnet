@@ -73,14 +73,14 @@ namespace NakamaSync
     {
         // todo maybe don't require session as a parameter here since we pass it to socket.
 
-        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, RpcTargetRegistry rpcTargetRegistry, SyncOpcodes opcodes, SyncErrorHandler errorHandler, ILogger logger = null)
+        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, RpcTargetRegistry rpcTargetRegistry, SyncOpcodes opcodes, SyncErrorHandler errorHandler, ILogger logger = null, string name = null)
         {
             logger?.DebugFormat($"User {session.UserId} is creating sync match.");
             AssertValidInputs(registry, errorHandler);
             var services = new SyncServices(socket, session, registry, rpcTargetRegistry, opcodes);
             services.Initialize(isMatchCreator: true, errorHandler: errorHandler, logger: logger);
 
-            IMatch match = await socket.CreateMatchAsync();
+            IMatch match = await socket.CreateMatchAsync(name);
             SyncMatch syncMatch = services.ReceiveMatch(match);
             return syncMatch;
         }
