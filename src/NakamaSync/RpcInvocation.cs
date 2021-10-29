@@ -29,6 +29,12 @@ namespace NakamaSync
         public static RpcInvocation Create(object target, string methodName, object[] parameters)
         {
             var method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+            if (method == null)
+            {
+                throw new NullReferenceException($"Could not find method with name: {methodName} on object {target}");
+            }
+
             return new RpcInvocation(target, method, parameters);
         }
 

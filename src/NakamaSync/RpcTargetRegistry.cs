@@ -53,5 +53,14 @@ namespace NakamaSync
         {
             return _targetsById[targetId];
         }
+
+        public void RemoveTarget(string targetId)
+        {
+            if (_targets.Contains(targetId))
+            {
+                _targets.Remove(targetId);
+                _targetsById.Remove(targetId);
+            }
+        }
     }
 }

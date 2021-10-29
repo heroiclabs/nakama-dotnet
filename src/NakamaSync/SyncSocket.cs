@@ -44,17 +44,17 @@ namespace NakamaSync
 
         public SyncSocket(ISocket socket, SyncOpcodes opcodes, PresenceTracker presenceTracker)
         {
-            if (_socket == null)
+            if (socket == null)
             {
                 throw new ArgumentException("Null socket provided to sync socket.");
             }
 
-            if (_opcodes == null)
+            if (opcodes == null)
             {
                 throw new ArgumentException("Null opcodes provided to sync socket.");
             }
 
-            if (_presenceTracker == null)
+            if (presenceTracker == null)
             {
                 throw new ArgumentException("Null presence tracker provided to sync socket.");
             }
@@ -86,8 +86,10 @@ namespace NakamaSync
         {
             if (_match == null)
             {
-                throw new NullReferenceException("Tried sending data before match was received");
+                ErrorHandler?.Invoke(new NullReferenceException("Tried sending data before match was received"));
+                return;
             }
+
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.Data, _encoding.Encode(envelope));
         }
