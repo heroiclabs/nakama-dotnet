@@ -221,7 +221,7 @@ namespace NakamaSync
             _handshakeRequester.ReceiveMatch(match);
             _logger?.DebugFormat("Sync services received match.");
 
-            return new SyncMatch(match, _hostTracker, _syncSocket);
+            return new SyncMatch(match, _hostTracker, _presenceTracker, _syncSocket);
         }
     }
 }

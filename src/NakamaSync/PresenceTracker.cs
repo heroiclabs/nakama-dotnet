@@ -84,6 +84,19 @@ namespace NakamaSync
             return null;
         }
 
+        public List<IUserPresence> GetPresences()
+        {
+            var presences = new List<IUserPresence>();
+
+            foreach (string userId in GetSortedUserIds())
+            {
+                presences.Add(GetPresence(userId));
+            }
+
+            return presences;
+        }
+
+
         public List<IUserPresence> GetPresences(IEnumerable<string> userIds)
         {
             var presences = new List<IUserPresence>();
@@ -96,7 +109,7 @@ namespace NakamaSync
             return presences;
         }
 
-        public IEnumerable<IUserPresence> GetOthers()
+        public List<IUserPresence> GetOthers()
         {
             var otherIds = GetSortedUserIds().Except(new string[]{_userId});
             return GetPresences(otherIds);

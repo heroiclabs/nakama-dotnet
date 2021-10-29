@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nakama;
 
 namespace NakamaSync
@@ -77,6 +78,11 @@ namespace NakamaSync
         {
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.Rpc, _encoding.Encode(envelope), targets);
+
+            if (targets.Any(presence => presence.UserId == _match.Self.UserId))
+            {
+                this.OnRpcEnvelope(_match.Self, envelope);
+            }
         }
 
         public void SendRpc(RpcEnvelope envelope)

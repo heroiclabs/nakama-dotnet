@@ -28,7 +28,6 @@ namespace NakamaSync
         public IEnumerable<IUserPresence> Presences => _match.Presences;
         public int Size => _match.Size;
         public IUserPresence Self => _match.Self;
-        public IUserPresence Host => _hostTracker.GetHost();
 
         public event Action<HostChangedEvent> OnHostChanged
         {
@@ -43,14 +42,31 @@ namespace NakamaSync
         }
 
         private HostTracker _hostTracker;
+        private PresenceTracker _presenceTracker;
         private readonly IMatch _match;
         private readonly SyncSocket _socket;
 
-        internal SyncMatch(IMatch match, HostTracker hostTracker, SyncSocket socket)
+        internal SyncMatch(IMatch match, HostTracker hostTracker, PresenceTracker presenceTracker, SyncSocket socket)
         {
             _match = match;
             _hostTracker = hostTracker;
+            _presenceTracker = presenceTracker;
             _socket = socket;
+        }
+
+        public IUserPresence GetHostPresence()
+        {
+            return _hostTracker.GetHost();
+        }
+
+        public List<IUserPresence> GetOtherPresences()
+        {
+            return  _presenceTracker.GetOthers();
+        }
+
+        public List<IUserPresence> GetAllPresences()
+        {
+            return _presenceTracker.GetPresences();
         }
 
         public bool IsSelfHost()
