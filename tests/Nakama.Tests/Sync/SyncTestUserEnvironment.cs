@@ -94,6 +94,14 @@ namespace Nakama.Tests.Sync
             return _match;
         }
 
+        public async Task<IMatch> CreateMatch(string name, SyncErrorHandler errorHandler)
+        {
+            await Connect();
+            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _rpcTargetRegistry, _opcodes, errorHandler, _logger, name);
+            _rpcs.ReceiveMatch(_match);
+            return _match;
+        }
+
         public async Task<IMatch> JoinMatch(string matchId, SyncErrorHandler errorHandler)
         {
             await Connect();

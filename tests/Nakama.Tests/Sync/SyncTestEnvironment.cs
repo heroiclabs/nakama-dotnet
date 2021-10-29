@@ -109,7 +109,6 @@ namespace Nakama.Tests.Sync
             Task.WaitAll(matchmakerTasks.ToArray());
         }
 
-        // todo fix this
         public async Task Start(SyncErrorHandler errorHandler = null)
         {
             var match = await _syncTestUserEnvironments[CreatorIndex].CreateMatch(errorHandler ?? DefaultErrorHandler());
@@ -122,6 +121,21 @@ namespace Nakama.Tests.Sync
                 }
 
                 await _syncTestUserEnvironments[i].JoinMatch(match.Id, errorHandler ?? DefaultErrorHandler());
+            }
+        }
+
+        public async Task StartViaName(string name, SyncErrorHandler errorHandler = null)
+        {
+            var match = await _syncTestUserEnvironments[CreatorIndex].CreateMatch(name, errorHandler ?? DefaultErrorHandler());
+
+            for (int i = 0; i < _syncTestUserEnvironments.Count; i++)
+            {
+                if (i == CreatorIndex)
+                {
+                    continue;
+                }
+
+                await _syncTestUserEnvironments[i].CreateMatch(name, errorHandler ?? DefaultErrorHandler());
             }
         }
 

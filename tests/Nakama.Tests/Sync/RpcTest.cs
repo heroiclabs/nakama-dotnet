@@ -40,7 +40,7 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(SyncTestsUtil.DefaultOpcodes(), numClients: 2, creatorIndex: 0);
             // todo change this to start
-            await testEnv.Start();
+            await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllEnvs();
             allEnvs[0].Rpcs.Invoke();
             await Task.Delay(1000);
