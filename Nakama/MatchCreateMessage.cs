@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Runtime.Serialization;
+
 namespace Nakama
 {
     /// <summary>
@@ -21,9 +23,9 @@ namespace Nakama
     /// </summary>
     internal class MatchCreateMessage
     {
-        public override string ToString()
-        {
-            return "MatchCreateMessage()";
-        }
+        [DataMember(Name = "name"), Preserve]
+        public string Name { get; set; }
+        
+        public override string ToString() => $"MatchCreateMessage(name='{Name}')";
     }
 }

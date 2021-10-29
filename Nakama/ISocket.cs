@@ -190,7 +190,7 @@ namespace Nakama
         /// Create a multiplayer match on the server.
         /// </summary>
         /// <returns>A task to represent the asynchronous operation.</returns>
-        Task<IMatch> CreateMatchAsync();
+        Task<IMatch> CreateMatchAsync(string matchName = null);
 
         /// <summary>
         /// Create a party.

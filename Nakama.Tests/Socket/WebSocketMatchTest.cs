@@ -52,6 +52,20 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldCreateMatchWithName()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.ConnectAsync(session);
+            var match = await _socket.CreateMatchAsync("TestMatch");
+
+            Assert.NotNull(match);
+            Assert.NotNull(match.Id);
+            Assert.NotEmpty(match.Id);
+            Assert.False(match.Authoritative);
+            Assert.True(match.Size > 0);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateMatchAndSecondUserJoin()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
