@@ -42,10 +42,10 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
-            HandlePresences(new IUserPresence[]{match.Self}, new IUserPresence[]{});
             Logger?.DebugFormat($"Presence tracker for {_userId} received match.");
+            HandlePresences(new IUserPresence[]{match.Self}, new IUserPresence[]{});
             HandlePresences(match.Presences, new IUserPresence[]{});
-
+            Logger?.DebugFormat($"Presence tracker for {_userId} done receiving match.");
         }
 
         public int GetPresenceCount()

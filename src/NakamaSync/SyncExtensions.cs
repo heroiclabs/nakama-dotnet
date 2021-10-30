@@ -80,8 +80,15 @@ namespace NakamaSync
             var services = new SyncServices(socket, session, registry, rpcTargetRegistry, opcodes);
             services.Initialize(isMatchCreator: true, errorHandler: errorHandler, logger: logger);
 
+
             IMatch match = await socket.CreateMatchAsync(name);
+
+            logger?.DebugFormat($"User {session.UserId} services are receiving sync match.");
+
             SyncMatch syncMatch = services.ReceiveMatch(match);
+
+            logger?.DebugFormat($"User {session.UserId} is returning sync match.");
+
             return syncMatch;
         }
 

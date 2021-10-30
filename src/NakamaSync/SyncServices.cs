@@ -215,10 +215,23 @@ namespace NakamaSync
             _logger?.DebugFormat("Sync services are receiving match...");
 
             _varRegistry.ReceiveMatch(match);
+
+            _logger?.DebugFormat("Sync socket is receiving match...");
+
             _syncSocket.ReceiveMatch(match);
+
+            _logger?.DebugFormat("Presence tracker is receiving match...");
+
             _presenceTracker.ReceiveMatch(match);
+
+            _logger?.DebugFormat("Rotators are receiving match...");
+
             _presenceVarRotators.ReceiveMatch(match);
+
+            _logger?.DebugFormat("Handshake requester is receiving match...");
+
             _handshakeRequester.ReceiveMatch(match);
+
             _logger?.DebugFormat("Sync services received match.");
 
             return new SyncMatch(match, _hostTracker, _presenceTracker, _syncSocket);

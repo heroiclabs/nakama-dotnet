@@ -66,6 +66,8 @@ namespace NakamaSync
                 {
                     RequestHandshake(_socket, presence);
                 }
+
+                Logger?.DebugFormat($"Handshake requester done seeing presence added.");
             };
 
             _socket.OnHandshakeResponse += (source, response) =>
@@ -93,6 +95,9 @@ namespace NakamaSync
             {
                 RequestHandshake(_socket, otherUser);
             }
+
+            Logger?.DebugFormat($"Handshake requeuster done receiving match.");
+
         }
 
         private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response, bool isHost)
