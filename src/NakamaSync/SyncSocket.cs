@@ -90,24 +90,19 @@ namespace NakamaSync
                 return;
             }
 
-            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
+            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data.");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.Data, _encoding.Encode(envelope));
         }
 
         public void SendRpc(RpcEnvelope envelope, IEnumerable<IUserPresence> targets)
         {
-            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
+            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data.");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.Rpc, _encoding.Encode(envelope), targets);
-
-            if (targets.Any(presence => presence.UserId == _match.Self.UserId))
-            {
-                this.OnRpcEnvelope(_match.Self, envelope);
-            }
         }
 
         public void SendRpc(RpcEnvelope envelope)
         {
-            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data to all");
+            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data.");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.Rpc, _encoding.Encode(envelope));
         }
 
