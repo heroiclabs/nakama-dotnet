@@ -22,7 +22,7 @@ using Nakama;
 namespace NakamaSync
 {
     // todo add some enum or option on how you would like the presence vars to be assigned.
-    // like, do they all need to be filled or what.
+    // like, do they all need to be filled with a presence or can some be unassigned.
     // todo assign errorhandler and logger to this
     internal class PresenceVarRotator<T> : ISyncService
     {

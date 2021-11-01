@@ -104,7 +104,8 @@ namespace NakamaSync
                     // TODO handle data for a stale user?
                     if (var.Presence == null)
                     {
-                        // this is a valid case
+                        // this is a valid case. not all presence vars will necessarily have a presence assigned
+                        // to the at this point.
                         continue;
                     }
 

@@ -14,12 +14,10 @@
 * limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 
 namespace NakamaSync
 {
-    // todo should this be internal if possible?
     internal class PresenceVarCollection<T>
     {
         public SelfVar<T> SelfVar { get; set; }

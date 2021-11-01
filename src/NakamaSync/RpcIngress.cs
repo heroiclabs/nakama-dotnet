@@ -33,7 +33,7 @@ namespace NakamaSync
             set;
         }
 
-        private RpcTargetRegistry _registry;
+        private readonly RpcTargetRegistry _registry;
 
         public RpcIngress(RpcTargetRegistry registry)
         {

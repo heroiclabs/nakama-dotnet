@@ -24,6 +24,8 @@ namespace NakamaSync
     /// <summary>
     /// A variable containing a value for a user in the match. The value is synchronized across all users
     /// but can only be set by the associated user.
+    ///
+    /// Todo rename to "OtherVar"? or something like that.
     /// </summary>
     public class PresenceVar<T> : Var<T>
     {
