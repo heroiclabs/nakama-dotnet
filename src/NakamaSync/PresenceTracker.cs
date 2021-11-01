@@ -26,7 +26,6 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-
         public event Action<IUserPresence> OnPresenceAdded;
         public event Action<IUserPresence> OnPresenceRemoved;
 
@@ -76,15 +75,15 @@ namespace NakamaSync
 
         public IUserPresence GetPresence(int index)
         {
-            if (GetPresenceCount() > index)
+            if (GetPresenceCount() >= index)
             {
                 return _presences.Values[index];
             }
 
-            return null;
+            throw new IndexOutOfRangeException("Presence index out of range of the number of presences.");
         }
 
-        public List<IUserPresence> GetPresences()
+        public List<IUserPresence> GetSortedPresences()
         {
             var presences = new List<IUserPresence>();
 
@@ -95,7 +94,6 @@ namespace NakamaSync
 
             return presences;
         }
-
 
         public List<IUserPresence> GetPresences(IEnumerable<string> userIds)
         {
@@ -109,7 +107,7 @@ namespace NakamaSync
             return presences;
         }
 
-        public List<IUserPresence> GetOthers()
+        public List<IUserPresence> GetSortedOthers()
         {
             var otherIds = GetSortedUserIds().Except(new string[]{_userId});
             return GetPresences(otherIds);
@@ -132,8 +130,6 @@ namespace NakamaSync
 
         private void HandlePresences(IEnumerable<IUserPresence> joiners, IEnumerable<IUserPresence> leavers)
         {
-            var oldPresences = new SortedList<string, IUserPresence>(_presences, StringComparer.Create(System.Globalization.CultureInfo.InvariantCulture, ignoreCase: false));
-
             var removedPresences = new List<IUserPresence>();
 
             foreach (IUserPresence leaver in leavers)
@@ -149,11 +145,6 @@ namespace NakamaSync
                 {
                     ErrorHandler?.Invoke(new InvalidOperationException($"For user {_userId} leaving presence does not exist: " + leaver.UserId));
                 }
-            }
-
-            foreach (var removedPresence in removedPresences)
-            {
-                OnPresenceRemoved?.Invoke(removedPresence);
             }
 
             var addedPresences = new List<IUserPresence>();
@@ -175,10 +166,16 @@ namespace NakamaSync
                 }
             }
 
+            foreach (var removedPresence in removedPresences)
+            {
+                OnPresenceRemoved?.Invoke(removedPresence);
+            }
+
             foreach (IUserPresence addedPresence in addedPresences)
             {
                 OnPresenceAdded?.Invoke(addedPresence);
             }
+
         }
     }
 }

@@ -61,7 +61,7 @@
 // add null checks for inputs and maybe more input validation
 // whole presencevarcollection?
 // todo make sure you can
-// does usemainthread need to be true? test with both
+// does usemainthread need to be true? test with both. think about different threading models.
 
 using System;
 using System.Threading.Tasks;

@@ -61,12 +61,12 @@ namespace NakamaSync
 
         public List<IUserPresence> GetOtherPresences()
         {
-            return  _presenceTracker.GetOthers();
+            return  _presenceTracker.GetSortedOthers();
         }
 
         public List<IUserPresence> GetAllPresences()
         {
-            return _presenceTracker.GetPresences();
+            return _presenceTracker.GetSortedPresences();
         }
 
         public bool IsSelfHost()

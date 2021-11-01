@@ -72,7 +72,7 @@ namespace NakamaSync
             if (joiner.UserId == host.UserId)
             {
                 // get the next presence in the alphanumeric list
-                IUserPresence oldHost = _presenceTracker.GetPresence(1);
+                IUserPresence oldHost = _presenceTracker.GetPresence(index: 1);
                 Logger?.DebugFormat($"Host tracker changing host from {oldHost?.UserId} to {host.UserId}");
                 OnHostChanged?.Invoke(new HostChangedEvent(oldHost, host));
             }

@@ -89,7 +89,7 @@ namespace NakamaSync
             }
 
             // todo randomize?
-            var otherUser = _presenceTracker.GetOthers().FirstOrDefault();
+            var otherUser = _presenceTracker.GetSortedOthers().FirstOrDefault();
 
             if (!_sentHandshake && otherUser != null)
             {
