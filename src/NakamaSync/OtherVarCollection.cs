@@ -18,6 +18,7 @@ using System.Collections.Generic;
 
 namespace NakamaSync
 {
+    // rename to something that inclues self var..."GroupedVar" collection? "OwnedVar" collection?
     internal class OtherVarCollection<T>
     {
         public SelfVar<T> SelfVar { get; set; }
