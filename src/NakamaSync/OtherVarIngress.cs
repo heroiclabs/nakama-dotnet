@@ -25,10 +25,10 @@ namespace NakamaSync
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private readonly OtherVarGuestIngress _OtherVarGuestIngress;
-        private readonly OtherVarHostIngress _OtherVarHostIngress;
+        private readonly OtherVarGuestIngress _otherVarGuestIngress;
+        private readonly OtherVarHostIngress _otherVarHostIngress;
         private readonly VarRegistry _registry;
-        private readonly OtherVarRotators _OtherVarRotators;
+        private readonly OtherVarRotators _otherVarRotators;
         private readonly string _userId;
 
         public OtherVarIngress(
@@ -40,9 +40,9 @@ namespace NakamaSync
         {
             _userId = userId;
             _registry = registry;
-            _OtherVarGuestIngress = OtherVarGuestIngress;
-            _OtherVarHostIngress = OtherVarHostIngress;
-            _OtherVarRotators = OtherVarRotators;
+            _otherVarGuestIngress = OtherVarGuestIngress;
+            _otherVarHostIngress = OtherVarHostIngress;
+            _otherVarRotators = OtherVarRotators;
         }
 
         public void Subscribe(SyncSocket socket, HostTracker hostTracker)
@@ -59,16 +59,16 @@ namespace NakamaSync
 
             try
             {
-                var bools = OtherVarIngressContext.FromBoolValues(_userId, envelope, _registry.OtherVarRegistry, _OtherVarRotators);
+                var bools = OtherVarIngressContext.FromBoolValues(_userId, envelope, _registry.OtherVarRegistry, _otherVarRotators);
                 HandleSyncEnvelope(source, bools, isHost);
 
-                var floats = OtherVarIngressContext.FromFloatValues(_userId, envelope, _registry.OtherVarRegistry, _OtherVarRotators);
+                var floats = OtherVarIngressContext.FromFloatValues(_userId, envelope, _registry.OtherVarRegistry, _otherVarRotators);
                 HandleSyncEnvelope(source, floats, isHost);
 
-                var ints = OtherVarIngressContext.FromIntValues(_userId, envelope, _registry.OtherVarRegistry, _OtherVarRotators);
+                var ints = OtherVarIngressContext.FromIntValues(_userId, envelope, _registry.OtherVarRegistry, _otherVarRotators);
                 HandleSyncEnvelope(source, ints, isHost);
 
-                var strings = OtherVarIngressContext.FromStringValues(_userId, envelope, _registry.OtherVarRegistry, _OtherVarRotators);
+                var strings = OtherVarIngressContext.FromStringValues(_userId, envelope, _registry.OtherVarRegistry, _otherVarRotators);
                 HandleSyncEnvelope(source, strings, isHost);
             }
             catch (Exception e)
@@ -88,12 +88,12 @@ namespace NakamaSync
                 if (isHost)
                 {
                     Logger?.InfoFormat($"Setting user value for {context.Var.Presence.UserId} as host: {context.Value}");
-                    _OtherVarHostIngress.HandleValue(source, context);
+                    _otherVarHostIngress.HandleValue(source, context);
                 }
                 else
                 {
                     Logger?.InfoFormat($"Setting user value for {context.Var.Presence.UserId} as guest: {context.Value}");
-                    _OtherVarGuestIngress.HandleValue(context.Var, source, context.Value);
+                    _otherVarGuestIngress.HandleValue(context.Var, source, context.Value);
                 }
             }
         }

@@ -26,17 +26,17 @@ namespace NakamaSync
         internal IEnumerable<IVar> RegisteredVars => new HashSet<IVar>(_registeredVars);
 
         internal SharedVarRegistry SharedVarRegistry => _sharedVarRegistry;
-        internal OtherVarRegistry OtherVarRegistry => _OtherVarRegistry;
+        internal OtherVarRegistry OtherVarRegistry => _otherVarRegistry;
 
         private readonly SharedVarRegistry _sharedVarRegistry;
-        private readonly OtherVarRegistry _OtherVarRegistry;
+        private readonly OtherVarRegistry _otherVarRegistry;
         private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
         private readonly HashSet<string> _registeredKeys = new HashSet<string>();
 
         public VarRegistry()
         {
             _sharedVarRegistry = new SharedVarRegistry();
-            _OtherVarRegistry = new OtherVarRegistry();
+            _otherVarRegistry = new OtherVarRegistry();
         }
 
         public void Register(string key, SharedVar<bool> sharedBool)
@@ -64,42 +64,42 @@ namespace NakamaSync
         // somewhere.
         public void Register(string key, SelfVar<bool> selfVar)
         {
-            Register<bool>(key, selfVar, _OtherVarRegistry.PresenceBools);
+            Register<bool>(key, selfVar, _otherVarRegistry.PresenceBools);
         }
 
         public void Register(string key, SelfVar<float> selfVar)
         {
-            Register<float>(key, selfVar, _OtherVarRegistry.PresenceFloats);
+            Register<float>(key, selfVar, _otherVarRegistry.PresenceFloats);
         }
 
         public void Register(string key, SelfVar<int> selfVar)
         {
-            Register<int>(key, selfVar, _OtherVarRegistry.PresenceInts);
+            Register<int>(key, selfVar, _otherVarRegistry.PresenceInts);
         }
 
         public void Register(string key, SelfVar<string> selfVar)
         {
-            Register<string>(key, selfVar, _OtherVarRegistry.PresenceStrings);
+            Register<string>(key, selfVar, _otherVarRegistry.PresenceStrings);
         }
 
         public void Register(string key, OtherVar<bool> OtherVar)
         {
-            Register<bool>(key, OtherVar, _OtherVarRegistry.PresenceBools);
+            Register<bool>(key, OtherVar, _otherVarRegistry.PresenceBools);
         }
 
         public void Register(string key, OtherVar<float> OtherVar)
         {
-            Register<float>(key, OtherVar, _OtherVarRegistry.PresenceFloats);
+            Register<float>(key, OtherVar, _otherVarRegistry.PresenceFloats);
         }
 
         public void Register(string key, OtherVar<int> OtherVar)
         {
-            Register<int>(key, OtherVar, _OtherVarRegistry.PresenceInts);
+            Register<int>(key, OtherVar, _otherVarRegistry.PresenceInts);
         }
 
         public void Register(string key, OtherVar<string> OtherVar)
         {
-            Register<string>(key, OtherVar, _OtherVarRegistry.PresenceStrings);
+            Register<string>(key, OtherVar, _otherVarRegistry.PresenceStrings);
         }
 
         private void Register<T>(string key, SharedVar<T> var, Dictionary<string, SharedVar<T>> varDict)

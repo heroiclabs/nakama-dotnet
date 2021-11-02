@@ -27,7 +27,7 @@ namespace Nakama.Tests.Sync
         public IUserPresence Self => _match.Self;
         public ISession Session => _session;
         public SyncTestSharedVars SharedVars => _sharedVars;
-        public SyncTestOtherVars OtherVars => _OtherVars;
+        public SyncTestOtherVars OtherVars => _otherVars;
         public SyncTestRpcs Rpcs => _rpcs;
         public SyncMatch Match => _match;
 
@@ -37,7 +37,7 @@ namespace Nakama.Tests.Sync
         private readonly RpcTargetRegistry _rpcTargetRegistry = new RpcTargetRegistry();
         private readonly SyncOpcodes _opcodes;
         private SyncTestSharedVars _sharedVars;
-        private SyncTestOtherVars _OtherVars;
+        private SyncTestOtherVars _otherVars;
         private SyncTestRpcs _rpcs;
         private readonly ILogger _logger;
         private readonly VarIdGenerator _varIdGenerator;
@@ -49,7 +49,7 @@ namespace Nakama.Tests.Sync
         public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numOtherVarCollections, int numOtherVarsPerCollection) : this(userId, opcodes)
         {
             _varIdGenerator = varIdGenerator;
-            _OtherVars = new SyncTestOtherVars(_varRegistry, numOtherVarCollections, numOtherVarsPerCollection);
+            _otherVars = new SyncTestOtherVars(_varRegistry, numOtherVarCollections, numOtherVarsPerCollection);
         }
 
         public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numSharedVars) : this(userId, opcodes)

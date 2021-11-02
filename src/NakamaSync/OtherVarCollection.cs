@@ -22,7 +22,7 @@ namespace NakamaSync
     internal class OtherVarCollection<T>
     {
         public SelfVar<T> SelfVar { get; set; }
-        public List<OtherVar<T>> OtherVars => _OtherVars;
-        private readonly List<OtherVar<T>> _OtherVars = new List<OtherVar<T>>();
+        public List<OtherVar<T>> OtherVars => _otherVars;
+        private readonly List<OtherVar<T>> _otherVars = new List<OtherVar<T>>();
     }
 }

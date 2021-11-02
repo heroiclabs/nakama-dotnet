@@ -35,7 +35,7 @@ namespace NakamaSync
         private readonly LockVersionGuard _lockVersionGuard;
 
         private readonly SharedVarIngress _sharedVarIngress;
-        private readonly OtherVarIngress _OtherVarIngress;
+        private readonly OtherVarIngress _otherVarIngress;
 
         private readonly SharedVarEgress _sharedVarEgress;
         private readonly SelfVarEgress _selfVarEgress;
@@ -46,7 +46,7 @@ namespace NakamaSync
         private readonly ISocket _socket;
         private readonly HostMigrator _migrator;
 
-        private readonly OtherVarRotators _OtherVarRotators;
+        private readonly OtherVarRotators _otherVarRotators;
 
         private RpcIngress _rpcIngress;
 
@@ -141,7 +141,7 @@ namespace NakamaSync
             _lockVersionGuard = lockVersionGuard;
 
             _sharedVarIngress = sharedVarGuestIngress;
-            _OtherVarIngress = presenceRoleIngress;
+            _otherVarIngress = presenceRoleIngress;
 
             _handshakeRequester = handshakeRequester;
             _handshakeResponder = handshakeResponder;
@@ -152,7 +152,7 @@ namespace NakamaSync
 
             _socket = socket;
             _migrator = migrator;
-            _OtherVarRotators = OtherVarRotators;
+            _otherVarRotators = OtherVarRotators;
             _rpcIngress = rpcIngress;
         }
 
@@ -195,13 +195,13 @@ namespace NakamaSync
             _selfVarEgress.Subscribe(_varRegistry.OtherVarRegistry);
 
             // no presence var egress because self cannot set a presence var
-            _OtherVarIngress.Subscribe(_syncSocket, _hostTracker);
+            _otherVarIngress.Subscribe(_syncSocket, _hostTracker);
 
             _handshakeRequester.Subscribe(_hostTracker);
             _handshakeResponder.Subscribe(_syncSocket);
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
 
-            _OtherVarRotators.Register(_varRegistry.OtherVarRegistry);
+            _otherVarRotators.Register(_varRegistry.OtherVarRegistry);
             _rpcIngress.Subscribe(_syncSocket);
             _syncCleanup.Subscribe(_presenceTracker);
 
@@ -226,7 +226,7 @@ namespace NakamaSync
 
             _logger?.DebugFormat("Rotators are receiving match...");
 
-            _OtherVarRotators.ReceiveMatch(match);
+            _otherVarRotators.ReceiveMatch(match);
 
             _logger?.DebugFormat("Handshake requester is receiving match...");
 
