@@ -33,6 +33,9 @@ namespace NakamaSync
         [DataMember(Name="shared_strings"), Preserve]
         public List<SharedValue<string>> SharedStrings { get; set; }
 
+        [DataMember(Name="shared_objects"), Preserve]
+        public List<SharedValue<object>> SharedObjects { get; set; }
+
         [DataMember(Name="user_bools"), Preserve]
         public List<PresenceValue<bool>> PresenceBools { get; set; }
 
@@ -57,6 +60,9 @@ namespace NakamaSync
         [DataMember(Name="shared_string_acks"), Preserve]
         public List<ValidationAck> SharedStringAcks { get; set; }
 
+        [DataMember(Name="shared_objects"), Preserve]
+        public List<ValidationAck> SharedObjectAcks { get; set; }
+
         [DataMember(Name="user_bool_acks"), Preserve]
         public List<ValidationAck> PresenceBoolAcks { get; set; }
 
@@ -75,6 +81,7 @@ namespace NakamaSync
             SharedFloats = new List<SharedValue<float>>();
             SharedInts = new List<SharedValue<int>>();
             SharedStrings = new List<SharedValue<string>>();
+            SharedObjects = new List<SharedValue<object>>();
 
             PresenceBools = new List<PresenceValue<bool>>();
             PresenceFloats = new List<PresenceValue<float>>();

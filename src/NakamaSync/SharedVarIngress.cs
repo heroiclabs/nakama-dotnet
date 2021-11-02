@@ -71,6 +71,9 @@ namespace NakamaSync
             var strings = SharedVarIngressContext.FromStringValues(envelope, _registry);
             ReceiveSyncEnvelope(source, strings, isHost);
 
+            var objects = SharedVarIngressContext.FromObjectValues(envelope, _registry);
+            ReceiveSyncEnvelope(source, objects, isHost);
+
             Logger?.DebugFormat($"Shared role ingress done processing sync envelope.");
         }
 

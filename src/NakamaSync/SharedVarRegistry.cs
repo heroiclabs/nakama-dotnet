@@ -24,6 +24,7 @@ namespace NakamaSync
         public Dictionary<string, SharedVar<float>> SharedFloats { get; }
         public Dictionary<string, SharedVar<int>> SharedInts { get; }
         public Dictionary<string, SharedVar<string>> SharedStrings { get; }
+        public Dictionary<string, SharedVar<object>> SharedObjects { get; }
 
         public SharedVarRegistry()
         {
@@ -31,6 +32,7 @@ namespace NakamaSync
             SharedFloats = new Dictionary<string, SharedVar<float>>();
             SharedInts = new Dictionary<string, SharedVar<int>>();
             SharedStrings = new Dictionary<string, SharedVar<string>>();
+            SharedObjects = new Dictionary<string, SharedVar<object>>();
         }
     }
 }

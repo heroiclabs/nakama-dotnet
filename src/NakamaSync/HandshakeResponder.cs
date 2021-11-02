@@ -54,6 +54,8 @@ namespace NakamaSync
                 CopyToGuestResponse(_registry.SharedVarRegistry.SharedFloats, syncValues.SharedFloats);
                 CopyToGuestResponse(_registry.SharedVarRegistry.SharedInts, syncValues.SharedInts);
                 CopyToGuestResponse(_registry.SharedVarRegistry.SharedStrings, syncValues.SharedStrings);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedObjects, syncValues.SharedObjects);
+
                 CopyToGuestResponse(_registry.OtherVarRegistry.PresenceBools, syncValues.PresenceBools);
                 CopyToGuestResponse(_registry.OtherVarRegistry.PresenceFloats, syncValues.PresenceFloats);
                 CopyToGuestResponse(_registry.OtherVarRegistry.PresenceInts, syncValues.PresenceInts);

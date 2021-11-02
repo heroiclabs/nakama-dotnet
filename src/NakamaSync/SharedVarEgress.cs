@@ -43,6 +43,8 @@ namespace NakamaSync
             Subscribe(registry.SharedFloats, values => values.SharedFloats);
             Subscribe(registry.SharedInts,  values => values.SharedInts);
             Subscribe(registry.SharedStrings, values => values.SharedStrings);
+            Subscribe(registry.SharedObjects, values => values.SharedObjects);
+
         }
 
         private void Subscribe<T>(Dictionary<string, SharedVar<T>> vars, SharedVarAccessor<T> accessor)

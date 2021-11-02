@@ -61,6 +61,11 @@ namespace NakamaSync
             return FromValues(envelope.SharedStrings, registry.SharedVarRegistry.SharedStrings, env => env.SharedStrings, env => env.SharedStringAcks);
         }
 
+        public static List<SharedVarIngressContext<object>> FromObjectValues(Envelope envelope, VarRegistry registry)
+        {
+            return FromValues(envelope.SharedObjects, registry.SharedVarRegistry.SharedObjects, env => env.SharedObjects, env => env.SharedObjectAcks);
+        }
+
         private static List<SharedVarIngressContext<T>> FromValues<T>(List<SharedValue<T>> values, Dictionary<string, SharedVar<T>> vars, SharedVarAccessor<T> varAccessor, AckAccessor ackAccessor)
         {
             var contexts = new List<SharedVarIngressContext<T>>();

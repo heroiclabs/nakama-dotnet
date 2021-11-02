@@ -59,6 +59,11 @@ namespace NakamaSync
             Register<string>(key, sharedString, _sharedVarRegistry.SharedStrings);
         }
 
+        public void Register(string key, SharedVar<object> sharedObject)
+        {
+            Register<object>(key, sharedObject, _sharedVarRegistry.SharedObjects);
+        }
+
         // todo allow registration one-by-one and then validate each collection afterwards.
         // do this validation and batching after the match starts with an internal method in sync services or
         // somewhere.
