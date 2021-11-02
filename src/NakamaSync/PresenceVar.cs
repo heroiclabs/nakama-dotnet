@@ -27,11 +27,11 @@ namespace NakamaSync
     ///
     /// Todo rename to "OtherVar"? or something like that.
     /// </summary>
-    public class PresenceVar<T> : Var<T>
+    public class OtherVar<T> : Var<T>
     {
         public event PresenceChangedHandler OnPresenceChanged;
 
-        public event Action<IPresenceVarEvent<T>> OnValueChanged;
+        public event Action<IOtherVarEvent<T>> OnValueChanged;
 
         public IUserPresence Presence => _presence;
 
@@ -48,7 +48,7 @@ namespace NakamaSync
             var valueChange = new ValueChange<T>(oldValue, value);
             var statusChange = new ValidationChange(oldStatus, validationStatus);
 
-            OnValueChanged?.Invoke(new PresenceVarEvent<T>(Presence, valueChange, statusChange));
+            OnValueChanged?.Invoke(new OtherVarEvent<T>(Presence, valueChange, statusChange));
         }
 
         internal override void Reset()
@@ -73,7 +73,7 @@ namespace NakamaSync
 
             if (presence?.UserId == Self?.UserId)
             {
-                throw new InvalidOperationException("PresenceVar cannot have a presence id equal to self id.");
+                throw new InvalidOperationException("OtherVar cannot have a presence id equal to self id.");
             }
 
             var oldOwner = _presence;

@@ -20,51 +20,51 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal delegate PresenceVarRotator<T> PresenceVarRotatorAccessor<T>(string collectionKey);
+    internal delegate OtherVarRotator<T> OtherVarRotatorAccessor<T>(string collectionKey);
 
-    internal class PresenceVarRotators : ISyncService
+    internal class OtherVarRotators : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private SyncErrorHandler _errorHandler;
 
-        private Dictionary<string, PresenceVarRotator<bool>> _boolRotators;
-        private Dictionary<string, PresenceVarRotator<float>> _floatRotators;
-        private Dictionary<string, PresenceVarRotator<int>> _intRotators;
-        private Dictionary<string, PresenceVarRotator<string>> _stringRotators;
+        private Dictionary<string, OtherVarRotator<bool>> _boolRotators;
+        private Dictionary<string, OtherVarRotator<float>> _floatRotators;
+        private Dictionary<string, OtherVarRotator<int>> _intRotators;
+        private Dictionary<string, OtherVarRotator<string>> _stringRotators;
 
         private readonly PresenceTracker _presenceTracker;
 
-        public PresenceVarRotators(PresenceTracker presenceTracker)
+        public OtherVarRotators(PresenceTracker presenceTracker)
         {
-            _boolRotators = new Dictionary<string, PresenceVarRotator<bool>>();
-            _floatRotators = new Dictionary<string, PresenceVarRotator<float>>();
-            _intRotators = new Dictionary<string, PresenceVarRotator<int>>();
-            _stringRotators = new Dictionary<string, PresenceVarRotator<string>>();
+            _boolRotators = new Dictionary<string, OtherVarRotator<bool>>();
+            _floatRotators = new Dictionary<string, OtherVarRotator<float>>();
+            _intRotators = new Dictionary<string, OtherVarRotator<int>>();
+            _stringRotators = new Dictionary<string, OtherVarRotator<string>>();
             _presenceTracker = presenceTracker;
         }
 
-        public void Register(PresenceVarRegistry registry)
+        public void Register(OtherVarRegistry registry)
         {
             foreach (var kvp in registry.PresenceBools)
             {
-                AddBool(kvp.Key, kvp.Value.SelfVar, kvp.Value.PresenceVars);
+                AddBool(kvp.Key, kvp.Value.SelfVar, kvp.Value.OtherVars);
             }
 
             foreach (var kvp in registry.PresenceFloats)
             {
-                AddFloat(kvp.Key, kvp.Value.SelfVar, kvp.Value.PresenceVars);
+                AddFloat(kvp.Key, kvp.Value.SelfVar, kvp.Value.OtherVars);
             }
 
             foreach (var kvp in registry.PresenceInts)
             {
-                AddInt(kvp.Key, kvp.Value.SelfVar, kvp.Value.PresenceVars);
+                AddInt(kvp.Key, kvp.Value.SelfVar, kvp.Value.OtherVars);
             }
 
             foreach (var kvp in registry.PresenceStrings)
             {
-                AddString(kvp.Key, kvp.Value.SelfVar, kvp.Value.PresenceVars);
+                AddString(kvp.Key, kvp.Value.SelfVar, kvp.Value.OtherVars);
             }
         }
 
@@ -77,51 +77,51 @@ namespace NakamaSync
             ReceiveMatch(match, _stringRotators);
         }
 
-        public PresenceVarRotator<bool> GetPresenceBoolRotator(string collectionKey)
+        public OtherVarRotator<bool> GetPresenceBoolRotator(string collectionKey)
         {
             return _boolRotators[collectionKey];
         }
 
-        public PresenceVarRotator<float> GetPresenceFloatRotator(string collectionKey)
+        public OtherVarRotator<float> GetPresenceFloatRotator(string collectionKey)
         {
             return _floatRotators[collectionKey];
         }
 
-        public PresenceVarRotator<int> GetPresenceIntRotator(string collectionKey)
+        public OtherVarRotator<int> GetPresenceIntRotator(string collectionKey)
         {
             return _intRotators[collectionKey];
         }
 
-        public PresenceVarRotator<string> GetPresenceStringRotator(string collectionKey)
+        public OtherVarRotator<string> GetPresenceStringRotator(string collectionKey)
         {
             return _stringRotators[collectionKey];
         }
 
-        private void AddBool(string key, SelfVar<bool> selfVar, IEnumerable<PresenceVar<bool>> presenceVars)
+        private void AddBool(string key, SelfVar<bool> selfVar, IEnumerable<OtherVar<bool>> OtherVars)
         {
-            Add(key, selfVar, presenceVars, _boolRotators);
+            Add(key, selfVar, OtherVars, _boolRotators);
         }
 
-        private void AddFloat(string key, SelfVar<float> selfVar, IEnumerable<PresenceVar<float>> presenceVars)
+        private void AddFloat(string key, SelfVar<float> selfVar, IEnumerable<OtherVar<float>> OtherVars)
         {
-            Add(key, selfVar, presenceVars, _floatRotators);
+            Add(key, selfVar, OtherVars, _floatRotators);
         }
 
-        private void AddInt(string key, SelfVar<int> selfVar, IEnumerable<PresenceVar<int>> presenceVars)
+        private void AddInt(string key, SelfVar<int> selfVar, IEnumerable<OtherVar<int>> OtherVars)
         {
-            Add(key, selfVar, presenceVars, _intRotators);
+            Add(key, selfVar, OtherVars, _intRotators);
         }
 
-        private void AddString(string key, SelfVar<string> selfVar, IEnumerable<PresenceVar<string>> presenceVars)
+        private void AddString(string key, SelfVar<string> selfVar, IEnumerable<OtherVar<string>> OtherVars)
         {
-            Add(key, selfVar, presenceVars, _stringRotators);
+            Add(key, selfVar, OtherVars, _stringRotators);
         }
 
         private void Add<T>(
             string key,
             SelfVar<T> selfVar,
-            IEnumerable<PresenceVar<T>> presenceVars,
-            Dictionary<string, PresenceVarRotator<T>> rotators)
+            IEnumerable<OtherVar<T>> OtherVars,
+            Dictionary<string, OtherVarRotator<T>> rotators)
         {
             if (rotators.ContainsKey(key))
             {
@@ -129,21 +129,21 @@ namespace NakamaSync
                 return;
             }
 
-            var rotator = new PresenceVarRotator<T>(_presenceTracker);
+            var rotator = new OtherVarRotator<T>(_presenceTracker);
 
-            foreach (var presenceVar in presenceVars)
+            foreach (var OtherVar in OtherVars)
             {
                 rotator.ErrorHandler = ErrorHandler;
                 rotator.Logger = Logger;
-                rotator.AddPresenceVar(presenceVar);
+                rotator.AddOtherVar(OtherVar);
             }
 
             rotators.Add(key, rotator);
         }
 
-        private void ReceiveMatch<T>(IMatch match, Dictionary<string, PresenceVarRotator<T>> rotators)
+        private void ReceiveMatch<T>(IMatch match, Dictionary<string, OtherVarRotator<T>> rotators)
         {
-            foreach (PresenceVarRotator<T> rotator in rotators.Values)
+            foreach (OtherVarRotator<T> rotator in rotators.Values)
             {
                 rotator.ReceiveMatch(match);
             }

@@ -59,7 +59,7 @@
 // which would keep the variables there?
 // todo create a syncmatch struct and expose presences.
 // add null checks for inputs and maybe more input validation
-// whole presencevarcollection?
+// whole OtherVarcollection?
 // todo make sure you can
 // does usemainthread need to be true? test with both. think about different threading models.
 

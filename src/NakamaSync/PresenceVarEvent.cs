@@ -18,13 +18,13 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class PresenceVarEvent<T> : IPresenceVarEvent<T>
+    internal class OtherVarEvent<T> : IOtherVarEvent<T>
     {
         public IUserPresence Source { get; }
         public ValueChange<T> ValueChange { get; }
         public ValidationChange ValidationChange { get; }
 
-        internal PresenceVarEvent(IUserPresence source, ValueChange<T> valueChange, ValidationChange validationChange)
+        internal OtherVarEvent(IUserPresence source, ValueChange<T> valueChange, ValidationChange validationChange)
         {
             Source = source;
             ValueChange = valueChange;

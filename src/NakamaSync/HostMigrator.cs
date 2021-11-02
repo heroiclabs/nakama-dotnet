@@ -58,10 +58,10 @@ namespace NakamaSync
             ValidatePendingVars<int>(registry.SharedVarRegistry.SharedInts, env => env.SharedIntAcks);
             ValidatePendingVars<string>(registry.SharedVarRegistry.SharedStrings, env => env.SharedStringAcks);
 
-            ValidatePendingVars<bool>(registry.PresenceVarRegistry.PresenceBools, env => env.PresenceBoolAcks);
-            ValidatePendingVars<float>(registry.PresenceVarRegistry.PresenceFloats, env => env.PresenceFloatAcks);
-            ValidatePendingVars<int>(registry.PresenceVarRegistry.PresenceInts, env => env.PresenceIntAcks);
-            ValidatePendingVars<string>(registry.PresenceVarRegistry.PresenceStrings, env => env.PresenceStringAcks);
+            ValidatePendingVars<bool>(registry.OtherVarRegistry.PresenceBools, env => env.PresenceBoolAcks);
+            ValidatePendingVars<float>(registry.OtherVarRegistry.PresenceFloats, env => env.PresenceFloatAcks);
+            ValidatePendingVars<int>(registry.OtherVarRegistry.PresenceInts, env => env.PresenceIntAcks);
+            ValidatePendingVars<string>(registry.OtherVarRegistry.PresenceStrings, env => env.PresenceStringAcks);
 
             _builder.SendEnvelope();
         }
@@ -74,7 +74,7 @@ namespace NakamaSync
             }
         }
 
-        private void ValidatePendingVars<T>(Dictionary<string, PresenceVarCollection<T>> vars, AckAccessor ackAccessor)
+        private void ValidatePendingVars<T>(Dictionary<string, OtherVarCollection<T>> vars, AckAccessor ackAccessor)
         {
             // TODO validate each var individually.
             foreach (var kvp in vars)
@@ -89,10 +89,10 @@ namespace NakamaSync
             UpdateVarHost(varRegistry.SharedVarRegistry.SharedFloats, isHost);
             UpdateVarHost(varRegistry.SharedVarRegistry.SharedInts, isHost);
             UpdateVarHost(varRegistry.SharedVarRegistry.SharedStrings, isHost);
-            UpdateVarHost(varRegistry.PresenceVarRegistry.PresenceBools, isHost);
-            UpdateVarHost(varRegistry.PresenceVarRegistry.PresenceFloats, isHost);
-            UpdateVarHost(varRegistry.PresenceVarRegistry.PresenceInts, isHost);
-            UpdateVarHost(varRegistry.PresenceVarRegistry.PresenceStrings, isHost);
+            UpdateVarHost(varRegistry.OtherVarRegistry.PresenceBools, isHost);
+            UpdateVarHost(varRegistry.OtherVarRegistry.PresenceFloats, isHost);
+            UpdateVarHost(varRegistry.OtherVarRegistry.PresenceInts, isHost);
+            UpdateVarHost(varRegistry.OtherVarRegistry.PresenceStrings, isHost);
         }
 
         private void UpdateVarHost<T>(Dictionary<string, SharedVar<T>> vars, bool isHost)
@@ -103,15 +103,15 @@ namespace NakamaSync
             }
         }
 
-        private void UpdateVarHost<T>(Dictionary<string, PresenceVarCollection<T>> vars, bool isHost)
+        private void UpdateVarHost<T>(Dictionary<string, OtherVarCollection<T>> vars, bool isHost)
         {
             foreach (var var in vars.Values)
             {
                 var.SelfVar.IsHost = isHost;
 
-                foreach (var presenceVar in var.PresenceVars)
+                foreach (var OtherVar in var.OtherVars)
                 {
-                    presenceVar.IsHost = isHost;
+                    OtherVar.IsHost = isHost;
                 }
             }
         }

@@ -21,7 +21,7 @@ namespace NakamaSync
 {
     internal delegate List<ValidationAck> AckAccessor(Envelope envelope);
     internal delegate List<SharedValue<T>> SharedVarAccessor<T>(Envelope envelope);
-    internal delegate List<PresenceValue<T>> PresenceVarAccessor<T>(Envelope envelope);
+    internal delegate List<PresenceValue<T>> OtherVarAccessor<T>(Envelope envelope);
 
     // todo this can be used to batch socket envelope sends
     // todo make this more like the rpcenvelopebuilder?
@@ -44,7 +44,7 @@ namespace NakamaSync
             accessor(_envelope).Add(value);
         }
 
-        public void AddPresenceVar<T>(PresenceVarAccessor<T> accessor, PresenceValue<T> value)
+        public void AddOtherVar<T>(OtherVarAccessor<T> accessor, PresenceValue<T> value)
         {
             accessor(_envelope).Add(value);
         }

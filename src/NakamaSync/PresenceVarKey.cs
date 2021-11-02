@@ -19,7 +19,7 @@ using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
-    internal class PresenceVarKey
+    internal class OtherVarKey
     {
         [DataMember(Name="collectionKey"), Preserve]
         public string CollectionKey { get; set; }
@@ -27,7 +27,7 @@ namespace NakamaSync
         [DataMember(Name="userId"), Preserve]
         public string UserId { get; set; }
 
-        public PresenceVarKey(string collectionKey, string userId)
+        public OtherVarKey(string collectionKey, string userId)
         {
             CollectionKey = collectionKey;
             UserId = userId;
@@ -35,7 +35,7 @@ namespace NakamaSync
 
         public override string ToString()
         {
-            return $"PresenceVarKey(Key='{CollectionKey}', Index='{UserId})'";
+            return $"OtherVarKey(Key='{CollectionKey}', Index='{UserId})'";
         }
     }
 }

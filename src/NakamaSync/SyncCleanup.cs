@@ -49,10 +49,10 @@ namespace NakamaSync
                 ResetVars(_varRegistry.SharedVarRegistry.SharedFloats);
                 ResetVars(_varRegistry.SharedVarRegistry.SharedInts);
                 ResetVars(_varRegistry.SharedVarRegistry.SharedStrings);
-                ResetVars(_varRegistry.PresenceVarRegistry.PresenceBools);
-                ResetVars(_varRegistry.PresenceVarRegistry.PresenceFloats);
-                ResetVars(_varRegistry.PresenceVarRegistry.PresenceInts);
-                ResetVars(_varRegistry.PresenceVarRegistry.PresenceStrings);
+                ResetVars(_varRegistry.OtherVarRegistry.PresenceBools);
+                ResetVars(_varRegistry.OtherVarRegistry.PresenceFloats);
+                ResetVars(_varRegistry.OtherVarRegistry.PresenceInts);
+                ResetVars(_varRegistry.OtherVarRegistry.PresenceStrings);
             }
         }
 
@@ -64,15 +64,15 @@ namespace NakamaSync
             }
         }
 
-        private void ResetVars<T>(Dictionary<string, PresenceVarCollection<T>> presenceVarCollections)
+        private void ResetVars<T>(Dictionary<string, OtherVarCollection<T>> OtherVarCollections)
         {
-            foreach (var presenceVarCollection in presenceVarCollections.Values)
+            foreach (var OtherVarCollection in OtherVarCollections.Values)
             {
-                presenceVarCollection.SelfVar.Reset();
+                OtherVarCollection.SelfVar.Reset();
 
-                foreach (var presenceVar in presenceVarCollection.PresenceVars)
+                foreach (var OtherVar in OtherVarCollection.OtherVars)
                 {
-                    presenceVar.Reset();
+                    OtherVar.Reset();
                 }
             }
         }

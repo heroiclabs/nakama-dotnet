@@ -78,8 +78,8 @@ namespace Nakama.Tests.Sync
         public SyncTestEnvironment(
             SyncOpcodes opcodes,
             int numClients,
-            int numPresenceVarCollections,
-            int numPresenceVarsPerCollection,
+            int numOtherVarCollections,
+            int numOtherVarsPerCollection,
             int creatorIndex,
             UserIdGenerator userIdGenerator = null,
             VarIdGenerator varIdGenerator = null)
@@ -91,7 +91,7 @@ namespace Nakama.Tests.Sync
             for (int i = 0; i < numClients; i++)
             {
                 string userId = userIdGenerator(i);
-                var env = new SyncTestUserEnvironment(userId, opcodes, varIdGenerator, numPresenceVarCollections, numPresenceVarsPerCollection);
+                var env = new SyncTestUserEnvironment(userId, opcodes, varIdGenerator, numOtherVarCollections, numOtherVarsPerCollection);
                 _syncTestUserEnvironments.Add(env);
             }
         }

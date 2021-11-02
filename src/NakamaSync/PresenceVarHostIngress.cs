@@ -19,7 +19,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class PresenceVarHostIngress : ISyncService
+    internal class OtherVarHostIngress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -27,13 +27,13 @@ namespace NakamaSync
         private readonly LockVersionGuard _lockVersionGuard;
         private EnvelopeBuilder _builder;
 
-        public PresenceVarHostIngress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
+        public OtherVarHostIngress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
         {
             _lockVersionGuard = lockVersionGuard;
             _builder = builder;
         }
 
-        public void HandleValue<T>(IUserPresence source, PresenceVarIngressContext<T> context)
+        public void HandleValue<T>(IUserPresence source, OtherVarIngressContext<T> context)
         {
             switch (context.Value.ValidationStatus)
             {
@@ -74,23 +74,23 @@ namespace NakamaSync
             }
         }
 
-        private void RollbackPendingValue<T>(PresenceVar<T> var, PresenceValue<T> value, PresenceVarAccessor<T> accessor)
+        private void RollbackPendingValue<T>(OtherVar<T> var, PresenceValue<T> value, OtherVarAccessor<T> accessor)
         {
             // one guest has incorrect value. queue a rollback for all guests.
             var outgoing = new PresenceValue<T>(value.Key, var.GetValue(), ValidationStatus.Validated);
-            _builder.AddPresenceVar(accessor, value);
+            _builder.AddOtherVar(accessor, value);
             _builder.SendEnvelope();
         }
 
-        private void AcceptPendingValue<T>(IUserPresence source, PresenceVar<T> var, PresenceValue<T> value, PresenceVarAccessor<T> accessor, AckAccessor ackAccessor)
+        private void AcceptPendingValue<T>(IUserPresence source, OtherVar<T> var, PresenceValue<T> value, OtherVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
             var.SetValue(value.Value, ValidationStatus.Validated);
-            _builder.AddPresenceVar(accessor, value);
+            _builder.AddOtherVar(accessor, value);
             _builder.AddAck(ackAccessor, value.ToString());
             _builder.SendEnvelope();
         }
 
-        private void HandleNonValidatedValue<T>(IUserPresence source, PresenceVar<T> var, PresenceValue<T> value)
+        private void HandleNonValidatedValue<T>(IUserPresence source, OtherVar<T> var, PresenceValue<T> value)
         {
             var.SetValue(value.Value, value.ValidationStatus);
         }

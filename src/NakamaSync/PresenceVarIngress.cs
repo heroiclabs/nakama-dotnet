@@ -20,29 +20,29 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class PresenceVarIngress : ISyncService
+    internal class OtherVarIngress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        private readonly PresenceVarGuestIngress _presenceVarGuestIngress;
-        private readonly PresenceVarHostIngress _presenceVarHostIngress;
+        private readonly OtherVarGuestIngress _OtherVarGuestIngress;
+        private readonly OtherVarHostIngress _OtherVarHostIngress;
         private readonly VarRegistry _registry;
-        private readonly PresenceVarRotators _presenceVarRotators;
+        private readonly OtherVarRotators _OtherVarRotators;
         private readonly string _userId;
 
-        public PresenceVarIngress(
+        public OtherVarIngress(
             string userId,
             VarRegistry registry,
-            PresenceVarRotators presenceVarRotators,
-            PresenceVarGuestIngress presenceVarGuestIngress,
-            PresenceVarHostIngress presenceVarHostIngress)
+            OtherVarRotators OtherVarRotators,
+            OtherVarGuestIngress OtherVarGuestIngress,
+            OtherVarHostIngress OtherVarHostIngress)
         {
             _userId = userId;
             _registry = registry;
-            _presenceVarGuestIngress = presenceVarGuestIngress;
-            _presenceVarHostIngress = presenceVarHostIngress;
-            _presenceVarRotators = presenceVarRotators;
+            _OtherVarGuestIngress = OtherVarGuestIngress;
+            _OtherVarHostIngress = OtherVarHostIngress;
+            _OtherVarRotators = OtherVarRotators;
         }
 
         public void Subscribe(SyncSocket socket, HostTracker hostTracker)
@@ -55,20 +55,20 @@ namespace NakamaSync
 
         public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, bool isHost)
         {
-            Logger?.DebugFormat($"PresenceVarIngress received sync envelope from source: {source.UserId}");
+            Logger?.DebugFormat($"OtherVarIngress received sync envelope from source: {source.UserId}");
 
             try
             {
-                var bools = PresenceVarIngressContext.FromBoolValues(_userId, envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
+                var bools = OtherVarIngressContext.FromBoolValues(_userId, envelope, _registry.OtherVarRegistry, _OtherVarRotators);
                 HandleSyncEnvelope(source, bools, isHost);
 
-                var floats = PresenceVarIngressContext.FromFloatValues(_userId, envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
+                var floats = OtherVarIngressContext.FromFloatValues(_userId, envelope, _registry.OtherVarRegistry, _OtherVarRotators);
                 HandleSyncEnvelope(source, floats, isHost);
 
-                var ints = PresenceVarIngressContext.FromIntValues(_userId, envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
+                var ints = OtherVarIngressContext.FromIntValues(_userId, envelope, _registry.OtherVarRegistry, _OtherVarRotators);
                 HandleSyncEnvelope(source, ints, isHost);
 
-                var strings = PresenceVarIngressContext.FromStringValues(_userId, envelope, _registry.PresenceVarRegistry, _presenceVarRotators);
+                var strings = OtherVarIngressContext.FromStringValues(_userId, envelope, _registry.OtherVarRegistry, _OtherVarRotators);
                 HandleSyncEnvelope(source, strings, isHost);
             }
             catch (Exception e)
@@ -77,23 +77,23 @@ namespace NakamaSync
             }
         }
 
-        private void HandleSyncEnvelope<T>(IUserPresence source, List<PresenceVarIngressContext<T>> contexts, bool isHost)
+        private void HandleSyncEnvelope<T>(IUserPresence source, List<OtherVarIngressContext<T>> contexts, bool isHost)
         {
-            Logger?.DebugFormat($"PresenceVarIngress processing num contexts: {contexts.Count}");
+            Logger?.DebugFormat($"OtherVarIngress processing num contexts: {contexts.Count}");
 
-            foreach (PresenceVarIngressContext<T> context in contexts)
+            foreach (OtherVarIngressContext<T> context in contexts)
             {
-                Logger?.DebugFormat($"PresenceVarIngress processing context: {context}");
+                Logger?.DebugFormat($"OtherVarIngress processing context: {context}");
 
                 if (isHost)
                 {
                     Logger?.InfoFormat($"Setting user value for {context.Var.Presence.UserId} as host: {context.Value}");
-                    _presenceVarHostIngress.HandleValue(source, context);
+                    _OtherVarHostIngress.HandleValue(source, context);
                 }
                 else
                 {
                     Logger?.InfoFormat($"Setting user value for {context.Var.Presence.UserId} as guest: {context.Value}");
-                    _presenceVarGuestIngress.HandleValue(context.Var, source, context.Value);
+                    _OtherVarGuestIngress.HandleValue(context.Var, source, context.Value);
                 }
             }
         }

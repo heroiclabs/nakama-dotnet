@@ -18,10 +18,10 @@ using System.Collections.Generic;
 
 namespace NakamaSync
 {
-    internal class PresenceVarCollection<T>
+    internal class OtherVarCollection<T>
     {
         public SelfVar<T> SelfVar { get; set; }
-        public List<PresenceVar<T>> PresenceVars => _presenceVars;
-        private readonly List<PresenceVar<T>> _presenceVars = new List<PresenceVar<T>>();
+        public List<OtherVar<T>> OtherVars => _OtherVars;
+        private readonly List<OtherVar<T>> _OtherVars = new List<OtherVar<T>>();
     }
 }

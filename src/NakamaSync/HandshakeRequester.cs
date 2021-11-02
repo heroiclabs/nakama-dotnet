@@ -36,11 +36,11 @@ namespace NakamaSync
         private bool _sentHandshake;
 
         private readonly SharedVarIngress _sharedVarGuestIngress;
-        private readonly PresenceVarIngress _presenceRoleIngress;
+        private readonly OtherVarIngress _presenceRoleIngress;
         private readonly SyncSocket _socket;
         private readonly string _userId;
 
-        public HandshakeRequester(VarRegistry registry, PresenceTracker presenceTracker, SyncSocket socket, SharedVarIngress sharedVarGuestIngress, PresenceVarIngress presenceRoleIngress, string userId)
+        public HandshakeRequester(VarRegistry registry, PresenceTracker presenceTracker, SyncSocket socket, SharedVarIngress sharedVarGuestIngress, OtherVarIngress presenceRoleIngress, string userId)
         {
             _registry = registry;
             _presenceTracker = presenceTracker;

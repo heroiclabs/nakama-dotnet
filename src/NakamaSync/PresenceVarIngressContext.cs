@@ -19,14 +19,14 @@ using System.Collections.Generic;
 
 namespace NakamaSync
 {
-    internal class PresenceVarIngressContext<T>
+    internal class OtherVarIngressContext<T>
     {
-        public PresenceVar<T> Var { get; }
+        public OtherVar<T> Var { get; }
         public PresenceValue<T> Value { get; }
-        public PresenceVarAccessor<T> VarAccessor { get; }
+        public OtherVarAccessor<T> VarAccessor { get; }
         public AckAccessor AckAccessor { get; }
 
-        public PresenceVarIngressContext(PresenceVar<T> var, PresenceValue<T> value, PresenceVarAccessor<T> accessor, AckAccessor ackAccessor)
+        public OtherVarIngressContext(OtherVar<T> var, PresenceValue<T> value, OtherVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
             Var = var;
             Value = value;
@@ -35,31 +35,31 @@ namespace NakamaSync
         }
     }
 
-    internal class PresenceVarIngressContext
+    internal class OtherVarIngressContext
     {
-        public static List<PresenceVarIngressContext<bool>> FromBoolValues(string selfId, Envelope envelope, PresenceVarRegistry registry, PresenceVarRotators presenceVarRotators)
+        public static List<OtherVarIngressContext<bool>> FromBoolValues(string selfId, Envelope envelope, OtherVarRegistry registry, OtherVarRotators OtherVarRotators)
         {
-            return PresenceVarIngressContext.FromValues<bool>(selfId, envelope.PresenceBools, registry.PresenceBools, env => env.PresenceBools, env => env.PresenceBoolAcks, presenceVarRotators.GetPresenceBoolRotator);
+            return OtherVarIngressContext.FromValues<bool>(selfId, envelope.PresenceBools, registry.PresenceBools, env => env.PresenceBools, env => env.PresenceBoolAcks, OtherVarRotators.GetPresenceBoolRotator);
         }
 
-        public static List<PresenceVarIngressContext<float>> FromFloatValues(string selfId, Envelope envelope, PresenceVarRegistry registry, PresenceVarRotators presenceVarRotators)
+        public static List<OtherVarIngressContext<float>> FromFloatValues(string selfId, Envelope envelope, OtherVarRegistry registry, OtherVarRotators OtherVarRotators)
         {
-            return PresenceVarIngressContext.FromValues<float>(selfId, envelope.PresenceFloats, registry.PresenceFloats, env => env.PresenceFloats, env => env.PresenceFloatAcks, presenceVarRotators.GetPresenceFloatRotator);
+            return OtherVarIngressContext.FromValues<float>(selfId, envelope.PresenceFloats, registry.PresenceFloats, env => env.PresenceFloats, env => env.PresenceFloatAcks, OtherVarRotators.GetPresenceFloatRotator);
         }
 
-        public static List<PresenceVarIngressContext<int>> FromIntValues(string selfId, Envelope envelope, PresenceVarRegistry registry, PresenceVarRotators presenceVarRotators)
+        public static List<OtherVarIngressContext<int>> FromIntValues(string selfId, Envelope envelope, OtherVarRegistry registry, OtherVarRotators OtherVarRotators)
         {
-            return PresenceVarIngressContext.FromValues<int>(selfId, envelope.PresenceInts, registry.PresenceInts, env => env.PresenceInts, env => env.PresenceIntAcks, presenceVarRotators.GetPresenceIntRotator);
+            return OtherVarIngressContext.FromValues<int>(selfId, envelope.PresenceInts, registry.PresenceInts, env => env.PresenceInts, env => env.PresenceIntAcks, OtherVarRotators.GetPresenceIntRotator);
         }
 
-        public static List<PresenceVarIngressContext<string>> FromStringValues(string selfId, Envelope envelope, PresenceVarRegistry registry, PresenceVarRotators presenceVarRotators)
+        public static List<OtherVarIngressContext<string>> FromStringValues(string selfId, Envelope envelope, OtherVarRegistry registry, OtherVarRotators OtherVarRotators)
         {
-            return PresenceVarIngressContext.FromValues<string>(selfId, envelope.PresenceStrings, registry.PresenceStrings, env => env.PresenceStrings, env => env.PresenceStringAcks, presenceVarRotators.GetPresenceStringRotator);
+            return OtherVarIngressContext.FromValues<string>(selfId, envelope.PresenceStrings, registry.PresenceStrings, env => env.PresenceStrings, env => env.PresenceStringAcks, OtherVarRotators.GetPresenceStringRotator);
         }
 
-        private static List<PresenceVarIngressContext<T>> FromValues<T>(string selfId, List<PresenceValue<T>> values, Dictionary<string, PresenceVarCollection<T>> vars, PresenceVarAccessor<T> varAccessor, AckAccessor ackAccessor, PresenceVarRotatorAccessor<T> rotatorAccessor)
+        private static List<OtherVarIngressContext<T>> FromValues<T>(string selfId, List<PresenceValue<T>> values, Dictionary<string, OtherVarCollection<T>> vars, OtherVarAccessor<T> varAccessor, AckAccessor ackAccessor, OtherVarRotatorAccessor<T> rotatorAccessor)
         {
-            var contexts = new List<PresenceVarIngressContext<T>>();
+            var contexts = new List<OtherVarIngressContext<T>>();
 
             foreach (PresenceValue<T> value in values)
             {
@@ -75,14 +75,14 @@ namespace NakamaSync
                     continue;
                 }
 
-                PresenceVarCollection<T> collection = vars[value.Key.CollectionKey];
-                PresenceVarRotator<T> presenceVarRotator = rotatorAccessor(value.Key.CollectionKey);
+                OtherVarCollection<T> collection = vars[value.Key.CollectionKey];
+                OtherVarRotator<T> OtherVarRotator = rotatorAccessor(value.Key.CollectionKey);
 
-                if (presenceVarRotator.AssignedPresenceVars.ContainsKey(value.Key.UserId))
+                if (OtherVarRotator.AssignedOtherVars.ContainsKey(value.Key.UserId))
                 {
-                    var assignedPresenceVar = presenceVarRotator.AssignedPresenceVars[value.Key.UserId];
-                    assignedPresenceVar.SetValue(value.Value, value.ValidationStatus);
-                    contexts.Add(new PresenceVarIngressContext<T>(assignedPresenceVar, value, varAccessor, ackAccessor));
+                    var assignedOtherVar = OtherVarRotator.AssignedOtherVars[value.Key.UserId];
+                    assignedOtherVar.SetValue(value.Value, value.ValidationStatus);
+                    contexts.Add(new OtherVarIngressContext<T>(assignedOtherVar, value, varAccessor, ackAccessor));
                 }
                 else
                 {

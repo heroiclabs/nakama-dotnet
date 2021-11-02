@@ -18,7 +18,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public interface IPresenceVarEvent<T>
+    public interface IOtherVarEvent<T>
     {
         IUserPresence Source { get; }
         ValueChange<T> ValueChange { get; }

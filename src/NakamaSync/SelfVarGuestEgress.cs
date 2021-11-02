@@ -31,7 +31,7 @@ namespace NakamaSync
             _builder = builder;
         }
 
-        public void HandleLocalSelfVarChanged<T>(PresenceVarKey key, SelfVar<T> var, T newValue, PresenceVarAccessor<T> accessor)
+        public void HandleLocalSelfVarChanged<T>(OtherVarKey key, SelfVar<T> var, T newValue, OtherVarAccessor<T> accessor)
         {
             var status = var.ValidationStatus;
 
@@ -43,7 +43,7 @@ namespace NakamaSync
 
             var newSyncedValue = new PresenceValue<T>(key, newValue, status);
 
-            _builder.AddPresenceVar(accessor, newSyncedValue);
+            _builder.AddOtherVar(accessor, newSyncedValue);
             _builder.SendEnvelope();
         }
     }

@@ -54,10 +54,10 @@ namespace NakamaSync
                 CopyToGuestResponse(_registry.SharedVarRegistry.SharedFloats, syncValues.SharedFloats);
                 CopyToGuestResponse(_registry.SharedVarRegistry.SharedInts, syncValues.SharedInts);
                 CopyToGuestResponse(_registry.SharedVarRegistry.SharedStrings, syncValues.SharedStrings);
-                CopyToGuestResponse(_registry.PresenceVarRegistry.PresenceBools, syncValues.PresenceBools);
-                CopyToGuestResponse(_registry.PresenceVarRegistry.PresenceFloats, syncValues.PresenceFloats);
-                CopyToGuestResponse(_registry.PresenceVarRegistry.PresenceInts, syncValues.PresenceInts);
-                CopyToGuestResponse(_registry.PresenceVarRegistry.PresenceStrings, syncValues.PresenceStrings);
+                CopyToGuestResponse(_registry.OtherVarRegistry.PresenceBools, syncValues.PresenceBools);
+                CopyToGuestResponse(_registry.OtherVarRegistry.PresenceFloats, syncValues.PresenceFloats);
+                CopyToGuestResponse(_registry.OtherVarRegistry.PresenceInts, syncValues.PresenceInts);
+                CopyToGuestResponse(_registry.OtherVarRegistry.PresenceStrings, syncValues.PresenceStrings);
             }
             else
             {
@@ -80,7 +80,7 @@ namespace NakamaSync
             }
         }
 
-        private void CopyToGuestResponse<T>(Dictionary<string, PresenceVarCollection<T>> collectionsByKey, List<PresenceValue<T>> values)
+        private void CopyToGuestResponse<T>(Dictionary<string, OtherVarCollection<T>> collectionsByKey, List<PresenceValue<T>> values)
         {
             foreach (var varKvp in collectionsByKey)
             {
@@ -88,19 +88,19 @@ namespace NakamaSync
 
                 T rawSelfValue = varKvp.Value.SelfVar.GetValue();
 
-                Logger?.DebugFormat($"PresenceVar value for initial payload: CollectionKey: {varKvp.Key}, Raw Value: ${rawSelfValue}");
+                Logger?.DebugFormat($"OtherVar value for initial payload: CollectionKey: {varKvp.Key}, Raw Value: ${rawSelfValue}");
 
-                var selfVarKey = new PresenceVarKey(collectionKey, _presenceTracker.GetSelf().UserId);
+                var selfVarKey = new OtherVarKey(collectionKey, _presenceTracker.GetSelf().UserId);
                 var selfValue = new PresenceValue<T>(selfVarKey, rawSelfValue, varKvp.Value.SelfVar.ValidationStatus);
                 values.Add(selfValue);
 
-                List<PresenceVar<T>> vars = varKvp.Value.PresenceVars;
+                List<OtherVar<T>> vars = varKvp.Value.OtherVars;
 
                 Logger?.DebugFormat($"Handshake responder scanning through user values to copy for key: {varKvp.Key}");
 
                 for (int i = 0; i < vars.Count; i++)
                 {
-                    PresenceVar<T> var = vars[i];
+                    OtherVar<T> var = vars[i];
                     // TODO handle data for a stale user?
                     if (var.Presence == null)
                     {
@@ -113,8 +113,8 @@ namespace NakamaSync
 
                     Logger?.DebugFormat($"Presence value for initial payload: CollectionKey: {varKvp.Key}, Raw Value: {rawValue}");
 
-                    var presenceVarKey = new PresenceVarKey(collectionKey, var.Presence.UserId);
-                    var value = new PresenceValue<T>(presenceVarKey, rawValue, var.ValidationStatus);
+                    var OtherVarKey = new OtherVarKey(collectionKey, var.Presence.UserId);
+                    var value = new PresenceValue<T>(OtherVarKey, rawValue, var.ValidationStatus);
                     values.Add(value);
                 }
             }

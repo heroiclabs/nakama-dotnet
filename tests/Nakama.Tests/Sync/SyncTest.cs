@@ -41,19 +41,19 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private async void PresenceVarShouldRetainData()
+        private async void OtherVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
                 SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
+                numOtherVarCollections: 1,
+                numOtherVarsPerCollection: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.PresenceVars.BoolSelfVars["presenceBools_0"].SetValue(true);
-            Assert.True(creatorEnv.PresenceVars.BoolSelfVars["presenceBools_0"].GetValue());
+            creatorEnv.OtherVars.BoolSelfVars["presenceBools_0"].SetValue(true);
+            Assert.True(creatorEnv.OtherVars.BoolSelfVars["presenceBools_0"].GetValue());
             testEnv.Dispose();
         }
 
@@ -116,19 +116,19 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private async Task PresenceVarShouldSyncData()
+        private async Task OtherVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
                 SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
+                numOtherVarCollections: 1,
+                numOtherVarsPerCollection: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.PresenceVars.BoolSelfVars["presenceBools_0"].SetValue(true);
+            creatorEnv.OtherVars.BoolSelfVars["presenceBools_0"].SetValue(true);
 
             await Task.Delay(2500);
 
@@ -139,9 +139,9 @@ namespace Nakama.Tests.Sync
             string creatorId = creatorEnv.Self.UserId;
             string nonCreatorId = nonCreatorEnv.Self.UserId;
 
-            var nonCreatorPresenceBools = nonCreatorEnv.PresenceVars.BoolPresenceVars["presenceBools_0"];
+            var nonCreatorPresenceBools = nonCreatorEnv.OtherVars.BoolOtherVars["presenceBools_0"];
 
-            var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
+            var creatorOtherVarInGuest = nonCreatorPresenceBools.First(var => {
                 return var.Presence.UserId == creatorId;
             });
 

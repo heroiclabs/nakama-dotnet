@@ -26,17 +26,17 @@ namespace NakamaSync
         internal IEnumerable<IVar> RegisteredVars => new HashSet<IVar>(_registeredVars);
 
         internal SharedVarRegistry SharedVarRegistry => _sharedVarRegistry;
-        internal PresenceVarRegistry PresenceVarRegistry => _presenceVarRegistry;
+        internal OtherVarRegistry OtherVarRegistry => _OtherVarRegistry;
 
         private readonly SharedVarRegistry _sharedVarRegistry;
-        private readonly PresenceVarRegistry _presenceVarRegistry;
+        private readonly OtherVarRegistry _OtherVarRegistry;
         private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
         private readonly HashSet<string> _registeredKeys = new HashSet<string>();
 
         public VarRegistry()
         {
             _sharedVarRegistry = new SharedVarRegistry();
-            _presenceVarRegistry = new PresenceVarRegistry();
+            _OtherVarRegistry = new OtherVarRegistry();
         }
 
         public void Register(string key, SharedVar<bool> sharedBool)
@@ -64,42 +64,42 @@ namespace NakamaSync
         // somewhere.
         public void Register(string key, SelfVar<bool> selfVar)
         {
-            Register<bool>(key, selfVar, _presenceVarRegistry.PresenceBools);
+            Register<bool>(key, selfVar, _OtherVarRegistry.PresenceBools);
         }
 
         public void Register(string key, SelfVar<float> selfVar)
         {
-            Register<float>(key, selfVar, _presenceVarRegistry.PresenceFloats);
+            Register<float>(key, selfVar, _OtherVarRegistry.PresenceFloats);
         }
 
         public void Register(string key, SelfVar<int> selfVar)
         {
-            Register<int>(key, selfVar, _presenceVarRegistry.PresenceInts);
+            Register<int>(key, selfVar, _OtherVarRegistry.PresenceInts);
         }
 
         public void Register(string key, SelfVar<string> selfVar)
         {
-            Register<string>(key, selfVar, _presenceVarRegistry.PresenceStrings);
+            Register<string>(key, selfVar, _OtherVarRegistry.PresenceStrings);
         }
 
-        public void Register(string key, PresenceVar<bool> presenceVar)
+        public void Register(string key, OtherVar<bool> OtherVar)
         {
-            Register<bool>(key, presenceVar, _presenceVarRegistry.PresenceBools);
+            Register<bool>(key, OtherVar, _OtherVarRegistry.PresenceBools);
         }
 
-        public void Register(string key, PresenceVar<float> presenceVar)
+        public void Register(string key, OtherVar<float> OtherVar)
         {
-            Register<float>(key, presenceVar, _presenceVarRegistry.PresenceFloats);
+            Register<float>(key, OtherVar, _OtherVarRegistry.PresenceFloats);
         }
 
-        public void Register(string key, PresenceVar<int> presenceVar)
+        public void Register(string key, OtherVar<int> OtherVar)
         {
-            Register<int>(key, presenceVar, _presenceVarRegistry.PresenceInts);
+            Register<int>(key, OtherVar, _OtherVarRegistry.PresenceInts);
         }
 
-        public void Register(string key, PresenceVar<string> presenceVar)
+        public void Register(string key, OtherVar<string> OtherVar)
         {
-            Register<string>(key, presenceVar, _presenceVarRegistry.PresenceStrings);
+            Register<string>(key, OtherVar, _OtherVarRegistry.PresenceStrings);
         }
 
         private void Register<T>(string key, SharedVar<T> var, Dictionary<string, SharedVar<T>> varDict)
@@ -117,39 +117,39 @@ namespace NakamaSync
             varDict.Add(key, var);
         }
 
-        private void Register<T>(string key, SelfVar<T> selfVar, Dictionary<string, PresenceVarCollection<T>> presenceVarCollections)
+        private void Register<T>(string key, SelfVar<T> selfVar, Dictionary<string, OtherVarCollection<T>> OtherVarCollections)
         {
             if (!_registeredVars.Add(selfVar))
             {
                 throw new InvalidOperationException($"Attempted to register duplicate var {selfVar}");
             }
 
-            PresenceVarCollection<T> presenceVarCollection =
-                presenceVarCollections.ContainsKey(key) ?
-                presenceVarCollections[key] :
-                (presenceVarCollections[key] = new PresenceVarCollection<T>());
+            OtherVarCollection<T> OtherVarCollection =
+                OtherVarCollections.ContainsKey(key) ?
+                OtherVarCollections[key] :
+                (OtherVarCollections[key] = new OtherVarCollection<T>());
 
-                if (presenceVarCollection.SelfVar != null)
+                if (OtherVarCollection.SelfVar != null)
                 {
                     throw new InvalidOperationException("Cannot reassign register multiple SelfVar<T> to the same key.");
                 }
 
-                presenceVarCollection.SelfVar = selfVar;
+                OtherVarCollection.SelfVar = selfVar;
         }
 
-        private void Register<T>(string key, PresenceVar<T> presenceVar, Dictionary<string, PresenceVarCollection<T>> presenceVarCollections)
+        private void Register<T>(string key, OtherVar<T> OtherVar, Dictionary<string, OtherVarCollection<T>> OtherVarCollections)
         {
-            if (!_registeredVars.Add(presenceVar))
+            if (!_registeredVars.Add(OtherVar))
             {
-                throw new InvalidOperationException($"Attempted to register duplicate var {presenceVar}");
+                throw new InvalidOperationException($"Attempted to register duplicate var {OtherVar}");
             }
 
-            PresenceVarCollection<T> presenceVarCollection =
-                presenceVarCollections.ContainsKey(key) ?
-                presenceVarCollections[key] :
-                (presenceVarCollections[key] = new PresenceVarCollection<T>());
+            OtherVarCollection<T> OtherVarCollection =
+                OtherVarCollections.ContainsKey(key) ?
+                OtherVarCollections[key] :
+                (OtherVarCollections[key] = new OtherVarCollection<T>());
 
-                presenceVarCollection.PresenceVars.Add(presenceVar);
+                OtherVarCollection.OtherVars.Add(OtherVar);
         }
 
         internal HashSet<string> GetAllKeys()

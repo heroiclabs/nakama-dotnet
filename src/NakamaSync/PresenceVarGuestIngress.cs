@@ -18,19 +18,19 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class PresenceVarGuestIngress : ISyncService
+    internal class OtherVarGuestIngress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private PresenceTracker _presenceTracker;
 
-        public PresenceVarGuestIngress(PresenceTracker presenceTracker)
+        public OtherVarGuestIngress(PresenceTracker presenceTracker)
         {
             _presenceTracker = presenceTracker;
         }
 
-        public void HandleValue<T>(PresenceVar<T> var, IUserPresence source, PresenceValue<T> value)
+        public void HandleValue<T>(OtherVar<T> var, IUserPresence source, PresenceValue<T> value)
         {
             var.SetValue(value.Value, value.ValidationStatus);
         }

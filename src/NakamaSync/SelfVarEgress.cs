@@ -38,7 +38,7 @@ namespace NakamaSync
             _hostTracker = hostTracker;
         }
 
-        public void Subscribe(PresenceVarRegistry registry)
+        public void Subscribe(OtherVarRegistry registry)
         {
             Subscribe(registry.PresenceBools, values => values.PresenceBools);
             Subscribe(registry.PresenceFloats, values => values.PresenceFloats);
@@ -46,18 +46,18 @@ namespace NakamaSync
             Subscribe(registry.PresenceStrings, values => values.PresenceStrings);
         }
 
-        private void Subscribe<T>(Dictionary<string, PresenceVarCollection<T>> vars, PresenceVarAccessor<T> accessor)
+        private void Subscribe<T>(Dictionary<string, OtherVarCollection<T>> vars, OtherVarAccessor<T> accessor)
         {
             foreach (var selfVarKvp in vars)
             {
-                var selfVarKey = new PresenceVarKey(selfVarKvp.Key, _presenceTracker.UserId);
+                var selfVarKey = new OtherVarKey(selfVarKvp.Key, _presenceTracker.UserId);
                 var selfVar = selfVarKvp.Value.SelfVar;
                 Logger?.DebugFormat($"Subscribing to self variable.");
                 selfVarKvp.Value.SelfVar.OnValueChanged += (evt) => HandleLocalSelfVarChanged(selfVarKey, evt, accessor);
             }
         }
 
-        private void HandleLocalSelfVarChanged<T>(PresenceVarKey key, ISelfVarEvent<T> evt, PresenceVarAccessor<T> accessor)
+        private void HandleLocalSelfVarChanged<T>(OtherVarKey key, ISelfVarEvent<T> evt, OtherVarAccessor<T> accessor)
         {
             bool isHost = _hostTracker.IsSelfHost();
 

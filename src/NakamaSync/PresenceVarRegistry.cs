@@ -18,19 +18,19 @@ using System.Collections.Generic;
 
 namespace NakamaSync
 {
-    internal class PresenceVarRegistry
+    internal class OtherVarRegistry
     {
-        public Dictionary<string, PresenceVarCollection<bool>> PresenceBools { get; }
-        public Dictionary<string, PresenceVarCollection<float>> PresenceFloats { get; }
-        public Dictionary<string, PresenceVarCollection<int>> PresenceInts { get; }
-        public Dictionary<string, PresenceVarCollection<string>> PresenceStrings { get; }
+        public Dictionary<string, OtherVarCollection<bool>> PresenceBools { get; }
+        public Dictionary<string, OtherVarCollection<float>> PresenceFloats { get; }
+        public Dictionary<string, OtherVarCollection<int>> PresenceInts { get; }
+        public Dictionary<string, OtherVarCollection<string>> PresenceStrings { get; }
 
-        public PresenceVarRegistry()
+        public OtherVarRegistry()
         {
-            PresenceBools = new Dictionary<string, PresenceVarCollection<bool>>();
-            PresenceFloats = new Dictionary<string, PresenceVarCollection<float>>();
-            PresenceInts = new Dictionary<string, PresenceVarCollection<int>>();
-            PresenceStrings = new Dictionary<string, PresenceVarCollection<string>>();
+            PresenceBools = new Dictionary<string, OtherVarCollection<bool>>();
+            PresenceFloats = new Dictionary<string, OtherVarCollection<float>>();
+            PresenceInts = new Dictionary<string, OtherVarCollection<int>>();
+            PresenceStrings = new Dictionary<string, OtherVarCollection<string>>();
         }
     }
 }
