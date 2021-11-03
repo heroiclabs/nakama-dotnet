@@ -46,10 +46,10 @@ namespace NakamaSync
             internal set;
         }
 
-        internal bool IsHost
+        public bool IsHost
         {
             get;
-            set;
+            internal set;
         }
 
         internal ILogger Logger

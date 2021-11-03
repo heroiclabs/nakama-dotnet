@@ -18,7 +18,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal interface IVar
+    public interface IVar
     {
         IUserPresence Self
         {
@@ -31,7 +31,21 @@ namespace NakamaSync
             get;
             set;
         }
-    }
 
+        bool RequiresValidation
+        {
+            get;
+        }
+
+        ValidationStatus ValidationStatus
+        {
+            get;
+        }
+
+        bool IsHost
+        {
+            get;
+        }
+    }
 }
 
