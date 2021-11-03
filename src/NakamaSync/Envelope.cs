@@ -60,7 +60,7 @@ namespace NakamaSync
         [DataMember(Name="shared_string_acks"), Preserve]
         public List<ValidationAck> SharedStringAcks { get; set; }
 
-        [DataMember(Name="shared_objects"), Preserve]
+        [DataMember(Name="shared_object_acks"), Preserve]
         public List<ValidationAck> SharedObjectAcks { get; set; }
 
         [DataMember(Name="user_bool_acks"), Preserve]

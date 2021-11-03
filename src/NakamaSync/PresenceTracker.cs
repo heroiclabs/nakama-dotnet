@@ -175,7 +175,6 @@ namespace NakamaSync
             {
                 OnPresenceAdded?.Invoke(addedPresence);
             }
-
         }
     }
 }
