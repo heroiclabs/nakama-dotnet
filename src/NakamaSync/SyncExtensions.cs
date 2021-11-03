@@ -87,6 +87,18 @@ namespace NakamaSync
 
             SyncMatch syncMatch = services.ReceiveMatch(match);
 
+            if (name != null && match.Size > 1)
+            {
+                try
+                {
+                    await services.GetHandshakeTask();
+                }
+                catch (HandshakeFailedException e)
+                {
+                    errorHandler?.Invoke(e);
+                }
+            }
+
             logger?.DebugFormat($"User {session.UserId} is returning sync match.");
 
             return syncMatch;
