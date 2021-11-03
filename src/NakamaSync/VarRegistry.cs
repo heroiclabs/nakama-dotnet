@@ -59,9 +59,9 @@ namespace NakamaSync
             Register<string>(key, sharedString, _sharedVarRegistry.SharedStrings);
         }
 
-        public void Register(string key, SharedVar<object> sharedObject)
+        public void Register<T>(string key, SharedVar<T> sharedObject) where T : class
         {
-            Register<object>(key, sharedObject, _sharedVarRegistry.SharedObjects);
+            Register<object>(key, sharedObject as ISharedVar<T>, _sharedVarRegistry.SharedObjects);
         }
 
         // todo allow registration one-by-one and then validate each collection afterwards.

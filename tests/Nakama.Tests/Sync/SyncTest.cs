@@ -116,6 +116,31 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarShouldSyncDict()
+        {
+            var testEnv = new SyncTestEnvironment(
+                SyncTestsUtil.DefaultOpcodes(),
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0);
+
+            await testEnv.Start();
+
+            var allEnvs = testEnv.GetAllEnvs();
+
+            var dict = new Dictionary<string, string>();
+            dict["hello"] = "world";
+
+            allEnvs[0].SharedVars.SharedObjects[0].SetValue(dict);
+
+            await Task.Delay(1000);
+
+            Assert.Equal("world", allEnvs[0].SharedVars.SharedObjects[0].GetValue()["hello"]);
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task OtherVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
