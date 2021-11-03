@@ -62,6 +62,8 @@
 // whole OtherVarcollection?
 // todo make sure you can
 // does usemainthread need to be true? test with both. think about different threading models.
+// TODO give all vars an interface component
+
 
 using System;
 using System.Threading.Tasks;

@@ -70,11 +70,11 @@ namespace NakamaSync
             socket.SendHandshakeResponse(source, response);
         }
 
-        private void CopyToGuestResponse<T>(Dictionary<string, SharedVar<T>> vars, List<SharedValue<T>> values)
+        private void CopyToGuestResponse<T>(Dictionary<string, ISharedVar<T>> vars, List<SharedValue<T>> values)
         {
             foreach (var kvp in vars)
             {
-                SharedVar<T> var = kvp.Value;
+                ISharedVar<T> var = kvp.Value;
                 T rawValue = var.GetValue();
                 Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
                 var sharedValue = new SharedValue<T>(kvp.Key, rawValue, _lockVersionGuard.GetLockVersion(kvp.Key), kvp.Value.ValidationStatus);

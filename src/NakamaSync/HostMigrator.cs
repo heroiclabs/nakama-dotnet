@@ -66,7 +66,7 @@ namespace NakamaSync
             _builder.SendEnvelope();
         }
 
-        private void ValidatePendingVars<T>(Dictionary<string, SharedVar<T>> vars, AckAccessor ackAccessor)
+        private void ValidatePendingVars<T>(Dictionary<string, ISharedVar<T>> vars, AckAccessor ackAccessor)
         {
             foreach (var kvp in vars)
             {
@@ -95,7 +95,7 @@ namespace NakamaSync
             UpdateVarHost(varRegistry.OtherVarRegistry.PresenceStrings, isHost);
         }
 
-        private void UpdateVarHost<T>(Dictionary<string, SharedVar<T>> vars, bool isHost)
+        private void UpdateVarHost<T>(Dictionary<string, ISharedVar<T>> vars, bool isHost)
         {
             foreach (var var in vars.Values)
             {
@@ -107,11 +107,11 @@ namespace NakamaSync
         {
             foreach (var var in vars.Values)
             {
-                var.SelfVar.IsHost = isHost;
+                (var.SelfVar as IVar).IsHost = isHost;
 
-                foreach (var OtherVar in var.OtherVars)
+                foreach (var otherVar in var.OtherVars)
                 {
-                    OtherVar.IsHost = isHost;
+                    (otherVar as IVar).IsHost = isHost;
                 }
             }
         }

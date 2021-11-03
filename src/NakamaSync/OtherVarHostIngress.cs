@@ -48,9 +48,9 @@ namespace NakamaSync
 
                     ValidationStatus oldStatus = context.Var.ValidationStatus;
                     ValidationStatus newStatus;
-                    if (context.Var.RequiresValidation)
+                    if (context.Var.ValidationHandler != null)
                     {
-                        newStatus = context.Var.InvokeValidationHandler(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
+                        newStatus = context.Var.ValidationHandler.Invoke(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
                     }
                     else
                     {

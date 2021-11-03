@@ -14,25 +14,15 @@
 * limitations under the License.
 */
 
+using System;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedVarGuestIngress : ISyncService
+    internal interface ISharedVar<T> : IVar<T>
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
-        public ILogger Logger { get; set; }
-
-        private PresenceTracker _presenceTracker;
-
-        public SharedVarGuestIngress(PresenceTracker presenceTracker)
-        {
-            _presenceTracker = presenceTracker;
-        }
-
-        public void ProcessValue<T>(ISharedVar<T> var, IUserPresence source, SharedValue<T> value)
-        {
-            var.SetValue(source, value.Value, value.ValidationStatus);
-        }
+        event Action<ISharedVarEvent<T>> OnValueChanged;
+        void SetValue(T value);
+        void SetValue(IUserPresence source, T value, ValidationStatus validationStatus);
     }
 }

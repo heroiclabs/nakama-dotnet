@@ -56,7 +56,7 @@ namespace NakamaSync
             }
         }
 
-        private void ResetVars<T>(Dictionary<string, SharedVar<T>> vars)
+        private void ResetVars<T>(Dictionary<string, ISharedVar<T>> vars)
         {
             foreach (var var in vars.Values)
             {

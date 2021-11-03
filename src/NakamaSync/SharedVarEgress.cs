@@ -47,7 +47,7 @@ namespace NakamaSync
 
         }
 
-        private void Subscribe<T>(Dictionary<string, SharedVar<T>> vars, SharedVarAccessor<T> accessor)
+        private void Subscribe<T>(Dictionary<string, ISharedVar<T>> vars, SharedVarAccessor<T> accessor)
         {
             foreach (var kvp in vars)
             {

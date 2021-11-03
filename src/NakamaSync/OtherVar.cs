@@ -57,7 +57,7 @@ namespace NakamaSync
             OnPresenceChanged = null;
             Self = null;
             _value = default(T);
-            _validationHandler = null;
+            ValidationHandler = null;
             _validationStatus = ValidationStatus.None;
             OnValueChanged = null;
             IsHost = false;

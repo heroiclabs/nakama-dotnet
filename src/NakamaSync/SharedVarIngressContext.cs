@@ -20,12 +20,12 @@ namespace NakamaSync
 {
     internal class SharedVarIngressContext<T>
     {
-        public SharedVar<T> Var { get; }
+        public ISharedVar<T> Var { get; }
         public SharedValue<T> Value { get; }
         public SharedVarAccessor<T> VarAccessor { get; }
         public AckAccessor AckAccessor { get; }
 
-        public SharedVarIngressContext(SharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
+        public SharedVarIngressContext(ISharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
             Var = var;
             Value = value;
@@ -66,7 +66,7 @@ namespace NakamaSync
             return FromValues(envelope.SharedObjects, registry.SharedVarRegistry.SharedObjects, env => env.SharedObjects, env => env.SharedObjectAcks);
         }
 
-        private static List<SharedVarIngressContext<T>> FromValues<T>(List<SharedValue<T>> values, Dictionary<string, SharedVar<T>> vars, SharedVarAccessor<T> varAccessor, AckAccessor ackAccessor)
+        private static List<SharedVarIngressContext<T>> FromValues<T>(List<SharedValue<T>> values, Dictionary<string, ISharedVar<T>> vars, SharedVarAccessor<T> varAccessor, AckAccessor ackAccessor)
         {
             var contexts = new List<SharedVarIngressContext<T>>();
 

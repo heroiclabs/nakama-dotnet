@@ -34,7 +34,7 @@ namespace NakamaSync
         {
             Self = null;
             _value = default(T);
-            _validationHandler = null;
+            ValidationHandler = null;
             _validationStatus = ValidationStatus.None;
             IsHost = false;
             OnValueChanged = null;

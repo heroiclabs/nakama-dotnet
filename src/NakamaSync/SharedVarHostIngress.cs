@@ -47,9 +47,9 @@ namespace NakamaSync
 
                     ValidationStatus oldStatus = context.Var.ValidationStatus;
                     ValidationStatus newStatus;
-                    if (context.Var.RequiresValidation)
+                    if (context.Var.ValidationHandler != null)
                     {
-                        newStatus = context.Var.InvokeValidationHandler(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
+                        newStatus = context.Var.ValidationHandler.Invoke(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
                     }
                     else
                     {
@@ -72,7 +72,7 @@ namespace NakamaSync
             }
         }
 
-        private void RollbackPendingValue<T>(SharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor)
+        private void RollbackPendingValue<T>(ISharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor)
         {
             // one guest has incorrect value. queue a rollback for all guests.
             _lockVersionGuard.IncrementLockVersion(value.Key);
@@ -81,7 +81,7 @@ namespace NakamaSync
             _builder.SendEnvelope();
         }
 
-        private void AcceptPendingValue<T>(IUserPresence source, SharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
+        private void AcceptPendingValue<T>(IUserPresence source, ISharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
         {
             var.SetValue(source, value.Value, ValidationStatus.Validated);
             _builder.AddSharedVar(accessor, value);
@@ -89,7 +89,7 @@ namespace NakamaSync
             _builder.SendEnvelope();
         }
 
-        private void HandleNonValidatedValue<T>(IUserPresence source, SharedVar<T> var, SharedValue<T> value)
+        private void HandleNonValidatedValue<T>(IUserPresence source, ISharedVar<T> var, SharedValue<T> value)
         {
             var.SetValue(source, value.Value, ValidationStatus.None);
         }

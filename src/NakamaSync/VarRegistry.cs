@@ -107,7 +107,7 @@ namespace NakamaSync
             Register<string>(key, OtherVar, _otherVarRegistry.PresenceStrings);
         }
 
-        private void Register<T>(string key, SharedVar<T> var, Dictionary<string, SharedVar<T>> varDict)
+        private void Register<T>(string key, ISharedVar<T> var, Dictionary<string, ISharedVar<T>> varDict)
         {
             if (!_registeredKeys.Add(key))
             {

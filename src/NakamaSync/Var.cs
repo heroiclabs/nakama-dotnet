@@ -20,13 +20,9 @@ namespace NakamaSync
 {
     public delegate bool ValidationHandler<T>(IUserPresence source, ValueChange<T> change);
 
-    public abstract class Var<T> : IVar
+    public abstract class Var<T> : IVar<T>
     {
-        public bool RequiresValidation
-        {
-            get;
-            protected set;
-        }
+        public ValidationHandler<T> ValidationHandler { get; set; }
 
         internal IUserPresence Self
         {
@@ -48,8 +44,21 @@ namespace NakamaSync
 
         public bool IsHost
         {
+            get
+            {
+                return (this as IVar).IsHost;
+            }
+            protected set
+            {
+                (this as IVar).IsHost = value;
+            }
+        }
+
+
+        bool IVar.IsHost
+        {
             get;
-            internal set;
+            set;
         }
 
         internal ILogger Logger
@@ -66,24 +75,17 @@ namespace NakamaSync
 
         protected ValidationStatus _validationStatus;
         protected T _value;
-        protected ValidationHandler<T> _validationHandler;
 
         public T GetValue()
         {
             return _value;
         }
 
-        public void MarkRequiresValidation(ValidationHandler<T> validationHandler)
-        {
-            _validationHandler = validationHandler;
-            // todo set validation status to pending here?
-        }
-
-        internal bool InvokeValidationHandler(IUserPresence source, ValueChange<T> change)
-        {
-            return _validationHandler(source, change);
-        }
-
         internal abstract void Reset();
+
+        void IVar.Reset()
+        {
+            this.Reset();
+        }
     }
 }
