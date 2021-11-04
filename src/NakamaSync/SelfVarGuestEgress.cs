@@ -38,7 +38,7 @@ namespace NakamaSync
             if (status == ValidationStatus.Validated)
             {
                 status = ValidationStatus.Pending;
-                var.ValidationStatus = status;
+                (var as IVar).SetValidationStatus(status);
             }
 
             var newSyncedValue = new PresenceValue<T>(key, newValue, status);

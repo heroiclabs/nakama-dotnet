@@ -52,11 +52,11 @@ namespace NakamaSync
             foreach (var kvp in vars)
             {
                 Logger?.DebugFormat($"Subscribing to shared variable with key {kvp.Key}");
-                vars[kvp.Key].OnValueChanged += (evt) => HandleLocalSharedVarChanged(kvp.Key, evt, accessor);
+                vars[kvp.Key].OnValueChanged += (evt) => HandleLocalSharedVarChanged(kvp.Key, kvp.Value, evt, accessor);
             }
         }
 
-        private void HandleLocalSharedVarChanged<T>(string key, ISharedVarEvent<T> evt, SharedVarAccessor<T> accessor)
+        private void HandleLocalSharedVarChanged<T>(string key, ISharedVar<T> var, ISharedVarEvent<T> evt, SharedVarAccessor<T> accessor)
         {
             if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
             {
@@ -71,11 +71,11 @@ namespace NakamaSync
 
             if (isHost)
             {
-                _sharedHostEgress.HandleLocalSharedVarChanged(key, evt.Var, evt.ValueChange.NewValue, accessor);
+                _sharedHostEgress.HandleLocalSharedVarChanged(key, var, evt.ValueChange.NewValue, accessor);
             }
             else
             {
-                _sharedVarGuestEgress.HandleLocalSharedVarChanged(key, evt.Var, evt.ValueChange.NewValue, accessor);
+                _sharedVarGuestEgress.HandleLocalSharedVarChanged(key, var, evt.ValueChange.NewValue, accessor);
             }
         }
     }

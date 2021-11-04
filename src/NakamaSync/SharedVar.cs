@@ -29,7 +29,7 @@ namespace NakamaSync
 
         public void SetValue(T value)
         {
-            (this as ISharedVar<T>).SetValue(Self, value, _validationStatus);
+            (this as ISharedVar<T>).SetValue(Self, value, ValidationStatus);
         }
 
         internal override void Reset()
@@ -37,7 +37,7 @@ namespace NakamaSync
             Self = null;
             _value = default(T);
             ValidationHandler = null;
-            _validationStatus = ValidationStatus.None;
+            ValidationStatus = ValidationStatus.None;
             OnValueChanged = null;
             IsHost = false;
         }
@@ -48,13 +48,13 @@ namespace NakamaSync
 
             T oldValue = _value;
             _value = value;
-            ValidationStatus oldStatus = _validationStatus;
-            _validationStatus = validationStatus;
+            ValidationStatus oldStatus = ValidationStatus;
+            ValidationStatus = validationStatus;
 
             var valueChange = new ValueChange<T>(oldValue, value);
-            var statusChange = new ValidationChange(oldStatus, _validationStatus);
+            var statusChange = new ValidationChange(oldStatus, ValidationStatus);
 
-            OnValueChanged?.Invoke(new SharedVarEvent<T>(source, this, valueChange, statusChange));
+            OnValueChanged?.Invoke(new SharedVarEvent<T>(source, valueChange, statusChange));
         }
     }
 }

@@ -27,7 +27,6 @@ namespace Nakama.Tests.Sync
         public List<SharedVar<string>> SharedStrings { get; }
         public List<SharedVar<Dictionary<string, string>>> SharedDicts { get; }
 
-
         public SyncTestSharedVars(string userId, VarRegistry registry, int numTestVars, VarIdGenerator keyGenerator)
         {
             SharedBools = new List<SharedVar<bool>>();
@@ -55,7 +54,7 @@ namespace Nakama.Tests.Sync
                 SharedStrings.Add(sharedString);
 
                 var sharedObject = new SharedVar<Dictionary<string, string>>();
-                registry.Register(keyGenerator(userId, nameof(sharedObject), i), sharedObject);
+                registry.Register<Dictionary<string, string>, string>(keyGenerator(userId, nameof(sharedObject), i), sharedObject);
                 SharedDicts.Add(sharedObject);
             }
         }

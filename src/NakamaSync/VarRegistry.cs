@@ -61,10 +61,18 @@ namespace NakamaSync
 
         public void Register<T>(string key, SharedVar<T> sharedObject) where T : class
         {
-            var asSharedObject = sharedObject as SharedVar<object>;
-            _sharedVarRegistry.SharedObjects[key] = asSharedObject;
-            Register<object>(key, asSharedObject, _sharedVarRegistry.SharedObjects);
+            // let us serialize type T as a generic object.
+            var proxyObject = new ProxySharedVar<T>(sharedObject);
+            Register<object>(key, proxyObject, _sharedVarRegistry.SharedObjects);
         }
+
+        public void Register<T, K>(string key, SharedVar<T> sharedObject) where T : class, IDictionary<string, K>, new()
+        {
+            // let us serialize type T as a generic object.
+            var proxyObject = new ProxySharedVar<T, K>(sharedObject);
+            Register<object>(key, proxyObject, _sharedVarRegistry.SharedObjects);
+        }
+
 
         // todo allow registration one-by-one and then validate each collection afterwards.
         // do this validation and batching after the match starts with an internal method in sync services or

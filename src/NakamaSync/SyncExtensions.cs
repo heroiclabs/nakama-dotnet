@@ -62,8 +62,8 @@
 // whole OtherVarcollection?
 // todo make sure you can
 // does usemainthread need to be true? test with both. think about different threading models.
-// TODO give all vars an interface component
-
+// TODO think about a decision to give all vars an interface component and most events or other user-facing objects an interface component. right now it's a mixed approach.
+// todo fix disparity w/r/t whether var events have the actual concrete var on them or if we don't really need that...there is inconsistency between the var evnets at the moment.
 
 using System;
 using System.Threading.Tasks;
@@ -81,7 +81,6 @@ namespace NakamaSync
             AssertValidInputs(registry, errorHandler);
             var services = new SyncServices(socket, session, registry, rpcTargetRegistry, opcodes);
             services.Initialize(isMatchCreator: true, errorHandler: errorHandler, logger: logger);
-
 
             IMatch match = await socket.CreateMatchAsync(name);
 

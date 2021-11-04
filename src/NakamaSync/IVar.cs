@@ -20,6 +20,8 @@ namespace NakamaSync
 {
     internal interface IVar
     {
+        event ResetHandler OnReset;
+
         IUserPresence Self
         {
             get;
@@ -44,11 +46,13 @@ namespace NakamaSync
         }
 
         void Reset();
+
+        void SetValidationStatus(ValidationStatus status);
     }
 
     internal interface IVar<T> : IVar
     {
-        ValidationHandler<T> ValidationHandler { get; }
+        ValidationHandler<T> ValidationHandler { get; set; }
         T GetValue();
     }
 }

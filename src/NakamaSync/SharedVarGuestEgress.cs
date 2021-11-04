@@ -33,14 +33,14 @@ namespace NakamaSync
             _builder = builder;
         }
 
-        public void HandleLocalSharedVarChanged<T>(string key, SharedVar<T> var, T newValue, SharedVarAccessor<T> accessor)
+        public void HandleLocalSharedVarChanged<T>(string key, ISharedVar<T> var, T newValue, SharedVarAccessor<T> accessor)
         {
             var status = var.ValidationStatus;
 
             if (status == ValidationStatus.Validated)
             {
                 status = ValidationStatus.Pending;
-                var.ValidationStatus = status;
+                (var as IVar).SetValidationStatus(status);
             }
 
             _lockVersionGuard.IncrementLockVersion(key);

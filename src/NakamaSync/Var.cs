@@ -18,10 +18,12 @@ using Nakama;
 
 namespace NakamaSync
 {
+    public delegate void ResetHandler();
     public delegate bool ValidationHandler<T>(IUserPresence source, IValueChange<T> change);
 
     public abstract class Var<T> : IVar<T>
     {
+        public event ResetHandler OnReset;
         public ValidationHandler<T> ValidationHandler { get; set; }
 
         internal IUserPresence Self
@@ -39,7 +41,7 @@ namespace NakamaSync
         public ValidationStatus ValidationStatus
         {
             get;
-            internal set;
+            protected set;
         }
 
         public bool IsHost
@@ -53,7 +55,6 @@ namespace NakamaSync
                 (this as IVar).IsHost = value;
             }
         }
-
 
         bool IVar.IsHost
         {
@@ -73,7 +74,6 @@ namespace NakamaSync
             set => Logger = value;
         }
 
-        protected ValidationStatus _validationStatus;
         protected T _value;
 
         public T GetValue()
@@ -86,6 +86,12 @@ namespace NakamaSync
         void IVar.Reset()
         {
             this.Reset();
+            OnReset();
+        }
+
+        void IVar.SetValidationStatus(ValidationStatus status)
+        {
+            ValidationStatus = status;
         }
     }
 }
