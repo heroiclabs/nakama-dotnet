@@ -34,7 +34,7 @@ namespace NakamaSync
             {
                 var newValueChange = new ValueChange<object>(evt.ValueChange.OldValue, evt.ValueChange.NewValue);
                 var newEvt = new SharedVarEvent<object>(evt.Source, newValueChange, evt.ValidationChange);
-                this.OnValueChanged(newEvt);
+                this.OnValueChanged?.Invoke(newEvt);
             };
 
             proxyTarget.OnReset += Reset;
@@ -51,17 +51,17 @@ namespace NakamaSync
         }
     }
 
-    internal class ProxySharedVar<T, V> : ProxyVar<SharedVar<T>, T>, ISharedVar<object> where T : class, IDictionary<string, V>, new()
+    internal class ProxySharedVarDictionary<T> : ProxyVar<SharedVar<IDictionary<string, T>>, IDictionary<string, T>>, ISharedVar<object>
     {
         public event Action<ISharedVarEvent<object>> OnValueChanged;
 
-        public ProxySharedVar(SharedVar<T> proxyTarget) : base(proxyTarget)
+        public ProxySharedVarDictionary(SharedVar<IDictionary<string, T>> proxyTarget) : base(proxyTarget)
         {
             proxyTarget.OnValueChanged += evt =>
             {
                 var newValueChange = new ValueChange<object>(evt.ValueChange.OldValue, evt.ValueChange.NewValue);
                 var newEvt = new SharedVarEvent<object>(evt.Source, newValueChange, evt.ValidationChange);
-                this.OnValueChanged(newEvt);
+                this.OnValueChanged?.Invoke(newEvt);
             };
 
             proxyTarget.OnReset += Reset;
@@ -78,18 +78,18 @@ namespace NakamaSync
             {
                 // todo the actual value coming into this method here depends on serializer
                 var asSerializedDict = (IDictionary<string, object>) value;
-                var obj = new T();
+                var obj = new Dictionary<string, T>();
 
                 foreach (var item in asSerializedDict)
                 {
-                    obj[item.Key] = (V) item.Value;
+                    obj[item.Key] = (T) item.Value;
                 }
 
-                (this._proxyTarget as ISharedVar<T>).SetValue(source, obj, validationStatus);
+                (this._proxyTarget as ISharedVar<IDictionary<string, T>>).SetValue(source, obj, validationStatus);
             }
             else
             {
-                (this._proxyTarget as ISharedVar<T>).SetValue(source, null, validationStatus);
+                (this._proxyTarget as ISharedVar<IDictionary<string, T>>).SetValue(source, null, validationStatus);
             }
         }
     }

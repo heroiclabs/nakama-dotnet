@@ -61,15 +61,13 @@ namespace NakamaSync
 
         public void Register<T>(string key, SharedVar<T> sharedObject) where T : class
         {
-            // let us serialize type T as a generic object.
             var proxyObject = new ProxySharedVar<T>(sharedObject);
             Register<object>(key, proxyObject, _sharedVarRegistry.SharedObjects);
         }
 
-        public void Register<T, K>(string key, SharedVar<T> sharedObject) where T : class, IDictionary<string, K>, new()
+        public void Register<T>(string key, SharedVar<IDictionary<string, T>> sharedObject)
         {
-            // let us serialize type T as a generic object.
-            var proxyObject = new ProxySharedVar<T, K>(sharedObject);
+            var proxyObject = new ProxySharedVarDictionary<T>(sharedObject);
             Register<object>(key, proxyObject, _sharedVarRegistry.SharedObjects);
         }
 
