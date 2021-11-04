@@ -16,7 +16,13 @@
 
 namespace NakamaSync
 {
-    public class ValidationChange
+    public interface IValidationChange
+    {
+        ValidationStatus OldStatus { get; }
+        ValidationStatus NewStatus { get; }
+    }
+
+    public class ValidationChange : IValidationChange
     {
         public ValidationStatus OldStatus { get; }
         public ValidationStatus NewStatus { get; }

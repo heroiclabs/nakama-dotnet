@@ -23,7 +23,7 @@ namespace NakamaSync
         IUserPresence Source { get; }
         // todo add this property to presence var event as well?
         SharedVar<T> Var { get; }
-        ValueChange<T> ValueChange { get; }
-        ValidationChange ValidationChange { get; }
+        IValueChange<T> ValueChange { get; }
+        IValidationChange ValidationChange { get; }
     }
 }

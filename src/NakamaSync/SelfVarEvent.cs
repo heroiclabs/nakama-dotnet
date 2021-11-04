@@ -19,8 +19,8 @@ namespace NakamaSync
     internal class SelfVarEvent<T> : ISelfVarEvent<T>
     {
         public SelfVar<T> Var { get; }
-        public ValueChange<T> ValueChange { get; }
-        public ValidationChange ValidationChange { get; }
+        public IValueChange<T> ValueChange { get; }
+        public IValidationChange ValidationChange { get; }
 
         public SelfVarEvent(SelfVar<T> var, ValueChange<T> valueChange, ValidationChange validationChange)
         {

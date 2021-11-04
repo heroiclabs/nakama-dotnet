@@ -131,11 +131,11 @@ namespace Nakama.Tests.Sync
             var dict = new Dictionary<string, string>();
             dict["hello"] = "world";
 
-            allEnvs[0].SharedVars.SharedObjects[0].SetValue(dict);
+            allEnvs[0].SharedVars.SharedDicts[0].SetValue(dict);
 
             await Task.Delay(1000);
 
-            Assert.Equal("world", allEnvs[0].SharedVars.SharedObjects[0].GetValue()["hello"]);
+            Assert.Equal("world", allEnvs[0].SharedVars.SharedDicts[0].GetValue()["hello"]);
 
             testEnv.Dispose();
         }

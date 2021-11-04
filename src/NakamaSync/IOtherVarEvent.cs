@@ -21,7 +21,7 @@ namespace NakamaSync
     public interface IOtherVarEvent<T>
     {
         IUserPresence Source { get; }
-        ValueChange<T> ValueChange { get; }
-        ValidationChange ValidationChange { get; }
+        IValueChange<T> ValueChange { get; }
+        IValidationChange ValidationChange { get; }
     }
 }

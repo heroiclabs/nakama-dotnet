@@ -21,10 +21,10 @@ namespace NakamaSync
     internal class OtherVarEvent<T> : IOtherVarEvent<T>
     {
         public IUserPresence Source { get; }
-        public ValueChange<T> ValueChange { get; }
-        public ValidationChange ValidationChange { get; }
+        public IValueChange<T> ValueChange { get; }
+        public IValidationChange ValidationChange { get; }
 
-        internal OtherVarEvent(IUserPresence source, ValueChange<T> valueChange, ValidationChange validationChange)
+        internal OtherVarEvent(IUserPresence source, IValueChange<T> valueChange, IValidationChange validationChange)
         {
             Source = source;
             ValueChange = valueChange;

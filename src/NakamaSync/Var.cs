@@ -18,7 +18,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public delegate bool ValidationHandler<T>(IUserPresence source, ValueChange<T> change);
+    public delegate bool ValidationHandler<T>(IUserPresence source, IValueChange<T> change);
 
     public abstract class Var<T> : IVar<T>
     {

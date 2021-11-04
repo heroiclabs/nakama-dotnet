@@ -22,8 +22,8 @@ namespace NakamaSync
     {
         public IUserPresence Source { get; }
         public SharedVar<T> Var { get; }
-        public ValueChange<T> ValueChange { get; }
-        public ValidationChange ValidationChange { get; }
+        public IValueChange<T> ValueChange { get; }
+        public IValidationChange ValidationChange { get; }
 
         internal SharedVarEvent(IUserPresence source, SharedVar<T> var, ValueChange<T> valueChange, ValidationChange validationChange)
         {
