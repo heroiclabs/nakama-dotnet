@@ -1,0 +1,8 @@
+var searchData=
+[
+  ['endread_0',['EndRead',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html#a59594ae24d7d39ef08e9b73292324ee7',1,'Nakama::Ninja::WebSockets::BufferPool::PublicBufferMemoryStream']]],
+  ['endwrite_1',['EndWrite',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html#a71d425d0d6626926a04dc11d01886a8c',1,'Nakama::Ninja::WebSockets::BufferPool::PublicBufferMemoryStream']]],
+  ['entitytoolargeexception_2',['EntityTooLargeException',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_entity_too_large_exception.html#abc1f5d6066924fd459fce627fa2b554c',1,'Nakama.Ninja.WebSockets.Exceptions.EntityTooLargeException.EntityTooLargeException()'],['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_entity_too_large_exception.html#a628ff4e3f729f87e5b894ef03764c0e1',1,'Nakama.Ninja.WebSockets.Exceptions.EntityTooLargeException.EntityTooLargeException(string message)'],['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_entity_too_large_exception.html#afad15e3f4c217372acdc26ba564694da',1,'Nakama.Ninja.WebSockets.Exceptions.EntityTooLargeException.EntityTooLargeException(string message, Exception inner)']]],
+  ['errorformat_3',['ErrorFormat',['../interface_nakama_1_1_i_logger.html#a7a32d0f6eadfce1dcdcd1884767978e8',1,'Nakama::ILogger']]],
+  ['eventasync_4',['EventAsync',['../class_nakama_1_1_client.html#a19c6fa59cd3206dc19307e769c581c75',1,'Nakama.Client.EventAsync()'],['../interface_nakama_1_1_i_client.html#a1a0b04eae451f3a16f06a9978cf69df0',1,'Nakama.IClient.EventAsync()']]]
+];

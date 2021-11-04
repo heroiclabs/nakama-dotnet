@@ -182,6 +182,20 @@ dotnet test --filter "Nakama.Tests.Api.GroupTest.ShouldPromoteAndDemoteUsers"
 
 If you'd like to attach a Visual Studio debugger to a test, set `VSTEST_HOST_DEBUG` to `true` in your shell environment and run `dotnet test`. Attach the debugger to the process identified by the console.
 
+### Generate Docs
+
+nakama-dotnet API docs are generated with Doxygen and deployed to GitHub pages.
+
+When changing the API comments, rerun Doxygen and commit the changes in `docs/*`.
+
+To run Doxygen:
+
+```
+brew install doxygen
+cd docs/
+doxygen
+```
+
 ### Licenses
 
 This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/nakama-dotnet/blob/master/LICENSE).
