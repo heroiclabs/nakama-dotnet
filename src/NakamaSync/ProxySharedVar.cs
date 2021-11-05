@@ -74,23 +74,22 @@ namespace NakamaSync
 
         void ISharedVar<object>.SetValue(IUserPresence source, object value, ValidationStatus validationStatus)
         {
+            Dictionary<string, T> typedDict = null;
+
             if (value != null)
             {
+                typedDict = new Dictionary<string, T>();
+
                 // todo the actual value coming into this method here depends on serializer
                 var asSerializedDict = (IDictionary<string, object>) value;
-                var obj = new Dictionary<string, T>();
 
                 foreach (var item in asSerializedDict)
                 {
-                    obj[item.Key] = (T) item.Value;
+                    typedDict[item.Key] = (T) item.Value;
                 }
+            }
 
-                (this._proxyTarget as ISharedVar<IDictionary<string, T>>).SetValue(source, obj, validationStatus);
-            }
-            else
-            {
-                (this._proxyTarget as ISharedVar<IDictionary<string, T>>).SetValue(source, null, validationStatus);
-            }
+            (this._proxyTarget as ISharedVar<IDictionary<string, T>>).SetValue(source, typedDict, validationStatus);
         }
     }
 }
