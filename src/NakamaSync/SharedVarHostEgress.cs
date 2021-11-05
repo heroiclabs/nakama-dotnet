@@ -44,7 +44,7 @@ namespace NakamaSync
             }
 
             _lockVersionGuard.IncrementLockVersion(key);
-            var sharedValue = new SharedValue<T>(key, newValue, _lockVersionGuard.GetLockVersion(key), status);
+            var sharedValue = new VarValue<T>(key, newValue, _lockVersionGuard.GetLockVersion(key), status);
             _builder.AddSharedVar(accessor, sharedValue);
             _builder.SendEnvelope();
         }

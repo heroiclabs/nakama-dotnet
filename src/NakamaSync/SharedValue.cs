@@ -21,7 +21,7 @@ namespace NakamaSync
     /// <summary>
     /// A data-transfer object for a sync var.
     /// </summary>
-    internal class SharedValue<T>
+    internal class VarValue<T>
     {
         [DataMember(Name="key"), Preserve]
         public string Key { get; set; }
@@ -35,7 +35,7 @@ namespace NakamaSync
         [DataMember(Name="key_validation_status"), Preserve]
         public ValidationStatus ValidationStatus { get; set; }
 
-        public SharedValue(string key, T value, int lockVersion, ValidationStatus validationStatus)
+        public VarValue(string key, T value, int lockVersion, ValidationStatus validationStatus)
         {
             Key = key;
             Value = value;

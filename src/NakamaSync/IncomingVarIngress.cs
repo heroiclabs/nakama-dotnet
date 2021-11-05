@@ -19,7 +19,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedVarIngress : ISyncService
+    internal class IncomingVarIngress : ISyncService
     {
         public ILogger Logger
         {
@@ -34,12 +34,12 @@ namespace NakamaSync
         }
 
         private readonly SharedVarGuestIngress _guestIngress;
-        private readonly SharedVarHostIngress _sharedHostIngress;
+        private readonly IncomingVarHostIngress _sharedHostIngress;
         private readonly VarRegistry _registry;
         private readonly LockVersionGuard _lockVersionGuard;
 
-        public SharedVarIngress(
-            SharedVarGuestIngress guestIngress, SharedVarHostIngress sharedHostIngress, VarRegistry registry, LockVersionGuard lockVersionGuard)
+        public IncomingVarIngress(
+            SharedVarGuestIngress guestIngress, IncomingVarHostIngress sharedHostIngress, VarRegistry registry, LockVersionGuard lockVersionGuard)
         {
             _guestIngress = guestIngress;
             _sharedHostIngress = sharedHostIngress;
@@ -77,11 +77,11 @@ namespace NakamaSync
             Logger?.DebugFormat($"Shared role ingress done processing sync envelope.");
         }
 
-        private void ReceiveSyncEnvelope<T>(IUserPresence source, List<SharedVarIngressContext<T>> contexts, bool isHost)
+        private void ReceiveSyncEnvelope<T>(IUserPresence source, List<IncomingVarIngressContext<T>> contexts, bool isHost)
         {
             Logger?.DebugFormat($"Shared role ingress processing num contexts: {contexts.Count}");
 
-            foreach (SharedVarIngressContext<T> context in contexts)
+            foreach (IncomingVarIngressContext<T> context in contexts)
             {
                 Logger?.DebugFormat($"Shared role ingress processing context: {context}");
 

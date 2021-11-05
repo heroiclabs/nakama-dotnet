@@ -53,10 +53,10 @@ namespace NakamaSync
 
         private void ValidatePendingVars(VarRegistry registry)
         {
-            ValidatePendingVars<bool>(registry.SharedVarRegistry.SharedBools, env => env.SharedBoolAcks);
-            ValidatePendingVars<float>(registry.SharedVarRegistry.SharedFloats, env => env.SharedFloatAcks);
-            ValidatePendingVars<int>(registry.SharedVarRegistry.SharedInts, env => env.SharedIntAcks);
-            ValidatePendingVars<string>(registry.SharedVarRegistry.SharedStrings, env => env.SharedStringAcks);
+            ValidatePendingVars<bool>(registry.SharedVarRegistry.SharedBoolsIncoming.Values, env => env.SharedBoolAcks);
+            ValidatePendingVars<float>(registry.SharedVarRegistry.SharedFloatsIncoming.Values, env => env.SharedFloatAcks);
+            ValidatePendingVars<int>(registry.SharedVarRegistry.SharedIntsIncoming.Values, env => env.SharedIntAcks);
+            ValidatePendingVars<string>(registry.SharedVarRegistry.SharedStringsIncoming.Values, env => env.SharedStringAcks);
 
             ValidatePendingVars<bool>(registry.OtherVarRegistry.PresenceBools, env => env.PresenceBoolAcks);
             ValidatePendingVars<float>(registry.OtherVarRegistry.PresenceFloats, env => env.PresenceFloatAcks);
@@ -66,11 +66,11 @@ namespace NakamaSync
             _builder.SendEnvelope();
         }
 
-        private void ValidatePendingVars<T>(Dictionary<string, ISharedVar<T>> vars, AckAccessor ackAccessor)
+        private void ValidatePendingVars<T>(IEnumerable<IIncomingVar<T>> vars, AckAccessor ackAccessor)
         {
-            foreach (var kvp in vars)
+            foreach (var var in vars)
             {
-                _builder.AddAck(ackAccessor, kvp.Key);
+                _builder.AddAck(ackAccessor, var.Key);
             }
         }
 
@@ -85,19 +85,19 @@ namespace NakamaSync
 
         private void UpdateVarHost(VarRegistry varRegistry, bool isHost)
         {
-            UpdateVarHost(varRegistry.SharedVarRegistry.SharedBools, isHost);
-            UpdateVarHost(varRegistry.SharedVarRegistry.SharedFloats, isHost);
-            UpdateVarHost(varRegistry.SharedVarRegistry.SharedInts, isHost);
-            UpdateVarHost(varRegistry.SharedVarRegistry.SharedStrings, isHost);
+            UpdateVarHost(varRegistry.SharedVarRegistry.SharedBoolsIncoming.Values, isHost);
+            UpdateVarHost(varRegistry.SharedVarRegistry.SharedFloatsIncoming.Values, isHost);
+            UpdateVarHost(varRegistry.SharedVarRegistry.SharedIntsIncoming.Values, isHost);
+            UpdateVarHost(varRegistry.SharedVarRegistry.SharedStringsIncoming.Values, isHost);
             UpdateVarHost(varRegistry.OtherVarRegistry.PresenceBools, isHost);
             UpdateVarHost(varRegistry.OtherVarRegistry.PresenceFloats, isHost);
             UpdateVarHost(varRegistry.OtherVarRegistry.PresenceInts, isHost);
             UpdateVarHost(varRegistry.OtherVarRegistry.PresenceStrings, isHost);
         }
 
-        private void UpdateVarHost<T>(Dictionary<string, ISharedVar<T>> vars, bool isHost)
+        private void UpdateVarHost<T>(IEnumerable<IIncomingVar<T>> vars, bool isHost)
         {
-            foreach (var var in vars.Values)
+            foreach (var var in vars)
             {
                 var.IsHost = isHost;
             }

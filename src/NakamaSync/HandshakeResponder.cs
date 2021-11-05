@@ -50,11 +50,11 @@ namespace NakamaSync
             if (success)
             {
                 Logger?.InfoFormat($"Remote keys from {source.UserId} match the local keys from {_presenceTracker.GetSelf().UserId}");
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedBools, syncValues.SharedBools);
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedFloats, syncValues.SharedFloats);
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedInts, syncValues.SharedInts);
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedStrings, syncValues.SharedStrings);
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedObjects, syncValues.SharedObjects);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedBoolsIncoming.Values, syncValues.SharedBools);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedFloatsIncoming.Values, syncValues.SharedFloats);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedIntsIncoming.Values, syncValues.SharedInts);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedStringsIncoming.Values, syncValues.SharedStrings);
+                CopyToGuestResponse(_registry.SharedVarRegistry.SharedObjectsIncoming.Values, syncValues.SharedObjects);
 
                 CopyToGuestResponse(_registry.OtherVarRegistry.PresenceBools, syncValues.PresenceBools);
                 CopyToGuestResponse(_registry.OtherVarRegistry.PresenceFloats, syncValues.PresenceFloats);
@@ -70,14 +70,13 @@ namespace NakamaSync
             socket.SendHandshakeResponse(source, response);
         }
 
-        private void CopyToGuestResponse<T>(Dictionary<string, ISharedVar<T>> vars, List<SharedValue<T>> values)
+        private void CopyToGuestResponse<T>(IEnumerable<IIncomingVar<T>> vars, List<VarValue<T>> values)
         {
-            foreach (var kvp in vars)
+            foreach (var var in vars)
             {
-                IIncomingVar<T> var = kvp.Value;
                 T rawValue = var.GetValue();
                 Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
-                var sharedValue = new SharedValue<T>(kvp.Key, rawValue, _lockVersionGuard.GetLockVersion(kvp.Key), kvp.Value.ValidationStatus);
+                var sharedValue = new VarValue<T>(var.Key, rawValue, _lockVersionGuard.GetLockVersion(var.Key), var.ValidationStatus);
                 values.Add(sharedValue);
             }
         }

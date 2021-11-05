@@ -57,7 +57,6 @@ namespace NakamaSync
             OnPresenceChanged = null;
             Self = null;
             _value = default(T);
-            ValidationHandler = null;
             ValidationStatus = ValidationStatus.None;
             IsHost = false;
         }

@@ -23,7 +23,7 @@ namespace NakamaSync
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// TODO implement an ownership model?
     /// </summary>
-    public class SharedVar<T> : Var<T>, ISharedVar<T>
+    public class SharedVar<T> : Var<T>, IIncomingVar<T>
     {
         public SharedVar(string key) : base(key)
         {
@@ -31,31 +31,15 @@ namespace NakamaSync
 
         public void SetValue(T value)
         {
-            (this as ISharedVar<T>).SetValue(Self, value, ValidationStatus);
+            (this as IIncomingVar<T>).SetValue(Self, value, ValidationStatus);
         }
 
         internal override void Reset()
         {
             Self = null;
             _value = default(T);
-            ValidationHandler = null;
             ValidationStatus = ValidationStatus.None;
             IsHost = false;
-        }
-
-        void ISharedVar<T>.SetValue(IUserPresence source, T value, ValidationStatus validationStatus)
-        {
-            Logger?.DebugFormat($"Setting shared value. Source: {source.UserId}, Value: {value}");
-
-            T oldValue = _value;
-            _value = value;
-            ValidationStatus oldStatus = ValidationStatus;
-            ValidationStatus = validationStatus;
-
-            var valueChange = new ValueChange<T>(oldValue, value);
-            var statusChange = new ValidationChange(oldStatus, ValidationStatus);
-
-            InvokeOnValueChanged(new VarEvent<T>(source, valueChange, statusChange));
         }
     }
 }

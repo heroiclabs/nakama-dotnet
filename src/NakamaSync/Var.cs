@@ -26,8 +26,9 @@ namespace NakamaSync
     {
         public event Action<IVarEvent<T>> OnValueChanged;
 
+        ValidationHandler<T> ValidationHandler { get; set; }
+
         public event ResetHandler OnReset;
-        public ValidationHandler<T> ValidationHandler { get; set; }
 
         public string Key { get; }
 
@@ -96,6 +97,7 @@ namespace NakamaSync
         void IVar.Reset()
         {
             OnValueChanged = null;
+            ValidationHandler = null;
             this.Reset();
             OnReset();
         }
@@ -108,6 +110,30 @@ namespace NakamaSync
         protected void InvokeOnValueChanged(IVarEvent<T> e)
         {
             OnValueChanged?.Invoke(e);
+        }
+
+        bool IIncomingVar<T>.SetValue(IUserPresence source, object value, ValidationStatus validationStatus)
+        {
+            Logger?.DebugFormat($"Setting shared value. Source: {source.UserId}, Value: {value}");
+
+            T oldValue = _value;
+            ValidationStatus oldStatus = ValidationStatus;
+
+            bool success = ValidationHandler == null ||
+                            ValidationHandler.Invoke(source, new ValueChange<T>(oldValue, (T) value));
+
+            if (success)
+            {
+                ValidationStatus = ValidationHandler == null ? ValidationStatus.None : ValidationStatus.Invalid; // how/when do we toggle this back to valid
+                _value = (T) value;
+                ValidationStatus = validationStatus;
+
+                var valueChange = new ValueChange<T>(oldValue, (T) value);
+                var statusChange = new ValidationChange(oldStatus, ValidationStatus);
+                InvokeOnValueChanged(new VarEvent<T>(source, valueChange, statusChange));
+            }
+
+            return success;
         }
     }
 

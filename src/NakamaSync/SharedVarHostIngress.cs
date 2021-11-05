@@ -19,7 +19,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedVarHostIngress : ISyncService
+    internal class IncomingVarHostIngress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -27,71 +27,40 @@ namespace NakamaSync
         private readonly LockVersionGuard _lockVersionGuard;
         private EnvelopeBuilder _builder;
 
-        public SharedVarHostIngress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
+        public IncomingVarHostIngress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
         {
             _lockVersionGuard = lockVersionGuard;
             _builder = builder;
         }
 
-        public void ProcessValue<T>(IUserPresence source, SharedVarIngressContext<T> context)
+        public void ProcessValue<T>(IUserPresence source, IncomingVarIngressContext<T> context)
         {
-            switch (context.Value.ValidationStatus)
+            if (context.Value.ValidationStatus == ValidationStatus.Validated)
             {
-                case ValidationStatus.None:
-                    HandleNonValidatedValue(source, context.Var, context.Value);
-                    break;
-                case ValidationStatus.Pending:
-                    T oldValue = context.Var.GetValue();
-                    T newValue = context.Value.Value;
-                    var valueChange = new ValueChange<T>(oldValue, newValue);
-
-                    ValidationStatus oldStatus = context.Var.ValidationStatus;
-                    ValidationStatus newStatus;
-                    if (context.Var.ValidationHandler != null)
-                    {
-                        newStatus = context.Var.ValidationHandler.Invoke(source, valueChange) ? ValidationStatus.Validated : ValidationStatus.Invalid;
-                    }
-                    else
-                    {
-                        newStatus = oldStatus;
-                        ErrorHandler?.Invoke(new InvalidOperationException("Pending value has no host validation handler."));
-                    }
-
-                    if (newStatus == ValidationStatus.Validated || newStatus == ValidationStatus.Pending)
-                    {
-                        AcceptPendingValue<T>(source, context.Var, context.Value, context.VarAccessor, context.AckAccessor);
-                    }
-                    else
-                    {
-                        RollbackPendingValue<T>(context.Var, context.Value, context.VarAccessor);
-                    }
-                    break;
-                case ValidationStatus.Validated:
-                    ErrorHandler?.Invoke(new InvalidOperationException("Host received value that already claims to be validated."));
-                    break;
+                ErrorHandler?.Invoke(new InvalidOperationException("Host received value that already claims to be validated."));
+                return;
             }
-        }
 
-        private void RollbackPendingValue<T>(ISharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor)
-        {
-            // one guest has incorrect value. queue a rollback for all guests.
-            _lockVersionGuard.IncrementLockVersion(value.Key);
-            var outgoing = new SharedValue<T>(value.Key, var.GetValue(), _lockVersionGuard.GetLockVersion(value.Key), ValidationStatus.Validated);
-            _builder.AddSharedVar(accessor, value);
-            _builder.SendEnvelope();
-        }
+            bool success = context.Var.SetValue(source, context.Value, context.Value.ValidationStatus);
 
-        private void AcceptPendingValue<T>(IUserPresence source, ISharedVar<T> var, SharedValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
-        {
-            var.SetValue(source, value.Value, ValidationStatus.Validated);
-            _builder.AddSharedVar(accessor, value);
-            _builder.AddAck(ackAccessor, value.Key);
-            _builder.SendEnvelope();
-        }
+            if (context.Value.ValidationStatus != ValidationStatus.Pending)
+            {
+                return;
+            }
 
-        private void HandleNonValidatedValue<T>(IUserPresence source, ISharedVar<T> var, SharedValue<T> value)
-        {
-            var.SetValue(source, value.Value, ValidationStatus.None);
+            if (success)
+            {
+                _builder.AddSharedVar(context.VarAccessor, context.Value);
+                _builder.AddAck(context.AckAccessor, context.Value.Key);
+                _builder.SendEnvelope();
+            }
+            else
+            {
+                _lockVersionGuard.IncrementLockVersion(context.Value.Key);
+                var outgoing = new VarValue<T>(context.Value.Key, context.Var.GetValue(), _lockVersionGuard.GetLockVersion(context.Value.Key), ValidationStatus.Validated);
+                _builder.AddSharedVar(context.VarAccessor, context.Value);
+                _builder.SendEnvelope();
+            }
         }
     }
 }

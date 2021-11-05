@@ -34,8 +34,7 @@ namespace NakamaSync
 
         private readonly LockVersionGuard _lockVersionGuard;
 
-        private readonly SharedVarIngress _sharedVarIngress;
-        private readonly OtherVarIngress _otherVarIngress;
+        private readonly IncomingVarIngress _incomingVarGuestIngress;
 
         private readonly SharedVarEgress _sharedVarEgress;
         private readonly SelfVarEgress _selfVarEgress;
@@ -79,7 +78,7 @@ namespace NakamaSync
             var sharedGuestIngress = new SharedVarGuestIngress(presenceTracker);
             _services.Add(sharedGuestIngress);
 
-            var sharedHostIngress = new SharedVarHostIngress(lockVersionGuard, envelopeBuilder);
+            var sharedHostIngress = new IncomingVarHostIngress(lockVersionGuard, envelopeBuilder);
             _services.Add(sharedHostIngress);
 
             var selfVarGuestEgress = new SelfVarGuestEgress(envelopeBuilder);
@@ -91,29 +90,20 @@ namespace NakamaSync
             var selfVarEgress = new SelfVarEgress(selfVarGuestEgress, selfVarHostEgress, presenceTracker, hostTracker);
             _services.Add(selfVarEgress);
 
-            var OtherVarGuestIngress = new OtherVarGuestIngress(presenceTracker);
-            _services.Add(OtherVarGuestIngress);
+            var incomingVarGuestIngress = new IncomingVarIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
+            _services.Add(incomingVarGuestIngress);
 
-            var OtherVarHostIngress = new OtherVarHostIngress(lockVersionGuard, envelopeBuilder);
-            _services.Add(OtherVarHostIngress);
-
-            var sharedVarGuestIngress = new SharedVarIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
-            _services.Add(sharedVarGuestIngress);
-
-            var presenceRoleIngress = new OtherVarIngress(session.UserId, varRegistry, OtherVarRotators, OtherVarGuestIngress, OtherVarHostIngress);
-            _services.Add(presenceRoleIngress);
-
-            var handshakeRequester = new HandshakeRequester(varRegistry, presenceTracker, syncSocket, sharedVarGuestIngress, presenceRoleIngress, session.UserId);
+            var handshakeRequester = new HandshakeRequester(varRegistry, presenceTracker, syncSocket, incomingVarGuestIngress, session.UserId);
             _services.Add(handshakeRequester);
 
             var handshakeResponder = new HandshakeResponder(lockVersionGuard, varRegistry, presenceTracker);
             _services.Add(handshakeResponder);
 
-            var handshakeResponseHandler = new HandshakeResponseHandler(sharedVarGuestIngress, presenceRoleIngress);
+            var handshakeResponseHandler = new HandshakeResponseHandler(incomingVarGuestIngress);
             _services.Add(handshakeResponseHandler);
 
             var sharedVarGuestEgress = new SharedVarGuestEgress(lockVersionGuard, envelopeBuilder);
-            _services.Add(sharedVarGuestIngress);
+            _services.Add(incomingVarGuestIngress);
 
             var sharedHostEgress = new SharedVarHostEgress(lockVersionGuard, envelopeBuilder);
             _services.Add(sharedHostEgress);
@@ -140,8 +130,7 @@ namespace NakamaSync
             _hostTracker = hostTracker;
             _lockVersionGuard = lockVersionGuard;
 
-            _sharedVarIngress = sharedVarGuestIngress;
-            _otherVarIngress = presenceRoleIngress;
+            _incomingVarGuestIngress = incomingVarGuestIngress;
 
             _handshakeRequester = handshakeRequester;
             _handshakeResponder = handshakeResponder;
@@ -188,14 +177,11 @@ namespace NakamaSync
                 var.Logger = logger;
             }
 
-            _sharedVarIngress.Subscribe(_syncSocket, _hostTracker);
+            _incomingVarGuestIngress.Subscribe(_syncSocket, _hostTracker);
             _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry);
 
             // no self var ingress because only self can set a presence var
             _selfVarEgress.Subscribe(_varRegistry.OtherVarRegistry);
-
-            // no presence var egress because self cannot set a presence var
-            _otherVarIngress.Subscribe(_syncSocket, _hostTracker);
 
             _handshakeRequester.Subscribe(_hostTracker);
             _handshakeResponder.Subscribe(_syncSocket);

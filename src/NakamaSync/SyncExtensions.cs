@@ -51,6 +51,7 @@
 // maybe it's game specific?
 // todo what happens if you set a var prior to passing it through the match? throw an exception from the var itself?
 // add a "HasValue" helper to the user var for a particular value
+// put self and other var into the same variable that has each as a member? or some other elegant way of "grouping" them.
 // debate pros and cons of user id vs user presence for user vars/values. i think we do want to use
 // userpresence, but it's just a matter of serializing interface rather than concrete type.
 // expose an OnLocalVariable changed event for users.
@@ -64,6 +65,7 @@
 // does usemainthread need to be true? test with both. think about different threading models.
 // TODO think about a decision to give all vars an interface component and most events or other user-facing objects an interface component. right now it's a mixed approach.
 // todo fix disparity w/r/t whether var events have the actual concrete var on them or if we don't really need that...there is inconsistency between the var evnets at the moment.
+// todo clean up internal usage of the term ISharedVar?
 
 using System;
 using System.Threading.Tasks;

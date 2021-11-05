@@ -14,7 +14,6 @@
 * limitations under the License.
 */
 
-using System.Linq;
 using System.Collections.Generic;
 using Nakama;
 
@@ -40,11 +39,11 @@ namespace NakamaSync
 
         public void Subscribe(SharedVarRegistry registry)
         {
-            Subscribe(registry.SharedBools.Values, values => values.SharedBools);
-            Subscribe(registry.SharedFloats.Values, values => values.SharedFloats);
-            Subscribe(registry.SharedInts.Values,  values => values.SharedInts);
-            Subscribe(registry.SharedStrings.Values, values => values.SharedStrings);
-            Subscribe(registry.SharedObjects.Values, values => values.SharedObjects);
+            Subscribe(registry.SharedBoolsIncoming.Values, values => values.SharedBools);
+            Subscribe(registry.SharedFloatsIncoming.Values, values => values.SharedFloats);
+            Subscribe(registry.SharedIntsIncoming.Values,  values => values.SharedInts);
+            Subscribe(registry.SharedStringsIncoming.Values, values => values.SharedStrings);
+            Subscribe(registry.SharedObjectsIncoming.Values, values => values.SharedObjects);
         }
 
         private void Subscribe<T>(IEnumerable<IIncomingVar<T>> vars, SharedVarAccessor<T> accessor)

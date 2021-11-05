@@ -45,10 +45,10 @@ namespace NakamaSync
         {
             if (leaver.UserId == _userId)
             {
-                ResetVars(_varRegistry.SharedVarRegistry.SharedBools);
-                ResetVars(_varRegistry.SharedVarRegistry.SharedFloats);
-                ResetVars(_varRegistry.SharedVarRegistry.SharedInts);
-                ResetVars(_varRegistry.SharedVarRegistry.SharedStrings);
+                ResetVars(_varRegistry.SharedVarRegistry.SharedBoolsIncoming.Values);
+                ResetVars(_varRegistry.SharedVarRegistry.SharedFloatsIncoming.Values);
+                ResetVars(_varRegistry.SharedVarRegistry.SharedIntsIncoming.Values);
+                ResetVars(_varRegistry.SharedVarRegistry.SharedStringsIncoming.Values);
                 ResetVars(_varRegistry.OtherVarRegistry.PresenceBools);
                 ResetVars(_varRegistry.OtherVarRegistry.PresenceFloats);
                 ResetVars(_varRegistry.OtherVarRegistry.PresenceInts);
@@ -56,9 +56,9 @@ namespace NakamaSync
             }
         }
 
-        private void ResetVars<T>(Dictionary<string, ISharedVar<T>> vars)
+        private void ResetVars<T>(IEnumerable<IIncomingVar<T>> vars)
         {
-            foreach (var var in vars.Values)
+            foreach (var var in vars)
             {
                 var.Reset();
             }

@@ -35,18 +35,16 @@ namespace NakamaSync
         // todo handle error with sending handshake and resend if needed
         private bool _sentHandshake;
 
-        private readonly SharedVarIngress _sharedVarGuestIngress;
-        private readonly OtherVarIngress _presenceRoleIngress;
+        private readonly IncomingVarIngress _incomingVarGuestIngress;
         private readonly SyncSocket _socket;
         private readonly string _userId;
 
-        public HandshakeRequester(VarRegistry registry, PresenceTracker presenceTracker, SyncSocket socket, SharedVarIngress sharedVarGuestIngress, OtherVarIngress presenceRoleIngress, string userId)
+        public HandshakeRequester(VarRegistry registry, PresenceTracker presenceTracker, SyncSocket socket, IncomingVarIngress incomingVarGuestIngress, string userId)
         {
             _registry = registry;
             _presenceTracker = presenceTracker;
             _socket = socket;
-            _sharedVarGuestIngress = sharedVarGuestIngress;
-            _presenceRoleIngress = presenceRoleIngress;
+            _incomingVarGuestIngress = incomingVarGuestIngress;
             _userId = userId;
         }
 
@@ -105,8 +103,7 @@ namespace NakamaSync
             if (response.Success)
             {
                 Logger?.InfoFormat("Received successful handshake response.");
-                _sharedVarGuestIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
-                _presenceRoleIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
+                _incomingVarGuestIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
                 OnHandshakeSuccess();
             }
             else

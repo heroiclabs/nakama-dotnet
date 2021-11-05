@@ -20,19 +20,19 @@ namespace NakamaSync
 {
     internal class SharedVarRegistry
     {
-        public Dictionary<string, ISharedVar<bool>> SharedBools { get; }
-        public Dictionary<string, ISharedVar<float>> SharedFloats { get; }
-        public Dictionary<string, ISharedVar<int>> SharedInts { get; }
-        public Dictionary<string, ISharedVar<string>> SharedStrings { get; }
-        public Dictionary<string, ISharedVar<object>> SharedObjects { get; }
+        public Dictionary<string, IIncomingVar<bool>> SharedBoolsIncoming { get; }
+        public Dictionary<string, IIncomingVar<float>> SharedFloatsIncoming { get; }
+        public Dictionary<string, IIncomingVar<int>> SharedIntsIncoming { get; }
+        public Dictionary<string, IIncomingVar<string>> SharedStringsIncoming { get; }
+        public Dictionary<string, IIncomingVar<object>> SharedObjectsIncoming { get; }
 
         public SharedVarRegistry()
         {
-            SharedBools = new Dictionary<string, ISharedVar<bool>>();
-            SharedFloats = new Dictionary<string, ISharedVar<float>>();
-            SharedInts = new Dictionary<string, ISharedVar<int>>();
-            SharedStrings = new Dictionary<string, ISharedVar<string>>();
-            SharedObjects = new Dictionary<string, ISharedVar<object>>();
+            SharedBoolsIncoming = new Dictionary<string, IIncomingVar<bool>>();
+            SharedFloatsIncoming = new Dictionary<string, IIncomingVar<float>>();
+            SharedIntsIncoming = new Dictionary<string, IIncomingVar<int>>();
+            SharedStringsIncoming = new Dictionary<string, IIncomingVar<string>>();
+            SharedObjectsIncoming = new Dictionary<string, IIncomingVar<object>>();
         }
     }
 }

@@ -61,11 +61,14 @@ namespace NakamaSync
         {
             get;
         }
+
+        bool SetValue(IUserPresence source, object value, ValidationStatus validationStatus);
     }
 
     internal interface IIOutgoingVar<T> : IVar
     {
         ValidationHandler<T> ValidationHandler { get; set; }
+
     }
 
     public interface IVarEvent<out T>
