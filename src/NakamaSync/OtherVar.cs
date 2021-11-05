@@ -37,20 +37,6 @@ namespace NakamaSync
         {
         }
 
-        internal void SetValue(T value, ValidationStatus validationStatus)
-        {
-            T oldValue = _value;
-            _value = value;
-
-            ValidationStatus oldStatus = ValidationStatus;
-            ValidationStatus = validationStatus;
-
-            var valueChange = new ValueChange<T>(oldValue, value);
-            var statusChange = new ValidationChange(oldStatus, validationStatus);
-
-            InvokeOnValueChanged(new VarEvent<T>(Presence, valueChange, statusChange));
-        }
-
         internal override void Reset()
         {
             SetPresence(null);

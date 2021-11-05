@@ -20,7 +20,7 @@ using Nakama;
 namespace NakamaSync
 {
     internal delegate List<ValidationAck> AckAccessor(Envelope envelope);
-    internal delegate List<VarValue<T>> SharedVarAccessor<T>(Envelope envelope);
+    internal delegate List<VarValue<T>> VarValueAccessor<T>(Envelope envelope);
     internal delegate List<PresenceValue<T>> OtherVarAccessor<T>(Envelope envelope);
 
     // todo this can be used to batch socket envelope sends
@@ -39,7 +39,7 @@ namespace NakamaSync
             _socket = socket;
         }
 
-        public void AddSharedVar<T>(SharedVarAccessor<T> accessor, VarValue<T> value)
+        public void AddIncomingVar<T>(VarValueAccessor<T> accessor, VarValue<T> value)
         {
             accessor(_envelope).Add(value);
         }

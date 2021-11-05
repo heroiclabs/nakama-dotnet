@@ -28,9 +28,9 @@ namespace NakamaSync
         private readonly TaskCompletionSource<object> _handshakeTcs = new TaskCompletionSource<object>();
         private IncomingVarIngress _incomingVarIngress;
 
-        public HandshakeResponseHandler(IncomingVarIngress sharedVarGuestEgress)
+        public HandshakeResponseHandler(IncomingVarIngress incoingVarIngress)
         {
-            _incomingVarIngress = sharedVarGuestEgress;
+            _incomingVarIngress = incoingVarIngress;
         }
 
         public void Subscribe(HandshakeRequester handshakeRequester, SyncSocket syncSocket, HostTracker hostTracker)

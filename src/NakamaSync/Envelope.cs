@@ -22,19 +22,19 @@ namespace NakamaSync
     internal class Envelope
     {
         [DataMember(Name="shared_bools"), Preserve]
-        public List<VarValue<bool>> SharedBools { get; set; }
+        public List<VarValue<bool>> Bools { get; set; }
 
         [DataMember(Name="shared_floats"), Preserve]
-        public List<VarValue<float>> SharedFloats { get; set; }
+        public List<VarValue<float>> Floats { get; set; }
 
         [DataMember(Name="shared_ints"), Preserve]
-        public List<VarValue<int>> SharedInts { get; set; }
+        public List<VarValue<int>> Ints { get; set; }
 
         [DataMember(Name="shared_strings"), Preserve]
-        public List<VarValue<string>> SharedStrings { get; set; }
+        public List<VarValue<string>> Strings { get; set; }
 
         [DataMember(Name="shared_objects"), Preserve]
-        public List<VarValue<object>> SharedObjects { get; set; }
+        public List<VarValue<object>> Objects { get; set; }
 
         [DataMember(Name="user_bools"), Preserve]
         public List<PresenceValue<bool>> PresenceBools { get; set; }
@@ -77,11 +77,11 @@ namespace NakamaSync
 
         internal Envelope()
         {
-            SharedBools = new List<VarValue<bool>>();
-            SharedFloats = new List<VarValue<float>>();
-            SharedInts = new List<VarValue<int>>();
-            SharedStrings = new List<VarValue<string>>();
-            SharedObjects = new List<VarValue<object>>();
+            Bools = new List<VarValue<bool>>();
+            Floats = new List<VarValue<float>>();
+            Ints = new List<VarValue<int>>();
+            Strings = new List<VarValue<string>>();
+            Objects = new List<VarValue<object>>();
 
             PresenceBools = new List<PresenceValue<bool>>();
             PresenceFloats = new List<PresenceValue<float>>();

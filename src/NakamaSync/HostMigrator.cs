@@ -53,10 +53,10 @@ namespace NakamaSync
 
         private void ValidatePendingVars(VarRegistry registry)
         {
-            ValidatePendingVars<bool>(registry.SharedVarRegistry.SharedBoolsIncoming.Values, env => env.SharedBoolAcks);
-            ValidatePendingVars<float>(registry.SharedVarRegistry.SharedFloatsIncoming.Values, env => env.SharedFloatAcks);
-            ValidatePendingVars<int>(registry.SharedVarRegistry.SharedIntsIncoming.Values, env => env.SharedIntAcks);
-            ValidatePendingVars<string>(registry.SharedVarRegistry.SharedStringsIncoming.Values, env => env.SharedStringAcks);
+            ValidatePendingVars<bool>(registry.IncomingVarRegistry.Bools.Values, env => env.SharedBoolAcks);
+            ValidatePendingVars<float>(registry.IncomingVarRegistry.Floats.Values, env => env.SharedFloatAcks);
+            ValidatePendingVars<int>(registry.IncomingVarRegistry.Ints.Values, env => env.SharedIntAcks);
+            ValidatePendingVars<string>(registry.IncomingVarRegistry.Strings.Values, env => env.SharedStringAcks);
 
             ValidatePendingVars<bool>(registry.OtherVarRegistry.PresenceBools, env => env.PresenceBoolAcks);
             ValidatePendingVars<float>(registry.OtherVarRegistry.PresenceFloats, env => env.PresenceFloatAcks);
@@ -85,10 +85,10 @@ namespace NakamaSync
 
         private void UpdateVarHost(VarRegistry varRegistry, bool isHost)
         {
-            UpdateVarHost(varRegistry.SharedVarRegistry.SharedBoolsIncoming.Values, isHost);
-            UpdateVarHost(varRegistry.SharedVarRegistry.SharedFloatsIncoming.Values, isHost);
-            UpdateVarHost(varRegistry.SharedVarRegistry.SharedIntsIncoming.Values, isHost);
-            UpdateVarHost(varRegistry.SharedVarRegistry.SharedStringsIncoming.Values, isHost);
+            UpdateVarHost(varRegistry.IncomingVarRegistry.Bools.Values, isHost);
+            UpdateVarHost(varRegistry.IncomingVarRegistry.Floats.Values, isHost);
+            UpdateVarHost(varRegistry.IncomingVarRegistry.Ints.Values, isHost);
+            UpdateVarHost(varRegistry.IncomingVarRegistry.Strings.Values, isHost);
             UpdateVarHost(varRegistry.OtherVarRegistry.PresenceBools, isHost);
             UpdateVarHost(varRegistry.OtherVarRegistry.PresenceFloats, isHost);
             UpdateVarHost(varRegistry.OtherVarRegistry.PresenceInts, isHost);

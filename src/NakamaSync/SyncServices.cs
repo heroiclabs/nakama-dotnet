@@ -36,7 +36,7 @@ namespace NakamaSync
 
         private readonly IncomingVarIngress _incomingVarGuestIngress;
 
-        private readonly SharedVarEgress _sharedVarEgress;
+        private readonly IncomingVarEgress _incomingVarEgress;
         private readonly SelfVarEgress _selfVarEgress;
 
         private readonly HandshakeRequester _handshakeRequester;
@@ -75,7 +75,7 @@ namespace NakamaSync
             var envelopeBuilder = new EnvelopeBuilder(syncSocket);
             _services.Add(envelopeBuilder);
 
-            var sharedGuestIngress = new SharedVarGuestIngress(presenceTracker);
+            var sharedGuestIngress = new IncomingVarGuestIngress(presenceTracker);
             _services.Add(sharedGuestIngress);
 
             var sharedHostIngress = new IncomingVarHostIngress(lockVersionGuard, envelopeBuilder);
@@ -102,14 +102,14 @@ namespace NakamaSync
             var handshakeResponseHandler = new HandshakeResponseHandler(incomingVarGuestIngress);
             _services.Add(handshakeResponseHandler);
 
-            var sharedVarGuestEgress = new SharedVarGuestEgress(lockVersionGuard, envelopeBuilder);
+            var incomingVarGuestEgress = new IncomingVarGuestEgress(lockVersionGuard, envelopeBuilder);
             _services.Add(incomingVarGuestIngress);
 
-            var sharedHostEgress = new SharedVarHostEgress(lockVersionGuard, envelopeBuilder);
+            var sharedHostEgress = new IncomingVarHostEgress(lockVersionGuard, envelopeBuilder);
             _services.Add(sharedHostEgress);
 
-            var sharedVarHostEgress = new SharedVarEgress(sharedVarGuestEgress, sharedHostEgress, presenceTracker, hostTracker);
-            _services.Add(sharedVarHostEgress);
+            var incomingVarHostEgress = new IncomingVarEgress(incomingVarGuestEgress, sharedHostEgress, presenceTracker, hostTracker);
+            _services.Add(incomingVarHostEgress);
 
             var migrator = new HostMigrator(varRegistry, envelopeBuilder);
             _services.Add(migrator);
@@ -136,7 +136,7 @@ namespace NakamaSync
             _handshakeResponder = handshakeResponder;
             _handshakeResponseHandler = handshakeResponseHandler;
 
-            _sharedVarEgress = sharedVarHostEgress;
+            _incomingVarEgress = incomingVarHostEgress;
             _selfVarEgress = selfVarEgress;
 
             _socket = socket;
@@ -178,7 +178,7 @@ namespace NakamaSync
             }
 
             _incomingVarGuestIngress.Subscribe(_syncSocket, _hostTracker);
-            _sharedVarEgress.Subscribe(_varRegistry.SharedVarRegistry);
+            _incomingVarEgress.Subscribe(_varRegistry.IncomingVarRegistry);
 
             // no self var ingress because only self can set a presence var
             _selfVarEgress.Subscribe(_varRegistry.OtherVarRegistry);

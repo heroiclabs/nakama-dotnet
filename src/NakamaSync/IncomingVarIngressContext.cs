@@ -22,10 +22,10 @@ namespace NakamaSync
     {
         public IIncomingVar<T> Var { get; }
         public VarValue<T> Value { get; }
-        public SharedVarAccessor<T> VarAccessor { get; }
+        public VarValueAccessor<T> VarAccessor { get; }
         public AckAccessor AckAccessor { get; }
 
-        public IncomingVarIngressContext(IIncomingVar<T> var, VarValue<T> value, SharedVarAccessor<T> accessor, AckAccessor ackAccessor)
+        public IncomingVarIngressContext(IIncomingVar<T> var, VarValue<T> value, VarValueAccessor<T> accessor, AckAccessor ackAccessor)
         {
             Var = var;
             Value = value;
@@ -34,34 +34,34 @@ namespace NakamaSync
         }
     }
 
-    internal class SharedVarIngressContext
+    internal class IncomingVarIngressContext
     {
         public static List<IncomingVarIngressContext<bool>> FromBoolValues(Envelope envelope, VarRegistry registry)
         {
-            return SharedVarIngressContext.FromValues<bool>(envelope.SharedBools, registry.SharedVarRegistry.SharedBoolsIncoming, env => env.SharedBools, env => env.SharedBoolAcks);
+            return IncomingVarIngressContext.FromValues<bool>(envelope.Bools, registry.IncomingVarRegistry.Bools, env => env.Bools, env => env.SharedBoolAcks);
         }
 
         public static List<IncomingVarIngressContext<float>> FromFloatValues(Envelope envelope, VarRegistry registry)
         {
-            return SharedVarIngressContext.FromValues<float>(envelope.SharedFloats, registry.SharedVarRegistry.SharedFloatsIncoming, env => env.SharedFloats, env => env.SharedFloatAcks);
+            return IncomingVarIngressContext.FromValues<float>(envelope.Floats, registry.IncomingVarRegistry.Floats, env => env.Floats, env => env.SharedFloatAcks);
         }
 
         public static List<IncomingVarIngressContext<int>> FromIntValues(Envelope envelope, VarRegistry registry)
         {
-            return SharedVarIngressContext.FromValues<int>(envelope.SharedInts, registry.SharedVarRegistry.SharedIntsIncoming, env => env.SharedInts, env => env.SharedIntAcks);
+            return IncomingVarIngressContext.FromValues<int>(envelope.Ints, registry.IncomingVarRegistry.Ints, env => env.Ints, env => env.SharedIntAcks);
         }
 
         public static List<IncomingVarIngressContext<string>> FromStringValues(Envelope envelope, VarRegistry registry)
         {
-            return FromValues(envelope.SharedStrings, registry.SharedVarRegistry.SharedStringsIncoming, env => env.SharedStrings, env => env.SharedStringAcks);
+            return FromValues(envelope.Strings, registry.IncomingVarRegistry.Strings, env => env.Strings, env => env.SharedStringAcks);
         }
 
         public static List<IncomingVarIngressContext<object>> FromObjectValues(Envelope envelope, VarRegistry registry)
         {
-            return FromValues(envelope.SharedObjects, registry.SharedVarRegistry.SharedObjectsIncoming, env => env.SharedObjects, env => env.SharedObjectAcks);
+            return FromValues(envelope.Objects, registry.IncomingVarRegistry.Objects, env => env.Objects, env => env.SharedObjectAcks);
         }
 
-        private static List<IncomingVarIngressContext<T>> FromValues<T>(List<VarValue<T>> values, Dictionary<string, IIncomingVar<T>> vars, SharedVarAccessor<T> varAccessor, AckAccessor ackAccessor)
+        private static List<IncomingVarIngressContext<T>> FromValues<T>(List<VarValue<T>> values, Dictionary<string, IIncomingVar<T>> vars, VarValueAccessor<T> varAccessor, AckAccessor ackAccessor)
         {
             var contexts = new List<IncomingVarIngressContext<T>>();
 

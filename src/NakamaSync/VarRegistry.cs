@@ -25,17 +25,17 @@ namespace NakamaSync
     {
         internal IEnumerable<IVar> RegisteredVars => new HashSet<IVar>(_registeredVars);
 
-        internal SharedVarRegistry SharedVarRegistry => _sharedVarRegistry;
+        internal IncomingVarRegistry IncomingVarRegistry => _incomingVarRegistry;
         internal OtherVarRegistry OtherVarRegistry => _otherVarRegistry;
 
-        private readonly SharedVarRegistry _sharedVarRegistry;
+        private readonly IncomingVarRegistry _incomingVarRegistry;
         private readonly OtherVarRegistry _otherVarRegistry;
         private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
         private readonly HashSet<string> _registeredKeys = new HashSet<string>();
 
         public VarRegistry()
         {
-            _sharedVarRegistry = new SharedVarRegistry();
+            _incomingVarRegistry = new IncomingVarRegistry();
             _otherVarRegistry = new OtherVarRegistry();
         }
 
@@ -43,32 +43,32 @@ namespace NakamaSync
 
         public void Register(SharedVar<bool> sharedBool)
         {
-            Register<bool>(sharedBool, _sharedVarRegistry.SharedBoolsIncoming);
+            Register<bool>(sharedBool, _incomingVarRegistry.Bools);
         }
 
         public void Register(SharedVar<int> sharedInt)
         {
-            Register<int>(sharedInt, _sharedVarRegistry.SharedIntsIncoming);
+            Register<int>(sharedInt, _incomingVarRegistry.Ints);
         }
 
         public void Register(SharedVar<float> sharedFloat)
         {
-            Register<float>(sharedFloat, _sharedVarRegistry.SharedFloatsIncoming);
+            Register<float>(sharedFloat, _incomingVarRegistry.Floats);
         }
 
         public void Register(SharedVar<string> sharedString)
         {
-            Register<string>(sharedString, _sharedVarRegistry.SharedStringsIncoming);
+            Register<string>(sharedString, _incomingVarRegistry.Strings);
         }
 
         public void Register<T>(SharedVar<T> sharedObject) where T : class
         {
-            Register<object>(sharedObject, _sharedVarRegistry.SharedObjectsIncoming);
+            Register<object>(sharedObject, _incomingVarRegistry.Objects);
         }
 
         public void Register<T>(SharedVar<IDictionary<string, T>> sharedObject)
         {
-            Register<object>(sharedObject, _sharedVarRegistry.SharedObjectsIncoming);
+            Register<object>(sharedObject, _incomingVarRegistry.Objects);
         }
 
         // todo allow registration one-by-one and then validate each collection afterwards.

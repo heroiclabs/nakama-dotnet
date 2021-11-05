@@ -45,10 +45,10 @@ namespace NakamaSync
         {
             if (leaver.UserId == _userId)
             {
-                ResetVars(_varRegistry.SharedVarRegistry.SharedBoolsIncoming.Values);
-                ResetVars(_varRegistry.SharedVarRegistry.SharedFloatsIncoming.Values);
-                ResetVars(_varRegistry.SharedVarRegistry.SharedIntsIncoming.Values);
-                ResetVars(_varRegistry.SharedVarRegistry.SharedStringsIncoming.Values);
+                ResetVars(_varRegistry.IncomingVarRegistry.Bools.Values);
+                ResetVars(_varRegistry.IncomingVarRegistry.Floats.Values);
+                ResetVars(_varRegistry.IncomingVarRegistry.Ints.Values);
+                ResetVars(_varRegistry.IncomingVarRegistry.Strings.Values);
                 ResetVars(_varRegistry.OtherVarRegistry.PresenceBools);
                 ResetVars(_varRegistry.OtherVarRegistry.PresenceFloats);
                 ResetVars(_varRegistry.OtherVarRegistry.PresenceInts);

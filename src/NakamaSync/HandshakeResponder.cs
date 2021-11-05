@@ -50,11 +50,11 @@ namespace NakamaSync
             if (success)
             {
                 Logger?.InfoFormat($"Remote keys from {source.UserId} match the local keys from {_presenceTracker.GetSelf().UserId}");
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedBoolsIncoming.Values, syncValues.SharedBools);
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedFloatsIncoming.Values, syncValues.SharedFloats);
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedIntsIncoming.Values, syncValues.SharedInts);
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedStringsIncoming.Values, syncValues.SharedStrings);
-                CopyToGuestResponse(_registry.SharedVarRegistry.SharedObjectsIncoming.Values, syncValues.SharedObjects);
+                CopyToGuestResponse(_registry.IncomingVarRegistry.Bools.Values, syncValues.Bools);
+                CopyToGuestResponse(_registry.IncomingVarRegistry.Floats.Values, syncValues.Floats);
+                CopyToGuestResponse(_registry.IncomingVarRegistry.Ints.Values, syncValues.Ints);
+                CopyToGuestResponse(_registry.IncomingVarRegistry.Strings.Values, syncValues.Strings);
+                CopyToGuestResponse(_registry.IncomingVarRegistry.Objects.Values, syncValues.Objects);
 
                 CopyToGuestResponse(_registry.OtherVarRegistry.PresenceBools, syncValues.PresenceBools);
                 CopyToGuestResponse(_registry.OtherVarRegistry.PresenceFloats, syncValues.PresenceFloats);

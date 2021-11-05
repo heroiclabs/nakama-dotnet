@@ -66,6 +66,7 @@
 // TODO think about a decision to give all vars an interface component and most events or other user-facing objects an interface component. right now it's a mixed approach.
 // todo fix disparity w/r/t whether var events have the actual concrete var on them or if we don't really need that...there is inconsistency between the var evnets at the moment.
 // todo clean up internal usage of the term ISharedVar?
+// todo find better name for "Incoming var"
 
 using System;
 using System.Threading.Tasks;

@@ -19,43 +19,43 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedVarEgress : ISyncService
+    internal class IncomingVarEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private PresenceTracker _presenceTracker;
         private HostTracker _hostTracker;
-        private SharedVarGuestEgress _sharedVarGuestEgress;
-        private SharedVarHostEgress _sharedHostEgress;
+        private IncomingVarGuestEgress _guestEgress;
+        private IncomingVarHostEgress _hostEgress;
 
-        public SharedVarEgress(SharedVarGuestEgress sharedVarGuestEgress, SharedVarHostEgress sharedHostEgress, PresenceTracker presenceTracker, HostTracker hostTracker)
+        public IncomingVarEgress(IncomingVarGuestEgress guestEgress, IncomingVarHostEgress hostEgress, PresenceTracker presenceTracker, HostTracker hostTracker)
         {
-            _sharedVarGuestEgress = sharedVarGuestEgress;
-            _sharedHostEgress = sharedHostEgress;
+            _guestEgress = guestEgress;
+            _hostEgress = hostEgress;
             _presenceTracker = presenceTracker;
             _hostTracker = hostTracker;
         }
 
-        public void Subscribe(SharedVarRegistry registry)
+        public void Subscribe(IncomingVarRegistry registry)
         {
-            Subscribe(registry.SharedBoolsIncoming.Values, values => values.SharedBools);
-            Subscribe(registry.SharedFloatsIncoming.Values, values => values.SharedFloats);
-            Subscribe(registry.SharedIntsIncoming.Values,  values => values.SharedInts);
-            Subscribe(registry.SharedStringsIncoming.Values, values => values.SharedStrings);
-            Subscribe(registry.SharedObjectsIncoming.Values, values => values.SharedObjects);
+            Subscribe(registry.Bools.Values, values => values.Bools);
+            Subscribe(registry.Floats.Values, values => values.Floats);
+            Subscribe(registry.Ints.Values,  values => values.Ints);
+            Subscribe(registry.Strings.Values, values => values.Strings);
+            Subscribe(registry.Objects.Values, values => values.Objects);
         }
 
-        private void Subscribe<T>(IEnumerable<IIncomingVar<T>> vars, SharedVarAccessor<T> accessor)
+        private void Subscribe<T>(IEnumerable<IIncomingVar<T>> vars, VarValueAccessor<T> accessor)
         {
             foreach (var var in vars)
             {
                 Logger?.DebugFormat($"Subscribing to shared variable with key {var.Key}");
-                var.OnValueChanged += (evt) => HandleLocalSharedVarChanged(var.Key, var, evt, accessor);
+                var.OnValueChanged += (evt) => HandleLocalVarChanged(var.Key, var, evt, accessor);
             }
         }
 
-        private void HandleLocalSharedVarChanged<T>(string key, IIncomingVar<T> var, IVarEvent<T> evt, SharedVarAccessor<T> accessor)
+        private void HandleLocalVarChanged<T>(string key, IIncomingVar<T> var, IVarEvent<T> evt, VarValueAccessor<T> accessor)
         {
             if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
             {
@@ -70,11 +70,11 @@ namespace NakamaSync
 
             if (isHost)
             {
-                _sharedHostEgress.HandleLocalSharedVarChanged(key, var, evt.ValueChange.NewValue, accessor);
+                _hostEgress.HandleLocalVarChanged(key, var, evt.ValueChange.NewValue, accessor);
             }
             else
             {
-                _sharedVarGuestEgress.HandleLocalSharedVarChanged(key, var, evt.ValueChange.NewValue, accessor);
+                _guestEgress.HandleLocalVarChanged(key, var, evt.ValueChange.NewValue, accessor);
             }
         }
     }

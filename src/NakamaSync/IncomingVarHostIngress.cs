@@ -41,7 +41,7 @@ namespace NakamaSync
                 return;
             }
 
-            bool success = context.Var.SetValue(source, context.Value, context.Value.ValidationStatus);
+            bool success = context.Var.SetValue(source, context.Value.Value, context.Value.ValidationStatus);
 
             if (context.Value.ValidationStatus != ValidationStatus.Pending)
             {
@@ -50,7 +50,7 @@ namespace NakamaSync
 
             if (success)
             {
-                _builder.AddSharedVar(context.VarAccessor, context.Value);
+                _builder.AddIncomingVar(context.VarAccessor, context.Value);
                 _builder.AddAck(context.AckAccessor, context.Value.Key);
                 _builder.SendEnvelope();
             }
@@ -58,7 +58,7 @@ namespace NakamaSync
             {
                 _lockVersionGuard.IncrementLockVersion(context.Value.Key);
                 var outgoing = new VarValue<T>(context.Value.Key, context.Var.GetValue(), _lockVersionGuard.GetLockVersion(context.Value.Key), ValidationStatus.Validated);
-                _builder.AddSharedVar(context.VarAccessor, context.Value);
+                _builder.AddIncomingVar(context.VarAccessor, context.Value);
                 _builder.SendEnvelope();
             }
         }

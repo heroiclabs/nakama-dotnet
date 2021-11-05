@@ -1,3 +1,4 @@
+
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -14,12 +15,11 @@
 * limitations under the License.
 */
 
-using System;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedVarHostEgress : ISyncService
+    internal class IncomingVarGuestEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -27,25 +27,26 @@ namespace NakamaSync
         private readonly LockVersionGuard _lockVersionGuard;
         private readonly EnvelopeBuilder _builder;
 
-        public SharedVarHostEgress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
+        public IncomingVarGuestEgress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
         {
             _lockVersionGuard = lockVersionGuard;
             _builder = builder;
         }
 
-        public void HandleLocalSharedVarChanged<T>(string key, IIncomingVar<T> var, T newValue, SharedVarAccessor<T> accessor)
+        public void HandleLocalVarChanged<T>(string key, IIncomingVar<T> var, T newValue, VarValueAccessor<T> accessor)
         {
             var status = var.ValidationStatus;
 
-            if (status == ValidationStatus.Pending)
+            if (status == ValidationStatus.Validated)
             {
-                ErrorHandler?.Invoke(new InvalidOperationException("Host should not have local key pending validation: " + key));
-                return;
+                status = ValidationStatus.Pending;
+                (var as IVar).SetValidationStatus(status);
             }
 
             _lockVersionGuard.IncrementLockVersion(key);
-            var sharedValue = new VarValue<T>(key, newValue, _lockVersionGuard.GetLockVersion(key), status);
-            _builder.AddSharedVar(accessor, sharedValue);
+            var newSyncedValue = new VarValue<T>(key, newValue, _lockVersionGuard.GetLockVersion(key), status);
+
+            _builder.AddIncomingVar(accessor, newSyncedValue);
             _builder.SendEnvelope();
         }
     }

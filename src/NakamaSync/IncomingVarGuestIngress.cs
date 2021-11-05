@@ -18,14 +18,14 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class SharedVarGuestIngress : ISyncService
+    internal class IncomingVarGuestIngress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private PresenceTracker _presenceTracker;
 
-        public SharedVarGuestIngress(PresenceTracker presenceTracker)
+        public IncomingVarGuestIngress(PresenceTracker presenceTracker)
         {
             _presenceTracker = presenceTracker;
         }
