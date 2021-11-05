@@ -29,6 +29,8 @@ namespace NakamaSync
         public event ResetHandler OnReset;
         public ValidationHandler<T> ValidationHandler { get; set; }
 
+        public string Key { get; }
+
         internal IUserPresence Self
         {
             get;
@@ -82,6 +84,11 @@ namespace NakamaSync
         public T GetValue()
         {
             return _value;
+        }
+
+        public Var(string key)
+        {
+            Key = key;
         }
 
         internal abstract void Reset();

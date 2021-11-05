@@ -23,6 +23,11 @@ namespace NakamaSync
     {
         event ResetHandler OnReset;
 
+        string Key
+        {
+            get;
+        }
+
         IUserPresence Self
         {
             get;

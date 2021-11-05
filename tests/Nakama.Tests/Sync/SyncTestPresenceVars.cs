@@ -38,28 +38,22 @@ namespace Nakama.Tests.Sync
         {
             for (int i = 0; i < numVarCollections; i++)
             {
-                var selfBool = new SelfVar<bool>();
-                var selfFloat = new SelfVar<float>();
-                var selfInt = new SelfVar<int>();
-                var selfString = new SelfVar<string>();
+                var selfBool = new SelfVar<bool>("presenceBools_" + i);
+                var selfFloat = new SelfVar<float>("presenceFloats_" + i);
+                var selfInt = new SelfVar<int>("presenceInts_" + i);
+                var selfString = new SelfVar<string>("presenceStrings_" + i);
 
-                string boolKey = "presenceBools_" + i;
-                string floatKey = "presenceFloats_" + i;
-                string intKey = "presenceInts_" + i;
-                string stringKey = "presenceStrings_" + i;
+                BoolSelfVars[selfBool.Key] = selfBool;
+                varRegistry.Register(selfBool);
 
-                BoolSelfVars[boolKey] = selfBool;
-                varRegistry.Register(boolKey, selfBool);
+                FloatSelfVars[selfFloat.Key] = selfFloat;
+                varRegistry.Register(selfFloat);
 
-                FloatSelfVars[floatKey] = selfFloat;
-                varRegistry.Register(floatKey, selfFloat);
+                IntSelfVars[selfInt.Key] = selfInt;
+                varRegistry.Register(selfInt);
 
-                IntSelfVars[intKey] = selfInt;
-                varRegistry.Register(intKey, selfInt);
-
-                StringSelfVars[stringKey] = selfString;
-                varRegistry.Register(stringKey, selfString);
-
+                StringSelfVars[selfString.Key] = selfString;
+                varRegistry.Register(selfString);
 
                 var presenceBools = new List<OtherVar<bool>>();
                 var presenceFloats = new List<OtherVar<float>>();
@@ -68,27 +62,27 @@ namespace Nakama.Tests.Sync
 
                 for (int j = 0; j < OtherVarsPerCollection; j++)
                 {
-                    var presenceBool = new OtherVar<bool>();
-                    varRegistry.Register(boolKey, presenceBool);
+                    var presenceBool = new OtherVar<bool>(selfBool.Key);
+                    varRegistry.Register(presenceBool);
                     presenceBools.Add(presenceBool);
 
-                    var presenceFloat = new OtherVar<float>();
-                    varRegistry.Register(floatKey, presenceFloat);
+                    var presenceFloat = new OtherVar<float>(selfFloat.Key);
+                    varRegistry.Register(presenceFloat);
                     presenceFloats.Add(presenceFloat);
 
-                    var presenceInt = new OtherVar<int>();
-                    varRegistry.Register(intKey, presenceInt);
+                    var presenceInt = new OtherVar<int>(selfInt.Key);
+                    varRegistry.Register(presenceInt);
                     presenceInts.Add(presenceInt);
 
-                    var presenceString = new OtherVar<string>();
-                    varRegistry.Register(stringKey, presenceString);
+                    var presenceString = new OtherVar<string>(selfString.Key);
+                    varRegistry.Register(presenceString);
                     presenceStrings.Add(presenceString);
                 }
 
-                BoolOtherVars[boolKey] = presenceBools;
-                FloatOtherVars[floatKey] = presenceFloats;
-                IntOtherVars[intKey] = presenceInts;
-                StringOtherVars[stringKey] = presenceStrings;
+                BoolOtherVars[selfBool.Key] = presenceBools;
+                FloatOtherVars[selfFloat.Key] = presenceFloats;
+                IntOtherVars[selfInt.Key] = presenceInts;
+                StringOtherVars[selfString.Key] = presenceStrings;
             }
         }
     }

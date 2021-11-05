@@ -39,85 +39,84 @@ namespace NakamaSync
             _otherVarRegistry = new OtherVarRegistry();
         }
 
-        public void Register(string key, SharedVar<bool> sharedBool)
+        public void Register(SharedVar<bool> sharedBool)
         {
-            Register<bool>(key, sharedBool, _sharedVarRegistry.SharedBools);
+            Register<bool>(sharedBool, _sharedVarRegistry.SharedBools);
         }
 
-        public void Register(string key, SharedVar<int> sharedInt)
+        public void Register(SharedVar<int> sharedInt)
         {
-            Register<int>(key, sharedInt, _sharedVarRegistry.SharedInts);
+            Register<int>(sharedInt, _sharedVarRegistry.SharedInts);
         }
 
-        public void Register(string key, SharedVar<float> sharedFloat)
+        public void Register(SharedVar<float> sharedFloat)
         {
-            Register<float>(key, sharedFloat, _sharedVarRegistry.SharedFloats);
+            Register<float>(sharedFloat, _sharedVarRegistry.SharedFloats);
         }
 
-        public void Register(string key, SharedVar<string> sharedString)
+        public void Register(SharedVar<string> sharedString)
         {
-            Register<string>(key, sharedString, _sharedVarRegistry.SharedStrings);
+            Register<string>(sharedString, _sharedVarRegistry.SharedStrings);
         }
 
-        public void Register<T>(string key, SharedVar<T> sharedObject) where T : class
+        public void Register<T>(SharedVar<T> sharedObject) where T : class
         {
-            Register<object>(key, sharedObject, _sharedVarRegistry.SharedObjects);
+            Register<object>(sharedObject, _sharedVarRegistry.SharedObjects);
         }
 
-        public void Register<T>(string key, SharedVar<IDictionary<string, T>> sharedObject)
+        public void Register<T>(SharedVar<IDictionary<string, T>> sharedObject)
         {
-            Register<object>(key, sharedObject, _sharedVarRegistry.SharedObjects);
+            Register<object>(sharedObject, _sharedVarRegistry.SharedObjects);
         }
-
 
         // todo allow registration one-by-one and then validate each collection afterwards.
         // do this validation and batching after the match starts with an internal method in sync services or
         // somewhere.
-        public void Register(string key, SelfVar<bool> selfVar)
+        public void Register(SelfVar<bool> selfVar)
         {
-            Register<bool>(key, selfVar, _otherVarRegistry.PresenceBools);
+            Register<bool>(selfVar, _otherVarRegistry.PresenceBools);
         }
 
-        public void Register(string key, SelfVar<float> selfVar)
+        public void Register(SelfVar<float> selfVar)
         {
-            Register<float>(key, selfVar, _otherVarRegistry.PresenceFloats);
+            Register<float>(selfVar, _otherVarRegistry.PresenceFloats);
         }
 
-        public void Register(string key, SelfVar<int> selfVar)
+        public void Register(SelfVar<int> selfVar)
         {
-            Register<int>(key, selfVar, _otherVarRegistry.PresenceInts);
+            Register<int>(selfVar, _otherVarRegistry.PresenceInts);
         }
 
-        public void Register(string key, SelfVar<string> selfVar)
+        public void Register(SelfVar<string> selfVar)
         {
-            Register<string>(key, selfVar, _otherVarRegistry.PresenceStrings);
+            Register<string>(selfVar, _otherVarRegistry.PresenceStrings);
         }
 
-        public void Register(string key, OtherVar<bool> OtherVar)
+        public void Register(OtherVar<bool> otherVar)
         {
-            Register<bool>(key, OtherVar, _otherVarRegistry.PresenceBools);
+            Register<bool>(otherVar, _otherVarRegistry.PresenceBools);
         }
 
-        public void Register(string key, OtherVar<float> OtherVar)
+        public void Register(OtherVar<float> otherVar)
         {
-            Register<float>(key, OtherVar, _otherVarRegistry.PresenceFloats);
+            Register<float>(otherVar, _otherVarRegistry.PresenceFloats);
         }
 
-        public void Register(string key, OtherVar<int> OtherVar)
+        public void Register(OtherVar<int> otherVar)
         {
-            Register<int>(key, OtherVar, _otherVarRegistry.PresenceInts);
+            Register<int>(otherVar, _otherVarRegistry.PresenceInts);
         }
 
-        public void Register(string key, OtherVar<string> OtherVar)
+        public void Register(OtherVar<string> otherVar)
         {
-            Register<string>(key, OtherVar, _otherVarRegistry.PresenceStrings);
+            Register<string>(otherVar, _otherVarRegistry.PresenceStrings);
         }
 
-        private void Register<T>(string key, ISharedVar<T> var, Dictionary<string, ISharedVar<T>> varDict)
+        private void Register<T>(ISharedVar<T> var, Dictionary<string, ISharedVar<T>> varDict)
         {
-            if (!_registeredKeys.Add(key))
+            if (!_registeredKeys.Add(var.Key))
             {
-                throw new InvalidOperationException($"Attempted to register duplicate key {key}");
+                throw new InvalidOperationException($"Attempted to register duplicate key {var.Key}");
             }
 
             if (!_registeredVars.Add(var))
@@ -125,42 +124,42 @@ namespace NakamaSync
                 throw new InvalidOperationException($"Attempted to register duplicate var {var}");
             }
 
-            varDict.Add(key, var);
+            varDict.Add(var.Key, var);
         }
 
-        private void Register<T>(string key, SelfVar<T> selfVar, Dictionary<string, OtherVarCollection<T>> OtherVarCollections)
+        private void Register<T>(SelfVar<T> selfVar, Dictionary<string, OtherVarCollection<T>> otherVarCollections)
         {
             if (!_registeredVars.Add(selfVar))
             {
                 throw new InvalidOperationException($"Attempted to register duplicate var {selfVar}");
             }
 
-            OtherVarCollection<T> OtherVarCollection =
-                OtherVarCollections.ContainsKey(key) ?
-                OtherVarCollections[key] :
-                (OtherVarCollections[key] = new OtherVarCollection<T>());
+            OtherVarCollection<T> otherVarCollection =
+                otherVarCollections.ContainsKey(selfVar.Key) ?
+                otherVarCollections[selfVar.Key] :
+                (otherVarCollections[selfVar.Key] = new OtherVarCollection<T>());
 
-                if (OtherVarCollection.SelfVar != null)
+                if (otherVarCollection.SelfVar != null)
                 {
                     throw new InvalidOperationException("Cannot reassign register multiple SelfVar<T> to the same key.");
                 }
 
-                OtherVarCollection.SelfVar = selfVar;
+                otherVarCollection.SelfVar = selfVar;
         }
 
-        private void Register<T>(string key, OtherVar<T> OtherVar, Dictionary<string, OtherVarCollection<T>> OtherVarCollections)
+        private void Register<T>(OtherVar<T> otherVar, Dictionary<string, OtherVarCollection<T>> OtherVarCollections)
         {
-            if (!_registeredVars.Add(OtherVar))
+            if (!_registeredVars.Add(otherVar))
             {
-                throw new InvalidOperationException($"Attempted to register duplicate var {OtherVar}");
+                throw new InvalidOperationException($"Attempted to register duplicate var {otherVar}");
             }
 
             OtherVarCollection<T> OtherVarCollection =
-                OtherVarCollections.ContainsKey(key) ?
-                OtherVarCollections[key] :
-                (OtherVarCollections[key] = new OtherVarCollection<T>());
+                OtherVarCollections.ContainsKey(otherVar.Key) ?
+                OtherVarCollections[otherVar.Key] :
+                (OtherVarCollections[otherVar.Key] = new OtherVarCollection<T>());
 
-                OtherVarCollection.OtherVars.Add(OtherVar);
+                OtherVarCollection.OtherVars.Add(otherVar);
         }
 
         internal HashSet<string> GetAllKeys()

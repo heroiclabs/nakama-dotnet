@@ -25,6 +25,10 @@ namespace NakamaSync
     /// </summary>
     public class SharedVar<T> : Var<T>, ISharedVar<T>
     {
+        public SharedVar(string key) : base(key)
+        {
+        }
+
         public void SetValue(T value)
         {
             (this as ISharedVar<T>).SetValue(Self, value, ValidationStatus);

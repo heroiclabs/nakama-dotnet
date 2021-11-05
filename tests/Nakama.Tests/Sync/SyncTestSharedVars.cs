@@ -37,24 +37,24 @@ namespace Nakama.Tests.Sync
 
             for (int i = 0; i < numTestVars; i++)
             {
-                var sharedBool = new SharedVar<bool>();
-                registry.Register(keyGenerator(userId, nameof(sharedBool), i),  sharedBool);
+                var sharedBool = new SharedVar<bool>(keyGenerator(userId, "sharedBool", i));
+                registry.Register(sharedBool);
                 SharedBools.Add(sharedBool);
 
-                var sharedFloat = new SharedVar<float>();
-                registry.Register(keyGenerator(userId, nameof(sharedFloat), i), sharedFloat);
+                var sharedFloat = new SharedVar<float>(keyGenerator(userId, "sharedFloat", i));
+                registry.Register(sharedFloat);
                 SharedFloats.Add(sharedFloat);
 
-                var sharedInt = new SharedVar<int>();
-                registry.Register(keyGenerator(userId, nameof(sharedInt), i), sharedInt);
+                var sharedInt = new SharedVar<int>(keyGenerator(userId, "sharedInt", i));
+                registry.Register(sharedInt);
                 SharedInts.Add(sharedInt);
 
-                var sharedString = new SharedVar<string>();
-                registry.Register(keyGenerator(userId, nameof(sharedString), i), sharedString);
+                var sharedString = new SharedVar<string>(keyGenerator(userId, "sharedString", i));
+                registry.Register(sharedString);
                 SharedStrings.Add(sharedString);
 
-                var sharedObject = new SharedVar<IDictionary<string, string>>();
-                registry.Register(keyGenerator(userId, nameof(sharedObject), i), sharedObject);
+                var sharedObject = new SharedVar<IDictionary<string, string>>(keyGenerator(userId, "sharedObject", i));
+                registry.Register(sharedObject);
                 SharedDicts.Add(sharedObject);
             }
         }

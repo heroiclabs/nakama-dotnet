@@ -23,6 +23,10 @@ namespace NakamaSync
     /// </summary>
     public class SelfVar<T> : Var<T>
     {
+        public SelfVar(string key) : base(key)
+        {
+        }
+
         public void SetValue(T value)
         {
             SetValue(value, ValidationStatus);

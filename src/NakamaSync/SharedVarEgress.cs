@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System.Linq;
 using System.Collections.Generic;
 using Nakama;
 
@@ -39,24 +40,23 @@ namespace NakamaSync
 
         public void Subscribe(SharedVarRegistry registry)
         {
-            Subscribe(registry.SharedBools, values => values.SharedBools);
-            Subscribe(registry.SharedFloats, values => values.SharedFloats);
-            Subscribe(registry.SharedInts,  values => values.SharedInts);
-            Subscribe(registry.SharedStrings, values => values.SharedStrings);
-            Subscribe(registry.SharedObjects, values => values.SharedObjects);
-
+            Subscribe(registry.SharedBools.Values, values => values.SharedBools);
+            Subscribe(registry.SharedFloats.Values, values => values.SharedFloats);
+            Subscribe(registry.SharedInts.Values,  values => values.SharedInts);
+            Subscribe(registry.SharedStrings.Values, values => values.SharedStrings);
+            Subscribe(registry.SharedObjects.Values, values => values.SharedObjects);
         }
 
-        private void Subscribe<T>(Dictionary<string, ISharedVar<T>> vars, SharedVarAccessor<T> accessor)
+        private void Subscribe<T>(IEnumerable<IIncomingVar<T>> vars, SharedVarAccessor<T> accessor)
         {
-            foreach (var kvp in vars)
+            foreach (var var in vars)
             {
-                Logger?.DebugFormat($"Subscribing to shared variable with key {kvp.Key}");
-                vars[kvp.Key].OnValueChanged += (evt) => HandleLocalSharedVarChanged(kvp.Key, kvp.Value, evt, accessor);
+                Logger?.DebugFormat($"Subscribing to shared variable with key {var.Key}");
+                var.OnValueChanged += (evt) => HandleLocalSharedVarChanged(var.Key, var, evt, accessor);
             }
         }
 
-        private void HandleLocalSharedVarChanged<T>(string key, ISharedVar<T> var, IVarEvent<T> evt, SharedVarAccessor<T> accessor)
+        private void HandleLocalSharedVarChanged<T>(string key, IIncomingVar<T> var, IVarEvent<T> evt, SharedVarAccessor<T> accessor)
         {
             if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
             {
