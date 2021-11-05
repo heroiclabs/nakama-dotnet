@@ -25,8 +25,6 @@ namespace NakamaSync
     /// </summary>
     public class SharedVar<T> : Var<T>, ISharedVar<T>
     {
-        public event Action<ISharedVarEvent<T>> OnValueChanged;
-
         public void SetValue(T value)
         {
             (this as ISharedVar<T>).SetValue(Self, value, ValidationStatus);
@@ -38,13 +36,12 @@ namespace NakamaSync
             _value = default(T);
             ValidationHandler = null;
             ValidationStatus = ValidationStatus.None;
-            OnValueChanged = null;
             IsHost = false;
         }
 
         void ISharedVar<T>.SetValue(IUserPresence source, T value, ValidationStatus validationStatus)
         {
-            Logger?.DebugFormat($"Setting shared value. Source: {source.UserId}, Value: {value}, NumHandlers {OnValueChanged?.GetInvocationList().Length}");
+            Logger?.DebugFormat($"Setting shared value. Source: {source.UserId}, Value: {value}");
 
             T oldValue = _value;
             _value = value;
@@ -54,7 +51,7 @@ namespace NakamaSync
             var valueChange = new ValueChange<T>(oldValue, value);
             var statusChange = new ValidationChange(oldStatus, ValidationStatus);
 
-            OnValueChanged?.Invoke(new SharedVarEvent<T>(source, valueChange, statusChange));
+            InvokeOnValueChanged(new VarEvent<T>(source, valueChange, statusChange));
         }
     }
 }

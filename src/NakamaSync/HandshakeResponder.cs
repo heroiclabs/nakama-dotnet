@@ -74,7 +74,7 @@ namespace NakamaSync
         {
             foreach (var kvp in vars)
             {
-                ISharedVar<T> var = kvp.Value;
+                IIncomingVar<T> var = kvp.Value;
                 T rawValue = var.GetValue();
                 Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
                 var sharedValue = new SharedValue<T>(kvp.Key, rawValue, _lockVersionGuard.GetLockVersion(kvp.Key), kvp.Value.ValidationStatus);

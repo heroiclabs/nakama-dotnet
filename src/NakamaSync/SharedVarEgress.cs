@@ -56,7 +56,7 @@ namespace NakamaSync
             }
         }
 
-        private void HandleLocalSharedVarChanged<T>(string key, ISharedVar<T> var, ISharedVarEvent<T> evt, SharedVarAccessor<T> accessor)
+        private void HandleLocalSharedVarChanged<T>(string key, ISharedVar<T> var, IVarEvent<T> evt, SharedVarAccessor<T> accessor)
         {
             if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
             {

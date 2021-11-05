@@ -28,7 +28,7 @@ namespace NakamaSync
         }
     }
 
-    public interface IValueChange<T>
+    public interface IValueChange<out T>
     {
         T OldValue { get; }
         T NewValue { get; }

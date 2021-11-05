@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using Nakama;
 
 namespace NakamaSync
@@ -21,8 +22,10 @@ namespace NakamaSync
     public delegate void ResetHandler();
     public delegate bool ValidationHandler<T>(IUserPresence source, IValueChange<T> change);
 
-    public abstract class Var<T> : IVar<T>
+    public abstract class Var<T> : IIncomingVar<T>
     {
+        public event Action<IVarEvent<T>> OnValueChanged;
+
         public event ResetHandler OnReset;
         public ValidationHandler<T> ValidationHandler { get; set; }
 
@@ -85,6 +88,7 @@ namespace NakamaSync
 
         void IVar.Reset()
         {
+            OnValueChanged = null;
             this.Reset();
             OnReset();
         }
@@ -92,6 +96,25 @@ namespace NakamaSync
         void IVar.SetValidationStatus(ValidationStatus status)
         {
             ValidationStatus = status;
+        }
+
+        protected void InvokeOnValueChanged(IVarEvent<T> e)
+        {
+            OnValueChanged?.Invoke(e);
+        }
+    }
+
+    public class VarEvent<T> : IVarEvent<T>
+    {
+        public IUserPresence Source { get; }
+        public IValueChange<T> ValueChange { get; }
+        public IValidationChange ValidationChange { get; }
+
+        public VarEvent(IUserPresence source, IValueChange<T> valueChange, IValidationChange validationChange)
+        {
+            Source = source;
+            ValueChange = valueChange;
+            ValidationChange = validationChange;
         }
     }
 }

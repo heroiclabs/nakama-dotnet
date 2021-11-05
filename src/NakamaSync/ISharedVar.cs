@@ -14,14 +14,12 @@
 * limitations under the License.
 */
 
-using System;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal interface ISharedVar<T> : IVar<T>
+    internal interface ISharedVar<T> : IIOutgoingVar<T>, IIncomingVar<T>
     {
-        event Action<ISharedVarEvent<T>> OnValueChanged;
         void SetValue(T value);
         void SetValue(IUserPresence source, T value, ValidationStatus validationStatus);
     }

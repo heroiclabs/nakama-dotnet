@@ -53,11 +53,11 @@ namespace NakamaSync
                 var selfVarKey = new OtherVarKey(selfVarKvp.Key, _presenceTracker.UserId);
                 var selfVar = selfVarKvp.Value.SelfVar;
                 Logger?.DebugFormat($"Subscribing to self variable.");
-                selfVarKvp.Value.SelfVar.OnValueChanged += (evt) => HandleLocalSelfVarChanged(selfVarKey, evt, accessor);
+                selfVarKvp.Value.SelfVar.OnValueChanged += (evt) => HandleLocalSelfVarChanged(selfVarKey, selfVarKvp.Value.SelfVar, evt, accessor);
             }
         }
 
-        private void HandleLocalSelfVarChanged<T>(OtherVarKey key, ISelfVarEvent<T> evt, OtherVarAccessor<T> accessor)
+        private void HandleLocalSelfVarChanged<T>(OtherVarKey key, SelfVar<T> var, IVarEvent<T> evt, OtherVarAccessor<T> accessor)
         {
             bool isHost = _hostTracker.IsSelfHost();
 
@@ -65,11 +65,11 @@ namespace NakamaSync
 
             if (isHost)
             {
-                _selfHostEgress.HandleLocalSelfVarChanged(key, evt.Var, evt.ValueChange.NewValue, accessor);
+                _selfHostEgress.HandleLocalSelfVarChanged(key, var, evt.ValueChange.NewValue, accessor);
             }
             else
             {
-                _selfVarGuestEgress.HandleLocalSelfVarChanged(key, evt.Var, evt.ValueChange.NewValue, accessor);
+                _selfVarGuestEgress.HandleLocalSelfVarChanged(key, var, evt.ValueChange.NewValue, accessor);
             }
         }
     }

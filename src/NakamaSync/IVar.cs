@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using Nakama;
 
 namespace NakamaSync
@@ -34,11 +35,6 @@ namespace NakamaSync
             set;
         }
 
-        ValidationStatus ValidationStatus
-        {
-            get;
-        }
-
         bool IsHost
         {
             get;
@@ -50,10 +46,27 @@ namespace NakamaSync
         void SetValidationStatus(ValidationStatus status);
     }
 
-    internal interface IVar<T> : IVar
+    internal interface IIncomingVar<out T> : IVar
+    {
+        event Action<IVarEvent<T>> OnValueChanged;
+
+        T GetValue();
+
+        ValidationStatus ValidationStatus
+        {
+            get;
+        }
+    }
+
+    internal interface IIOutgoingVar<T> : IVar
     {
         ValidationHandler<T> ValidationHandler { get; set; }
-        T GetValue();
+    }
+
+    public interface IVarEvent<out T>
+    {
+        IUserPresence Source { get; }
+        IValueChange<T> ValueChange { get; }
+        IValidationChange ValidationChange { get; }
     }
 }
-

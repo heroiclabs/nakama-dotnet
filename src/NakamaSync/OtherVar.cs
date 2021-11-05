@@ -31,8 +31,6 @@ namespace NakamaSync
     {
         public event PresenceChangedHandler OnPresenceChanged;
 
-        public event Action<IOtherVarEvent<T>> OnValueChanged;
-
         public IUserPresence Presence => _presence;
 
         private IUserPresence _presence;
@@ -48,7 +46,7 @@ namespace NakamaSync
             var valueChange = new ValueChange<T>(oldValue, value);
             var statusChange = new ValidationChange(oldStatus, validationStatus);
 
-            OnValueChanged?.Invoke(new OtherVarEvent<T>(Presence, valueChange, statusChange));
+            InvokeOnValueChanged(new VarEvent<T>(Presence, valueChange, statusChange));
         }
 
         internal override void Reset()
@@ -59,7 +57,6 @@ namespace NakamaSync
             _value = default(T);
             ValidationHandler = null;
             ValidationStatus = ValidationStatus.None;
-            OnValueChanged = null;
             IsHost = false;
         }
 

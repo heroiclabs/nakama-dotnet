@@ -23,8 +23,6 @@ namespace NakamaSync
     /// </summary>
     public class SelfVar<T> : Var<T>
     {
-        public event Action<ISelfVarEvent<T>> OnValueChanged;
-
         public void SetValue(T value)
         {
             SetValue(value, ValidationStatus);
@@ -37,7 +35,6 @@ namespace NakamaSync
             ValidationHandler = null;
             ValidationStatus = ValidationStatus.None;
             IsHost = false;
-            OnValueChanged = null;
         }
 
         internal void SetValue(T value, ValidationStatus validationStatus)
@@ -51,7 +48,7 @@ namespace NakamaSync
             var valueChange = new ValueChange<T>(oldValue, value);
             var statusChange = new ValidationChange(oldStatus, ValidationStatus);
 
-            OnValueChanged?.Invoke(new SelfVarEvent<T>(this, valueChange, statusChange));
+            InvokeOnValueChanged(new VarEvent<T>(Self, valueChange, statusChange));
         }
     }
 }
