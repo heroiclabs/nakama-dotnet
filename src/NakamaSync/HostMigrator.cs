@@ -16,6 +16,7 @@
 
 using Nakama;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NakamaSync
 {
@@ -53,20 +54,16 @@ namespace NakamaSync
 
         private void ValidatePendingVars(VarRegistry registry)
         {
-            ValidatePendingVars<bool>(registry.IncomingVarRegistry.Bools.Values, env => env.SharedBoolAcks);
-            ValidatePendingVars<float>(registry.IncomingVarRegistry.Floats.Values, env => env.SharedFloatAcks);
-            ValidatePendingVars<int>(registry.IncomingVarRegistry.Ints.Values, env => env.SharedIntAcks);
-            ValidatePendingVars<string>(registry.IncomingVarRegistry.Strings.Values, env => env.SharedStringAcks);
-
-            ValidatePendingVars<bool>(registry.OtherVarRegistry.PresenceBools, env => env.PresenceBoolAcks);
-            ValidatePendingVars<float>(registry.OtherVarRegistry.PresenceFloats, env => env.PresenceFloatAcks);
-            ValidatePendingVars<int>(registry.OtherVarRegistry.PresenceInts, env => env.PresenceIntAcks);
-            ValidatePendingVars<string>(registry.OtherVarRegistry.PresenceStrings, env => env.PresenceStringAcks);
+            ValidatePendingVars<bool>(registry.Bools.Values.SelectMany(l => l), env => env.SharedBoolAcks);
+            ValidatePendingVars<float>(registry.Floats.Values.SelectMany(l => l), env => env.SharedFloatAcks);
+            ValidatePendingVars<int>(registry.Ints.Values.SelectMany(l => l), env => env.SharedIntAcks);
+            ValidatePendingVars<string>(registry.Strings.Values.SelectMany(l => l), env => env.SharedStringAcks);
+            ValidatePendingVars<object>(registry.Objects.Values.SelectMany(l => l), env => env.SharedObjectAcks);
 
             _builder.SendEnvelope();
         }
 
-        private void ValidatePendingVars<T>(IEnumerable<IIncomingVar<T>> vars, AckAccessor ackAccessor)
+        private void ValidatePendingVars<T>(IEnumerable<IVar<T>> vars, AckAccessor ackAccessor)
         {
             foreach (var var in vars)
             {
@@ -74,7 +71,7 @@ namespace NakamaSync
             }
         }
 
-        private void ValidatePendingVars<T>(Dictionary<string, OtherVarCollection<T>> vars, AckAccessor ackAccessor)
+        private void ValidatePendingVars<T>(Dictionary<string, List<IVar<T>>> vars, AckAccessor ackAccessor)
         {
             // TODO validate each var individually.
             foreach (var kvp in vars)
@@ -85,34 +82,17 @@ namespace NakamaSync
 
         private void UpdateVarHost(VarRegistry varRegistry, bool isHost)
         {
-            UpdateVarHost(varRegistry.IncomingVarRegistry.Bools.Values, isHost);
-            UpdateVarHost(varRegistry.IncomingVarRegistry.Floats.Values, isHost);
-            UpdateVarHost(varRegistry.IncomingVarRegistry.Ints.Values, isHost);
-            UpdateVarHost(varRegistry.IncomingVarRegistry.Strings.Values, isHost);
-            UpdateVarHost(varRegistry.OtherVarRegistry.PresenceBools, isHost);
-            UpdateVarHost(varRegistry.OtherVarRegistry.PresenceFloats, isHost);
-            UpdateVarHost(varRegistry.OtherVarRegistry.PresenceInts, isHost);
-            UpdateVarHost(varRegistry.OtherVarRegistry.PresenceStrings, isHost);
+            UpdateVarHost(varRegistry.Bools.Values.SelectMany(l => l), isHost);
+            UpdateVarHost(varRegistry.Floats.Values.SelectMany(l => l), isHost);
+            UpdateVarHost(varRegistry.Ints.Values.SelectMany(l => l), isHost);
+            UpdateVarHost(varRegistry.Strings.Values.SelectMany(l => l), isHost);
         }
 
-        private void UpdateVarHost<T>(IEnumerable<IIncomingVar<T>> vars, bool isHost)
+        private void UpdateVarHost<T>(IEnumerable<IVar<T>> vars, bool isHost)
         {
             foreach (var var in vars)
             {
                 var.IsHost = isHost;
-            }
-        }
-
-        private void UpdateVarHost<T>(Dictionary<string, OtherVarCollection<T>> vars, bool isHost)
-        {
-            foreach (var var in vars.Values)
-            {
-                (var.SelfVar as IVar).IsHost = isHost;
-
-                foreach (var otherVar in var.OtherVars)
-                {
-                    (otherVar as IVar).IsHost = isHost;
-                }
             }
         }
     }

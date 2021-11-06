@@ -1,3 +1,4 @@
+
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -14,35 +15,38 @@
 * limitations under the License.
 */
 
-using System;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class SelfVarHostEgress : ISyncService
+    internal class VarGuestEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
+        private readonly LockVersionGuard _lockVersionGuard;
         private readonly EnvelopeBuilder _builder;
 
-        public SelfVarHostEgress(EnvelopeBuilder builder)
+        public VarGuestEgress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
         {
+            _lockVersionGuard = lockVersionGuard;
             _builder = builder;
         }
 
-        public void HandleLocalSelfVarChanged<T>(OtherVarKey key, SelfVar<T> var, T newValue, OtherVarAccessor<T> accessor)
+        public void HandleLocalVarChanged<T>(string key, IVar<T> var, T newValue, VarValueAccessor<T> accessor)
         {
             var status = var.ValidationStatus;
 
-            if (status == ValidationStatus.Pending)
+            if (status == ValidationStatus.Validated)
             {
-                ErrorHandler?.Invoke(new InvalidOperationException("Host should not have local key pending validation: " + key));
-                return;
+                status = ValidationStatus.Pending;
+                (var as IVar).SetValidationStatus(status);
             }
 
-            var selfValue = new PresenceValue<T>(key, newValue, status);
-            _builder.AddOtherVar(accessor, selfValue);
+            _lockVersionGuard.IncrementLockVersion(key);
+            var newSyncedValue = new VarValue<T>(key, newValue, _lockVersionGuard.GetLockVersion(key), status);
+
+            _builder.AddVar(accessor, newSyncedValue);
             _builder.SendEnvelope();
         }
     }

@@ -28,14 +28,18 @@ namespace NakamaSync
         public ValidationStatus ValidationStatus { get; set; }
 
         [DataMember(Name="key"), Preserve]
-        public OtherVarKey Key { get; set; }
+        public string Key { get; set; }
+
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
 
         [DataMember(Name="value"), Preserve]
         public T Value { get; set; }
 
-        public PresenceValue(OtherVarKey key, T value, ValidationStatus validationStatus)
+        public PresenceValue(string key, string userId, T value, ValidationStatus validationStatus)
         {
             Key = key;
+            UserId = userId;
             Value = value;
             ValidationStatus = validationStatus;
         }

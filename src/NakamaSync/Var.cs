@@ -22,7 +22,7 @@ namespace NakamaSync
     public delegate void ResetHandler();
     public delegate bool ValidationHandler<T>(IUserPresence source, IValueChange<T> change);
 
-    public abstract class Var<T> : IIncomingVar<T>
+    public abstract class Var<T> : IVar<T>
     {
         public event Action<IVarEvent<T>> OnValueChanged;
 
@@ -112,7 +112,7 @@ namespace NakamaSync
             OnValueChanged?.Invoke(e);
         }
 
-        bool IIncomingVar<T>.SetValue(IUserPresence source, object value, ValidationStatus validationStatus)
+        bool IVar<T>.SetValue(IUserPresence source, object value, ValidationStatus validationStatus)
         {
             Logger?.DebugFormat($"Setting shared value. Source: {source.UserId}, Value: {value}");
 

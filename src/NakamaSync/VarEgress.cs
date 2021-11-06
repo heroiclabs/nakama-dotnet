@@ -15,21 +15,22 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class IncomingVarEgress : ISyncService
+    internal class VarEgress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private PresenceTracker _presenceTracker;
         private HostTracker _hostTracker;
-        private IncomingVarGuestEgress _guestEgress;
-        private IncomingVarHostEgress _hostEgress;
+        private VarGuestEgress _guestEgress;
+        private VarHostEgress _hostEgress;
 
-        public IncomingVarEgress(IncomingVarGuestEgress guestEgress, IncomingVarHostEgress hostEgress, PresenceTracker presenceTracker, HostTracker hostTracker)
+        public VarEgress(VarGuestEgress guestEgress, VarHostEgress hostEgress, PresenceTracker presenceTracker, HostTracker hostTracker)
         {
             _guestEgress = guestEgress;
             _hostEgress = hostEgress;
@@ -37,25 +38,26 @@ namespace NakamaSync
             _hostTracker = hostTracker;
         }
 
-        public void Subscribe(IncomingVarRegistry registry)
+        public void Subscribe(VarRegistry registry)
         {
-            Subscribe(registry.Bools.Values, values => values.Bools);
-            Subscribe(registry.Floats.Values, values => values.Floats);
-            Subscribe(registry.Ints.Values,  values => values.Ints);
-            Subscribe(registry.Strings.Values, values => values.Strings);
-            Subscribe(registry.Objects.Values, values => values.Objects);
+            Subscribe(registry.Bools, values => values.Bools);
+            Subscribe(registry.Floats, values => values.Floats);
+            Subscribe(registry.Ints,  values => values.Ints);
+            Subscribe(registry.Strings, values => values.Strings);
+            Subscribe(registry.Objects, values => values.Objects);
         }
 
-        private void Subscribe<T>(IEnumerable<IIncomingVar<T>> vars, VarValueAccessor<T> accessor)
+        private void Subscribe<T>(Dictionary<string, List<IVar<T>>> vars, VarValueAccessor<T> accessor)
         {
-            foreach (var var in vars)
+            var flattenedVars = vars.Values.SelectMany(l => l);
+            foreach (var var in flattenedVars)
             {
                 Logger?.DebugFormat($"Subscribing to shared variable with key {var.Key}");
                 var.OnValueChanged += (evt) => HandleLocalVarChanged(var.Key, var, evt, accessor);
             }
         }
 
-        private void HandleLocalVarChanged<T>(string key, IIncomingVar<T> var, IVarEvent<T> evt, VarValueAccessor<T> accessor)
+        private void HandleLocalVarChanged<T>(string key, IVar<T> var, IVarEvent<T> evt, VarValueAccessor<T> accessor)
         {
             if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
             {

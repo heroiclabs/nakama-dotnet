@@ -19,7 +19,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class IncomingVarHostIngress : ISyncService
+    internal class HostIngress : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
@@ -27,13 +27,13 @@ namespace NakamaSync
         private readonly LockVersionGuard _lockVersionGuard;
         private EnvelopeBuilder _builder;
 
-        public IncomingVarHostIngress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
+        public HostIngress(LockVersionGuard lockVersionGuard, EnvelopeBuilder builder)
         {
             _lockVersionGuard = lockVersionGuard;
             _builder = builder;
         }
 
-        public void ProcessValue<T>(IUserPresence source, IncomingVarIngressContext<T> context)
+        public void ProcessValue<T>(IUserPresence source, VarIngressContext<T> context)
         {
             if (context.Value.ValidationStatus == ValidationStatus.Validated)
             {
@@ -50,7 +50,7 @@ namespace NakamaSync
 
             if (success)
             {
-                _builder.AddIncomingVar(context.VarAccessor, context.Value);
+                _builder.AddVar(context.VarAccessor, context.Value);
                 _builder.AddAck(context.AckAccessor, context.Value.Key);
                 _builder.SendEnvelope();
             }
@@ -58,7 +58,7 @@ namespace NakamaSync
             {
                 _lockVersionGuard.IncrementLockVersion(context.Value.Key);
                 var outgoing = new VarValue<T>(context.Value.Key, context.Var.GetValue(), _lockVersionGuard.GetLockVersion(context.Value.Key), ValidationStatus.Validated);
-                _builder.AddIncomingVar(context.VarAccessor, context.Value);
+                _builder.AddVar(context.VarAccessor, context.Value);
                 _builder.SendEnvelope();
             }
         }

@@ -20,21 +20,21 @@ using NakamaSync;
 namespace Nakama.Tests.Sync
 {
     // todo apply varid generator to presence var collections
-    public class SyncTestOtherVars
+    public class SyncTestPresenceVars
     {
         public Dictionary<string, SelfVar<bool>> BoolSelfVars { get; } = new Dictionary<string, SelfVar<bool>>();
-        public Dictionary<string, List<OtherVar<bool>>> BoolOtherVars { get; } = new Dictionary<string, List<OtherVar<bool>>>();
+        public Dictionary<string, List<PresenceVar<bool>>> BoolPresenceVars { get; } = new Dictionary<string, List<PresenceVar<bool>>>();
 
         public Dictionary<string, SelfVar<float>> FloatSelfVars { get; } = new Dictionary<string, SelfVar<float>>();
-        public Dictionary<string, List<OtherVar<float>>> FloatOtherVars { get; } = new Dictionary<string, List<OtherVar<float>>>();
+        public Dictionary<string, List<PresenceVar<float>>> FloatPresenceVars { get; } = new Dictionary<string, List<PresenceVar<float>>>();
 
         public Dictionary<string, SelfVar<int>> IntSelfVars { get; } = new Dictionary<string, SelfVar<int>>();
-        public Dictionary<string, List<OtherVar<int>>> IntOtherVars { get; } = new Dictionary<string, List<OtherVar<int>>>();
+        public Dictionary<string, List<PresenceVar<int>>> IntPresenceVars { get; } = new Dictionary<string, List<PresenceVar<int>>>();
 
         public Dictionary<string, SelfVar<string>> StringSelfVars { get; } = new Dictionary<string, SelfVar<string>>();
-        public Dictionary<string, List<OtherVar<string>>> StringOtherVars { get; } = new Dictionary<string, List<OtherVar<string>>>();
+        public Dictionary<string, List<PresenceVar<string>>> StringPresenceVars { get; } = new Dictionary<string, List<PresenceVar<string>>>();
 
-        public SyncTestOtherVars(VarRegistry varRegistry, int numVarCollections, int OtherVarsPerCollection)
+        public SyncTestPresenceVars(VarRegistry varRegistry, int numVarCollections, int PresenceVarsPerCollection)
         {
             for (int i = 0; i < numVarCollections; i++)
             {
@@ -55,34 +55,34 @@ namespace Nakama.Tests.Sync
                 StringSelfVars[selfString.Key] = selfString;
                 varRegistry.Register(selfString);
 
-                var presenceBools = new List<OtherVar<bool>>();
-                var presenceFloats = new List<OtherVar<float>>();
-                var presenceInts = new List<OtherVar<int>>();
-                var presenceStrings = new List<OtherVar<string>>();
+                var presenceBools = new List<PresenceVar<bool>>();
+                var presenceFloats = new List<PresenceVar<float>>();
+                var presenceInts = new List<PresenceVar<int>>();
+                var presenceStrings = new List<PresenceVar<string>>();
 
-                for (int j = 0; j < OtherVarsPerCollection; j++)
+                for (int j = 0; j < PresenceVarsPerCollection; j++)
                 {
-                    var presenceBool = new OtherVar<bool>(selfBool.Key);
+                    var presenceBool = new PresenceVar<bool>(selfBool.Key);
                     varRegistry.Register(presenceBool);
                     presenceBools.Add(presenceBool);
 
-                    var presenceFloat = new OtherVar<float>(selfFloat.Key);
+                    var presenceFloat = new PresenceVar<float>(selfFloat.Key);
                     varRegistry.Register(presenceFloat);
                     presenceFloats.Add(presenceFloat);
 
-                    var presenceInt = new OtherVar<int>(selfInt.Key);
+                    var presenceInt = new PresenceVar<int>(selfInt.Key);
                     varRegistry.Register(presenceInt);
                     presenceInts.Add(presenceInt);
 
-                    var presenceString = new OtherVar<string>(selfString.Key);
+                    var presenceString = new PresenceVar<string>(selfString.Key);
                     varRegistry.Register(presenceString);
                     presenceStrings.Add(presenceString);
                 }
 
-                BoolOtherVars[selfBool.Key] = presenceBools;
-                FloatOtherVars[selfFloat.Key] = presenceFloats;
-                IntOtherVars[selfInt.Key] = presenceInts;
-                StringOtherVars[selfString.Key] = presenceStrings;
+                BoolPresenceVars[selfBool.Key] = presenceBools;
+                FloatPresenceVars[selfFloat.Key] = presenceFloats;
+                IntPresenceVars[selfInt.Key] = presenceInts;
+                StringPresenceVars[selfString.Key] = presenceStrings;
             }
         }
     }

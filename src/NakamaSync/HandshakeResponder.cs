@@ -50,16 +50,11 @@ namespace NakamaSync
             if (success)
             {
                 Logger?.InfoFormat($"Remote keys from {source.UserId} match the local keys from {_presenceTracker.GetSelf().UserId}");
-                CopyToGuestResponse(_registry.IncomingVarRegistry.Bools.Values, syncValues.Bools);
-                CopyToGuestResponse(_registry.IncomingVarRegistry.Floats.Values, syncValues.Floats);
-                CopyToGuestResponse(_registry.IncomingVarRegistry.Ints.Values, syncValues.Ints);
-                CopyToGuestResponse(_registry.IncomingVarRegistry.Strings.Values, syncValues.Strings);
-                CopyToGuestResponse(_registry.IncomingVarRegistry.Objects.Values, syncValues.Objects);
-
-                CopyToGuestResponse(_registry.OtherVarRegistry.PresenceBools, syncValues.PresenceBools);
-                CopyToGuestResponse(_registry.OtherVarRegistry.PresenceFloats, syncValues.PresenceFloats);
-                CopyToGuestResponse(_registry.OtherVarRegistry.PresenceInts, syncValues.PresenceInts);
-                CopyToGuestResponse(_registry.OtherVarRegistry.PresenceStrings, syncValues.PresenceStrings);
+                CopyToGuestResponse(_registry.Bools.Values.SelectMany(l => l), syncValues.Bools);
+                CopyToGuestResponse(_registry.Floats.Values.SelectMany(l => l), syncValues.Floats);
+                CopyToGuestResponse(_registry.Ints.Values.SelectMany(l => l), syncValues.Ints);
+                CopyToGuestResponse(_registry.Strings.Values.SelectMany(l => l), syncValues.Strings);
+                CopyToGuestResponse(_registry.Objects.Values.SelectMany(l => l), syncValues.Objects);
             }
             else
             {
@@ -70,7 +65,7 @@ namespace NakamaSync
             socket.SendHandshakeResponse(source, response);
         }
 
-        private void CopyToGuestResponse<T>(IEnumerable<IIncomingVar<T>> vars, List<VarValue<T>> values)
+        private void CopyToGuestResponse<T>(IEnumerable<IVar<T>> vars, List<VarValue<T>> values)
         {
             foreach (var var in vars)
             {
@@ -78,46 +73,6 @@ namespace NakamaSync
                 Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
                 var sharedValue = new VarValue<T>(var.Key, rawValue, _lockVersionGuard.GetLockVersion(var.Key), var.ValidationStatus);
                 values.Add(sharedValue);
-            }
-        }
-
-        private void CopyToGuestResponse<T>(Dictionary<string, OtherVarCollection<T>> collectionsByKey, List<PresenceValue<T>> values)
-        {
-            foreach (var varKvp in collectionsByKey)
-            {
-                string collectionKey = varKvp.Key;
-
-                T rawSelfValue = varKvp.Value.SelfVar.GetValue();
-
-                Logger?.DebugFormat($"OtherVar value for initial payload: CollectionKey: {varKvp.Key}, Raw Value: ${rawSelfValue}");
-
-                var selfVarKey = new OtherVarKey(collectionKey, _presenceTracker.GetSelf().UserId);
-                var selfValue = new PresenceValue<T>(selfVarKey, rawSelfValue, varKvp.Value.SelfVar.ValidationStatus);
-                values.Add(selfValue);
-
-                List<OtherVar<T>> vars = varKvp.Value.OtherVars;
-
-                Logger?.DebugFormat($"Handshake responder scanning through user values to copy for key: {varKvp.Key}");
-
-                for (int i = 0; i < vars.Count; i++)
-                {
-                    OtherVar<T> var = vars[i];
-                    // TODO handle data for a stale user?
-                    if (var.Presence == null)
-                    {
-                        // this is a valid case. not all presence vars will necessarily have a presence assigned
-                        // to the at this point.
-                        continue;
-                    }
-
-                    T rawValue = var.GetValue();
-
-                    Logger?.DebugFormat($"Presence value for initial payload: CollectionKey: {varKvp.Key}, Raw Value: {rawValue}");
-
-                    var OtherVarKey = new OtherVarKey(collectionKey, var.Presence.UserId);
-                    var value = new PresenceValue<T>(OtherVarKey, rawValue, var.ValidationStatus);
-                    values.Add(value);
-                }
             }
         }
     }

@@ -24,35 +24,35 @@ namespace NakamaSync
     // todo add some enum or option on how you would like the presence vars to be assigned.
     // like, do they all need to be filled with a presence or can some be unassigned.
     // todo assign errorhandler and logger to this
-    internal class OtherVarRotator<T> : ISyncService
+    internal class PresenceVarRotator<T> : ISyncService
     {
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
-        public Dictionary<string, OtherVar<T>> AssignedOtherVars => _assignedOtherVars;
-        public IList<OtherVar<T>> UnassignedOtherVars => _unassignedOtherVars;
+        public Dictionary<string, PresenceVar<T>> AssignedPresenceVars => _assignedPresenceVars;
+        public IList<PresenceVar<T>> UnassignedPresenceVars => _unassignedPresenceVars;
 
-        private readonly List<OtherVar<T>> _unassignedOtherVars = new List<OtherVar<T>>();
-        private readonly Dictionary<string, OtherVar<T>> _assignedOtherVars = new Dictionary<string, OtherVar<T>>();
+        private readonly List<PresenceVar<T>> _unassignedPresenceVars = new List<PresenceVar<T>>();
+        private readonly Dictionary<string, PresenceVar<T>> _assignedPresenceVars = new Dictionary<string, PresenceVar<T>>();
         private readonly PresenceTracker _presenceTracker;
         private IUserPresence _self;
 
-        public OtherVarRotator(PresenceTracker presenceTracker)
+        public PresenceVarRotator(PresenceTracker presenceTracker)
         {
             _presenceTracker = presenceTracker;
         }
 
-        public void AddOtherVar(OtherVar<T> OtherVar)
+        public void AddPresenceVar(PresenceVar<T> PresenceVar)
         {
-            if (OtherVar.Presence == null)
+            if (PresenceVar.Presence == null)
             {
-                Logger?.DebugFormat($"Rotator is adding unassigned presence var: {OtherVar}");
-                _unassignedOtherVars.Add(OtherVar);
+                Logger?.DebugFormat($"Rotator is adding unassigned presence var: {PresenceVar}");
+                _unassignedPresenceVars.Add(PresenceVar);
             }
             else
             {
-                Logger?.DebugFormat($"Rotator is adding assigned presence var: {OtherVar}");
-                _assignedOtherVars.Add(OtherVar.Presence.UserId, OtherVar);
+                Logger?.DebugFormat($"Rotator is adding assigned presence var: {PresenceVar}");
+                _assignedPresenceVars.Add(PresenceVar.Presence.UserId, PresenceVar);
             }
         }
 
@@ -73,34 +73,34 @@ namespace NakamaSync
         {
             Logger?.DebugFormat($"Presence var rotator for {_presenceTracker.UserId} notified of added presence: {presence.UserId}");
 
-            if (_unassignedOtherVars.Count == 0)
+            if (_unassignedPresenceVars.Count == 0)
             {
                 ErrorHandler?.Invoke(new InvalidOperationException($"Not enough presence vars to handle presence."));
             }
             // normal for server to send duplicate presence additions in very specific situations.
-            else if (!_assignedOtherVars.ContainsKey(presence.UserId))
+            else if (!_assignedPresenceVars.ContainsKey(presence.UserId))
             {
                 Logger?.DebugFormat($"Presence var rotator for {_self.UserId} is moving var from unassigned to assigned for presence: {presence.UserId} ");
-                var varToAssign = _unassignedOtherVars.First();
+                var varToAssign = _unassignedPresenceVars.First();
                 varToAssign.SetPresence(presence);
-                _unassignedOtherVars.Remove(varToAssign);
-                _assignedOtherVars.Add(presence.UserId, varToAssign);
+                _unassignedPresenceVars.Remove(varToAssign);
+                _assignedPresenceVars.Add(presence.UserId, varToAssign);
             }
         }
 
         private void HandlePresenceRemoved(IUserPresence presence)
         {
-            if (!_assignedOtherVars.ContainsKey(presence.UserId))
+            if (!_assignedPresenceVars.ContainsKey(presence.UserId))
             {
                 // user presence left that hadn't been assigned to any vars.
                 // this is perfectly valid.
                 return;
             }
 
-            OtherVar<T> varToRemove = _assignedOtherVars[presence.UserId];
+            PresenceVar<T> varToRemove = _assignedPresenceVars[presence.UserId];
             varToRemove.SetPresence(null);
-            _assignedOtherVars.Remove(presence.UserId);
-            _unassignedOtherVars.Add(varToRemove);
+            _assignedPresenceVars.Remove(presence.UserId);
+            _unassignedPresenceVars.Add(varToRemove);
         }
     }
 }

@@ -60,7 +60,7 @@
 // which would keep the variables there?
 // todo create a syncmatch struct and expose presences.
 // add null checks for inputs and maybe more input validation
-// whole OtherVarcollection?
+// whole PresenceVarcollection?
 // todo make sure you can
 // does usemainthread need to be true? test with both. think about different threading models.
 // TODO think about a decision to give all vars an interface component and most events or other user-facing objects an interface component. right now it's a mixed approach.

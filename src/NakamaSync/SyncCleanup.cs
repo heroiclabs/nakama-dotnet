@@ -15,6 +15,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using Nakama;
 
 namespace NakamaSync
@@ -45,35 +46,19 @@ namespace NakamaSync
         {
             if (leaver.UserId == _userId)
             {
-                ResetVars(_varRegistry.IncomingVarRegistry.Bools.Values);
-                ResetVars(_varRegistry.IncomingVarRegistry.Floats.Values);
-                ResetVars(_varRegistry.IncomingVarRegistry.Ints.Values);
-                ResetVars(_varRegistry.IncomingVarRegistry.Strings.Values);
-                ResetVars(_varRegistry.OtherVarRegistry.PresenceBools);
-                ResetVars(_varRegistry.OtherVarRegistry.PresenceFloats);
-                ResetVars(_varRegistry.OtherVarRegistry.PresenceInts);
-                ResetVars(_varRegistry.OtherVarRegistry.PresenceStrings);
+                ResetVars(_varRegistry.Bools);
+                ResetVars(_varRegistry.Floats);
+                ResetVars(_varRegistry.Ints);
+                ResetVars(_varRegistry.Strings);
+                ResetVars(_varRegistry.Objects);
             }
         }
 
-        private void ResetVars<T>(IEnumerable<IIncomingVar<T>> vars)
+        private void ResetVars<T>(Dictionary<string, List<IVar<T>>> vars)
         {
-            foreach (var var in vars)
+            foreach (var var in vars.Values.SelectMany(l => l))
             {
                 var.Reset();
-            }
-        }
-
-        private void ResetVars<T>(Dictionary<string, OtherVarCollection<T>> OtherVarCollections)
-        {
-            foreach (var OtherVarCollection in OtherVarCollections.Values)
-            {
-                OtherVarCollection.SelfVar.Reset();
-
-                foreach (var OtherVar in OtherVarCollection.OtherVars)
-                {
-                    OtherVar.Reset();
-                }
             }
         }
     }

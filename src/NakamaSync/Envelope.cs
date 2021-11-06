@@ -36,18 +36,6 @@ namespace NakamaSync
         [DataMember(Name="shared_objects"), Preserve]
         public List<VarValue<object>> Objects { get; set; }
 
-        [DataMember(Name="user_bools"), Preserve]
-        public List<PresenceValue<bool>> PresenceBools { get; set; }
-
-        [DataMember(Name="user_floats"), Preserve]
-        public List<PresenceValue<float>> PresenceFloats { get; set; }
-
-        [DataMember(Name="user_ints"), Preserve]
-        public List<PresenceValue<int>> PresenceInts { get; set; }
-
-        [DataMember(Name="user_strings"), Preserve]
-        public List<PresenceValue<string>> PresenceStrings { get; set; }
-
         [DataMember(Name="shared_bool_acks"), Preserve]
         public List<ValidationAck> SharedBoolAcks { get; set; }
 
@@ -63,18 +51,6 @@ namespace NakamaSync
         [DataMember(Name="shared_object_acks"), Preserve]
         public List<ValidationAck> SharedObjectAcks { get; set; }
 
-        [DataMember(Name="user_bool_acks"), Preserve]
-        public List<ValidationAck> PresenceBoolAcks { get; set; }
-
-        [DataMember(Name="user_float_acks"), Preserve]
-        public List<ValidationAck> PresenceFloatAcks { get; set; }
-
-        [DataMember(Name="user_int_acks"), Preserve]
-        public List<ValidationAck> PresenceIntAcks { get; set; }
-
-        [DataMember(Name="user_string_acks"), Preserve]
-        public List<ValidationAck> PresenceStringAcks { get; set; }
-
         internal Envelope()
         {
             Bools = new List<VarValue<bool>>();
@@ -82,21 +58,6 @@ namespace NakamaSync
             Ints = new List<VarValue<int>>();
             Strings = new List<VarValue<string>>();
             Objects = new List<VarValue<object>>();
-
-            PresenceBools = new List<PresenceValue<bool>>();
-            PresenceFloats = new List<PresenceValue<float>>();
-            PresenceInts = new List<PresenceValue<int>>();
-            PresenceStrings = new List<PresenceValue<string>>();
-
-            SharedBoolAcks = new List<ValidationAck>();
-            SharedFloatAcks = new List<ValidationAck>();
-            SharedIntAcks = new List<ValidationAck>();
-            SharedStringAcks = new List<ValidationAck>();
-
-            PresenceBoolAcks = new List<ValidationAck>();
-            PresenceFloatAcks = new List<ValidationAck>();
-            PresenceIntAcks = new List<ValidationAck>();
-            PresenceStringAcks = new List<ValidationAck>();
         }
     }
 }

@@ -51,7 +51,7 @@ namespace NakamaSync
         void SetValidationStatus(ValidationStatus status);
     }
 
-    internal interface IIncomingVar<out T> : IVar
+    internal interface IVar<out T> : IVar
     {
         event Action<IVarEvent<T>> OnValueChanged;
 
@@ -63,12 +63,6 @@ namespace NakamaSync
         }
 
         bool SetValue(IUserPresence source, object value, ValidationStatus validationStatus);
-    }
-
-    internal interface IIOutgoingVar<T> : IVar
-    {
-        ValidationHandler<T> ValidationHandler { get; set; }
-
     }
 
     public interface IVarEvent<out T>

@@ -25,7 +25,7 @@ namespace NakamaSync
     /// A variable containing a value for a user in the match. The value is synchronized across all users
     /// but can only be set by the associated user.
     /// </summary>
-    public class OtherVar<T> : Var<T>
+    public class PresenceVar<T> : Var<T>
     {
         public event PresenceChangedHandler OnPresenceChanged;
 
@@ -33,7 +33,7 @@ namespace NakamaSync
 
         private IUserPresence _presence;
 
-        public OtherVar(string key) : base(key)
+        public PresenceVar(string key) : base(key)
         {
         }
 
@@ -57,7 +57,7 @@ namespace NakamaSync
 
             if (presence?.UserId == Self?.UserId)
             {
-                throw new InvalidOperationException("OtherVar cannot have a presence id equal to self id.");
+                throw new InvalidOperationException("PresenceVar cannot have a presence id equal to self id.");
             }
 
             var oldOwner = _presence;

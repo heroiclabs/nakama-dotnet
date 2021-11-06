@@ -19,7 +19,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class IncomingVarIngress : ISyncService
+    internal class VarIngress : ISyncService
     {
         public ILogger Logger
         {
@@ -33,13 +33,12 @@ namespace NakamaSync
             set;
         }
 
-        private readonly IncomingVarGuestIngress _guestIngress;
-        private readonly IncomingVarHostIngress _sharedHostIngress;
+        private readonly GuestIngress _guestIngress;
+        private readonly HostIngress _sharedHostIngress;
         private readonly VarRegistry _registry;
         private readonly LockVersionGuard _lockVersionGuard;
 
-        public IncomingVarIngress(
-            IncomingVarGuestIngress guestIngress, IncomingVarHostIngress sharedHostIngress, VarRegistry registry, LockVersionGuard lockVersionGuard)
+        public VarIngress(GuestIngress guestIngress, HostIngress sharedHostIngress, VarRegistry registry, LockVersionGuard lockVersionGuard)
         {
             _guestIngress = guestIngress;
             _sharedHostIngress = sharedHostIngress;
@@ -59,46 +58,46 @@ namespace NakamaSync
         {
             Logger?.DebugFormat($"Shared role ingress received sync envelope.");
 
-            var bools = IncomingVarIngressContext.FromBoolValues(envelope, _registry);
+            var bools = VarIngressContext.FromBoolValues(envelope, _registry);
             ReceiveSyncEnvelope(source, bools, isHost);
 
-            var floats = IncomingVarIngressContext.FromFloatValues(envelope, _registry);
+            var floats = VarIngressContext.FromFloatValues(envelope, _registry);
             ReceiveSyncEnvelope(source, floats, isHost);
 
-            var ints = IncomingVarIngressContext.FromIntValues(envelope, _registry);
+            var ints = VarIngressContext.FromIntValues(envelope, _registry);
             ReceiveSyncEnvelope(source, ints, isHost);
 
-            var strings = IncomingVarIngressContext.FromStringValues(envelope, _registry);
+            var strings = VarIngressContext.FromStringValues(envelope, _registry);
             ReceiveSyncEnvelope(source, strings, isHost);
 
-            var objects = IncomingVarIngressContext.FromObjectValues(envelope, _registry);
+            var objects = VarIngressContext.FromObjectValues(envelope, _registry);
             ReceiveSyncEnvelope(source, objects, isHost);
 
             Logger?.DebugFormat($"Shared role ingress done processing sync envelope.");
         }
 
-        private void ReceiveSyncEnvelope<T>(IUserPresence source, List<IncomingVarIngressContext<T>> contexts, bool isHost)
+        private void ReceiveSyncEnvelope<T>(IUserPresence source, List<VarIngressContext<T>> contexts, bool isHost)
         {
             Logger?.DebugFormat($"Shared role ingress processing num contexts: {contexts.Count}");
 
-            foreach (IncomingVarIngressContext<T> context in contexts)
+            foreach (VarIngressContext<T> context in contexts)
             {
-                Logger?.DebugFormat($"Shared role ingress processing context: {context}");
+                Logger?.DebugFormat($"Ingress processing context: {context}");
 
                 if (!_lockVersionGuard.IsValidLockVersion(context.Value.Key, context.Value.LockVersion))
                 {
-                    Logger?.DebugFormat($"Shared role ingress received invalid lock version: {context.Value.LockVersion}");
+                    Logger?.DebugFormat($"Ingress received invalid lock version: {context.Value.LockVersion}");
                     continue;
                 }
 
                 if (isHost)
                 {
-                    Logger?.InfoFormat($"Setting shared value for self as host: {context.Value}");
+                    Logger?.InfoFormat($"Setting value for self as host: {context.Value}");
                     _sharedHostIngress.ProcessValue(source, context);
                 }
                 else
                 {
-                    Logger?.InfoFormat($"Setting shared value for self as guest: {context.Value}");
+                    Logger?.InfoFormat($"Setting value for self as guest: {context.Value}");
                     _guestIngress.ProcessValue(context.Var, source, context.Value);
                 }
             }

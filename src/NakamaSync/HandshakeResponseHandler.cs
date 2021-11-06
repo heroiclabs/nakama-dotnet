@@ -26,18 +26,18 @@ namespace NakamaSync
         public ILogger Logger { get; set; }
 
         private readonly TaskCompletionSource<object> _handshakeTcs = new TaskCompletionSource<object>();
-        private IncomingVarIngress _incomingVarIngress;
+        private VarIngress _varIngress;
 
-        public HandshakeResponseHandler(IncomingVarIngress incoingVarIngress)
+        public HandshakeResponseHandler(VarIngress incoingVarIngress)
         {
-            _incomingVarIngress = incoingVarIngress;
+            _varIngress = incoingVarIngress;
         }
 
         public void Subscribe(HandshakeRequester handshakeRequester, SyncSocket syncSocket, HostTracker hostTracker)
         {
             handshakeRequester.OnHandshakeSuccess += () =>
             {
-                _incomingVarIngress.Subscribe(syncSocket, hostTracker);
+                _varIngress.Subscribe(syncSocket, hostTracker);
                 _handshakeTcs.SetResult(null);
             };
 
