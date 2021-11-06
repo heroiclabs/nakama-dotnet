@@ -21,35 +21,23 @@ namespace NakamaSync
 {
     internal class Envelope
     {
-        [DataMember(Name="shared_bools"), Preserve]
+        [DataMember(Name="bools"), Preserve]
         public List<VarValue<bool>> Bools { get; set; }
 
-        [DataMember(Name="shared_floats"), Preserve]
+        [DataMember(Name="floats"), Preserve]
         public List<VarValue<float>> Floats { get; set; }
 
-        [DataMember(Name="shared_ints"), Preserve]
+        [DataMember(Name="ints"), Preserve]
         public List<VarValue<int>> Ints { get; set; }
 
-        [DataMember(Name="shared_strings"), Preserve]
+        [DataMember(Name="strings"), Preserve]
         public List<VarValue<string>> Strings { get; set; }
 
-        [DataMember(Name="shared_objects"), Preserve]
+        [DataMember(Name="objects"), Preserve]
         public List<VarValue<object>> Objects { get; set; }
 
-        [DataMember(Name="shared_bool_acks"), Preserve]
-        public List<ValidationAck> SharedBoolAcks { get; set; }
-
-        [DataMember(Name="shared_float_acks"), Preserve]
-        public List<ValidationAck> SharedFloatAcks { get; set; }
-
-        [DataMember(Name="shared_int_acks"), Preserve]
-        public List<ValidationAck> SharedIntAcks { get; set; }
-
-        [DataMember(Name="shared_string_acks"), Preserve]
-        public List<ValidationAck> SharedStringAcks { get; set; }
-
-        [DataMember(Name="shared_object_acks"), Preserve]
-        public List<ValidationAck> SharedObjectAcks { get; set; }
+        [DataMember(Name="acks"), Preserve]
+        public List<ValidationAck> Acks { get; set; }
 
         internal Envelope()
         {
@@ -58,6 +46,7 @@ namespace NakamaSync
             Ints = new List<VarValue<int>>();
             Strings = new List<VarValue<string>>();
             Objects = new List<VarValue<object>>();
+            Acks = new List<ValidationAck>();
         }
     }
 }

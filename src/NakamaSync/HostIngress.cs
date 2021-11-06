@@ -51,7 +51,7 @@ namespace NakamaSync
             if (success)
             {
                 _builder.AddVar(context.VarAccessor, context.Value);
-                _builder.AddAck(context.AckAccessor, context.Value.Key);
+                _builder.AddAck(context.Value.Key);
                 _builder.SendEnvelope();
             }
             else

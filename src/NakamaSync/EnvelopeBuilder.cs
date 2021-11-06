@@ -19,7 +19,6 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal delegate List<ValidationAck> AckAccessor(Envelope envelope);
     internal delegate List<VarValue<T>> VarValueAccessor<T>(Envelope envelope);
 
     // todo this can be used to batch socket envelope sends
@@ -43,9 +42,9 @@ namespace NakamaSync
             accessor(_envelope).Add(value);
         }
 
-        public void AddAck(AckAccessor accessor, string key)
+        public void AddAck(string key)
         {
-            accessor(_envelope).Add(new ValidationAck(key));
+            _envelope.Acks.Add(new ValidationAck(key));
         }
 
         public void SendEnvelope()

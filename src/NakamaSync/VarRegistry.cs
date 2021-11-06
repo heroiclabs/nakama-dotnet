@@ -47,6 +47,12 @@ namespace NakamaSync
             Ints = new Dictionary<string, List<IVar<int>>>();
             Strings = new Dictionary<string, List<IVar<string>>>();
             Objects = new Dictionary<string, List<IVar<object>>>();
+
+            PresenceBools = new Dictionary<string, List<PresenceVar<bool>>>();
+            PresenceFloats = new Dictionary<string, List<PresenceVar<float>>>();
+            PresenceInts = new Dictionary<string, List<PresenceVar<int>>>();
+            PresenceStrings = new Dictionary<string, List<PresenceVar<string>>>();
+            PresenceObjects = new Dictionary<string, List<PresenceVar<object>>>();
         }
 
         // TODO put all incoming vars in the same collection in the shared var registry

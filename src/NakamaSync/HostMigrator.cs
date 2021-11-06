@@ -54,29 +54,20 @@ namespace NakamaSync
 
         private void ValidatePendingVars(VarRegistry registry)
         {
-            ValidatePendingVars<bool>(registry.Bools.Values.SelectMany(l => l), env => env.SharedBoolAcks);
-            ValidatePendingVars<float>(registry.Floats.Values.SelectMany(l => l), env => env.SharedFloatAcks);
-            ValidatePendingVars<int>(registry.Ints.Values.SelectMany(l => l), env => env.SharedIntAcks);
-            ValidatePendingVars<string>(registry.Strings.Values.SelectMany(l => l), env => env.SharedStringAcks);
-            ValidatePendingVars<object>(registry.Objects.Values.SelectMany(l => l), env => env.SharedObjectAcks);
+            ValidatePendingVars<bool>(registry.Bools.Values.SelectMany(l => l));
+            ValidatePendingVars<float>(registry.Floats.Values.SelectMany(l => l));
+            ValidatePendingVars<int>(registry.Ints.Values.SelectMany(l => l));
+            ValidatePendingVars<string>(registry.Strings.Values.SelectMany(l => l));
+            ValidatePendingVars<object>(registry.Objects.Values.SelectMany(l => l));
 
             _builder.SendEnvelope();
         }
 
-        private void ValidatePendingVars<T>(IEnumerable<IVar<T>> vars, AckAccessor ackAccessor)
+        private void ValidatePendingVars<T>(IEnumerable<IVar<T>> vars)
         {
             foreach (var var in vars)
             {
-                _builder.AddAck(ackAccessor, var.Key);
-            }
-        }
-
-        private void ValidatePendingVars<T>(Dictionary<string, List<IVar<T>>> vars, AckAccessor ackAccessor)
-        {
-            // TODO validate each var individually.
-            foreach (var kvp in vars)
-            {
-                _builder.AddAck(ackAccessor, kvp.Key);
+                _builder.AddAck(var.Key);
             }
         }
 
