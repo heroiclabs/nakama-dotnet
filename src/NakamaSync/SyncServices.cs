@@ -58,7 +58,7 @@ namespace NakamaSync
             var presenceTracker = new PresenceTracker(session.UserId);
             _services.Add(presenceTracker);
 
-            var PresenceVarRotators = new PresenceVarRotators(presenceTracker);
+            var PresenceVarRotators = new PresenceVarRotators(presenceTracker, session);
             _services.Add(PresenceVarRotators);
 
             var hostTracker = new HostTracker(presenceTracker);
@@ -152,7 +152,7 @@ namespace NakamaSync
             _handshakeResponder.Subscribe(_syncSocket);
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
 
-            _presenceVarRotators.Register(_varRegistry);
+            _presenceVarRotators.Subscribe(_varRegistry);
             _rpcIngress.Subscribe(_syncSocket);
             _syncCleanup.Subscribe(_presenceTracker);
 

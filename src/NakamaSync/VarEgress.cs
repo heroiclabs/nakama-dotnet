@@ -99,6 +99,7 @@ namespace NakamaSync
             var newValue = new PresenceVarValue<T>(key, evt.ValueChange.NewValue, _lockVersionGuard.GetLockVersion(key), newStatus, isAck: false, _presenceTracker.GetSelf().UserId);
             _lockVersionGuard.IncrementLockVersion(key);
             accessor(envelope).Add(newValue);
+            _syncSocket.SendSyncDataToAll(envelope);
         }
 
         private ValidationStatus SetNewStatus<T>(IVar<T> var)

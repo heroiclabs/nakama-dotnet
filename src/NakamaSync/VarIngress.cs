@@ -130,7 +130,6 @@ namespace NakamaSync
                     continue;
                 }
 
-
                 foreach (var var in vars[value.Key])
                 {
                     HandleSyncValue(source, var, value, responses);

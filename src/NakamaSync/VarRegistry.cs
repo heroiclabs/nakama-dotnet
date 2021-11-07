@@ -163,11 +163,12 @@ namespace NakamaSync
                 throw new InvalidOperationException($"Attempted to register duplicate var {var}");
             }
 
-            List<PresenceVar<T>> vars = incomingDict.ContainsKey(var.Key) ?
-                                        incomingDict[var.Key] :
-                                        new List<PresenceVar<T>>();
+            if (!incomingDict.ContainsKey(var.Key))
+            {
+                incomingDict[var.Key] = new List<PresenceVar<T>>();
+            }
 
-            vars.Add(var);
+            incomingDict[var.Key].Add(var);
         }
 
         // we use IVar<T> rather than SharedVar<T> to indicate to the compiler that we are supporting covariance.

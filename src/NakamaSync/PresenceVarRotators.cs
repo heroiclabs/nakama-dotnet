@@ -32,73 +32,62 @@ namespace NakamaSync
         private Dictionary<string, PresenceVarRotator<bool>> _boolRotators;
         private Dictionary<string, PresenceVarRotator<float>> _floatRotators;
         private Dictionary<string, PresenceVarRotator<int>> _intRotators;
+        private Dictionary<string, PresenceVarRotator<object>> _objectRotators;
         private Dictionary<string, PresenceVarRotator<string>> _stringRotators;
+        private PresenceTracker _presenceTracker;
+        private ISession _session;
 
-        private readonly PresenceTracker _presenceTracker;
-
-        public PresenceVarRotators(PresenceTracker presenceTracker)
+        public PresenceVarRotators(PresenceTracker presenceTracker, ISession session)
         {
+            _presenceTracker = presenceTracker;
+            _session = session;
             _boolRotators = new Dictionary<string, PresenceVarRotator<bool>>();
             _floatRotators = new Dictionary<string, PresenceVarRotator<float>>();
             _intRotators = new Dictionary<string, PresenceVarRotator<int>>();
+            _objectRotators = new Dictionary<string, PresenceVarRotator<object>>();
             _stringRotators = new Dictionary<string, PresenceVarRotator<string>>();
-            _presenceTracker = presenceTracker;
         }
 
-        public void Register(VarRegistry registry)
+        public void Subscribe(VarRegistry registry)
         {
-            foreach (var kvp in registry.PresenceBools)
+            System.Console.WriteLine("SUBSCRIBING");
+
+            foreach (var rotator in registry.PresenceBools)
             {
-                Register(kvp.Key, kvp.Value, _boolRotators);
+                Subscribe(rotator.Key, rotator.Value, _boolRotators);
             }
 
             foreach (var kvp in registry.PresenceFloats)
             {
-                Register(kvp.Key, kvp.Value, _floatRotators);
+                Subscribe(kvp.Key, kvp.Value, _floatRotators);
             }
 
             foreach (var kvp in registry.PresenceInts)
             {
-                Register(kvp.Key, kvp.Value, _intRotators);
+                Subscribe(kvp.Key, kvp.Value, _intRotators);
+            }
+
+            foreach (var kvp in registry.PresenceObjects)
+            {
+                Subscribe(kvp.Key, kvp.Value, _objectRotators);
             }
 
             foreach (var kvp in registry.PresenceStrings)
             {
-                Register(kvp.Key, kvp.Value, _stringRotators);
+                Subscribe(kvp.Key, kvp.Value, _stringRotators);
             }
         }
 
         public void ReceiveMatch(IMatch match)
         {
-            Logger?.DebugFormat($"Presence var rotators for {_presenceTracker.UserId} received match.");
             ReceiveMatch(match, _boolRotators);
             ReceiveMatch(match, _floatRotators);
             ReceiveMatch(match, _intRotators);
+            ReceiveMatch(match, _objectRotators);
             ReceiveMatch(match, _stringRotators);
         }
 
-        public PresenceVarRotator<bool> GetPresenceBoolRotator(string collectionKey)
-        {
-            return _boolRotators[collectionKey];
-        }
-
-        public PresenceVarRotator<float> GetPresenceFloatRotator(string collectionKey)
-        {
-            return _floatRotators[collectionKey];
-        }
-
-        public PresenceVarRotator<int> GetPresenceIntRotator(string collectionKey)
-        {
-            return _intRotators[collectionKey];
-        }
-
-        public PresenceVarRotator<string> GetPresenceStringRotator(string collectionKey)
-        {
-            return _stringRotators[collectionKey];
-        }
-
-
-        private void Register<T>(
+        private void Subscribe<T>(
             string key,
             IEnumerable<PresenceVar<T>> presenceVars,
             Dictionary<string, PresenceVarRotator<T>> rotators)
@@ -109,7 +98,7 @@ namespace NakamaSync
                 return;
             }
 
-            var rotator = new PresenceVarRotator<T>(_presenceTracker);
+            var rotator = new PresenceVarRotator<T>(_session);
 
             foreach (var presenceVar in presenceVars)
             {
@@ -118,6 +107,7 @@ namespace NakamaSync
                 rotator.AddPresenceVar(presenceVar);
             }
 
+            rotator.Subscribe(_presenceTracker);
             rotators.Add(key, rotator);
         }
 

@@ -96,7 +96,7 @@ namespace NakamaSync
 
         bool IVar<T>.SetValue(IUserPresence source, object value, ValidationStatus validationStatus)
         {
-            Logger?.DebugFormat($"Setting shared value. Source: {source.UserId}, Value: {value}");
+            Logger?.DebugFormat($"Setting value. Source: {source.UserId}, Value: {value}");
 
             T oldValue = _value;
             ValidationStatus oldStatus = ValidationStatus;

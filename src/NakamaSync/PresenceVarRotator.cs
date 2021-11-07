@@ -34,12 +34,17 @@ namespace NakamaSync
 
         private readonly List<PresenceVar<T>> _unassignedPresenceVars = new List<PresenceVar<T>>();
         private readonly Dictionary<string, PresenceVar<T>> _assignedPresenceVars = new Dictionary<string, PresenceVar<T>>();
-        private readonly PresenceTracker _presenceTracker;
-        private IUserPresence _self;
+        private readonly ISession _session;
 
-        public PresenceVarRotator(PresenceTracker presenceTracker)
+        public PresenceVarRotator(ISession session)
         {
-            _presenceTracker = presenceTracker;
+            _session = session;
+        }
+
+        public void Subscribe(PresenceTracker presenceTracker)
+        {
+            presenceTracker.OnPresenceAdded += HandlePresenceAdded;
+            presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
         }
 
         public void AddPresenceVar(PresenceVar<T> PresenceVar)
@@ -58,20 +63,20 @@ namespace NakamaSync
 
         public void ReceiveMatch(IMatch match)
         {
-            _self = match.Self;
-
             foreach (IUserPresence joiner in match.Presences)
             {
                 HandlePresenceAdded(joiner);
             }
-
-            _presenceTracker.OnPresenceAdded += HandlePresenceAdded;
-            _presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
         }
 
         private void HandlePresenceAdded(IUserPresence presence)
         {
-            Logger?.DebugFormat($"Presence var rotator for {_presenceTracker.UserId} notified of added presence: {presence.UserId}");
+            if (presence.UserId == _session.UserId)
+            {
+                return;
+            }
+
+            Logger?.DebugFormat($"Presence var rotator notified of added presence: {presence.UserId}");
 
             if (_unassignedPresenceVars.Count == 0)
             {
@@ -80,7 +85,7 @@ namespace NakamaSync
             // normal for server to send duplicate presence additions in very specific situations.
             else if (!_assignedPresenceVars.ContainsKey(presence.UserId))
             {
-                Logger?.DebugFormat($"Presence var rotator for {_self.UserId} is moving var from unassigned to assigned for presence: {presence.UserId} ");
+                Logger?.DebugFormat($"Presence var rotator is moving var from unassigned to assigned for presence: {presence.UserId} ");
                 var varToAssign = _unassignedPresenceVars.First();
                 varToAssign.SetPresence(presence);
                 _unassignedPresenceVars.Remove(varToAssign);

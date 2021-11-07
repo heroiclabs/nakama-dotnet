@@ -42,15 +42,8 @@ namespace NakamaSync
         internal void SetValue(T value, ValidationStatus validationStatus)
         {
             T oldValue = _value;
-            _value = value;
-
             ValidationStatus oldStatus = ValidationStatus;
-            ValidationStatus = validationStatus;
-
-            var valueChange = new ValueChange<T>(oldValue, value);
-            var statusChange = new ValidationChange(oldStatus, ValidationStatus);
-
-            InvokeOnValueChanged(new VarEvent<T>(Self, valueChange, statusChange));
+            (this as IVar<T>).SetValue(Self, value, ValidationStatus);
         }
     }
 }
