@@ -89,6 +89,7 @@ namespace NakamaSync
             var newValue = new SharedVarValue<T>(key, evt.ValueChange.NewValue, _lockVersionGuard.GetLockVersion(key), newStatus, isAck: false);
             _lockVersionGuard.IncrementLockVersion(key);
             accessor(envelope).Add(newValue);
+            _syncSocket.SendSyncDataToAll(envelope);
         }
 
         private void HandleValueChange<T>(string key, SelfVar<T> var, IVarEvent<T> evt, SelfValuesAccessor<T> accessor)

@@ -67,8 +67,6 @@ namespace NakamaSync
             SelfObjects = new Dictionary<string, SelfVar<object>>();
         }
 
-        // TODO put all incoming vars in the same collection in the shared var registry
-
         public void Register(SharedVar<bool> sharedBool)
         {
             RegisterSharedVar<bool>(sharedBool, Bools);
@@ -91,18 +89,17 @@ namespace NakamaSync
 
         public void Register<T>(SharedVar<T> sharedObject) where T : class
         {
-            RegisterSharedVar(sharedObject, Objects);
+            RegisterSharedVar<object>(sharedObject, Objects);
         }
 
         public void Register<T>(SharedVar<IDictionary<string, T>> sharedObject)
         {
-            RegisterSharedVar(sharedObject, Objects);
+            RegisterSharedVar<object>(sharedObject, Objects);
         }
 
         // todo allow registration of self and presence vars one-by-one and then validate each group of self and presence vars afterwards.
-        // do this validation and batching after the match starts with an internal method in sync services or
-        // somewhere.
-
+        // do this validation and batching after the match starts with an internal method in sync services or somewhere. there should be
+        // no set of presence var without a corresponding self var
         public void Register(SelfVar<bool> selfVar)
         {
             RegisterSelfVar<bool>(selfVar, SelfBools);
@@ -145,6 +142,9 @@ namespace NakamaSync
 
         private void RegisterSelfVar<T>(SelfVar<T> var, Dictionary<string, SelfVar<T>> incomingDict)
         {
+            // multiple vars with same key is expected
+            _registeredKeys.Add(var.Key);
+
             if (!_registeredVars.Add(var))
             {
                 throw new InvalidOperationException($"Attempted to register duplicate var {var}");
@@ -155,14 +155,17 @@ namespace NakamaSync
 
         private void RegisterPresenceVar<T>(PresenceVar<T> var, Dictionary<string, List<PresenceVar<T>>> incomingDict)
         {
+            // multiple vars with same key is expected
+            _registeredKeys.Add(var.Key);
+
             if (!_registeredVars.Add(var))
             {
                 throw new InvalidOperationException($"Attempted to register duplicate var {var}");
             }
 
             List<PresenceVar<T>> vars = incomingDict.ContainsKey(var.Key) ?
-                                         incomingDict[var.Key] :
-                                         new List<PresenceVar<T>>();
+                                        incomingDict[var.Key] :
+                                        new List<PresenceVar<T>>();
 
             vars.Add(var);
         }
@@ -170,21 +173,6 @@ namespace NakamaSync
         // we use IVar<T> rather than SharedVar<T> to indicate to the compiler that we are supporting covariance.
         // for more background, see the `out` keyword in generic interfaces.
         private void RegisterSharedVar<T>(IVar<T> var, Dictionary<string, IVar<T>> incomingDict)
-        {
-            if (!_registeredKeys.Add(var.Key))
-            {
-                throw new InvalidOperationException($"Attempted to register duplicate key {var.Key}");
-            }
-
-            if (!_registeredVars.Add(var))
-            {
-                throw new InvalidOperationException($"Attempted to register duplicate var {var}");
-            }
-
-            incomingDict.Add(var.Key, var);
-        }
-
-        private void RegisterSharedVar(SharedVar<object> var, Dictionary<string, SharedVar<object>> incomingDict)
         {
             if (!_registeredKeys.Add(var.Key))
             {

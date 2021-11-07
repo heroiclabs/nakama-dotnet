@@ -68,7 +68,7 @@ namespace NakamaSync
             }
 
             var response = new HandshakeResponse(syncValues, success);
-            socket.SendHandshakeResponse(source, response);
+            socket.SendHandshakeResponse(response, source);
         }
 
         private void CopyToGuestResponse<T>(IEnumerable<IVar<T>> vars, List<SharedVarValue<T>> values)

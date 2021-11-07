@@ -65,5 +65,23 @@ namespace NakamaSync
             PresenceStrings = new List<PresenceVarValue<string>>();
             PresenceObjects = new List<PresenceVarValue<object>>();
         }
+
+        public List<IVarValue> AllVars()
+        {
+            var allVars = new List<IVarValue>();
+
+            allVars.AddRange(Bools);
+            allVars.AddRange(Floats);
+            allVars.AddRange(Ints);
+            allVars.AddRange(Strings);
+            allVars.AddRange(Objects);
+            allVars.AddRange(PresenceBools);
+            allVars.AddRange(PresenceFloats);
+            allVars.AddRange(PresenceInts);
+            allVars.AddRange(PresenceStrings);
+            allVars.AddRange(PresenceObjects);
+
+            return allVars;
+        }
     }
 }

@@ -70,10 +70,10 @@ namespace NakamaSync
             var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
             _services.Add(syncSocket);
 
-            var varGuestIngress = new VarIngress(varRegistry, lockVersionGuard, _hostTracker);
+            var varGuestIngress = new VarIngress(varRegistry, lockVersionGuard, hostTracker);
             _services.Add(varGuestIngress);
 
-            var handshakeRequester = new HandshakeRequester(varRegistry, presenceTracker, syncSocket, varGuestIngress, session.UserId);
+            var handshakeRequester = new HandshakeRequester(varRegistry, varGuestIngress, syncSocket);
             _services.Add(handshakeRequester);
 
             var handshakeResponder = new HandshakeResponder(lockVersionGuard, varRegistry, presenceTracker);
@@ -82,7 +82,7 @@ namespace NakamaSync
             var handshakeResponseHandler = new HandshakeResponseHandler(varGuestIngress);
             _services.Add(handshakeResponseHandler);
 
-            var varHostEgress = new VarEgress(lockVersionGuard, presenceTracker, hostTracker, _syncSocket);
+            var varHostEgress = new VarEgress(lockVersionGuard, presenceTracker, hostTracker, syncSocket);
             _services.Add(varHostEgress);
 
             _services.Add(rpcTargetRegistry);
@@ -148,7 +148,7 @@ namespace NakamaSync
             _varGuestIngress.Subscribe(_syncSocket);
             _varEgress.Subscribe(_varRegistry);
 
-            _handshakeRequester.Subscribe(_hostTracker);
+            _handshakeRequester.Subscribe();
             _handshakeResponder.Subscribe(_syncSocket);
             _handshakeResponseHandler.Subscribe(_handshakeRequester, _syncSocket, _hostTracker);
 
@@ -182,7 +182,6 @@ namespace NakamaSync
             _logger?.DebugFormat("Handshake requester is receiving match...");
 
             _handshakeRequester.ReceiveMatch(match);
-
             _logger?.DebugFormat("Sync services received match.");
 
             return new SyncMatch(match, _hostTracker, _presenceTracker, _syncSocket);

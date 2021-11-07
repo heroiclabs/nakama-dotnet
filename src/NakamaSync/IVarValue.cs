@@ -14,18 +14,22 @@
 * limitations under the License.
 */
 
-using System.Runtime.Serialization;
-
 namespace NakamaSync
 {
     /// <summary>
     /// A data-transfer object for a sync var.
     /// </summary>
-    internal interface IVarValue<T>
+    internal interface IVarValue<T> : IVarValue
+    {
+        T Value { get; }
+    }
+
+    /// <summary>
+    /// A data-transfer object for a sync var.
+    /// </summary>
+    internal interface IVarValue
     {
         string Key { get; }
-
-        T Value { get; }
 
         int LockVersion { get; }
 

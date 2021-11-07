@@ -76,7 +76,7 @@ namespace NakamaSync
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequest, _encoding.Encode(request), new IUserPresence[]{target});
         }
 
-        public void SendHandshakeResponse(IUserPresence target, HandshakeResponse response)
+        public void SendHandshakeResponse(HandshakeResponse response, IUserPresence target)
         {
             Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake response.");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponse, _encoding.Encode(response), new IUserPresence[]{target});

@@ -82,14 +82,16 @@ namespace NakamaSync
             responseEnvelope.PresenceObjects.AddRange(presenceObjectResponses);
             responseEnvelope.PresenceStrings.AddRange(presenceStringResponses);
 
-            socket.SendSyncDataToAll(responseEnvelope);
+            if (responseEnvelope.AllVars().Count > 0)
+            {
+                socket.SendSyncDataToAll(responseEnvelope);
+            }
+
             Logger?.DebugFormat($"Ingress done processing sync envelope.");
         }
 
         private List<SharedVarValue<T>> HandleSyncEnvelope<T>(IUserPresence source, List<SharedVarValue<T>> values, Dictionary<string, IVar<T>> vars)
         {
-            Logger?.DebugFormat($"Ingress processing num contexts: {values.Count}");
-
             var responses = new List<SharedVarValue<T>>();
 
             foreach (SharedVarValue<T> value in values)
@@ -117,8 +119,6 @@ namespace NakamaSync
 
         private List<PresenceVarValue<T>> HandleSyncEnvelope<T>(IUserPresence source, List<PresenceVarValue<T>> values, Dictionary<string, List<PresenceVar<T>>> vars)
         {
-            Logger?.DebugFormat($"Ingress processing num contexts: {values.Count}");
-
             var responses = new List<PresenceVarValue<T>>();
 
             foreach (PresenceVarValue<T> value in values)
