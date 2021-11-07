@@ -68,10 +68,7 @@ namespace NakamaSync
                 Logger?.DebugFormat($"Handshake requester done seeing presence added.");
             };
 
-            _socket.OnHandshakeResponse += (source, response) =>
-            {
-                HandleHandshakeResponse(source, response, hostTracker.IsSelfHost());
-            };
+            _socket.OnHandshakeResponse += HandleHandshakeResponse;
 
             Logger?.DebugFormat($"User {_presenceTracker.UserId} subscribed to socket and presence tracker.");
         }
@@ -98,12 +95,13 @@ namespace NakamaSync
 
         }
 
-        private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response, bool isHost)
+        private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response)
         {
+            // todo if no longer host at this point, then reroute the request to the new host.
             if (response.Success)
             {
                 Logger?.InfoFormat("Received successful handshake response.");
-                _varGuestIngress.ReceiveSyncEnvelope(source, response.Store, isHost);
+                _varGuestIngress.ReceiveSyncEnvelope(source, response.Store, _socket);
                 OnHandshakeSuccess();
             }
             else

@@ -15,38 +15,41 @@
 */
 
 using System.Runtime.Serialization;
-using Nakama;
 
 namespace NakamaSync
 {
     /// <summary>
     /// A data-transfer object for a sync var.
     /// </summary>
-    internal class PresenceValue<T>
+    internal class SharedVarValue<T> : IVarValue<T>
     {
-        [DataMember(Name="key_validation_status"), Preserve]
-        public ValidationStatus ValidationStatus { get; set; }
-
         [DataMember(Name="key"), Preserve]
         public string Key { get; set; }
-
-        [DataMember(Name="user_id"), Preserve]
-        public string UserId { get; set; }
 
         [DataMember(Name="value"), Preserve]
         public T Value { get; set; }
 
-        public PresenceValue(string key, string userId, T value, ValidationStatus validationStatus)
+        [DataMember(Name="lock_version"), Preserve]
+        public int LockVersion { get; set; }
+
+        [DataMember(Name="key_validation_status"), Preserve]
+        public ValidationStatus ValidationStatus { get; set; }
+
+        [DataMember(Name="is_ack"), Preserve]
+        public bool IsAck { get; set; }
+
+        public SharedVarValue(string key, T value, int lockVersion, ValidationStatus validationStatus, bool isAck)
         {
             Key = key;
-            UserId = userId;
             Value = value;
+            LockVersion = lockVersion;
             ValidationStatus = validationStatus;
+            IsAck = isAck;
         }
 
         public override string ToString()
         {
-            return $"PresenceValue(ValidationStatus='{ValidationStatus}', Key='{Key}', Value='{Value}')";
+            return $"SharedValue(ValidationStatus='{ValidationStatus}', Key='{Key}', LockVersion='{LockVersion}', Value='{Value}')";
         }
     }
 }

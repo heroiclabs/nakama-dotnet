@@ -14,70 +14,108 @@
 * limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nakama;
 
 namespace NakamaSync
 {
+
+    internal delegate List<SharedVarValue<T>> ValuesAccessor<T>(Envelope env);
+    internal delegate List<PresenceVarValue<T>> SelfValuesAccessor<T>(Envelope env);
+
     internal class VarEgress : ISyncService
     {
+
         public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private PresenceTracker _presenceTracker;
         private HostTracker _hostTracker;
-        private VarGuestEgress _guestEgress;
-        private VarHostEgress _hostEgress;
+        private LockVersionGuard _lockVersionGuard;
+        private SyncSocket _syncSocket;
 
-        public VarEgress(VarGuestEgress guestEgress, VarHostEgress hostEgress, PresenceTracker presenceTracker, HostTracker hostTracker)
+        public VarEgress(LockVersionGuard lockVersionGuard, PresenceTracker presenceTracker, HostTracker hostTracker, SyncSocket socket)
         {
-            _guestEgress = guestEgress;
-            _hostEgress = hostEgress;
+            _lockVersionGuard = lockVersionGuard;
             _presenceTracker = presenceTracker;
             _hostTracker = hostTracker;
+            _syncSocket = socket;
         }
 
         public void Subscribe(VarRegistry registry)
         {
-            Subscribe(registry.Bools, values => values.Bools);
-            Subscribe(registry.Floats, values => values.Floats);
-            Subscribe(registry.Ints,  values => values.Ints);
-            Subscribe(registry.Strings, values => values.Strings);
-            Subscribe(registry.Objects, values => values.Objects);
+            Subscribe(registry.Bools, env => env.Bools);
+            Subscribe(registry.Floats, env => env.Floats);
+            Subscribe(registry.Ints,  env => env.Ints);
+            Subscribe(registry.Strings, env => env.Strings);
+            Subscribe(registry.Objects, env => env.Objects);
+            Subscribe(registry.SelfBools, env => env.PresenceBools);
+            Subscribe(registry.SelfFloats, env => env.PresenceFloats);
+            Subscribe(registry.SelfInts,  env => env.PresenceInts);
+            Subscribe(registry.SelfStrings, env => env.PresenceStrings);
+            Subscribe(registry.SelfObjects, env => env.PresenceObjects);
         }
 
-        private void Subscribe<T>(Dictionary<string, List<IVar<T>>> vars, VarValueAccessor<T> accessor)
+        private void Subscribe<T>(Dictionary<string, IVar<T>> vars, ValuesAccessor<T> accessor)
         {
-            var flattenedVars = vars.Values.SelectMany(l => l);
+            var flattenedVars = vars.Values;
             foreach (var var in flattenedVars)
             {
-                Logger?.DebugFormat($"Subscribing to shared variable with key {var.Key}");
-                var.OnValueChanged += (evt) => HandleLocalVarChanged(var.Key, var, evt, accessor);
+                var.OnValueChanged += (evt) => HandleValueChange(var.Key, var, evt, accessor);
             }
         }
 
-        private void HandleLocalVarChanged<T>(string key, IVar<T> var, IVarEvent<T> evt, VarValueAccessor<T> accessor)
+        private void Subscribe<T>(Dictionary<string, SelfVar<T>> vars, SelfValuesAccessor<T> accessor)
+        {
+            var flattenedVars = vars.Values;
+            foreach (var var in flattenedVars)
+            {
+                var.OnValueChanged += (evt) => HandleValueChange(var.Key, var, evt, accessor);
+            }
+        }
+
+        private void HandleValueChange<T>(string key, IVar<T> var, IVarEvent<T> evt, ValuesAccessor<T> accessor)
         {
             if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
             {
-                // ingress should only send out changes initated by self.
-                Logger?.DebugFormat($"Egress for {_presenceTracker.UserId} is ignoring local shared var change.");
+                // not set by this user.
                 return;
             }
 
-            bool isHost = _hostTracker.IsSelfHost();
+            var envelope = new Envelope();
+            var newStatus = SetNewStatus(var);
+            var newValue = new SharedVarValue<T>(key, evt.ValueChange.NewValue, _lockVersionGuard.GetLockVersion(key), newStatus, isAck: false);
+            _lockVersionGuard.IncrementLockVersion(key);
+            accessor(envelope).Add(newValue);
+        }
 
-            Logger?.DebugFormat($"Local shared variable changed. Key: {key}, OldValue: {evt.ValueChange.OldValue}, Value: {evt.ValueChange.NewValue}");
+        private void HandleValueChange<T>(string key, SelfVar<T> var, IVarEvent<T> evt, SelfValuesAccessor<T> accessor)
+        {
+            var envelope = new Envelope();
+            var newStatus = SetNewStatus(var);
+            var newValue = new PresenceVarValue<T>(key, evt.ValueChange.NewValue, _lockVersionGuard.GetLockVersion(key), newStatus, isAck: false, _presenceTracker.GetSelf().UserId);
+            _lockVersionGuard.IncrementLockVersion(key);
+            accessor(envelope).Add(newValue);
+        }
 
-            if (isHost)
+        private ValidationStatus SetNewStatus<T>(IVar<T> var)
+        {
+           bool isHost = _hostTracker.IsSelfHost();
+
+            ValidationStatus status = var.ValidationStatus;
+
+            if (!isHost)
             {
-                _hostEgress.HandleLocalVarChanged(key, var, evt.ValueChange.NewValue, accessor);
+                if (status == ValidationStatus.Valid)
+                {
+                    status = ValidationStatus.Pending;
+                    (var as IVar).SetValidationStatus(status);
+                }
             }
-            else
-            {
-                _guestEgress.HandleLocalVarChanged(key, var, evt.ValueChange.NewValue, accessor);
-            }
+
+            return status;
         }
     }
 }

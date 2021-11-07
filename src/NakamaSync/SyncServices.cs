@@ -42,7 +42,6 @@ namespace NakamaSync
         private readonly HandshakeResponder _handshakeResponder;
         private readonly HandshakeResponseHandler _handshakeResponseHandler;
         private readonly ISocket _socket;
-        private readonly HostMigrator _migrator;
 
         private readonly PresenceVarRotators _presenceVarRotators;
 
@@ -71,16 +70,7 @@ namespace NakamaSync
             var syncSocket = new SyncSocket(socket, opcodes, presenceTracker);
             _services.Add(syncSocket);
 
-            var envelopeBuilder = new EnvelopeBuilder(syncSocket);
-            _services.Add(envelopeBuilder);
-
-            var sharedGuestIngress = new GuestIngress(presenceTracker);
-            _services.Add(sharedGuestIngress);
-
-            var sharedHostIngress = new HostIngress(lockVersionGuard, envelopeBuilder);
-            _services.Add(sharedHostIngress);
-
-            var varGuestIngress = new VarIngress(sharedGuestIngress, sharedHostIngress, varRegistry, lockVersionGuard);
+            var varGuestIngress = new VarIngress(varRegistry, lockVersionGuard, _hostTracker);
             _services.Add(varGuestIngress);
 
             var handshakeRequester = new HandshakeRequester(varRegistry, presenceTracker, syncSocket, varGuestIngress, session.UserId);
@@ -92,17 +82,8 @@ namespace NakamaSync
             var handshakeResponseHandler = new HandshakeResponseHandler(varGuestIngress);
             _services.Add(handshakeResponseHandler);
 
-            var varGuestEgress = new VarGuestEgress(lockVersionGuard, envelopeBuilder);
-            _services.Add(varGuestIngress);
-
-            var sharedHostEgress = new VarHostEgress(lockVersionGuard, envelopeBuilder);
-            _services.Add(sharedHostEgress);
-
-            var varHostEgress = new VarEgress(varGuestEgress, sharedHostEgress, presenceTracker, hostTracker);
+            var varHostEgress = new VarEgress(lockVersionGuard, presenceTracker, hostTracker, _syncSocket);
             _services.Add(varHostEgress);
-
-            var migrator = new HostMigrator(varRegistry, envelopeBuilder);
-            _services.Add(migrator);
 
             _services.Add(rpcTargetRegistry);
 
@@ -129,7 +110,6 @@ namespace NakamaSync
             _varEgress = varHostEgress;
 
             _socket = socket;
-            _migrator = migrator;
             _presenceVarRotators = PresenceVarRotators;
             _rpcIngress = rpcIngress;
         }
@@ -159,14 +139,13 @@ namespace NakamaSync
 
             _presenceTracker.Subscribe(_socket);
             _hostTracker.Subscribe(_socket);
-            _migrator.Subscribe(_presenceTracker, _hostTracker);
 
             foreach (IVar var in _varRegistry.RegisteredVars)
             {
                 var.Logger = logger;
             }
 
-            _varGuestIngress.Subscribe(_syncSocket, _hostTracker);
+            _varGuestIngress.Subscribe(_syncSocket);
             _varEgress.Subscribe(_varRegistry);
 
             _handshakeRequester.Subscribe(_hostTracker);

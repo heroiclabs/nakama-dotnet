@@ -40,12 +40,6 @@ namespace NakamaSync
             set;
         }
 
-        bool IsHost
-        {
-            get;
-            set;
-        }
-
         void Reset();
 
         void SetValidationStatus(ValidationStatus status);
@@ -55,12 +49,12 @@ namespace NakamaSync
     {
         event Action<IVarEvent<T>> OnValueChanged;
 
-        T GetValue();
-
         ValidationStatus ValidationStatus
         {
             get;
         }
+
+        T GetValue();
 
         bool SetValue(IUserPresence source, object value, ValidationStatus validationStatus);
     }

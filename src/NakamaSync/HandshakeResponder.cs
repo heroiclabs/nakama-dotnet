@@ -50,11 +50,17 @@ namespace NakamaSync
             if (success)
             {
                 Logger?.InfoFormat($"Remote keys from {source.UserId} match the local keys from {_presenceTracker.GetSelf().UserId}");
-                CopyToGuestResponse(_registry.Bools.Values.SelectMany(l => l), syncValues.Bools);
-                CopyToGuestResponse(_registry.Floats.Values.SelectMany(l => l), syncValues.Floats);
-                CopyToGuestResponse(_registry.Ints.Values.SelectMany(l => l), syncValues.Ints);
-                CopyToGuestResponse(_registry.Strings.Values.SelectMany(l => l), syncValues.Strings);
-                CopyToGuestResponse(_registry.Objects.Values.SelectMany(l => l), syncValues.Objects);
+                CopyToGuestResponse(_registry.Bools.Values, syncValues.Bools);
+                CopyToGuestResponse(_registry.Floats.Values, syncValues.Floats);
+                CopyToGuestResponse(_registry.Ints.Values, syncValues.Ints);
+                CopyToGuestResponse(_registry.Strings.Values, syncValues.Strings);
+                CopyToGuestResponse(_registry.Objects.Values, syncValues.Objects);
+
+                CopyToGuestResponse(_registry.PresenceBools.Values.SelectMany(l => l), syncValues.PresenceBools);
+                CopyToGuestResponse(_registry.PresenceFloats.Values.SelectMany(l => l), syncValues.PresenceFloats);
+                CopyToGuestResponse(_registry.PresenceInts.Values.SelectMany(l => l), syncValues.PresenceInts);
+                CopyToGuestResponse(_registry.PresenceStrings.Values.SelectMany(l => l), syncValues.PresenceStrings);
+                CopyToGuestResponse(_registry.PresenceObjects.Values.SelectMany(l => l), syncValues.PresenceObjects);
             }
             else
             {
@@ -65,14 +71,36 @@ namespace NakamaSync
             socket.SendHandshakeResponse(source, response);
         }
 
-        private void CopyToGuestResponse<T>(IEnumerable<IVar<T>> vars, List<VarValue<T>> values)
+        private void CopyToGuestResponse<T>(IEnumerable<IVar<T>> vars, List<SharedVarValue<T>> values)
         {
             foreach (var var in vars)
             {
                 T rawValue = var.GetValue();
                 Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
-                var sharedValue = new VarValue<T>(var.Key, rawValue, _lockVersionGuard.GetLockVersion(var.Key), var.ValidationStatus);
+                int lockVersion = _lockVersionGuard.HasLockVersion(var.Key) ? _lockVersionGuard.GetLockVersion(var.Key) : 0;
+                var sharedValue = new SharedVarValue<T>(var.Key, rawValue, lockVersion, var.ValidationStatus, isAck: false);
                 values.Add(sharedValue);
+            }
+        }
+
+        private void CopyToGuestResponse<T>(IEnumerable<PresenceVar<T>> vars, List<PresenceVarValue<T>> values)
+        {
+            foreach (var var in vars)
+            {
+                if (var.Presence == null)
+                {
+                    // expected, unoccupied presence var
+                    continue;
+                }
+
+                T rawValue = var.GetValue();
+                Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
+                // todo check for null presence on var?
+
+                int lockVersion = _lockVersionGuard.HasLockVersion(var.Key) ? _lockVersionGuard.GetLockVersion(var.Key) : 0;
+
+                var value = new PresenceVarValue<T>(var.Key, rawValue, lockVersion, var.ValidationStatus, isAck: false, var.Presence.UserId);
+                values.Add(value);
             }
         }
     }

@@ -25,11 +25,11 @@ namespace NakamaSync
     {
         internal IEnumerable<IVar> RegisteredVars => new HashSet<IVar>(_registeredVars);
 
-        internal Dictionary<string, List<IVar<bool>>> Bools { get; }
-        internal Dictionary<string, List<IVar<float>>> Floats { get; }
-        internal Dictionary<string, List<IVar<int>>> Ints { get; }
-        internal Dictionary<string, List<IVar<string>>> Strings { get; }
-        internal Dictionary<string, List<IVar<object>>> Objects { get; }
+        internal Dictionary<string, IVar<bool>> Bools { get; }
+        internal Dictionary<string, IVar<float>> Floats { get; }
+        internal Dictionary<string, IVar<int>> Ints { get; }
+        internal Dictionary<string, IVar<string>> Strings { get; }
+        internal Dictionary<string, IVar<object>> Objects { get; }
 
         internal Dictionary<string, List<PresenceVar<bool>>> PresenceBools { get; }
         internal Dictionary<string, List<PresenceVar<float>>> PresenceFloats { get; }
@@ -37,22 +37,34 @@ namespace NakamaSync
         internal Dictionary<string, List<PresenceVar<string>>> PresenceStrings { get; }
         internal Dictionary<string, List<PresenceVar<object>>> PresenceObjects { get; }
 
+        internal Dictionary<string, SelfVar<bool>> SelfBools { get; }
+        internal Dictionary<string, SelfVar<float>> SelfFloats { get; }
+        internal Dictionary<string, SelfVar<int>> SelfInts { get; }
+        internal Dictionary<string, SelfVar<string>> SelfStrings { get; }
+        internal Dictionary<string, SelfVar<object>> SelfObjects { get; }
+
         private readonly HashSet<IVar> _registeredVars = new HashSet<IVar>();
         private readonly HashSet<string> _registeredKeys = new HashSet<string>();
 
         public VarRegistry()
         {
-            Bools = new Dictionary<string, List<IVar<bool>>>();
-            Floats = new Dictionary<string, List<IVar<float>>>();
-            Ints = new Dictionary<string, List<IVar<int>>>();
-            Strings = new Dictionary<string, List<IVar<string>>>();
-            Objects = new Dictionary<string, List<IVar<object>>>();
+            Bools = new Dictionary<string, IVar<bool>>();
+            Floats = new Dictionary<string, IVar<float>>();
+            Ints = new Dictionary<string, IVar<int>>();
+            Strings = new Dictionary<string, IVar<string>>();
+            Objects = new Dictionary<string, IVar<object>>();
 
             PresenceBools = new Dictionary<string, List<PresenceVar<bool>>>();
             PresenceFloats = new Dictionary<string, List<PresenceVar<float>>>();
             PresenceInts = new Dictionary<string, List<PresenceVar<int>>>();
             PresenceStrings = new Dictionary<string, List<PresenceVar<string>>>();
             PresenceObjects = new Dictionary<string, List<PresenceVar<object>>>();
+
+            SelfBools = new Dictionary<string, SelfVar<bool>>();
+            SelfFloats = new Dictionary<string,SelfVar<float>>();
+            SelfInts = new Dictionary<string, SelfVar<int>>();
+            SelfStrings = new Dictionary<string, SelfVar<string>>();
+            SelfObjects = new Dictionary<string, SelfVar<object>>();
         }
 
         // TODO put all incoming vars in the same collection in the shared var registry
@@ -79,12 +91,12 @@ namespace NakamaSync
 
         public void Register<T>(SharedVar<T> sharedObject) where T : class
         {
-            RegisterSharedVar<object>(sharedObject, Objects);
+            RegisterSharedVar(sharedObject, Objects);
         }
 
         public void Register<T>(SharedVar<IDictionary<string, T>> sharedObject)
         {
-            RegisterSharedVar<object>(sharedObject, Objects);
+            RegisterSharedVar(sharedObject, Objects);
         }
 
         // todo allow registration of self and presence vars one-by-one and then validate each group of self and presence vars afterwards.
@@ -93,22 +105,22 @@ namespace NakamaSync
 
         public void Register(SelfVar<bool> selfVar)
         {
-            RegisterSelfVar<bool>(selfVar, Bools);
+            RegisterSelfVar<bool>(selfVar, SelfBools);
         }
 
         public void Register(SelfVar<float> selfVar)
         {
-            RegisterSelfVar<float>(selfVar, Floats);
+            RegisterSelfVar<float>(selfVar, SelfFloats);
         }
 
         public void Register(SelfVar<int> selfVar)
         {
-            RegisterSelfVar<int>(selfVar, Ints);
+            RegisterSelfVar<int>(selfVar, SelfInts);
         }
 
         public void Register(SelfVar<string> selfVar)
         {
-            RegisterSelfVar<string>(selfVar, Strings);
+            RegisterSelfVar<string>(selfVar, SelfStrings);
         }
 
         public void Register(PresenceVar<bool> presenceVar)
@@ -131,18 +143,14 @@ namespace NakamaSync
             RegisterPresenceVar<string>(presenceVar, PresenceStrings);
         }
 
-        private void RegisterSelfVar<T>(SelfVar<T> var, Dictionary<string, List<IVar<T>>> incomingDict)
+        private void RegisterSelfVar<T>(SelfVar<T> var, Dictionary<string, SelfVar<T>> incomingDict)
         {
             if (!_registeredVars.Add(var))
             {
                 throw new InvalidOperationException($"Attempted to register duplicate var {var}");
             }
 
-            List<IVar<T>> vars = incomingDict.ContainsKey(var.Key) ?
-                                         incomingDict[var.Key] :
-                                         new List<IVar<T>>();
-
-            vars.Add(var);
+            incomingDict.Add(var.Key, var);
         }
 
         private void RegisterPresenceVar<T>(PresenceVar<T> var, Dictionary<string, List<PresenceVar<T>>> incomingDict)
@@ -159,7 +167,9 @@ namespace NakamaSync
             vars.Add(var);
         }
 
-        private void RegisterSharedVar<T>(IVar<T> var, Dictionary<string, List<IVar<T>>> incomingDict)
+        // we use IVar<T> rather than SharedVar<T> to indicate to the compiler that we are supporting covariance.
+        // for more background, see the `out` keyword in generic interfaces.
+        private void RegisterSharedVar<T>(IVar<T> var, Dictionary<string, IVar<T>> incomingDict)
         {
             if (!_registeredKeys.Add(var.Key))
             {
@@ -171,10 +181,22 @@ namespace NakamaSync
                 throw new InvalidOperationException($"Attempted to register duplicate var {var}");
             }
 
-            var vars = new List<IVar<T>>();
-            vars.Add(var);
+            incomingDict.Add(var.Key, var);
+        }
 
-            incomingDict.Add(var.Key, vars);
+        private void RegisterSharedVar(SharedVar<object> var, Dictionary<string, SharedVar<object>> incomingDict)
+        {
+            if (!_registeredKeys.Add(var.Key))
+            {
+                throw new InvalidOperationException($"Attempted to register duplicate key {var.Key}");
+            }
+
+            if (!_registeredVars.Add(var))
+            {
+                throw new InvalidOperationException($"Attempted to register duplicate var {var}");
+            }
+
+            incomingDict.Add(var.Key, var);
         }
 
         internal HashSet<string> GetAllKeys()

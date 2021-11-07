@@ -50,24 +50,6 @@ namespace NakamaSync
             protected set;
         }
 
-        public bool IsHost
-        {
-            get
-            {
-                return (this as IVar).IsHost;
-            }
-            protected set
-            {
-                (this as IVar).IsHost = value;
-            }
-        }
-
-        bool IVar.IsHost
-        {
-            get;
-            set;
-        }
-
         internal ILogger Logger
         {
             get;

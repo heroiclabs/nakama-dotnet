@@ -22,31 +22,48 @@ namespace NakamaSync
     internal class Envelope
     {
         [DataMember(Name="bools"), Preserve]
-        public List<VarValue<bool>> Bools { get; set; }
+        public List<SharedVarValue<bool>> Bools { get; set; }
 
         [DataMember(Name="floats"), Preserve]
-        public List<VarValue<float>> Floats { get; set; }
+        public List<SharedVarValue<float>> Floats { get; set; }
 
         [DataMember(Name="ints"), Preserve]
-        public List<VarValue<int>> Ints { get; set; }
+        public List<SharedVarValue<int>> Ints { get; set; }
 
         [DataMember(Name="strings"), Preserve]
-        public List<VarValue<string>> Strings { get; set; }
+        public List<SharedVarValue<string>> Strings { get; set; }
 
         [DataMember(Name="objects"), Preserve]
-        public List<VarValue<object>> Objects { get; set; }
+        public List<SharedVarValue<object>> Objects { get; set; }
 
-        [DataMember(Name="acks"), Preserve]
-        public List<ValidationAck> Acks { get; set; }
+        [DataMember(Name="presence_bools"), Preserve]
+        public List<PresenceVarValue<bool>> PresenceBools { get; set; }
+
+        [DataMember(Name="presence_floats"), Preserve]
+        public List<PresenceVarValue<float>> PresenceFloats { get; set; }
+
+        [DataMember(Name="presence_ints"), Preserve]
+        public List<PresenceVarValue<int>> PresenceInts { get; set; }
+
+        [DataMember(Name="presence_strings"), Preserve]
+        public List<PresenceVarValue<string>> PresenceStrings { get; set; }
+
+        [DataMember(Name="presence_objects"), Preserve]
+        public List<PresenceVarValue<object>> PresenceObjects { get; set; }
 
         internal Envelope()
         {
-            Bools = new List<VarValue<bool>>();
-            Floats = new List<VarValue<float>>();
-            Ints = new List<VarValue<int>>();
-            Strings = new List<VarValue<string>>();
-            Objects = new List<VarValue<object>>();
-            Acks = new List<ValidationAck>();
+            Bools = new List<SharedVarValue<bool>>();
+            Floats = new List<SharedVarValue<float>>();
+            Ints = new List<SharedVarValue<int>>();
+            Strings = new List<SharedVarValue<string>>();
+            Objects = new List<SharedVarValue<object>>();
+
+            PresenceBools = new List<PresenceVarValue<bool>>();
+            PresenceFloats = new List<PresenceVarValue<float>>();
+            PresenceInts = new List<PresenceVarValue<int>>();
+            PresenceStrings = new List<PresenceVarValue<string>>();
+            PresenceObjects = new List<PresenceVarValue<object>>();
         }
     }
 }

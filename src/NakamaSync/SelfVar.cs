@@ -37,7 +37,6 @@ namespace NakamaSync
             Self = null;
             _value = default(T);
             ValidationStatus = ValidationStatus.None;
-            IsHost = false;
         }
 
         internal void SetValue(T value, ValidationStatus validationStatus)

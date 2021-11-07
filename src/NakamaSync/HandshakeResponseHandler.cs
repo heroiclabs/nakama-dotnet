@@ -37,7 +37,7 @@ namespace NakamaSync
         {
             handshakeRequester.OnHandshakeSuccess += () =>
             {
-                _varIngress.Subscribe(syncSocket, hostTracker);
+                _varIngress.Subscribe(syncSocket);
                 _handshakeTcs.SetResult(null);
             };
 

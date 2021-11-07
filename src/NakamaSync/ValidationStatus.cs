@@ -20,7 +20,7 @@ namespace NakamaSync
     {
         None,
         Pending,
-        Validated,
+        Valid,
         Invalid
     }
 }

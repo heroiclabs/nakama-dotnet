@@ -65,8 +65,7 @@
 // does usemainthread need to be true? test with both. think about different threading models.
 // TODO think about a decision to give all vars an interface component and most events or other user-facing objects an interface component. right now it's a mixed approach.
 // todo fix disparity w/r/t whether var events have the actual concrete var on them or if we don't really need that...there is inconsistency between the var evnets at the moment.
-// todo clean up internal usage of the term ISharedVar?
-// todo find better name for "Incoming var"
+// todo lock the processing of each envelope to avoid multithreading issues e.g., host changing while processing a value.
 
 using System;
 using System.Threading.Tasks;
@@ -77,7 +76,6 @@ namespace NakamaSync
     public static class SyncExtensions
     {
         // todo maybe don't require session as a parameter here since we pass it to socket.
-
         public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, RpcTargetRegistry rpcTargetRegistry, SyncOpcodes opcodes, SyncErrorHandler errorHandler, ILogger logger = null, string name = null)
         {
             logger?.DebugFormat($"User {session.UserId} is creating sync match.");

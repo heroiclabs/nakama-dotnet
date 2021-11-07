@@ -14,25 +14,23 @@
 * limitations under the License.
 */
 
-using Nakama;
+using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
-    internal class GuestIngress : ISyncService
+    /// <summary>
+    /// A data-transfer object for a sync var.
+    /// </summary>
+    internal interface IVarValue<T>
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
-        public ILogger Logger { get; set; }
+        string Key { get; }
 
-        private PresenceTracker _presenceTracker;
+        T Value { get; }
 
-        public GuestIngress(PresenceTracker presenceTracker)
-        {
-            _presenceTracker = presenceTracker;
-        }
+        int LockVersion { get; }
 
-        public void ProcessValue<T>(IVar<T> var, IUserPresence source, VarValue<T> value)
-        {
-            var.SetValue(source, value.Value, value.ValidationStatus);
-        }
+        ValidationStatus ValidationStatus { get; }
+
+        bool IsAck { get; }
     }
 }

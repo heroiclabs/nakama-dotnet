@@ -21,7 +21,7 @@ namespace NakamaSync
     /// <summary>
     /// A data-transfer object for a sync var.
     /// </summary>
-    internal class VarValue<T>
+    internal class PresenceVarValue<T> : IVarValue<T>
     {
         [DataMember(Name="key"), Preserve]
         public string Key { get; set; }
@@ -35,12 +35,20 @@ namespace NakamaSync
         [DataMember(Name="key_validation_status"), Preserve]
         public ValidationStatus ValidationStatus { get; set; }
 
-        public VarValue(string key, T value, int lockVersion, ValidationStatus validationStatus)
+        [DataMember(Name="is_ack"), Preserve]
+        public bool IsAck { get; set; }
+
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
+        public PresenceVarValue(string key, T value, int lockVersion, ValidationStatus validationStatus, bool isAck, string userId)
         {
             Key = key;
             Value = value;
             LockVersion = lockVersion;
             ValidationStatus = validationStatus;
+            IsAck = isAck;
+            UserId = userId;
         }
 
         public override string ToString()

@@ -61,6 +61,7 @@ namespace NakamaSync
             if (!HasLockVersion(key))
             {
                 ErrorHandler?.Invoke(new KeyNotFoundException($"Lock version guard could not find key when getting lock version: {key}"));
+                return 0;
             }
 
             return _lockVersions[key];

@@ -31,6 +31,8 @@ namespace NakamaSync
 
         public void SetValue(T value)
         {
+            T oldValue = _value;
+            ValidationStatus oldStatus = ValidationStatus;
             (this as IVar<T>).SetValue(Self, value, ValidationStatus);
         }
 
@@ -39,7 +41,6 @@ namespace NakamaSync
             Self = null;
             _value = default(T);
             ValidationStatus = ValidationStatus.None;
-            IsHost = false;
         }
     }
 }

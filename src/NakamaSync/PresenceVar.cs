@@ -44,7 +44,6 @@ namespace NakamaSync
             Self = null;
             _value = default(T);
             ValidationStatus = ValidationStatus.None;
-            IsHost = false;
         }
 
         internal void SetPresence(IUserPresence presence)
