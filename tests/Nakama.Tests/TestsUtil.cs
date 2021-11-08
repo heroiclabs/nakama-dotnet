@@ -20,7 +20,7 @@ namespace Nakama.Tests
     internal static class TestsUtil
     {
         public const int TIMEOUT_MILLISECONDS = 5000;
-        public const int MATCHMAKER_TIMEOUT_MILLISECONDS = 5000;
+        public const int MATCHMAKER_TIMEOUT_MILLISECONDS = 25000;
         public const string DefaultSettingsPath = "settings.json";
 
         public static IClient FromSettingsFile()

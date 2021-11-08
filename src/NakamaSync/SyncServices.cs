@@ -157,7 +157,6 @@ namespace NakamaSync
             _rpcIngress.Subscribe(_syncSocket);
             _syncCleanup.Subscribe(_presenceTracker);
 
-
             _initialized = true;
             _logger?.DebugFormat("Sync services initialized.");
         }

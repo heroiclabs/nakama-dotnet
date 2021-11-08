@@ -24,7 +24,7 @@ namespace Nakama.Tests.Sync
 {
     public class SyncTest
     {
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void SharedVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
@@ -40,7 +40,7 @@ namespace Nakama.Tests.Sync
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void PresenceVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
@@ -57,7 +57,7 @@ namespace Nakama.Tests.Sync
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task BadHandshakeShouldFail()
         {
             VarIdGenerator idGenerator = (string userId, string varName, int varId) => {
@@ -93,7 +93,7 @@ namespace Nakama.Tests.Sync
             mismatchedEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task SharedVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
@@ -115,7 +115,7 @@ namespace Nakama.Tests.Sync
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task SharedVarShouldSyncDict()
         {
             var testEnv = new SyncTestEnvironment(
@@ -146,7 +146,7 @@ namespace Nakama.Tests.Sync
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task PresenceVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
@@ -180,7 +180,7 @@ namespace Nakama.Tests.Sync
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void EnvsShouldBeSeparate()
         {
             var testEnv = new SyncTestEnvironment(
@@ -199,7 +199,7 @@ namespace Nakama.Tests.Sync
         }
 
 
-        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void HostShouldBeChosen()
         {
             var testEnv = new SyncTestEnvironment(

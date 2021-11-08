@@ -125,9 +125,9 @@ namespace NakamaSync
 
         internal void ReceiveMatch(IMatch match)
         {
-            foreach (VarRegistry var in _allRegistries)
+            foreach (IVarRegistry registry in _allRegistries)
             {
-                var.ReceiveMatch(match);
+                registry.ReceiveMatch(match);
             }
         }
 
@@ -137,7 +137,7 @@ namespace NakamaSync
 
             foreach (var registry in _allRegistries)
             {
-                foreach (var var in allVars)
+                foreach (var var in registry.GetAllVars())
                 {
                     allVars.AddRange(registry.GetAllVars());
                 }

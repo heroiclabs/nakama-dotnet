@@ -61,6 +61,12 @@ namespace NakamaSync
         [DataMember(Name="presence"), Preserve]
         public List<PresenceVarValue<T>> PresenceValues { get; set; }
 
+        public Envelope()
+        {
+            SharedValues = new List<SharedVarValue<T>>();
+            PresenceValues = new List<PresenceVarValue<T>>();
+        }
+
         public List<IVarValue<T>> GetAllValues()
         {
             var allValues = new List<IVarValue<T>>();
