@@ -14,16 +14,13 @@
 * limitations under the License.
 */
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nakama;
 
 namespace NakamaSync
 {
 
-    internal delegate List<SharedVarValue<T>> ValuesAccessor<T>(Envelope env);
-    internal delegate List<PresenceVarValue<T>> SelfValuesAccessor<T>(Envelope env);
+    internal delegate Envelope<T> EnvelopeAccessor<T>(Envelope registry);
 
     internal class VarEgress : ISyncService
     {
@@ -50,33 +47,22 @@ namespace NakamaSync
             Subscribe(registry.Floats, env => env.Floats);
             Subscribe(registry.Ints,  env => env.Ints);
             Subscribe(registry.Strings, env => env.Strings);
-            Subscribe(registry.Objects, env => env.Objects);
-            Subscribe(registry.SelfBools, env => env.PresenceBools);
-            Subscribe(registry.SelfFloats, env => env.PresenceFloats);
-            Subscribe(registry.SelfInts,  env => env.PresenceInts);
-            Subscribe(registry.SelfStrings, env => env.PresenceStrings);
-            Subscribe(registry.SelfObjects, env => env.PresenceObjects);
         }
 
-        private void Subscribe<T>(Dictionary<string, IVar<T>> vars, ValuesAccessor<T> accessor)
+        private void Subscribe<T>(VarRegistry<T> registry, EnvelopeAccessor<T> accessor)
         {
-            var flattenedVars = vars.Values;
-            foreach (var var in flattenedVars)
+            foreach (var var in registry.SharedVars.Values)
+            {
+                var.OnValueChanged += (evt) => HandleValueChange(var.Key, var, evt, accessor);
+            }
+
+            foreach (var var in registry.SelfVars.Values)
             {
                 var.OnValueChanged += (evt) => HandleValueChange(var.Key, var, evt, accessor);
             }
         }
 
-        private void Subscribe<T>(Dictionary<string, SelfVar<T>> vars, SelfValuesAccessor<T> accessor)
-        {
-            var flattenedVars = vars.Values;
-            foreach (var var in flattenedVars)
-            {
-                var.OnValueChanged += (evt) => HandleValueChange(var.Key, var, evt, accessor);
-            }
-        }
-
-        private void HandleValueChange<T>(string key, IVar<T> var, IVarEvent<T> evt, ValuesAccessor<T> accessor)
+        private void HandleValueChange<T>(string key, SharedVar<T> var, IVarEvent<T> evt, EnvelopeAccessor<T> accessor)
         {
             if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
             {
@@ -88,21 +74,21 @@ namespace NakamaSync
             var newStatus = SetNewStatus(var);
             var newValue = new SharedVarValue<T>(key, evt.ValueChange.NewValue, _lockVersionGuard.GetLockVersion(key), newStatus, isAck: false);
             _lockVersionGuard.IncrementLockVersion(key);
-            accessor(envelope).Add(newValue);
+            accessor(envelope).SharedValues.Add(newValue);
             _syncSocket.SendSyncDataToAll(envelope);
         }
 
-        private void HandleValueChange<T>(string key, SelfVar<T> var, IVarEvent<T> evt, SelfValuesAccessor<T> accessor)
+        private void HandleValueChange<T>(string key, SelfVar<T> var, IVarEvent<T> evt, EnvelopeAccessor<T> accessor)
         {
             var envelope = new Envelope();
             var newStatus = SetNewStatus(var);
             var newValue = new PresenceVarValue<T>(key, evt.ValueChange.NewValue, _lockVersionGuard.GetLockVersion(key), newStatus, isAck: false, _presenceTracker.GetSelf().UserId);
             _lockVersionGuard.IncrementLockVersion(key);
-            accessor(envelope).Add(newValue);
+            accessor(envelope).PresenceValues.Add(newValue);
             _syncSocket.SendSyncDataToAll(envelope);
         }
 
-        private ValidationStatus SetNewStatus<T>(IVar<T> var)
+        private ValidationStatus SetNewStatus(IVar var)
         {
            bool isHost = _hostTracker.IsSelfHost();
 

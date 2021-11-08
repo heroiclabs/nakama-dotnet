@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using Nakama;
 
 namespace NakamaSync
@@ -26,7 +27,7 @@ namespace NakamaSync
     {
         public event Action<IVarEvent<T>> OnValueChanged;
 
-        ValidationHandler<T> ValidationHandler { get; set; }
+        public ValidationHandler<T> ValidationHandler { get; set; }
 
         public event ResetHandler OnReset;
 
@@ -62,16 +63,27 @@ namespace NakamaSync
             set => Logger = value;
         }
 
-        protected T _value;
-
-        public T GetValue()
+        HostTracker IVar.HostTracker
         {
-            return _value;
+            get;
+            set;
         }
+
+        protected T _value;
 
         public Var(string key)
         {
             Key = key;
+        }
+
+        void IVar.SetValidationStatus(ValidationStatus status)
+        {
+            ValidationStatus = status;
+        }
+
+        public T GetValue()
+        {
+            return _value;
         }
 
         internal abstract void Reset();
@@ -84,52 +96,71 @@ namespace NakamaSync
             OnReset();
         }
 
-        void IVar.SetValidationStatus(ValidationStatus status)
-        {
-            ValidationStatus = status;
-        }
-
-        protected void InvokeOnValueChanged(IVarEvent<T> e)
+        internal void InvokeOnValueChanged(IVarEvent<T> e)
         {
             OnValueChanged?.Invoke(e);
         }
 
-        bool IVar<T>.SetValue(IUserPresence source, object value, ValidationStatus validationStatus)
+        void IVar<T>.SetValue(IUserPresence source, T value)
         {
-            Logger?.DebugFormat($"Setting value. Source: {source.UserId}, Value: {value}");
-
             T oldValue = _value;
+            T newValue = ConvertToNewValue(value);
+
             ValidationStatus oldStatus = ValidationStatus;
+            ValidationStatus newStatus = GetNewValidationStatus(source, oldValue, newValue);
 
-            bool success = ValidationHandler == null ||
-                            ValidationHandler.Invoke(source, new ValueChange<T>(oldValue, (T) value));
+            ValidationStatus = newStatus;
 
-            if (success)
+            if (newStatus != ValidationStatus.Invalid)
             {
-                ValidationStatus = ValidationHandler == null ? ValidationStatus.None : ValidationStatus.Invalid; // how/when do we toggle this back to valid
-                _value = (T) value;
-                ValidationStatus = validationStatus;
+                _value = newValue;
+                // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
+                InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, newStatus)));
+            }
+        }
 
-                var valueChange = new ValueChange<T>(oldValue, (T) value);
-                var statusChange = new ValidationChange(oldStatus, ValidationStatus);
-                InvokeOnValueChanged(new VarEvent<T>(source, valueChange, statusChange));
+        protected abstract T ConvertToNewValue(object newValue);
+
+        private ValidationStatus GetNewValidationStatus(IUserPresence source, T oldValue, T newValue)
+        {
+            if (!(this as IVar).HostTracker.IsSelfHost())
+            {
+                return ValidationStatus.Pending;
             }
 
-            return success;
+            if (ValidationHandler == null)
+            {
+                return ValidationStatus.None;
+            }
+
+            if (ValidationHandler.Invoke(source, new ValueChange<T>(oldValue, (T) newValue)))
+            {
+                return ValidationStatus.Valid;
+            }
+            else
+            {
+                return ValidationStatus.Invalid;
+            }
         }
     }
 
-    public class VarEvent<T> : IVarEvent<T>
+    public abstract class ObjectVar<T> : Var<T>, IVar<T>
     {
-        public IUserPresence Source { get; }
-        public IValueChange<T> ValueChange { get; }
-        public IValidationChange ValidationChange { get; }
+        public ObjectVar(string key) : base(key) {}
 
-        public VarEvent(IUserPresence source, IValueChange<T> valueChange, IValidationChange validationChange)
+        protected override T ConvertToNewValue(object newValue)
         {
-            Source = source;
-            ValueChange = valueChange;
-            ValidationChange = validationChange;
+            return (T) newValue;
         }
     }
+/*
+    public abstract class DictionaryVar<T, K> : Var<Dictionary<T, K>>
+    {
+        public DictionaryVar(string key) : base(key) {}
+
+        protected override Dictionary<T, K> ConvertToNewValue(object newValue)
+        {
+            return (T) newValue;
+        }
+    }*/
 }

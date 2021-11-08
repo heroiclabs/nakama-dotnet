@@ -46,29 +46,7 @@ namespace NakamaSync
         {
             if (leaver.UserId == _userId)
             {
-                ResetVars(_varRegistry.Bools.Values);
-                ResetVars(_varRegistry.Floats.Values);
-                ResetVars(_varRegistry.Ints.Values);
-                ResetVars(_varRegistry.Strings.Values);
-                ResetVars(_varRegistry.Objects.Values);
-                ResetVars(_varRegistry.PresenceBools.Values.SelectMany(l => l));
-                ResetVars(_varRegistry.PresenceFloats.Values.SelectMany(l => l));
-                ResetVars(_varRegistry.PresenceInts.Values.SelectMany(l => l));
-                ResetVars(_varRegistry.PresenceStrings.Values.SelectMany(l => l));
-                ResetVars(_varRegistry.PresenceObjects.Values.SelectMany(l => l));
-                ResetVars(_varRegistry.SelfBools.Values);
-                ResetVars(_varRegistry.SelfFloats.Values);
-                ResetVars(_varRegistry.SelfInts.Values);
-                ResetVars(_varRegistry.SelfStrings.Values);
-                ResetVars(_varRegistry.SelfObjects.Values);
-            }
-        }
-
-        private void ResetVars<T>(IEnumerable<IVar<T>> vars)
-        {
-            foreach (var var in vars)
-            {
-                var.Reset();
+                _varRegistry.Reset();
             }
         }
     }

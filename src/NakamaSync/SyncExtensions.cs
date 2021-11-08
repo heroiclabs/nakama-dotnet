@@ -66,6 +66,7 @@
 // TODO think about a decision to give all vars an interface component and most events or other user-facing objects an interface component. right now it's a mixed approach.
 // todo fix disparity w/r/t whether var events have the actual concrete var on them or if we don't really need that...there is inconsistency between the var evnets at the moment.
 // todo lock the processing of each envelope to avoid multithreading issues e.g., host changing while processing a value.
+// todo support more list-like and dictionary-like methods on the shared and self vars (or maybe use an implicit operator on the var) rather than just setting a fresh new object each time.
 
 using System;
 using System.Threading.Tasks;

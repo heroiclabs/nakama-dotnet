@@ -14,31 +14,21 @@
 * limitations under the License.
 */
 
-using System;
 using Nakama;
 
 namespace NakamaSync
 {
-    /// <summary>
-    /// A variable whose single value is synchronized across all clients connected to the same match.
-    /// TODO implement an ownership model?
-    /// </summary>
-    public class SharedVar<T> : ObjectVar<T>
+    public class VarEvent<T> : IVarEvent<T>
     {
-        public SharedVar(string key) : base(key)
-        {
-        }
+        public IUserPresence Source { get; }
+        public IValueChange<T> ValueChange { get; }
+        public IValidationChange ValidationChange { get; }
 
-        public void SetValue(T value)
+        public VarEvent(IUserPresence source, IValueChange<T> valueChange, IValidationChange validationChange)
         {
-            (this as IVar<T>).SetValue(Self, value);
-        }
-
-        internal override void Reset()
-        {
-            Self = null;
-            _value = default(T);
-            ValidationStatus = ValidationStatus.None;
+            Source = source;
+            ValueChange = valueChange;
+            ValidationChange = validationChange;
         }
     }
 }

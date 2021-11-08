@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System.Collections;
 using System.Collections.Generic;
 using Nakama;
 
@@ -52,49 +53,28 @@ namespace NakamaSync
             };
         }
 
-        public void ReceiveSyncEnvelope(IUserPresence source, Envelope envelope, SyncSocket socket)
+        public void ReceiveSyncEnvelope(IUserPresence source, Envelope incomingEnvelope, SyncSocket socket)
         {
             Logger?.DebugFormat($"Ingress received sync envelope.");
 
-            var responseEnvelope = new Envelope();
+            var outgoingEnvelope = new Envelope();
 
-            var boolResponses = HandleSyncEnvelope(source, envelope.Bools, _registry.Bools);
-            var floatResponses = HandleSyncEnvelope(source, envelope.Floats, _registry.Floats);
-            var intResponses = HandleSyncEnvelope(source, envelope.Ints, _registry.Ints);
-            var stringResponses = HandleSyncEnvelope(source, envelope.Strings, _registry.Strings);
-            var objectResponses = HandleSyncEnvelope(source, envelope.Objects, _registry.Objects);
+            HandleSyncEnvelope(source, _registry.Bools, incomingEnvelope.Bools, outgoingEnvelope.Bools);
+            HandleSyncEnvelope(source, _registry.Floats, incomingEnvelope.Floats, outgoingEnvelope.Floats);
+            HandleSyncEnvelope(source, _registry.Ints, incomingEnvelope.Ints, outgoingEnvelope.Ints);
+            HandleSyncEnvelope(source, _registry.Strings, incomingEnvelope.Strings, outgoingEnvelope.Strings);
 
-            var presenceBoolResponses = HandleSyncEnvelope(source, envelope.PresenceBools, _registry.PresenceBools);
-            var presenceFloatResponses = HandleSyncEnvelope(source, envelope.PresenceFloats, _registry.PresenceFloats);
-            var presenceIntResponses = HandleSyncEnvelope(source, envelope.PresenceInts, _registry.PresenceInts);
-            var presenceStringResponses = HandleSyncEnvelope(source, envelope.PresenceStrings, _registry.PresenceStrings);
-            var presenceObjectResponses = HandleSyncEnvelope(source, envelope.PresenceObjects, _registry.PresenceObjects);
-
-            responseEnvelope.Bools.AddRange(boolResponses);
-            responseEnvelope.Floats.AddRange(floatResponses);
-            responseEnvelope.Ints.AddRange(intResponses);
-            responseEnvelope.Objects.AddRange(objectResponses);
-            responseEnvelope.Strings.AddRange(stringResponses);
-
-            responseEnvelope.PresenceBools.AddRange(presenceBoolResponses);
-            responseEnvelope.PresenceFloats.AddRange(presenceFloatResponses);
-            responseEnvelope.PresenceInts.AddRange(presenceIntResponses);
-            responseEnvelope.PresenceObjects.AddRange(presenceObjectResponses);
-            responseEnvelope.PresenceStrings.AddRange(presenceStringResponses);
-
-            if (responseEnvelope.AllVars().Count > 0)
+            if (outgoingEnvelope.GetAllValues().Count > 0)
             {
-                socket.SendSyncDataToAll(responseEnvelope);
+                socket.SendSyncDataToAll(outgoingEnvelope);
             }
 
             Logger?.DebugFormat($"Ingress done processing sync envelope.");
         }
 
-        private List<SharedVarValue<T>> HandleSyncEnvelope<T>(IUserPresence source, List<SharedVarValue<T>> values, Dictionary<string, IVar<T>> vars)
+        private void HandleSyncEnvelope<T>(IUserPresence source, VarRegistry<T> registry, Envelope<T> incomingValues, Envelope<T> outgoingValues)
         {
-            var responses = new List<SharedVarValue<T>>();
-
-            foreach (SharedVarValue<T> value in values)
+            foreach (SharedVarValue<T> value in incomingValues.SharedValues)
             {
                 if (!_lockVersionGuard.IsValidLockVersion(value.Key, value.LockVersion))
                 {
@@ -103,56 +83,48 @@ namespace NakamaSync
                     continue;
                 }
 
-                if (!vars.ContainsKey(value.Key))
+                if (!registry.SharedVars.ContainsKey(value.Key))
                 {
                     // not expected
                     ErrorHandler?.Invoke(new KeyNotFoundException($"Could not find var with key: {value.Key}"));
                     continue;
                 }
 
-                var var = vars[value.Key];
-                HandleSyncValue(source, var, value, responses);
+                var var = registry.SharedVars[value.Key];
+
+                HandleSyncValue(source, var, value, outgoingValues.SharedValues);
             }
 
-            return responses;
-        }
-
-        private List<PresenceVarValue<T>> HandleSyncEnvelope<T>(IUserPresence source, List<PresenceVarValue<T>> values, Dictionary<string, List<PresenceVar<T>>> vars)
-        {
-            var responses = new List<PresenceVarValue<T>>();
-
-            foreach (PresenceVarValue<T> value in values)
+            foreach (PresenceVarValue<T> value in incomingValues.PresenceValues)
             {
-                if (!vars.ContainsKey(value.Key))
+                if (!registry.PresenceVars.ContainsKey(value.Key))
                 {
                     // not expected
                     ErrorHandler?.Invoke(new KeyNotFoundException($"Could not find var with key: {value.Key}"));
                     continue;
                 }
 
-                foreach (var var in vars[value.Key])
+                foreach (var var in registry.PresenceVars[value.Key])
                 {
-                    HandleSyncValue(source, var, value, responses);
+                    HandleSyncValue(source, var, value, outgoingValues.PresenceValues);
                 }
             }
-
-            return responses;
         }
 
         private void HandleSyncValue<T>(IUserPresence source, IVar<T> var, SharedVarValue<T> value, List<SharedVarValue<T>> responses)
         {
+            // response from host, treat as authoritative
             if (value.IsAck)
             {
-                var.SetValidationStatus(ValidationStatus.Valid);
+                var.SetValidationStatus(value.ValidationStatus);
                 return;
             }
 
-            bool wasValid = var.SetValue(source, value.Value, value.ValidationStatus);
+            var.SetValue(source, value.Value);
 
             if (_hostTracker.IsSelfHost())
             {
-                ValidationStatus newStatus = wasValid ? ValidationStatus.Valid : ValidationStatus.Invalid;
-                responses.Add(new SharedVarValue<T>(value.Key, value.Value, value.LockVersion, newStatus, isAck: true));
+                responses.Add(new SharedVarValue<T>(value.Key, value.Value, value.LockVersion, var.ValidationStatus, isAck: true));
             }
         }
 
@@ -160,16 +132,15 @@ namespace NakamaSync
         {
             if (value.IsAck)
             {
-                var.SetValidationStatus(ValidationStatus.Valid);
+                var.SetValidationStatus(value.ValidationStatus);
                 return;
             }
 
-            bool wasValid = var.SetValue(source, value.Value, value.ValidationStatus);
+            var.SetValue(source, value.Value);
 
             if (_hostTracker.IsSelfHost())
             {
-                ValidationStatus newStatus = wasValid ? ValidationStatus.Valid : ValidationStatus.Invalid;
-                responses.Add(new PresenceVarValue<T>(value.Key, value.Value, value.LockVersion, newStatus, isAck: true, value.UserId));
+                responses.Add(new PresenceVarValue<T>(value.Key, value.Value, value.LockVersion, var.ValidationStatus, isAck: true, value.UserId));
             }
         }
     }

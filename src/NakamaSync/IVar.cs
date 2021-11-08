@@ -23,6 +23,13 @@ namespace NakamaSync
     {
         event ResetHandler OnReset;
 
+        HostTracker HostTracker { get; set; }
+
+        ValidationStatus ValidationStatus
+        {
+            get;
+        }
+
         string Key
         {
             get;
@@ -45,21 +52,16 @@ namespace NakamaSync
         void SetValidationStatus(ValidationStatus status);
     }
 
-    internal interface IVar<out T> : IVar
+    internal interface IVar<T> : IVar
     {
         event Action<IVarEvent<T>> OnValueChanged;
 
-        ValidationStatus ValidationStatus
-        {
-            get;
-        }
-
         T GetValue();
 
-        bool SetValue(IUserPresence source, object value, ValidationStatus validationStatus);
+        void SetValue(IUserPresence source, T value);
     }
 
-    public interface IVarEvent<out T>
+    public interface IVarEvent<T>
     {
         IUserPresence Source { get; }
         IValueChange<T> ValueChange { get; }

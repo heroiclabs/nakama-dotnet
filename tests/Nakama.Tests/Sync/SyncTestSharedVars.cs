@@ -52,10 +52,6 @@ namespace Nakama.Tests.Sync
                 var sharedString = new SharedVar<string>(keyGenerator(userId, "sharedString", i));
                 registry.Register(sharedString);
                 SharedStrings.Add(sharedString);
-
-                var sharedObject = new SharedVar<IDictionary<string, string>>(keyGenerator(userId, "sharedObject", i));
-                registry.Register(sharedObject);
-                SharedDicts.Add(sharedObject);
             }
         }
     }

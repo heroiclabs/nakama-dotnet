@@ -21,7 +21,7 @@ namespace NakamaSync
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
     /// </summary>
-    public class SelfVar<T> : Var<T>
+    public class SelfVar<T> : ObjectVar<T>
     {
         public SelfVar(string key) : base(key)
         {
@@ -39,11 +39,11 @@ namespace NakamaSync
             ValidationStatus = ValidationStatus.None;
         }
 
-        internal void SetValue(T value, ValidationStatus validationStatus)
+        private void SetValue(T value, ValidationStatus validationStatus)
         {
             T oldValue = _value;
             ValidationStatus oldStatus = ValidationStatus;
-            (this as IVar<T>).SetValue(Self, value, ValidationStatus);
+            (this as IVar<T>).SetValue(Self, value);
         }
     }
 }

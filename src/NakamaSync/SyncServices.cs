@@ -140,9 +140,10 @@ namespace NakamaSync
             _presenceTracker.Subscribe(_socket);
             _hostTracker.Subscribe(_socket);
 
-            foreach (IVar var in _varRegistry.RegisteredVars)
+            foreach (IVar var in _varRegistry.GetAllVars())
             {
                 var.Logger = logger;
+                var.HostTracker = _hostTracker;
             }
 
             _varGuestIngress.Subscribe(_syncSocket);

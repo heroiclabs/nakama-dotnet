@@ -50,29 +50,22 @@ namespace NakamaSync
 
         public void Subscribe(VarRegistry registry)
         {
-            System.Console.WriteLine("SUBSCRIBING");
-
-            foreach (var rotator in registry.PresenceBools)
+            foreach (var rotator in registry.Bools.PresenceVars)
             {
                 Subscribe(rotator.Key, rotator.Value, _boolRotators);
             }
 
-            foreach (var kvp in registry.PresenceFloats)
+            foreach (var kvp in registry.Floats.PresenceVars)
             {
                 Subscribe(kvp.Key, kvp.Value, _floatRotators);
             }
 
-            foreach (var kvp in registry.PresenceInts)
+            foreach (var kvp in registry.Ints.PresenceVars)
             {
                 Subscribe(kvp.Key, kvp.Value, _intRotators);
             }
 
-            foreach (var kvp in registry.PresenceObjects)
-            {
-                Subscribe(kvp.Key, kvp.Value, _objectRotators);
-            }
-
-            foreach (var kvp in registry.PresenceStrings)
+            foreach (var kvp in registry.Strings.PresenceVars)
             {
                 Subscribe(kvp.Key, kvp.Value, _stringRotators);
             }
