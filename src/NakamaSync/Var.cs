@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
@@ -22,107 +23,29 @@ namespace NakamaSync
     public delegate void ResetHandler();
     public delegate bool ValidationHandler<T>(IUserPresence source, IValueChange<T> change);
 
-    public abstract class Var<T> : IVar<T>
+    public abstract class Var<T> : IVar
     {
         public event Action<IVarEvent<T>> OnValueChanged;
-
+        public string Key { get; }
+        public event ResetHandler OnReset;
         public ValidationHandler<T> ValidationHandler { get; set; }
 
-        public event ResetHandler OnReset;
+        // todo rename to validation status
+        public ValidationStatus Status { get; private set; }
 
-        public string Key { get; }
+        protected IUserPresence Self => _matchState.Match.Self;
 
-        internal IUserPresence Self
+        private VarMatchState _matchState;
+        private VarSharedMatchState<T> _sharedState;
+
+        void IVar.Initialize(ISocket socket, ISession session)
         {
-            get;
-            set;
+
         }
-
-        IUserPresence IVar.Self
-        {
-            get => Self;
-            set => Self = value;
-        }
-
-        public ValidationStatus ValidationStatus
-        {
-            get;
-            protected set;
-        }
-
-        internal ILogger Logger
-        {
-            get;
-            set;
-        }
-
-        ILogger IVar.Logger
-        {
-            get => Logger;
-            set => Logger = value;
-        }
-
-        HostTracker IVar.HostTracker
-        {
-            get;
-            set;
-        }
-
-        protected T _value;
-
-        public Var(string key)
-        {
-            Key = key;
-        }
-
-        void IVar.SetValidationStatus(ValidationStatus status)
-        {
-            ValidationStatus = status;
-        }
-
-        public T GetValue()
-        {
-            return _value;
-        }
-
-        internal abstract void Reset();
-
-        void IVar.Reset()
-        {
-            OnValueChanged = null;
-            ValidationHandler = null;
-            this.Reset();
-            OnReset();
-        }
-
-        internal void InvokeOnValueChanged(IVarEvent<T> e)
-        {
-            OnValueChanged?.Invoke(e);
-        }
-
-        void IVar<T>.SetValue(IUserPresence source, T value)
-        {
-            T oldValue = _value;
-            T newValue = ConvertToNewValue(value);
-
-            ValidationStatus oldStatus = ValidationStatus;
-            ValidationStatus newStatus = GetNewValidationStatus(source, oldValue, newValue);
-
-            ValidationStatus = newStatus;
-
-            if (newStatus != ValidationStatus.Invalid)
-            {
-                _value = newValue;
-                // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
-                InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, newStatus)));
-            }
-        }
-
-        protected abstract T ConvertToNewValue(object newValue);
 
         private ValidationStatus GetNewValidationStatus(IUserPresence source, T oldValue, T newValue)
         {
-            if (!(this as IVar).HostTracker.IsSelfHost())
+            if (!_matchState.HostTracker.IsSelfHost())
             {
                 return ValidationStatus.Pending;
             }
@@ -141,25 +64,64 @@ namespace NakamaSync
                 return ValidationStatus.Invalid;
             }
         }
-    }
 
-    public abstract class ObjectVar<T> : Var<T>, IVar<T>
-    {
-        public ObjectVar(string key) : base(key) {}
+        private VarUserState<T> _userState;
+        protected T Value { get; set; }
+        public ValidationStatus ValidationStatus { get; internal set; }
 
-        protected override T ConvertToNewValue(object newValue)
+        public Var(string key)
+        {
+            Key = key;
+            _userState = new VarUserState<T>(key);
+        }
+
+        public T GetValue()
+        {
+            return Value;
+        }
+
+        protected virtual void Reset()
+        {
+            _userState = new VarUserState<T>(Key);
+            OnReset();
+        }
+
+        internal void InvokeOnValueChanged(IVarEvent<T> e)
+        {
+            OnValueChanged?.Invoke(e);
+        }
+
+        internal void SetValue(IUserPresence source, T value)
+        {
+            T oldValue = value;
+            T newValue = ConvertToNewValue(value);
+
+            ValidationStatus oldStatus = this.ValidationStatus;
+            ValidationStatus newStatus = GetNewValidationStatus(source, oldValue, newValue);
+
+            Status = newStatus;
+
+            if (newStatus != NakamaSync.ValidationStatus.Invalid)
+            {
+                value = newValue;
+                // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
+                InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, newStatus)));
+            }
+        }
+
+        protected virtual T ConvertToNewValue(object newValue)
         {
             return (T) newValue;
         }
-    }
-/*
-    public abstract class DictionaryVar<T, K> : Var<Dictionary<T, K>>
-    {
-        public DictionaryVar(string key) : base(key) {}
 
-        protected override Dictionary<T, K> ConvertToNewValue(object newValue)
+        public Task GetHandshakeTask()
         {
-            return (T) newValue;
+            return _sharedState.HandshakeResponseHandler.GetHandshakeTask();
         }
-    }*/
+
+        void IVar.ReceiveMatch(VarMatchState matchState)
+        {
+            _matchState = matchState;
+        }
+    }
 }

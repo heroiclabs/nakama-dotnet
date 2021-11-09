@@ -15,28 +15,28 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nakama;
 
 namespace NakamaSync
 {
     // todo should we await on sending on handshake
-    internal class HandshakeRequester : ISyncService
+    internal class HandshakeRequester<T>
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         public event Action OnHandshakeSuccess;
         public event Action<IUserPresence> OnHandshakeFailure;
 
-        private readonly VarRegistry _registry;
+        private SyncSocket<T> _socket;
+        private readonly VarIngress<T> _varGuestIngress;
 
-        private SyncSocket _socket;
-        private readonly VarIngress _varGuestIngress;
+        private IEnumerable<string> _allKeys;
 
-        public HandshakeRequester(VarRegistry registry, VarIngress varGuestIngress, SyncSocket socket)
+        public HandshakeRequester(IEnumerable<string> allKeys, VarIngress<T> varGuestIngress, SyncSocket<T> socket)
         {
-            _registry = registry;
+            _allKeys = allKeys;
             _varGuestIngress = varGuestIngress;
             _socket = socket;
         }
@@ -57,7 +57,7 @@ namespace NakamaSync
             }
         }
 
-        private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse response)
+        private void HandleHandshakeResponse(IUserPresence source, HandshakeResponse<T> response)
         {
             // todo if no longer host at this point, then reroute the request to the new host.
             if (response.Success)
@@ -72,9 +72,9 @@ namespace NakamaSync
             }
         }
 
-        private void RequestHandshake(SyncSocket socket, IUserPresence target)
+        private void RequestHandshake(SyncSocket<T> socket, IUserPresence target)
         {
-            var keysForValidation = _registry.GetAllKeys();
+            var keysForValidation = _allKeys;
             socket.SendHandshakeRequest(new HandshakeRequest(keysForValidation.ToList()), target);
         }
     }

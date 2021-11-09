@@ -16,24 +16,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class SyncSocket : ISyncService
+    internal class SyncSocket<T>
     {
-        public delegate void SyncEnvelopeHandler(IUserPresence source, Envelope envelope);
+        public delegate void SyncEnvelopeHandler(IUserPresence source, Envelope<T> envelope);
         public delegate void HandshakeRequestHandler(IUserPresence source, HandshakeRequest request);
-        public delegate void HandshakeResponseHandler(IUserPresence source, HandshakeResponse response);
-        public delegate void RpcEnvelopeHandler(IUserPresence source, RpcEnvelope response);
+        public delegate void HandshakeResponseHandler(IUserPresence source, HandshakeResponse<T> response);
 
         public event SyncEnvelopeHandler OnSyncEnvelope;
         public event HandshakeRequestHandler OnHandshakeRequest;
         public event HandshakeResponseHandler OnHandshakeResponse;
-        public event RpcEnvelopeHandler OnRpcEnvelope;
 
-        public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly SyncEncoding _encoding = new SyncEncoding();
@@ -76,18 +72,17 @@ namespace NakamaSync
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeRequest, _encoding.Encode(request), new IUserPresence[]{target});
         }
 
-        public void SendHandshakeResponse(HandshakeResponse response, IUserPresence target)
+        public void SendHandshakeResponse(HandshakeResponse<T> response, IUserPresence target)
         {
             Logger?.InfoFormat($"User id {_match.Self.UserId} sending handshake response.");
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponse, _encoding.Encode(response), new IUserPresence[]{target});
         }
 
-        public void SendSyncDataToAll(Envelope envelope)
+        public void SendSyncDataToAll(Envelope<T> envelope)
         {
             if (_match == null)
             {
-                ErrorHandler?.Invoke(new NullReferenceException("Tried sending data before match was received"));
-                return;
+                throw new NullReferenceException("Tried sending data before match was received");
             }
 
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data.");
@@ -112,15 +107,15 @@ namespace NakamaSync
             {
                 Logger?.InfoFormat($"Socket for {_match.Self.UserId} received sync envelope.");
 
-                Envelope envelope = null;
+                Envelope<T> envelope = null;
 
                 try
                 {
-                    envelope = _encoding.Decode<Envelope>(state.State);
+                    envelope = _encoding.Decode<Envelope<T>>(state.State);
                 }
                 catch (Exception e)
                 {
-                    ErrorHandler?.Invoke(e);
+                    throw e;
                 }
 
                 Logger?.DebugFormat($"Envelope decoded.");
@@ -133,31 +128,17 @@ namespace NakamaSync
 
                 HandshakeRequest request = null;
 
-                try
-                {
-                    request = _encoding.Decode<HandshakeRequest>(state.State);
-                    OnHandshakeRequest?.Invoke(state.UserPresence, request);
-                }
-                catch (Exception e)
-                {
-                    ErrorHandler?.Invoke(e);
-                }
+                request = _encoding.Decode<HandshakeRequest>(state.State);
+                OnHandshakeRequest?.Invoke(state.UserPresence, request);
             }
             else if (state.OpCode == _opcodes.HandshakeResponse)
             {
                 Logger?.InfoFormat($"Socket for {_match.Self.UserId} received handshake response.");
 
-                HandshakeResponse response = null;
+                HandshakeResponse<T> response = null;
 
-                try
-                {
-                    response = _encoding.Decode<HandshakeResponse>(state.State);
-                    OnHandshakeResponse?.Invoke(state.UserPresence, response);
-                }
-                catch (Exception e)
-                {
-                    ErrorHandler?.Invoke(e);
-                }
+                response = _encoding.Decode<HandshakeResponse<T>>(state.State);
+                OnHandshakeResponse?.Invoke(state.UserPresence, response);
             }
             else if (state.OpCode == _opcodes.Rpc)
             {
@@ -165,15 +146,8 @@ namespace NakamaSync
 
                 RpcEnvelope response = null;
 
-                try
-                {
-                    response = _encoding.Decode<RpcEnvelope>(state.State);
-                    OnRpcEnvelope?.Invoke(state.UserPresence, response);
-                }
-                catch (Exception e)
-                {
-                    ErrorHandler?.Invoke(e);
-                }
+                response = _encoding.Decode<RpcEnvelope>(state.State);
+                //OnRpcEnvelope?.Invoke(state.UserPresence, response);
             }
         }
     }

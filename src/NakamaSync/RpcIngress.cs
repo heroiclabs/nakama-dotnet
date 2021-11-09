@@ -19,20 +19,15 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class RpcIngress : ISyncService
+    //public delegate void RpcEnvelopeHandler(IUserPresence source, RpcEnvelope response);
+
+    internal interface IRpcSocket
     {
-        public ILogger Logger
-        {
-            get;
-            set;
-        }
+       // event RpcEnvelopeHandler OnRpcEnvelope;
+    }
 
-        public SyncErrorHandler ErrorHandler
-        {
-            get;
-            set;
-        }
-
+    internal class RpcIngress
+    {
         private readonly RpcTargetRegistry _registry;
 
         public RpcIngress(RpcTargetRegistry registry)
@@ -40,23 +35,20 @@ namespace NakamaSync
             _registry = registry;
         }
 
-        public void Subscribe(SyncSocket socket)
+        public void Subscribe(IRpcSocket socket)
         {
-            socket.OnRpcEnvelope += HandleRpcEnvelope;
+            //socket.OnRpcEnvelope += HandleRpcEnvelope;
         }
 
         private void HandleRpcEnvelope(IUserPresence source, RpcEnvelope envelope)
         {
             if (!_registry.HasTarget(envelope.RpcKey.TargetId))
             {
-                ErrorHandler?.Invoke(new InvalidOperationException("Received rpc for non-existent target: " + envelope.RpcKey.TargetId));
-                return;
+                throw new InvalidOperationException("Received rpc for non-existent target: " + envelope.RpcKey.TargetId);
             }
 
             var rpc = RpcInvocation.Create(_registry.GetTarget(envelope.RpcKey.TargetId), envelope.RpcKey.MethodName, envelope.Parameters);
             rpc.Invoke();
-            // todo handle signatures not equal
-            Logger?.DebugFormat($"Rpc ingress done processing envelope.");
         }
     }
 }

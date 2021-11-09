@@ -22,16 +22,18 @@ namespace Nakama.Tests.Sync
     public class SyncTestSharedVars
     {
         public List<SharedVar<bool>> SharedBools { get; }
+        public List<SharedVar<IDictionary<string, string>>> SharedDicts { get; }
         public List<SharedVar<float>> SharedFloats { get; }
         public List<SharedVar<int>> SharedInts { get; }
+        public List<SharedVar<SyncTestObject>> SharedObjects { get; }
         public List<SharedVar<string>> SharedStrings { get; }
-        public List<SharedVar<IDictionary<string, string>>> SharedDicts { get; }
 
         public SyncTestSharedVars(string userId, VarRegistry registry, int numTestVars, VarIdGenerator keyGenerator)
         {
             SharedBools = new List<SharedVar<bool>>();
             SharedFloats = new List<SharedVar<float>>();
             SharedInts = new List<SharedVar<int>>();
+            SharedObjects = new List<SharedVar<SyncTestObject>>();
             SharedStrings = new List<SharedVar<string>>();
             SharedDicts = new List<SharedVar<IDictionary<string, string>>>();
 
@@ -48,6 +50,10 @@ namespace Nakama.Tests.Sync
                 var sharedInt = new SharedVar<int>(keyGenerator(userId, "sharedInt", i));
                 registry.Register(sharedInt);
                 SharedInts.Add(sharedInt);
+
+                var sharedObject = new SharedVar<SyncTestObject>(keyGenerator(userId, "sharedObject", i));
+                registry.Register(sharedObject);
+                SharedObjects.Add(sharedObject);
 
                 var sharedString = new SharedVar<string>(keyGenerator(userId, "sharedString", i));
                 registry.Register(sharedString);

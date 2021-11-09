@@ -22,13 +22,12 @@ using Nakama;
 namespace NakamaSync
 {
     // TODO catch presence tracker exceptions. and think about how to handle exceptions for the sync system in general
-    internal class HostTracker : ISyncService
+    internal class HostTracker
     {
         public event Action<HostChangedEvent> OnHostChanged;
         public event Action<IUserPresence> OnGuestLeft;
         public event Action<IUserPresence> OnGuestJoined;
 
-        public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private PresenceTracker _presenceTracker;

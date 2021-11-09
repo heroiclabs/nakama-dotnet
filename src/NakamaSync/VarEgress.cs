@@ -14,26 +14,16 @@
 * limitations under the License.
 */
 
-using System.Linq;
-using Nakama;
-
 namespace NakamaSync
 {
-
-    internal delegate Envelope<T> EnvelopeAccessor<T>(Envelope registry);
-
-    internal class VarEgress : ISyncService
+    internal class VarEgress<T>
     {
-
-        public SyncErrorHandler ErrorHandler { get; set; }
-        public ILogger Logger { get; set; }
-
         private PresenceTracker _presenceTracker;
         private HostTracker _hostTracker;
         private LockVersionGuard _lockVersionGuard;
-        private SyncSocket _syncSocket;
+        private SyncSocket<T> _syncSocket;
 
-        public VarEgress(LockVersionGuard lockVersionGuard, PresenceTracker presenceTracker, HostTracker hostTracker, SyncSocket socket)
+        public VarEgress(LockVersionGuard lockVersionGuard, PresenceTracker presenceTracker, HostTracker hostTracker, SyncSocket<T> socket)
         {
             _lockVersionGuard = lockVersionGuard;
             _presenceTracker = presenceTracker;
@@ -41,28 +31,20 @@ namespace NakamaSync
             _syncSocket = socket;
         }
 
-        public void Subscribe(VarRegistry registry)
+        public void Subscribe(VarRegistry<T> registry)
         {
-            Subscribe(registry.Bools, env => env.Bools);
-            Subscribe(registry.Floats, env => env.Floats);
-            Subscribe(registry.Ints,  env => env.Ints);
-            Subscribe(registry.Strings, env => env.Strings);
-        }
-
-        private void Subscribe<T>(VarRegistry<T> registry, EnvelopeAccessor<T> accessor)
-        {
-            foreach (var var in registry.SharedVars.Values)
+            foreach (var var in registry.SharedVars)
             {
-                var.OnValueChanged += (evt) => HandleValueChange(var.Key, var, evt, accessor);
+                var.OnValueChanged += (evt) => HandleValueChange(var.Key, var, evt);
             }
 
-            foreach (var var in registry.SelfVars.Values)
+            foreach (var var in registry.SelfVars)
             {
-                var.OnValueChanged += (evt) => HandleValueChange(var.Key, var, evt, accessor);
+                var.OnValueChanged += (evt) => HandleValueChange(var.Key, var, evt);
             }
         }
 
-        private void HandleValueChange<T>(string key, SharedVar<T> var, IVarEvent<T> evt, EnvelopeAccessor<T> accessor)
+        private void HandleValueChange(string key, SharedVar<T> var, IVarEvent<T> evt)
         {
             if (evt.Source.UserId != _presenceTracker.GetSelf().UserId)
             {
@@ -70,36 +52,36 @@ namespace NakamaSync
                 return;
             }
 
-            var envelope = new Envelope();
+            var envelope = new Envelope<T>();
             var newStatus = SetNewStatus(var);
             var newValue = new SharedVarValue<T>(key, evt.ValueChange.NewValue, _lockVersionGuard.GetLockVersion(key), newStatus, isAck: false);
             _lockVersionGuard.IncrementLockVersion(key);
-            accessor(envelope).SharedValues.Add(newValue);
+            envelope.SharedValues.Add(newValue);
             _syncSocket.SendSyncDataToAll(envelope);
         }
 
-        private void HandleValueChange<T>(string key, SelfVar<T> var, IVarEvent<T> evt, EnvelopeAccessor<T> accessor)
+        private void HandleValueChange(string key, SelfVar<T> var, IVarEvent<T> evt)
         {
-            var envelope = new Envelope();
+            var envelope = new Envelope<T>();
             var newStatus = SetNewStatus(var);
             var newValue = new PresenceVarValue<T>(key, evt.ValueChange.NewValue, _lockVersionGuard.GetLockVersion(key), newStatus, isAck: false, _presenceTracker.GetSelf().UserId);
             _lockVersionGuard.IncrementLockVersion(key);
-            accessor(envelope).PresenceValues.Add(newValue);
+            envelope.PresenceValues.Add(newValue);
             _syncSocket.SendSyncDataToAll(envelope);
         }
 
-        private ValidationStatus SetNewStatus(IVar var)
+        private ValidationStatus SetNewStatus(Var<T> var)
         {
            bool isHost = _hostTracker.IsSelfHost();
 
-            ValidationStatus status = var.ValidationStatus;
+            ValidationStatus status = var.Status;
 
             if (!isHost)
             {
                 if (status == ValidationStatus.Valid)
                 {
                     status = ValidationStatus.Pending;
-                    (var as IVar).SetValidationStatus(status);
+                    var.ValidationStatus = status;
                 }
             }
 

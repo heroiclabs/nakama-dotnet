@@ -25,7 +25,7 @@ namespace NakamaSync
     /// A variable containing a value for a user in the match. The value is synchronized across all users
     /// but can only be set by the associated user.
     /// </summary>
-    public class PresenceVar<T> : ObjectVar<T>
+    public class PresenceVar<T> : Var<T>
     {
         public event PresenceChangedHandler OnPresenceChanged;
 
@@ -37,13 +37,11 @@ namespace NakamaSync
         {
         }
 
-        internal override void Reset()
+        protected override void Reset()
         {
             SetPresence(null);
             OnPresenceChanged = null;
-            Self = null;
-            _value = default(T);
-            ValidationStatus = ValidationStatus.None;
+            base.Reset();
         }
 
         internal void SetPresence(IUserPresence presence)

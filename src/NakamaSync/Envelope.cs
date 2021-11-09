@@ -14,46 +14,13 @@
 * limitations under the License.
 */
 
+using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Collections;
 
 namespace NakamaSync
 {
-    internal class Envelope
-    {
-        [DataMember(Name="bools"), Preserve]
-        public Envelope<bool> Bools { get; set; }
-
-        [DataMember(Name="floats"), Preserve]
-        public Envelope<float> Floats { get; set; }
-
-        [DataMember(Name="ints"), Preserve]
-        public Envelope<int> Ints { get; set; }
-
-        [DataMember(Name="strings"), Preserve]
-        public Envelope<string> Strings { get; set; }
-
-        internal Envelope()
-        {
-            Bools = new Envelope<bool>();
-            Floats = new Envelope<float>();
-            Ints = new Envelope<int>();
-            Strings = new Envelope<string>();
-        }
-
-        public List<IVarValue> GetAllValues()
-        {
-            var allVars = new List<IVarValue>();
-
-            allVars.AddRange(Bools.GetAllValues());
-            allVars.AddRange(Floats.GetAllValues());
-            allVars.AddRange(Ints.GetAllValues());
-            allVars.AddRange(Strings.GetAllValues());
-
-            return allVars;
-        }
-    }
-
     internal class Envelope<T>
     {
         [DataMember(Name="shared"), Preserve]
@@ -67,9 +34,9 @@ namespace NakamaSync
             PresenceValues = new List<PresenceVarValue<T>>();
         }
 
-        public List<IVarValue<T>> GetAllValues()
+        public List<IVarValue> GetAllValues()
         {
-            var allValues = new List<IVarValue<T>>();
+            var allValues = new List<IVarValue>();
             allValues.AddRange(SharedValues);
             allValues.AddRange(PresenceValues);
             return allValues;

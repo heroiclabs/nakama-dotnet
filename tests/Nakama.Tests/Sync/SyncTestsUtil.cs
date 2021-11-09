@@ -24,10 +24,5 @@ namespace Nakama.Tests.Sync
         {
             return new SyncOpcodes(handshakeRequest: 0, handshakeResponse: 1, data: 2, rpc: 3);
         }
-
-        public static SyncErrorHandler CreateDefaultErrorHandler()
-        {
-            return (e) => new StdoutLogger().ErrorFormat(e.Message);
-        }
     }
 }

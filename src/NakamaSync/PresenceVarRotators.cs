@@ -14,7 +14,6 @@
 * limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 using Nakama;
 
@@ -22,18 +21,10 @@ namespace NakamaSync
 {
     internal delegate PresenceVarRotator<T> PresenceVarRotatorAccessor<T>(string collectionKey);
 
-    internal class PresenceVarRotators : ISyncService
+    internal class PresenceVarRotators<T>
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
-        public ILogger Logger { get; set; }
+        List<PresenceVarRotator<T>> _rotators;
 
-        private SyncErrorHandler _errorHandler;
-
-        private Dictionary<string, PresenceVarRotator<bool>> _boolRotators;
-        private Dictionary<string, PresenceVarRotator<float>> _floatRotators;
-        private Dictionary<string, PresenceVarRotator<int>> _intRotators;
-        private Dictionary<string, PresenceVarRotator<object>> _objectRotators;
-        private Dictionary<string, PresenceVarRotator<string>> _stringRotators;
         private PresenceTracker _presenceTracker;
         private ISession _session;
 
@@ -41,70 +32,33 @@ namespace NakamaSync
         {
             _presenceTracker = presenceTracker;
             _session = session;
-            _boolRotators = new Dictionary<string, PresenceVarRotator<bool>>();
-            _floatRotators = new Dictionary<string, PresenceVarRotator<float>>();
-            _intRotators = new Dictionary<string, PresenceVarRotator<int>>();
-            _objectRotators = new Dictionary<string, PresenceVarRotator<object>>();
-            _stringRotators = new Dictionary<string, PresenceVarRotator<string>>();
-        }
-
-        public void Subscribe(VarRegistry registry)
-        {
-            foreach (var rotator in registry.Bools.PresenceVars)
-            {
-                Subscribe(rotator.Key, rotator.Value, _boolRotators);
-            }
-
-            foreach (var kvp in registry.Floats.PresenceVars)
-            {
-                Subscribe(kvp.Key, kvp.Value, _floatRotators);
-            }
-
-            foreach (var kvp in registry.Ints.PresenceVars)
-            {
-                Subscribe(kvp.Key, kvp.Value, _intRotators);
-            }
-
-            foreach (var kvp in registry.Strings.PresenceVars)
-            {
-                Subscribe(kvp.Key, kvp.Value, _stringRotators);
-            }
         }
 
         public void ReceiveMatch(IMatch match)
         {
-            ReceiveMatch(match, _boolRotators);
-            ReceiveMatch(match, _floatRotators);
-            ReceiveMatch(match, _intRotators);
-            ReceiveMatch(match, _objectRotators);
-            ReceiveMatch(match, _stringRotators);
+            foreach (var rotator in _rotators)
+            {
+                rotator.ReceiveMatch(match);
+            }
         }
 
-        private void Subscribe<T>(
-            string key,
-            IEnumerable<PresenceVar<T>> presenceVars,
-            Dictionary<string, PresenceVarRotator<T>> rotators)
+        public void Subscribe(VarRegistry<T> registry)
         {
-            if (rotators.ContainsKey(key))
-            {
-                ErrorHandler?.Invoke(new InvalidOperationException($"Tried adding duplicate key for presence var rotation: {key}"));
-                return;
-            }
-
             var rotator = new PresenceVarRotator<T>(_session);
 
-            foreach (var presenceVar in presenceVars)
+            string key = null;
+
+            foreach (var presenceVar in registry.GetPresenceVars(key))
             {
-                rotator.ErrorHandler = ErrorHandler;
-                rotator.Logger = Logger;
                 rotator.AddPresenceVar(presenceVar);
+                key = key ?? presenceVar.Key;
             }
 
             rotator.Subscribe(_presenceTracker);
-            rotators.Add(key, rotator);
+            _rotators.Add(rotator);
         }
 
-        private void ReceiveMatch<T>(IMatch match, Dictionary<string, PresenceVarRotator<T>> rotators)
+        private void ReceiveMatch(IMatch match, Dictionary<string, PresenceVarRotator<T>> rotators)
         {
             foreach (PresenceVarRotator<T> rotator in rotators.Values)
             {

@@ -14,26 +14,24 @@
 * limitations under the License.
 */
 
-using System;
 using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class HandshakeResponseHandler : ISyncService
+    internal class HandshakeResponseHandler<T>
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly TaskCompletionSource<object> _handshakeTcs = new TaskCompletionSource<object>();
-        private VarIngress _varIngress;
+        private VarIngress<T> _varIngress;
 
-        public HandshakeResponseHandler(VarIngress incoingVarIngress)
+        public HandshakeResponseHandler(VarIngress<T> incoingVarIngress)
         {
             _varIngress = incoingVarIngress;
         }
 
-        public void Subscribe(HandshakeRequester handshakeRequester, SyncSocket syncSocket, HostTracker hostTracker)
+        public void Subscribe(HandshakeRequester<T> handshakeRequester, SyncSocket<T> syncSocket, HostTracker hostTracker)
         {
             handshakeRequester.OnHandshakeSuccess += () =>
             {

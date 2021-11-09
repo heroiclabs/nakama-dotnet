@@ -21,16 +21,15 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class LockVersionGuard : ISyncService
+    internal class LockVersionGuard
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly ConcurrentDictionary<string, int> _lockVersions = new ConcurrentDictionary<string, int>();
 
-        public LockVersionGuard(VarRegistry registry)
+        public LockVersionGuard(IEnumerable<string> allKeys)
         {
-            foreach (var key in registry.GetAllKeys())
+            foreach (var key in allKeys)
             {
                 Register(key);
             }
@@ -40,8 +39,7 @@ namespace NakamaSync
         {
             if (!HasLockVersion(key))
             {
-                ErrorHandler?.Invoke(new ArgumentException($"Received unrecognized remote key: {key}"));
-                return false;
+                throw new ArgumentException($"Received unrecognized remote key: {key}");
             }
 
             // todo one client updated locally while another value was in flight
@@ -60,8 +58,7 @@ namespace NakamaSync
         {
             if (!HasLockVersion(key))
             {
-                ErrorHandler?.Invoke(new KeyNotFoundException($"Lock version guard could not find key when getting lock version: {key}"));
-                return 0;
+                throw new KeyNotFoundException($"Lock version guard could not find key when getting lock version: {key}");
             }
 
             return _lockVersions[key];
@@ -76,7 +73,7 @@ namespace NakamaSync
         {
             if (!HasLockVersion(key))
             {
-                ErrorHandler?.Invoke(new KeyNotFoundException($"Lock version guard could not find key when incrementing lock version: {key}"));
+                throw new KeyNotFoundException($"Lock version guard could not find key when incrementing lock version: {key}");
             }
 
             _lockVersions[key]++;

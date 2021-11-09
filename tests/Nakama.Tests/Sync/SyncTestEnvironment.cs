@@ -96,22 +96,22 @@ namespace Nakama.Tests.Sync
             }
         }
 
-        public void StartViaMatchmaker(SyncErrorHandler errorHandler = null)
+        public void StartViaMatchmaker()
         {
             var matchmakerTasks = new List<Task>();
 
             for (int i = 0; i < _syncTestUserEnvironments.Count; i++)
             {
-                var matchmakerTask = _syncTestUserEnvironments[i].StartMatchViaMatchmaker(_syncTestUserEnvironments.Count, errorHandler ?? DefaultErrorHandler());
+                var matchmakerTask = _syncTestUserEnvironments[i].StartMatchViaMatchmaker(_syncTestUserEnvironments.Count);
                 matchmakerTasks.Add(matchmakerTask);
             }
 
             Task.WaitAll(matchmakerTasks.ToArray());
         }
 
-        public async Task Start(SyncErrorHandler errorHandler = null)
+        public async Task Start()
         {
-            var match = await _syncTestUserEnvironments[CreatorIndex].CreateMatch(errorHandler ?? DefaultErrorHandler());
+            var match = await _syncTestUserEnvironments[CreatorIndex].CreateMatch();
 
             for (int i = 0; i < _syncTestUserEnvironments.Count; i++)
             {
@@ -120,13 +120,13 @@ namespace Nakama.Tests.Sync
                     continue;
                 }
 
-                await _syncTestUserEnvironments[i].JoinMatch(match.Id, errorHandler ?? DefaultErrorHandler());
+                await _syncTestUserEnvironments[i].JoinMatch(match.Id);
             }
         }
 
-        public async Task StartViaName(string name, SyncErrorHandler errorHandler = null)
+        public async Task StartViaName(string name)
         {
-            var match = await _syncTestUserEnvironments[CreatorIndex].CreateMatch(name, errorHandler ?? DefaultErrorHandler());
+            var match = await _syncTestUserEnvironments[CreatorIndex].CreateMatch(name);
 
             for (int i = 0; i < _syncTestUserEnvironments.Count; i++)
             {
@@ -135,7 +135,7 @@ namespace Nakama.Tests.Sync
                     continue;
                 }
 
-                await _syncTestUserEnvironments[i].CreateMatch(name, errorHandler ?? DefaultErrorHandler());
+                await _syncTestUserEnvironments[i].CreateMatch(name);
             }
         }
 
@@ -208,11 +208,6 @@ namespace Nakama.Tests.Sync
             }
 
             return guests;
-        }
-
-        private SyncErrorHandler DefaultErrorHandler()
-        {
-            return e => new StdoutLogger().ErrorFormat($"{e.Message}{e.StackTrace}");
         }
 
         private static string DefaultVarIdGenerator(string userId, string varName, int varIndex)

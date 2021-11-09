@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -69,7 +70,7 @@ namespace Nakama.Tests.Sync
 
             bool threwError = false;
 
-            SyncErrorHandler errorHandler = e =>
+            Action<Exception> errorHandler = e =>
             {
                 if (e is HandshakeFailedException)
                 {
@@ -86,7 +87,7 @@ namespace Nakama.Tests.Sync
                 idGenerator);
 
 
-            await mismatchedEnv.Start(errorHandler);
+            await mismatchedEnv.Start();
 
             await Task.Delay(2000);
             Assert.True(threwError);

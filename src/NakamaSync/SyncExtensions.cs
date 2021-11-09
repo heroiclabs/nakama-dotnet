@@ -49,6 +49,7 @@
 // todo expose metadata to match id method.
 // think about what should happen to local changes that occur before the initial store is synced from handshake.
 // maybe it's game specific?
+// todo implement Reset() of all vars on presence leave.
 // todo what happens if you set a var prior to passing it through the match? throw an exception from the var itself?
 // add a "HasValue" helper to the user var for a particular value
 // put self and other var into the same variable that has each as a member? or some other elegant way of "grouping" them.
@@ -69,6 +70,7 @@
 // todo support more list-like and dictionary-like methods on the shared and self vars (or maybe use an implicit operator on the var) rather than just setting a fresh new object each time.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Nakama;
 
@@ -77,99 +79,60 @@ namespace NakamaSync
     public static class SyncExtensions
     {
         // todo maybe don't require session as a parameter here since we pass it to socket.
-        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, RpcTargetRegistry rpcTargetRegistry, SyncOpcodes opcodes, SyncErrorHandler errorHandler, ILogger logger = null, string name = null)
+        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes, string name = null)
         {
-            logger?.DebugFormat($"User {session.UserId} is creating sync match.");
-            AssertValidInputs(registry, errorHandler);
-            var services = new SyncServices(socket, session, registry, rpcTargetRegistry, opcodes);
-            services.Initialize(isMatchCreator: true, errorHandler: errorHandler, logger: logger);
+            var presenceTracker = new PresenceTracker(session.UserId);
+            var hostTracker = new HostTracker(presenceTracker);
 
             IMatch match = await socket.CreateMatchAsync(name);
 
-            logger?.DebugFormat($"User {session.UserId} services are receiving sync match.");
+            SyncMatch syncMatch = new SyncMatch(match, hostTracker, presenceTracker);
 
-            SyncMatch syncMatch = services.ReceiveMatch(match);
+            foreach (IVar var in registry.GetAllVars())
+            {
+                var.ReceiveMatch(new VarMatchState(match, hostTracker, presenceTracker));
+            }
 
             if (name != null && match.Size > 1)
             {
-                try
-                {
-                    await services.GetHandshakeTask();
-                }
-                catch (HandshakeFailedException e)
-                {
-                    errorHandler?.Invoke(e);
-                }
-            }
+                await Task.WhenAll(registry.GetAllVars().Select(v => v.GetHandshakeTask()));
 
-            logger?.DebugFormat($"User {session.UserId} is returning sync match.");
+            }
 
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, IMatchmakerMatched matched, VarRegistry registry, RpcTargetRegistry rpcTargetRegistry, SyncErrorHandler errorHandler, ILogger logger = null)
+        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, IMatchmakerMatched matched, VarRegistry registry, SyncOpcodes opcodes)
         {
-            AssertValidInputs(registry, errorHandler);
-            logger?.DebugFormat($"User {session.UserId} is joining sync match via matchmaker.");
-
-            var services = new SyncServices(socket, session, registry, rpcTargetRegistry, opcodes);
-            services.Initialize(isMatchCreator: false, errorHandler: errorHandler, logger: logger);
+            var presenceTracker = new PresenceTracker(session.UserId);
+            var hostTracker = new HostTracker(presenceTracker);
 
             IMatch match = await socket.JoinMatchAsync(matched);
-            SyncMatch syncMatch = services.ReceiveMatch(match);
+            SyncMatch syncMatch = new SyncMatch(match, hostTracker, presenceTracker);
 
-            try
+            foreach (IVar var in registry.GetAllVars())
             {
-                await services.GetHandshakeTask();
+                var.ReceiveMatch(new VarMatchState(match, hostTracker, presenceTracker));
             }
-            catch (HandshakeFailedException e)
-            {
-                errorHandler?.Invoke(e);
-            }
+
+            await Task.WhenAll(registry.GetAllVars().Select(v => v.GetHandshakeTask()));
 
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, SyncOpcodes opcodes, string matchId, VarRegistry registry, RpcTargetRegistry rpcTargetRegistry, SyncErrorHandler errorHandler, ILogger logger = null)
+        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, string matchId, VarRegistry registry, SyncOpcodes opcodes)
         {
-            AssertValidInputs(registry, errorHandler);
-            logger?.DebugFormat($"User {session.UserId} is joining sync match: {matchId}.");
-
-            var services = new SyncServices(socket, session, registry, rpcTargetRegistry, opcodes);
-            services.Initialize(isMatchCreator: false, errorHandler: errorHandler, logger: logger);
+            var presenceTracker = new PresenceTracker(session.UserId);
+            var hostTracker = new HostTracker(presenceTracker);
 
             IMatch match = await socket.JoinMatchAsync(matchId);
 
-            var syncMatch = services.ReceiveMatch(match);
+            var syncMatch = new SyncMatch(match, hostTracker, presenceTracker);
 
-            try
-            {
-                await services.GetHandshakeTask();
-            }
-            catch (HandshakeFailedException e)
-            {
-                errorHandler?.Invoke(e);
-            }
+            await Task.WhenAll(registry.GetAllVars().Select(v => v.GetHandshakeTask()));
 
             return syncMatch;
         }
 
-        private static void AssertValidInputs(VarRegistry registry, SyncErrorHandler errorHandler)
-        {
-            if (registry == null)
-            {
-                throw new NullReferenceException("Var registry cannot be null.");
-            }
-
-            if (errorHandler == null)
-            {
-                throw new NullReferenceException("Sync error handler cannot be null.");
-            }
-        }
-
-        private static void DefaultErrorHandler(Exception e)
-        {
-            throw e;
-        }
     }
 }

@@ -68,7 +68,7 @@ namespace Nakama.Tests.Sync
             _rpcs = new SyncTestRpcs(_rpcTargetRegistry);
         }
 
-        public async Task StartMatchViaMatchmaker(int count, SyncErrorHandler errorHandler)
+        public async Task StartMatchViaMatchmaker(int count)
         {
             await Connect();
             await _socket.AddMatchmakerAsync("*", minCount: count, maxCount: count);
@@ -82,30 +82,30 @@ namespace Nakama.Tests.Sync
 
             await matchedTcs.Task;
 
-            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchedTcs.Task.Result, _varRegistry, _rpcTargetRegistry, errorHandler, _logger);
+            _match = await _socket.JoinSyncMatch(_session,  matchedTcs.Task.Result, _varRegistry, _opcodes);
             _rpcs.ReceiveMatch(_match);
         }
 
-        public async Task<IMatch> CreateMatch(SyncErrorHandler errorHandler)
+        public async Task<IMatch> CreateMatch()
         {
             await Connect();
-            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _rpcTargetRegistry, _opcodes, errorHandler, _logger);
-            _rpcs.ReceiveMatch(_match);
-            return _match;
-        }
-
-        public async Task<IMatch> CreateMatch(string name, SyncErrorHandler errorHandler)
-        {
-            await Connect();
-            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _rpcTargetRegistry, _opcodes, errorHandler, _logger, name);
+            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _opcodes);
             _rpcs.ReceiveMatch(_match);
             return _match;
         }
 
-        public async Task<IMatch> JoinMatch(string matchId, SyncErrorHandler errorHandler)
+        public async Task<IMatch> CreateMatch(string name)
         {
             await Connect();
-            _match = await _socket.JoinSyncMatch(_session, _opcodes, matchId, _varRegistry, _rpcTargetRegistry, errorHandler, _logger);
+            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _opcodes, name);
+            _rpcs.ReceiveMatch(_match);
+            return _match;
+        }
+
+        public async Task<IMatch> JoinMatch(string matchId)
+        {
+            await Connect();
+            _match = await _socket.JoinSyncMatch(_session,  matchId, _varRegistry, _opcodes);
             _rpcs.ReceiveMatch(_match);
             return _match;
         }

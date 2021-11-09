@@ -14,23 +14,21 @@
 * limitations under the License.
 */
 
-using System;
-using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal interface IVar
+    internal class VarMatchState
     {
-        Task GetHandshakeTask();
-        void ReceiveMatch(VarMatchState matchState);
-        void Initialize(ISocket socket, ISession session);
-    }
+        public IMatch Match { get; }
+        public HostTracker HostTracker { get; }
+        public PresenceTracker PresenceTracker { get; }
 
-    public interface IVarEvent<T>
-    {
-        IUserPresence Source { get; }
-        IValueChange<T> ValueChange { get; }
-        IValidationChange ValidationChange { get; }
+        public VarMatchState(IMatch match, HostTracker hostTracker, PresenceTracker presenceTracker)
+        {
+            Match = match;
+            HostTracker = hostTracker;
+            PresenceTracker = presenceTracker;
+        }
     }
 }

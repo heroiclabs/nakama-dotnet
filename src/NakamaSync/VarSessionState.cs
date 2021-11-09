@@ -18,9 +18,15 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal interface ISyncService
+    internal class VarSessionState
     {
-        SyncErrorHandler ErrorHandler { get; set; }
-        ILogger Logger { get; set; }
+        public ISession Session { get; }
+        public ISocket Socket { get; }
+
+        public VarSessionState(ISession session, ISocket socket)
+        {
+            Session = session;
+            Socket = socket;
+        }
     }
 }

@@ -21,9 +21,8 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class PresenceTracker : ISyncService
+    internal class PresenceTracker
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         public event Action<IUserPresence> OnPresenceAdded;
@@ -61,8 +60,7 @@ namespace NakamaSync
         {
             if (!_presences.ContainsKey(userId))
             {
-                ErrorHandler?.Invoke(new KeyNotFoundException($"User{_userId} could not find presence with id {userId}."));
-                return null;
+                throw new KeyNotFoundException($"User{_userId} could not find presence with id {userId}.");
             }
 
             return _presences[userId];
@@ -143,7 +141,7 @@ namespace NakamaSync
                 }
                 else
                 {
-                    ErrorHandler?.Invoke(new InvalidOperationException($"For user {_userId} leaving presence does not exist: " + leaver.UserId));
+                    throw new InvalidOperationException($"For user {_userId} leaving presence does not exist: " + leaver.UserId);
                 }
             }
 

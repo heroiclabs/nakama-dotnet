@@ -15,22 +15,19 @@
 */
 
 using System;
-using System.Threading.Tasks;
-using Nakama;
 
 namespace NakamaSync
 {
-    internal interface IVar
+    internal class VarUserState<T>
     {
-        Task GetHandshakeTask();
-        void ReceiveMatch(VarMatchState matchState);
-        void Initialize(ISocket socket, ISession session);
-    }
+        public event Action<IVarEvent<T>> OnValueChanged;
+        public ValidationHandler<T> ValidationHandler { get; set; }
+        public event ResetHandler OnReset;
+        public string Key { get; }
 
-    public interface IVarEvent<T>
-    {
-        IUserPresence Source { get; }
-        IValueChange<T> ValueChange { get; }
-        IValidationChange ValidationChange { get; }
+        public VarUserState(string key)
+        {
+            Key = key;
+        }
     }
 }

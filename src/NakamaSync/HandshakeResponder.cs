@@ -20,54 +20,49 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class HandshakeResponder : ISyncService
+    internal class HandshakeResponder<T>
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         private readonly LockVersionGuard _lockVersionGuard;
-        private readonly VarRegistry _registry;
+        private readonly VarRegistry<T> _registry;
         private readonly PresenceTracker _presenceTracker;
 
-        public HandshakeResponder(LockVersionGuard lockVersionGuard, VarRegistry registry, PresenceTracker presenceTracker)
+        public HandshakeResponder(LockVersionGuard lockVersionGuard, VarRegistry<T> registry, PresenceTracker presenceTracker)
         {
             _lockVersionGuard = lockVersionGuard;
             _registry = registry;
             _presenceTracker = presenceTracker;
         }
 
-        public void Subscribe(SyncSocket socket)
+        public void Subscribe(SyncSocket<T> socket)
         {
             socket.OnHandshakeRequest += (source, request) => HandleHandshakeRequest(source, request, socket);
         }
 
-        private void HandleHandshakeRequest(IUserPresence source, HandshakeRequest request, SyncSocket socket)
+        private void HandleHandshakeRequest(IUserPresence source, HandshakeRequest request, SyncSocket<T> socket)
         {
-            var syncValues = new Envelope();
+            var syncValues = new Envelope<T>();
 
             bool success = request.AllKeys.SequenceEqual(_registry.GetAllKeys());
 
             if (success)
             {
                 Logger?.InfoFormat($"Remote keys from {source.UserId} match the local keys from {_presenceTracker.GetSelf().UserId}");
-                CopyToGuestResponse(_registry.Bools, syncValues.Bools);
-                CopyToGuestResponse(_registry.Floats, syncValues.Floats);
-                CopyToGuestResponse(_registry.Ints, syncValues.Ints);
-                CopyToGuestResponse(_registry.Strings, syncValues.Strings);
+                CopyToGuestResponse(_registry, syncValues);
             }
             else
             {
                 Logger?.WarnFormat($"Remote keys from {source.UserId} do not match the local keys from {_presenceTracker.GetSelf().UserId}");
             }
 
-            var response = new HandshakeResponse(syncValues, success);
+            var response = new HandshakeResponse<T>(syncValues, success);
             socket.SendHandshakeResponse(response, source);
         }
 
-        private void CopyToGuestResponse<T>(VarRegistry<T> registry, Envelope<T> env)
+        private void CopyToGuestResponse(VarRegistry<T> registry, Envelope<T> env)
         {
-
-            foreach (var var in registry.SharedVars.Values)
+            foreach (var var in registry.SharedVars)
             {
                 T rawValue = var.GetValue();
                 Logger?.DebugFormat("Shared variable value for initial payload: " + rawValue);
@@ -76,7 +71,7 @@ namespace NakamaSync
                 env.SharedValues.Add(sharedValue);
             }
 
-            foreach (var var in registry.PresenceVars.Values.SelectMany(l => l))
+            foreach (var var in registry.PresenceVars.SelectMany(v => v))
             {
                 if (var.Presence == null)
                 {
@@ -93,11 +88,6 @@ namespace NakamaSync
                 var value = new PresenceVarValue<T>(var.Key, rawValue, lockVersion, var.ValidationStatus, isAck: false, var.Presence.UserId);
                 env.PresenceValues.Add(value);
             }
-        }
-
-        private void CopyToGuestResponse<T>(IEnumerable<PresenceVar<T>> vars, List<PresenceVarValue<T>> values)
-        {
-
         }
     }
 }

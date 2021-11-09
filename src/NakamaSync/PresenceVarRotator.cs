@@ -24,9 +24,8 @@ namespace NakamaSync
     // todo add some enum or option on how you would like the presence vars to be assigned.
     // like, do they all need to be filled with a presence or can some be unassigned.
     // todo assign errorhandler and logger to this
-    internal class PresenceVarRotator<T> : ISyncService
+    internal class PresenceVarRotator<T>
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
         public ILogger Logger { get; set; }
 
         public Dictionary<string, PresenceVar<T>> AssignedPresenceVars => _assignedPresenceVars;
@@ -80,7 +79,7 @@ namespace NakamaSync
 
             if (_unassignedPresenceVars.Count == 0)
             {
-                ErrorHandler?.Invoke(new InvalidOperationException($"Not enough presence vars to handle presence."));
+                throw new InvalidOperationException($"Not enough presence vars to handle presence.");
             }
             // normal for server to send duplicate presence additions in very specific situations.
             else if (!_assignedPresenceVars.ContainsKey(presence.UserId))

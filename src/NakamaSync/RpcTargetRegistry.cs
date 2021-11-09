@@ -20,11 +20,8 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public class RpcTargetRegistry : ISyncService
+    public class RpcTargetRegistry
     {
-        public SyncErrorHandler ErrorHandler { get; set; }
-        public ILogger Logger { get; set; }
-
         private readonly HashSet<object> _targets = new HashSet<object>();
         private readonly Dictionary<string, object> _targetsById = new Dictionary<string, object>();
 

@@ -14,38 +14,25 @@
 * limitations under the License.
 */
 
-using System.Collections;
 using System.Collections.Generic;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class VarIngress : ISyncService
+    internal class VarIngress<T>
     {
-        public ILogger Logger
-        {
-            get;
-            set;
-        }
-
-        public SyncErrorHandler ErrorHandler
-        {
-            get;
-            set;
-        }
-
-        private readonly VarRegistry _registry;
+        private readonly VarRegistry<T> _registry;
         private readonly LockVersionGuard _lockVersionGuard;
         private readonly HostTracker _hostTracker;
 
-        public VarIngress(VarRegistry registry, LockVersionGuard lockVersionGuard, HostTracker hostTracker)
+        public VarIngress(VarRegistry<T> registry, LockVersionGuard lockVersionGuard, HostTracker hostTracker)
         {
             _registry = registry;
             _lockVersionGuard = lockVersionGuard;
             _hostTracker = hostTracker;
         }
 
-        public void Subscribe(SyncSocket socket)
+        public void Subscribe(SyncSocket<T> socket)
         {
             socket.OnSyncEnvelope += (source, envelope) =>
             {
@@ -53,65 +40,55 @@ namespace NakamaSync
             };
         }
 
-        public void ReceiveSyncEnvelope(IUserPresence source, Envelope incomingEnvelope, SyncSocket socket)
+        public void ReceiveSyncEnvelope(IUserPresence source, Envelope<T> incomingEnvelope, SyncSocket<T> socket)
         {
-            Logger?.DebugFormat($"Ingress received sync envelope.");
+            var outgoingEnvelope = new Envelope<T>();
 
-            var outgoingEnvelope = new Envelope();
-
-            HandleSyncEnvelope(source, _registry.Bools, incomingEnvelope.Bools, outgoingEnvelope.Bools);
-            HandleSyncEnvelope(source, _registry.Floats, incomingEnvelope.Floats, outgoingEnvelope.Floats);
-            HandleSyncEnvelope(source, _registry.Ints, incomingEnvelope.Ints, outgoingEnvelope.Ints);
-            HandleSyncEnvelope(source, _registry.Strings, incomingEnvelope.Strings, outgoingEnvelope.Strings);
+            HandleSyncEnvelope(source, _registry, incomingEnvelope, outgoingEnvelope);
 
             if (outgoingEnvelope.GetAllValues().Count > 0)
             {
                 socket.SendSyncDataToAll(outgoingEnvelope);
             }
-
-            Logger?.DebugFormat($"Ingress done processing sync envelope.");
         }
 
-        private void HandleSyncEnvelope<T>(IUserPresence source, VarRegistry<T> registry, Envelope<T> incomingValues, Envelope<T> outgoingValues)
+        private void HandleSyncEnvelope(IUserPresence source, VarRegistry<T> registry, Envelope<T> incomingValues, Envelope<T> outgoingValues)
         {
             foreach (SharedVarValue<T> value in incomingValues.SharedValues)
             {
                 if (!_lockVersionGuard.IsValidLockVersion(value.Key, value.LockVersion))
                 {
                     // expected race to occur
-                    Logger?.DebugFormat($"Ingress received invalid lock version: {value.LockVersion}");
                     continue;
                 }
 
-                if (!registry.SharedVars.ContainsKey(value.Key))
+                if (!registry.ContainsSharedKey(value.Key))
                 {
                     // not expected
-                    ErrorHandler?.Invoke(new KeyNotFoundException($"Could not find var with key: {value.Key}"));
-                    continue;
+                    throw new KeyNotFoundException($"Could not find var with key: {value.Key}");
                 }
 
-                var var = registry.SharedVars[value.Key];
+                var var = registry.GetSharedVar(value.Key);
 
                 HandleSyncValue(source, var, value, outgoingValues.SharedValues);
             }
 
             foreach (PresenceVarValue<T> value in incomingValues.PresenceValues)
             {
-                if (!registry.PresenceVars.ContainsKey(value.Key))
+                if (!registry.ContainsPresenceKey(value.Key))
                 {
                     // not expected
-                    ErrorHandler?.Invoke(new KeyNotFoundException($"Could not find var with key: {value.Key}"));
-                    continue;
+                    throw new KeyNotFoundException($"Could not find var with key: {value.Key}");
                 }
 
-                foreach (var var in registry.PresenceVars[value.Key])
+                foreach (var var in registry.GetPresenceVars(value.Key))
                 {
                     HandleSyncValue(source, var, value, outgoingValues.PresenceValues);
                 }
             }
         }
 
-        private void HandleSyncValue<T>(IUserPresence source, IVar<T> var, SharedVarValue<T> value, List<SharedVarValue<T>> responses)
+        private void HandleSyncValue(IUserPresence source, Var<T> var, SharedVarValue<T> value, List<SharedVarValue<T>> responses)
         {
             // response from host, treat as authoritative
             if (value.IsAck)
@@ -128,11 +105,11 @@ namespace NakamaSync
             }
         }
 
-        private void HandleSyncValue<T>(IUserPresence source, IVar<T> var, PresenceVarValue<T> value, List<PresenceVarValue<T>> responses)
+        private void HandleSyncValue(IUserPresence source, Var<T> var, PresenceVarValue<T> value, List<PresenceVarValue<T>> responses)
         {
             if (value.IsAck)
             {
-                var.SetValidationStatus(value.ValidationStatus);
+                var.ValidationStatus = value.ValidationStatus;
                 return;
             }
 
