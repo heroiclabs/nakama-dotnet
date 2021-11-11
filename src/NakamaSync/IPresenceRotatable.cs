@@ -18,15 +18,9 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal class VarSessionState
+    internal interface IPresenceRotatable
     {
-        public ISession Session { get; }
-        public ISocket Socket { get; }
-
-        public VarSessionState(ISession session, ISocket socket)
-        {
-            Session = session;
-            Socket = socket;
-        }
+        string Key { get; set; }
+        IUserPresence Presence { get; set; }
     }
 }

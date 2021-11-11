@@ -14,6 +14,8 @@
 * limitations under the License.
 */
 
+using System.Collections.Generic;
+
 namespace NakamaSync
 {
     /// <summary>
@@ -27,7 +29,15 @@ namespace NakamaSync
 
         public void SetValue(T value)
         {
-            this.SetValue(Self, value);
+            // TODO need to handle sync match not started yet
+            this.SetLocalValue(Connection.Match.Self, value);
+        }
+
+        internal override ISerializableVar<T> ToSerializable(bool isAck)
+        {
+            var serializable = base.ToSerializable(isAck);
+            var presenceSerializable = new SerializablePresenceVar<T>(serializable, Connection.Match.Self.UserId);
+            return presenceSerializable;
         }
     }
 }

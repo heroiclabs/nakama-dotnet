@@ -14,19 +14,18 @@
 * limitations under the License.
 */
 
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
     internal class HandshakeRequest
     {
-        [DataMember(Name="keys"), Preserve]
-        public List<string> AllKeys { get; set; }
+        [DataMember(Name="key"), Preserve]
+        public string Key { get; set; }
 
-        internal HandshakeRequest(List<string> allKeys)
+        internal HandshakeRequest(string key)
         {
-            AllKeys = allKeys;
+            Key = key;
         }
     }
 }

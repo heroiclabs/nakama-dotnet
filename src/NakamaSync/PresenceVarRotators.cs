@@ -19,36 +19,38 @@ using Nakama;
 
 namespace NakamaSync
 {
-    internal delegate PresenceVarRotator<T> PresenceVarRotatorAccessor<T>(string collectionKey);
+    internal delegate PresenceVarRotator PresenceVarRotatorAccessor(string collectionKey);
 
-    internal class PresenceVarRotators<T>
+    internal class PresenceVarRotators
     {
-        List<PresenceVarRotator<T>> _rotators;
+        private readonly List<PresenceVarRotator> _rotators = new List<PresenceVarRotator>();
 
         private PresenceTracker _presenceTracker;
         private ISession _session;
+        private VarRegistry _varRegistry;
 
-        public PresenceVarRotators(PresenceTracker presenceTracker, ISession session)
+        public PresenceVarRotators(PresenceTracker presenceTracker, ISession session, VarRegistry registry)
         {
             _presenceTracker = presenceTracker;
             _session = session;
+            _varRegistry = registry;
         }
 
-        public void ReceiveMatch(IMatch match)
+        public void HandlePresencesAdded(IEnumerable<IUserPresence> presences)
         {
             foreach (var rotator in _rotators)
             {
-                rotator.ReceiveMatch(match);
+                rotator.HandlePresencesAdded(presences);
             }
         }
 
-        public void Subscribe(VarRegistry<T> registry)
+        public void Subscribe()
         {
-            var rotator = new PresenceVarRotator<T>(_session);
+            var rotator = new PresenceVarRotator(_session);
 
             string key = null;
 
-            foreach (var presenceVar in registry.GetPresenceVars(key))
+            foreach (var presenceVar in _varRegistry.GetAllRotatables())
             {
                 rotator.AddPresenceVar(presenceVar);
                 key = key ?? presenceVar.Key;
@@ -56,14 +58,6 @@ namespace NakamaSync
 
             rotator.Subscribe(_presenceTracker);
             _rotators.Add(rotator);
-        }
-
-        private void ReceiveMatch(IMatch match, Dictionary<string, PresenceVarRotator<T>> rotators)
-        {
-            foreach (PresenceVarRotator<T> rotator in rotators.Values)
-            {
-                rotator.ReceiveMatch(match);
-            }
         }
     }
 }

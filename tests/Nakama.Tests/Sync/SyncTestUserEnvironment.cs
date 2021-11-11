@@ -35,7 +35,6 @@ namespace Nakama.Tests.Sync
         private readonly IClient _client;
         private readonly VarRegistry _varRegistry = new VarRegistry();
         private readonly RpcTargetRegistry _rpcTargetRegistry = new RpcTargetRegistry();
-        private readonly SyncOpcodes _opcodes;
         private SyncTestSharedVars _sharedVars;
         private SyncTestPresenceVars _presenceVars;
         private SyncTestRpcs _rpcs;
@@ -46,22 +45,21 @@ namespace Nakama.Tests.Sync
         private ISession _session;
         private ISocket _socket;
 
-        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numPresenceVarCollections, int numPresenceVarsPerCollection) : this(userId, opcodes)
+        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numPresenceVarCollections, int numPresenceVarsPerCollection) : this(userId)
         {
             _varIdGenerator = varIdGenerator;
             _presenceVars = new SyncTestPresenceVars(_varRegistry, numPresenceVarCollections, numPresenceVarsPerCollection);
         }
 
-        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numSharedVars) : this(userId, opcodes)
+        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numSharedVars) : this(userId)
         {
             _varIdGenerator = varIdGenerator;
             _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, numSharedVars, _varIdGenerator);
         }
 
-        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes)
+        public SyncTestUserEnvironment(string userId)
         {
             _userId = userId;
-            _opcodes = opcodes;
             _client = TestsUtil.FromSettingsFile();
             _logger = TestsUtil.LoadConfiguration().StdOut ? new StdoutLogger() : null;
             _socket = Nakama.Socket.From(_client);
@@ -82,14 +80,14 @@ namespace Nakama.Tests.Sync
 
             await matchedTcs.Task;
 
-            _match = await _socket.JoinSyncMatch(_session,  matchedTcs.Task.Result, _varRegistry, _opcodes);
+            _match = await _socket.JoinSyncMatch(_session,  matchedTcs.Task.Result, _varRegistry);
             _rpcs.ReceiveMatch(_match);
         }
 
         public async Task<IMatch> CreateMatch()
         {
             await Connect();
-            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _opcodes);
+            _match = await _socket.CreateSyncMatch(_session, _varRegistry);
             _rpcs.ReceiveMatch(_match);
             return _match;
         }
@@ -97,7 +95,7 @@ namespace Nakama.Tests.Sync
         public async Task<IMatch> CreateMatch(string name)
         {
             await Connect();
-            _match = await _socket.CreateSyncMatch(_session, _varRegistry, _opcodes, name);
+            _match = await _socket.CreateSyncMatch(_session, _varRegistry, name);
             _rpcs.ReceiveMatch(_match);
             return _match;
         }
@@ -105,7 +103,7 @@ namespace Nakama.Tests.Sync
         public async Task<IMatch> JoinMatch(string matchId)
         {
             await Connect();
-            _match = await _socket.JoinSyncMatch(_session,  matchId, _varRegistry, _opcodes);
+            _match = await _socket.JoinSyncMatch(_session,  matchId, _varRegistry);
             _rpcs.ReceiveMatch(_match);
             return _match;
         }

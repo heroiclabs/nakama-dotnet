@@ -19,7 +19,7 @@ namespace NakamaSync
     /// <summary>
     /// A data-transfer object for a sync var.
     /// </summary>
-    internal interface IVarValue<T> : IVarValue
+    internal interface ISerializableVar<T> : ISerializableVar
     {
         T Value { get; }
     }
@@ -27,14 +27,14 @@ namespace NakamaSync
     /// <summary>
     /// A data-transfer object for a sync var.
     /// </summary>
-    internal interface IVarValue
+    internal interface ISerializableVar
     {
-        string Key { get; }
+        int LockVersion { get; set; }
 
-        int LockVersion { get; }
+        ValidationStatus Status { get; set; }
 
-        ValidationStatus ValidationStatus { get; }
+        bool IsAck { get; set; }
 
-        bool IsAck { get; }
+        string Key { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace NakamaSync
 
         public void SetValue(T value)
         {
-            this.SetValue(Self, value);
+            this.SetLocalValue(Connection.Match?.Self, value);
         }
     }
 }

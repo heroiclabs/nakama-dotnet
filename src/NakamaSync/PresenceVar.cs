@@ -25,13 +25,14 @@ namespace NakamaSync
     /// A variable containing a value for a user in the match. The value is synchronized across all users
     /// but can only be set by the associated user.
     /// </summary>
-    public class PresenceVar<T> : Var<T>
+    public class PresenceVar<T> : Var<T>, IPresenceRotatable
     {
         public event PresenceChangedHandler OnPresenceChanged;
 
-        public IUserPresence Presence => _presence;
+        public IUserPresence Presence => (this as IPresenceRotatable).Presence;
 
-        private IUserPresence _presence;
+        IUserPresence IPresenceRotatable.Presence { get; set; }
+        string IPresenceRotatable.Key { get => (this as IPresenceRotatable).Key; set => (this as IPresenceRotatable).Key = value; }
 
         public PresenceVar(string key) : base(key)
         {
@@ -46,21 +47,28 @@ namespace NakamaSync
 
         internal void SetPresence(IUserPresence presence)
         {
-            if (presence?.UserId == _presence?.UserId)
+            if (presence?.UserId == Presence?.UserId)
             {
                 // todo log warning here?
                 return;
             }
 
-            if (presence?.UserId == Self?.UserId)
+            if (presence?.UserId == Connection?.Match.Self?.UserId)
             {
                 throw new InvalidOperationException("PresenceVar cannot have a presence id equal to self id.");
             }
 
-            var oldOwner = _presence;
-            _presence = presence;
+            var oldOwner = Presence;
+            (this as IPresenceRotatable).Presence = presence;
             var presenceChange = new PresenceChange(oldOwner, presence);
             OnPresenceChanged?.Invoke(presenceChange);
+        }
+
+        internal override ISerializableVar<T> ToSerializable(bool isAck)
+        {
+            var serializable = base.ToSerializable(isAck);
+            var presenceSerializable = new SerializablePresenceVar<T>(serializable, Presence.UserId);
+            return presenceSerializable;
         }
     }
 }

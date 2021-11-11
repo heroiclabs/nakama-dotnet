@@ -70,7 +70,7 @@ namespace Nakama.Tests.Sync
             for (int i = 0; i < numClients; i++)
             {
                 string userId = userIdGenerator(i);
-                var env = new SyncTestUserEnvironment(userId, opcodes);
+                var env = new SyncTestUserEnvironment(userId);
                 _syncTestUserEnvironments.Add(env);
             }
         }

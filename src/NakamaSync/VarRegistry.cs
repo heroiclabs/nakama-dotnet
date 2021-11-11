@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nakama;
+using System.Threading.Tasks;
 
 namespace NakamaSync
 {
@@ -34,7 +34,7 @@ namespace NakamaSync
 
             VarRegistry<T> registry = (VarRegistry<T>) _registries[typeof(T)];
 
-            registry.RegisterSharedVar(var);
+            registry.SharedVars.Register(var);
         }
 
         public void Register<T>(PresenceVar<T> var)
@@ -46,7 +46,7 @@ namespace NakamaSync
 
             VarRegistry<T> registry = (VarRegistry<T>) _registries[typeof(T)];
 
-            registry.RegisterPresenceVar(var);
+            registry.PresenceVars.Register(var);
         }
 
         public void Register<T>(SelfVar<T> var)
@@ -57,8 +57,7 @@ namespace NakamaSync
             }
 
             VarRegistry<T> registry = (VarRegistry<T>) _registries[typeof(T)];
-
-            registry.RegisterSelfVar(var);
+            registry.SelfVars.Register(var);
         }
 
         internal VarRegistry<T> GetRegistry<T>()
@@ -70,53 +69,102 @@ namespace NakamaSync
         {
             return _registries.Values.SelectMany(registry => registry.GetAllVars());
         }
+
+        internal IEnumerable<IPresenceRotatable> GetAllRotatables()
+        {
+            return _registries.Values.SelectMany(registry => registry.GetAllRotatables());
+        }
+
+        internal void ReceiveMatch(SyncMatch match)
+        {
+            foreach (IVarRegistry registry in _registries.Values)
+            {
+                registry.ReceiveMatch(match);
+            }
+        }
+
+        internal Task GetPendingHandshake()
+        {
+            return Task.WhenAll(_registries.Values.Select(registry => registry.GetPendingHandshake()));
+        }
     }
 
     internal class VarRegistry<T> : IVarRegistry
     {
-        public IEnumerable<SharedVar<T>> SharedVars => _sharedVars.Values;
-        public IEnumerable<SelfVar<T>> SelfVars => _selfVars.Values;
-        public IEnumerable<IEnumerable<PresenceVar<T>>> PresenceVars => _presenceVars.Values;
+        public VarRegistry<SharedVar<T>, T> SharedVars => _sharedVars;
+        public VarRegistry<SelfVar<T>, T> SelfVars => _selfVars;
+        public VarRegistry<PresenceVar<T>, T> PresenceVars => _presenceVars;
 
-        private Dictionary<string, SharedVar<T>> _sharedVars;
-        private Dictionary<string, SelfVar<T>> _selfVars;
-        private Dictionary<string, List<PresenceVar<T>>> _presenceVars;
+        private readonly VarRegistry<SharedVar<T>, T> _sharedVars = new VarRegistry<SharedVar<T>, T>(allowDuplicateKeys: false);
+        private readonly VarRegistry<SelfVar<T>, T> _selfVars = new VarRegistry<SelfVar<T>, T>(allowDuplicateKeys: false);
+        // multiple presence vars per key, each corresponding to a different user (or unoccupied)
+        private readonly VarRegistry<PresenceVar<T>, T> _presenceVars = new VarRegistry<PresenceVar<T>, T>(allowDuplicateKeys: true);
 
-        private readonly HashSet<Var<T>> _registeredVars = new HashSet<Var<T>>();
-        private readonly HashSet<string> _registeredKeys = new HashSet<string>();
+        public IEnumerable<string> GetAllKeys()
+        {
+            var keys = new List<string>();
+            keys.AddRange(_sharedVars.GetAllKeys());
+            keys.AddRange(_selfVars.GetAllKeys());
+            keys.AddRange(_presenceVars.GetAllKeys());
+            return keys;
+        }
+
+        public IEnumerable<IVar> GetAllVars()
+        {
+            var vars = new List<IVar>();
+            vars.AddRange(_sharedVars.GetAllVars());
+            vars.AddRange(_selfVars.GetAllVars());
+            vars.AddRange(_presenceVars.GetAllVars());
+            return vars;
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return _sharedVars.ContainsKey(key) || _selfVars.ContainsKey(key) || _presenceVars.ContainsKey(key);
+        }
+
+        public IEnumerable<IPresenceRotatable> GetAllRotatables()
+        {
+            return _presenceVars.Vars;
+        }
+
+        public Task GetPendingHandshake()
+        {
+            return Task.WhenAll(_presenceVars.GetPendingHandshake(), _selfVars.GetPendingHandshake(), _sharedVars.GetPendingHandshake());
+        }
+
+        public void ReceiveMatch(SyncMatch match)
+        {
+            _presenceVars.ReceiveMatch(match);
+            _selfVars.ReceiveMatch(match);
+            _sharedVars.ReceiveMatch(match);
+        }
+    }
+
+    internal class VarRegistry<T, K> : IVarRegistry where T : Var<K>
+    {
+        public IEnumerable<T> Vars => _vars.Values;
 
         internal IEnumerable<IVar> RegisteredVars => new HashSet<IVar>(_registeredVars);
 
-        public VarRegistry()
+        private readonly bool _allowDuplicateKeys;
+        private readonly HashSet<string> _registeredKeys = new HashSet<string>();
+        private readonly HashSet<T> _registeredVars = new HashSet<T>();
+        private readonly Dictionary<string, T> _vars = new Dictionary<string, T>();
+
+        public VarRegistry(bool allowDuplicateKeys)
         {
-            _sharedVars = new Dictionary<string, SharedVar<T>>();
-            _selfVars = new Dictionary<string, SelfVar<T>>();
-            _presenceVars = new Dictionary<string, List<PresenceVar<T>>>();
+            _allowDuplicateKeys = allowDuplicateKeys;
         }
 
-        public SharedVar<T> GetSharedVar(string key)
+        public bool ContainsKey(string key)
         {
-            return _sharedVars[key];
+            return _vars.ContainsKey(key);
         }
 
-        public IEnumerable<PresenceVar<T>> GetPresenceVars(string key)
+        public void Register(T var)
         {
-            return _presenceVars[key];
-        }
-
-        public bool ContainsSharedKey(string key)
-        {
-            return _sharedVars.ContainsKey(key);
-        }
-
-        public bool ContainsPresenceKey(string key)
-        {
-            return _selfVars.ContainsKey(key) || _presenceVars.ContainsKey(key);
-        }
-
-        public void RegisterSharedVar(SharedVar<T> var)
-        {
-            if (!_registeredKeys.Add(var.Key))
+            if (!_registeredKeys.Add(var.Key) && !_allowDuplicateKeys)
             {
                 throw new InvalidOperationException($"Attempted to register duplicate key {var.Key}");
             }
@@ -126,61 +174,46 @@ namespace NakamaSync
                 throw new InvalidOperationException($"Attempted to register duplicate var {var}");
             }
 
-            _sharedVars.Add(var.Key, var);
+            _vars.Add(var.Key, var);
         }
 
-        public void RegisterSelfVar(SelfVar<T> var)
-        {
-            // multiple vars with same key is expected
-            _registeredKeys.Add(var.Key);
-
-            if (!_registeredVars.Add(var))
-            {
-                throw new InvalidOperationException($"Attempted to register duplicate var {var}");
-            }
-
-            _selfVars.Add(var.Key, var);
-        }
-
-        public void RegisterPresenceVar(PresenceVar<T> var)
-        {
-            // multiple vars with same key is expected
-            _registeredKeys.Add(var.Key);
-
-            if (!_registeredVars.Add(var))
-            {
-                throw new InvalidOperationException($"Attempted to register duplicate var {var}");
-            }
-
-            if (!_presenceVars.ContainsKey(var.Key))
-            {
-                _presenceVars[var.Key] = new List<PresenceVar<T>>();
-            }
-
-            _presenceVars[var.Key].Add(var);
-        }
-
-        public HashSet<string> GetAllKeys()
+        public IEnumerable<string> GetAllKeys()
         {
             return _registeredKeys;
         }
 
-        public IEnumerable<Var<T>> GetAllVars()
+        public IEnumerable<IVar> GetAllVars()
         {
             return _registeredVars;
         }
 
-        IEnumerable<IVar> IVarRegistry.GetAllVars()
+        public IEnumerable<IPresenceRotatable> GetAllRotatables()
         {
-            return _registeredVars;
+            return _registeredVars.OfType<IPresenceRotatable>();
+        }
+
+        public Task GetPendingHandshake()
+        {
+            return Task.WhenAll(_vars.Values.Select(var => (var as IVar).GetPendingHandshake()));
+        }
+
+        public void ReceiveMatch(SyncMatch match)
+        {
+            foreach (T var in _vars.Values)
+            {
+                var connection = new VarConnection<K>(match.Socket, match.Opcodes, match.PresenceTracker, match.HostTracker);
+                var.ReceiveConnection(connection);
+            }
         }
     }
 
     internal interface IVarRegistry
     {
-        HashSet<string> GetAllKeys();
+        IEnumerable<string> GetAllKeys();
         IEnumerable<IVar> GetAllVars();
-        bool ContainsSharedKey(string key);
-        bool ContainsPresenceKey(string key);
+        IEnumerable<IPresenceRotatable> GetAllRotatables();
+        Task GetPendingHandshake();
+        void ReceiveMatch(SyncMatch match);
+        bool ContainsKey(string key);
     }
 }

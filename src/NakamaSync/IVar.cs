@@ -14,7 +14,6 @@
 * limitations under the License.
 */
 
-using System;
 using System.Threading.Tasks;
 using Nakama;
 
@@ -22,9 +21,7 @@ namespace NakamaSync
 {
     internal interface IVar
     {
-        Task GetHandshakeTask();
-        void ReceiveMatch(VarMatchState matchState);
-        void Initialize(ISocket socket, ISession session);
+        Task GetPendingHandshake();
     }
 
     public interface IVarEvent<T>

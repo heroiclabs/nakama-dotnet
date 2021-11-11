@@ -38,6 +38,8 @@
 // override tostring
 // todo remove any event subscriptions in constructors.
 // todo parameter ordering
+// todo variable batching and handshake batching
+// todo opcode give user way to know what are the reserved opcodes if you wind up communicating between vars using a particular set for each one.
 // todo internalize the registry so that users can't change it from the outside?
 // otherwise find some other way to prevent users from messing with it.
 // todo error handling checks particularly on dictionary accessing etc.
@@ -67,10 +69,9 @@
 // TODO think about a decision to give all vars an interface component and most events or other user-facing objects an interface component. right now it's a mixed approach.
 // todo fix disparity w/r/t whether var events have the actual concrete var on them or if we don't really need that...there is inconsistency between the var evnets at the moment.
 // todo lock the processing of each envelope to avoid multithreading issues e.g., host changing while processing a value.
+// also think about if incoming values comes from a user who isn't host but thinks he is, this is expected to happen given conccurrency? or maybe iti sn' expecetd to happen?
 // todo support more list-like and dictionary-like methods on the shared and self vars (or maybe use an implicit operator on the var) rather than just setting a fresh new object each time.
 
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Nakama;
 
@@ -79,60 +80,36 @@ namespace NakamaSync
     public static class SyncExtensions
     {
         // todo maybe don't require session as a parameter here since we pass it to socket.
-        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, SyncOpcodes opcodes, string name = null)
+        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, string name = null)
         {
-            var presenceTracker = new PresenceTracker(session.UserId);
-            var hostTracker = new HostTracker(presenceTracker);
-
             IMatch match = await socket.CreateMatchAsync(name);
-
-            SyncMatch syncMatch = new SyncMatch(match, hostTracker, presenceTracker);
-
-            foreach (IVar var in registry.GetAllVars())
-            {
-                var.ReceiveMatch(new VarMatchState(match, hostTracker, presenceTracker));
-            }
+            var syncMatch = new SyncMatch(socket, session, match, new SyncOpcodes(0, 1, 2, 3));
+            registry.ReceiveMatch(syncMatch);
 
             if (name != null && match.Size > 1)
             {
-                await Task.WhenAll(registry.GetAllVars().Select(v => v.GetHandshakeTask()));
-
+                await registry.GetPendingHandshake();
             }
 
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, IMatchmakerMatched matched, VarRegistry registry, SyncOpcodes opcodes)
+        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, IMatchmakerMatched matched, VarRegistry registry)
         {
-            var presenceTracker = new PresenceTracker(session.UserId);
-            var hostTracker = new HostTracker(presenceTracker);
-
             IMatch match = await socket.JoinMatchAsync(matched);
-            SyncMatch syncMatch = new SyncMatch(match, hostTracker, presenceTracker);
-
-            foreach (IVar var in registry.GetAllVars())
-            {
-                var.ReceiveMatch(new VarMatchState(match, hostTracker, presenceTracker));
-            }
-
-            await Task.WhenAll(registry.GetAllVars().Select(v => v.GetHandshakeTask()));
-
+            var syncMatch = new SyncMatch(socket, session, match, new SyncOpcodes(0, 1, 2, 3));
+            registry.ReceiveMatch(syncMatch);
+            await registry.GetPendingHandshake();
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, string matchId, VarRegistry registry, SyncOpcodes opcodes)
+        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, string matchId, VarRegistry registry)
         {
-            var presenceTracker = new PresenceTracker(session.UserId);
-            var hostTracker = new HostTracker(presenceTracker);
-
             IMatch match = await socket.JoinMatchAsync(matchId);
-
-            var syncMatch = new SyncMatch(match, hostTracker, presenceTracker);
-
-            await Task.WhenAll(registry.GetAllVars().Select(v => v.GetHandshakeTask()));
-
+            var syncMatch = new SyncMatch(socket, session, match, new SyncOpcodes(0, 1, 2, 3));
+            registry.ReceiveMatch(syncMatch);
+            await registry.GetPendingHandshake();
             return syncMatch;
         }
-
     }
 }

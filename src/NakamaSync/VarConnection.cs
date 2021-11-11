@@ -15,30 +15,36 @@
 */
 
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
 {
-    internal class SyncSocket<T>
+    internal class VarConnection<T>
     {
-        public delegate void SyncEnvelopeHandler(IUserPresence source, Envelope<T> envelope);
+        public delegate void SyncEnvelopeHandler(IUserPresence source, ISerializableVar<T> envelope);
         public delegate void HandshakeRequestHandler(IUserPresence source, HandshakeRequest request);
-        public delegate void HandshakeResponseHandler(IUserPresence source, HandshakeResponse<T> response);
+        public delegate void HandshakeSuccessHandler(IUserPresence source, ISerializableVar<T> response);
+        public delegate void HandshakeFailureHandler(IUserPresence source);
 
         public event SyncEnvelopeHandler OnSyncEnvelope;
         public event HandshakeRequestHandler OnHandshakeRequest;
-        public event HandshakeResponseHandler OnHandshakeResponse;
+        public event HandshakeSuccessHandler OnHandshakeSuccess;
+        public event HandshakeFailureHandler OnHandshakeFailure;
 
         public ILogger Logger { get; set; }
+        public IMatch Match => _match;
+        public HostTracker HostTracker => _hostTracker;
 
         private readonly SyncEncoding _encoding = new SyncEncoding();
         private readonly ISocket _socket;
         private readonly SyncOpcodes _opcodes;
         private readonly PresenceTracker _presenceTracker;
+        private readonly HostTracker _hostTracker;
         private IMatch _match;
+        private readonly TaskCompletionSource<object> _handshakeTcs = new TaskCompletionSource<object>();
 
-        public SyncSocket(ISocket socket, SyncOpcodes opcodes, PresenceTracker presenceTracker)
+        public VarConnection(ISocket socket, SyncOpcodes opcodes, PresenceTracker presenceTracker, HostTracker hostTracker)
         {
             if (socket == null)
             {
@@ -55,9 +61,15 @@ namespace NakamaSync
                 throw new ArgumentException("Null presence tracker provided to sync socket.");
             }
 
+            if (hostTracker == null)
+            {
+                throw new ArgumentException("Null host tracker provided to sync socket.");
+            }
+
             _socket = socket;
             _opcodes = opcodes;
             _presenceTracker = presenceTracker;
+            _hostTracker = hostTracker;
             _socket.ReceivedMatchState += HandleReceivedMatchState;
         }
 
@@ -78,7 +90,7 @@ namespace NakamaSync
             _socket.SendMatchStateAsync(_match.Id, _opcodes.HandshakeResponse, _encoding.Encode(response), new IUserPresence[]{target});
         }
 
-        public void SendSyncDataToAll(Envelope<T> envelope)
+        public void SendSyncDataToAll(ISerializableVar<T> serializable)
         {
             if (_match == null)
             {
@@ -86,41 +98,20 @@ namespace NakamaSync
             }
 
             Logger?.DebugFormat($"User id {_match.Self.UserId} sending data.");
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.Data, _encoding.Encode(envelope));
+            _socket.SendMatchStateAsync(_match.Id, _opcodes.Data, _encoding.Encode(serializable));
         }
 
-        public void SendRpc(RpcEnvelope envelope, IEnumerable<IUserPresence> targets)
-        {
-            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data.");
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.Rpc, _encoding.Encode(envelope), targets);
-        }
-
-        public void SendRpc(RpcEnvelope envelope)
-        {
-            Logger?.DebugFormat($"User id {_match.Self.UserId} sending data.");
-            _socket.SendMatchStateAsync(_match.Id, _opcodes.Rpc, _encoding.Encode(envelope));
-        }
-
-        private void HandleReceivedMatchState(IMatchState state)
+        public void HandleReceivedMatchState(IMatchState state)
         {
             if (state.OpCode == _opcodes.Data)
             {
                 Logger?.InfoFormat($"Socket for {_match.Self.UserId} received sync envelope.");
 
-                Envelope<T> envelope = null;
-
-                try
-                {
-                    envelope = _encoding.Decode<Envelope<T>>(state.State);
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                ISerializableVar<T> serialized = _encoding.Decode<ISerializableVar<T>>(state.State);
 
                 Logger?.DebugFormat($"Envelope decoded.");
 
-                OnSyncEnvelope?.Invoke(state.UserPresence, envelope);
+                OnSyncEnvelope?.Invoke(state.UserPresence, serialized);
             }
             else if (state.OpCode == _opcodes.HandshakeRequest)
             {
@@ -138,17 +129,23 @@ namespace NakamaSync
                 HandshakeResponse<T> response = null;
 
                 response = _encoding.Decode<HandshakeResponse<T>>(state.State);
-                OnHandshakeResponse?.Invoke(state.UserPresence, response);
-            }
-            else if (state.OpCode == _opcodes.Rpc)
-            {
-                Logger?.InfoFormat($"Socket for {_match.Self.UserId} received rpc.");
 
-                RpcEnvelope response = null;
-
-                response = _encoding.Decode<RpcEnvelope>(state.State);
-                //OnRpcEnvelope?.Invoke(state.UserPresence, response);
+                if (response.Success)
+                {
+                    _handshakeTcs.SetResult(true);
+                    OnHandshakeSuccess?.Invoke(state.UserPresence, response.Serializable);
+                }
+                else
+                {
+                    _handshakeTcs.SetException(new HandshakeFailedException("Handshake requester received handshake failure", state.UserPresence));
+                    OnHandshakeFailure?.Invoke(state.UserPresence);
+                }
             }
+        }
+
+        public Task GetPendingHandshake()
+        {
+            return _handshakeTcs.Task;
         }
     }
 }

@@ -21,11 +21,8 @@ namespace NakamaSync
     /// <summary>
     /// A data-transfer object for a sync var.
     /// </summary>
-    internal class PresenceVarValue<T> : IVarValue<T>
+    internal class SerializableVar<T> : ISerializableVar<T>
     {
-        [DataMember(Name="key"), Preserve]
-        public string Key { get; set; }
-
         [DataMember(Name="value"), Preserve]
         public T Value { get; set; }
 
@@ -33,27 +30,12 @@ namespace NakamaSync
         public int LockVersion { get; set; }
 
         [DataMember(Name="key_validation_status"), Preserve]
-        public ValidationStatus ValidationStatus { get; set; }
+        public ValidationStatus Status { get; set; }
 
         [DataMember(Name="is_ack"), Preserve]
         public bool IsAck { get; set; }
 
-        [DataMember(Name="user_id"), Preserve]
-        public string UserId { get; set; }
-
-        public PresenceVarValue(string key, T value, int lockVersion, ValidationStatus validationStatus, bool isAck, string userId)
-        {
-            Key = key;
-            Value = value;
-            LockVersion = lockVersion;
-            ValidationStatus = validationStatus;
-            IsAck = isAck;
-            UserId = userId;
-        }
-
-        public override string ToString()
-        {
-            return $"SharedValue(ValidationStatus='{ValidationStatus}', Key='{Key}', LockVersion='{LockVersion}', Value='{Value}')";
-        }
+        [DataMember(Name="key"), Preserve]
+        public string Key { get; set; }
     }
 }

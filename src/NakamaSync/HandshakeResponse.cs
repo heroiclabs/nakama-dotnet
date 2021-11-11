@@ -23,12 +23,8 @@ namespace NakamaSync
     /// </summary>
     internal class HandshakeResponse<T>
     {
-        /// <summary>
-        /// The store of synced values for a local client to merge in upon
-        /// receiving the handshake response.
-        /// </summary>
-        [DataMember(Name="currentStore"), Preserve]
-        public Envelope<T> Store { get; set; }
+        [DataMember(Name="serializable"), Preserve]
+        public ISerializableVar<T> Serializable { get; set; }
 
         /// <summary>
         /// Whether or not the handshake was successful.
@@ -39,9 +35,9 @@ namespace NakamaSync
         /// <summary>
         /// Create a handshake response from a host to a guest.
         /// </summary>
-        internal HandshakeResponse(Envelope<T> currentState, bool success)
+        internal HandshakeResponse(ISerializableVar<T> currentState, bool success)
         {
-            Store = currentState;
+            Serializable = currentState;
             Success = success;
         }
     }

@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Nakama;
 
@@ -30,49 +31,17 @@ namespace NakamaSync
         public event ResetHandler OnReset;
         public ValidationHandler<T> ValidationHandler { get; set; }
 
-        // todo rename to validation status
         public ValidationStatus Status { get; private set; }
+        protected T Value { get; private set; }
 
-        protected IUserPresence Self => _matchState.Match.Self;
+        internal VarConnection<T> Connection { get; }
 
-        private VarMatchState _matchState;
-        private VarSharedMatchState<T> _sharedState;
-
-        void IVar.Initialize(ISocket socket, ISession session)
-        {
-
-        }
-
-        private ValidationStatus GetNewValidationStatus(IUserPresence source, T oldValue, T newValue)
-        {
-            if (!_matchState.HostTracker.IsSelfHost())
-            {
-                return ValidationStatus.Pending;
-            }
-
-            if (ValidationHandler == null)
-            {
-                return ValidationStatus.None;
-            }
-
-            if (ValidationHandler.Invoke(source, new ValueChange<T>(oldValue, (T) newValue)))
-            {
-                return ValidationStatus.Valid;
-            }
-            else
-            {
-                return ValidationStatus.Invalid;
-            }
-        }
-
-        private VarUserState<T> _userState;
-        protected T Value { get; set; }
-        public ValidationStatus ValidationStatus { get; internal set; }
+        private VarConnection<T> _connection;
+        private int _lockVersion;
 
         public Var(string key)
         {
             Key = key;
-            _userState = new VarUserState<T>(key);
         }
 
         public T GetValue()
@@ -82,7 +51,8 @@ namespace NakamaSync
 
         protected virtual void Reset()
         {
-            _userState = new VarUserState<T>(Key);
+            Value = default(T);
+            Status = ValidationStatus.None;
             OnReset();
         }
 
@@ -91,37 +61,128 @@ namespace NakamaSync
             OnValueChanged?.Invoke(e);
         }
 
-        internal void SetValue(IUserPresence source, T value)
+        internal void SetLocalValue(IUserPresence source, T value)
         {
-            T oldValue = value;
-            T newValue = ConvertToNewValue(value);
-
-            ValidationStatus oldStatus = this.ValidationStatus;
-            ValidationStatus newStatus = GetNewValidationStatus(source, oldValue, newValue);
-
-            Status = newStatus;
-
-            if (newStatus != NakamaSync.ValidationStatus.Invalid)
+            if (_connection == null)
             {
-                value = newValue;
-                // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
-                InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, newStatus)));
+                throw new InvalidOperationException("Cannot set a synchronized var before establishing a connection.");
+            }
+
+            T oldValue = Value;
+            T newValue = value;
+
+            ValidationStatus oldStatus = this.Status;
+
+            if (_connection.HostTracker.IsSelfHost())
+            {
+                Status = ValidationHandler == null ? ValidationStatus.None : ValidationStatus.Valid;
+            }
+            else
+            {
+                Status = ValidationHandler == null ? ValidationStatus.Pending : ValidationStatus.Valid;
+            }
+
+            _lockVersion++;
+            _connection.SendSyncDataToAll(ToSerializable(isAck: false));
+
+            var evt = new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, Status));
+
+            // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
+            InvokeOnValueChanged(evt);
+        }
+
+        internal void ReceiveConnection(VarConnection<T> connection)
+        {
+            _connection = connection;
+
+            // todo remove these handlers.
+            connection.OnHandshakeRequest += HandleHandshakeRequest;
+            connection.OnHandshakeSuccess += HandleSyncEnvelope;
+
+            // no need to handle handshake failure because the task returned to the user will surface
+            // the exception. TODO maybe handle by resetting any variable state?
+            if (_connection.Match.Presences.Any())
+            {
+                _connection.SendHandshakeRequest(new HandshakeRequest(Key), _connection.Match.Presences.First());
             }
         }
 
-        protected virtual T ConvertToNewValue(object newValue)
+        private void HandleSyncEnvelope(IUserPresence source, ISerializableVar<T> incomingSerialized)
         {
-            return (T) newValue;
+            if (_lockVersion >= incomingSerialized.LockVersion)
+            {
+                // expected race to occur
+                return;
+            }
+
+            ValidationStatus newStatus = TryHostIntercept(source, incomingSerialized);
+
+            if (newStatus != ValidationStatus.Invalid)
+            {
+                this.ReceiveSerializable(incomingSerialized);
+            }
         }
 
-        public Task GetHandshakeTask()
+        private ValidationStatus TryHostIntercept(IUserPresence source, ISerializableVar<T> serialized)
         {
-            return _sharedState.HandshakeResponseHandler.GetHandshakeTask();
+            ValidationStatus newStatus = serialized.Status;
+
+            if (_connection.HostTracker.IsSelfHost())
+            {
+                if (ValidationHandler != null)
+                {
+                    ISerializableVar<T> responseSerialized = null;
+
+                    if (ValidationHandler.Invoke(source, new ValueChange<T>(Value, serialized.Value)))
+                    {
+                        responseSerialized = serialized;
+                        responseSerialized.IsAck = true;
+                        newStatus = ValidationStatus.Valid;
+                    }
+                    else
+                    {
+                        responseSerialized = ToSerializable(isAck: true);
+                        newStatus = ValidationStatus.Invalid;
+                    }
+
+                    responseSerialized.Status = newStatus;
+                    responseSerialized.IsAck = true;
+                    _connection.SendSyncDataToAll(responseSerialized);
+                }
+            }
+
+            return newStatus;
         }
 
-        void IVar.ReceiveMatch(VarMatchState matchState)
+        private void HandleHandshakeRequest(IUserPresence source, HandshakeRequest request)
         {
-            _matchState = matchState;
+            // todo this doesn't really make sense
+            bool success = Key == request.Key;
+
+            if (success)
+            {
+                var asSerializable = ToSerializable(isAck: true);
+                var response = new HandshakeResponse<T>(asSerializable, success);
+                _connection.SendHandshakeResponse(response, source);
+            }
+
+        }
+
+        internal virtual ISerializableVar<T> ToSerializable(bool isAck)
+        {
+            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, IsAck = isAck, Key = Key};
+        }
+
+        internal void ReceiveSerializable(ISerializableVar<T> serialized)
+        {
+            Value = serialized.Value;
+            _lockVersion = serialized.LockVersion;
+            Status = serialized.Status;
+        }
+
+        Task IVar.GetPendingHandshake()
+        {
+            return _connection.GetPendingHandshake();
         }
     }
 }
