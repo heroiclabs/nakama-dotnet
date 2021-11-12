@@ -21,44 +21,21 @@ namespace Nakama.Tests.Sync
 {
     public class SyncTestSharedVars
     {
-        public List<SharedVar<bool>> SharedBools { get; }
-        public List<SharedVar<IDictionary<string, string>>> SharedDicts { get; }
-        public List<SharedVar<float>> SharedFloats { get; }
-        public List<SharedVar<int>> SharedInts { get; }
-        public List<SharedVar<SyncTestObject>> SharedObjects { get; }
-        public List<SharedVar<string>> SharedStrings { get; }
+        public SharedVar<bool> SharedBool { get; }
+        public SharedVar<IDictionary<string, string>> SharedDict { get; }
+        public SharedVar<float> SharedFloat { get; }
+        public SharedVar<int> SharedInt { get; }
+        public SharedVar<SyncTestObject> SharedObject { get; }
+        public SharedVar<string> SharedString { get; }
 
-        public SyncTestSharedVars(string userId, VarRegistry registry, int numTestVars, VarIdGenerator keyGenerator)
+        public SyncTestSharedVars(string userId, VarRegistry registry)
         {
-            SharedBools = new List<SharedVar<bool>>();
-            SharedFloats = new List<SharedVar<float>>();
-            SharedInts = new List<SharedVar<int>>();
-            SharedObjects = new List<SharedVar<SyncTestObject>>();
-            SharedStrings = new List<SharedVar<string>>();
-            SharedDicts = new List<SharedVar<IDictionary<string, string>>>();
-
-            for (int i = 0; i < numTestVars; i++)
-            {
-                var sharedBool = new SharedVar<bool>(keyGenerator(userId, "sharedBool", i));
-                registry.Register(sharedBool);
-                SharedBools.Add(sharedBool);
-
-                var sharedFloat = new SharedVar<float>(keyGenerator(userId, "sharedFloat", i));
-                registry.Register(sharedFloat);
-                SharedFloats.Add(sharedFloat);
-
-                var sharedInt = new SharedVar<int>(keyGenerator(userId, "sharedInt", i));
-                registry.Register(sharedInt);
-                SharedInts.Add(sharedInt);
-
-                var sharedObject = new SharedVar<SyncTestObject>(keyGenerator(userId, "sharedObject", i));
-                registry.Register(sharedObject);
-                SharedObjects.Add(sharedObject);
-
-                var sharedString = new SharedVar<string>(keyGenerator(userId, "sharedString", i));
-                registry.Register(sharedString);
-                SharedStrings.Add(sharedString);
-            }
+            SharedBool = new SharedVar<bool>(100);
+            SharedDict = new SharedVar<IDictionary<string, string>>(101);
+            SharedFloat = new SharedVar<float>(102);
+            SharedInt = new SharedVar<int>(103);
+            SharedObject = new SharedVar<SyncTestObject>(104);
+            SharedString = new SharedVar<string>(105);
         }
     }
 }

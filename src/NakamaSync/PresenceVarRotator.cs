@@ -33,12 +33,7 @@ namespace NakamaSync
 
         private readonly List<IPresenceRotatable> _unassignedRotatables = new List<IPresenceRotatable>();
         private readonly Dictionary<string, IPresenceRotatable> _assignedRotatables = new Dictionary<string, IPresenceRotatable>();
-        private readonly ISession _session;
 
-        public PresenceVarRotator(ISession session)
-        {
-            _session = session;
-        }
 
         public void Subscribe(PresenceTracker presenceTracker)
         {
@@ -70,10 +65,6 @@ namespace NakamaSync
 
         private void HandlePresenceAdded(IUserPresence presence)
         {
-            if (presence.UserId == _session.UserId)
-            {
-                return;
-            }
 
             Logger?.DebugFormat($"Presence var rotator notified of added presence: {presence.UserId}");
 

@@ -35,8 +35,8 @@ namespace Nakama.Tests.Sync
 
             await testEnv.Start();
             SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
-            creatorEnv.SharedBools[0].SetValue(true);
-            Assert.True(creatorEnv.SharedBools[0].GetValue());
+            creatorEnv.SharedBool.SetValue(true);
+            Assert.True(creatorEnv.SharedBool.GetValue());
             testEnv.Dispose();
         }
 
@@ -51,44 +51,9 @@ namespace Nakama.Tests.Sync
 
             await testEnv.Start();
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.PresenceVars.BoolSelfVars["presenceBools_0"].SetValue(true);
-            Assert.True(creatorEnv.PresenceVars.BoolSelfVars["presenceBools_0"].GetValue());
+            creatorEnv.PresenceVars.BoolSelfVar.SetValue(true);
+            Assert.True(creatorEnv.PresenceVars.BoolSelfVar.GetValue());
             testEnv.Dispose();
-        }
-
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async Task BadHandshakeShouldFail()
-        {
-            VarIdGenerator idGenerator = (string userId, string varName, int varId) => {
-
-                // create "mismatched" keys, i.e., keys with different ids for each client, to
-                // simulate clients using different app binaries.
-                return userId + varName + varId.ToString();
-            };
-
-            bool threwError = false;
-
-            Action<Exception> errorHandler = e =>
-            {
-                if (e is HandshakeFailedException)
-                {
-                    threwError = true;
-                }
-            };
-
-            var mismatchedEnv = new SyncTestEnvironment(
-                numClients: 2,
-                numSharedVars: 1,
-                creatorIndex: 0,
-                null,
-                idGenerator);
-
-
-            await mismatchedEnv.Start();
-
-            await Task.Delay(2000);
-            Assert.True(threwError);
-            mismatchedEnv.Dispose();
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
@@ -103,11 +68,11 @@ namespace Nakama.Tests.Sync
 
             var allEnvs = testEnv.GetAllEnvs();
 
-            allEnvs[0].SharedVars.SharedInts[0].SetValue(5);
+            allEnvs[0].SharedVars.SharedInt.SetValue(5);
 
             await Task.Delay(1000);
 
-            Assert.Equal(5, allEnvs[1].SharedVars.SharedInts[0].GetValue());
+            Assert.Equal(5, allEnvs[1].SharedVars.SharedInt.GetValue());
 
             testEnv.Dispose();
         }
@@ -127,17 +92,16 @@ namespace Nakama.Tests.Sync
             var dict = new Dictionary<string, string>();
             dict["hello"] = "world";
 
-            allEnvs[0].SharedVars.SharedDicts[0].SetValue(dict);
+            allEnvs[0].SharedVars.SharedDict.SetValue(dict);
 
             await Task.Delay(1000);
 
-            var env1Dicts = allEnvs[1].SharedVars.SharedDicts;
+            var env1Dicts = allEnvs[1].SharedVars.SharedDict;
 
-            Assert.NotEmpty(env1Dicts);
-            Assert.NotNull(env1Dicts[0].GetValue());
-            Assert.True(env1Dicts[0].GetValue().ContainsKey("hello"));
+            Assert.NotNull(env1Dicts.GetValue());
+            Assert.True(env1Dicts.GetValue().ContainsKey("hello"));
 
-            Assert.Equal("world", env1Dicts[0].GetValue()["hello"]);
+            Assert.Equal("world", env1Dicts.GetValue()["hello"]);
 
             testEnv.Dispose();
         }
@@ -154,7 +118,7 @@ namespace Nakama.Tests.Sync
             await testEnv.Start();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.PresenceVars.BoolSelfVars["presenceBools_0"].SetValue(true);
+            creatorEnv.PresenceVars.BoolSelfVar.SetValue(true);
 
             await Task.Delay(2500);
 
@@ -165,13 +129,13 @@ namespace Nakama.Tests.Sync
             string creatorId = creatorEnv.Self.UserId;
             string nonCreatorId = nonCreatorEnv.Self.UserId;
 
-            var nonCreatorPresenceBools = nonCreatorEnv.PresenceVars.BoolPresenceVars["presenceBools_0"];
+            var nonCreatorPresenceBools = nonCreatorEnv.PresenceVars.BoolPresenceVars;
 
             var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
                 return var.Presence.UserId == creatorId;
             });
 
-            Assert.True(nonCreatorPresenceBools[0].GetValue());
+            Assert.True(creatorPresenceVarInGuest.GetValue());
             testEnv.Dispose();
         }
 
