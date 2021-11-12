@@ -96,12 +96,12 @@ namespace Nakama.Tests.Sync
 
             await Task.Delay(1000);
 
-            var env1Dicts = allEnvs[1].SharedVars.SharedDict;
+            var env1Dict = allEnvs[1].SharedVars.SharedDict;
 
-            Assert.NotNull(env1Dicts.GetValue());
-            Assert.True(env1Dicts.GetValue().ContainsKey("hello"));
+            Assert.NotNull(env1Dict.GetValue());
+            Assert.True(env1Dict.GetValue().ContainsKey("hello"));
 
-            Assert.Equal("world", env1Dicts.GetValue()["hello"]);
+            Assert.Equal("world", env1Dict.GetValue()["hello"]);
 
             testEnv.Dispose();
         }

@@ -86,6 +86,7 @@ namespace NakamaSync
             IMatch match = await socket.CreateMatchAsync(name);
             var syncMatch = new SyncMatch(socket, session, match, rpcRegistry);
             registry.ReceiveMatch(syncMatch);
+            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
             return syncMatch;
         }
 
@@ -94,6 +95,7 @@ namespace NakamaSync
             IMatch match = await socket.JoinMatchAsync(matched);
             var syncMatch = new SyncMatch(socket, session, match, rpcRegistry);
             registry.ReceiveMatch(syncMatch);
+            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
             return syncMatch;
         }
 
@@ -102,6 +104,7 @@ namespace NakamaSync
             IMatch match = await socket.JoinMatchAsync(matchId);
             var syncMatch = new SyncMatch(socket, session, match, rpcRegistry);
             registry.ReceiveMatch(syncMatch);
+            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
             return syncMatch;
         }
     }

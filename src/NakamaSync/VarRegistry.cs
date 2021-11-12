@@ -61,12 +61,12 @@ namespace NakamaSync
                 throw new ArgumentException("Cannot register duplicate variable.");
             }
 
-            if (!_rotatorsByOpcode.ContainsKey(var.Opcode))
+            if (!_rotatorsByOpcode.ContainsKey(_opcodeStart + var.Opcode))
             {
-                _rotatorsByOpcode.Add(var.Opcode, new PresenceVarRotator());
+                _rotatorsByOpcode.Add(_opcodeStart + var.Opcode, new PresenceVarRotator());
             }
 
-            _rotatorsByOpcode[var.Opcode].AddPresenceVar(var);
+            _rotatorsByOpcode[_opcodeStart + var.Opcode].AddPresenceVar(var);
 
             // multiple opcodes are okay for presence vars
             GetOrAddSubregistry<T>(_opcodeStart + var.Opcode).Register(var);
@@ -107,25 +107,25 @@ namespace NakamaSync
             }
         }
 
-        private VarSubRegistry<T> GetOrAddSubregistry<T>(long opcode)
+        private VarSubRegistry<T> GetOrAddSubregistry<T>(long combinedOpcode)
         {
             if (!_subregistriesByType.ContainsKey(typeof(T)))
             {
-                var newSubRegistry = new VarSubRegistry<T>();
+                var newSubRegistry = new VarSubRegistry<T>(_opcodeStart);
                 _subregistriesByType[typeof(T)] = newSubRegistry;
-                _subregistriesByOpcode[opcode] = newSubRegistry;
+                _subregistriesByOpcode[combinedOpcode] = newSubRegistry;
             }
 
             VarSubRegistry<T> registry = (VarSubRegistry<T>) _subregistriesByType[typeof(T)];
             return registry;
         }
 
-        private void HandleReceivedMatchState(IMatchState matchState)
+        internal void HandleReceivedMatchState(IMatchState matchState)
         {
             // could just be a regular piece of match data, i.e., not related to sync vars
-            if (_subregistriesByOpcode.ContainsKey(matchState.OpCode))
+            if (_subregistriesByOpcode.ContainsKey(_opcodeStart + matchState.OpCode))
             {
-                IVarSubRegistry subRegistry = _subregistriesByOpcode[matchState.OpCode];
+                IVarSubRegistry subRegistry = _subregistriesByOpcode[_opcodeStart + matchState.OpCode];
                 subRegistry.ReceiveMatchState(matchState);
             }
         }
@@ -135,6 +135,12 @@ namespace NakamaSync
     {
         private readonly Dictionary<long, List<Var<T>>> _vars = new Dictionary<long, List<Var<T>>>();
         private SyncMatch _syncMatch;
+        private readonly long _opcodeStart;
+
+        public VarSubRegistry(int opcodeStart)
+        {
+            _opcodeStart = opcodeStart;
+        }
 
         public void ReceiveMatch(SyncMatch syncMatch)
         {
@@ -146,42 +152,38 @@ namespace NakamaSync
             }
         }
 
-        public void ReceiveMatchState(MatchState matchState)
-        {
-            if (!_vars.ContainsKey(matchState.OpCode))
-            {
-                throw new ArgumentException("Registry did not recognize opcode.");
-            }
-
-            var vars = _vars[matchState.OpCode];
-            foreach (var var in vars)
-            {
-                var.HandleSerialized(matchState.UserPresence, _syncMatch.Encoding.Decode<SerializableVar<T>>(matchState.State));
-            }
-        }
-
         public void ReceiveMatchState(IMatchState state)
         {
-            if (_vars.ContainsKey(state.OpCode))
+            if (_vars.ContainsKey(_opcodeStart + state.OpCode))
             {
-                ISerializableVar<T> serialized = _syncMatch.Encoding.Decode<ISerializableVar<T>>(state.State);
-                var vars = _vars[state.OpCode];
+                SerializableVar<T> serialized = null;
+                try
+                {
+                    serialized = _syncMatch.Encoding.Decode<SerializableVar<T>>(state.State);
+
+                }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine(e.Message);
+                }
+
+                var vars = _vars[_opcodeStart + state.OpCode];
+
                 foreach (var var in vars)
                 {
-                    var.ReceiveSerializable(serialized);
-
+                    var.HandleSerialized(state.UserPresence, serialized);
                 }
             }
         }
 
         public void Register(Var<T> var)
         {
-            if (!_vars.ContainsKey(var.Opcode))
+            if (!_vars.ContainsKey(_opcodeStart + var.Opcode))
             {
-                _vars[var.Opcode] = new List<Var<T>>();
+                _vars[_opcodeStart + var.Opcode] = new List<Var<T>>();
             }
 
-            _vars[var.Opcode].Add(var);
+            _vars[_opcodeStart + var.Opcode].Add(var);
         }
 
         IEnumerable<IPresenceRotatable> IVarSubRegistry.GetPresenceRotatables()

@@ -14,6 +14,8 @@
 * limitations under the License.
 */
 
+using Nakama;
+
 namespace NakamaSync
 {
     /// <summary>
@@ -34,7 +36,8 @@ namespace NakamaSync
         internal override ISerializableVar<T> ToSerializable(bool isAck)
         {
             var serializable = base.ToSerializable(isAck);
-            var presenceSerializable = new SerializablePresenceVar<T>(serializable, SyncMatch.Self.UserId);
+            IUserPresence self = SyncMatch.Self;
+            var presenceSerializable = new SerializablePresenceVar<T>(serializable, self.UserId);
             return presenceSerializable;
         }
     }

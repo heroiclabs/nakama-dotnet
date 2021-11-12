@@ -56,7 +56,6 @@ namespace Nakama.Tests.Sync
             _logger = TestsUtil.LoadConfiguration().StdOut ? new StdoutLogger() : null;
             _socket = Nakama.Socket.From(_client);
             _sharedVars = new SyncTestSharedVars(_userId, _varRegistry);
-
             _rpcs = new SyncTestRpcs(_rpcRegistry);
         }
 

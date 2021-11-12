@@ -31,7 +31,7 @@ namespace NakamaSync
 
         public ValidationStatus Status { get; private set; }
         protected T Value { get; private set; }
-        protected SyncMatch SyncMatch { get; }
+        protected SyncMatch SyncMatch => _syncMatch;
 
         private int _lockVersion;
         private SyncMatch _syncMatch;
@@ -62,11 +62,12 @@ namespace NakamaSync
         {
             if (_syncMatch == null)
             {
-                throw new InvalidOperationException("Cannot set a synchronized var before establishing a connection.");
+                throw new InvalidOperationException("Cannot set a synchronized var before joining a synchronized match.");
             }
 
             T oldValue = Value;
             T newValue = value;
+            Value = newValue;
 
             ValidationStatus oldStatus = this.Status;
 
@@ -91,12 +92,11 @@ namespace NakamaSync
         internal void ReceiveSyncMatch(SyncMatch syncMatch)
         {
             _syncMatch = syncMatch;
-            syncMatch.Socket.SendMatchStateAsync(syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(isAck: false)));
         }
 
-        internal void HandleSerialized(IUserPresence source, ISerializableVar<T> incomingSerialized)
+        internal void HandleSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
         {
-            if (_lockVersion >= incomingSerialized.LockVersion)
+            if (_lockVersion > incomingSerialized.LockVersion)
             {
                 // expected race to occur
                 return;
@@ -106,7 +106,9 @@ namespace NakamaSync
 
             if (newStatus != ValidationStatus.Invalid)
             {
-                this.ReceiveSerializable(incomingSerialized);
+                Value = incomingSerialized.Value;
+                _lockVersion = incomingSerialized.LockVersion;
+                Status = incomingSerialized.Status;
             }
         }
 
@@ -144,13 +146,6 @@ namespace NakamaSync
         internal virtual ISerializableVar<T> ToSerializable(bool isAck)
         {
             return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, IsAck = isAck};
-        }
-
-        internal void ReceiveSerializable(ISerializableVar<T> serialized)
-        {
-            Value = serialized.Value;
-            _lockVersion = serialized.LockVersion;
-            Status = serialized.Status;
         }
     }
 }
