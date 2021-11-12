@@ -26,6 +26,7 @@ namespace NakamaSync
     {
         private readonly Dictionary<Type, IVarSubRegistry> _subregistriesByType = new Dictionary<Type, IVarSubRegistry>();
         private readonly Dictionary<long, IVarSubRegistry> _subregistriesByOpcode = new Dictionary<long, IVarSubRegistry>();
+        private readonly Dictionary<long, PresenceVarRotator> _rotatorsByOpcode = new Dictionary<long, PresenceVarRotator>();
 
         private Hashtable _registeredVars = new Hashtable();
         private Hashtable _registeredOpcodes = new Hashtable();
@@ -60,6 +61,13 @@ namespace NakamaSync
                 throw new ArgumentException("Cannot register duplicate variable.");
             }
 
+            if (!_rotatorsByOpcode.ContainsKey(var.Opcode))
+            {
+                _rotatorsByOpcode.Add(var.Opcode, new PresenceVarRotator());
+            }
+
+            _rotatorsByOpcode[var.Opcode].AddPresenceVar(var);
+
             // multiple opcodes are okay for presence vars
             GetOrAddSubregistry<T>(_opcodeStart + var.Opcode).Register(var);
         }
@@ -90,6 +98,12 @@ namespace NakamaSync
             foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
             {
                 subRegistry.ReceiveMatch(match);
+            }
+
+            foreach (PresenceVarRotator rotator in _rotatorsByOpcode.Values)
+            {
+                rotator.Subscribe(match.PresenceTracker);
+                rotator.HandlePresencesAdded(match.Presences);
             }
         }
 
@@ -151,6 +165,12 @@ namespace NakamaSync
             if (_vars.ContainsKey(state.OpCode))
             {
                 ISerializableVar<T> serialized = _syncMatch.Encoding.Decode<ISerializableVar<T>>(state.State);
+                var vars = _vars[state.OpCode];
+                foreach (var var in vars)
+                {
+                    var.ReceiveSerializable(serialized);
+
+                }
             }
         }
 

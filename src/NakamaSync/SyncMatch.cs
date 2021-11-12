@@ -53,14 +53,35 @@ namespace NakamaSync
         private readonly HostTracker _hostTracker;
         private ISocket _socket;
         private readonly SyncEncoding _encoding = new SyncEncoding();
+        private readonly RpcRegistry _rpcRegistry;
 
-        internal SyncMatch(ISocket socket, ISession session, IMatch match)
+        internal SyncMatch(ISocket socket, ISession session, IMatch match, RpcRegistry rpcRegistry)
         {
             _socket = socket;
             _session = session;
             _match = match;
             _presenceTracker = new PresenceTracker(session.UserId);
             _hostTracker = new HostTracker(_presenceTracker);
+            _rpcRegistry = rpcRegistry;
+
+
+            socket.ReceivedMatchState += HandleRpcMatchState;
+        }
+
+        private void HandleRpcMatchState(IMatchState obj)
+        {
+            if (obj.OpCode == _rpcRegistry.Opcode)
+            {
+                RpcEnvelope envelope = _encoding.Decode<RpcEnvelope>(obj.State);
+
+                if (!_rpcRegistry.HasTarget(envelope.RpcKey.TargetId))
+                {
+                    throw new InvalidOperationException("Received rpc for non-existent target: " + envelope.RpcKey.TargetId);
+                }
+
+                var rpc = RpcInvocation.Create(_rpcRegistry.GetTarget(envelope.RpcKey.TargetId), envelope.RpcKey.MethodName, envelope.Parameters);
+                rpc.Invoke();
+            }
         }
 
         public IUserPresence GetHostPresence()
@@ -83,14 +104,24 @@ namespace NakamaSync
             return _hostTracker.IsSelfHost();
         }
 
-
-/*
         public void SendRpc(IEnumerable<IUserPresence> targetPresences, string rpcId, string targetId, params object[] parameters)
         {
             var envelope = new RpcEnvelope();
             envelope.Parameters = parameters;
             envelope.RpcKey = new RpcKey(rpcId, targetId);
-            _socket.SendRpc(envelope, targetPresences);
+
+            if (!_rpcRegistry.HasTarget(targetId))
+            {
+                throw new ArgumentException("Unrecognized rpc target id: " + targetId);
+            }
+
+            _socket.SendMatchStateAsync(_match.Id, _rpcRegistry.Opcode, _encoding.Encode(envelope), targetPresences);
+
+        }
+
+        private void HandleRpcEnvelope(IUserPresence source, RpcEnvelope envelope)
+        {
+           // var invocation = RpcInvocation.Create(_rpcRegistry.GetTarget(rpcId), rpcId, parameters);
         }
 
         public void SendRpc(string rpcId, string targetId, params object[] parameters)
@@ -98,8 +129,13 @@ namespace NakamaSync
             var envelope = new RpcEnvelope();
             envelope.Parameters = parameters;
             envelope.RpcKey = new RpcKey(rpcId, targetId);
-            _socket.SendRpc(envelope);
+
+            if (!_rpcRegistry.HasTarget(targetId))
+            {
+                throw new ArgumentException("Unrecognized rpc target id: " + targetId);
+            }
+
+            _socket.SendMatchStateAsync(_match.Id, _rpcRegistry.Opcode, _encoding.Encode(envelope));
         }
-        */
     }
 }

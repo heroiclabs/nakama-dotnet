@@ -16,14 +16,21 @@
 
 using System;
 using System.Collections.Generic;
-using Nakama;
 
 namespace NakamaSync
 {
-    public class RpcTargetRegistry
+    public class RpcRegistry
     {
         private readonly HashSet<object> _targets = new HashSet<object>();
         private readonly Dictionary<string, object> _targetsById = new Dictionary<string, object>();
+        private readonly long _opcode;
+
+        public long Opcode => _opcode;
+
+        public RpcRegistry(long opcode)
+        {
+            _opcode = opcode;
+        }
 
         public void AddTarget(string targetId, object target)
         {

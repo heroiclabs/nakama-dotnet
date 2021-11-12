@@ -30,7 +30,7 @@ namespace Nakama.Tests.Sync
 
         private const string ObjectId = "SyncTestRpcs";
 
-        public SyncTestRpcs(RpcTargetRegistry registry)
+        public SyncTestRpcs(RpcRegistry registry)
         {
             registry.AddTarget(ObjectId, this);
         }
