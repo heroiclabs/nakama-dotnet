@@ -15,8 +15,6 @@
 */
 
 using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
@@ -24,24 +22,23 @@ namespace NakamaSync
     public delegate void ResetHandler();
     public delegate bool ValidationHandler<T>(IUserPresence source, IValueChange<T> change);
 
-    public abstract class Var<T> : IVar
+    public abstract class Var<T>
     {
         public event Action<IVarEvent<T>> OnValueChanged;
-        public string Key { get; }
+        public long Opcode { get; }
         public event ResetHandler OnReset;
         public ValidationHandler<T> ValidationHandler { get; set; }
 
         public ValidationStatus Status { get; private set; }
         protected T Value { get; private set; }
+        protected SyncMatch SyncMatch { get; }
 
-        internal VarConnection<T> Connection { get; }
-
-        private VarConnection<T> _connection;
         private int _lockVersion;
+        private SyncMatch _syncMatch;
 
-        public Var(string key)
+        public Var(long opcode)
         {
-            Key = key;
+            Opcode = opcode;
         }
 
         public T GetValue()
@@ -63,7 +60,7 @@ namespace NakamaSync
 
         internal void SetLocalValue(IUserPresence source, T value)
         {
-            if (_connection == null)
+            if (_syncMatch == null)
             {
                 throw new InvalidOperationException("Cannot set a synchronized var before establishing a connection.");
             }
@@ -73,7 +70,7 @@ namespace NakamaSync
 
             ValidationStatus oldStatus = this.Status;
 
-            if (_connection.HostTracker.IsSelfHost())
+            if (_syncMatch.HostTracker.IsSelfHost())
             {
                 Status = ValidationHandler == null ? ValidationStatus.None : ValidationStatus.Valid;
             }
@@ -83,7 +80,7 @@ namespace NakamaSync
             }
 
             _lockVersion++;
-            _connection.SendSyncDataToAll(ToSerializable(isAck: false));
+            _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode,  _syncMatch.Encoding.Encode(ToSerializable(isAck: false)));
 
             var evt = new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, Status));
 
@@ -91,23 +88,13 @@ namespace NakamaSync
             InvokeOnValueChanged(evt);
         }
 
-        internal void ReceiveConnection(VarConnection<T> connection)
+        internal void ReceiveSyncMatch(SyncMatch syncMatch)
         {
-            _connection = connection;
-
-            // todo remove these handlers.
-            connection.OnHandshakeRequest += HandleHandshakeRequest;
-            connection.OnHandshakeSuccess += HandleSyncEnvelope;
-
-            // no need to handle handshake failure because the task returned to the user will surface
-            // the exception. TODO maybe handle by resetting any variable state?
-            if (_connection.Match.Presences.Any())
-            {
-                _connection.SendHandshakeRequest(new HandshakeRequest(Key), _connection.Match.Presences.First());
-            }
+            _syncMatch = syncMatch;
+            syncMatch.Socket.SendMatchStateAsync(syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(isAck: false)));
         }
 
-        private void HandleSyncEnvelope(IUserPresence source, ISerializableVar<T> incomingSerialized)
+        internal void HandleSerialized(IUserPresence source, ISerializableVar<T> incomingSerialized)
         {
             if (_lockVersion >= incomingSerialized.LockVersion)
             {
@@ -127,7 +114,7 @@ namespace NakamaSync
         {
             ValidationStatus newStatus = serialized.Status;
 
-            if (_connection.HostTracker.IsSelfHost())
+            if (_syncMatch.HostTracker.IsSelfHost())
             {
                 if (ValidationHandler != null)
                 {
@@ -147,30 +134,16 @@ namespace NakamaSync
 
                     responseSerialized.Status = newStatus;
                     responseSerialized.IsAck = true;
-                    _connection.SendSyncDataToAll(responseSerialized);
+                    _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode,  _syncMatch.Encoding.Encode(responseSerialized));
                 }
             }
 
             return newStatus;
         }
 
-        private void HandleHandshakeRequest(IUserPresence source, HandshakeRequest request)
-        {
-            // todo this doesn't really make sense
-            bool success = Key == request.Key;
-
-            if (success)
-            {
-                var asSerializable = ToSerializable(isAck: true);
-                var response = new HandshakeResponse<T>(asSerializable, success);
-                _connection.SendHandshakeResponse(response, source);
-            }
-
-        }
-
         internal virtual ISerializableVar<T> ToSerializable(bool isAck)
         {
-            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, IsAck = isAck, Key = Key};
+            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, IsAck = isAck};
         }
 
         internal void ReceiveSerializable(ISerializableVar<T> serialized)
@@ -178,11 +151,6 @@ namespace NakamaSync
             Value = serialized.Value;
             _lockVersion = serialized.LockVersion;
             Status = serialized.Status;
-        }
-
-        Task IVar.GetPendingHandshake()
-        {
-            return _connection.GetPendingHandshake();
         }
     }
 }

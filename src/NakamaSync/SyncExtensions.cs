@@ -71,6 +71,7 @@
 // todo lock the processing of each envelope to avoid multithreading issues e.g., host changing while processing a value.
 // also think about if incoming values comes from a user who isn't host but thinks he is, this is expected to happen given conccurrency? or maybe iti sn' expecetd to happen?
 // todo support more list-like and dictionary-like methods on the shared and self vars (or maybe use an implicit operator on the var) rather than just setting a fresh new object each time.
+// todo handle resetting
 
 using System.Threading.Tasks;
 using Nakama;
@@ -83,32 +84,24 @@ namespace NakamaSync
         public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, string name = null)
         {
             IMatch match = await socket.CreateMatchAsync(name);
-            var syncMatch = new SyncMatch(socket, session, match, new SyncOpcodes(0, 1, 2, 3));
+            var syncMatch = new SyncMatch(socket, session, match);
             registry.ReceiveMatch(syncMatch);
-
-            if (name != null && match.Size > 1)
-            {
-                await registry.GetPendingHandshake();
-            }
-
             return syncMatch;
         }
 
         public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, IMatchmakerMatched matched, VarRegistry registry)
         {
             IMatch match = await socket.JoinMatchAsync(matched);
-            var syncMatch = new SyncMatch(socket, session, match, new SyncOpcodes(0, 1, 2, 3));
+            var syncMatch = new SyncMatch(socket, session, match);
             registry.ReceiveMatch(syncMatch);
-            await registry.GetPendingHandshake();
             return syncMatch;
         }
 
         public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, string matchId, VarRegistry registry)
         {
             IMatch match = await socket.JoinMatchAsync(matchId);
-            var syncMatch = new SyncMatch(socket, session, match, new SyncOpcodes(0, 1, 2, 3));
+            var syncMatch = new SyncMatch(socket, session, match);
             registry.ReceiveMatch(syncMatch);
-            await registry.GetPendingHandshake();
             return syncMatch;
         }
     }

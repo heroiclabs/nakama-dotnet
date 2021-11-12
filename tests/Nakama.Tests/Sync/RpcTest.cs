@@ -24,7 +24,7 @@ namespace Nakama.Tests.Sync
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task TestLocalRpc()
         {
-            var testEnv = new SyncTestEnvironment(SyncTestsUtil.DefaultOpcodes(), numClients: 2, creatorIndex: 0);
+            var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             // todo change this to start
             testEnv.StartViaMatchmaker();
             var allEnvs = testEnv.GetAllEnvs();
@@ -38,7 +38,7 @@ namespace Nakama.Tests.Sync
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task TestRpc()
         {
-            var testEnv = new SyncTestEnvironment(SyncTestsUtil.DefaultOpcodes(), numClients: 2, creatorIndex: 0);
+            var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             // todo change this to start
             await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllEnvs();

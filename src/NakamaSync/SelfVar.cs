@@ -14,8 +14,6 @@
 * limitations under the License.
 */
 
-using System.Collections.Generic;
-
 namespace NakamaSync
 {
     /// <summary>
@@ -23,20 +21,20 @@ namespace NakamaSync
     /// </summary>
     public class SelfVar<T> : Var<T>
     {
-        public SelfVar(string key) : base(key)
+        public SelfVar(long opcode) : base(opcode)
         {
         }
 
         public void SetValue(T value)
         {
             // TODO need to handle sync match not started yet
-            this.SetLocalValue(Connection.Match.Self, value);
+            this.SetLocalValue(SyncMatch.Self, value);
         }
 
         internal override ISerializableVar<T> ToSerializable(bool isAck)
         {
             var serializable = base.ToSerializable(isAck);
-            var presenceSerializable = new SerializablePresenceVar<T>(serializable, Connection.Match.Self.UserId);
+            var presenceSerializable = new SerializablePresenceVar<T>(serializable, SyncMatch.Self.UserId);
             return presenceSerializable;
         }
     }

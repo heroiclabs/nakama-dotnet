@@ -48,12 +48,12 @@ namespace NakamaSync
         {
             var rotator = new PresenceVarRotator(_session);
 
-            string key = null;
+            long? opcode = 0;
 
-            foreach (var presenceVar in _varRegistry.GetAllRotatables())
+            foreach (var presenceVar in _varRegistry.GetPresenceRotatables())
             {
                 rotator.AddPresenceVar(presenceVar);
-                key = key ?? presenceVar.Key;
+                opcode = opcode ?? presenceVar.Opcode;
             }
 
             rotator.Subscribe(_presenceTracker);

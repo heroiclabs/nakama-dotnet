@@ -29,7 +29,6 @@ namespace Nakama.Tests.Sync
         private async void SharedVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
-                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0);
@@ -45,7 +44,6 @@ namespace Nakama.Tests.Sync
         private async void PresenceVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
-                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numPresenceVarCollections: 1,
                 numPresenceVarsPerCollection: 1,
@@ -79,7 +77,6 @@ namespace Nakama.Tests.Sync
             };
 
             var mismatchedEnv = new SyncTestEnvironment(
-                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0,
@@ -98,7 +95,6 @@ namespace Nakama.Tests.Sync
         private async Task SharedVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
-                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0);
@@ -120,7 +116,6 @@ namespace Nakama.Tests.Sync
         private async Task SharedVarShouldSyncDict()
         {
             var testEnv = new SyncTestEnvironment(
-                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0);
@@ -151,7 +146,6 @@ namespace Nakama.Tests.Sync
         private async Task PresenceVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
-                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numPresenceVarCollections: 1,
                 numPresenceVarsPerCollection: 1,
@@ -185,7 +179,6 @@ namespace Nakama.Tests.Sync
         private async void EnvsShouldBeSeparate()
         {
             var testEnv = new SyncTestEnvironment(
-                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0);
@@ -204,7 +197,6 @@ namespace Nakama.Tests.Sync
         private async void HostShouldBeChosen()
         {
             var testEnv = new SyncTestEnvironment(
-                SyncTestsUtil.DefaultOpcodes(),
                 numClients: 2,
                 numSharedVars: 1,
                 creatorIndex: 0);

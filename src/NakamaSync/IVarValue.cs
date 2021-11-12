@@ -30,11 +30,7 @@ namespace NakamaSync
     internal interface ISerializableVar
     {
         int LockVersion { get; set; }
-
         ValidationStatus Status { get; set; }
-
         bool IsAck { get; set; }
-
-        string Key { get; set; }
     }
 }

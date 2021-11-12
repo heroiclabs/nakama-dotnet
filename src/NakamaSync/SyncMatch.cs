@@ -45,23 +45,22 @@ namespace NakamaSync
         internal PresenceTracker PresenceTracker => _presenceTracker;
         internal ISession Session => _session;
         internal ISocket Socket => _socket;
-        internal SyncOpcodes Opcodes => _opcodes;
+        internal SyncEncoding Encoding => _encoding;
 
         private readonly IMatch _match;
         private readonly ISession _session;
         private readonly PresenceTracker _presenceTracker;
         private readonly HostTracker _hostTracker;
-        private readonly ISocket _socket;
-        private readonly SyncOpcodes _opcodes;
+        private ISocket _socket;
+        private readonly SyncEncoding _encoding = new SyncEncoding();
 
-        internal SyncMatch(ISocket socket, ISession session, IMatch match, SyncOpcodes opcodes)
+        internal SyncMatch(ISocket socket, ISession session, IMatch match)
         {
             _socket = socket;
             _session = session;
             _match = match;
             _presenceTracker = new PresenceTracker(session.UserId);
             _hostTracker = new HostTracker(_presenceTracker);
-            _opcodes = opcodes;
         }
 
         public IUserPresence GetHostPresence()

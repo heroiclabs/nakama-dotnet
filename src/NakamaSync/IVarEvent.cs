@@ -14,15 +14,14 @@
 * limitations under the License.
 */
 
-using NakamaSync;
+using Nakama;
 
-namespace Nakama.Tests.Sync
+namespace NakamaSync
 {
-    internal class SyncTestsUtil
+    public interface IVarEvent<T>
     {
-        public static SyncOpcodes DefaultOpcodes()
-        {
-            return new SyncOpcodes(handshakeRequest: 0, handshakeResponse: 1, data: 2, rpc: 3);
-        }
+        IUserPresence Source { get; }
+        IValueChange<T> ValueChange { get; }
+        IValidationChange ValidationChange { get; }
     }
 }

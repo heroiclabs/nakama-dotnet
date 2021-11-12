@@ -25,13 +25,13 @@ namespace NakamaSync
     /// </summary>
     public class SharedVar<T> : Var<T>
     {
-        public SharedVar(string key) : base(key)
+        public SharedVar(long opcode) : base(opcode)
         {
         }
 
         public void SetValue(T value)
         {
-            this.SetLocalValue(Connection.Match?.Self, value);
+            this.SetLocalValue(SyncMatch?.Self, value);
         }
     }
 }

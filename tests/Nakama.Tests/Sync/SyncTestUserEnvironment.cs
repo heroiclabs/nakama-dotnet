@@ -45,13 +45,13 @@ namespace Nakama.Tests.Sync
         private ISession _session;
         private ISocket _socket;
 
-        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numPresenceVarCollections, int numPresenceVarsPerCollection) : this(userId)
+        public SyncTestUserEnvironment(string userId, VarIdGenerator varIdGenerator, int numPresenceVarCollections, int numPresenceVarsPerCollection) : this(userId)
         {
             _varIdGenerator = varIdGenerator;
             _presenceVars = new SyncTestPresenceVars(_varRegistry, numPresenceVarCollections, numPresenceVarsPerCollection);
         }
 
-        public SyncTestUserEnvironment(string userId, SyncOpcodes opcodes, VarIdGenerator varIdGenerator, int numSharedVars) : this(userId)
+        public SyncTestUserEnvironment(string userId, VarIdGenerator varIdGenerator, int numSharedVars) : this(userId)
         {
             _varIdGenerator = varIdGenerator;
             _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, numSharedVars, _varIdGenerator);

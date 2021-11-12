@@ -20,7 +20,7 @@ namespace NakamaSync
 {
     internal interface IPresenceRotatable
     {
-        string Key { get; set; }
+        long Opcode { get; }
         IUserPresence Presence { get; set; }
     }
 }

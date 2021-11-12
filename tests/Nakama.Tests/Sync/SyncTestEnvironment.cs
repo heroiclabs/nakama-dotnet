@@ -39,7 +39,6 @@ namespace Nakama.Tests.Sync
         private readonly List<SyncTestUserEnvironment> _syncTestUserEnvironments = new List<SyncTestUserEnvironment>();
 
        public SyncTestEnvironment(
-            SyncOpcodes opcodes,
             int numClients,
             int numSharedVars,
             int creatorIndex,
@@ -53,13 +52,12 @@ namespace Nakama.Tests.Sync
             for (int i = 0; i < numClients; i++)
             {
                 string userId = userIdGenerator(i);
-                var env = new SyncTestUserEnvironment(userId, opcodes, varIdGenerator, numSharedVars);
+                var env = new SyncTestUserEnvironment(userId, varIdGenerator, numSharedVars);
                 _syncTestUserEnvironments.Add(env);
             }
         }
 
         public SyncTestEnvironment(
-            SyncOpcodes opcodes,
             int numClients,
             int creatorIndex,
             UserIdGenerator userIdGenerator = null)
@@ -76,7 +74,6 @@ namespace Nakama.Tests.Sync
         }
 
         public SyncTestEnvironment(
-            SyncOpcodes opcodes,
             int numClients,
             int numPresenceVarCollections,
             int numPresenceVarsPerCollection,
@@ -91,7 +88,7 @@ namespace Nakama.Tests.Sync
             for (int i = 0; i < numClients; i++)
             {
                 string userId = userIdGenerator(i);
-                var env = new SyncTestUserEnvironment(userId, opcodes, varIdGenerator, numPresenceVarCollections, numPresenceVarsPerCollection);
+                var env = new SyncTestUserEnvironment(userId, varIdGenerator, numPresenceVarCollections, numPresenceVarsPerCollection);
                 _syncTestUserEnvironments.Add(env);
             }
         }

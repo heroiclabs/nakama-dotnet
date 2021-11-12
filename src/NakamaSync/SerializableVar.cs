@@ -34,8 +34,5 @@ namespace NakamaSync
 
         [DataMember(Name="is_ack"), Preserve]
         public bool IsAck { get; set; }
-
-        [DataMember(Name="key"), Preserve]
-        public string Key { get; set; }
     }
 }

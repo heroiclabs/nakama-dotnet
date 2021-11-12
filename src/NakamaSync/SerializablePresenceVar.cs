@@ -33,7 +33,6 @@ namespace NakamaSync
         public int LockVersion { get => Var.LockVersion; set => Var.LockVersion = value; }
         public ValidationStatus Status { get => Var.Status; set => Var.Status = value; }
         public bool IsAck { get => Var.IsAck; set => Var.IsAck = value; }
-        public string Key { get => Var.Key; set => Var.Key = value; }
 
         public SerializablePresenceVar(ISerializableVar<T> var, string userId)
         {

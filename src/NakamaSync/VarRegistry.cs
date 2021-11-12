@@ -15,205 +15,165 @@
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Nakama;
 
 namespace NakamaSync
 {
     public class VarRegistry
     {
-        private readonly Dictionary<Type, IVarRegistry> _registries = new Dictionary<Type, IVarRegistry>();
+        private readonly Dictionary<Type, IVarSubRegistry> _subregistriesByType = new Dictionary<Type, IVarSubRegistry>();
+        private readonly Dictionary<long, IVarSubRegistry> _subregistriesByOpcode = new Dictionary<long, IVarSubRegistry>();
+
+        private Hashtable _registeredVars = new Hashtable();
+        private Hashtable _registeredOpcodes = new Hashtable();
+
+        private readonly int _opcodeStart;
+
+        public VarRegistry(int opcodeStart = 0)
+        {
+            _opcodeStart = opcodeStart;
+        }
 
         public void Register<T>(SharedVar<T> var)
         {
-            if (!_registries.ContainsKey(typeof(T)))
+            if (_registeredVars.ContainsKey(_opcodeStart + var.Opcode))
             {
-                _registries[typeof(T)] = new VarRegistry<T>();
+                throw new ArgumentException("Cannot register duplicate variable.");
             }
 
-            VarRegistry<T> registry = (VarRegistry<T>) _registries[typeof(T)];
+            if (_registeredOpcodes.ContainsKey(_opcodeStart + var.Opcode))
+            {
+                throw new ArgumentException("Cannot register duplicate opcode.");
+            }
 
-            registry.SharedVars.Register(var);
+            VarSubRegistry<T> subegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
+            subegistry.Register(var);
         }
 
         public void Register<T>(PresenceVar<T> var)
         {
-            if (!_registries.ContainsKey(typeof(T)))
+            if (_registeredVars.ContainsKey(_opcodeStart + var.Opcode))
             {
-                _registries[typeof(T)] = new VarRegistry<T>();
+                throw new ArgumentException("Cannot register duplicate variable.");
             }
 
-            VarRegistry<T> registry = (VarRegistry<T>) _registries[typeof(T)];
-
-            registry.PresenceVars.Register(var);
+            // multiple opcodes are okay for presence vars
+            GetOrAddSubregistry<T>(_opcodeStart + var.Opcode).Register(var);
         }
 
         public void Register<T>(SelfVar<T> var)
         {
-            if (!_registries.ContainsKey(typeof(T)))
+            if (_registeredVars.ContainsKey(_opcodeStart + var.Opcode))
             {
-                _registries[typeof(T)] = new VarRegistry<T>();
+                throw new ArgumentException("Cannot register duplicate variable.");
             }
 
-            VarRegistry<T> registry = (VarRegistry<T>) _registries[typeof(T)];
-            registry.SelfVars.Register(var);
+            if (_registeredOpcodes.ContainsKey(_opcodeStart + var.Opcode))
+            {
+                throw new ArgumentException("Cannot register duplicate opcode.");
+            }
+
+            VarSubRegistry<T> subegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
+            subegistry.Register(var);
         }
 
-        internal VarRegistry<T> GetRegistry<T>()
+        internal IEnumerable<IPresenceRotatable> GetPresenceRotatables()
         {
-            return (VarRegistry<T>) _registries[typeof(T)];
-        }
-
-        internal IEnumerable<IVar> GetAllVars()
-        {
-            return _registries.Values.SelectMany(registry => registry.GetAllVars());
-        }
-
-        internal IEnumerable<IPresenceRotatable> GetAllRotatables()
-        {
-            return _registries.Values.SelectMany(registry => registry.GetAllRotatables());
+            return _subregistriesByType.Values.SelectMany(registry => registry.GetPresenceRotatables());
         }
 
         internal void ReceiveMatch(SyncMatch match)
         {
-            foreach (IVarRegistry registry in _registries.Values)
+            foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
             {
-                registry.ReceiveMatch(match);
+                subRegistry.ReceiveMatch(match);
             }
         }
 
-        internal Task GetPendingHandshake()
+        private VarSubRegistry<T> GetOrAddSubregistry<T>(long opcode)
         {
-            return Task.WhenAll(_registries.Values.Select(registry => registry.GetPendingHandshake()));
-        }
-    }
-
-    internal class VarRegistry<T> : IVarRegistry
-    {
-        public VarRegistry<SharedVar<T>, T> SharedVars => _sharedVars;
-        public VarRegistry<SelfVar<T>, T> SelfVars => _selfVars;
-        public VarRegistry<PresenceVar<T>, T> PresenceVars => _presenceVars;
-
-        private readonly VarRegistry<SharedVar<T>, T> _sharedVars = new VarRegistry<SharedVar<T>, T>(allowDuplicateKeys: false);
-        private readonly VarRegistry<SelfVar<T>, T> _selfVars = new VarRegistry<SelfVar<T>, T>(allowDuplicateKeys: false);
-        // multiple presence vars per key, each corresponding to a different user (or unoccupied)
-        private readonly VarRegistry<PresenceVar<T>, T> _presenceVars = new VarRegistry<PresenceVar<T>, T>(allowDuplicateKeys: true);
-
-        public IEnumerable<string> GetAllKeys()
-        {
-            var keys = new List<string>();
-            keys.AddRange(_sharedVars.GetAllKeys());
-            keys.AddRange(_selfVars.GetAllKeys());
-            keys.AddRange(_presenceVars.GetAllKeys());
-            return keys;
-        }
-
-        public IEnumerable<IVar> GetAllVars()
-        {
-            var vars = new List<IVar>();
-            vars.AddRange(_sharedVars.GetAllVars());
-            vars.AddRange(_selfVars.GetAllVars());
-            vars.AddRange(_presenceVars.GetAllVars());
-            return vars;
-        }
-
-        public bool ContainsKey(string key)
-        {
-            return _sharedVars.ContainsKey(key) || _selfVars.ContainsKey(key) || _presenceVars.ContainsKey(key);
-        }
-
-        public IEnumerable<IPresenceRotatable> GetAllRotatables()
-        {
-            return _presenceVars.Vars;
-        }
-
-        public Task GetPendingHandshake()
-        {
-            return Task.WhenAll(_presenceVars.GetPendingHandshake(), _selfVars.GetPendingHandshake(), _sharedVars.GetPendingHandshake());
-        }
-
-        public void ReceiveMatch(SyncMatch match)
-        {
-            _presenceVars.ReceiveMatch(match);
-            _selfVars.ReceiveMatch(match);
-            _sharedVars.ReceiveMatch(match);
-        }
-    }
-
-    internal class VarRegistry<T, K> : IVarRegistry where T : Var<K>
-    {
-        public IEnumerable<T> Vars => _vars.Values;
-
-        internal IEnumerable<IVar> RegisteredVars => new HashSet<IVar>(_registeredVars);
-
-        private readonly bool _allowDuplicateKeys;
-        private readonly HashSet<string> _registeredKeys = new HashSet<string>();
-        private readonly HashSet<T> _registeredVars = new HashSet<T>();
-        private readonly Dictionary<string, T> _vars = new Dictionary<string, T>();
-
-        public VarRegistry(bool allowDuplicateKeys)
-        {
-            _allowDuplicateKeys = allowDuplicateKeys;
-        }
-
-        public bool ContainsKey(string key)
-        {
-            return _vars.ContainsKey(key);
-        }
-
-        public void Register(T var)
-        {
-            if (!_registeredKeys.Add(var.Key) && !_allowDuplicateKeys)
+            if (!_subregistriesByType.ContainsKey(typeof(T)))
             {
-                throw new InvalidOperationException($"Attempted to register duplicate key {var.Key}");
+                var newSubRegistry = new VarSubRegistry<T>();
+                _subregistriesByType[typeof(T)] = newSubRegistry;
+                _subregistriesByOpcode[opcode] = newSubRegistry;
             }
 
-            if (!_registeredVars.Add(var))
+            VarSubRegistry<T> registry = (VarSubRegistry<T>) _subregistriesByType[typeof(T)];
+            return registry;
+        }
+
+        private void HandleReceivedMatchState(IMatchState matchState)
+        {
+            // could just be a regular piece of match data, i.e., not related to sync vars
+            if (_subregistriesByOpcode.ContainsKey(matchState.OpCode))
             {
-                throw new InvalidOperationException($"Attempted to register duplicate var {var}");
-            }
-
-            _vars.Add(var.Key, var);
-        }
-
-        public IEnumerable<string> GetAllKeys()
-        {
-            return _registeredKeys;
-        }
-
-        public IEnumerable<IVar> GetAllVars()
-        {
-            return _registeredVars;
-        }
-
-        public IEnumerable<IPresenceRotatable> GetAllRotatables()
-        {
-            return _registeredVars.OfType<IPresenceRotatable>();
-        }
-
-        public Task GetPendingHandshake()
-        {
-            return Task.WhenAll(_vars.Values.Select(var => (var as IVar).GetPendingHandshake()));
-        }
-
-        public void ReceiveMatch(SyncMatch match)
-        {
-            foreach (T var in _vars.Values)
-            {
-                var connection = new VarConnection<K>(match.Socket, match.Opcodes, match.PresenceTracker, match.HostTracker);
-                var.ReceiveConnection(connection);
+                IVarSubRegistry subRegistry = _subregistriesByOpcode[matchState.OpCode];
+                subRegistry.ReceiveMatchState(matchState);
             }
         }
     }
 
-    internal interface IVarRegistry
+    internal class VarSubRegistry<T> : IVarSubRegistry
     {
-        IEnumerable<string> GetAllKeys();
-        IEnumerable<IVar> GetAllVars();
-        IEnumerable<IPresenceRotatable> GetAllRotatables();
-        Task GetPendingHandshake();
+        private readonly Dictionary<long, List<Var<T>>> _vars = new Dictionary<long, List<Var<T>>>();
+        private SyncMatch _syncMatch;
+
+        public void ReceiveMatch(SyncMatch syncMatch)
+        {
+            _syncMatch = syncMatch;
+            var allVars = _vars.Values.SelectMany(l => l);
+            foreach (var var in allVars)
+            {
+                var.ReceiveSyncMatch(syncMatch);
+            }
+        }
+
+        public void ReceiveMatchState(MatchState matchState)
+        {
+            if (!_vars.ContainsKey(matchState.OpCode))
+            {
+                throw new ArgumentException("Registry did not recognize opcode.");
+            }
+
+            var vars = _vars[matchState.OpCode];
+            foreach (var var in vars)
+            {
+                var.HandleSerialized(matchState.UserPresence, _syncMatch.Encoding.Decode<SerializableVar<T>>(matchState.State));
+            }
+        }
+
+        public void ReceiveMatchState(IMatchState state)
+        {
+            if (_vars.ContainsKey(state.OpCode))
+            {
+                ISerializableVar<T> serialized = _syncMatch.Encoding.Decode<ISerializableVar<T>>(state.State);
+            }
+        }
+
+        public void Register(Var<T> var)
+        {
+            if (!_vars.ContainsKey(var.Opcode))
+            {
+                _vars[var.Opcode] = new List<Var<T>>();
+            }
+
+            _vars[var.Opcode].Add(var);
+        }
+
+        IEnumerable<IPresenceRotatable> IVarSubRegistry.GetPresenceRotatables()
+        {
+            return _vars.Values.SelectMany(l => l).OfType<IPresenceRotatable>();
+        }
+    }
+
+    internal interface IVarSubRegistry
+    {
         void ReceiveMatch(SyncMatch match);
-        bool ContainsKey(string key);
+        void ReceiveMatchState(IMatchState match);
+        IEnumerable<IPresenceRotatable> GetPresenceRotatables();
     }
 }

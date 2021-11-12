@@ -32,9 +32,8 @@ namespace NakamaSync
         public IUserPresence Presence => (this as IPresenceRotatable).Presence;
 
         IUserPresence IPresenceRotatable.Presence { get; set; }
-        string IPresenceRotatable.Key { get => (this as IPresenceRotatable).Key; set => (this as IPresenceRotatable).Key = value; }
 
-        public PresenceVar(string key) : base(key)
+        public PresenceVar(long opcode) : base(opcode)
         {
         }
 
@@ -53,7 +52,7 @@ namespace NakamaSync
                 return;
             }
 
-            if (presence?.UserId == Connection?.Match.Self?.UserId)
+            if (presence?.UserId == SyncMatch?.Self?.UserId)
             {
                 throw new InvalidOperationException("PresenceVar cannot have a presence id equal to self id.");
             }
