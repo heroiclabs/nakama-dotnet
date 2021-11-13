@@ -65,7 +65,6 @@ namespace NakamaSync
 
         private void HandlePresenceAdded(IUserPresence presence)
         {
-
             Logger?.DebugFormat($"Presence var rotator notified of added presence: {presence.UserId}");
 
             if (_unassignedRotatables.Count == 0)

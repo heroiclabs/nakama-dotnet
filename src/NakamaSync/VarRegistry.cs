@@ -32,6 +32,8 @@ namespace NakamaSync
         private Hashtable _registeredOpcodes = new Hashtable();
 
         private readonly int _opcodeStart;
+        private readonly SyncMatch _syncMatch;
+        private bool _attachedReset = false;
 
         public VarRegistry(int opcodeStart = 0)
         {
@@ -105,6 +107,22 @@ namespace NakamaSync
                 rotator.Subscribe(match.PresenceTracker);
                 rotator.HandlePresencesAdded(match.Presences);
             }
+
+            if (!_attachedReset)
+            {
+                match.Socket.ReceivedMatchPresence += (evt) =>
+                {
+                    if (evt.Leaves.Any(leave => leave.UserId == match.Session.UserId))
+                    {
+                        foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
+                        {
+                            subRegistry.Reset();
+                        }
+                    }
+                };
+            }
+
+            _attachedReset = true;
         }
 
         private VarSubRegistry<T> GetOrAddSubregistry<T>(long combinedOpcode)
@@ -127,6 +145,14 @@ namespace NakamaSync
             {
                 IVarSubRegistry subRegistry = _subregistriesByOpcode[_opcodeStart + matchState.OpCode];
                 subRegistry.ReceiveMatchState(matchState);
+            }
+        }
+
+        internal void HandleMatchClosed()
+        {
+            foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
+            {
+                subRegistry.Reset();
             }
         }
     }
@@ -186,10 +212,19 @@ namespace NakamaSync
             _vars[_opcodeStart + var.Opcode].Add(var);
         }
 
+        public void Reset()
+        {
+            foreach (Var<T> var in _vars.Values.SelectMany(l => l))
+            {
+                var.Reset();
+            }
+        }
+
         IEnumerable<IPresenceRotatable> IVarSubRegistry.GetPresenceRotatables()
         {
             return _vars.Values.SelectMany(l => l).OfType<IPresenceRotatable>();
         }
+
     }
 
     internal interface IVarSubRegistry
@@ -197,5 +232,6 @@ namespace NakamaSync
         void ReceiveMatch(SyncMatch match);
         void ReceiveMatchState(IMatchState match);
         IEnumerable<IPresenceRotatable> GetPresenceRotatables();
+        void Reset();
     }
 }

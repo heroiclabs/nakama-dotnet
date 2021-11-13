@@ -37,10 +37,9 @@ namespace NakamaSync
         {
         }
 
-        protected override void Reset()
+        internal override void Reset()
         {
             SetPresence(null);
-            OnPresenceChanged = null;
             base.Reset();
         }
 

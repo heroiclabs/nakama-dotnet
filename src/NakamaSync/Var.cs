@@ -46,10 +46,11 @@ namespace NakamaSync
             return Value;
         }
 
-        protected virtual void Reset()
+        internal virtual void Reset()
         {
             Value = default(T);
             Status = ValidationStatus.None;
+            _syncMatch = null;
             OnReset();
         }
 

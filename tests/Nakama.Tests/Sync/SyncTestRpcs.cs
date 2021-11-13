@@ -44,7 +44,7 @@ namespace Nakama.Tests.Sync
         {
             var testObj = new SyncTestRpcObject();
             testObj.TestMember = "testMember";
-            //_syncMatch.SendRpc("TestRpcDelegate", ObjectId, "param1", 1, true, testObj);
+            _syncMatch.SendRpc("TestRpcDelegate", ObjectId, "param1", 1, true, testObj);
         }
 
         private void TestRpcDelegate(string param1, int param2, bool param3, SyncTestRpcObject param4)
