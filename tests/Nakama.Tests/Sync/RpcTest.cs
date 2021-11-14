@@ -25,10 +25,9 @@ namespace Nakama.Tests.Sync
         private async Task TestLocalRpc()
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
-            // todo change this to start
-            testEnv.StartViaMatchmaker();
+            await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllEnvs();
-            allEnvs[0].Rpcs.Invoke();
+            allEnvs[0].Rpcs.Invoke(new IUserPresence[]{allEnvs[0].Self});
             await Task.Delay(1000);
             Assert.Equal("param1", allEnvs[0].Rpcs.Param1Result);
             Assert.Equal(1, allEnvs[0].Rpcs.Param2Result);

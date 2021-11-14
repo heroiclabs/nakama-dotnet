@@ -78,6 +78,8 @@ namespace NakamaSync
                 processedParameters[i] = processedParam;
             }
 
+            System.Console.WriteLine("invoking rpc method");
+
             _method.Invoke(_target, processedParameters);
         }
 

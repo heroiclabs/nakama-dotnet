@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nakama;
 
 namespace NakamaSync
@@ -71,9 +72,13 @@ namespace NakamaSync
 
         private void HandleRpcMatchState(IMatchState obj)
         {
+            System.Console.WriteLine("sync match saw rpc match state");
             if (obj.OpCode == _rpcRegistry.Opcode)
             {
+            System.Console.WriteLine("correct opcode");
+
                 RpcEnvelope envelope = _encoding.Decode<RpcEnvelope>(obj.State);
+            System.Console.WriteLine("post envelope");
 
                 if (!_rpcRegistry.HasTarget(envelope.RpcKey.TargetId))
                 {
@@ -107,6 +112,7 @@ namespace NakamaSync
 
         public void SendRpc(IEnumerable<IUserPresence> targetPresences, string rpcId, string targetId, params object[] parameters)
         {
+            // todo name sure match exists
             var envelope = new RpcEnvelope();
             envelope.Parameters = parameters;
             envelope.RpcKey = new RpcKey(rpcId, targetId);
@@ -118,6 +124,16 @@ namespace NakamaSync
 
             _socket.SendMatchStateAsync(_match.Id, _rpcRegistry.Opcode, _encoding.Encode(envelope), targetPresences);
 
+            if (targetPresences.Any(presence => presence.UserId == Self.UserId))
+            {
+                if (!_rpcRegistry.HasTarget(targetId))
+                {
+                    throw new InvalidOperationException("Received rpc for non-existent target: " + targetId);
+                }
+
+                var rpc = RpcInvocation.Create(_rpcRegistry.GetTarget(targetId), rpcId, parameters);
+                rpc.Invoke();
+            }
         }
 
         private void HandleRpcEnvelope(IUserPresence source, RpcEnvelope envelope)

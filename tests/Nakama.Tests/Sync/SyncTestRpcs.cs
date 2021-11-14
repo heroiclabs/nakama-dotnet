@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NakamaSync;
 
@@ -40,15 +41,16 @@ namespace Nakama.Tests.Sync
             _syncMatch = syncMatch;
         }
 
-        public void Invoke()
+        public void Invoke(IEnumerable<IUserPresence> presences = null)
         {
             var testObj = new SyncTestRpcObject();
             testObj.TestMember = "testMember";
-            _syncMatch.SendRpc("TestRpcDelegate", ObjectId, "param1", 1, true, testObj);
+            _syncMatch.SendRpc(presences, "TestRpcDelegate", ObjectId, "param1", 1, true, testObj);
         }
 
         private void TestRpcDelegate(string param1, int param2, bool param3, SyncTestRpcObject param4)
         {
+            System.Console.WriteLine("test rpc delegate invoked " + param1);
             Param1Result = param1;
             Param2Result = param2;
             Param3Result = param3;
