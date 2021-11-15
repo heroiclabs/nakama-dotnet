@@ -25,13 +25,11 @@ namespace NakamaSync
     /// A variable containing a value for a user in the match. The value is synchronized across all users
     /// but can only be set by the associated user.
     /// </summary>
-    public class PresenceVar<T> : Var<T>, IPresenceRotatable
+    public class PresenceVar<T> : Var<T>
     {
         public event PresenceChangedHandler OnPresenceChanged;
 
-        public IUserPresence Presence => (this as IPresenceRotatable).Presence;
-
-        IUserPresence IPresenceRotatable.Presence { get; set; }
+        public IUserPresence Presence { get; private set; }
 
         public PresenceVar(long opcode) : base(opcode)
         {
@@ -57,7 +55,7 @@ namespace NakamaSync
             }
 
             var oldOwner = Presence;
-            (this as IPresenceRotatable).Presence = presence;
+            this.Presence = presence;
             var presenceChange = new PresenceChange(oldOwner, presence);
             OnPresenceChanged?.Invoke(presenceChange);
         }

@@ -20,55 +20,24 @@ using NakamaSync;
 namespace Nakama.Tests.Sync
 {
     // todo apply varid generator to presence var collections
-    public class SyncTestPresenceVars
+    public class SyncTestGroupVars
     {
-        public SelfVar<bool> BoolSelfVar { get; }
-        public List<PresenceVar<bool>> BoolPresenceVars { get; } = new List<PresenceVar<bool>>();
+        public GroupVar<bool> BoolGroupVar { get; }
+        public GroupVar<float> FloatGroupVar { get; }
+        public GroupVar<int> IntGroupVar { get; }
+        public GroupVar<string> StringGroupVar { get; }
 
-        public SelfVar<float> FloatSelfVar { get; }
-        public List<PresenceVar<float>> FloatPresenceVars { get; } = new List<PresenceVar<float>>();
-
-        public SelfVar<int> IntSelfVar { get; }
-        public List<PresenceVar<int>> IntPresenceVars { get; } = new List<PresenceVar<int>>();
-
-        public SelfVar<string> StringSelfVar { get; }
-        public List<PresenceVar<string>> StringPresenceVars { get; } = new List<PresenceVar<string>>();
-
-        public SyncTestPresenceVars(VarRegistry varRegistry, int presenceVarsPerCollection)
+        public SyncTestGroupVars(VarRegistry varRegistry, int presenceVarsPerCollection)
         {
-            BoolSelfVar = new SelfVar<bool>(opcode: 0);
-            FloatSelfVar = new SelfVar<float>(opcode: 1);
-            IntSelfVar = new SelfVar<int>(opcode: 2);
-            StringSelfVar = new SelfVar<string>(opcode: 3);
+            BoolGroupVar = new GroupVar<bool>(opcode: 0);
+            FloatGroupVar = new GroupVar<float>(opcode: 1);
+            IntGroupVar = new GroupVar<int>(opcode: 2);
+            StringGroupVar = new GroupVar<string>(opcode: 3);
 
-            varRegistry.Register(BoolSelfVar);
-            varRegistry.Register(FloatSelfVar);
-            varRegistry.Register(IntSelfVar);
-            varRegistry.Register(StringSelfVar);
-
-            var presenceBools = new List<PresenceVar<bool>>();
-            var presenceFloats = new List<PresenceVar<float>>();
-            var presenceInts = new List<PresenceVar<int>>();
-            var presenceStrings = new List<PresenceVar<string>>();
-
-            for (int j = 0; j < presenceVarsPerCollection; j++)
-            {
-                var presenceBool = new PresenceVar<bool>(BoolSelfVar.Opcode);
-                varRegistry.Register(presenceBool);
-                presenceBools.Add(presenceBool);
-
-                var presenceFloat = new PresenceVar<float>(FloatSelfVar.Opcode);
-                varRegistry.Register(presenceFloat);
-                presenceFloats.Add(presenceFloat);
-
-                var presenceInt = new PresenceVar<int>(IntSelfVar.Opcode);
-                varRegistry.Register(presenceInt);
-                presenceInts.Add(presenceInt);
-
-                var presenceString = new PresenceVar<string>(StringSelfVar.Opcode);
-                varRegistry.Register(presenceString);
-                presenceStrings.Add(presenceString);
-            }
+            varRegistry.Register(BoolGroupVar);
+            varRegistry.Register(FloatGroupVar);
+            varRegistry.Register(IntGroupVar);
+            varRegistry.Register(StringGroupVar);
         }
     }
 }

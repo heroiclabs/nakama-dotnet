@@ -51,8 +51,8 @@ namespace Nakama.Tests.Sync
 
             await testEnv.Start();
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.PresenceVars.BoolSelfVar.SetValue(true);
-            Assert.True(creatorEnv.PresenceVars.BoolSelfVar.GetValue());
+            creatorEnv.PresenceVars.BoolGroupVar.Self.SetValue(true);
+            Assert.True(creatorEnv.PresenceVars.BoolGroupVar.GetValue());
             testEnv.Dispose();
         }
 
@@ -118,7 +118,7 @@ namespace Nakama.Tests.Sync
             await testEnv.Start();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.PresenceVars.BoolSelfVar.SetValue(true);
+            creatorEnv.PresenceVars.BoolGroupVar.Self.SetValue(true);
 
             await Task.Delay(2500);
 
@@ -129,7 +129,7 @@ namespace Nakama.Tests.Sync
             string creatorId = creatorEnv.Self.UserId;
             string nonCreatorId = nonCreatorEnv.Self.UserId;
 
-            var nonCreatorPresenceBools = nonCreatorEnv.PresenceVars.BoolPresenceVars;
+            var nonCreatorPresenceBools = nonCreatorEnv.PresenceVars.BoolGroupVar.Others;
 
             var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
                 return var.Presence.UserId == creatorId;
@@ -155,7 +155,6 @@ namespace Nakama.Tests.Sync
             Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
             testEnv.Dispose();
         }
-
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void HostShouldBeChosen()

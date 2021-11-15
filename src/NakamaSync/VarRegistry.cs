@@ -26,10 +26,6 @@ namespace NakamaSync
     {
         private readonly Dictionary<Type, IVarSubRegistry> _subregistriesByType = new Dictionary<Type, IVarSubRegistry>();
         private readonly Dictionary<long, IVarSubRegistry> _subregistriesByOpcode = new Dictionary<long, IVarSubRegistry>();
-        private readonly Dictionary<long, PresenceVarRotator> _rotatorsByOpcode = new Dictionary<long, PresenceVarRotator>();
-
-        private Hashtable _registeredVars = new Hashtable();
-        private Hashtable _registeredOpcodes = new Hashtable();
 
         private readonly int _opcodeStart;
         private readonly SyncMatch _syncMatch;
@@ -42,57 +38,15 @@ namespace NakamaSync
 
         public void Register<T>(SharedVar<T> var)
         {
-            if (_registeredVars.ContainsKey(_opcodeStart + var.Opcode))
-            {
-                throw new ArgumentException("Cannot register duplicate variable.");
-            }
-
-            if (_registeredOpcodes.ContainsKey(_opcodeStart + var.Opcode))
-            {
-                throw new ArgumentException("Cannot register duplicate opcode.");
-            }
-
             VarSubRegistry<T> subegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
             subegistry.Register(var);
         }
 
-        public void Register<T>(PresenceVar<T> var)
+        public void Register<T>(GroupVar<T> var)
         {
-            if (_registeredVars.ContainsKey(_opcodeStart + var.Opcode))
-            {
-                throw new ArgumentException("Cannot register duplicate variable.");
-            }
-
-            if (!_rotatorsByOpcode.ContainsKey(_opcodeStart + var.Opcode))
-            {
-                _rotatorsByOpcode.Add(_opcodeStart + var.Opcode, new PresenceVarRotator());
-            }
-
-            _rotatorsByOpcode[_opcodeStart + var.Opcode].AddPresenceVar(var);
-
-            // multiple opcodes are okay for presence vars
-            GetOrAddSubregistry<T>(_opcodeStart + var.Opcode).Register(var);
-        }
-
-        public void Register<T>(SelfVar<T> var)
-        {
-            if (_registeredVars.ContainsKey(_opcodeStart + var.Opcode))
-            {
-                throw new ArgumentException("Cannot register duplicate variable.");
-            }
-
-            if (_registeredOpcodes.ContainsKey(_opcodeStart + var.Opcode))
-            {
-                throw new ArgumentException("Cannot register duplicate opcode.");
-            }
-
             VarSubRegistry<T> subegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
+            subegistry.AddRotatorOpcode(_opcodeStart + var.Opcode);
             subegistry.Register(var);
-        }
-
-        internal IEnumerable<IPresenceRotatable> GetPresenceRotatables()
-        {
-            return _subregistriesByType.Values.SelectMany(registry => registry.GetPresenceRotatables());
         }
 
         internal void ReceiveMatch(SyncMatch match)
@@ -102,14 +56,9 @@ namespace NakamaSync
                 subRegistry.ReceiveMatch(match);
             }
 
-            foreach (PresenceVarRotator rotator in _rotatorsByOpcode.Values)
-            {
-                rotator.Subscribe(match.PresenceTracker);
-                rotator.HandlePresencesAdded(match.Presences);
-            }
-
             if (!_attachedReset)
             {
+                // todo think about race between this event and inside the presence var rotator
                 match.Socket.ReceivedMatchPresence += (evt) =>
                 {
                     if (evt.Leaves.Any(leave => leave.UserId == match.Session.UserId))
@@ -155,83 +104,5 @@ namespace NakamaSync
                 subRegistry.Reset();
             }
         }
-    }
-
-    internal class VarSubRegistry<T> : IVarSubRegistry
-    {
-        private readonly Dictionary<long, List<Var<T>>> _vars = new Dictionary<long, List<Var<T>>>();
-        private SyncMatch _syncMatch;
-        private readonly long _opcodeStart;
-
-        public VarSubRegistry(int opcodeStart)
-        {
-            _opcodeStart = opcodeStart;
-        }
-
-        public void ReceiveMatch(SyncMatch syncMatch)
-        {
-            _syncMatch = syncMatch;
-            var allVars = _vars.Values.SelectMany(l => l);
-            foreach (var var in allVars)
-            {
-                var.ReceiveSyncMatch(syncMatch);
-            }
-        }
-
-        public void ReceiveMatchState(IMatchState state)
-        {
-            if (_vars.ContainsKey(_opcodeStart + state.OpCode))
-            {
-                SerializableVar<T> serialized = null;
-                try
-                {
-                    serialized = _syncMatch.Encoding.Decode<SerializableVar<T>>(state.State);
-
-                }
-                catch (Exception e)
-                {
-                    System.Console.WriteLine(e.Message);
-                }
-
-                var vars = _vars[_opcodeStart + state.OpCode];
-
-                foreach (var var in vars)
-                {
-                    var.HandleSerialized(state.UserPresence, serialized);
-                }
-            }
-        }
-
-        public void Register(Var<T> var)
-        {
-            if (!_vars.ContainsKey(_opcodeStart + var.Opcode))
-            {
-                _vars[_opcodeStart + var.Opcode] = new List<Var<T>>();
-            }
-
-            _vars[_opcodeStart + var.Opcode].Add(var);
-        }
-
-        public void Reset()
-        {
-            foreach (Var<T> var in _vars.Values.SelectMany(l => l))
-            {
-                var.Reset();
-            }
-        }
-
-        IEnumerable<IPresenceRotatable> IVarSubRegistry.GetPresenceRotatables()
-        {
-            return _vars.Values.SelectMany(l => l).OfType<IPresenceRotatable>();
-        }
-
-    }
-
-    internal interface IVarSubRegistry
-    {
-        void ReceiveMatch(SyncMatch match);
-        void ReceiveMatchState(IMatchState match);
-        IEnumerable<IPresenceRotatable> GetPresenceRotatables();
-        void Reset();
     }
 }

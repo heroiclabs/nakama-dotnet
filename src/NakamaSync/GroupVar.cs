@@ -14,21 +14,31 @@
 * limitations under the License.
 */
 
+using System;
+using System.Collections.Generic;
+using Nakama;
+
 namespace NakamaSync
 {
     /// <summary>
-    /// A variable whose single value is synchronized across all clients connected to the same match.
-    /// TODO implement an ownership model?
+    /// A variable whose single value is synchronized across all clients connected to the same match
+    /// and indexable by user id.
     /// </summary>
-    public class SharedVar<T> : Var<T>
+    public class GroupVar<T> : Var<T>
     {
-        public SharedVar(long opcode) : base(opcode)
+        public SelfVar<T> Self { get; }
+        public IEnumerable<PresenceVar<T>> Others => _others;
+
+        private readonly List<PresenceVar<T>> _others = new List<PresenceVar<T>>();
+
+        public GroupVar(long opcode) : base(opcode)
         {
+            Self = new SelfVar<T>(opcode);
         }
 
-        public void SetValue(T value)
+        internal override ISerializableVar<T> ToSerializable(bool isAck)
         {
-            this.SetLocalValue(SyncMatch?.Self, value);
+            throw new InvalidOperationException("Group vars cannot be directly serialized");
         }
     }
 }
