@@ -19,16 +19,12 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public delegate void PresenceChangedHandler(PresenceChange presenceChange);
-
     /// <summary>
     /// A variable containing a value for a user in the match. The value is synchronized across all users
     /// but can only be set by the associated user.
     /// </summary>
     public class PresenceVar<T> : Var<T>
     {
-        public event PresenceChangedHandler OnPresenceChanged;
-
         public IUserPresence Presence { get; private set; }
 
         public PresenceVar(long opcode) : base(opcode)
@@ -54,10 +50,7 @@ namespace NakamaSync
                 throw new InvalidOperationException("PresenceVar cannot have a presence id equal to self id.");
             }
 
-            var oldOwner = Presence;
             this.Presence = presence;
-            var presenceChange = new PresenceChange(oldOwner, presence);
-            OnPresenceChanged?.Invoke(presenceChange);
         }
 
         internal override ISerializableVar<T> ToSerializable(bool isAck)

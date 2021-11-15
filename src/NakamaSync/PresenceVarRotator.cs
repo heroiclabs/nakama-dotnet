@@ -84,7 +84,13 @@ namespace NakamaSync
                 return;
             }
 
-            _varsByUser.Remove(presence.UserId);
+            List<PresenceVar<T>> presenceVars = _varsByUser[_userId];
+
+            foreach (PresenceVar<T> presenceVar in presenceVars)
+            {
+                presenceVar.Reset();
+                _varsByUser.Remove(presence.UserId);
+            }
         }
     }
 }

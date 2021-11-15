@@ -16,16 +16,19 @@
 
 using System;
 using System.Collections.Generic;
-using Nakama;
 
 namespace NakamaSync
 {
+    public delegate void PresenceAddHandler<T>(PresenceVar<T> var);
+
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match
     /// and indexable by user id.
     /// </summary>
     public class GroupVar<T> : Var<T>
     {
+        public event PresenceAddHandler<T> OnPresenceAdded;
+
         public SelfVar<T> Self { get; }
         public IEnumerable<PresenceVar<T>> Others => _others;
 
