@@ -88,5 +88,14 @@ namespace Nakama.Tests.Socket
             Assert.True(_socket.IsConnected);
             await Assert.ThrowsAsync<SocketException>(() => _socket.ConnectAsync(session));
         }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ClosingBeforeConnecting()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.CloseAsync();
+            await _socket.ConnectAsync(session);
+            Assert.True(_socket.IsConnected);
+        }
     }
 }
