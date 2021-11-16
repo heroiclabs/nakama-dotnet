@@ -14,7 +14,6 @@
 * limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nakama;
@@ -23,6 +22,7 @@ namespace NakamaSync
 {
     internal class VarSubRegistry<T> : IVarSubRegistry
     {
+        //todo this is just shared and self vars at the moment and not presence vars which is weird.
         private readonly Dictionary<long, List<Var<T>>> _vars = new Dictionary<long, List<Var<T>>>();
         private SyncMatch _syncMatch;
         private readonly long _opcodeStart;
@@ -41,29 +41,26 @@ namespace NakamaSync
             {
                 var.ReceiveSyncMatch(syncMatch);
             }
+
+            _rotator.ReceiveSyncMatch(syncMatch);
         }
 
         public void ReceiveMatchState(IMatchState state)
         {
             if (_vars.ContainsKey(_opcodeStart + state.OpCode))
             {
-                SerializableVar<T> serialized = null;
-                try
-                {
-                    serialized = _syncMatch.Encoding.Decode<SerializableVar<T>>(state.State);
-
-                }
-                catch (Exception e)
-                {
-                    System.Console.WriteLine(e.Message);
-                }
-
+                SerializableVar<T> serialized = _syncMatch.Encoding.Decode<SerializableVar<T>>(state.State);
                 var vars = _vars[_opcodeStart + state.OpCode];
 
                 foreach (var var in vars)
                 {
                     var.HandleSerialized(state.UserPresence, serialized);
                 }
+
+                // todo something seems off about the rotator abstraction and the relation to group var.
+                // the flexible creation of presence vars seems correct but the way they are named or the boundaries
+                // between the objects seems non-intuitive.
+                _rotator.HandleSerialized(state.UserPresence, _opcodeStart + state.OpCode, serialized);
             }
         }
 
@@ -85,9 +82,9 @@ namespace NakamaSync
             }
         }
 
-        public void AddRotatorOpcode(long opcode)
+        public void AddRotatorOpcode(long opcode, List<PresenceVar<T>> presenceVars)
         {
-            _rotator.AddOpcode(opcode);
+            _rotator.AddOpcode(opcode, presenceVars);
         }
     }
 

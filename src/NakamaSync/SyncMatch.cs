@@ -72,13 +72,9 @@ namespace NakamaSync
 
         private void HandleRpcMatchState(IMatchState obj)
         {
-            System.Console.WriteLine("sync match saw rpc match state");
             if (obj.OpCode == _rpcRegistry.Opcode)
             {
-            System.Console.WriteLine("correct opcode");
-
                 RpcEnvelope envelope = _encoding.Decode<RpcEnvelope>(obj.State);
-            System.Console.WriteLine("post envelope");
 
                 if (!_rpcRegistry.HasTarget(envelope.RpcKey.TargetId))
                 {

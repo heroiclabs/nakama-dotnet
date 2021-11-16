@@ -52,12 +52,5 @@ namespace NakamaSync
 
             this.Presence = presence;
         }
-
-        internal override ISerializableVar<T> ToSerializable(bool isAck)
-        {
-            var serializable = base.ToSerializable(isAck);
-            var presenceSerializable = new SerializablePresenceVar<T>(serializable, Presence.UserId);
-            return presenceSerializable;
-        }
     }
 }

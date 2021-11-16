@@ -21,8 +21,6 @@ using Nakama;
 
 namespace NakamaSync
 {
-    // todo add some enum or option on how you would like the presence vars to be assigned.
-    // like, do they all need to be filled with a presence or can some be unassigned.
     // todo assign errorhandler and logger to this
     // todo reuse same variable if user rejoins?
     internal class PresenceVarRotator<T>
@@ -34,9 +32,13 @@ namespace NakamaSync
 
         private string _userId;
 
+        // todo flush this value where appropriate
+        private SyncMatch _syncMatch;
+
         public void ReceiveSyncMatch(SyncMatch syncMatch)
         {
             _userId = syncMatch.Self.UserId;
+            _syncMatch = syncMatch;
             syncMatch.PresenceTracker.OnPresenceAdded += HandlePresenceAdded;
             syncMatch.PresenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
 
@@ -46,32 +48,54 @@ namespace NakamaSync
             }
         }
 
-        public void AddOpcode(long opcode)
+        public void HandleSerialized(IUserPresence source, long opcode, SerializableVar<T> serializable)
+        {
+            if (!_varsByOpcode.ContainsKey(opcode))
+            {
+                // todo I think either unnecessary or log an error
+                return;
+            }
+
+            foreach (PresenceVar<T> var in _varsByOpcode[opcode])
+            {
+                if (var.Presence.UserId == source.UserId)
+                {
+                    System.Console.WriteLine("CALLING HANDLE SERIALIZED");
+                    var.HandleSerialized(source, serializable);
+                }
+            }
+        }
+
+        public void AddOpcode(long opcode, List<PresenceVar<T>> presenceVars)
         {
             if (_varsByOpcode.ContainsKey(opcode))
             {
-                throw new ArgumentException($"Not enough presence vars to handle presence.");
+                throw new ArgumentException($"Already added opcode: {opcode}");
             }
 
-            _varsByOpcode.Add(opcode, new List<PresenceVar<T>>());
+            _varsByOpcode.Add(opcode, presenceVars);
         }
 
         private void HandlePresenceAdded(IUserPresence presence)
         {
-            if (_varsByUser.ContainsKey(presence.UserId))
+            if (_varsByUser.ContainsKey(presence.UserId) || presence.UserId == _userId)
             {
-                // normal for server to send duplicate presence additions in very specific situations.
+                // note: normal for server to send duplicate presence additions in very specific situations.
                 return;
             }
 
             var userVars =  new List<PresenceVar<T>>();
             _varsByUser.Add(presence.UserId, userVars);
 
-            foreach (KeyValuePair<long, List<PresenceVar<T>>> rotatables in _varsByOpcode)
+            foreach (KeyValuePair<long, List<PresenceVar<T>>> vars in _varsByOpcode)
             {
-                var newVar = new PresenceVar<T>(rotatables.Key);
+                var newVar = new PresenceVar<T>(vars.Key);
                 newVar.SetPresence(presence);
-                rotatables.Value.Add(newVar);
+                newVar.ReceiveSyncMatch(_syncMatch);
+
+                System.Console.WriteLine("adding new var to list " + presence.UserId + ", " + _userId);
+
+                vars.Value.Add(newVar);
                 userVars.Add(newVar);
             }
         }
@@ -84,9 +108,9 @@ namespace NakamaSync
                 return;
             }
 
-            List<PresenceVar<T>> presenceVars = _varsByUser[_userId];
+            List<PresenceVar<T>> userVars = _varsByUser[_userId];
 
-            foreach (PresenceVar<T> presenceVar in presenceVars)
+            foreach (PresenceVar<T> presenceVar in userVars)
             {
                 presenceVar.Reset();
                 _varsByUser.Remove(presence.UserId);

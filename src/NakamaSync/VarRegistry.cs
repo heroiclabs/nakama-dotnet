@@ -15,7 +15,6 @@
 */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Nakama;
@@ -45,8 +44,8 @@ namespace NakamaSync
         public void Register<T>(GroupVar<T> var)
         {
             VarSubRegistry<T> subegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
-            subegistry.AddRotatorOpcode(_opcodeStart + var.Opcode);
-            subegistry.Register(var);
+            subegistry.AddRotatorOpcode(_opcodeStart + var.Opcode, var.OthersList);
+            subegistry.Register(var.Self);
         }
 
         internal void ReceiveMatch(SyncMatch match)
@@ -76,15 +75,26 @@ namespace NakamaSync
 
         private VarSubRegistry<T> GetOrAddSubregistry<T>(long combinedOpcode)
         {
+             VarSubRegistry<T> subRegistry;
+
             if (!_subregistriesByType.ContainsKey(typeof(T)))
             {
-                var newSubRegistry = new VarSubRegistry<T>(_opcodeStart);
-                _subregistriesByType[typeof(T)] = newSubRegistry;
-                _subregistriesByOpcode[combinedOpcode] = newSubRegistry;
+                subRegistry = new VarSubRegistry<T>(_opcodeStart);
+                _subregistriesByType[typeof(T)] = subRegistry;
+            }
+            else
+            {
+                subRegistry = (VarSubRegistry<T>) _subregistriesByType[typeof(T)];
             }
 
-            VarSubRegistry<T> registry = (VarSubRegistry<T>) _subregistriesByType[typeof(T)];
-            return registry;
+            if (_subregistriesByOpcode.ContainsKey(combinedOpcode))
+            {
+                throw new InvalidOperationException("Duplicate opcode for subregistry: " + combinedOpcode);
+            }
+
+            _subregistriesByOpcode[combinedOpcode] = subRegistry;
+
+            return subRegistry;
         }
 
         internal void HandleReceivedMatchState(IMatchState matchState)
@@ -92,6 +102,7 @@ namespace NakamaSync
             // could just be a regular piece of match data, i.e., not related to sync vars
             if (_subregistriesByOpcode.ContainsKey(_opcodeStart + matchState.OpCode))
             {
+
                 IVarSubRegistry subRegistry = _subregistriesByOpcode[_opcodeStart + matchState.OpCode];
                 subRegistry.ReceiveMatchState(matchState);
             }

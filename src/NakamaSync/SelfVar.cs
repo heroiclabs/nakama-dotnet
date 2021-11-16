@@ -32,13 +32,5 @@ namespace NakamaSync
             // TODO need to handle sync match not started yet
             this.SetLocalValue(SyncMatch.Self, value);
         }
-
-        internal override ISerializableVar<T> ToSerializable(bool isAck)
-        {
-            var serializable = base.ToSerializable(isAck);
-            IUserPresence self = SyncMatch.Self;
-            var presenceSerializable = new SerializablePresenceVar<T>(serializable, self.UserId);
-            return presenceSerializable;
-        }
     }
 }

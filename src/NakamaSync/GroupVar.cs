@@ -24,24 +24,25 @@ namespace NakamaSync
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match
     /// and indexable by user id.
+    ///
+    /// todo sort of weird that this doesn't inherit from Var<T> but it also doesn't make sense for it do do so.
     /// </summary>
-    public class GroupVar<T> : Var<T>
+    public class GroupVar<T>
     {
         public event PresenceAddHandler<T> OnPresenceAdded;
 
         public SelfVar<T> Self { get; }
         public IEnumerable<PresenceVar<T>> Others => _others;
+        public long Opcode { get; }
+
+        internal List<PresenceVar<T>> OthersList => _others;
 
         private readonly List<PresenceVar<T>> _others = new List<PresenceVar<T>>();
 
-        public GroupVar(long opcode) : base(opcode)
+        public GroupVar(long opcode)
         {
+            Opcode = opcode;
             Self = new SelfVar<T>(opcode);
-        }
-
-        internal override ISerializableVar<T> ToSerializable(bool isAck)
-        {
-            throw new InvalidOperationException("Group vars cannot be directly serialized");
         }
     }
 }

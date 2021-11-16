@@ -144,7 +144,7 @@ namespace NakamaSync
             return newStatus;
         }
 
-        internal virtual ISerializableVar<T> ToSerializable(bool isAck)
+        internal ISerializableVar<T> ToSerializable(bool isAck)
         {
             return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, IsAck = isAck};
         }

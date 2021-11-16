@@ -51,8 +51,8 @@ namespace Nakama.Tests.Sync
 
             await testEnv.Start();
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.PresenceVars.BoolGroupVar.Self.SetValue(true);
-            Assert.True(creatorEnv.PresenceVars.BoolGroupVar.GetValue());
+            creatorEnv.GroupVars.BoolGroupVar.Self.SetValue(true);
+            Assert.True(creatorEnv.GroupVars.BoolGroupVar.Self.GetValue());
             testEnv.Dispose();
         }
 
@@ -118,18 +118,20 @@ namespace Nakama.Tests.Sync
             await testEnv.Start();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.PresenceVars.BoolGroupVar.Self.SetValue(true);
+            creatorEnv.GroupVars.BoolGroupVar.Self.SetValue(true);
 
             await Task.Delay(2500);
 
             IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
 
-            var nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
+            SyncTestUserEnvironment nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
 
             string creatorId = creatorEnv.Self.UserId;
             string nonCreatorId = nonCreatorEnv.Self.UserId;
 
-            var nonCreatorPresenceBools = nonCreatorEnv.PresenceVars.BoolGroupVar.Others;
+            var nonCreatorPresenceBools = nonCreatorEnv.GroupVars.BoolGroupVar.Others;
+
+            Assert.True(nonCreatorPresenceBools.Any());
 
             var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
                 return var.Presence.UserId == creatorId;
