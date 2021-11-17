@@ -48,6 +48,11 @@ namespace NakamaSync
             subegistry.Register(var.Self);
         }
 
+        public bool HasOpCode(long opcode)
+        {
+            return _subregistriesByOpcode.ContainsKey(opcode);
+        }
+
         internal void ReceiveMatch(SyncMatch match)
         {
             foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
