@@ -186,12 +186,16 @@ namespace Nakama.Tests.Sync
 
             var allEnvs = testEnv.GetAllEnvs();
 
+            bool valueChanged = false;
+            allEnvs[1].SharedVars.SharedInt.OnValueChanged += delegate { valueChanged = true; };
+
             allEnvs[0].SharedVars.SharedInt.SetValue(5);
             allEnvs[0].VarRegistry.Register(allEnvs[0].SharedVars.SharedInt);
             allEnvs[1].VarRegistry.Register(allEnvs[1].SharedVars.SharedInt);
 
             await Task.Delay(1000);
 
+            Assert.True(valueChanged);
             Assert.Equal(5, allEnvs[1].SharedVars.SharedInt.GetValue());
 
             testEnv.Dispose();
@@ -207,9 +211,14 @@ namespace Nakama.Tests.Sync
                 delayRegistration: true
             );
 
+
+
             await testEnv.Start();
 
             var allEnvs = testEnv.GetAllEnvs();
+
+            bool valueChanged = false;
+            allEnvs[1].SharedVars.SharedInt.OnValueChanged += delegate { valueChanged = true; };
 
             allEnvs[0].VarRegistry.Register(allEnvs[0].SharedVars.SharedInt);
             allEnvs[1].VarRegistry.Register(allEnvs[1].SharedVars.SharedInt);
@@ -217,6 +226,8 @@ namespace Nakama.Tests.Sync
 
             await Task.Delay(1000);
 
+
+            Assert.True(valueChanged);
             Assert.Equal(5, allEnvs[1].SharedVars.SharedInt.GetValue());
 
             testEnv.Dispose();

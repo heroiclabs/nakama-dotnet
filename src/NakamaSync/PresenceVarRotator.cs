@@ -60,7 +60,6 @@ namespace NakamaSync
             {
                 if (var.Presence.UserId == source.UserId)
                 {
-                    System.Console.WriteLine("CALLING HANDLE SERIALIZED");
                     var.HandleSerialized(source, serializable);
                 }
             }
