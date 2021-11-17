@@ -14,8 +14,9 @@
 * limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using Nakama;
 
 namespace NakamaSync
 {
@@ -43,6 +44,19 @@ namespace NakamaSync
         {
             Opcode = opcode;
             Self = new SelfVar<T>(opcode);
+        }
+
+        // todo this feels like an odd addition to the api for some reason.
+        public Var<T> GetVar(IUserPresence presence)
+        {
+            if (presence.UserId == Self.Presence.UserId)
+            {
+                return Self;
+            }
+            else
+            {
+                return _others.FirstOrDefault(other => presence.UserId == other.Presence.UserId);
+            }
         }
     }
 }

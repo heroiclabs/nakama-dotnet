@@ -23,6 +23,8 @@ namespace NakamaSync
     /// </summary>
     public class SelfVar<T> : Var<T>
     {
+        public IUserPresence Presence => SyncMatch?.Self;
+
         public SelfVar(long opcode) : base(opcode)
         {
         }
