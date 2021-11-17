@@ -31,8 +31,8 @@ namespace NakamaSync
 
         public void SetValue(T value)
         {
-            // TODO need to handle sync match not started yet
-            this.SetLocalValue(SyncMatch.Self, value);
+            // sync match can be null if deferred registration
+            this.SetLocalValue(SyncMatch?.Self, value);
         }
     }
 }

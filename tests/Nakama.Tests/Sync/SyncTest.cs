@@ -221,5 +221,46 @@ namespace Nakama.Tests.Sync
 
             testEnv.Dispose();
         }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task PresenceVarShouldSyncDataDeferred()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numPresenceVarCollections: 1,
+                numPresenceVarsPerCollection: 1,
+                creatorIndex: 0,
+                userIdGenerator: null,
+                delayRegistration: true
+            );
+
+            await testEnv.Start();
+
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
+
+            IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
+            SyncTestUserEnvironment nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
+
+            creatorEnv.VarRegistry.Register(creatorEnv.GroupVars.BoolGroupVar);
+            nonCreatorEnv.VarRegistry.Register(nonCreatorEnv.GroupVars.BoolGroupVar);
+
+            creatorEnv.GroupVars.BoolGroupVar.Self.SetValue(true);
+
+            await Task.Delay(2500);
+
+            string creatorId = creatorEnv.Self.UserId;
+            string nonCreatorId = nonCreatorEnv.Self.UserId;
+
+            var nonCreatorPresenceBools = nonCreatorEnv.GroupVars.BoolGroupVar.Others;
+
+            Assert.True(nonCreatorPresenceBools.Any());
+
+            var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
+                return var.Presence.UserId == creatorId;
+            });
+
+            Assert.True(creatorPresenceVarInGuest.GetValue());
+            testEnv.Dispose();
+        }
     }
 }

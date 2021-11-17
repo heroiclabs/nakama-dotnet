@@ -40,7 +40,7 @@ namespace NakamaSync
             VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
             subRegistry.Register(var);
 
-            // match already started
+            // deferred registration to after match received
             if (_syncMatch != null)
             {
                 var.ReceiveSyncMatch(_syncMatch);
@@ -52,6 +52,12 @@ namespace NakamaSync
             VarSubRegistry<T> subegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
             subegistry.AddRotatorOpcode(_opcodeStart + var.Opcode, var.OthersList);
             subegistry.Register(var.Self);
+
+            // deferred registration to after match received
+            if (_syncMatch != null)
+            {
+                var.Self.ReceiveSyncMatch(_syncMatch);
+            }
         }
 
         public bool HasOpCode(long opcode)

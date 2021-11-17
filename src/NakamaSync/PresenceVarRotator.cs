@@ -74,6 +74,24 @@ namespace NakamaSync
             }
 
             _varsByOpcode.Add(opcode, presenceVars);
+
+            // deferred registration
+            if (_syncMatch != null)
+            {
+                foreach (IUserPresence presence in _syncMatch.Presences)
+                {
+                    if (!_varsByUser.ContainsKey(presence.UserId))
+                    {
+                        _varsByUser[presence.UserId] = new List<PresenceVar<T>>();
+                    }
+
+                    var newVar = new PresenceVar<T>(opcode);
+                    newVar.SetPresence(presence);
+                    newVar.ReceiveSyncMatch(_syncMatch);
+                    _varsByUser[presence.UserId].Add(newVar);
+                    _varsByOpcode[opcode].Add(newVar);
+                }
+            }
         }
 
         private void HandlePresenceAdded(IUserPresence presence)

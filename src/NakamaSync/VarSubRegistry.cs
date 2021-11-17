@@ -36,6 +36,7 @@ namespace NakamaSync
         public void ReceiveMatch(SyncMatch syncMatch)
         {
             _syncMatch = syncMatch;
+
             var allVars = _vars.Values.SelectMany(l => l);
             foreach (var var in allVars)
             {
