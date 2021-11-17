@@ -39,7 +39,9 @@ namespace Nakama.Tests.Sync
             int numClients,
             int numSharedVars,
             int creatorIndex,
-            UserIdGenerator userIdGenerator = null)
+            UserIdGenerator userIdGenerator = null,
+            bool delayRegistration = false
+        )
         {
             CreatorIndex = creatorIndex;
             userIdGenerator = userIdGenerator ?? DefaultUserIdGenerator;
@@ -47,7 +49,7 @@ namespace Nakama.Tests.Sync
             for (int i = 0; i < numClients; i++)
             {
                 string userId = userIdGenerator(i);
-                var env = new SyncTestUserEnvironment(userId);
+                var env = new SyncTestUserEnvironment(userId, delayRegistration);
                 _syncTestUserEnvironments.Add(env);
             }
         }
@@ -55,7 +57,7 @@ namespace Nakama.Tests.Sync
         public SyncTestEnvironment(
             int numClients,
             int creatorIndex,
-            UserIdGenerator userIdGenerator = null)
+            UserIdGenerator userIdGenerator = null, bool delayRegistration = false)
         {
             CreatorIndex = creatorIndex;
             userIdGenerator = userIdGenerator ?? DefaultUserIdGenerator;
@@ -63,7 +65,7 @@ namespace Nakama.Tests.Sync
             for (int i = 0; i < numClients; i++)
             {
                 string userId = userIdGenerator(i);
-                var env = new SyncTestUserEnvironment(userId);
+                var env = new SyncTestUserEnvironment(userId, delayRegistration);
                 _syncTestUserEnvironments.Add(env);
             }
         }
@@ -73,7 +75,9 @@ namespace Nakama.Tests.Sync
             int numPresenceVarCollections,
             int numPresenceVarsPerCollection,
             int creatorIndex,
-            UserIdGenerator userIdGenerator = null)
+            UserIdGenerator userIdGenerator = null,
+            bool delayRegistration = false
+        )
         {
             CreatorIndex = creatorIndex;
             userIdGenerator = userIdGenerator ?? DefaultUserIdGenerator;
@@ -81,7 +85,7 @@ namespace Nakama.Tests.Sync
             for (int i = 0; i < numClients; i++)
             {
                 string userId = userIdGenerator(i);
-                var env = new SyncTestUserEnvironment(userId, numPresenceVarCollections, numPresenceVarsPerCollection);
+                var env = new SyncTestUserEnvironment(userId, numPresenceVarCollections, numPresenceVarsPerCollection, delayRegistration);
                 _syncTestUserEnvironments.Add(env);
             }
         }

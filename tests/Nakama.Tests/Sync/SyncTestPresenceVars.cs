@@ -27,17 +27,20 @@ namespace Nakama.Tests.Sync
         public GroupVar<int> IntGroupVar { get; }
         public GroupVar<string> StringGroupVar { get; }
 
-        public SyncTestGroupVars(VarRegistry varRegistry, int presenceVarsPerCollection)
+        public SyncTestGroupVars(VarRegistry varRegistry, int presenceVarsPerCollection, bool delayRegistration)
         {
             BoolGroupVar = new GroupVar<bool>(opcode: 0);
             FloatGroupVar = new GroupVar<float>(opcode: 1);
             IntGroupVar = new GroupVar<int>(opcode: 2);
             StringGroupVar = new GroupVar<string>(opcode: 3);
 
-            varRegistry.Register(BoolGroupVar);
-            varRegistry.Register(FloatGroupVar);
-            varRegistry.Register(IntGroupVar);
-            varRegistry.Register(StringGroupVar);
+            if (!delayRegistration)
+            {
+                varRegistry.Register(BoolGroupVar);
+                varRegistry.Register(FloatGroupVar);
+                varRegistry.Register(IntGroupVar);
+                varRegistry.Register(StringGroupVar);
+            }
         }
     }
 }

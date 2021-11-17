@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NakamaSync;
 using Xunit;
 
 namespace Nakama.Tests.Sync
@@ -171,6 +169,56 @@ namespace Nakama.Tests.Sync
             var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
             Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
             Assert.True(env1.Match.IsSelfHost() || env2.Match.IsSelfHost());
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarShouldSyncDataDeferred1()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0,
+                delayRegistration: true
+            );
+
+            await testEnv.Start();
+
+            var allEnvs = testEnv.GetAllEnvs();
+
+            allEnvs[0].SharedVars.SharedInt.SetValue(5);
+            allEnvs[0].VarRegistry.Register(allEnvs[0].SharedVars.SharedInt);
+            allEnvs[1].VarRegistry.Register(allEnvs[1].SharedVars.SharedInt);
+
+            await Task.Delay(1000);
+
+            Assert.Equal(5, allEnvs[1].SharedVars.SharedInt.GetValue());
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarShouldSyncDataDeferred2()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0,
+                delayRegistration: true
+            );
+
+            await testEnv.Start();
+
+            var allEnvs = testEnv.GetAllEnvs();
+
+            allEnvs[0].VarRegistry.Register(allEnvs[0].SharedVars.SharedInt);
+            allEnvs[1].VarRegistry.Register(allEnvs[1].SharedVars.SharedInt);
+            allEnvs[0].SharedVars.SharedInt.SetValue(5);
+
+            await Task.Delay(1000);
+
+            Assert.Equal(5, allEnvs[1].SharedVars.SharedInt.GetValue());
+
             testEnv.Dispose();
         }
     }

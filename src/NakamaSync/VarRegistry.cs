@@ -27,7 +27,7 @@ namespace NakamaSync
         private readonly Dictionary<long, IVarSubRegistry> _subregistriesByOpcode = new Dictionary<long, IVarSubRegistry>();
 
         private readonly int _opcodeStart;
-        private readonly SyncMatch _syncMatch;
+        private SyncMatch _syncMatch;
         private bool _attachedReset = false;
 
         public VarRegistry(int opcodeStart = 0)
@@ -37,8 +37,14 @@ namespace NakamaSync
 
         public void Register<T>(SharedVar<T> var)
         {
-            VarSubRegistry<T> subegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
-            subegistry.Register(var);
+            VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
+            subRegistry.Register(var);
+
+            // match already started
+            if (_syncMatch != null)
+            {
+                var.ReceiveSyncMatch(_syncMatch);
+            }
         }
 
         public void Register<T>(GroupVar<T> var)
@@ -55,6 +61,8 @@ namespace NakamaSync
 
         internal void ReceiveMatch(SyncMatch match)
         {
+            _syncMatch = match;
+
             foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
             {
                 subRegistry.ReceiveMatch(match);
@@ -99,6 +107,12 @@ namespace NakamaSync
 
             _subregistriesByOpcode[combinedOpcode] = subRegistry;
 
+            // registration was deferred to after the sync match being received
+            if (_syncMatch != null)
+            {
+                subRegistry.ReceiveMatch(_syncMatch);
+            }
+
             return subRegistry;
         }
 
@@ -107,7 +121,6 @@ namespace NakamaSync
             // could just be a regular piece of match data, i.e., not related to sync vars
             if (_subregistriesByOpcode.ContainsKey(_opcodeStart + matchState.OpCode))
             {
-
                 IVarSubRegistry subRegistry = _subregistriesByOpcode[_opcodeStart + matchState.OpCode];
                 subRegistry.ReceiveMatchState(matchState);
             }

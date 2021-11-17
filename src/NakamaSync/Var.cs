@@ -61,15 +61,32 @@ namespace NakamaSync
 
         internal void SetLocalValue(IUserPresence source, T value)
         {
-            if (_syncMatch == null)
-            {
-                throw new InvalidOperationException("Cannot set a synchronized var before joining a synchronized match.");
-            }
-
             T oldValue = Value;
             T newValue = value;
             Value = newValue;
+            _lockVersion++;
 
+            if (_syncMatch == null)
+            {
+                // defer synchronization until reception of sync match.
+                return;
+            }
+
+            ValidateAndSync(source, Value, value);
+        }
+
+        internal void ReceiveSyncMatch(SyncMatch syncMatch)
+        {
+            _syncMatch = syncMatch;
+
+            if (this.Value != null && !this.Value.Equals(default(T)))
+            {
+                ValidateAndSync(syncMatch.PresenceTracker.GetSelf(), Value, Value);
+            }
+        }
+
+        private void ValidateAndSync(IUserPresence source, T oldValue, T newValue)
+        {
             ValidationStatus oldStatus = this.Status;
 
             if (_syncMatch.HostTracker.IsSelfHost())
@@ -81,18 +98,13 @@ namespace NakamaSync
                 Status = ValidationHandler == null ? ValidationStatus.Pending : ValidationStatus.Valid;
             }
 
-            _lockVersion++;
             _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(isAck: false)));
 
             var evt = new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, Status));
 
             // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
+            // todo also check that there is an actual change!!!
             InvokeOnValueChanged(evt);
-        }
-
-        internal void ReceiveSyncMatch(SyncMatch syncMatch)
-        {
-            _syncMatch = syncMatch;
         }
 
         internal void HandleSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)

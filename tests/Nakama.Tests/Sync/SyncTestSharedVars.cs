@@ -28,7 +28,7 @@ namespace Nakama.Tests.Sync
         public SharedVar<SyncTestObject> SharedObject { get; }
         public SharedVar<string> SharedString { get; }
 
-        public SyncTestSharedVars(string userId, VarRegistry registry)
+        public SyncTestSharedVars(string userId, VarRegistry registry, bool delayRegistration)
         {
             SharedBool = new SharedVar<bool>(100);
             SharedDict = new SharedVar<Dictionary<string, string>>(101);
@@ -37,12 +37,16 @@ namespace Nakama.Tests.Sync
             SharedObject = new SharedVar<SyncTestObject>(104);
             SharedString = new SharedVar<string>(105);
 
-            registry.Register(SharedBool);
-            registry.Register(SharedDict);
-            registry.Register(SharedFloat);
-            registry.Register(SharedInt);
-            registry.Register(SharedObject);
-            registry.Register(SharedString);
+            if (!delayRegistration)
+            {
+                registry.Register(SharedBool);
+                registry.Register(SharedDict);
+                registry.Register(SharedFloat);
+                registry.Register(SharedInt);
+                registry.Register(SharedObject);
+                registry.Register(SharedString);
+            }
+
         }
     }
 }

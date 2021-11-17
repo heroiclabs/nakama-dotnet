@@ -30,6 +30,7 @@ namespace Nakama.Tests.Sync
         public SyncTestGroupVars GroupVars => _groupVars;
         public SyncTestRpcs Rpcs => _rpcs;
         public SyncMatch Match => _match;
+        public VarRegistry VarRegistry => _varRegistry;
 
         private readonly string _userId;
         private readonly IClient _client;
@@ -44,18 +45,18 @@ namespace Nakama.Tests.Sync
         private ISession _session;
         private ISocket _socket;
 
-        public SyncTestUserEnvironment(string userId, int numPresenceVarCollections, int numPresenceVarsPerCollection) : this(userId)
+        public SyncTestUserEnvironment(string userId, int numPresenceVarCollections, int numPresenceVarsPerCollection, bool delayRegistration) : this(userId)
         {
-            _groupVars = new SyncTestGroupVars(_varRegistry, numPresenceVarsPerCollection);
+            _groupVars = new SyncTestGroupVars(_varRegistry, numPresenceVarsPerCollection, delayRegistration);
         }
 
-        public SyncTestUserEnvironment(string userId)
+        public SyncTestUserEnvironment(string userId, bool delayRegistration = false)
         {
             _userId = userId;
             _client = TestsUtil.FromSettingsFile();
             _logger = TestsUtil.LoadConfiguration().StdOut ? new StdoutLogger() : null;
             _socket = Nakama.Socket.From(_client);
-            _sharedVars = new SyncTestSharedVars(_userId, _varRegistry);
+            _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, delayRegistration);
             _rpcs = new SyncTestRpcs(_rpcRegistry);
         }
 
