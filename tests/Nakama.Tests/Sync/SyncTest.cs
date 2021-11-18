@@ -273,5 +273,31 @@ namespace Nakama.Tests.Sync
             Assert.True(creatorPresenceVarInGuest.GetValue());
             testEnv.Dispose();
         }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarShouldSyncAnonymousData()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0);
+
+            await testEnv.Start();
+
+            var allEnvs = testEnv.GetAllEnvs();
+
+            var dict = new Dictionary<object, object>();
+            dict["key"] = 5;
+            allEnvs[0].SharedVars.AnonymousDict.SetValue(dict);
+
+            await Task.Delay(1000);
+
+            Assert.Equal(5, allEnvs[1].SharedVars.AnonymousDict.GetValue()["key"]);
+
+            testEnv.Dispose();
+        }
+
+
+
     }
 }

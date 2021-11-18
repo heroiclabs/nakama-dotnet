@@ -126,13 +126,6 @@ namespace Nakama.TinyJson
             {
                 var keyType = type.GetGenericArguments()[0];
 
-                //Refuse to output dictionary keys that aren't of type string
-                if (keyType != typeof(string))
-                {
-                    stringBuilder.Append("{}");
-                    return;
-                }
-
                 stringBuilder.Append('{');
                 var dict = item as IDictionary;
                 var isFirst = true;

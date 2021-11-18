@@ -274,9 +274,6 @@ namespace Nakama.TinyJson
                     valueType = args[1];
                 }
 
-                // Refuse to parse dictionary keys that aren't of type string
-                if (keyType != typeof(string))
-                    return null;
                 // Must be a valid dictionary element
                 if (json[0] != '{' || json[json.Length - 1] != '}')
                     return null;
