@@ -87,7 +87,6 @@ namespace NakamaSync
 
         private void ValidateAndSync(IUserPresence source, T oldValue, T newValue)
         {
-            System.Console.WriteLine("calling validate and sync");
             ValidationStatus oldStatus = this.Status;
 
             if (_syncMatch.HostTracker.IsSelfHost())
@@ -102,8 +101,6 @@ namespace NakamaSync
             _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(isAck: false)));
 
             var evt = new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, Status));
-
-            System.Console.WriteLine("invoking value changed");
 
             // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
             // todo also check that there is an actual change!!!

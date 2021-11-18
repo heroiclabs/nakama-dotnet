@@ -20,8 +20,8 @@ namespace NakamaSync
 {
     public class HostChangedEvent
     {
-        internal IUserPresence OldHost { get; }
-        internal IUserPresence NewHost { get; }
+        public IUserPresence OldHost { get; }
+        public IUserPresence NewHost { get; }
 
         public HostChangedEvent(IUserPresence oldHost, IUserPresence newHost)
         {
