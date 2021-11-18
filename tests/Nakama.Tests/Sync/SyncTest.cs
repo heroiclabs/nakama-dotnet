@@ -287,12 +287,17 @@ namespace Nakama.Tests.Sync
             var allEnvs = testEnv.GetAllEnvs();
 
             var dict = new Dictionary<object, object>();
-            dict["key"] = 5;
+            dict["keyInt"] = 5;
+            dict["keyString"] = "hello world";
+            dict["keyBool"] = true;
+
             allEnvs[0].SharedVars.AnonymousDict.SetValue(dict);
 
             await Task.Delay(1000);
 
-            Assert.Equal(5, allEnvs[1].SharedVars.AnonymousDict.GetValue()["key"]);
+            Assert.Equal(5, allEnvs[1].SharedVars.AnonymousDict.GetValue()["keyInt"]);
+            Assert.Equal("hello world", allEnvs[1].SharedVars.AnonymousDict.GetValue()["keyString"]);
+            Assert.Equal(true, allEnvs[1].SharedVars.AnonymousDict.GetValue()["keyBool"]);
 
             testEnv.Dispose();
         }
