@@ -62,6 +62,7 @@ namespace NakamaSync
             _session = session;
             _match = match;
             _presenceTracker = new PresenceTracker(session.UserId);
+            _presenceTracker.Subscribe(socket);
             _presenceTracker.ReceiveMatch(match);
             _hostTracker = new HostTracker(_presenceTracker);
             _rpcRegistry = rpcRegistry;
