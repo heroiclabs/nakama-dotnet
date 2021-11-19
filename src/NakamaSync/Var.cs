@@ -59,10 +59,9 @@ namespace NakamaSync
             OnValueChanged?.Invoke(e);
         }
 
-        internal void SetLocalValue(IUserPresence source, T value)
+        internal void SetLocalValue(IUserPresence source, T newValue)
         {
             T oldValue = Value;
-            T newValue = value;
             Value = newValue;
             _lockVersion++;
 
@@ -72,7 +71,7 @@ namespace NakamaSync
                 return;
             }
 
-            ValidateAndSync(source, Value, value);
+            ValidateAndSync(source, oldValue, newValue);
         }
 
         internal void ReceiveSyncMatch(SyncMatch syncMatch)

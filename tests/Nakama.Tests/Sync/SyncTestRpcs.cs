@@ -71,8 +71,8 @@ namespace Nakama.Tests.Sync
         [DataMember(Name="TestMember")]
         public string TestMember { get; set; }
 
-        public static implicit operator SyncTestRpcObject2(SyncTestRpcObject v) => new SyncTestRpcObject2{TestMember = v.TestMember };
-        public static implicit operator SyncTestRpcObject(SyncTestRpcObject2 v) => new SyncTestRpcObject{TestMember = v.TestMember };
+        public static implicit operator SyncTestRpcObject2(SyncTestRpcObject v) => new SyncTestRpcObject2{TestMember = v.TestMember};
+        public static implicit operator SyncTestRpcObject(SyncTestRpcObject2 v) => new SyncTestRpcObject{TestMember = v.TestMember};
     }
 
     public class SyncTestRpcObject2
