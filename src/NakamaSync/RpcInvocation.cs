@@ -108,7 +108,16 @@ namespace NakamaSync
 
                 if (t.GetField(item.Key) != null)
                 {
-                    t.GetProperty(item.Key).SetValue(obj, item.Value, null);
+                    try
+                    {
+                        // todo do this for properties too?
+                        t.GetField(item.Key).SetValue(obj, System.Convert.ChangeType(item.Value, t.GetField(item.Key).FieldType));
+                    }
+                    catch
+                    {
+                        System.Console.WriteLine("Could not convert key " + item.Key);
+                        throw;
+                    }
                     continue;
                 }
             }
