@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-using Nakama.TinyJson;
 using System.Runtime.Serialization;
 
 namespace Nakama.Tests.Sync
@@ -23,5 +22,6 @@ namespace Nakama.Tests.Sync
     {
         [DataMember(Name = "test_value")]
         public string TestValue { get; set; }
+
     }
 }

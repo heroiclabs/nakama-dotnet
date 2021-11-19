@@ -41,14 +41,22 @@ namespace Nakama.Tests.Sync
             _syncMatch = syncMatch;
         }
 
-        public void Invoke(IEnumerable<IUserPresence> presences = null)
+        public void Invoke(IEnumerable<IUserPresence> presences = null, string testDel = "TestRpcDelegate")
         {
             var testObj = new SyncTestRpcObject();
             testObj.TestMember = "testMember";
-            _syncMatch.SendRpc(presences, "TestRpcDelegate", ObjectId, new object[]{"param1", 1, true, testObj});
+            _syncMatch.SendRpc(presences, testDel, ObjectId, new object[]{"param1", 1, true, testObj});
         }
 
         private void TestRpcDelegate(string param1, int param2, bool param3, SyncTestRpcObject param4)
+        {
+            Param1Result = param1;
+            Param2Result = param2;
+            Param3Result = param3;
+            Param4Result = param4;
+        }
+
+        private void TestRpcDelegate2(string param1, int param2, bool param3, SyncTestRpcObject2 param4)
         {
             Param1Result = param1;
             Param2Result = param2;
@@ -61,5 +69,14 @@ namespace Nakama.Tests.Sync
     {
         [DataMember(Name="TestMember")]
         public string TestMember { get; set; }
+
+        public static implicit operator SyncTestRpcObject2(SyncTestRpcObject v) => new SyncTestRpcObject2{OtherTestMember = v.TestMember };
+        public static implicit operator SyncTestRpcObject(SyncTestRpcObject2 v) => new SyncTestRpcObject{TestMember = v.OtherTestMember };
+    }
+
+    public class SyncTestRpcObject2
+    {
+        [DataMember(Name = "test_value")]
+        public string OtherTestMember { get; set; }
     }
 }

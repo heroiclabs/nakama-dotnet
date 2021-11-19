@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace NakamaSync
@@ -55,6 +56,7 @@ namespace NakamaSync
             _parameters = parameters;
         }
 
+
         public void Invoke()
         {
             var processedParameters = new object[_parameters.Length];
@@ -64,21 +66,30 @@ namespace NakamaSync
             for (int i = 0; i < methodParams.Length; i++)
             {
                 ParameterInfo methodParam = methodParams[i];
-                object processedParam = _parameters[i];
+                object param = _parameters[i];
 
-                bool serializedAsGenericDict = _parameters[i] is IDictionary<string,object>;
+                // only used by local rpcs
+
+                var converter = GetImplicitConverter(baseType: param.GetType(), targetType: methodParam.ParameterType);
+
+                if (converter != null)
+                {
+                    param = converter.Invoke(null, new[] {param});
+                }
+
+                bool serializedAsGenericDict = param is IDictionary<string,object>;
                 bool rpcExpectGenericDict = methodParam.ParameterType == typeof(IDictionary<string, object>);
 
                 // tinyjson processes anonymous objects as dictionaries
                 if (serializedAsGenericDict && !rpcExpectGenericDict)
                 {
-                    processedParam = ParamToObject(_parameters[i] as IDictionary<string, object>, methodParam.ParameterType);
+                    param = ParamToObject(param as IDictionary<string, object>, methodParam.ParameterType);
                 }
 
-                processedParameters[i] = processedParam;
+                processedParameters[i] = param;
             }
 
-            System.Console.WriteLine("invoking rpc method");
+            System.Console.WriteLine("invoking rpc method with num params: " + processedParameters.Length);
 
             _method.Invoke(_target, processedParameters);
         }
@@ -93,6 +104,16 @@ namespace NakamaSync
             }
 
             return obj;
+        }
+
+        public static MethodInfo GetImplicitConverter(Type baseType, Type targetType)
+        {
+            return baseType.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Where(method => method.Name == "op_Implicit" && method.ReturnType == targetType)
+                .FirstOrDefault(method => {
+                    ParameterInfo param = method.GetParameters().FirstOrDefault();
+                    return param != null && param.ParameterType == baseType;
+                });
         }
     }
 }

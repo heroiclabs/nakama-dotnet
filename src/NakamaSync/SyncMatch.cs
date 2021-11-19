@@ -133,11 +133,6 @@ namespace NakamaSync
             }
         }
 
-        private void HandleRpcEnvelope(IUserPresence source, RpcEnvelope envelope)
-        {
-           // var invocation = RpcInvocation.Create(_rpcRegistry.GetTarget(rpcId), rpcId, parameters);
-        }
-
         public void SendRpc(string rpcId, string targetId, object[] parameters)
         {
             var envelope = new RpcEnvelope();
