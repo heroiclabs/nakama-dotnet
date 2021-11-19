@@ -58,6 +58,7 @@ namespace Nakama.Tests.Sync
 
         private void TestRpcDelegate2(string param1, int param2, bool param3, SyncTestRpcObject2 param4)
         {
+            System.Console.WriteLine("rpc del 2 called");
             Param1Result = param1;
             Param2Result = param2;
             Param3Result = param3;
@@ -70,13 +71,13 @@ namespace Nakama.Tests.Sync
         [DataMember(Name="TestMember")]
         public string TestMember { get; set; }
 
-        public static implicit operator SyncTestRpcObject2(SyncTestRpcObject v) => new SyncTestRpcObject2{OtherTestMember = v.TestMember };
-        public static implicit operator SyncTestRpcObject(SyncTestRpcObject2 v) => new SyncTestRpcObject{TestMember = v.OtherTestMember };
+        public static implicit operator SyncTestRpcObject2(SyncTestRpcObject v) => new SyncTestRpcObject2{TestMember = v.TestMember };
+        public static implicit operator SyncTestRpcObject(SyncTestRpcObject2 v) => new SyncTestRpcObject{TestMember = v.TestMember };
     }
 
     public class SyncTestRpcObject2
     {
-        [DataMember(Name = "test_value")]
-        public string OtherTestMember { get; set; }
+        [DataMember(Name = "TestMember")]
+        public string TestMember { get; set; }
     }
 }

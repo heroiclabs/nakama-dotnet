@@ -22,7 +22,7 @@ namespace Nakama.Tests.Sync
     public class RpcTest
     {
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private async Task TestLocalRpc()
+        private async Task TestLocalRpcNoImplicit()
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             await testEnv.StartViaName("testName");
@@ -35,7 +35,7 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
-        private async Task TestRpc()
+        private async Task TestRpcNoImplicit()
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             // todo change this to start
