@@ -302,6 +302,56 @@ namespace Nakama.Tests.Sync
             testEnv.Dispose();
         }
 
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void SharedVarShouldEmitDelta()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0);
+
+            await testEnv.Start();
+            SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
+            bool oldValue = true;
+            bool newValue = false;
+
+            creatorEnv.SharedBool.OnValueChanged += evt => {
+                oldValue = evt.ValueChange.OldValue;
+                newValue = evt.ValueChange.NewValue;
+            };
+
+            creatorEnv.SharedBool.SetValue(true);
+            Assert.False(oldValue);
+            Assert.True(newValue);
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void SharedVarShouldEmitDictDelta()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numSharedVars: 1,
+                creatorIndex: 0);
+
+            await testEnv.Start();
+            SyncTestSharedVars creatorEnv = testEnv.GetCreator().SharedVars;
+            bool oldValueHasKey = true;
+            bool newValueHasKey = false;
+
+
+            creatorEnv.SharedDict.OnValueChanged += evt => {
+                oldValueHasKey = evt.ValueChange.OldValue != null && evt.ValueChange.OldValue.ContainsKey("hello");
+                newValueHasKey = evt.ValueChange.NewValue.ContainsKey("hello");
+            };
+
+            creatorEnv.SharedDict.SetValue(new Dictionary<string, string>{{"hello", "world"}});
+
+            Assert.False(oldValueHasKey);
+            Assert.True(newValueHasKey);
+
+            testEnv.Dispose();
+        }
 
 
     }

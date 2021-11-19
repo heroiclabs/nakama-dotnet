@@ -65,13 +65,21 @@ namespace NakamaSync
             Value = newValue;
             _lockVersion++;
 
-            if (_syncMatch == null)
-            {
+            ValidateAndDispatch(source, oldValue, newValue);
+
                 // defer synchronization until reception of sync match.
+            if (_syncMatch != null)
+            {
+                Send();
                 return;
             }
 
-            ValidateAndSync(source, oldValue, newValue);
+
+
+            System.Console.Write("old value " + oldValue);
+            System.Console.Write("new value " + newValue);
+
+
         }
 
         internal void ReceiveSyncMatch(SyncMatch syncMatch)
@@ -80,30 +88,37 @@ namespace NakamaSync
 
             if (this.Value != null && !this.Value.Equals(default(T)))
             {
-                ValidateAndSync(syncMatch.PresenceTracker.GetSelf(), Value, Value);
+                ValidateAndDispatch(syncMatch.PresenceTracker.GetSelf(), Value, Value);
+                Send();
             }
         }
 
-        private void ValidateAndSync(IUserPresence source, T oldValue, T newValue)
+        private void ValidateAndDispatch(IUserPresence source, T oldValue, T newValue)
         {
             ValidationStatus oldStatus = this.Status;
 
-            if (_syncMatch.HostTracker.IsSelfHost())
+            if (_syncMatch != null && _syncMatch.HostTracker.IsSelfHost())
             {
                 Status = ValidationHandler == null ? ValidationStatus.None : ValidationStatus.Valid;
             }
             else
             {
+                // todo if this user becomes host let's move validation status to valid
                 Status = ValidationHandler == null ? ValidationStatus.Pending : ValidationStatus.Valid;
             }
 
-            _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(isAck: false)));
-
             var evt = new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, Status));
 
-            // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
-            // todo also check that there is an actual change!!!
             InvokeOnValueChanged(evt);
+
+            // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
+            // todo also check that there is an actual change!!! think about how to do for collections
+        }
+
+        private void Send()
+        {
+            _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(isAck: false)));
+
         }
 
         internal void HandleSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
