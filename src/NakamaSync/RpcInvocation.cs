@@ -100,7 +100,17 @@ namespace NakamaSync
 
             foreach (var item in parameter)
             {
-                t.GetProperty(item.Key).SetValue(obj, item.Value, null);
+                if (t.GetProperty(item.Key) != null)
+                {
+                    t.GetProperty(item.Key).SetValue(obj, item.Value, null);
+                    continue;
+                }
+
+                if (t.GetField(item.Key) != null)
+                {
+                    t.GetProperty(item.Key).SetValue(obj, item.Value, null);
+                    continue;
+                }
             }
 
             return obj;
