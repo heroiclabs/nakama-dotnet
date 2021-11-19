@@ -107,7 +107,7 @@ namespace NakamaSync
             return _hostTracker.IsSelfHost();
         }
 
-        public void SendRpc(IEnumerable<IUserPresence> targetPresences, string rpcId, string targetId, params object[] parameters)
+        public void SendRpc(IEnumerable<IUserPresence> targetPresences, string rpcId, string targetId, object[] parameters)
         {
             // todo name sure match exists
             var envelope = new RpcEnvelope();
@@ -121,7 +121,7 @@ namespace NakamaSync
 
             _socket.SendMatchStateAsync(_match.Id, _rpcRegistry.Opcode, _encoding.Encode(envelope), targetPresences);
 
-            if (targetPresences.Any(presence => presence.UserId == Self.UserId))
+            if (targetPresences != null && targetPresences.Any(presence => presence.UserId == Self.UserId))
             {
                 if (!_rpcRegistry.HasTarget(targetId))
                 {
@@ -138,7 +138,7 @@ namespace NakamaSync
            // var invocation = RpcInvocation.Create(_rpcRegistry.GetTarget(rpcId), rpcId, parameters);
         }
 
-        public void SendRpc(string rpcId, string targetId, params object[] parameters)
+        public void SendRpc(string rpcId, string targetId, object[] parameters)
         {
             var envelope = new RpcEnvelope();
             envelope.Parameters = parameters;
