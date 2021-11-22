@@ -286,18 +286,14 @@ namespace Nakama.Tests.Sync
             nonCreatorEnv.VarRegistry.Register(nonCreatorEnv.GroupVars.GroupBool);
 
             IUserPresence creatorBoolSelf = creatorEnv.GroupVars.GroupBool.Self.Presence;
+
             Assert.True(creatorBoolSelf.UserId == creatorEnv.Self.UserId);
-
             Assert.Equal(1, creatorEnv.GroupVars.GroupBool.Others.Count());
-
             Assert.True(creatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == nonCreatorEnv.Self.UserId));
             Assert.True(nonCreatorEnv.GroupVars.GroupBool.Self.Presence.UserId == nonCreatorEnv.Self.UserId);
             Assert.True(nonCreatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == creatorEnv.Self.UserId));
-
             Assert.False(creatorEnv.GroupVars.GroupBool.Others.Any(var => var.Presence.UserId == creatorEnv.GroupVars.GroupBool.Self.Presence.UserId));
             Assert.False(nonCreatorEnv.GroupVars.GroupBool.Others.Any(var => var.Presence.UserId == nonCreatorEnv.GroupVars.GroupBool.Self.Presence.UserId));
-
-
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
@@ -332,7 +328,7 @@ namespace Nakama.Tests.Sync
             var nonCreatorSelfBool = nonCreatorEnv.GroupVars.GroupBool.Self;
             var nonCreatorPresenceBools = nonCreatorEnv.GroupVars.GroupBool.Others;
 
-            Assert.True(nonCreatorSelfBool.GetValue());
+            Assert.False(nonCreatorSelfBool.GetValue());
             Assert.False(nonCreatorEnv.GroupVars.GroupBool.Self.GetValue());
 
             var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
@@ -433,18 +429,19 @@ namespace Nakama.Tests.Sync
                 creatorIndex: 0);
 
             await testEnv.Start();
-            SyncTestGroupVars creatorEnv = testEnv.GetCreator().GroupVars;
 
-            IUserPresence otherPresence = testEnv.GetRandomNonCreatorPresence();
-            SyncTestGroupVars nonCreatorEnv = testEnv.GetUserEnv(otherPresence).GroupVars;
+            IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
+
+            SyncTestGroupVars creatorEnv = testEnv.GetCreator().GroupVars;
+            SyncTestGroupVars nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence).GroupVars;
 
             bool eventDispatched = false;
             bool oldValueHasKey = true;
             bool newValueHasKey = false;
 
-            var nonCreatorVar = nonCreatorEnv.GroupDict.GetVar(otherPresence);
+            var nonCreatorOtherVar = nonCreatorEnv.GroupDict.GetVar(testEnv.GetCreatorPresence());
 
-            nonCreatorVar.OnValueChanged += evt =>
+            nonCreatorOtherVar.OnValueChanged += evt =>
             {
                 eventDispatched = true;
                 oldValueHasKey = evt.ValueChange.OldValue != null && evt.ValueChange.OldValue.ContainsKey("hello");

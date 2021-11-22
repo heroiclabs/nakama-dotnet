@@ -57,6 +57,12 @@ namespace NakamaSync
 
                 foreach (var var in vars)
                 {
+                    // TODO hack, this needs a refactor
+                    if (var is SelfVar<T>)
+                    {
+                        continue;
+                    }
+
                     var.HandleSerialized(state.UserPresence, serialized);
                 }
 
