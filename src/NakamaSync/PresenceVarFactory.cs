@@ -43,7 +43,7 @@ namespace NakamaSync
 
             // use the presence tracker presences rather than the sync match presence because they will be
             // up to date. the sync match may be stale at the point based on how the registry is written.
-            foreach (IUserPresence presence in syncMatch.PresenceTracker.GetSortedPresences())
+            foreach (IUserPresence presence in syncMatch.PresenceTracker.GetSortedOthers())
             {
                 HandlePresenceAdded(presence);
             }
@@ -79,7 +79,9 @@ namespace NakamaSync
             // deferred registration
             if (_syncMatch != null)
             {
-                foreach (IUserPresence presence in _syncMatch.Presences)
+                // use the presence tracker presences rather than the sync match presence because they will be
+                // up to date. the sync match may be stale at the point based on how the registry is written.
+                foreach (IUserPresence presence in _syncMatch.PresenceTracker.GetSortedOthers())
                 {
                     if (!_varsByUser.ContainsKey(presence.UserId))
                     {

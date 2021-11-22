@@ -39,8 +39,6 @@ namespace NakamaSync
         {
             VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
 
-            subRegistry.Register(var);
-
             if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)
             {
                 // registration was deferred to after the sync match being received.
@@ -48,6 +46,8 @@ namespace NakamaSync
                 // if a var of their type was already registered prior to receiving the match.
                 subRegistry.ReceiveMatch(_syncMatch);
             }
+
+            subRegistry.Register(var);
         }
 
         public void Register<T>(GroupVar<T> var)
@@ -62,7 +62,6 @@ namespace NakamaSync
                 // registration was deferred to after the sync match being received.
                 // note that some registries have already received the sync match
                 // if a var of their type was already registered prior to receiving the match.
-                var.Self.ReceiveSyncMatch(_syncMatch);
                 subRegistry.ReceiveMatch(_syncMatch);
             }
         }

@@ -30,6 +30,7 @@ namespace NakamaSync
         public ValidationHandler<T> ValidationHandler { get; set; }
 
         public ValidationStatus Status { get; private set; }
+        internal bool ReceivedSyncMatch => _syncMatch != null;
         protected T Value { get; private set; }
         protected SyncMatch SyncMatch => _syncMatch;
 

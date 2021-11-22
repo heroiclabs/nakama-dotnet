@@ -44,6 +44,7 @@ namespace NakamaSync
                 var.ReceiveSyncMatch(syncMatch);
             }
 
+            System.Console.WriteLine("receiving sync match through receive match");
             _factory.ReceiveSyncMatch(syncMatch);
         }
 
@@ -75,11 +76,10 @@ namespace NakamaSync
 
             _vars[_opcodeStart + var.Opcode].Add(var);
 
-            // registration was deferred to after the sync match being received
-            if (_syncMatch != null)
+            if (_syncMatch != null && !var.ReceivedSyncMatch)
             {
+                // deferred registratoin of variable
                 var.ReceiveSyncMatch(_syncMatch);
-                _factory.ReceiveSyncMatch(_syncMatch);
             }
         }
 
