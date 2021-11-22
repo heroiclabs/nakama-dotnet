@@ -111,7 +111,6 @@ namespace NakamaSync
         private void Send()
         {
             _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(isAck: false)));
-
         }
 
         internal void HandleSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)

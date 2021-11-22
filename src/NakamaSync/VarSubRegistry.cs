@@ -22,6 +22,7 @@ namespace NakamaSync
 {
     internal class VarSubRegistry<T> : IVarSubRegistry
     {
+        public bool ReceivedSyncMatch => _syncMatch != null;
         //todo this is just shared and self vars at the moment and not presence vars which is weird.
         private readonly Dictionary<long, List<Var<T>>> _vars = new Dictionary<long, List<Var<T>>>();
         private SyncMatch _syncMatch;
@@ -73,6 +74,13 @@ namespace NakamaSync
             }
 
             _vars[_opcodeStart + var.Opcode].Add(var);
+
+            // registration was deferred to after the sync match being received
+            if (_syncMatch != null)
+            {
+                var.ReceiveSyncMatch(_syncMatch);
+                _rotator.ReceiveSyncMatch(_syncMatch);
+            }
         }
 
         public void Reset()

@@ -38,25 +38,27 @@ namespace NakamaSync
         public void Register<T>(SharedVar<T> var)
         {
             VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
+
             subRegistry.Register(var);
 
-            // deferred registration to after match received
-            if (_syncMatch != null)
+            if (!subRegistry.ReceivedSyncMatch && _syncMatch !=  null)
             {
-                var.ReceiveSyncMatch(_syncMatch);
+                // registration was deferred to after the sync match being received
+                subRegistry.ReceiveMatch(_syncMatch);
             }
         }
 
         public void Register<T>(GroupVar<T> var)
         {
-            VarSubRegistry<T> subegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
-            subegistry.AddRotatorOpcode(_opcodeStart + var.Opcode, var.OthersList);
-            subegistry.Register(var.Self);
+            VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
+            subRegistry.AddRotatorOpcode(_opcodeStart + var.Opcode, var.OthersList);
+            subRegistry.Register(var.Self);
 
-            // deferred registration to after match received
-            if (_syncMatch != null)
+            if (!subRegistry.ReceivedSyncMatch && _syncMatch !=  null)
             {
+                // registration was deferred to after the sync match being received
                 var.Self.ReceiveSyncMatch(_syncMatch);
+                subRegistry.ReceiveMatch(_syncMatch);
             }
         }
 
@@ -94,7 +96,7 @@ namespace NakamaSync
 
         private VarSubRegistry<T> GetOrAddSubregistry<T>(long combinedOpcode)
         {
-             VarSubRegistry<T> subRegistry;
+            VarSubRegistry<T> subRegistry;
 
             if (!_subregistriesByType.ContainsKey(typeof(T)))
             {
@@ -112,12 +114,6 @@ namespace NakamaSync
             }
 
             _subregistriesByOpcode[combinedOpcode] = subRegistry;
-
-            // registration was deferred to after the sync match being received
-            if (_syncMatch != null)
-            {
-                subRegistry.ReceiveMatch(_syncMatch);
-            }
 
             return subRegistry;
         }

@@ -234,6 +234,65 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task PresenceVarRotatorUniqueAssignmentsNotDeferred()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numPresenceVarCollections: 1,
+                numPresenceVarsPerCollection: 1,
+                creatorIndex: 0,
+                userIdGenerator: null,
+                delayRegistration: false
+            );
+
+            await testEnv.Start();
+            IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
+
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
+            SyncTestUserEnvironment nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
+
+            await Task.Delay(1000);
+            IUserPresence creatorBoolSelf = creatorEnv.GroupVars.GroupBool.Self.Presence;
+            Assert.True(creatorBoolSelf.UserId == creatorEnv.Self.UserId);
+            Assert.True(creatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == nonCreatorEnv.Self.UserId));
+            Assert.True(nonCreatorEnv.GroupVars.GroupBool.Self.Presence.UserId == nonCreatorEnv.Self.UserId);
+            Assert.True(nonCreatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == creatorEnv.Self.UserId));
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task PresenceVarRotatorUniqueAssignmentsDeferred()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numPresenceVarCollections: 1,
+                numPresenceVarsPerCollection: 1,
+                creatorIndex: 0,
+                userIdGenerator: null,
+                delayRegistration: true
+            );
+
+            await testEnv.Start();
+            IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
+
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
+            SyncTestUserEnvironment nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
+
+            await Task.Delay(1000);
+
+            creatorEnv.VarRegistry.Register(creatorEnv.GroupVars.GroupBool);
+            nonCreatorEnv.VarRegistry.Register(nonCreatorEnv.GroupVars.GroupBool);
+
+            IUserPresence creatorBoolSelf = creatorEnv.GroupVars.GroupBool.Self.Presence;
+            Assert.True(creatorBoolSelf.UserId == creatorEnv.Self.UserId);
+
+            Assert.Equal(1, creatorEnv.GroupVars.GroupBool.Others.Count());
+
+            Assert.True(creatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == nonCreatorEnv.Self.UserId));
+            Assert.True(nonCreatorEnv.GroupVars.GroupBool.Self.Presence.UserId == nonCreatorEnv.Self.UserId);
+            Assert.True(nonCreatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == creatorEnv.Self.UserId));
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task PresenceVarShouldSyncDataDeferred()
         {
             var testEnv = new SyncTestEnvironment(

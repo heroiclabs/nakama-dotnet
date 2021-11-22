@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Nakama;
 
 namespace NakamaSync
@@ -42,7 +41,9 @@ namespace NakamaSync
             syncMatch.PresenceTracker.OnPresenceAdded += HandlePresenceAdded;
             syncMatch.PresenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
 
-            foreach (IUserPresence presence in syncMatch.Presences)
+            // use the presence tracker presences rather than the sync match presence because they will be
+            // up to date. the sync match may be stale at the point based on how the registry is written.
+            foreach (IUserPresence presence in syncMatch.PresenceTracker.GetSortedPresences())
             {
                 HandlePresenceAdded(presence);
             }
@@ -72,6 +73,7 @@ namespace NakamaSync
                 throw new ArgumentException($"Already added opcode: {opcode}");
             }
 
+            System.Console.WriteLine("adding opcode");
             _varsByOpcode.Add(opcode, presenceVars);
 
             // deferred registration
@@ -101,12 +103,14 @@ namespace NakamaSync
                 return;
             }
 
-            var userVars =  new List<PresenceVar<T>>();
+            var userVars = new List<PresenceVar<T>>();
             _varsByUser.Add(presence.UserId, userVars);
-
+            System.Console.WriteLine("vars by opcode is " + _varsByOpcode.Count);
             foreach (KeyValuePair<long, List<PresenceVar<T>>> vars in _varsByOpcode)
             {
                 var newVar = new PresenceVar<T>(vars.Key);
+                System.Console.WriteLine("adding new presence var for " + presence.UserId);
+
                 newVar.SetPresence(presence);
                 newVar.ReceiveSyncMatch(_syncMatch);
                 vars.Value.Add(newVar);
