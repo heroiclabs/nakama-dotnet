@@ -252,11 +252,14 @@ namespace Nakama.Tests.Sync
             SyncTestUserEnvironment nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
 
             await Task.Delay(1000);
-            IUserPresence creatorBoolSelf = creatorEnv.GroupVars.GroupBool.Self.Presence;
-            Assert.True(creatorBoolSelf.UserId == creatorEnv.Self.UserId);
+            Assert.True(creatorEnv.GroupVars.GroupBool.Self.Presence.UserId == creatorEnv.Self.UserId);
             Assert.True(creatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == nonCreatorEnv.Self.UserId));
+            Assert.False(creatorEnv.GroupVars.GroupBool.Others.Any(var => var.Presence.UserId == creatorEnv.GroupVars.GroupBool.Self.Presence.UserId));
+
             Assert.True(nonCreatorEnv.GroupVars.GroupBool.Self.Presence.UserId == nonCreatorEnv.Self.UserId);
             Assert.True(nonCreatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == creatorEnv.Self.UserId));
+            Assert.False(nonCreatorEnv.GroupVars.GroupBool.Others.Any(var => var.Presence.UserId == nonCreatorEnv.GroupVars.GroupBool.Self.Presence.UserId));
+
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
@@ -290,6 +293,11 @@ namespace Nakama.Tests.Sync
             Assert.True(creatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == nonCreatorEnv.Self.UserId));
             Assert.True(nonCreatorEnv.GroupVars.GroupBool.Self.Presence.UserId == nonCreatorEnv.Self.UserId);
             Assert.True(nonCreatorEnv.GroupVars.GroupBool.Others.Any(p => p.Presence.UserId == creatorEnv.Self.UserId));
+
+            Assert.False(creatorEnv.GroupVars.GroupBool.Others.Any(var => var.Presence.UserId == creatorEnv.GroupVars.GroupBool.Self.Presence.UserId));
+            Assert.False(nonCreatorEnv.GroupVars.GroupBool.Others.Any(var => var.Presence.UserId == nonCreatorEnv.GroupVars.GroupBool.Self.Presence.UserId));
+
+
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
@@ -321,9 +329,10 @@ namespace Nakama.Tests.Sync
             string creatorId = creatorEnv.Self.UserId;
             string nonCreatorId = nonCreatorEnv.Self.UserId;
 
+            var nonCreatorSelfBool = nonCreatorEnv.GroupVars.GroupBool.Self;
             var nonCreatorPresenceBools = nonCreatorEnv.GroupVars.GroupBool.Others;
 
-            Assert.True(nonCreatorPresenceBools.Any());
+            Assert.True(nonCreatorSelfBool.GetValue());
             Assert.False(nonCreatorEnv.GroupVars.GroupBool.Self.GetValue());
 
             var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
