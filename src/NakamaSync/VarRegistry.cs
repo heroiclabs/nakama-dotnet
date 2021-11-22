@@ -41,9 +41,11 @@ namespace NakamaSync
 
             subRegistry.Register(var);
 
-            if (!subRegistry.ReceivedSyncMatch && _syncMatch !=  null)
+            if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)
             {
-                // registration was deferred to after the sync match being received
+                // registration was deferred to after the sync match being received.
+                // note that some registries have already received the sync match
+                // if a var of their type was already registered prior to receiving the match.
                 subRegistry.ReceiveMatch(_syncMatch);
             }
         }
@@ -51,12 +53,15 @@ namespace NakamaSync
         public void Register<T>(GroupVar<T> var)
         {
             VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
-            subRegistry.AddRotatorOpcode(_opcodeStart + var.Opcode, var.OthersList);
+            System.Console.WriteLine("Calling add factory opcode");
+            subRegistry.AddFactoryOpcode(_opcodeStart + var.Opcode, var.OthersList);
             subRegistry.Register(var.Self);
 
-            if (!subRegistry.ReceivedSyncMatch && _syncMatch !=  null)
+            if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)
             {
-                // registration was deferred to after the sync match being received
+                // registration was deferred to after the sync match being received.
+                // note that some registries have already received the sync match
+                // if a var of their type was already registered prior to receiving the match.
                 var.Self.ReceiveSyncMatch(_syncMatch);
                 subRegistry.ReceiveMatch(_syncMatch);
             }
@@ -78,7 +83,7 @@ namespace NakamaSync
 
             if (!_attachedReset)
             {
-                // todo think about race between this event and inside the presence var rotator
+                // todo think about race between this event and inside the presence var factory
                 match.Socket.ReceivedMatchPresence += (evt) =>
                 {
                     if (evt.Leaves.Any(leave => leave.UserId == match.Session.UserId))

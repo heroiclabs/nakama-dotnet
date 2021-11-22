@@ -22,7 +22,7 @@ namespace NakamaSync
 {
     // todo assign errorhandler and logger to this
     // todo reuse same variable if user rejoins?
-    internal class PresenceVarRotator<T>
+    internal class PresenceVarFactory<T>
     {
         public ILogger Logger { get; set; }
 

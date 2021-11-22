@@ -27,7 +27,7 @@ namespace NakamaSync
         private readonly Dictionary<long, List<Var<T>>> _vars = new Dictionary<long, List<Var<T>>>();
         private SyncMatch _syncMatch;
         private readonly long _opcodeStart;
-        private PresenceVarRotator<T> _rotator = new PresenceVarRotator<T>();
+        private PresenceVarFactory<T> _factory = new PresenceVarFactory<T>();
 
         public VarSubRegistry(int opcodeStart)
         {
@@ -44,7 +44,7 @@ namespace NakamaSync
                 var.ReceiveSyncMatch(syncMatch);
             }
 
-            _rotator.ReceiveSyncMatch(syncMatch);
+            _factory.ReceiveSyncMatch(syncMatch);
         }
 
         public void ReceiveMatchState(IMatchState state)
@@ -59,10 +59,10 @@ namespace NakamaSync
                     var.HandleSerialized(state.UserPresence, serialized);
                 }
 
-                // todo something seems off about the rotator abstraction and the relation to group var.
+                // todo something seems off about the factory abstraction and the relation to group var.
                 // the flexible creation of presence vars seems correct but the way they are named or the boundaries
                 // between the objects seems non-intuitive.
-                _rotator.HandleSerialized(state.UserPresence, _opcodeStart + state.OpCode, serialized);
+                _factory.HandleSerialized(state.UserPresence, _opcodeStart + state.OpCode, serialized);
             }
         }
 
@@ -79,7 +79,7 @@ namespace NakamaSync
             if (_syncMatch != null)
             {
                 var.ReceiveSyncMatch(_syncMatch);
-                _rotator.ReceiveSyncMatch(_syncMatch);
+                _factory.ReceiveSyncMatch(_syncMatch);
             }
         }
 
@@ -91,9 +91,9 @@ namespace NakamaSync
             }
         }
 
-        public void AddRotatorOpcode(long opcode, List<PresenceVar<T>> presenceVars)
+        public void AddFactoryOpcode(long opcode, List<PresenceVar<T>> presenceVars)
         {
-            _rotator.AddOpcode(opcode, presenceVars);
+            _factory.AddOpcode(opcode, presenceVars);
         }
     }
 

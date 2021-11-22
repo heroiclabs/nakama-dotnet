@@ -234,7 +234,7 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async Task PresenceVarRotatorUniqueAssignmentsNotDeferred()
+        private async Task PresenceVarFactoryUniqueAssignmentsNotDeferred()
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
@@ -260,7 +260,7 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async Task PresenceVarRotatorUniqueAssignmentsDeferred()
+        private async Task PresenceVarFactoryUniqueAssignmentsDeferred()
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
