@@ -49,8 +49,8 @@ namespace Nakama.Tests.Sync
 
             await testEnv.Start();
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.GroupVars.BoolGroupVar.Self.SetValue(true);
-            Assert.True(creatorEnv.GroupVars.BoolGroupVar.Self.GetValue());
+            creatorEnv.GroupVars.GroupBool.Self.SetValue(true);
+            Assert.True(creatorEnv.GroupVars.GroupBool.Self.GetValue());
             testEnv.Dispose();
         }
 
@@ -105,7 +105,7 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async Task PresenceVarShouldSyncData()
+        private async Task GroupVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
@@ -116,18 +116,19 @@ namespace Nakama.Tests.Sync
             await testEnv.Start();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreator();
-            creatorEnv.GroupVars.BoolGroupVar.Self.SetValue(true);
+            creatorEnv.GroupVars.GroupBool.Self.SetValue(true);
 
-            await Task.Delay(2500);
+            var guestPresenceInCreatorEnv = testEnv.GetRandomNonCreatorPresence();
+
+            await Task.Delay(1000);
 
             IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
-
             SyncTestUserEnvironment nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
 
             string creatorId = creatorEnv.Self.UserId;
             string nonCreatorId = nonCreatorEnv.Self.UserId;
 
-            var nonCreatorPresenceBools = nonCreatorEnv.GroupVars.BoolGroupVar.Others;
+            var nonCreatorPresenceBools = nonCreatorEnv.GroupVars.GroupBool.Others;
 
             Assert.True(nonCreatorPresenceBools.Any());
 
@@ -136,6 +137,7 @@ namespace Nakama.Tests.Sync
             });
 
             Assert.True(creatorPresenceVarInGuest.GetValue());
+            Assert.False(creatorEnv.GroupVars.GroupBool.GetVar(guestPresenceInCreatorEnv).GetValue());
             testEnv.Dispose();
         }
 
@@ -211,8 +213,6 @@ namespace Nakama.Tests.Sync
                 delayRegistration: true
             );
 
-
-
             await testEnv.Start();
 
             var allEnvs = testEnv.GetAllEnvs();
@@ -252,25 +252,27 @@ namespace Nakama.Tests.Sync
             IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
             SyncTestUserEnvironment nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
 
-            creatorEnv.VarRegistry.Register(creatorEnv.GroupVars.BoolGroupVar);
-            nonCreatorEnv.VarRegistry.Register(nonCreatorEnv.GroupVars.BoolGroupVar);
+            creatorEnv.VarRegistry.Register(creatorEnv.GroupVars.GroupBool);
+            nonCreatorEnv.VarRegistry.Register(nonCreatorEnv.GroupVars.GroupBool);
 
-            creatorEnv.GroupVars.BoolGroupVar.Self.SetValue(true);
+            creatorEnv.GroupVars.GroupBool.Self.SetValue(true);
 
-            await Task.Delay(2500);
+            await Task.Delay(1000);
 
             string creatorId = creatorEnv.Self.UserId;
             string nonCreatorId = nonCreatorEnv.Self.UserId;
 
-            var nonCreatorPresenceBools = nonCreatorEnv.GroupVars.BoolGroupVar.Others;
+            var nonCreatorPresenceBools = nonCreatorEnv.GroupVars.GroupBool.Others;
 
             Assert.True(nonCreatorPresenceBools.Any());
+            Assert.False(nonCreatorEnv.GroupVars.GroupBool.Self.GetValue());
 
             var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
                 return var.Presence.UserId == creatorId;
             });
 
             Assert.True(creatorPresenceVarInGuest.GetValue());
+            Assert.False(creatorEnv.GroupVars.GroupBool.Others.Any(var => var.GetValue()));
             testEnv.Dispose();
         }
 
@@ -291,13 +293,13 @@ namespace Nakama.Tests.Sync
             dict["keyString"] = "hello world";
             dict["keyBool"] = true;
 
-            allEnvs[0].SharedVars.AnonymousDict.SetValue(dict);
+            allEnvs[0].SharedVars.SharedAnonymousDict.SetValue(dict);
 
             await Task.Delay(1000);
 
-            Assert.Equal(5, allEnvs[1].SharedVars.AnonymousDict.GetValue()["keyInt"]);
-            Assert.Equal("hello world", allEnvs[1].SharedVars.AnonymousDict.GetValue()["keyString"]);
-            Assert.Equal(true, allEnvs[1].SharedVars.AnonymousDict.GetValue()["keyBool"]);
+            Assert.Equal(5, allEnvs[1].SharedVars.SharedAnonymousDict.GetValue()["keyInt"]);
+            Assert.Equal("hello world", allEnvs[1].SharedVars.SharedAnonymousDict.GetValue()["keyString"]);
+            Assert.Equal(true, allEnvs[1].SharedVars.SharedAnonymousDict.GetValue()["keyBool"]);
 
             testEnv.Dispose();
         }
@@ -353,6 +355,43 @@ namespace Nakama.Tests.Sync
             testEnv.Dispose();
         }
 
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void GroupVarShouldEmitDictDelta()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numPresenceVarCollections: 1,
+                numPresenceVarsPerCollection: 1,
+                creatorIndex: 0);
 
+            await testEnv.Start();
+            SyncTestGroupVars creatorEnv = testEnv.GetCreator().GroupVars;
+
+            IUserPresence otherPresence = testEnv.GetRandomNonCreatorPresence();
+            SyncTestGroupVars nonCreatorEnv = testEnv.GetUserEnv(otherPresence).GroupVars;
+
+            bool eventDispatched = false;
+            bool oldValueHasKey = true;
+            bool newValueHasKey = false;
+
+            var nonCreatorVar = nonCreatorEnv.GroupDict.GetVar(otherPresence);
+
+            nonCreatorVar.OnValueChanged += evt =>
+            {
+                eventDispatched = true;
+                oldValueHasKey = evt.ValueChange.OldValue != null && evt.ValueChange.OldValue.ContainsKey("hello");
+                newValueHasKey = evt.ValueChange.NewValue.ContainsKey("hello");
+            };
+
+            creatorEnv.GroupDict.Self.SetValue(new Dictionary<string, string>{{"hello", "world"}});
+
+            await Task.Delay(1000);
+
+            Assert.True(eventDispatched);
+            Assert.False(oldValueHasKey);
+            Assert.True(newValueHasKey);
+
+            testEnv.Dispose();
+        }
     }
 }

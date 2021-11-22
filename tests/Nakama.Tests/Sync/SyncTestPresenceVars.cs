@@ -22,24 +22,27 @@ namespace Nakama.Tests.Sync
     // todo apply varid generator to presence var collections
     public class SyncTestGroupVars
     {
-        public GroupVar<bool> BoolGroupVar { get; }
-        public GroupVar<float> FloatGroupVar { get; }
-        public GroupVar<int> IntGroupVar { get; }
-        public GroupVar<string> StringGroupVar { get; }
+        public GroupVar<bool> GroupBool { get; }
+        public GroupVar<float> GroupFloat { get; }
+        public GroupVar<int> GroupInt { get; }
+        public GroupVar<string> GroupString { get; }
+        public GroupVar<Dictionary<string, string>> GroupDict { get; }
 
         public SyncTestGroupVars(VarRegistry varRegistry, int presenceVarsPerCollection, bool delayRegistration)
         {
-            BoolGroupVar = new GroupVar<bool>(opcode: 0);
-            FloatGroupVar = new GroupVar<float>(opcode: 1);
-            IntGroupVar = new GroupVar<int>(opcode: 2);
-            StringGroupVar = new GroupVar<string>(opcode: 3);
+            GroupBool = new GroupVar<bool>(opcode: 0);
+            GroupFloat = new GroupVar<float>(opcode: 1);
+            GroupInt = new GroupVar<int>(opcode: 2);
+            GroupString = new GroupVar<string>(opcode: 3);
+            GroupDict = new GroupVar<Dictionary<string, string>>(opcode: 4);
 
             if (!delayRegistration)
             {
-                varRegistry.Register(BoolGroupVar);
-                varRegistry.Register(FloatGroupVar);
-                varRegistry.Register(IntGroupVar);
-                varRegistry.Register(StringGroupVar);
+                varRegistry.Register(GroupBool);
+                varRegistry.Register(GroupFloat);
+                varRegistry.Register(GroupInt);
+                varRegistry.Register(GroupString);
+                varRegistry.Register(GroupDict);
             }
         }
     }

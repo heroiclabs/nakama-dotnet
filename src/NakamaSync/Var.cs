@@ -67,19 +67,12 @@ namespace NakamaSync
 
             ValidateAndDispatch(source, oldValue, newValue);
 
-                // defer synchronization until reception of sync match.
+            // defer synchronization until reception of sync match.
             if (_syncMatch != null)
             {
                 Send();
                 return;
             }
-
-
-
-            System.Console.Write("old value " + oldValue);
-            System.Console.Write("new value " + newValue);
-
-
         }
 
         internal void ReceiveSyncMatch(SyncMatch syncMatch)

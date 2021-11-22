@@ -109,9 +109,6 @@ namespace NakamaSync
                 var newVar = new PresenceVar<T>(vars.Key);
                 newVar.SetPresence(presence);
                 newVar.ReceiveSyncMatch(_syncMatch);
-
-                System.Console.WriteLine("adding new var to list " + presence.UserId + ", " + _userId);
-
                 vars.Value.Add(newVar);
                 userVars.Add(newVar);
             }

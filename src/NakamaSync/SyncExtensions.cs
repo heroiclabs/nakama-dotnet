@@ -14,8 +14,9 @@
 * limitations under the License.
 */
 
+
+// todo should sync vars return copies of reference types?
 // todo entire concurrency pass on all this
-// should var registry have a dictionary or should it have methods?
 // TODO what if someone changes the type collection that the key is in, will try to send to the incorrect type
 // between clients and may pass handshake.
 // if user leaves and then rejoins do their values come back? they are still in collection but
@@ -72,6 +73,7 @@
 // also think about if incoming values comes from a user who isn't host but thinks he is, this is expected to happen given conccurrency? or maybe iti sn' expecetd to happen?
 // todo support more list-like and dictionary-like methods on the shared and self vars (or maybe use an implicit operator on the var) rather than just setting a fresh new object each time.
 // todo handle resetting
+// todo implicit operator for underlying type? careful...
 
 using System.Threading.Tasks;
 using Nakama;
