@@ -458,5 +458,26 @@ namespace Nakama.Tests.Sync
 
             testEnv.Dispose();
         }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void GroupVarEmitsPresence()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                numPresenceVarCollections: 1,
+                numPresenceVarsPerCollection: 1,
+                creatorIndex: 0);
+
+            bool varAdded = false;
+
+            testEnv.GetCreator().GroupVars.GroupBool.OnPresenceAdded += var =>
+            {
+                varAdded = true;
+            };
+
+            await testEnv.Start();
+            Assert.True(varAdded);
+            testEnv.Dispose();
+        }
     }
 }

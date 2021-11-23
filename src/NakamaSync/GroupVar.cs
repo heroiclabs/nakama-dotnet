@@ -30,7 +30,19 @@ namespace NakamaSync
     /// </summary>
     public class GroupVar<T>
     {
-        public event PresenceAddHandler<T> OnPresenceAdded;
+        public event PresenceAddHandler<T> OnPresenceAdded
+        {
+            add
+            {
+                OnPresenceAddedInternal += value;
+            }
+            remove
+            {
+                OnPresenceAddedInternal -= value;
+            }
+        }
+
+        internal PresenceAddHandler<T> OnPresenceAddedInternal;
 
         public SelfVar<T> Self { get; }
         public IEnumerable<PresenceVar<T>> Others => _others;

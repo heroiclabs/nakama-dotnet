@@ -26,7 +26,7 @@ namespace NakamaSync
     {
         public ILogger Logger { get; set; }
 
-        private readonly Dictionary<long, List<PresenceVar<T>>> _varsByOpcode = new Dictionary<long, List<PresenceVar<T>>>();
+        private readonly Dictionary<long, GroupVar<T>> _varsByOpcode = new Dictionary<long, GroupVar<T>>();
         private readonly Dictionary<string, List<PresenceVar<T>>> _varsByUser = new Dictionary<string, List<PresenceVar<T>>>();
 
         private string _userId;
@@ -57,7 +57,7 @@ namespace NakamaSync
                 return;
             }
 
-            foreach (PresenceVar<T> var in _varsByOpcode[opcode])
+            foreach (PresenceVar<T> var in _varsByOpcode[opcode].Others)
             {
                 if (var.Presence.UserId == source.UserId)
                 {
@@ -66,7 +66,7 @@ namespace NakamaSync
             }
         }
 
-        public void AddOpcode(long opcode, List<PresenceVar<T>> presenceVars)
+        public void AddOpcode(long opcode, GroupVar<T> groupVar)
         {
             if (_varsByOpcode.ContainsKey(opcode))
             {
@@ -74,7 +74,7 @@ namespace NakamaSync
             }
 
             System.Console.WriteLine("adding opcode");
-            _varsByOpcode.Add(opcode, presenceVars);
+            _varsByOpcode.Add(opcode, groupVar);
 
             // deferred registration
             if (_syncMatch != null)
@@ -92,7 +92,8 @@ namespace NakamaSync
                     newVar.SetPresence(presence);
                     newVar.ReceiveSyncMatch(_syncMatch);
                     _varsByUser[presence.UserId].Add(newVar);
-                    _varsByOpcode[opcode].Add(newVar);
+                    _varsByOpcode[opcode].OthersList.Add(newVar);
+                    _varsByOpcode[opcode].OnPresenceAddedInternal?.Invoke(newVar);
                 }
             }
         }
@@ -108,15 +109,16 @@ namespace NakamaSync
             var userVars = new List<PresenceVar<T>>();
             _varsByUser.Add(presence.UserId, userVars);
             System.Console.WriteLine("vars by opcode is " + _varsByOpcode.Count);
-            foreach (KeyValuePair<long, List<PresenceVar<T>>> vars in _varsByOpcode)
+            foreach (KeyValuePair<long, GroupVar<T>> var in _varsByOpcode)
             {
-                var newVar = new PresenceVar<T>(vars.Key);
+                var newVar = new PresenceVar<T>(var.Key);
                 System.Console.WriteLine("adding new presence var for " + presence.UserId);
 
                 newVar.SetPresence(presence);
                 newVar.ReceiveSyncMatch(_syncMatch);
-                vars.Value.Add(newVar);
                 userVars.Add(newVar);
+                var.Value.OthersList.Add(newVar);
+                var.Value.OnPresenceAddedInternal?.Invoke(newVar);
             }
         }
 

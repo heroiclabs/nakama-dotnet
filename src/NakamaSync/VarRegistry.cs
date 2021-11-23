@@ -53,8 +53,7 @@ namespace NakamaSync
         public void Register<T>(GroupVar<T> var)
         {
             VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
-            System.Console.WriteLine("Calling add factory opcode");
-            subRegistry.AddFactoryOpcode(_opcodeStart + var.Opcode, var.OthersList);
+            subRegistry.AddFactoryOpcode(_opcodeStart + var.Opcode, var);
             subRegistry.Register(var.Self);
 
             if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)

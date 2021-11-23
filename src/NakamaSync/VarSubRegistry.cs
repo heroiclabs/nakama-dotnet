@@ -97,9 +97,9 @@ namespace NakamaSync
             }
         }
 
-        public void AddFactoryOpcode(long opcode, List<PresenceVar<T>> presenceVars)
+        public void AddFactoryOpcode(long opcode, GroupVar<T> groupVar)
         {
-            _factory.AddOpcode(opcode, presenceVars);
+            _factory.AddOpcode(opcode, groupVar);
         }
     }
 
