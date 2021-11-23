@@ -82,7 +82,8 @@ namespace Nakama.Ninja.WebSockets
         /// <param name="options">The WebSocket client options</param>
         /// <param name="token">The optional cancellation token</param>
         /// <returns>A connected web socket instance</returns>
-        public async Task<WebSocket> ConnectAsync(Uri uri, WebSocketClientOptions options, CancellationToken token = default(CancellationToken))
+        public async Task<WebSocket> ConnectAsync(Uri uri, WebSocketClientOptions options,
+            CancellationToken token = default(CancellationToken))
         {
             Guid guid = Guid.NewGuid();
             string host = uri.Host;
@@ -105,13 +106,17 @@ namespace Nakama.Ninja.WebSockets
         /// <param name="options">The WebSocket client options</param>
         /// <param name="token">The optional cancellation token</param>
         /// <returns></returns>
-        public async Task<WebSocket> ConnectAsync(System.IO.Stream responseStream, string secWebSocketKey, WebSocketClientOptions options, CancellationToken token = default(CancellationToken))
+        public async Task<WebSocket> ConnectAsync(System.IO.Stream responseStream, string secWebSocketKey,
+            WebSocketClientOptions options, CancellationToken token = default(CancellationToken))
         {
             Guid guid = Guid.NewGuid();
-            return await ConnectAsync(guid, responseStream, secWebSocketKey, options.KeepAliveInterval, options.SecWebSocketExtensions, options.IncludeExceptionInCloseResponse, token);
+            return await ConnectAsync(guid, responseStream, secWebSocketKey, options.KeepAliveInterval,
+                options.SecWebSocketExtensions, options.IncludeExceptionInCloseResponse, token);
         }
 
-        private async Task<WebSocket> ConnectAsync(Guid guid, System.IO.Stream responseStream, string secWebSocketKey, TimeSpan keepAliveInterval, string secWebSocketExtensions, bool includeExceptionInCloseResponse, CancellationToken token)
+        private async Task<WebSocket> ConnectAsync(Guid guid, System.IO.Stream responseStream, string secWebSocketKey,
+            TimeSpan keepAliveInterval, string secWebSocketExtensions, bool includeExceptionInCloseResponse,
+            CancellationToken token)
         {
             string response = string.Empty;
 
@@ -127,7 +132,8 @@ namespace Nakama.Ninja.WebSockets
             ThrowIfInvalidResponseCode(response);
             ThrowIfInvalidAcceptString(guid, response, secWebSocketKey);
             string subProtocol = GetSubProtocolFromHeader(response);
-            return new WebSocketImplementation(guid, _bufferFactory, responseStream, keepAliveInterval, secWebSocketExtensions, includeExceptionInCloseResponse, true, subProtocol);
+            return new WebSocketImplementation(guid, _bufferFactory, responseStream, keepAliveInterval,
+                secWebSocketExtensions, includeExceptionInCloseResponse, true, subProtocol);
         }
 
         private string GetSubProtocolFromHeader(string response)
@@ -155,7 +161,9 @@ namespace Nakama.Ninja.WebSockets
             string expectedAcceptString = HttpHelper.ComputeSocketAcceptString(secWebSocketKey);
             if (expectedAcceptString != actualAcceptString)
             {
-                string warning = string.Format($"Handshake failed because the accept string from the server '{expectedAcceptString}' was not the expected string '{actualAcceptString}'");
+                string warning =
+                    string.Format(
+                        $"Handshake failed because the accept string from the server '{expectedAcceptString}' was not the expected string '{actualAcceptString}'");
                 throw new WebSocketHandshakeFailedException(warning);
             }
         }
@@ -203,9 +211,12 @@ namespace Nakama.Ninja.WebSockets
         /// <param name="port">The destination port</param>
         /// <param name="cancellationToken">Used to cancel the request</param>
         /// <returns>A connected and open stream</returns>
-        protected virtual async Task<System.IO.Stream> GetStream(Guid loggingGuid, bool isSecure, bool noDelay, string host, int port, CancellationToken cancellationToken)
+        protected virtual async Task<System.IO.Stream> GetStream(Guid loggingGuid, bool isSecure, bool noDelay,
+            string host, int port, CancellationToken cancellationToken)
         {
-            var tcpClient = new TcpClient {NoDelay = noDelay};
+            var tcpClient = new TcpClient(AddressFamily.InterNetworkV6);
+            tcpClient.Client.NoDelay = true;
+            tcpClient.Client.DualMode = true;
             IPAddress ipAddress;
             if (IPAddress.TryParse(host, out ipAddress))
             {
@@ -213,25 +224,7 @@ namespace Nakama.Ninja.WebSockets
             }
             else
             {
-                // NOTE Workaround for Mono runtime issue #8692
-                // https://github.com/mono/mono/issues/8692
-                var hostAddresses = Dns.GetHostAddresses(host);
-                IPAddress ipv4Address = null;
-                foreach (var address in hostAddresses)
-                {
-                    if (address.AddressFamily != AddressFamily.InterNetwork) continue;
-                    ipv4Address = address;
-                    break;
-                }
-
-                if (ipv4Address != null)
-                {
-                    await tcpClient.ConnectAsync(ipv4Address, port);
-                }
-                else
-                {
-                    await tcpClient.ConnectAsync(host, port);
-                }
+                await tcpClient.ConnectAsync(host, port);
             }
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -239,7 +232,8 @@ namespace Nakama.Ninja.WebSockets
 
             if (isSecure)
             {
-                SslStream sslStream = new SslStream(stream, false, new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
+                SslStream sslStream = new SslStream(stream, false,
+                    new RemoteCertificateValidationCallback(ValidateServerCertificate), null);
 
                 // This will throw an AuthenticationException if the certificate is not valid
                 TlsAuthenticateAsClient(sslStream, host);
@@ -255,7 +249,8 @@ namespace Nakama.Ninja.WebSockets
         /// Invoked by the RemoteCertificateValidationDelegate
         /// If you want to ignore certificate errors (for debugging) then return true
         /// </summary>
-        private static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        private static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain,
+            SslPolicyErrors sslPolicyErrors)
         {
             if (sslPolicyErrors == SslPolicyErrors.None)
             {
@@ -284,7 +279,8 @@ namespace Nakama.Ninja.WebSockets
             }
         }
 
-        private async Task<WebSocket> PerformHandshake(Guid guid, Uri uri, System.IO.Stream stream, WebSocketClientOptions options, CancellationToken token)
+        private async Task<WebSocket> PerformHandshake(Guid guid, Uri uri, System.IO.Stream stream,
+            WebSocketClientOptions options, CancellationToken token)
         {
             Random rand = new Random();
             byte[] keyAsBytes = new byte[16];
@@ -293,13 +289,13 @@ namespace Nakama.Ninja.WebSockets
             string additionalHeaders = GetAdditionalHeaders(options.AdditionalHttpHeaders);
             string handshakeHttpRequest = $"GET {uri.PathAndQuery} HTTP/1.1\r\n" +
                                           $"Host: {uri.Host}:{uri.Port}\r\n" +
-                                           "Upgrade: websocket\r\n" +
-                                           "Connection: Upgrade\r\n" +
+                                          "Upgrade: websocket\r\n" +
+                                          "Connection: Upgrade\r\n" +
                                           $"Sec-WebSocket-Key: {secWebSocketKey}\r\n" +
                                           $"Origin: http://{uri.Host}:{uri.Port}\r\n" +
                                           $"Sec-WebSocket-Protocol: {options.SecWebSocketProtocol}\r\n" +
                                           additionalHeaders +
-                                           "Sec-WebSocket-Version: 13\r\n\r\n";
+                                          "Sec-WebSocket-Version: 13\r\n\r\n";
 
             byte[] httpRequest = Encoding.UTF8.GetBytes(handshakeHttpRequest);
             stream.Write(httpRequest, 0, httpRequest.Length);
