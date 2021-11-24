@@ -29,10 +29,12 @@ namespace NakamaSync
         public event ResetHandler OnReset;
         public ValidationHandler<T> ValidationHandler { get; set; }
 
-        public ValidationStatus Status { get; private set; }
         internal bool ReceivedSyncMatch => _syncMatch != null;
+        internal SyncMatch SyncMatch => _syncMatch;
+
+        public ValidationStatus Status { get; private set; }
+
         protected T Value { get; private set; }
-        protected SyncMatch SyncMatch => _syncMatch;
 
         private int _lockVersion;
         private SyncMatch _syncMatch;
@@ -66,7 +68,7 @@ namespace NakamaSync
             Value = newValue;
             _lockVersion++;
 
-            ValidateAndDispatch(source, oldValue, newValue);
+            ValidateAndDispatch(source, oldValue, newValue, SyncMatch.GetElapsedTimeMs());
 
             // defer synchronization until reception of sync match.
             if (_syncMatch != null)
@@ -82,12 +84,12 @@ namespace NakamaSync
 
             if (this.Value != null && !this.Value.Equals(default(T)))
             {
-                ValidateAndDispatch(syncMatch.PresenceTracker.GetSelf(), Value, Value);
+                ValidateAndDispatch(syncMatch.PresenceTracker.GetSelf(), Value, Value, 0f);
                 Send();
             }
         }
 
-        private void ValidateAndDispatch(IUserPresence source, T oldValue, T newValue)
+        private void ValidateAndDispatch(IUserPresence source, T oldValue, T newValue, double sendTimeMs)
         {
             ValidationStatus oldStatus = this.Status;
 
@@ -101,7 +103,7 @@ namespace NakamaSync
                 Status = ValidationHandler == null ? ValidationStatus.Pending : ValidationStatus.Valid;
             }
 
-            var evt = new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, Status));
+            var evt = new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, Status), sendTimeMs);
 
             InvokeOnValueChanged(evt);
 
@@ -133,7 +135,7 @@ namespace NakamaSync
                 Value = incomingSerialized.Value;
                 _lockVersion = incomingSerialized.LockVersion;
                 Status = incomingSerialized.Status;
-                InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, Value), new ValidationChange(oldStatus, Status)));
+                InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, Value), new ValidationChange(oldStatus, Status), incomingSerialized.SendTimeMs));
             }
 
             // todo notify if invalid?
@@ -172,7 +174,8 @@ namespace NakamaSync
 
         internal ISerializableVar<T> ToSerializable(bool isAck)
         {
-            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, IsAck = isAck};
+            double unixMilliseconds = (DateTime.UtcNow - SyncMatch.StartTime).TotalMilliseconds;
+            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, IsAck = isAck, SendTimeMs = unixMilliseconds};
         }
     }
 }

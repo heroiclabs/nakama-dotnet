@@ -47,6 +47,7 @@ namespace NakamaSync
         internal ISession Session => _session;
         internal ISocket Socket => _socket;
         internal SyncEncoding Encoding => _encoding;
+        internal DateTime StartTime => _startTime;
 
         private readonly IMatch _match;
         private readonly ISession _session;
@@ -55,6 +56,10 @@ namespace NakamaSync
         private ISocket _socket;
         private readonly SyncEncoding _encoding = new SyncEncoding();
         private readonly RpcRegistry _rpcRegistry;
+
+        // TODO separate into separate vars, a synced var from the match creator and then a private
+        // var specific to this specific client's time in the match.
+        private DateTime _startTime;
 
         internal SyncMatch(ISocket socket, ISession session, IMatch match, RpcRegistry rpcRegistry)
         {
@@ -66,7 +71,7 @@ namespace NakamaSync
             _presenceTracker.ReceiveMatch(match);
             _hostTracker = new HostTracker(_presenceTracker);
             _rpcRegistry = rpcRegistry;
-
+            _startTime = DateTime.UtcNow;
 
             socket.ReceivedMatchState += HandleRpcMatchState;
         }
@@ -145,6 +150,11 @@ namespace NakamaSync
             }
 
             _socket.SendMatchStateAsync(_match.Id, _rpcRegistry.Opcode, _encoding.Encode(envelope));
+        }
+
+        internal double GetElapsedTimeMs()
+        {
+            return (DateTime.UtcNow - DateTime.UtcNow).TotalMilliseconds;
         }
     }
 }

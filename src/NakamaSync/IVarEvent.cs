@@ -23,5 +23,6 @@ namespace NakamaSync
         IUserPresence Source { get; }
         IValueChange<T> ValueChange { get; }
         IValidationChange ValidationChange { get; }
+        double SendTimeMs { get; }
     }
 }

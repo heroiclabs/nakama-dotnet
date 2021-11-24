@@ -14,17 +14,33 @@
 * limitations under the License.
 */
 
+using System;
+
 namespace NakamaSync
 {
-    /// <summary>
-    /// A data-transfer object for a sync var.
-    /// </summary>
-    internal interface ISerializableVar<T>
+    internal struct RawValue
     {
-        T Value { get; }
-        int LockVersion { get; set; }
-        ValidationStatus Status { get; set; }
-        bool IsAck { get; set; }
-        double SendTimeMs { get; set; }
+        public float Value { get; }
+        public DateTime Time { get; }
+
+        public RawValue(float value, DateTime time)
+        {
+            Value = value;
+            Time = time;
+        }
+    }
+
+    internal struct SmoothedValue
+    {
+        public float RawValue { get; }
+        public float Value { get; }
+        public DateTime Time { get; }
+
+        public SmoothedValue(float value, float smoothedValue, DateTime time)
+        {
+            RawValue = value;
+            Value = value;
+            Time = time;
+        }
     }
 }

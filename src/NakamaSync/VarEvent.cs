@@ -23,12 +23,14 @@ namespace NakamaSync
         public IUserPresence Source { get; }
         public IValueChange<T> ValueChange { get; }
         public IValidationChange ValidationChange { get; }
+        public double SendTimeMs { get; }
 
-        public VarEvent(IUserPresence source, IValueChange<T> valueChange, IValidationChange validationChange)
+        public VarEvent(IUserPresence source, IValueChange<T> valueChange, IValidationChange validationChange, double sendTimeMs)
         {
             Source = source;
             ValueChange = valueChange;
             ValidationChange = validationChange;
+            SendTimeMs = sendTimeMs;
         }
     }
 }
