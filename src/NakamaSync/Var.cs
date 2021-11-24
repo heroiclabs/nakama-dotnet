@@ -15,6 +15,9 @@
 */
 
 using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
@@ -25,17 +28,20 @@ namespace NakamaSync
     public abstract class Var<T>
     {
         public event Action<IVarEvent<T>> OnValueChanged;
-        public long Opcode { get; }
         public event ResetHandler OnReset;
-        public ValidationHandler<T> ValidationHandler { get; set; }
 
+        public ValidationHandler<T> ValidationHandler { get; set; }
+        public long Opcode { get; }
         public ValidationStatus Status { get; private set; }
+
         internal bool ReceivedSyncMatch => _syncMatch != null;
+
         protected T Value { get; private set; }
         protected SyncMatch SyncMatch => _syncMatch;
 
         private int _lockVersion;
         private SyncMatch _syncMatch;
+        private TaskCompletionSource<bool> _handshakeTcs = new TaskCompletionSource<bool>();
 
         public Var(long opcode)
         {
@@ -52,6 +58,7 @@ namespace NakamaSync
             Value = default(T);
             Status = ValidationStatus.None;
             _syncMatch = null;
+            _handshakeTcs = new TaskCompletionSource<bool>();
             OnReset();
         }
 
@@ -64,27 +71,58 @@ namespace NakamaSync
         {
             T oldValue = Value;
             Value = newValue;
-            _lockVersion++;
+
+            // don't increment lock version if haven't done handshake yet.
+            // remote clients should overwrite any local value during the handshake.
+            if (_syncMatch != null)
+            {
+                _lockVersion++;
+            }
 
             ValidateAndDispatch(source, oldValue, newValue);
 
             // defer synchronization until reception of sync match.
             if (_syncMatch != null)
             {
-                Send();
+                Send(AckType.None);
                 return;
             }
         }
 
-        internal void ReceiveSyncMatch(SyncMatch syncMatch)
+        internal Task ReceiveSyncMatch(SyncMatch syncMatch, int handshakeTimeoutSec)
         {
             _syncMatch = syncMatch;
 
             if (this.Value != null && !this.Value.Equals(default(T)))
             {
                 ValidateAndDispatch(syncMatch.PresenceTracker.GetSelf(), Value, Value);
-                Send();
+                Send(AckType.None);
             }
+
+            syncMatch.PresenceTracker.OnPresenceAdded += (p) =>
+            {
+                // share state with the new user
+                // note that in the case of a shared var, last lock version will win
+                // when all clients try to greet the new one.
+                // todo put this into its own method and virtualize it instead
+                // of doing a type check?
+                if (!(this is PresenceVar<T>))
+                {
+                    Send(AckType.Handshake, new IUserPresence[]{p});
+                }
+            };
+
+            // not match creator
+            if (syncMatch.Presences.Any())
+            {
+                // todo what if user spam creates and closes lots of sync matches before the timeout from the first ends?
+                var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(handshakeTimeoutSec));
+                timeoutCts.Token.Register(() => _handshakeTcs.SetCanceled());
+
+                return _handshakeTcs.Task;
+            }
+
+            return Task.CompletedTask;
         }
 
         private void ValidateAndDispatch(IUserPresence source, T oldValue, T newValue)
@@ -109,9 +147,9 @@ namespace NakamaSync
             // todo also check that there is an actual change!!! think about how to do for collections
         }
 
-        private void Send()
+        private void Send(AckType ackType, IUserPresence[] presences = null)
         {
-            _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(isAck: false)));
+            _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(ackType)), presences);
         }
 
         internal void HandleSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
@@ -127,7 +165,7 @@ namespace NakamaSync
 
             ValidationStatus newStatus = TryHostIntercept(source, incomingSerialized);
 
-
+            // todo notify if invalid?
             if (newStatus != ValidationStatus.Invalid)
             {
                 Value = incomingSerialized.Value;
@@ -136,7 +174,7 @@ namespace NakamaSync
                 InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, Value), new ValidationChange(oldStatus, Status)));
             }
 
-            // todo notify if invalid?
+            _handshakeTcs.SetResult(true);
         }
 
         private ValidationStatus TryHostIntercept(IUserPresence source, ISerializableVar<T> serialized)
@@ -152,17 +190,17 @@ namespace NakamaSync
                     if (ValidationHandler.Invoke(source, new ValueChange<T>(Value, serialized.Value)))
                     {
                         responseSerialized = serialized;
-                        responseSerialized.IsAck = true;
+                        responseSerialized.AckType = AckType.Validation;
                         newStatus = ValidationStatus.Valid;
                     }
                     else
                     {
-                        responseSerialized = ToSerializable(isAck: true);
+                        responseSerialized = ToSerializable(AckType.Validation);
                         newStatus = ValidationStatus.Invalid;
                     }
 
                     responseSerialized.Status = newStatus;
-                    responseSerialized.IsAck = true;
+                    responseSerialized.AckType = AckType.Validation;
                     _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode,  _syncMatch.Encoding.Encode(responseSerialized));
                 }
             }
@@ -170,9 +208,9 @@ namespace NakamaSync
             return newStatus;
         }
 
-        internal ISerializableVar<T> ToSerializable(bool isAck)
+        internal ISerializableVar<T> ToSerializable(AckType ackType)
         {
-            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, IsAck = isAck};
+            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, AckType = ackType};
         }
     }
 }

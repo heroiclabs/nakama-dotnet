@@ -31,6 +31,6 @@ namespace NakamaSync
     {
         int LockVersion { get; set; }
         ValidationStatus Status { get; set; }
-        bool IsAck { get; set; }
+        AckType AckType { get; set; }
     }
 }

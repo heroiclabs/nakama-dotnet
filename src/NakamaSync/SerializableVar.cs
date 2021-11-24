@@ -29,10 +29,19 @@ namespace NakamaSync
         [DataMember(Name="lock_version"), Preserve]
         public int LockVersion { get; set; }
 
-        [DataMember(Name="key_validation_status"), Preserve]
+        [DataMember(Name="validation_status"), Preserve]
         public ValidationStatus Status { get; set; }
 
-        [DataMember(Name="is_ack"), Preserve]
-        public bool IsAck { get; set; }
+        [DataMember(Name="ack_type"), Preserve]
+        public AckType AckType { get; set; }
+    }
+
+    internal enum AckType
+    {
+        None = 1,
+        // other client acknowledging new client
+        Handshake = 2,
+        // host acknowledging value that needs validation
+        Validation = 3,
     }
 }

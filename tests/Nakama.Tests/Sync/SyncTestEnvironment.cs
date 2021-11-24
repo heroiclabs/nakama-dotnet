@@ -155,7 +155,7 @@ namespace Nakama.Tests.Sync
             return _syncTestUserEnvironments.First(env => env.Self.UserId == clientPresence.UserId);
         }
 
-        public SyncTestUserEnvironment GetCreator()
+        public SyncTestUserEnvironment GetCreatorEnv()
         {
             return _syncTestUserEnvironments[CreatorIndex];
         }

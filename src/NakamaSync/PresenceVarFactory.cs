@@ -90,7 +90,7 @@ namespace NakamaSync
 
                     var newVar = new PresenceVar<T>(opcode);
                     newVar.SetPresence(presence);
-                    newVar.ReceiveSyncMatch(_syncMatch);
+                    newVar.ReceiveSyncMatch(_syncMatch, -1);
                     _varsByUser[presence.UserId].Add(newVar);
                     _varsByOpcode[opcode].OthersList.Add(newVar);
                     _varsByOpcode[opcode].OnPresenceAddedInternal?.Invoke(newVar);
@@ -115,7 +115,7 @@ namespace NakamaSync
                 System.Console.WriteLine("adding new presence var for " + presence.UserId);
 
                 newVar.SetPresence(presence);
-                newVar.ReceiveSyncMatch(_syncMatch);
+                newVar.ReceiveSyncMatch(_syncMatch, -1);
                 userVars.Add(newVar);
                 var.Value.OthersList.Add(newVar);
                 var.Value.OnPresenceAddedInternal?.Invoke(newVar);

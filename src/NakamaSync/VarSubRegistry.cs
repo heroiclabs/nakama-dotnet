@@ -16,6 +16,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
@@ -28,24 +29,30 @@ namespace NakamaSync
         private SyncMatch _syncMatch;
         private readonly long _opcodeStart;
         private PresenceVarFactory<T> _factory = new PresenceVarFactory<T>();
+        private int _handshakeTimeoutSec;
 
-        public VarSubRegistry(int opcodeStart)
+        public VarSubRegistry(int opcodeStart, int handshakeTimeoutSec)
         {
             _opcodeStart = opcodeStart;
+            _handshakeTimeoutSec = handshakeTimeoutSec;
         }
 
-        public void ReceiveMatch(SyncMatch syncMatch)
+        public Task ReceiveMatch(SyncMatch syncMatch)
         {
             _syncMatch = syncMatch;
+
+            var handshakeTasks = new List<Task>();
 
             var allVars = _vars.Values.SelectMany(l => l);
             foreach (var var in allVars)
             {
-                var.ReceiveSyncMatch(syncMatch);
+                handshakeTasks.Add(var.ReceiveSyncMatch(syncMatch, _handshakeTimeoutSec));
             }
 
             System.Console.WriteLine("receiving sync match through receive match");
             _factory.ReceiveSyncMatch(syncMatch);
+
+            return Task.WhenAll(handshakeTasks);
         }
 
         public void ReceiveMatchState(IMatchState state)
@@ -85,7 +92,7 @@ namespace NakamaSync
             if (_syncMatch != null && !var.ReceivedSyncMatch)
             {
                 // deferred registratoin of variable
-                var.ReceiveSyncMatch(_syncMatch);
+                var.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec);
             }
         }
 
@@ -105,7 +112,7 @@ namespace NakamaSync
 
     internal interface IVarSubRegistry
     {
-        void ReceiveMatch(SyncMatch match);
+        Task ReceiveMatch(SyncMatch match);
         void ReceiveMatchState(IMatchState match);
         void Reset();
     }

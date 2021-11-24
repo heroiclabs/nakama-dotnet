@@ -67,7 +67,6 @@ namespace NakamaSync
             _hostTracker = new HostTracker(_presenceTracker);
             _rpcRegistry = rpcRegistry;
 
-
             socket.ReceivedMatchState += HandleRpcMatchState;
         }
 

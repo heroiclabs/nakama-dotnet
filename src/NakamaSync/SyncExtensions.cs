@@ -31,7 +31,7 @@
 // TODO restore the default getvalue call with self
 // think about end match flow, resetting sync vars.
 // to string calls
-// expose interfaces, not concrete classes.
+// expose interfaces, not concrete classes, where possible.
 // todo create hostvar.
 // todo handle host changed
 // todo handle guest left
@@ -64,15 +64,13 @@
 // which would keep the variables there?
 // todo create a syncmatch struct and expose presences.
 // add null checks for inputs and maybe more input validation
-// whole PresenceVarcollection?
-// todo make sure you can
 // does usemainthread need to be true? test with both. think about different threading models.
 // TODO think about a decision to give all vars an interface component and most events or other user-facing objects an interface component. right now it's a mixed approach.
 // todo fix disparity w/r/t whether var events have the actual concrete var on them or if we don't really need that...there is inconsistency between the var evnets at the moment.
 // todo lock the processing of each envelope to avoid multithreading issues e.g., host changing while processing a value.
 // also think about if incoming values comes from a user who isn't host but thinks he is, this is expected to happen given conccurrency? or maybe iti sn' expecetd to happen?
 // todo support more list-like and dictionary-like methods on the shared and self vars (or maybe use an implicit operator on the var) rather than just setting a fresh new object each time.
-// todo handle resetting
+// todo test/handle match close and var resetting
 // todo implicit operator for underlying type? careful...
 
 using System.Threading.Tasks;
@@ -85,28 +83,34 @@ namespace NakamaSync
         // todo maybe don't require session as a parameter here since we pass it to socket.
         public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, RpcRegistry rpcRegistry, string name = null)
         {
+            // TODO think about how to properly deregister, if at all.
+            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
+
             IMatch match = await socket.CreateMatchAsync(name);
             var syncMatch = new SyncMatch(socket, session, match, rpcRegistry);
-            registry.ReceiveMatch(syncMatch);
-            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
+            await registry.ReceiveMatch(syncMatch);
             return syncMatch;
         }
 
         public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, IMatchmakerMatched matched, VarRegistry registry, RpcRegistry rpcRegistry)
         {
+            // TODO think about how to properly deregister, if at all.
+            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
+
             IMatch match = await socket.JoinMatchAsync(matched);
             var syncMatch = new SyncMatch(socket, session, match, rpcRegistry);
-            registry.ReceiveMatch(syncMatch);
-            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
+            await registry.ReceiveMatch(syncMatch);
             return syncMatch;
         }
 
         public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, string matchId, VarRegistry registry, RpcRegistry rpcRegistry)
         {
+            // TODO think about how to properly deregister, if at all.
+            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
+
             IMatch match = await socket.JoinMatchAsync(matchId);
             var syncMatch = new SyncMatch(socket, session, match, rpcRegistry);
-            registry.ReceiveMatch(syncMatch);
-            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
+            await registry.ReceiveMatch(syncMatch);
             return syncMatch;
         }
     }

@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
@@ -29,10 +30,12 @@ namespace NakamaSync
         private readonly int _opcodeStart;
         private SyncMatch _syncMatch;
         private bool _attachedReset = false;
+        private readonly int _handshakeTimeoutSec;
 
-        public VarRegistry(int opcodeStart = 0)
+        public VarRegistry(int opcodeStart = 0, int handshakeTimeoutSec = 5)
         {
             _opcodeStart = opcodeStart;
+            _handshakeTimeoutSec = handshakeTimeoutSec;
         }
 
         public void Register<T>(SharedVar<T> var)
@@ -70,13 +73,15 @@ namespace NakamaSync
             return _subregistriesByOpcode.ContainsKey(opcode);
         }
 
-        internal void ReceiveMatch(SyncMatch match)
+        internal Task ReceiveMatch(SyncMatch match)
         {
             _syncMatch = match;
 
+            var subregistryTasks = new List<Task>();
+
             foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
             {
-                subRegistry.ReceiveMatch(match);
+                subregistryTasks.Add(subRegistry.ReceiveMatch(match));
             }
 
             if (!_attachedReset)
@@ -95,6 +100,8 @@ namespace NakamaSync
             }
 
             _attachedReset = true;
+
+            return Task.WhenAll(subregistryTasks);
         }
 
         private VarSubRegistry<T> GetOrAddSubregistry<T>(long combinedOpcode)
@@ -103,7 +110,7 @@ namespace NakamaSync
 
             if (!_subregistriesByType.ContainsKey(typeof(T)))
             {
-                subRegistry = new VarSubRegistry<T>(_opcodeStart);
+                subRegistry = new VarSubRegistry<T>(_opcodeStart, _handshakeTimeoutSec);
                 _subregistriesByType[typeof(T)] = subRegistry;
             }
             else
