@@ -28,7 +28,7 @@ namespace Nakama.Tests.Sync
         public GroupVar<string> GroupString { get; }
         public GroupVar<Dictionary<string, string>> GroupDict { get; }
 
-        public SyncTestGroupVars(VarRegistry varRegistry, int presenceVarsPerCollection, bool delayRegistration)
+        public SyncTestGroupVars(VarRegistry varRegistry, bool delayRegistration)
         {
             GroupBool = new GroupVar<bool>(opcode: 0);
             GroupFloat = new GroupVar<float>(opcode: 1);

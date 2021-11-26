@@ -34,39 +34,14 @@ namespace NakamaSync
         // todo flush this value where appropriate
         private SyncMatch _syncMatch;
 
-        public void ReceiveSyncMatch(SyncMatch syncMatch)
-        {
-            _userId = syncMatch.Self.UserId;
-            _syncMatch = syncMatch;
-            syncMatch.PresenceTracker.OnPresenceAdded += HandlePresenceAdded;
-            syncMatch.PresenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
+        private readonly int _handshakeTimeoutSec;
 
-            // use the presence tracker presences rather than the sync match presence because they will be
-            // up to date. the sync match may be stale at the point based on how the registry is written.
-            foreach (IUserPresence presence in syncMatch.PresenceTracker.GetSortedOthers())
-            {
-                HandlePresenceAdded(presence);
-            }
+        public PresenceVarFactory(int handhakeTimeoutSec)
+        {
+            _handshakeTimeoutSec = handhakeTimeoutSec;
         }
 
-        public void HandleSerialized(IUserPresence source, long opcode, SerializableVar<T> serializable)
-        {
-            if (!_varsByOpcode.ContainsKey(opcode))
-            {
-                // todo I think either unnecessary or log an error
-                return;
-            }
-
-            foreach (PresenceVar<T> var in _varsByOpcode[opcode].Others)
-            {
-                if (var.Presence.UserId == source.UserId)
-                {
-                    var.HandleSerialized(source, serializable);
-                }
-            }
-        }
-
-        public void AddOpcode(long opcode, GroupVar<T> groupVar)
+        public void AddGroupVar(long opcode, GroupVar<T> groupVar)
         {
             if (_varsByOpcode.ContainsKey(opcode))
             {
@@ -90,11 +65,44 @@ namespace NakamaSync
 
                     var newVar = new PresenceVar<T>(opcode);
                     newVar.SetPresence(presence);
-                    newVar.ReceiveSyncMatch(_syncMatch, -1);
+                    newVar.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec);
+
                     _varsByUser[presence.UserId].Add(newVar);
                     _varsByOpcode[opcode].OthersList.Add(newVar);
                     _varsByOpcode[opcode].OnPresenceAddedInternal?.Invoke(newVar);
                 }
+            }
+        }
+
+        public void HandleSerialized(IUserPresence source, long opcode, SerializableVar<T> serializable)
+        {
+            if (!_varsByOpcode.ContainsKey(opcode))
+            {
+                // todo I think either unnecessary or log an error
+                return;
+            }
+
+            foreach (PresenceVar<T> var in _varsByOpcode[opcode].Others)
+            {
+                if (var.Presence.UserId == source.UserId)
+                {
+                    var.HandleSerialized(source, serializable);
+                }
+            }
+        }
+
+        public void ReceiveSyncMatch(SyncMatch syncMatch)
+        {
+            _userId = syncMatch.Self.UserId;
+            _syncMatch = syncMatch;
+            syncMatch.PresenceTracker.OnPresenceAdded += HandlePresenceAdded;
+            syncMatch.PresenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
+
+            // use the presence tracker presences rather than the sync match presence because they will be
+            // up to date. the sync match may be stale at the point based on how the registry is written.
+            foreach (IUserPresence presence in syncMatch.PresenceTracker.GetSortedOthers())
+            {
+                HandlePresenceAdded(presence);
             }
         }
 
@@ -108,15 +116,15 @@ namespace NakamaSync
 
             var userVars = new List<PresenceVar<T>>();
             _varsByUser.Add(presence.UserId, userVars);
-            System.Console.WriteLine("vars by opcode is " + _varsByOpcode.Count);
+
             foreach (KeyValuePair<long, GroupVar<T>> var in _varsByOpcode)
             {
                 var newVar = new PresenceVar<T>(var.Key);
-                System.Console.WriteLine("adding new presence var for " + presence.UserId);
-
                 newVar.SetPresence(presence);
-                newVar.ReceiveSyncMatch(_syncMatch, -1);
+                newVar.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec);
+
                 userVars.Add(newVar);
+
                 var.Value.OthersList.Add(newVar);
                 var.Value.OnPresenceAddedInternal?.Invoke(newVar);
             }

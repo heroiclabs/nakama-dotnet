@@ -37,7 +37,6 @@ namespace Nakama.Tests.Sync
 
        public SyncTestEnvironment(
             int numClients,
-            int numSharedVars,
             int creatorIndex,
             UserIdGenerator userIdGenerator = null,
             bool delayRegistration = false
@@ -50,42 +49,6 @@ namespace Nakama.Tests.Sync
             {
                 string userId = userIdGenerator(i);
                 var env = new SyncTestUserEnvironment(userId, delayRegistration);
-                _syncTestUserEnvironments.Add(env);
-            }
-        }
-
-        public SyncTestEnvironment(
-            int numClients,
-            int creatorIndex,
-            UserIdGenerator userIdGenerator = null, bool delayRegistration = false)
-        {
-            CreatorIndex = creatorIndex;
-            userIdGenerator = userIdGenerator ?? DefaultUserIdGenerator;
-
-            for (int i = 0; i < numClients; i++)
-            {
-                string userId = userIdGenerator(i);
-                var env = new SyncTestUserEnvironment(userId, delayRegistration);
-                _syncTestUserEnvironments.Add(env);
-            }
-        }
-
-        public SyncTestEnvironment(
-            int numClients,
-            int numPresenceVarCollections,
-            int numPresenceVarsPerCollection,
-            int creatorIndex,
-            UserIdGenerator userIdGenerator = null,
-            bool delayRegistration = false
-        )
-        {
-            CreatorIndex = creatorIndex;
-            userIdGenerator = userIdGenerator ?? DefaultUserIdGenerator;
-
-            for (int i = 0; i < numClients; i++)
-            {
-                string userId = userIdGenerator(i);
-                var env = new SyncTestUserEnvironment(userId, numPresenceVarCollections, numPresenceVarsPerCollection, delayRegistration);
                 _syncTestUserEnvironments.Add(env);
             }
         }

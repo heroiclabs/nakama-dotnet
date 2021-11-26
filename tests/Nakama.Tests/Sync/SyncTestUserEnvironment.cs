@@ -45,11 +45,6 @@ namespace Nakama.Tests.Sync
         private ISession _session;
         private ISocket _socket;
 
-        public SyncTestUserEnvironment(string userId, int numPresenceVarCollections, int numPresenceVarsPerCollection, bool delayRegistration) : this(userId)
-        {
-            _groupVars = new SyncTestGroupVars(_varRegistry, numPresenceVarsPerCollection, delayRegistration);
-        }
-
         public SyncTestUserEnvironment(string userId, bool delayRegistration = false)
         {
             _userId = userId;
@@ -57,6 +52,7 @@ namespace Nakama.Tests.Sync
             _logger = TestsUtil.LoadConfiguration().StdOut ? new StdoutLogger() : null;
             _socket = Nakama.Socket.From(_client);
             _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, delayRegistration);
+            _groupVars = new SyncTestGroupVars(_varRegistry, delayRegistration);
             _rpcs = new SyncTestRpcs(_rpcRegistry);
         }
 

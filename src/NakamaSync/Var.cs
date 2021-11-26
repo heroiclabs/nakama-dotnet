@@ -58,6 +58,12 @@ namespace NakamaSync
             Value = default(T);
             Status = ValidationStatus.None;
             _syncMatch = null;
+
+            if (!_handshakeTcs.Task.IsCanceled)
+            {
+                _handshakeTcs.SetCanceled();
+            }
+
             _handshakeTcs = new TaskCompletionSource<bool>();
             OnReset();
         }
@@ -106,18 +112,22 @@ namespace NakamaSync
                 // when all clients try to greet the new one.
                 // todo put this into its own method and virtualize it instead
                 // of doing a type check?
-                if (!(this is PresenceVar<T>))
-                {
-                    Send(AckType.Handshake, new IUserPresence[]{p});
-                }
+                Send(AckType.Handshake, new IUserPresence[]{p});
             };
 
             // not match creator
-            if (syncMatch.Presences.Any())
+            if (!(this is PresenceVar<T>) && syncMatch.Presences.Any())
             {
-                // todo what if user spam creates and closes lots of sync matches before the timeout from the first ends?
-                var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(handshakeTimeoutSec));
-                timeoutCts.Token.Register(() => _handshakeTcs.SetCanceled());
+                var timeoutCts = new CancellationTokenSource();
+                timeoutCts.Token.Register(() =>
+                {
+                    if (!_handshakeTcs.Task.IsCompleted)
+                    {
+                        _handshakeTcs.SetCanceled();
+                    }
+                });
+
+                timeoutCts.CancelAfter(TimeSpan.FromSeconds(handshakeTimeoutSec));
 
                 return _handshakeTcs.Task;
             }

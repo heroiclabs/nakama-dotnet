@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NakamaSync;
 using Xunit;
 
 namespace Nakama.Tests.Sync
@@ -24,11 +25,33 @@ namespace Nakama.Tests.Sync
     public class SyncTest
     {
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void SingleClientShouldHandshake()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 1,
+                creatorIndex: 0);
+
+            await testEnv.Start();
+            testEnv.Dispose();
+        }
+
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void TwoClientsShouldHandshake()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            await testEnv.Start();
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void SharedVarShouldRetainData()
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -43,13 +66,12 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
-            creatorEnv.GroupVars.GroupBool.Self.SetValue(true);
+            SelfVar<bool> self = creatorEnv.GroupVars.GroupBool.Self;
+            self.SetValue(true);
             Assert.True(creatorEnv.GroupVars.GroupBool.Self.GetValue());
             testEnv.Dispose();
         }
@@ -59,7 +81,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -80,7 +101,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -109,8 +129,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -146,7 +164,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -163,7 +180,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -179,7 +195,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0,
                 delayRegistration: true
             );
@@ -208,7 +223,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0,
                 delayRegistration: true
             );
@@ -238,8 +252,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0,
                 userIdGenerator: null,
                 delayRegistration: false
@@ -267,8 +279,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0,
                 userIdGenerator: null,
                 delayRegistration: true
@@ -301,8 +311,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0,
                 userIdGenerator: null,
                 delayRegistration: true
@@ -345,7 +353,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -373,7 +380,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -397,7 +403,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numSharedVars: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -424,8 +429,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0);
 
             await testEnv.Start();
@@ -464,8 +467,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0);
 
             bool varAdded = false;
@@ -485,8 +486,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0);
 
             testEnv.GetCreatorEnv().SharedVars.SharedBool.SetValue(true);
@@ -504,8 +503,6 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,
-                numPresenceVarCollections: 1,
-                numPresenceVarsPerCollection: 1,
                 creatorIndex: 0);
 
             testEnv.GetCreatorEnv().GroupVars.GroupBool.Self.SetValue(true);

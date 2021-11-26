@@ -28,13 +28,14 @@ namespace NakamaSync
         private readonly Dictionary<long, List<Var<T>>> _vars = new Dictionary<long, List<Var<T>>>();
         private SyncMatch _syncMatch;
         private readonly long _opcodeStart;
-        private PresenceVarFactory<T> _factory = new PresenceVarFactory<T>();
+        private PresenceVarFactory<T> _factory;
         private int _handshakeTimeoutSec;
 
         public VarSubRegistry(int opcodeStart, int handshakeTimeoutSec)
         {
             _opcodeStart = opcodeStart;
             _handshakeTimeoutSec = handshakeTimeoutSec;
+            _factory = new PresenceVarFactory<T>(handshakeTimeoutSec);
         }
 
         public Task ReceiveMatch(SyncMatch syncMatch)
@@ -104,9 +105,9 @@ namespace NakamaSync
             }
         }
 
-        public void AddFactoryOpcode(long opcode, GroupVar<T> groupVar)
+        public void AddGroupVar(long opcode, GroupVar<T> groupVar)
         {
-            _factory.AddOpcode(opcode, groupVar);
+            _factory.AddGroupVar(opcode, groupVar);
         }
     }
 
