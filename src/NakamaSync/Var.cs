@@ -55,6 +55,7 @@ namespace NakamaSync
 
         internal virtual void Reset()
         {
+            System.Console.WriteLine("reset called");
             Value = default(T);
             Status = ValidationStatus.None;
             _syncMatch = null;
@@ -76,6 +77,7 @@ namespace NakamaSync
         internal void SetLocalValue(IUserPresence source, T newValue)
         {
             T oldValue = Value;
+            System.Console.WriteLine("setting local value " + newValue);
             Value = newValue;
 
             // don't increment lock version if haven't done handshake yet.
@@ -107,16 +109,24 @@ namespace NakamaSync
 
             syncMatch.PresenceTracker.OnPresenceAdded += (p) =>
             {
+                if (p.UserId == syncMatch.PresenceTracker.GetSelf().UserId)
+                {
+                    return;
+                }
                 // share state with the new user
                 // note that in the case of a shared var, last lock version will win
                 // when all clients try to greet the new one.
                 // todo put this into its own method and virtualize it instead
                 // of doing a type check?
+
+                System.Console.WriteLine($"user {syncMatch.Self.UserId} sending ack while value is " + Value);
                 Send(AckType.Handshake, new IUserPresence[]{p});
             };
 
             // not match creator
-            if (syncMatch.Presences.Any(user => user.UserId == syncMatch.Self.UserId))
+            // todo hack on self var type check
+            // self vars should not expect a handshake because only this client can write to them anyway.
+            if (!(this is SelfVar<T>) && syncMatch.Presences.Any(user => user.UserId != syncMatch.Self.UserId))
             {
                 var timeoutCts = new CancellationTokenSource();
                 timeoutCts.Token.Register(() =>
@@ -128,6 +138,8 @@ namespace NakamaSync
                 });
 
                 timeoutCts.CancelAfter(TimeSpan.FromSeconds(handshakeTimeoutSec));
+
+                System.Console.WriteLine($"user {syncMatch.Self.UserId} " + "returning handshake tcs");
 
                 return _handshakeTcs.Task;
             }
@@ -178,6 +190,7 @@ namespace NakamaSync
             // todo notify if invalid?
             if (newStatus != ValidationStatus.Invalid)
             {
+                System.Console.WriteLine($"user {_syncMatch.Self.UserId} setting value to be " + incomingSerialized.Value);
                 Value = incomingSerialized.Value;
                 _lockVersion = incomingSerialized.LockVersion;
                 Status = incomingSerialized.Status;
@@ -188,6 +201,7 @@ namespace NakamaSync
             {
                 // if multiple users in match, they will all send handshake responses.
                 // complete the task after the first handshake and no-op the remaining.
+                System.Console.WriteLine("setting handshake tcs");
                 _handshakeTcs.TrySetResult(true);
             }
         }

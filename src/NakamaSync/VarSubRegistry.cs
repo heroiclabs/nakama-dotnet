@@ -41,6 +41,7 @@ namespace NakamaSync
         public Task ReceiveMatch(SyncMatch syncMatch)
         {
             _syncMatch = syncMatch;
+            _factory.ReceiveSyncMatch(syncMatch);
 
             var handshakeTasks = new List<Task>();
 
@@ -49,8 +50,6 @@ namespace NakamaSync
             {
                 handshakeTasks.Add(var.ReceiveSyncMatch(syncMatch, _handshakeTimeoutSec));
             }
-
-            _factory.ReceiveSyncMatch(syncMatch);
 
             return Task.WhenAll(handshakeTasks);
         }
@@ -73,9 +72,6 @@ namespace NakamaSync
                     var.ReceiveSerialized(state.UserPresence, serialized);
                 }
 
-                // todo something seems off about the factory abstraction and the relation to group var.
-                // the flexible creation of presence vars seems correct but the way they are named or the boundaries
-                // between the objects seems non-intuitive.
                 _factory.HandleSerialized(state.UserPresence, _opcodeStart + state.OpCode, serialized);
             }
         }
@@ -91,7 +87,7 @@ namespace NakamaSync
 
             if (_syncMatch != null && !var.HasSyncMatch)
             {
-                // deferred registratoin of variable
+                // deferred registration of variable
                 var.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec);
             }
         }

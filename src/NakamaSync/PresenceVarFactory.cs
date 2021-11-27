@@ -48,7 +48,6 @@ namespace NakamaSync
                 throw new ArgumentException($"Already added opcode: {opcode}");
             }
 
-            System.Console.WriteLine("adding opcode");
             _varsByOpcode.Add(opcode, groupVar);
 
             // deferred registration
