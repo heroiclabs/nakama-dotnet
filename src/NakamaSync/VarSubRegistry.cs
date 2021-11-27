@@ -104,10 +104,16 @@ namespace NakamaSync
         {
             _factory.AddGroupVar(opcode, groupVar);
         }
+
+        public void ReceivePresenceEvent(IMatchPresenceEvent evt)
+        {
+            _factory.ReceivePresenceEvent(evt);
+        }
     }
 
     internal interface IVarSubRegistry
     {
+        void ReceivePresenceEvent(IMatchPresenceEvent evt);
         Task ReceiveMatch(SyncMatch match);
         void ReceiveMatchState(IMatchState match);
         void Reset();

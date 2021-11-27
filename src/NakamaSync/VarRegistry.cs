@@ -77,6 +77,9 @@ namespace NakamaSync
         {
             _syncMatch = match;
 
+            //
+            match.Socket.ReceivedMatchPresence += HandlePresenceEvent;
+
             var subregistryTasks = new List<Task>();
 
             foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
@@ -102,6 +105,15 @@ namespace NakamaSync
             _attachedReset = true;
 
             return Task.WhenAll(subregistryTasks);
+        }
+
+        private void HandlePresenceEvent(IMatchPresenceEvent obj)
+        {
+            _syncMatch.PresenceTracker.HandlePresenceEvent(obj);
+            foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
+            {
+                subRegistry.ReceivePresenceEvent(obj);
+            }
         }
 
         private VarSubRegistry<T> GetOrAddSubregistry<T>(long combinedOpcode)
@@ -144,6 +156,14 @@ namespace NakamaSync
             {
                 subRegistry.Reset();
             }
+
+            if (_syncMatch == null)
+            {
+                throw new NullReferenceException("Null sync match during match close.");
+            }
+
+            _syncMatch.Socket.ReceivedMatchPresence -= _syncMatch.PresenceTracker.HandlePresenceEvent;
+            _syncMatch = null;
         }
     }
 }

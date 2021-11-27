@@ -94,14 +94,27 @@ namespace NakamaSync
         {
             _userId = syncMatch.Self.UserId;
             _syncMatch = syncMatch;
-            syncMatch.PresenceTracker.OnPresenceAdded += HandlePresenceAdded;
-            syncMatch.PresenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
+
+            // todo remove event
 
             // use the presence tracker presences rather than the sync match presence because they will be
             // up to date. the sync match may be stale at the point based on how the registry is written.
             foreach (IUserPresence presence in syncMatch.PresenceTracker.GetSortedOthers())
             {
                 HandlePresenceAdded(presence);
+            }
+        }
+
+        internal void ReceivePresenceEvent(IMatchPresenceEvent evt)
+        {
+            foreach (IUserPresence presence in evt.Joins)
+            {
+                HandlePresenceAdded(presence);
+            }
+
+            foreach (IUserPresence presence in evt.Leaves)
+            {
+                HandlePresenceRemoved(presence);
             }
         }
 
