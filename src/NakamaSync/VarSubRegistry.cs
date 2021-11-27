@@ -50,7 +50,6 @@ namespace NakamaSync
                 handshakeTasks.Add(var.ReceiveSyncMatch(syncMatch, _handshakeTimeoutSec));
             }
 
-            System.Console.WriteLine("receiving sync match through receive match");
             _factory.ReceiveSyncMatch(syncMatch);
 
             return Task.WhenAll(handshakeTasks);
@@ -71,7 +70,7 @@ namespace NakamaSync
                         continue;
                     }
 
-                    var.HandleSerialized(state.UserPresence, serialized);
+                    var.ReceiveSerialized(state.UserPresence, serialized);
                 }
 
                 // todo something seems off about the factory abstraction and the relation to group var.
@@ -90,7 +89,7 @@ namespace NakamaSync
 
             _vars[_opcodeStart + var.Opcode].Add(var);
 
-            if (_syncMatch != null && !var.ReceivedSyncMatch)
+            if (_syncMatch != null && !var.HasSyncMatch)
             {
                 // deferred registratoin of variable
                 var.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec);

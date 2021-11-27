@@ -86,7 +86,7 @@ namespace NakamaSync
             {
                 if (var.Presence.UserId == source.UserId)
                 {
-                    var.HandleSerialized(source, serializable);
+                    var.ReceiveSerialized(source, serializable);
                 }
             }
         }

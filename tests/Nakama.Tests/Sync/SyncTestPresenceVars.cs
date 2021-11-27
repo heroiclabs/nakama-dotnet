@@ -35,7 +35,6 @@ namespace Nakama.Tests.Sync
             GroupInt = new GroupVar<int>(opcode: 2);
             GroupString = new GroupVar<string>(opcode: 3);
             GroupDict = new GroupVar<Dictionary<string, string>>(opcode: 4);
-
             if (!delayRegistration)
             {
                 varRegistry.Register(GroupBool);

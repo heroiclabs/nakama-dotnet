@@ -34,7 +34,7 @@ namespace NakamaSync
         public long Opcode { get; }
         public ValidationStatus Status { get; private set; }
 
-        internal bool ReceivedSyncMatch => _syncMatch != null;
+        internal bool HasSyncMatch => _syncMatch != null;
 
         protected T Value { get; private set; }
         protected SyncMatch SyncMatch => _syncMatch;
@@ -116,7 +116,7 @@ namespace NakamaSync
             };
 
             // not match creator
-            if (!(this is PresenceVar<T>) && syncMatch.Presences.Any())
+            if (syncMatch.Presences.Any(user => user.UserId == syncMatch.Self.UserId))
             {
                 var timeoutCts = new CancellationTokenSource();
                 timeoutCts.Token.Register(() =>
@@ -162,7 +162,7 @@ namespace NakamaSync
             _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(ackType)), presences);
         }
 
-        internal void HandleSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
+        internal void ReceiveSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
         {
             if (_lockVersion > incomingSerialized.LockVersion)
             {
@@ -184,7 +184,12 @@ namespace NakamaSync
                 InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, Value), new ValidationChange(oldStatus, Status)));
             }
 
-            _handshakeTcs.SetResult(true);
+            if (incomingSerialized.AckType == AckType.Handshake)
+            {
+                // if multiple users in match, they will all send handshake responses.
+                // complete the task after the first handshake and no-op the remaining.
+                _handshakeTcs.TrySetResult(true);
+            }
         }
 
         private ValidationStatus TryHostIntercept(IUserPresence source, ISerializableVar<T> serialized)
