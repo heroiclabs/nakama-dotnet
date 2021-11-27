@@ -58,7 +58,6 @@ namespace Nakama.Tests.Sync
 
         private void TestRpcDelegate2(string param1, int param2, bool param3, SyncTestRpcObject2 param4)
         {
-            System.Console.WriteLine("rpc del 2 called");
             Param1Result = param1;
             Param2Result = param2;
             Param3Result = param3;

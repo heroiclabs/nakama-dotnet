@@ -494,7 +494,6 @@ namespace Nakama.Tests.Sync
 
             IUserPresence nonCreator = testEnv.GetRandomNonCreatorPresence();
             var nonCreatorEnv = testEnv.GetTestEnvironment(nonCreator);
-            System.Console.WriteLine("getting test env for " + nonCreator.UserId);
             Assert.True(nonCreatorEnv.SharedVars.SharedBool.GetValue());
             testEnv.Dispose();
         }

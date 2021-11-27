@@ -78,7 +78,6 @@ namespace Nakama.Tests.Sync
         {
             await Connect();
             _match = await _socket.CreateSyncMatch(_session, _varRegistry, _rpcRegistry);
-            System.Console.WriteLine("matchi s " + _match);
             _rpcs.ReceiveMatch(_match);
             return _match;
         }
@@ -87,8 +86,6 @@ namespace Nakama.Tests.Sync
         {
             await Connect();
             _match = await _socket.CreateSyncMatch(_session, _varRegistry, _rpcRegistry, name);
-            System.Console.WriteLine("matchi s " + _match);
-
             _rpcs.ReceiveMatch(_match);
             return _match;
         }
@@ -97,8 +94,6 @@ namespace Nakama.Tests.Sync
         {
             await Connect();
             _match = await _socket.JoinSyncMatch(_session,  matchId, _varRegistry, _rpcRegistry);
-            System.Console.WriteLine("matchi s " + _match);
-
             _rpcs.ReceiveMatch(_match);
             return _match;
         }
