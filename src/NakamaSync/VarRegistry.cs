@@ -118,13 +118,16 @@ namespace NakamaSync
 
         private void HandlePresenceEvent(IMatchPresenceEvent obj)
         {
-            // update internal presence tracker
-            _syncMatch.PresenceTracker.HandlePresenceEvent(obj);
-
-            // update vars (e.g., presence var factory)
-            foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
+            lock (_lock)
             {
-                subRegistry.ReceivePresenceEvent(obj);
+                // update internal presence tracker
+                _syncMatch.PresenceTracker.HandlePresenceEvent(obj);
+
+                // update vars (e.g., presence var factory)
+                foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
+                {
+                    subRegistry.ReceivePresenceEvent(obj);
+                }
             }
         }
 

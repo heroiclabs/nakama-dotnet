@@ -58,6 +58,82 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void PresenceEventBeforeSharedHandshakeDataDeferred()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0,
+                null,
+                delayRegistration: true);
+
+
+            var createdBool = testEnv.GetCreatorEnv().SharedVars.SharedBool;
+            createdBool.SetValue(true);
+
+            var nonCreatorBool = testEnv.GetNonCreatorEnv().SharedVars.SharedBool;
+
+            await testEnv.Start();
+
+            testEnv.GetCreatorEnv().VarRegistry.Register(createdBool);
+            testEnv.GetNonCreatorEnv().VarRegistry.Register(nonCreatorBool);
+
+            bool receivedValueChanged = false;
+            bool receivedPresenceBeforeValue = false;
+
+            testEnv.GetNonCreatorEnv().SharedVars.SharedBool.OnValueChanged += evt =>
+            {
+                receivedPresenceBeforeValue = testEnv.GetNonCreatorEnv().Match.GetAllPresences().Count() == 2;
+                receivedValueChanged = true;
+            };
+
+            await Task.Delay(1000);
+
+            Assert.True(receivedValueChanged);
+            Assert.True(receivedPresenceBeforeValue);
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void PresenceEventBeforeGroupHandshakeDataDeferred()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0,
+                null,
+                delayRegistration: true);
+
+            var createdBool = testEnv.GetCreatorEnv().GroupVars.GroupBool;
+            createdBool.Self.SetValue(true);
+
+            var nonCreatorBool = testEnv.GetNonCreatorEnv().GroupVars.GroupBool;
+
+            await testEnv.Start();
+
+            testEnv.GetCreatorEnv().VarRegistry.Register(createdBool);
+            testEnv.GetNonCreatorEnv().VarRegistry.Register(nonCreatorBool);
+
+            bool receivedValueChanged = false;
+            bool receivedPresenceBeforeValue = false;
+
+            var creatorPresence = testEnv.GetCreatorPresence();
+            var nonCreatorVar = testEnv.GetNonCreatorEnv().GroupVars.GroupBool.GetVar(creatorPresence);
+
+            nonCreatorVar.OnValueChanged += evt =>
+            {
+                receivedPresenceBeforeValue = testEnv.GetNonCreatorEnv().Match.GetAllPresences().Count() == 2;
+                receivedValueChanged = true;
+            };
+
+            await Task.Delay(1000);
+
+            Assert.True(receivedValueChanged);
+            Assert.True(receivedPresenceBeforeValue);
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void PresenceEventBeforeSharedHandshakeMatchState()
         {
             var testEnv = new SyncTestEnvironment(
@@ -84,39 +160,6 @@ namespace Nakama.Tests.Sync
             await testEnv.Start();
 
             Assert.True(receivedMatchState);
-            Assert.True(receivedPresence);
-            Assert.True(receivedPresenceBeforeValue);
-
-            testEnv.Dispose();
-        }
-
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async void PresenceEventBeforeGroupHandshakeData()
-        {
-            var testEnv = new SyncTestEnvironment(
-                numClients: 2,
-                creatorIndex: 0);
-
-            testEnv.GetCreatorEnv().GroupVars.GroupBool.Self.SetValue(true);
-
-            bool receivedValueChanged = false;
-            bool receivedPresence = false;
-            bool receivedPresenceBeforeValue = false;
-
-            testEnv.GetNonCreatorEnv().GroupVars.GroupBool.Others.First().OnValueChanged += evt =>
-            {
-                receivedValueChanged = true;
-            };
-
-            testEnv.GetNonCreatorEnv().Socket.ReceivedMatchPresence += evt =>
-            {
-                receivedPresence = true;
-                receivedPresenceBeforeValue = !receivedValueChanged;
-            };
-
-            await testEnv.Start();
-
-            Assert.True(receivedValueChanged);
             Assert.True(receivedPresence);
             Assert.True(receivedPresenceBeforeValue);
 

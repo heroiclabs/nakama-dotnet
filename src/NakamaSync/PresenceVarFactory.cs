@@ -133,6 +133,7 @@ namespace NakamaSync
             {
                 var newVar = new PresenceVar<T>(var.Key);
                 newVar.SetPresence(presence);
+                newVar.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec);
 
                 userVars.Add(newVar);
 
