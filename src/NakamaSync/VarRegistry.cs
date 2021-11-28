@@ -31,6 +31,7 @@ namespace NakamaSync
         private SyncMatch _syncMatch;
         private bool _attachedReset = false;
         private readonly int _handshakeTimeoutSec;
+        private readonly object _lock = new object();
 
         public VarRegistry(int opcodeStart = 0, int handshakeTimeoutSec = 5)
         {
@@ -40,31 +41,37 @@ namespace NakamaSync
 
         public void Register<T>(SharedVar<T> var)
         {
-            VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
-
-            if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)
+            lock (_lock)
             {
-                // registration was deferred to after the sync match being received.
-                // note that some registries have already received the sync match
-                // if a var of their type was already registered prior to receiving the match.
-                subRegistry.ReceiveMatch(_syncMatch);
-            }
+                VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
 
-            subRegistry.Register(var);
+                if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)
+                {
+                    // registration was deferred to after the sync match being received.
+                    // note that some registries have already received the sync match
+                    // if a var of their type was already registered prior to receiving the match.
+                    subRegistry.ReceiveMatch(_syncMatch);
+                }
+
+                subRegistry.Register(var);
+            }
         }
 
         public void Register<T>(GroupVar<T> var)
         {
-            VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
-            subRegistry.AddGroupVar(_opcodeStart + var.Opcode, var);
-            subRegistry.Register(var.Self);
-
-            if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)
+            lock (_lock)
             {
-                // registration was deferred to after the sync match being received.
-                // note that some registries have already received the sync match
-                // if a var of their type was already registered prior to receiving the match.
-                subRegistry.ReceiveMatch(_syncMatch);
+                VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
+                subRegistry.AddGroupVar(_opcodeStart + var.Opcode, var);
+                subRegistry.Register(var.Self);
+
+                if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)
+                {
+                    // registration was deferred to after the sync match being received.
+                    // note that some registries have already received the sync match
+                    // if a var of their type was already registered prior to receiving the match.
+                    subRegistry.ReceiveMatch(_syncMatch);
+                }
             }
         }
 
@@ -75,41 +82,46 @@ namespace NakamaSync
 
         internal Task ReceiveMatch(SyncMatch match)
         {
-            _syncMatch = match;
-
-            //
-            match.Socket.ReceivedMatchPresence += HandlePresenceEvent;
-
-            var subregistryTasks = new List<Task>();
-
-            foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
+            lock (_lock)
             {
-                subregistryTasks.Add(subRegistry.ReceiveMatch(match));
-            }
+                _syncMatch = match;
 
-            if (!_attachedReset)
-            {
-                // todo think about race between this event and inside the presence var factory
-                match.Socket.ReceivedMatchPresence += (evt) =>
+                match.Socket.ReceivedMatchPresence += HandlePresenceEvent;
+
+                var subregistryTasks = new List<Task>();
+
+                foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
                 {
-                    if (evt.Leaves.Any(leave => leave.UserId == match.Session.UserId))
+                    subregistryTasks.Add(subRegistry.ReceiveMatch(match));
+                }
+
+                if (!_attachedReset)
+                {
+                    // todo think about race between this event and inside the presence var factory
+                    match.Socket.ReceivedMatchPresence += (evt) =>
                     {
-                        foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
+                        if (evt.Leaves.Any(leave => leave.UserId == match.Session.UserId))
                         {
-                            subRegistry.Reset();
+                            foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
+                            {
+                                subRegistry.Reset();
+                            }
                         }
-                    }
-                };
+                    };
+                }
+
+                _attachedReset = true;
+
+                return Task.WhenAll(subregistryTasks);
             }
-
-            _attachedReset = true;
-
-            return Task.WhenAll(subregistryTasks);
         }
 
         private void HandlePresenceEvent(IMatchPresenceEvent obj)
         {
+            // update internal presence tracker
             _syncMatch.PresenceTracker.HandlePresenceEvent(obj);
+
+            // update vars (e.g., presence var factory)
             foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
             {
                 subRegistry.ReceivePresenceEvent(obj);
@@ -142,11 +154,14 @@ namespace NakamaSync
 
         internal void HandleReceivedMatchState(IMatchState matchState)
         {
-            // could just be a regular piece of match data, i.e., not related to sync vars
-            if (_subregistriesByOpcode.ContainsKey(_opcodeStart + matchState.OpCode))
+            lock (_lock)
             {
-                IVarSubRegistry subRegistry = _subregistriesByOpcode[_opcodeStart + matchState.OpCode];
-                subRegistry.ReceiveMatchState(matchState);
+                // could just be a regular piece of match data, i.e., not related to sync vars
+                if (_subregistriesByOpcode.ContainsKey(_opcodeStart + matchState.OpCode))
+                {
+                    IVarSubRegistry subRegistry = _subregistriesByOpcode[_opcodeStart + matchState.OpCode];
+                    subRegistry.ReceiveMatchState(matchState);
+                }
             }
         }
 

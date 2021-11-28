@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,6 +57,11 @@ namespace NakamaSync
 
         public void ReceiveMatchState(IMatchState state)
         {
+            if (_syncMatch == null)
+            {
+                throw new NullReferenceException("Received match state with null sync match.");
+            }
+
             if (_vars.ContainsKey(_opcodeStart + state.OpCode))
             {
                 SerializableVar<T> serialized = _syncMatch.Encoding.Decode<SerializableVar<T>>(state.State);

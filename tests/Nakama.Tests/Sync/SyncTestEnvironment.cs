@@ -123,6 +123,21 @@ namespace Nakama.Tests.Sync
             return _syncTestUserEnvironments[CreatorIndex];
         }
 
+        public SyncTestUserEnvironment GetNonCreatorEnv()
+        {
+            for (int i = 0; i < _syncTestUserEnvironments.Count; i++)
+            {
+                if (i == CreatorIndex)
+                {
+                    continue;
+                }
+
+                return _syncTestUserEnvironments[i];
+            }
+
+            throw new InvalidProgramException("Could not find non creator env");
+        }
+
         public IUserPresence GetCreatorPresence()
         {
             return _syncTestUserEnvironments[CreatorIndex].Self;

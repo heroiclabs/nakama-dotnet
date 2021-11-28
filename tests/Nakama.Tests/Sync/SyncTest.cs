@@ -25,6 +25,105 @@ namespace Nakama.Tests.Sync
     public class SyncTest
     {
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void PresenceEventBeforeSharedHandshakeData()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            testEnv.GetCreatorEnv().SharedVars.SharedBool.SetValue(true);
+
+            bool receivedValueChanged = false;
+            bool receivedPresence = false;
+            bool receivedPresenceBeforeValue = false;
+
+            testEnv.GetNonCreatorEnv().SharedVars.SharedBool.OnValueChanged += evt =>
+            {
+                receivedValueChanged = true;
+            };
+
+            testEnv.GetNonCreatorEnv().Socket.ReceivedMatchPresence += evt =>
+            {
+                receivedPresence = true;
+                receivedPresenceBeforeValue = !receivedValueChanged;
+            };
+
+            await testEnv.Start();
+
+            Assert.True(receivedValueChanged);
+            Assert.True(receivedPresence);
+            Assert.True(receivedPresenceBeforeValue);
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void PresenceEventBeforeSharedHandshakeMatchState()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            testEnv.GetCreatorEnv().SharedVars.SharedBool.SetValue(true);
+
+            bool receivedMatchState = false;
+            bool receivedPresence = false;
+            bool receivedPresenceBeforeValue = false;
+
+            testEnv.GetNonCreatorEnv().Socket.ReceivedMatchState += evt =>
+            {
+                receivedMatchState = true;
+            };
+
+            testEnv.GetNonCreatorEnv().Socket.ReceivedMatchPresence += evt =>
+            {
+                receivedPresence = true;
+                receivedPresenceBeforeValue = !receivedMatchState;
+            };
+
+            await testEnv.Start();
+
+            Assert.True(receivedMatchState);
+            Assert.True(receivedPresence);
+            Assert.True(receivedPresenceBeforeValue);
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void PresenceEventBeforeGroupHandshakeData()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            testEnv.GetCreatorEnv().GroupVars.GroupBool.Self.SetValue(true);
+
+            bool receivedValueChanged = false;
+            bool receivedPresence = false;
+            bool receivedPresenceBeforeValue = false;
+
+            testEnv.GetNonCreatorEnv().GroupVars.GroupBool.Others.First().OnValueChanged += evt =>
+            {
+                receivedValueChanged = true;
+            };
+
+            testEnv.GetNonCreatorEnv().Socket.ReceivedMatchPresence += evt =>
+            {
+                receivedPresence = true;
+                receivedPresenceBeforeValue = !receivedValueChanged;
+            };
+
+            await testEnv.Start();
+
+            Assert.True(receivedValueChanged);
+            Assert.True(receivedPresence);
+            Assert.True(receivedPresenceBeforeValue);
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void SingleClientShouldHandshake()
         {
             var testEnv = new SyncTestEnvironment(
@@ -34,7 +133,6 @@ namespace Nakama.Tests.Sync
             await testEnv.Start();
             testEnv.Dispose();
         }
-
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void TwoClientsShouldHandshake()
@@ -86,7 +184,6 @@ namespace Nakama.Tests.Sync
             await testEnv.Start();
 
             var allEnvs = testEnv.GetAllEnvs();
-
             allEnvs[0].SharedVars.SharedInt.SetValue(5);
 
             await Task.Delay(1000);

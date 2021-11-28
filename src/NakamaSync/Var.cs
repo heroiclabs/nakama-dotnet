@@ -175,6 +175,17 @@ namespace NakamaSync
                 return;
             }
 
+            // complete the task vefore invoking a value changed.
+            // we want the top level user-facing match task to end
+            // prior to the event dispatching. this is so they can
+            // handle any match received events prior to handling specific var events.
+            if (incomingSerialized.AckType == AckType.Handshake)
+            {
+                // if multiple users in match, they will all send handshake responses.
+                // complete the task after the first handshake and no-op the remaining.
+                _handshakeTcs.TrySetResult(true);
+            }
+
             ValidationStatus oldStatus = Status;
             T oldValue = Value;
 
@@ -189,12 +200,6 @@ namespace NakamaSync
                 InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, Value), new ValidationChange(oldStatus, Status)));
             }
 
-            if (incomingSerialized.AckType == AckType.Handshake)
-            {
-                // if multiple users in match, they will all send handshake responses.
-                // complete the task after the first handshake and no-op the remaining.
-                _handshakeTcs.TrySetResult(true);
-            }
         }
 
         private ValidationStatus TryHostIntercept(IUserPresence source, ISerializableVar<T> serialized)

@@ -31,6 +31,8 @@ namespace Nakama.Tests.Sync
         public SyncTestRpcs Rpcs => _rpcs;
         public SyncMatch Match => _match;
         public VarRegistry VarRegistry => _varRegistry;
+        public ISocket Socket => _socket;
+
 
         private readonly string _userId;
         private readonly IClient _client;
