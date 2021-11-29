@@ -43,5 +43,7 @@ namespace NakamaSync
         HandshakeResponse = 2,
         // host acknowledging value that needs validation
         Validation = 3,
+        // new client request initial state from existing clients.
+        HandshakeRequest = 4,
     }
 }

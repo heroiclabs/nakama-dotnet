@@ -99,14 +99,19 @@ namespace NakamaSync
 
         internal Task ReceiveSyncMatch(SyncMatch syncMatch, int handshakeTimeoutSec)
         {
-                _syncMatch = syncMatch;
+            _syncMatch = syncMatch;
 
+            var self = syncMatch.PresenceTracker.GetSelf();
             if (this.Value != null && !this.Value.Equals(default(T)))
             {
-                ValidateAndDispatch(syncMatch.PresenceTracker.GetSelf(), _lastValue, Value);
+                ValidateAndDispatch(self, _lastValue, Value);
                 Send(AckType.None);
             }
-
+            else
+            {
+                // don't have value to share, request it from other clients.
+                Send(AckType.HandshakeRequest);
+            }
 
             syncMatch.PresenceTracker.OnPresenceAdded += (p) =>
             {
@@ -178,7 +183,7 @@ namespace NakamaSync
                 return;
             }
 
-            // complete the task vefore invoking a value changed.
+            // complete the task before invoking a value changed.
             // we want the top level user-facing match task to end
             // prior to the event dispatching. this is so they can
             // handle any match received events prior to handling specific var events.
@@ -188,9 +193,14 @@ namespace NakamaSync
                 // complete the task after the first handshake and no-op the remaining.
                 _handshakeTcs.TrySetResult(true);
             }
+            else if (incomingSerialized.AckType == AckType.HandshakeRequest)
+            {
+                System.Console.WriteLine("RECEIVED HANDSHAKE REQUEST");
+                // new client registered variable
+                Send(AckType.HandshakeResponse, new IUserPresence[]{source});
+            }
 
             ValidationStatus oldStatus = Status;
-
             ValidationStatus newStatus = TryHostIntercept(source, incomingSerialized);
 
             // todo notify if invalid?
@@ -202,7 +212,6 @@ namespace NakamaSync
                 Status = incomingSerialized.Status;
                 InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(_lastValue, Value), new ValidationChange(oldStatus, Status)));
             }
-
         }
 
         private ValidationStatus TryHostIntercept(IUserPresence source, ISerializableVar<T> serialized)
