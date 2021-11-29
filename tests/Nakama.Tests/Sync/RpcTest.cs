@@ -26,7 +26,7 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             await testEnv.StartViaName("testName");
-            var allEnvs = testEnv.GetAllEnvs();
+            var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].Rpcs.Invoke(new IUserPresence[]{allEnvs[0].Self});
             await Task.Delay(1000);
             Assert.Equal("param1", allEnvs[0].Rpcs.Param1Result);
@@ -40,7 +40,7 @@ namespace Nakama.Tests.Sync
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             // todo change this to start
             await testEnv.StartViaName("testName");
-            var allEnvs = testEnv.GetAllEnvs();
+            var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].Rpcs.Invoke();
             await Task.Delay(1000);
             Assert.Equal("param1", allEnvs[1].Rpcs.Param1Result);
@@ -54,7 +54,7 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             await testEnv.StartViaName("testName");
-            var allEnvs = testEnv.GetAllEnvs();
+            var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].Rpcs.Invoke(new IUserPresence[]{allEnvs[0].Self}, "TestRpcDelegate2");
             await Task.Delay(1000);
             Assert.Equal("param1", allEnvs[0].Rpcs.Param1Result);
@@ -68,7 +68,7 @@ namespace Nakama.Tests.Sync
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             // todo change this to start
             await testEnv.StartViaName("testName");
-            var allEnvs = testEnv.GetAllEnvs();
+            var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].Rpcs.Invoke(null, "TestRpcDelegate2");
             await Task.Delay(1000);
             Assert.Equal("param1", allEnvs[1].Rpcs.Param1Result);

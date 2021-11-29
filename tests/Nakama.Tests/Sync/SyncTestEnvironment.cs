@@ -66,7 +66,7 @@ namespace Nakama.Tests.Sync
             Task.WaitAll(matchmakerTasks.ToArray());
         }
 
-        public async Task Start()
+        public async Task StartAll()
         {
             var match = await _syncTestUserEnvironments[CreatorIndex].CreateMatch();
 
@@ -80,6 +80,22 @@ namespace Nakama.Tests.Sync
                 await _syncTestUserEnvironments[i].JoinMatch(match.Id);
             }
         }
+
+        public Task<IMatch> StartCreate()
+        {
+            return _syncTestUserEnvironments[CreatorIndex].CreateMatch();
+        }
+
+        public Task<IMatch> StartJoin(int envIndex, IMatch match)
+        {
+            if (envIndex == CreatorIndex)
+            {
+                throw new ArgumentException("Cannot join test sync match with creator index. They can only create.");
+            }
+
+            return _syncTestUserEnvironments[envIndex].JoinMatch(match.Id);
+        }
+
 
         public async Task StartViaName(string name)
         {
@@ -108,7 +124,7 @@ namespace Nakama.Tests.Sync
             Task.WaitAll(disposeTasks.ToArray());
         }
 
-        public List<SyncTestUserEnvironment> GetAllEnvs()
+        public List<SyncTestUserEnvironment> GetAllUserEnvs()
         {
             return new List<SyncTestUserEnvironment>(_syncTestUserEnvironments);
         }

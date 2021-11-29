@@ -48,7 +48,7 @@ namespace Nakama.Tests.Sync
                 receivedPresenceBeforeValue = !receivedValueChanged;
             };
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
             Assert.True(receivedValueChanged);
             Assert.True(receivedPresence);
@@ -72,7 +72,7 @@ namespace Nakama.Tests.Sync
 
             var nonCreatorBool = testEnv.GetNonCreatorEnv().SharedVars.SharedBool;
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
             testEnv.GetCreatorEnv().VarRegistry.Register(createdBool);
             testEnv.GetNonCreatorEnv().VarRegistry.Register(nonCreatorBool);
@@ -108,7 +108,7 @@ namespace Nakama.Tests.Sync
 
             var nonCreatorBool = testEnv.GetNonCreatorEnv().GroupVars.GroupBool;
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
             testEnv.GetCreatorEnv().VarRegistry.Register(createdBool);
             testEnv.GetNonCreatorEnv().VarRegistry.Register(nonCreatorBool);
@@ -157,7 +157,7 @@ namespace Nakama.Tests.Sync
                 receivedPresenceBeforeValue = !receivedMatchState;
             };
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
             Assert.True(receivedMatchState);
             Assert.True(receivedPresence);
@@ -173,7 +173,7 @@ namespace Nakama.Tests.Sync
                 numClients: 1,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             testEnv.Dispose();
         }
 
@@ -184,7 +184,7 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             testEnv.Dispose();
         }
 
@@ -195,7 +195,7 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             SyncTestSharedVars creatorEnv = testEnv.GetCreatorEnv().SharedVars;
             creatorEnv.SharedBool.SetValue(true);
             Assert.True(creatorEnv.SharedBool.GetValue());
@@ -209,7 +209,7 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
             SelfVar<bool> self = creatorEnv.GroupVars.GroupBool.Self;
             self.SetValue(true);
@@ -224,9 +224,9 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
-            var allEnvs = testEnv.GetAllEnvs();
+            var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].SharedVars.SharedInt.SetValue(5);
 
             await Task.Delay(1000);
@@ -243,9 +243,9 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
-            var allEnvs = testEnv.GetAllEnvs();
+            var allEnvs = testEnv.GetAllUserEnvs();
 
             var dict = new Dictionary<string, string>();
             dict["hello"] = "world";
@@ -271,7 +271,7 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
             creatorEnv.GroupVars.GroupBool.Self.SetValue(true);
@@ -306,9 +306,9 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
-            List<SyncTestUserEnvironment> allEnvs = testEnv.GetAllEnvs();
+            List<SyncTestUserEnvironment> allEnvs = testEnv.GetAllUserEnvs();
             var env1 = allEnvs[0];
             var env2 = allEnvs[1];
             Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
@@ -322,7 +322,7 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
             var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
             Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
@@ -339,9 +339,9 @@ namespace Nakama.Tests.Sync
                 delayRegistration: true
             );
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
-            var allEnvs = testEnv.GetAllEnvs();
+            var allEnvs = testEnv.GetAllUserEnvs();
 
             bool valueChanged = false;
             allEnvs[1].SharedVars.SharedInt.OnValueChanged += delegate { valueChanged = true; };
@@ -367,9 +367,9 @@ namespace Nakama.Tests.Sync
                 delayRegistration: true
             );
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
-            var allEnvs = testEnv.GetAllEnvs();
+            var allEnvs = testEnv.GetAllUserEnvs();
 
             bool valueChanged = false;
             allEnvs[1].SharedVars.SharedInt.OnValueChanged += delegate { valueChanged = true; };
@@ -388,6 +388,101 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarNonCreatorSharesInitialState()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0,
+                delayRegistration: true
+            );
+
+            await testEnv.StartAll();
+
+            var allEnvs = testEnv.GetAllUserEnvs();
+
+            bool valueChanged = false;
+            allEnvs[0].SharedVars.SharedInt.OnValueChanged += delegate { valueChanged = true; };
+
+            allEnvs[0].VarRegistry.Register(allEnvs[0].SharedVars.SharedInt);
+            allEnvs[1].VarRegistry.Register(allEnvs[1].SharedVars.SharedInt);
+            allEnvs[1].SharedVars.SharedInt.SetValue(5);
+
+            await Task.Delay(1000);
+
+            Assert.True(valueChanged);
+            Assert.Equal(5, allEnvs[0].SharedVars.SharedInt.GetValue());
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarNonCreatorSharesInitialStateStaggered1()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0,
+                delayRegistration: true
+            );
+
+            var allUserEnvs = testEnv.GetAllUserEnvs();
+
+            allUserEnvs[0].VarRegistry.Register(allUserEnvs[0].SharedVars.SharedInt);
+            allUserEnvs[0].SharedVars.SharedInt.SetValue(5);
+
+            var match = await testEnv.StartCreate();
+
+            bool valueChanged = false;
+            allUserEnvs[1].SharedVars.SharedInt.OnValueChanged += delegate { valueChanged = true; };
+            allUserEnvs[1].VarRegistry.Register(allUserEnvs[1].SharedVars.SharedInt);
+
+            await testEnv.StartJoin(envIndex: 1, match);
+
+            await Task.Delay(1000);
+
+            Assert.True(valueChanged);
+            Assert.Equal(5, allUserEnvs[1].SharedVars.SharedInt.GetValue());
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarNonCreatorSharesInitialStateStaggered2()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0,
+                delayRegistration: true
+            );
+
+            var allUserEnvs = testEnv.GetAllUserEnvs();
+
+            allUserEnvs[0].VarRegistry.Register(allUserEnvs[0].SharedVars.SharedInt);
+            allUserEnvs[0].SharedVars.SharedInt.SetValue(5);
+
+            var match = await testEnv.StartCreate();
+
+            System.Console.WriteLine("CREATOR IS " + match.Self.UserId);
+
+            match = await testEnv.StartJoin(envIndex: 1, match);
+
+            System.Console.WriteLine("JOINER IS " + match.Self.UserId);
+
+            System.Console.WriteLine("done joining with guest");
+            await Task.Delay(1000);
+
+            System.Console.WriteLine("registering with guest");
+
+
+            allUserEnvs[1].VarRegistry.Register(allUserEnvs[1].SharedVars.SharedInt);
+
+            await Task.Delay(1000);
+
+            Assert.Equal(5, allUserEnvs[1].SharedVars.SharedInt.GetValue());
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task PresenceVarFactoryUniqueAssignmentsNotDeferred()
         {
             var testEnv = new SyncTestEnvironment(
@@ -397,7 +492,7 @@ namespace Nakama.Tests.Sync
                 delayRegistration: false
             );
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
@@ -424,7 +519,7 @@ namespace Nakama.Tests.Sync
                 delayRegistration: true
             );
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
@@ -456,7 +551,7 @@ namespace Nakama.Tests.Sync
                 delayRegistration: true
             );
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
             SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
 
@@ -495,9 +590,9 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
-            var allEnvs = testEnv.GetAllEnvs();
+            var allEnvs = testEnv.GetAllUserEnvs();
 
             var dict = new Dictionary<object, object>();
             dict["keyInt"] = 5;
@@ -522,7 +617,7 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             SyncTestSharedVars creatorEnv = testEnv.GetCreatorEnv().SharedVars;
             bool oldValue = true;
             bool newValue = false;
@@ -545,7 +640,7 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             SyncTestSharedVars creatorEnv = testEnv.GetCreatorEnv().SharedVars;
             bool oldValueHasKey = true;
             bool newValueHasKey = false;
@@ -571,7 +666,7 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
             IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
 
@@ -616,7 +711,7 @@ namespace Nakama.Tests.Sync
                 varAdded = true;
             };
 
-            await testEnv.Start();
+            await testEnv.StartAll();
             Assert.True(varAdded);
             testEnv.Dispose();
         }
@@ -630,7 +725,7 @@ namespace Nakama.Tests.Sync
 
             testEnv.GetCreatorEnv().SharedVars.SharedBool.SetValue(true);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
             IUserPresence nonCreator = testEnv.GetRandomNonCreatorPresence();
             var nonCreatorEnv = testEnv.GetTestEnvironment(nonCreator);
@@ -647,7 +742,7 @@ namespace Nakama.Tests.Sync
 
             testEnv.GetCreatorEnv().GroupVars.GroupBool.Self.SetValue(true);
 
-            await testEnv.Start();
+            await testEnv.StartAll();
 
             IUserPresence nonCreator = testEnv.GetRandomNonCreatorPresence();
             var nonCreatorEnv = testEnv.GetTestEnvironment(nonCreator);

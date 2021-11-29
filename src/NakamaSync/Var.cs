@@ -39,6 +39,7 @@ namespace NakamaSync
         protected T Value { get; private set; }
         protected SyncMatch SyncMatch => _syncMatch;
 
+        private T _lastValue;
         private int _lockVersion;
         private SyncMatch _syncMatch;
         private TaskCompletionSource<bool> _handshakeTcs = new TaskCompletionSource<bool>();
@@ -55,6 +56,7 @@ namespace NakamaSync
 
         internal virtual void Reset()
         {
+            _lastValue = default(T);
             Value = default(T);
             Status = ValidationStatus.None;
             _syncMatch = null;
@@ -75,7 +77,7 @@ namespace NakamaSync
 
         internal void SetLocalValue(IUserPresence source, T newValue)
         {
-            T oldValue = Value;
+            _lastValue = Value;
             Value = newValue;
 
             // don't increment lock version if haven't done handshake yet.
@@ -85,7 +87,7 @@ namespace NakamaSync
                 _lockVersion++;
             }
 
-            ValidateAndDispatch(source, oldValue, newValue);
+            ValidateAndDispatch(source, _lastValue, newValue);
 
             // defer synchronization until reception of sync match.
             if (_syncMatch != null)
@@ -97,13 +99,14 @@ namespace NakamaSync
 
         internal Task ReceiveSyncMatch(SyncMatch syncMatch, int handshakeTimeoutSec)
         {
-            _syncMatch = syncMatch;
+                _syncMatch = syncMatch;
 
             if (this.Value != null && !this.Value.Equals(default(T)))
             {
-                ValidateAndDispatch(syncMatch.PresenceTracker.GetSelf(), Value, Value);
+                ValidateAndDispatch(syncMatch.PresenceTracker.GetSelf(), _lastValue, Value);
                 Send(AckType.None);
             }
+
 
             syncMatch.PresenceTracker.OnPresenceAdded += (p) =>
             {
@@ -116,11 +119,11 @@ namespace NakamaSync
                 // when all clients try to greet the new one.
                 // todo put this into its own method and virtualize it instead
                 // of doing a type check?
-                Send(AckType.Handshake, new IUserPresence[]{p});
+                Send(AckType.HandshakeResponse, new IUserPresence[]{p});
             };
 
             // not match creator
-            // todo hack on self var type check
+            // todo hack on self var type check.
             // self vars should not expect a handshake because only this client can write to them anyway.
             if (!(this is SelfVar<T>) && syncMatch.Presences.Any(user => user.UserId != syncMatch.Self.UserId))
             {
@@ -179,7 +182,7 @@ namespace NakamaSync
             // we want the top level user-facing match task to end
             // prior to the event dispatching. this is so they can
             // handle any match received events prior to handling specific var events.
-            if (incomingSerialized.AckType == AckType.Handshake)
+            if (incomingSerialized.AckType == AckType.HandshakeResponse)
             {
                 // if multiple users in match, they will all send handshake responses.
                 // complete the task after the first handshake and no-op the remaining.
@@ -187,17 +190,17 @@ namespace NakamaSync
             }
 
             ValidationStatus oldStatus = Status;
-            T oldValue = Value;
 
             ValidationStatus newStatus = TryHostIntercept(source, incomingSerialized);
 
             // todo notify if invalid?
             if (newStatus != ValidationStatus.Invalid)
             {
+                _lastValue = Value;
                 Value = incomingSerialized.Value;
                 _lockVersion = incomingSerialized.LockVersion;
                 Status = incomingSerialized.Status;
-                InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(oldValue, Value), new ValidationChange(oldStatus, Status)));
+                InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(_lastValue, Value), new ValidationChange(oldStatus, Status)));
             }
 
         }

@@ -40,7 +40,7 @@ namespace NakamaSync
     {
         None = 1,
         // other client acknowledging new client
-        Handshake = 2,
+        HandshakeResponse = 2,
         // host acknowledging value that needs validation
         Validation = 3,
     }
