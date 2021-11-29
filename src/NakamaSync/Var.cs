@@ -111,7 +111,7 @@ namespace NakamaSync
             else
             {
                 // don't have value to share, request it from other clients.
-                //Send(AckType.HandshakeRequest);
+                Send(AckType.HandshakeRequest);
             }
 
             syncMatch.PresenceTracker.OnPresenceAdded += (p) =>
@@ -186,17 +186,26 @@ namespace NakamaSync
                 return;
             }
 
-            ValidationStatus oldStatus = Status;
-            ValidationStatus newStatus = TryHostIntercept(source, incomingSerialized);
+            bool valueChange = false;
 
-            // todo notify if invalid?
-            if (newStatus != ValidationStatus.Invalid)
+            ValidationStatus oldStatus = default(ValidationStatus);
+            ValidationStatus newStatus = default(ValidationStatus);
+
+            if (incomingSerialized.AckType != AckType.HandshakeRequest)
             {
-                _lastValue = Value;
-                System.Console.WriteLine("SETTING VALUE " + incomingSerialized.Value);
-                Value = incomingSerialized.Value;
-                _lockVersion = incomingSerialized.LockVersion;
-                Status = incomingSerialized.Status;
+                oldStatus = Status;
+                newStatus = TryHostIntercept(source, incomingSerialized);
+
+                // todo notify if invalid?
+                if (newStatus != ValidationStatus.Invalid)
+                {
+                    _lastValue = Value;
+                    System.Console.WriteLine("SETTING VALUE " + incomingSerialized.Value);
+                    Value = incomingSerialized.Value;
+                    _lockVersion = incomingSerialized.LockVersion;
+                    Status = incomingSerialized.Status;
+                    valueChange = true;
+                }
             }
 
             // complete the task before invoking a value changed.
@@ -216,7 +225,7 @@ namespace NakamaSync
                 Send(AckType.HandshakeResponse, new IUserPresence[]{source});
             }
 
-            if (newStatus != ValidationStatus.Invalid)
+            if (valueChange)
             {
                 InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(_lastValue, Value), new ValidationChange(oldStatus, Status)));
             }
