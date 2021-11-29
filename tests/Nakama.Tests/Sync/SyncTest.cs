@@ -744,8 +744,11 @@ namespace Nakama.Tests.Sync
 
             await testEnv.StartAll();
 
+            System.Console.WriteLine("done with start all");
+
             IUserPresence nonCreator = testEnv.GetRandomNonCreatorPresence();
             var nonCreatorEnv = testEnv.GetTestEnvironment(nonCreator);
+
             Assert.True(nonCreatorEnv.GroupVars.GroupBool.GetVar(testEnv.GetCreatorPresence()).GetValue());
             testEnv.Dispose();
         }

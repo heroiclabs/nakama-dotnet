@@ -102,6 +102,7 @@ namespace NakamaSync
             _syncMatch = syncMatch;
 
             var self = syncMatch.PresenceTracker.GetSelf();
+
             if (this.Value != null && !this.Value.Equals(default(T)))
             {
                 ValidateAndDispatch(self, _lastValue, Value);
@@ -110,7 +111,7 @@ namespace NakamaSync
             else
             {
                 // don't have value to share, request it from other clients.
-                Send(AckType.HandshakeRequest);
+                //Send(AckType.HandshakeRequest);
             }
 
             syncMatch.PresenceTracker.OnPresenceAdded += (p) =>
@@ -142,8 +143,10 @@ namespace NakamaSync
                 });
 
                 timeoutCts.CancelAfter(TimeSpan.FromSeconds(handshakeTimeoutSec));
+
                 return _handshakeTcs.Task;
             }
+
 
             return Task.CompletedTask;
         }
@@ -183,6 +186,19 @@ namespace NakamaSync
                 return;
             }
 
+            ValidationStatus oldStatus = Status;
+            ValidationStatus newStatus = TryHostIntercept(source, incomingSerialized);
+
+            // todo notify if invalid?
+            if (newStatus != ValidationStatus.Invalid)
+            {
+                _lastValue = Value;
+                System.Console.WriteLine("SETTING VALUE " + incomingSerialized.Value);
+                Value = incomingSerialized.Value;
+                _lockVersion = incomingSerialized.LockVersion;
+                Status = incomingSerialized.Status;
+            }
+
             // complete the task before invoking a value changed.
             // we want the top level user-facing match task to end
             // prior to the event dispatching. this is so they can
@@ -200,18 +216,11 @@ namespace NakamaSync
                 Send(AckType.HandshakeResponse, new IUserPresence[]{source});
             }
 
-            ValidationStatus oldStatus = Status;
-            ValidationStatus newStatus = TryHostIntercept(source, incomingSerialized);
-
-            // todo notify if invalid?
             if (newStatus != ValidationStatus.Invalid)
             {
-                _lastValue = Value;
-                Value = incomingSerialized.Value;
-                _lockVersion = incomingSerialized.LockVersion;
-                Status = incomingSerialized.Status;
                 InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(_lastValue, Value), new ValidationChange(oldStatus, Status)));
             }
+
         }
 
         private ValidationStatus TryHostIntercept(IUserPresence source, ISerializableVar<T> serialized)

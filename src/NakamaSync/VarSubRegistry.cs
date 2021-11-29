@@ -42,9 +42,9 @@ namespace NakamaSync
         public Task ReceiveMatch(SyncMatch syncMatch)
         {
             _syncMatch = syncMatch;
-            _factory.ReceiveSyncMatch(syncMatch);
 
             var handshakeTasks = new List<Task>();
+            handshakeTasks.Add(_factory.ReceiveSyncMatch(syncMatch));
 
             var allVars = _vars.Values.SelectMany(l => l);
             foreach (var var in allVars)

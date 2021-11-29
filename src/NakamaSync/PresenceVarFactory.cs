@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nakama;
 
 namespace NakamaSync
@@ -41,12 +42,14 @@ namespace NakamaSync
             _handshakeTimeoutSec = handhakeTimeoutSec;
         }
 
-        public void AddGroupVar(long opcode, GroupVar<T> groupVar)
+        public Task AddGroupVar(long opcode, GroupVar<T> groupVar)
         {
             if (_varsByOpcode.ContainsKey(opcode))
             {
                 throw new ArgumentException($"Already added opcode: {opcode}");
             }
+
+            var taskList = new List<Task>();
 
             _varsByOpcode.Add(opcode, groupVar);
 
@@ -64,13 +67,17 @@ namespace NakamaSync
 
                     var newVar = new PresenceVar<T>(opcode);
                     newVar.SetPresence(presence);
-                    newVar.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec);
+
+                    // newly created presence vars need to handshake, etc.
+                    taskList.Add(newVar.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec));
 
                     _varsByUser[presence.UserId].Add(newVar);
                     _varsByOpcode[opcode].OthersList.Add(newVar);
                     _varsByOpcode[opcode].OnPresenceAddedInternal?.Invoke(newVar);
                 }
             }
+
+            return Task.WhenAll(taskList);
         }
 
         public void HandleSerialized(IUserPresence source, long opcode, SerializableVar<T> serializable)
@@ -90,19 +97,23 @@ namespace NakamaSync
             }
         }
 
-        public void ReceiveSyncMatch(SyncMatch syncMatch)
+        public Task ReceiveSyncMatch(SyncMatch syncMatch)
         {
             _userId = syncMatch.Self.UserId;
             _syncMatch = syncMatch;
 
-            // todo remove event
+            // todo what if user leaves before handshake is done
+
+            var handshakeTasks = new List<Task>();
 
             // use the presence tracker presences rather than the sync match presence because they will be
             // up to date. the sync match may be stale at the point based on how the registry is written.
             foreach (IUserPresence presence in syncMatch.PresenceTracker.GetSortedOthers())
             {
-                HandlePresenceAdded(presence);
+                handshakeTasks.AddRange(HandlePresenceAdded(presence));
             }
+
+            return Task.WhenAll(handshakeTasks);
         }
 
         internal void ReceivePresenceEvent(IMatchPresenceEvent evt)
@@ -118,12 +129,14 @@ namespace NakamaSync
             }
         }
 
-        private void HandlePresenceAdded(IUserPresence presence)
+        private List<Task> HandlePresenceAdded(IUserPresence presence)
         {
+            var newVarHandshakes = new List<Task>();
+
             if (_varsByUser.ContainsKey(presence.UserId) || presence.UserId == _userId)
             {
                 // note: normal for server to send duplicate presence additions in very specific situations.
-                return;
+                return newVarHandshakes;
             }
 
             var userVars = new List<PresenceVar<T>>();
@@ -133,13 +146,14 @@ namespace NakamaSync
             {
                 var newVar = new PresenceVar<T>(var.Key);
                 newVar.SetPresence(presence);
-                newVar.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec);
-
+                newVarHandshakes.Add(newVar.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec));
                 userVars.Add(newVar);
 
                 var.Value.OthersList.Add(newVar);
                 var.Value.OnPresenceAddedInternal?.Invoke(newVar);
             }
+
+            return newVarHandshakes;
         }
 
         private void HandlePresenceRemoved(IUserPresence presence)
