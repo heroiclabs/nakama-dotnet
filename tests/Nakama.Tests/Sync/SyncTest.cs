@@ -265,6 +265,35 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarShouldSyncDictForClientJoiningLate()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            var match = await testEnv.StartCreate();
+            var creatorEnv = testEnv.GetCreatorEnv();
+
+            var dict = new Dictionary<string, string>
+            {
+                ["hello"] = "world"
+            };
+
+            creatorEnv.SharedVars.SharedDict.SetValue(dict);
+
+            await Task.Delay(1000);
+
+            await testEnv.StartJoin(1, match);
+            var env1Dict = testEnv.GetNonCreatorEnv().SharedVars.SharedDict;
+
+            Assert.NotNull(env1Dict);
+            Assert.True(env1Dict.GetValue().ContainsKey("hello"));
+            Assert.Equal("world", env1Dict.GetValue()["hello"]);
+            
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task GroupVarShouldSyncData()
         {
             var testEnv = new SyncTestEnvironment(
