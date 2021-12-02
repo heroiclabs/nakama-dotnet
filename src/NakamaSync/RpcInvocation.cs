@@ -25,10 +25,10 @@ namespace NakamaSync
     {
         private readonly object _target;
         private readonly MethodInfo _method;
-        private readonly object[] _parameters;
-        private readonly object[] _optionalParameters;
+        private readonly object[] _requiredRemoteParams;
+        private readonly object[] _optionalRemoteParams;
 
-        public RpcInvocation(object target, string methodName, object[] requiredParameters, object[] optionalParameters)
+        public RpcInvocation(object target, string methodName, object[] requiredRemoteParams, object[] optionalRemoteParams)
         {
             if (target == null)
             {
@@ -49,42 +49,67 @@ namespace NakamaSync
 
             _target = target;
             _method = method;
-            _parameters = requiredParameters;
-            _optionalParameters = optionalParameters;
+            _requiredRemoteParams = requiredRemoteParams;
+            _optionalRemoteParams = optionalRemoteParams;
         }
 
         public void Invoke()
         {
-            var processedParameters = new object[_parameters.Length];
+            System.Console.WriteLine("invoke called");
+            var allParams = _method.GetParameters();
+            var requiredLocalParams = new List<ParameterInfo>();
+            var optionalLocalParams = new List<ParameterInfo>();
 
-            ParameterInfo[] methodParams = _method.GetParameters();
-
-            for (int i = 0; i < methodParams.Length; i++)
+            foreach (var p in allParams)
             {
-                ParameterInfo methodParam = methodParams[i];
-                object param = _parameters[i];
-
-                // only used by local rpcs
-
-                var converter = GetImplicitConverter(baseType: param.GetType(), targetType: methodParam.ParameterType);
-                if (converter != null)
-                {
-                    param = converter.Invoke(null, new[] {param});
-                }
-
-                bool serializedAsGenericDict = param is IDictionary<string,object>;
-                bool rpcExpectGenericDict = methodParam.ParameterType == typeof(IDictionary<string, object>);
-
-                // tinyjson processes anonymous objects as dictionaries
-                if (serializedAsGenericDict && !rpcExpectGenericDict)
-                {
-                    param = ParamToObject(param as IDictionary<string, object>, methodParam.ParameterType);
-                }
-
-                processedParameters[i] = param;
+                var list = p.IsOptional ? optionalLocalParams : requiredLocalParams;
+                list.Add(p);
             }
 
-            _method.Invoke(_target, processedParameters);
+            if (requiredLocalParams.Count != _requiredRemoteParams.Length)
+            {
+                throw new InvalidOperationException("The number of required parameters does not match the number of supplied parameters.");
+            }
+
+            var processedParameters = new List<object>();
+            System.Console.WriteLine("beginning processing");
+
+            for (int i = 0; i < _requiredRemoteParams.Length; i++)
+            {
+                processedParameters.Add(ProcessRpcParameter(requiredLocalParams[i], _requiredRemoteParams[i]));
+            }
+
+            for (int i = 0; i < _optionalRemoteParams.Length; i++)
+            {
+                processedParameters.Add(ProcessRpcParameter(optionalLocalParams[i], _optionalRemoteParams[i]));
+            }
+
+            System.Console.WriteLine("processed params count " + processedParameters.Count);
+
+            _method.Invoke(_target, processedParameters.ToArray());
+        }
+
+        private object ProcessRpcParameter(ParameterInfo localParam, object remoteParam)
+        {
+            // only used by local rpcs
+            object processedLocalParam = remoteParam;
+
+            var converter = GetImplicitConverter(baseType: remoteParam.GetType(), targetType: localParam.ParameterType);
+            if (converter != null)
+            {
+                processedLocalParam = converter.Invoke(null, new[] {localParam});
+            }
+
+            bool serializedAsGenericDict = remoteParam is IDictionary<string,object>;
+            bool rpcExpectGenericDict = localParam.ParameterType == typeof(IDictionary<string, object>);
+
+            // tinyjson processes anonymous objects as dictionaries
+            if (serializedAsGenericDict && !rpcExpectGenericDict)
+            {
+                processedLocalParam = ParamToObject(remoteParam as IDictionary<string, object>, localParam.ParameterType);
+            }
+
+            return processedLocalParam;
         }
 
         private static object ParamToObject(IDictionary<string, object> parameter, Type t)

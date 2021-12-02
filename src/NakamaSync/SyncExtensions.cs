@@ -66,6 +66,7 @@
 // todo support more list-like and dictionary-like methods on the shared and self vars (or maybe use an implicit operator on the var) rather than just setting a fresh new object each time.
 // todo test/handle match close and var resetting
 // todo implicit operator for underlying type? careful...
+// TODO write tests for
 
 using System.Threading.Tasks;
 using Nakama;
