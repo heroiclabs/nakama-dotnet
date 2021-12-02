@@ -79,7 +79,7 @@ namespace NakamaSync
                     throw new InvalidOperationException("Received rpc for non-existent target: " + envelope.RpcKey.TargetId);
                 }
 
-                var rpc = RpcInvocation.Create(_rpcRegistry.GetTarget(envelope.RpcKey.TargetId), envelope.RpcKey.MethodName, envelope.Parameters);
+                var rpc = new RpcInvocation(_rpcRegistry.GetTarget(envelope.RpcKey.TargetId), envelope.RpcKey.MethodName, envelope.RequiredParameters, envelope.OptionalParameters);
                 rpc.Invoke();
             }
         }
@@ -104,11 +104,12 @@ namespace NakamaSync
             return _hostTracker.IsSelfHost();
         }
 
-        public void SendRpc(IEnumerable<IUserPresence> targetPresences, string rpcId, string targetId, object[] parameters)
+        public void SendRpc(IEnumerable<IUserPresence> targetPresences, string rpcId, string targetId, object[] requiredParameters, object[] optionalParameters = null)
         {
             // todo name sure match exists
             var envelope = new RpcEnvelope();
-            envelope.Parameters = parameters;
+            envelope.RequiredParameters = requiredParameters;
+            envelope.OptionalParameters = optionalParameters;
             envelope.RpcKey = new RpcKey(rpcId, targetId);
 
             if (!_rpcRegistry.HasTarget(targetId))
@@ -125,7 +126,7 @@ namespace NakamaSync
                     throw new InvalidOperationException("Received rpc for non-existent target: " + targetId);
                 }
 
-                var rpc = RpcInvocation.Create(_rpcRegistry.GetTarget(targetId), rpcId, parameters);
+                var rpc = new RpcInvocation(_rpcRegistry.GetTarget(targetId), rpcId, requiredParameters, optionalParameters);
                 rpc.Invoke();
             }
         }
@@ -133,7 +134,7 @@ namespace NakamaSync
         public void SendRpc(string rpcId, string targetId, object[] parameters)
         {
             var envelope = new RpcEnvelope();
-            envelope.Parameters = parameters;
+            envelope.RequiredParameters = parameters;
             envelope.RpcKey = new RpcKey(rpcId, targetId);
 
             if (!_rpcRegistry.HasTarget(targetId))

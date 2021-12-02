@@ -26,9 +26,20 @@ namespace NakamaSync
         private readonly object _target;
         private readonly MethodInfo _method;
         private readonly object[] _parameters;
+        private readonly object[] _optionalParameters;
 
-        public static RpcInvocation Create(object target, string methodName, object[] parameters)
+        public RpcInvocation(object target, string methodName, object[] requiredParameters, object[] optionalParameters)
         {
+            if (target == null)
+            {
+                throw new ArgumentException("Cannot construct rpc with null target.");
+            }
+
+            if (methodName == null)
+            {
+                throw new ArgumentException("Cannot construct rpc with null method.");
+            }
+
             var method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
             if (method == null)
@@ -36,26 +47,11 @@ namespace NakamaSync
                 throw new NullReferenceException($"Could not find method with name: {methodName} on object {target}");
             }
 
-            return new RpcInvocation(target, method, parameters);
-        }
-
-        private RpcInvocation(object target, MethodInfo method, object[] parameters)
-        {
-            if (target == null)
-            {
-                throw new ArgumentException("Cannot construct rpc with null target.");
-            }
-
-            if (method == null)
-            {
-                throw new ArgumentException("Cannot construct rpc with null method.");
-            }
-
             _target = target;
             _method = method;
-            _parameters = parameters;
+            _parameters = requiredParameters;
+            _optionalParameters = optionalParameters;
         }
-
 
         public void Invoke()
         {
@@ -71,7 +67,6 @@ namespace NakamaSync
                 // only used by local rpcs
 
                 var converter = GetImplicitConverter(baseType: param.GetType(), targetType: methodParam.ParameterType);
-
                 if (converter != null)
                 {
                     param = converter.Invoke(null, new[] {param});
@@ -88,8 +83,6 @@ namespace NakamaSync
 
                 processedParameters[i] = param;
             }
-
-            System.Console.WriteLine("invoking rpc method with num params: " + processedParameters.Length);
 
             _method.Invoke(_target, processedParameters);
         }

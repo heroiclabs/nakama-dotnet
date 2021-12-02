@@ -23,7 +23,10 @@ namespace NakamaSync
         [DataMember(Name="rpc_key"), Preserve]
         public RpcKey RpcKey { get; set; }
 
-        [DataMember(Name="parameters"), Preserve]
-        public object[] Parameters { get; set; }
+        [DataMember(Name="required_parameters"), Preserve]
+        public object[] RequiredParameters { get; set; }
+
+        [DataMember(Name="optional_parameters"), Preserve]
+        public object[] OptionalParameters { get; set; }
     }
 }

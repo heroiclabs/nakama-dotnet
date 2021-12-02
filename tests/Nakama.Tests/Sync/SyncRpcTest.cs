@@ -19,7 +19,7 @@ using Xunit;
 
 namespace Nakama.Tests.Sync
 {
-    public class RpcTest
+    public class SyncRpcTest
     {
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
         private async Task TestLocalRpcNoImplicit()
