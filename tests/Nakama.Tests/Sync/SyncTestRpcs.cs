@@ -25,7 +25,7 @@ namespace Nakama.Tests.Sync
         public string Param1Result { get; private set; }
         public int Param2Result { get; private set; }
         public bool Param3Result { get; private set; }
-        public SyncTestRpcObject Param4Result { get; private set; }
+        public SyncTestRpcObjectImplicit Param4Result { get; private set; }
 
         private SyncMatch _syncMatch;
 
@@ -41,14 +41,12 @@ namespace Nakama.Tests.Sync
             _syncMatch = syncMatch;
         }
 
-        public void Invoke(IEnumerable<IUserPresence> presences = null, string testDel = "TestRpcDelegate")
+        public void Invoke(IEnumerable<IUserPresence> presences, string testDel, object[] requiredParameters, object[] optionalParameters)
         {
-            var testObj = new SyncTestRpcObject();
-            testObj.TestMember = "testMember";
-            _syncMatch.SendRpc(presences, testDel, ObjectId, new object[]{"param1", 1, true, testObj});
+            _syncMatch.SendRpc(presences, testDel, ObjectId, requiredParameters, optionalParameters);
         }
 
-        private void TestRpcDelegate(string param1, int param2, bool param3, SyncTestRpcObject param4)
+        private void TestRpcDelegateImplicit(string param1, int param2, bool param3, SyncTestRpcObjectImplicit param4)
         {
             Param1Result = param1;
             Param2Result = param2;
@@ -56,25 +54,33 @@ namespace Nakama.Tests.Sync
             Param4Result = param4;
         }
 
-        private void TestRpcDelegate2(string param1, int param2, bool param3, SyncTestRpcObject2 param4)
+        private void TestRpcDelegateNoImplicit(string param1, int param2, bool param3, SyncTestRpcObjectNoImplicit param4)
         {
             Param1Result = param1;
             Param2Result = param2;
             Param3Result = param3;
             Param4Result = param4;
+        }
+
+        private void TestRpcDelegateOptional(string param1, int param2, bool param3, SyncTestRpcObjectNoImplicit optionalParam4)
+        {
+            Param1Result = param1;
+            Param2Result = param2;
+            Param3Result = param3;
+            Param4Result = optionalParam4;
         }
     }
 
-    public class SyncTestRpcObject
+    public class SyncTestRpcObjectImplicit
     {
         [DataMember(Name="TestMember")]
         public string TestMember { get; set; }
 
-        public static implicit operator SyncTestRpcObject2(SyncTestRpcObject v) => new SyncTestRpcObject2{TestMember = v.TestMember};
-        public static implicit operator SyncTestRpcObject(SyncTestRpcObject2 v) => new SyncTestRpcObject{TestMember = v.TestMember};
+        public static implicit operator SyncTestRpcObjectNoImplicit(SyncTestRpcObjectImplicit v) => new SyncTestRpcObjectNoImplicit{TestMember = v.TestMember};
+        public static implicit operator SyncTestRpcObjectImplicit(SyncTestRpcObjectNoImplicit v) => new SyncTestRpcObjectImplicit{TestMember = v.TestMember};
     }
 
-    public class SyncTestRpcObject2
+    public class SyncTestRpcObjectNoImplicit
     {
         [DataMember(Name = "TestMember")]
         public string TestMember { get; set; }

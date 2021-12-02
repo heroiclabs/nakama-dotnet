@@ -27,11 +27,21 @@ namespace Nakama.Tests.Sync
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllUserEnvs();
-            allEnvs[0].Rpcs.Invoke(new IUserPresence[]{allEnvs[0].Self});
+
+            allEnvs[0].Rpcs.Invoke
+            (
+                new IUserPresence[]{allEnvs[0].Self},"TestRpcDelegateNoImplicit",
+                new object[]{"param1", 1, true, new SyncTestRpcObjectNoImplicit{TestMember = "paramMember"}},
+                new object[]{}
+            );
+
             await Task.Delay(1000);
+
             Assert.Equal("param1", allEnvs[0].Rpcs.Param1Result);
             Assert.Equal(1, allEnvs[0].Rpcs.Param2Result);
             Assert.Equal(true, allEnvs[0].Rpcs.Param3Result);
+            Assert.Equal("paramMember", allEnvs[0].Rpcs.Param4Result.TestMember);
+
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
@@ -41,12 +51,21 @@ namespace Nakama.Tests.Sync
             // todo change this to start
             await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllUserEnvs();
-            allEnvs[0].Rpcs.Invoke();
+
+            allEnvs[0].Rpcs.Invoke
+            (
+                new IUserPresence[]{allEnvs[1].Self},
+                "TestRpcDelegateNoImplicit",
+                new object[]{"param1", 1, true, new SyncTestRpcObjectNoImplicit{TestMember = "paramMember"}},
+                new object[]{}
+            );
+
             await Task.Delay(1000);
+
             Assert.Equal("param1", allEnvs[1].Rpcs.Param1Result);
             Assert.Equal(1, allEnvs[1].Rpcs.Param2Result);
             Assert.Equal(true, allEnvs[1].Rpcs.Param3Result);
-            Assert.Equal("testMember", allEnvs[1].Rpcs.Param4Result.TestMember);
+            Assert.Equal("paramMember", allEnvs[1].Rpcs.Param4Result.TestMember);
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
@@ -54,12 +73,21 @@ namespace Nakama.Tests.Sync
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             await testEnv.StartViaName("testName");
+
             var allEnvs = testEnv.GetAllUserEnvs();
-            allEnvs[0].Rpcs.Invoke(new IUserPresence[]{allEnvs[0].Self}, "TestRpcDelegate2");
+            allEnvs[0].Rpcs.Invoke
+            (
+                new IUserPresence[]{allEnvs[0].Self}, "TestRpcDelegateImplicit",
+                new object[]{"param1", 1, true, new SyncTestRpcObjectImplicit{TestMember = "paramMember"}},
+                new object[]{}
+            );
+
             await Task.Delay(1000);
+
             Assert.Equal("param1", allEnvs[0].Rpcs.Param1Result);
             Assert.Equal(1, allEnvs[0].Rpcs.Param2Result);
             Assert.Equal(true, allEnvs[0].Rpcs.Param3Result);
+            Assert.Equal("paramMember", allEnvs[0].Rpcs.Param4Result.TestMember);
         }
 
         [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
@@ -69,7 +97,36 @@ namespace Nakama.Tests.Sync
             // todo change this to start
             await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllUserEnvs();
-            allEnvs[0].Rpcs.Invoke(null, "TestRpcDelegate2");
+            allEnvs[0].Rpcs.Invoke
+            (
+                null,
+                "TestRpcDelegateImplicit",
+                new object[]{"param1", 1, true, new SyncTestRpcObjectImplicit{TestMember = "paramMember"}},
+                new object[]{}
+            );
+
+            await Task.Delay(1000);
+            Assert.Equal("param1", allEnvs[1].Rpcs.Param1Result);
+            Assert.Equal(1, allEnvs[1].Rpcs.Param2Result);
+            Assert.Equal(true, allEnvs[1].Rpcs.Param3Result);
+            Assert.Equal("paramMember", allEnvs[1].Rpcs.Param4Result.TestMember);
+        }
+
+        [Fact(Timeout = TestsUtil.MATCHMAKER_TIMEOUT_MILLISECONDS)]
+        private async Task TestRpcOptionalParams()
+        {
+            var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
+            // todo change this to start
+            await testEnv.StartViaName("testName");
+            var allEnvs = testEnv.GetAllUserEnvs();
+            allEnvs[0].Rpcs.Invoke
+            (
+                new IUserPresence[]{},
+                "TestRpcDelegateOptional",
+                new object[]{"param1", 1, true},
+                new object[]{new SyncTestRpcObjectImplicit{TestMember = "testMember"}}
+            );
+
             await Task.Delay(1000);
             Assert.Equal("param1", allEnvs[1].Rpcs.Param1Result);
             Assert.Equal(1, allEnvs[1].Rpcs.Param2Result);
