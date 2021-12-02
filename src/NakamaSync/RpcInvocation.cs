@@ -32,43 +32,51 @@ namespace NakamaSync
         {
             if (target == null)
             {
+                System.Console.WriteLine("null target");
+
                 throw new ArgumentException("Cannot construct rpc with null target.");
             }
 
             if (methodName == null)
             {
+                System.Console.WriteLine("null method name");
+
                 throw new ArgumentException("Cannot construct rpc with null method.");
             }
 
+            System.Console.WriteLine("getting method");
+
             var method = target.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+            System.Console.WriteLine("done getting method");
 
             if (method == null)
             {
+                System.Console.WriteLine("null method");
+
                 throw new NullReferenceException($"Could not find method with name: {methodName} on object {target}");
             }
 
+
+            System.Console.WriteLine("done creating invocation");
+
             _target = target;
             _method = method;
-            _requiredRemoteParams = requiredRemoteParams;
-            _optionalRemoteParams = optionalRemoteParams;
+            _requiredRemoteParams = requiredRemoteParams ?? new object[]{};
+            _optionalRemoteParams = optionalRemoteParams ?? new object[]{};
         }
 
         public void Invoke()
         {
             System.Console.WriteLine("invoke called");
-            var allParams = _method.GetParameters();
+            var allLocalParams = _method.GetParameters();
             var requiredLocalParams = new List<ParameterInfo>();
             var optionalLocalParams = new List<ParameterInfo>();
 
-            foreach (var p in allParams)
+            foreach (var p in allLocalParams)
             {
                 var list = p.IsOptional ? optionalLocalParams : requiredLocalParams;
                 list.Add(p);
-            }
-
-            if (requiredLocalParams.Count != _requiredRemoteParams.Length)
-            {
-                throw new InvalidOperationException("The number of required parameters does not match the number of supplied parameters.");
             }
 
             var processedParameters = new List<object>();
@@ -79,14 +87,30 @@ namespace NakamaSync
                 processedParameters.Add(ProcessRpcParameter(requiredLocalParams[i], _requiredRemoteParams[i]));
             }
 
+            for (int i = _requiredRemoteParams.Length; i < requiredLocalParams.Count; i++)
+            {
+                processedParameters.Add(null);
+            }
+
             for (int i = 0; i < _optionalRemoteParams.Length; i++)
             {
+                System.Console.WriteLine("processing remote param " + processedParameters.Count);
                 processedParameters.Add(ProcessRpcParameter(optionalLocalParams[i], _optionalRemoteParams[i]));
             }
 
             System.Console.WriteLine("processed params count " + processedParameters.Count);
 
-            _method.Invoke(_target, processedParameters.ToArray());
+            try
+            {
+                _method.Invoke(_target, processedParameters.ToArray());
+
+            } catch (Exception e)
+            {
+                System.Console.WriteLine("MSG " + e.Message + "ST " + e.StackTrace);
+            }
+
+            System.Console.WriteLine("done invoking");
+
         }
 
         private object ProcessRpcParameter(ParameterInfo localParam, object remoteParam)

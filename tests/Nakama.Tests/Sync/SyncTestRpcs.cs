@@ -62,7 +62,14 @@ namespace Nakama.Tests.Sync
             Param4Result = param4;
         }
 
-        private void TestRpcDelegateOptional(string param1, int param2, bool param3, SyncTestRpcObjectNoImplicit optionalParam4)
+        private void TestRpcOptionalParamsOmittedLocal(string param1, int param2, bool param3)
+        {
+            Param1Result = param1;
+            Param2Result = param2;
+            Param3Result = param3;
+        }
+
+        private void TestRpcOptionalParamsOmittedRemote(string param1, int param2, bool param3, SyncTestRpcObjectNoImplicit optionalParam4)
         {
             Param1Result = param1;
             Param2Result = param2;

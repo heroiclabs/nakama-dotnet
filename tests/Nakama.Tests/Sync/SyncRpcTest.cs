@@ -112,7 +112,7 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async Task TestRpcOptionalParams()
+        private async Task TestRpcOptionalParamsOmittedRemote()
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             // todo change this to start
@@ -120,21 +120,22 @@ namespace Nakama.Tests.Sync
             var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].Rpcs.Invoke
             (
-                new IUserPresence[]{},
-                "TestRpcDelegateOptional",
+                new IUserPresence[]{allEnvs[1].Self},
+                "TestRpcOptionalParamsOmittedRemote",
                 new object[]{"param1", 1, true},
-                new object[]{new SyncTestRpcObjectImplicit{TestMember = "testMember"}}
+                new object[]{}
             );
 
             await Task.Delay(1000);
+
             Assert.Equal("param1", allEnvs[1].Rpcs.Param1Result);
             Assert.Equal(1, allEnvs[1].Rpcs.Param2Result);
             Assert.Equal(true, allEnvs[1].Rpcs.Param3Result);
-            Assert.Equal("testMember", allEnvs[1].Rpcs.Param4Result.TestMember);
+            Assert.Equal(null, allEnvs[1].Rpcs.Param4Result);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async Task TestRpcOptionalParamsOmitted()
+        private async Task TestRpcOptionalParamsOmittedLocal()
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
             // todo change this to start
@@ -142,9 +143,9 @@ namespace Nakama.Tests.Sync
             var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].Rpcs.Invoke
             (
-                new IUserPresence[]{},
-                "TestRpcDelegateOptionalOmitted",
-                new object[]{"param1", 1, true},
+                new IUserPresence[]{allEnvs[1].Self},
+                "TestRpcOptionalParamsOmittedLocal",
+                new object[]{"param1", 1, true, new SyncTestRpcObjectImplicit()},
                 new object[]{}
             );
 
@@ -152,7 +153,7 @@ namespace Nakama.Tests.Sync
             Assert.Equal("param1", allEnvs[1].Rpcs.Param1Result);
             Assert.Equal(1, allEnvs[1].Rpcs.Param2Result);
             Assert.Equal(true, allEnvs[1].Rpcs.Param3Result);
-            Assert.Equal(null, allEnvs[1].Rpcs.Param4Result.TestMember);
+            Assert.Equal(null, allEnvs[1].Rpcs.Param4Result);
         }
     }
 }
