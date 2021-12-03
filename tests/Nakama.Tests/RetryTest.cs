@@ -163,7 +163,7 @@ namespace Nakama.Tests
             client.GlobalRetryConfiguration = globalConfig;
 
             var localConfig = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
-            var session = await client.AuthenticateCustomAsync("test_id", null, true, null, localConfig, null);
+            var session = await client.AuthenticateCustomAsync("test_id", null, true, null, localConfig);
             Assert.NotNull(session);
             Assert.Equal(3, lastNumRetry);
 
