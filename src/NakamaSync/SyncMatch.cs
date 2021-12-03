@@ -30,7 +30,7 @@ namespace NakamaSync
         public int Size => _match.Size;
         public IUserPresence Self => _match.Self;
 
-        public event Action<HostChangedEvent> OnHostChanged
+        public event Action<IHostChangedEvent> OnHostChanged
         {
             add
             {

@@ -24,7 +24,7 @@ namespace NakamaSync
     // TODO catch presence tracker exceptions. and think about how to handle exceptions for the sync system in general
     internal class HostTracker
     {
-        public event Action<HostChangedEvent> OnHostChanged;
+        public event Action<IHostChangedEvent> OnHostChanged;
         public event Action<IUserPresence> OnGuestLeft;
         public event Action<IUserPresence> OnGuestJoined;
 

@@ -15,6 +15,7 @@
 */
 
 using Xunit;
+using NakamaSync;
 
 namespace Nakama.Tests.Sync
 {
@@ -29,6 +30,30 @@ namespace Nakama.Tests.Sync
 
             await testEnv.StartAll();
             var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
+            var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
+
+            Assert.True(env1.Match.IsSelfHost() || env2.Match.IsSelfHost());
+            Assert.NotEqual(env1.Match.IsSelfHost(), env2.Match.IsSelfHost());
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void HostChangedDispatches()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            await testEnv.StartCreate();
+            var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
+
+            IHostChangedEvent hostChangedEvent;
+
+            env1.Match.OnHostChanged += evt => {
+                hostChangedEvent = evt;
+            };
+
             var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
 
             Assert.True(env1.Match.IsSelfHost() || env2.Match.IsSelfHost());
