@@ -289,7 +289,7 @@ namespace Nakama.Tests.Sync
             Assert.NotNull(env1Dict);
             Assert.True(env1Dict.GetValue().ContainsKey("hello"));
             Assert.Equal("world", env1Dict.GetValue()["hello"]);
-            
+
             testEnv.Dispose();
         }
 
@@ -341,21 +341,6 @@ namespace Nakama.Tests.Sync
             var env1 = allEnvs[0];
             var env2 = allEnvs[1];
             Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
-            testEnv.Dispose();
-        }
-
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async void HostShouldBeChosen()
-        {
-            var testEnv = new SyncTestEnvironment(
-                numClients: 2,
-                creatorIndex: 0);
-
-            await testEnv.StartAll();
-            var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
-            var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
-            Assert.NotEqual(env1.Self.UserId, env2.Self.UserId);
-            Assert.True(env1.Match.IsSelfHost() || env2.Match.IsSelfHost());
             testEnv.Dispose();
         }
 
@@ -490,17 +475,9 @@ namespace Nakama.Tests.Sync
 
             var match = await testEnv.StartCreate();
 
-            System.Console.WriteLine("CREATOR IS " + match.Self.UserId);
-
             match = await testEnv.StartJoin(envIndex: 1, match);
 
-            System.Console.WriteLine("JOINER IS " + match.Self.UserId);
-
-            System.Console.WriteLine("done joining with guest");
             await Task.Delay(1000);
-
-            System.Console.WriteLine("registering with guest");
-
 
             allUserEnvs[1].VarRegistry.Register(allUserEnvs[1].SharedVars.SharedInt);
 

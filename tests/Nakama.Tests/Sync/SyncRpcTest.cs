@@ -47,7 +47,7 @@ namespace Nakama.Tests.Sync
         private async Task TestRpcNoImplicit()
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
-            // todo change this to start
+
             await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllUserEnvs();
 
@@ -93,7 +93,6 @@ namespace Nakama.Tests.Sync
         private async Task TestRpcImplicitOperator()
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
-            // todo change this to start
             await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].Rpcs.Invoke
@@ -115,7 +114,6 @@ namespace Nakama.Tests.Sync
         private async Task TestRpcOptionalParamsOmittedRemote()
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
-            // todo change this to start
             await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].Rpcs.Invoke
@@ -138,7 +136,6 @@ namespace Nakama.Tests.Sync
         private async Task TestRpcOptionalParamsOmittedLocal()
         {
             var testEnv = new SyncTestEnvironment(numClients: 2, creatorIndex: 0);
-            // todo change this to start
             await testEnv.StartViaName("testName");
             var allEnvs = testEnv.GetAllUserEnvs();
             allEnvs[0].Rpcs.Invoke

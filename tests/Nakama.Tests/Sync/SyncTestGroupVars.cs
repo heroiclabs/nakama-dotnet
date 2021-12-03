@@ -19,7 +19,6 @@ using NakamaSync;
 
 namespace Nakama.Tests.Sync
 {
-    // todo apply varid generator to presence var collections
     public class SyncTestGroupVars
     {
         public GroupVar<bool> GroupBool { get; }
