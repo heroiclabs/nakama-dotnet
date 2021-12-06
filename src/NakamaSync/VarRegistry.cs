@@ -45,36 +45,18 @@ namespace NakamaSync
 
         public void Register<T>(SharedVar<T> var)
         {
-            long combinedOpcode = _opcodeStart + var.Opcode;
-            if (_reservedOpcodes.Contains(combinedOpcode))
-            {
-                throw new ArgumentException($"Opcode {combinedOpcode} is reserved by the registry.");
-            }
-
-            lock (_lock)
-            {
-                VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
-
-                if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)
-                {
-                    // registration was deferred to after the sync match being received.
-                    // note that some registries have already received the sync match
-                    // if a var of their type was already registered prior to receiving the match.
-                    subRegistry.ReceiveMatch(_syncMatch);
-                }
-
-                subRegistry.Register(var);
-            }
+            ThrowIfReserved(var.Opcode);
+            RegisterInternal(var);
         }
 
         public void Register<T>(GroupVar<T> var)
         {
-            long combinedOpcode = _opcodeStart + var.Opcode;
-            if (_reservedOpcodes.Contains(combinedOpcode))
-            {
-                throw new ArgumentException($"Opcode {combinedOpcode} is reserved by the registry.");
-            }
+            ThrowIfReserved(var.Opcode);
+            RegisterInternal(var);
+        }
 
+        internal void RegisterInternal<T>(GroupVar<T> var)
+        {
             lock (_lock)
             {
                 VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
@@ -88,6 +70,24 @@ namespace NakamaSync
                     // if a var of their type was already registered prior to receiving the match.
                     subRegistry.ReceiveMatch(_syncMatch);
                 }
+            }
+        }
+
+        internal void RegisterInternal<T>(SharedVar<T> var)
+        {
+            lock (_lock)
+            {
+                VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
+
+                if (!subRegistry.ReceivedSyncMatch && _syncMatch != null)
+                {
+                    // registration was deferred to after the sync match being received.
+                    // note that some registries have already received the sync match
+                    // if a var of their type was already registered prior to receiving the match.
+                    subRegistry.ReceiveMatch(_syncMatch);
+                }
+
+                subRegistry.Register(var);
             }
         }
 
@@ -195,6 +195,15 @@ namespace NakamaSync
 
             _syncMatch.Socket.ReceivedMatchPresence -= _syncMatch.PresenceTracker.HandlePresenceEvent;
             _syncMatch = null;
+        }
+
+        private void ThrowIfReserved(long varOpcode)
+        {
+            long combinedOpcode = _opcodeStart + varOpcode;
+            if (_reservedOpcodes.Contains(combinedOpcode))
+            {
+                throw new ArgumentException($"Opcode {combinedOpcode} is reserved by the registry.");
+            }
         }
     }
 }

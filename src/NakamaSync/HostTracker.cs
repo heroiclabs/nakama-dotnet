@@ -39,7 +39,7 @@ namespace NakamaSync
         public HostTracker(PresenceTracker presenceTracker, VarRegistry registry)
         {
             _presenceTracker = presenceTracker;
-            registry.Register(_stickyHostId);
+            registry.RegisterInternal(_stickyHostId);
         }
 
         public void Subscribe(ISocket socket)
