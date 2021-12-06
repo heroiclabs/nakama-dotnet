@@ -270,15 +270,22 @@ namespace NakamaSync
         {
             if (incomingValue == null)
             {
-                Value = default(T);
+                Value = default;
                 return;
             }
             
             var type = incomingValue.GetType();
             if (Value != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
+                var existingDictionary = (IDictionary) Value;
                 var incomingDictionary = (IDictionary) incomingValue;
-                var newDictionary = (IDictionary) Value;
+                var newDictionary = (IDictionary) Activator.CreateInstance(type);
+                
+                foreach (var key in existingDictionary.Keys)
+                {
+                    newDictionary[key] = existingDictionary[key];
+                }
+
                 foreach (var key in incomingDictionary.Keys)
                 {
                     newDictionary[key] = incomingDictionary[key];
