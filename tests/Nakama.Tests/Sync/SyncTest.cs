@@ -489,6 +489,69 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarDictionaryShouldMergeValues()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            await testEnv.StartAll();
+            var allUserEnvs = testEnv.GetAllUserEnvs();
+
+            var dict1 = new Dictionary<string, string>
+            {
+                { "Env1", "Foo" }
+            };
+            
+            var dict2 = new Dictionary<string, string>
+            {
+                { "Env2", "Bar" }
+            };
+
+            allUserEnvs[0].SharedVars.SharedDict.SetValue(dict1);
+            allUserEnvs[1].SharedVars.SharedDict.SetValue(dict2);
+
+            await Task.Delay(1000);
+            
+            Assert.Equal("Foo", allUserEnvs[0].SharedVars.SharedDict.GetValue()["Env1"]);
+            Assert.Equal("Foo", allUserEnvs[1].SharedVars.SharedDict.GetValue()["Env1"]);
+            Assert.Equal("Bar", allUserEnvs[0].SharedVars.SharedDict.GetValue()["Env2"]);
+            Assert.Equal("Bar", allUserEnvs[1].SharedVars.SharedDict.GetValue()["Env2"]);
+        }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async Task SharedVarDictionaryShouldOverwriteValues()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            await testEnv.StartAll();
+            var allUserEnvs = testEnv.GetAllUserEnvs();
+
+            var dict1 = new Dictionary<string, string>
+            {
+                { "OverwriteMe", "1" }
+            };
+            
+            var dict2 = new Dictionary<string, string>
+            {
+                { "OverwriteMe", "2" }
+            };
+
+            allUserEnvs[0].SharedVars.SharedDict.SetValue(dict1);
+            
+            await Task.Delay(1000);
+            
+            allUserEnvs[1].SharedVars.SharedDict.SetValue(dict2);
+
+            await Task.Delay(1000);
+            
+            Assert.Equal("2", allUserEnvs[0].SharedVars.SharedDict.GetValue()["OverwriteMe"]);
+            Assert.Equal("2", allUserEnvs[1].SharedVars.SharedDict.GetValue()["OverwriteMe"]);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task PresenceVarFactoryUniqueAssignmentsNotDeferred()
         {
             var testEnv = new SyncTestEnvironment(
