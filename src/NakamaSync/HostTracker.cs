@@ -43,6 +43,12 @@ namespace NakamaSync
             _stickyHostId = stickyHostId;
         }
 
+        public void SetHost(string userId)
+        {
+            // TODO MAKE SURE EVENT FIRES APPROPRIATELY IN ALL TESTS
+            _stickyHostId.SetValue(userId);
+        }
+
         public void ReceiveMatch(IMatch match)
         {
             if (!match.Presences.Any())

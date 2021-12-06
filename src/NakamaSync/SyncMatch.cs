@@ -142,5 +142,10 @@ namespace NakamaSync
 
             _socket.SendMatchStateAsync(_match.Id, _rpcRegistry.Opcode, _encoding.Encode(envelope));
         }
+
+        public void SetHost(string newHostId)
+        {
+            _syncTrackers.HostTracker.SetHost(newHostId);
+        }
     }
 }

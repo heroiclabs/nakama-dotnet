@@ -14,7 +14,6 @@
 * limitations under the License.
 */
 
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -56,10 +55,30 @@ namespace Nakama.Tests.Sync
             await env1.Socket.LeaveMatchAsync(env1.Match);
 
             await Task.Delay(1000);
+
             Assert.True(env2.Match.IsSelfHost());
 
             testEnv.Dispose();
         }
 
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void StickyHostCanBeManuallySet()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            await testEnv.StartAll();
+            var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
+            var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
+            env1.Match.SetHost(env2.Self.UserId);
+
+            await Task.Delay(1000);
+
+            Assert.False(env1.Match.IsSelfHost());
+            Assert.True(env2.Match.IsSelfHost());
+
+            testEnv.Dispose();
+        }
     }
 }
