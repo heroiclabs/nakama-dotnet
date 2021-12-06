@@ -15,6 +15,8 @@
 */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -78,7 +80,8 @@ namespace NakamaSync
         internal void SetLocalValue(IUserPresence source, T newValue)
         {
             _lastValue = Value;
-            Value = newValue;
+
+            SetValueFromIncoming(newValue);
 
             // don't increment lock version if haven't done handshake yet.
             // remote clients should overwrite any local value during the handshake.
@@ -201,7 +204,7 @@ namespace NakamaSync
                 {
                     _lastValue = Value;
                     System.Console.WriteLine("SETTING VALUE " + incomingSerialized.Value);
-                    Value = incomingSerialized.Value;
+                    SetValueFromIncoming(incomingSerialized.Value);
                     _lockVersion = incomingSerialized.LockVersion;
                     Status = incomingSerialized.Status;
                     valueChange = true;
@@ -261,6 +264,32 @@ namespace NakamaSync
             }
 
             return newStatus;
+        }
+
+        private void SetValueFromIncoming(T incomingValue)
+        {
+            if (incomingValue == null)
+            {
+                Value = default(T);
+                return;
+            }
+            
+            var type = incomingValue.GetType();
+            if (Value != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            {
+                var incomingDictionary = (IDictionary) incomingValue;
+                var newDictionary = (IDictionary) Value;
+                foreach (var key in incomingDictionary.Keys)
+                {
+                    newDictionary[key] = incomingDictionary[key];
+                }
+
+                Value = (T) newDictionary;
+            }
+            else
+            {
+                Value = incomingValue;
+            }
         }
 
         internal ISerializableVar<T> ToSerializable(AckType ackType)

@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System.Linq;
 using Xunit;
 using NakamaSync;
 
@@ -59,6 +60,49 @@ namespace Nakama.Tests.Sync
             Assert.True(env1.Match.IsSelfHost() || env2.Match.IsSelfHost());
             Assert.NotEqual(env1.Match.IsSelfHost(), env2.Match.IsSelfHost());
 
+            testEnv.Dispose();
+        }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void HostShouldBeFirstByAlphanumericSort()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 4,
+                creatorIndex: 0);
+
+            await testEnv.StartAll();
+            var expectedHostEnv = testEnv.GetAllUserEnvs().OrderBy(x => x.Self.UserId).First();
+
+            foreach (var env in testEnv.GetAllUserEnvs())
+            {
+                if (env.Self.UserId == expectedHostEnv.Self.UserId)
+                {
+                    Assert.True(env.Match.IsSelfHost());
+                }
+                else
+                {
+                    Assert.False(env.Match.IsSelfHost());
+                }
+            }
+            
+            testEnv.Dispose();
+        }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void HostShouldBeSameOnAllClients()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 4,
+                creatorIndex: 0);
+
+            await testEnv.StartAll();
+            var expectedHostEnv = testEnv.GetAllUserEnvs().OrderBy(x => x.Self.UserId).First();
+
+            foreach (var env in testEnv.GetAllUserEnvs())
+            {
+                Assert.Equal(expectedHostEnv.Self.UserId, env.Match.GetHostPresence().UserId);
+            }
+            
             testEnv.Dispose();
         }
     }
