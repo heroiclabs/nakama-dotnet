@@ -15,6 +15,7 @@
 */
 
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Nakama.Tests.Sync
@@ -42,46 +43,23 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async void HostShouldBeFirstByAlphanumericSort()
+        private async void StickyHostShouldBeRemoved()
         {
             var testEnv = new SyncTestEnvironment(
-                numClients: 4,
+                numClients: 2,
                 creatorIndex: 0);
 
             await testEnv.StartAll();
-            var expectedHostEnv = testEnv.GetAllUserEnvs().OrderBy(x => x.Self.UserId).First();
+            var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
+            var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
 
-            foreach (var env in testEnv.GetAllUserEnvs())
-            {
-                if (env.Self.UserId == expectedHostEnv.Self.UserId)
-                {
-                    Assert.True(env.Match.IsSelfHost());
-                }
-                else
-                {
-                    Assert.False(env.Match.IsSelfHost());
-                }
-            }
+            await env1.Socket.LeaveMatchAsync(env1.Match);
+
+            await Task.Delay(1000);
+            Assert.True(env2.Match.IsSelfHost());
 
             testEnv.Dispose();
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async void HostShouldBeSameOnAllClients()
-        {
-            var testEnv = new SyncTestEnvironment(
-                numClients: 4,
-                creatorIndex: 0);
-
-            await testEnv.StartAll();
-            var expectedHostEnv = testEnv.GetAllUserEnvs().OrderBy(x => x.Self.UserId).First();
-
-            foreach (var env in testEnv.GetAllUserEnvs())
-            {
-                Assert.Equal(expectedHostEnv.Self.UserId, env.Match.GetHostPresence().UserId);
-            }
-
-            testEnv.Dispose();
-        }
     }
 }
