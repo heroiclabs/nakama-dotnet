@@ -30,9 +30,10 @@ namespace NakamaSync
         {
             // TODO think about how to properly deregister, if at all.
             socket.ReceivedMatchState += varRegistry.HandleReceivedMatchState;
-
+            var trackers = new SyncTrackers(session, varRegistry, socket);
             IMatch match = await socket.CreateMatchAsync(name);
-            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry);
+            trackers.PresenceTracker.ReceiveMatch(match);
+            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry, trackers);
             await varRegistry.ReceiveMatch(syncMatch);
             return syncMatch;
         }
@@ -41,9 +42,10 @@ namespace NakamaSync
         {
             // TODO think about how to properly deregister, if at all.
             socket.ReceivedMatchState += varRegistry.HandleReceivedMatchState;
-
+            var trackers = new SyncTrackers(session, varRegistry, socket);
             IMatch match = await socket.JoinMatchAsync(matched);
-            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry);
+            trackers.PresenceTracker.ReceiveMatch(match);
+            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry, trackers);
             await varRegistry.ReceiveMatch(syncMatch);
             return syncMatch;
         }
@@ -52,9 +54,10 @@ namespace NakamaSync
         {
             // TODO think about how to properly deregister, if at all.
             socket.ReceivedMatchState += varRegistry.HandleReceivedMatchState;
-
+            var trackers = new SyncTrackers(session, varRegistry, socket);
             IMatch match = await socket.JoinMatchAsync(matchId);
-            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry);
+            trackers.PresenceTracker.ReceiveMatch(match);
+            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry, trackers);
             await varRegistry.ReceiveMatch(syncMatch);
             return syncMatch;
         }

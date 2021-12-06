@@ -30,16 +30,17 @@ namespace NakamaSync
 
         public ILogger Logger { get; set; }
 
+        private readonly PresenceTracker _presenceTracker;
+
         // the first host of the match is the first player to join. after that, we use alphanumeric sort on the userids.
         // we do this because if we used alphanumeric sort the whole time, there would be a lot of host changes
         // right as users enter the match.
-        private readonly SharedVar<string> _stickyHostId = new SharedVar<string>(VarRegistry.STICKY_HOST_OPCODE);
-        private readonly PresenceTracker _presenceTracker;
+        private readonly SharedVar<string> _stickyHostId;
 
-        public HostTracker(PresenceTracker presenceTracker, VarRegistry registry)
+        public HostTracker(PresenceTracker presenceTracker, SharedVar<string> stickyHostId)
         {
             _presenceTracker = presenceTracker;
-            registry.RegisterInternal(_stickyHostId);
+            _stickyHostId = stickyHostId;
         }
 
         public void Subscribe(ISocket socket)
@@ -79,8 +80,12 @@ namespace NakamaSync
 
             IUserPresence host = GetHost();
 
+            System.Console.WriteLine("HANDLING PRESENCE ADDED");
+
             if (joiner.UserId != host.UserId)
             {
+                System.Console.WriteLine("DISPATCHING ON HOST CHANGED");
+
                 // get the next presence in the alphanumeric list
                 IUserPresence oldHost = _presenceTracker.GetPresence(index: 1);
                 Logger?.DebugFormat($"Host tracker changing host from {oldHost?.UserId} to {host.UserId}");

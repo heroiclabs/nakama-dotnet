@@ -34,37 +34,35 @@ namespace NakamaSync
         {
             add
             {
-                _hostTracker.OnHostChanged += value;
+                HostTracker.OnHostChanged += value;
             }
             remove
             {
-                _hostTracker.OnHostChanged -= value;
+                HostTracker.OnHostChanged -= value;
             }
         }
 
-        internal HostTracker HostTracker => _hostTracker;
-        internal PresenceTracker PresenceTracker => _presenceTracker;
+        internal HostTracker HostTracker => _syncTrackers.HostTracker;
+        internal PresenceTracker PresenceTracker => _syncTrackers.PresenceTracker;
         internal ISession Session => _session;
         internal ISocket Socket => _socket;
         internal SyncEncoding Encoding => _encoding;
 
         private readonly IMatch _match;
         private readonly ISession _session;
-        private readonly PresenceTracker _presenceTracker;
-        private readonly HostTracker _hostTracker;
+        private readonly SyncTrackers _syncTrackers;
         private ISocket _socket;
         private readonly SyncEncoding _encoding = new SyncEncoding();
         private readonly RpcRegistry _rpcRegistry;
 
-        internal SyncMatch(ISocket socket, ISession session, IMatch match, VarRegistry varRegistry, RpcRegistry rpcRegistry)
+        internal SyncMatch(ISocket socket, ISession session, IMatch match, VarRegistry varRegistry, RpcRegistry rpcRegistry, SyncTrackers syncTrackers)
         {
             _socket = socket;
             _session = session;
             _match = match;
-            _presenceTracker = new PresenceTracker(session.UserId);
-            _presenceTracker.ReceiveMatch(match);
-            _hostTracker = new HostTracker(_presenceTracker, varRegistry);
             _rpcRegistry = rpcRegistry;
+            _syncTrackers = syncTrackers;
+
             socket.ReceivedMatchState += HandleRpcMatchState;
         }
 
@@ -86,22 +84,22 @@ namespace NakamaSync
 
         public IUserPresence GetHostPresence()
         {
-            return _hostTracker.GetHost();
+            return HostTracker.GetHost();
         }
 
         public List<IUserPresence> GetOtherPresences()
         {
-            return  _presenceTracker.GetSortedOthers();
+            return  PresenceTracker.GetSortedOthers();
         }
 
         public List<IUserPresence> GetAllPresences()
         {
-            return _presenceTracker.GetSortedPresences();
+            return PresenceTracker.GetSortedPresences();
         }
 
         public bool IsSelfHost()
         {
-            return _hostTracker.IsSelfHost();
+            return HostTracker.IsSelfHost();
         }
 
         public void SendRpc(IEnumerable<IUserPresence> targetPresences, string rpcId, string targetId, object[] requiredParameters, object[] optionalParameters = null)

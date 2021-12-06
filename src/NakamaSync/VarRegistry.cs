@@ -26,6 +26,8 @@ namespace NakamaSync
     {
         public const long STICKY_HOST_OPCODE = -1;
 
+        internal SharedVar<string> StickyHostId => _stickyHostId;
+
         private readonly Dictionary<Type, IVarSubRegistry> _subregistriesByType = new Dictionary<Type, IVarSubRegistry>();
         private readonly Dictionary<long, IVarSubRegistry> _subregistriesByOpcode = new Dictionary<long, IVarSubRegistry>();
 
@@ -35,12 +37,15 @@ namespace NakamaSync
         private readonly int _handshakeTimeoutSec;
         private readonly object _lock = new object();
         private readonly HashSet<long> _reservedOpcodes = new HashSet<long>();
+        private readonly SharedVar<string> _stickyHostId = new SharedVar<string>(VarRegistry.STICKY_HOST_OPCODE);
 
         public VarRegistry(int opcodeStart = 0, int handshakeTimeoutSec = 5)
         {
             _opcodeStart = opcodeStart;
             _handshakeTimeoutSec = handshakeTimeoutSec;
+
             _reservedOpcodes.Add(STICKY_HOST_OPCODE);
+            RegisterInternal(_stickyHostId);
         }
 
         public void Register<T>(SharedVar<T> var)
