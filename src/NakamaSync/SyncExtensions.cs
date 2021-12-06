@@ -35,6 +35,7 @@ namespace NakamaSync
             trackers.PresenceTracker.ReceiveMatch(match);
             var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry, trackers);
             await varRegistry.ReceiveMatch(syncMatch);
+            trackers.HostTracker.ReceiveMatch(match);
             return syncMatch;
         }
 
@@ -47,6 +48,7 @@ namespace NakamaSync
             trackers.PresenceTracker.ReceiveMatch(match);
             var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry, trackers);
             await varRegistry.ReceiveMatch(syncMatch);
+            trackers.HostTracker.ReceiveMatch(match);
             return syncMatch;
         }
 

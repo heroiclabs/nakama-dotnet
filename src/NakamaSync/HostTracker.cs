@@ -43,8 +43,13 @@ namespace NakamaSync
             _stickyHostId = stickyHostId;
         }
 
-        public void Subscribe(ISocket socket)
+        public void ReceiveMatch(IMatch match)
         {
+            if (!match.Presences.Any())
+            {
+                _stickyHostId.SetValue(match.Self.UserId);
+            }
+
             _presenceTracker.OnPresenceAdded += HandlePresenceAdded;
             _presenceTracker.OnPresenceRemoved += HandlePresenceRemoved;
         }
@@ -70,22 +75,13 @@ namespace NakamaSync
 
         private void HandlePresenceAdded(IUserPresence joiner)
         {
-            if (joiner.UserId == _presenceTracker.GetSelf().UserId && _presenceTracker.GetPresenceCount() == 1)
-            {
-                // first to match is host
-                _stickyHostId.SetValue(joiner.UserId);
-            }
-
             Logger?.DebugFormat($"Host tracker for {_presenceTracker.UserId} saw joiner added: {joiner.UserId}");
 
             IUserPresence host = GetHost();
 
-            System.Console.WriteLine("HANDLING PRESENCE ADDED");
 
             if (joiner.UserId != host.UserId)
             {
-                System.Console.WriteLine("DISPATCHING ON HOST CHANGED");
-
                 // get the next presence in the alphanumeric list
                 IUserPresence oldHost = _presenceTracker.GetPresence(index: 1);
                 Logger?.DebugFormat($"Host tracker changing host from {oldHost?.UserId} to {host.UserId}");
@@ -131,6 +127,7 @@ namespace NakamaSync
 
         public bool IsSelfHost()
         {
+            System.Console.WriteLine("sticky host is " + _stickyHostId.GetValue());
             return _presenceTracker.GetSelf().UserId == GetHost()?.UserId;
         }
     }

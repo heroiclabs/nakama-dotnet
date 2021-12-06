@@ -27,7 +27,6 @@ namespace NakamaSync
         {
             PresenceTracker = new PresenceTracker(session.UserId);
             HostTracker = new HostTracker(PresenceTracker, varRegistry.StickyHostId);
-            HostTracker.Subscribe(socket);
         }
     }
 }
