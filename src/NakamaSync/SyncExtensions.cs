@@ -26,36 +26,36 @@ namespace NakamaSync
     public static class SyncExtensions
     {
         // todo maybe don't require session as a parameter here since we pass it to socket.
-        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry registry, RpcRegistry rpcRegistry, string name = null)
+        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry varRegistry, RpcRegistry rpcRegistry, string name = null)
         {
             // TODO think about how to properly deregister, if at all.
-            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
+            socket.ReceivedMatchState += varRegistry.HandleReceivedMatchState;
 
             IMatch match = await socket.CreateMatchAsync(name);
-            var syncMatch = new SyncMatch(socket, session, match, rpcRegistry);
-            await registry.ReceiveMatch(syncMatch);
+            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry);
+            await varRegistry.ReceiveMatch(syncMatch);
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, IMatchmakerMatched matched, VarRegistry registry, RpcRegistry rpcRegistry)
+        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, IMatchmakerMatched matched, VarRegistry varRegistry, RpcRegistry rpcRegistry)
         {
             // TODO think about how to properly deregister, if at all.
-            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
+            socket.ReceivedMatchState += varRegistry.HandleReceivedMatchState;
 
             IMatch match = await socket.JoinMatchAsync(matched);
-            var syncMatch = new SyncMatch(socket, session, match, rpcRegistry);
-            await registry.ReceiveMatch(syncMatch);
+            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry);
+            await varRegistry.ReceiveMatch(syncMatch);
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, string matchId, VarRegistry registry, RpcRegistry rpcRegistry)
+        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, string matchId, VarRegistry varRegistry, RpcRegistry rpcRegistry)
         {
             // TODO think about how to properly deregister, if at all.
-            socket.ReceivedMatchState += registry.HandleReceivedMatchState;
+            socket.ReceivedMatchState += varRegistry.HandleReceivedMatchState;
 
             IMatch match = await socket.JoinMatchAsync(matchId);
-            var syncMatch = new SyncMatch(socket, session, match, rpcRegistry);
-            await registry.ReceiveMatch(syncMatch);
+            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry);
+            await varRegistry.ReceiveMatch(syncMatch);
             return syncMatch;
         }
     }

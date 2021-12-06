@@ -56,14 +56,14 @@ namespace NakamaSync
         private readonly SyncEncoding _encoding = new SyncEncoding();
         private readonly RpcRegistry _rpcRegistry;
 
-        internal SyncMatch(ISocket socket, ISession session, IMatch match, RpcRegistry rpcRegistry)
+        internal SyncMatch(ISocket socket, ISession session, IMatch match, VarRegistry varRegistry, RpcRegistry rpcRegistry)
         {
             _socket = socket;
             _session = session;
             _match = match;
             _presenceTracker = new PresenceTracker(session.UserId);
             _presenceTracker.ReceiveMatch(match);
-            _hostTracker = new HostTracker(_presenceTracker);
+            _hostTracker = new HostTracker(_presenceTracker, varRegistry);
             _rpcRegistry = rpcRegistry;
             socket.ReceivedMatchState += HandleRpcMatchState;
         }

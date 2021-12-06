@@ -17,6 +17,8 @@
 using System.Linq;
 using Xunit;
 using NakamaSync;
+using System;
+using System.Threading.Tasks;
 
 namespace Nakama.Tests.Sync
 {
@@ -46,19 +48,27 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
-            await testEnv.StartCreate();
+            IMatch env1Match = await testEnv.StartCreate();
             var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
 
-            IHostChangedEvent hostChangedEvent;
+            IHostChangedEvent hostChangedEvent = null;
 
-            env1.Match.OnHostChanged += evt => {
+            env1.Match.OnHostChanged += evt =>
+            {
                 hostChangedEvent = evt;
             };
 
-            var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
+            var env2 = testEnv.GetNonCreatorEnv();
+            await env2.JoinMatch(env1Match.Id);
 
-            Assert.True(env1.Match.IsSelfHost() || env2.Match.IsSelfHost());
-            Assert.NotEqual(env1.Match.IsSelfHost(), env2.Match.IsSelfHost());
+            await Task.Delay(1000);
+
+            string oldhostId = string.Compare(env1.Self.UserId, env2.Self.UserId, StringComparison.InvariantCulture) > 0 ? env2.Self.UserId : env1.Self.UserId;
+            string newHostId = string.Compare(env1.Self.UserId, env2.Self.UserId, StringComparison.InvariantCulture) > 0 ? env1.Self.UserId : env2.Self.UserId;
+            // todo there is a race here...the hostchangedevent doesn't always dispatch before the continuation.
+            Assert.NotNull(hostChangedEvent);
+            Assert.Equal(hostChangedEvent.OldHost.UserId, oldhostId);
+            Assert.Equal(hostChangedEvent.NewHost.UserId, newHostId);
 
             testEnv.Dispose();
         }

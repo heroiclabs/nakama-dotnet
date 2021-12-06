@@ -37,7 +37,7 @@ namespace Nakama.Tests.Sync
         private readonly string _userId;
         private readonly IClient _client;
         private readonly VarRegistry _varRegistry = new VarRegistry();
-        private readonly RpcRegistry _rpcRegistry = new RpcRegistry(opcode: -1);
+        private readonly RpcRegistry _rpcRegistry = new RpcRegistry(opcode: -2);
         private SyncTestSharedVars _sharedVars;
         private SyncTestGroupVars _groupVars;
         private SyncTestRpcs _rpcs;

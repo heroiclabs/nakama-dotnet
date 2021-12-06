@@ -24,6 +24,8 @@ namespace NakamaSync
 {
     public class VarRegistry
     {
+        public const long STICKY_HOST_OPCODE = -1;
+
         private readonly Dictionary<Type, IVarSubRegistry> _subregistriesByType = new Dictionary<Type, IVarSubRegistry>();
         private readonly Dictionary<long, IVarSubRegistry> _subregistriesByOpcode = new Dictionary<long, IVarSubRegistry>();
 
@@ -32,15 +34,23 @@ namespace NakamaSync
         private bool _attachedReset = false;
         private readonly int _handshakeTimeoutSec;
         private readonly object _lock = new object();
+        private readonly HashSet<long> _reservedOpcodes = new HashSet<long>();
 
         public VarRegistry(int opcodeStart = 0, int handshakeTimeoutSec = 5)
         {
             _opcodeStart = opcodeStart;
             _handshakeTimeoutSec = handshakeTimeoutSec;
+            _reservedOpcodes.Add(STICKY_HOST_OPCODE);
         }
 
         public void Register<T>(SharedVar<T> var)
         {
+            long combinedOpcode = _opcodeStart + var.Opcode;
+            if (_reservedOpcodes.Contains(combinedOpcode))
+            {
+                throw new ArgumentException($"Opcode {combinedOpcode} is reserved by the registry.");
+            }
+
             lock (_lock)
             {
                 VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
@@ -59,6 +69,12 @@ namespace NakamaSync
 
         public void Register<T>(GroupVar<T> var)
         {
+            long combinedOpcode = _opcodeStart + var.Opcode;
+            if (_reservedOpcodes.Contains(combinedOpcode))
+            {
+                throw new ArgumentException($"Opcode {combinedOpcode} is reserved by the registry.");
+            }
+
             lock (_lock)
             {
                 VarSubRegistry<T> subRegistry = GetOrAddSubregistry<T>(_opcodeStart + var.Opcode);
@@ -80,40 +96,37 @@ namespace NakamaSync
             return _subregistriesByOpcode.ContainsKey(opcode);
         }
 
-        internal Task ReceiveMatch(SyncMatch match)
+        internal async Task ReceiveMatch(SyncMatch match)
         {
-            lock (_lock)
+            _syncMatch = match;
+
+            match.Socket.ReceivedMatchPresence += HandlePresenceEvent;
+
+            var subregistryTasks = new List<Task>();
+
+            foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
             {
-                _syncMatch = match;
-
-                match.Socket.ReceivedMatchPresence += HandlePresenceEvent;
-
-                var subregistryTasks = new List<Task>();
-
-                foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
-                {
-                    subregistryTasks.Add(subRegistry.ReceiveMatch(match));
-                }
-
-                if (!_attachedReset)
-                {
-                    // todo think about race between this event and inside the presence var factory
-                    match.Socket.ReceivedMatchPresence += (evt) =>
-                    {
-                        if (evt.Leaves.Any(leave => leave.UserId == match.Session.UserId))
-                        {
-                            foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
-                            {
-                                subRegistry.Reset();
-                            }
-                        }
-                    };
-                }
-
-                _attachedReset = true;
-
-                return Task.WhenAll(subregistryTasks);
+                subregistryTasks.Add(subRegistry.ReceiveMatch(match));
             }
+
+            if (!_attachedReset)
+            {
+                // todo think about race between this event and inside the presence var factory
+                match.Socket.ReceivedMatchPresence += (evt) =>
+                {
+                    if (evt.Leaves.Any(leave => leave.UserId == match.Self.UserId))
+                    {
+                        foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
+                        {
+                            subRegistry.Reset();
+                        }
+                    }
+                };
+            }
+
+            _attachedReset = true;
+
+            await Task.WhenAll(subregistryTasks);
         }
 
         private void HandlePresenceEvent(IMatchPresenceEvent obj)

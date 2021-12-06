@@ -30,11 +30,16 @@ namespace NakamaSync
 
         public ILogger Logger { get; set; }
 
-        private PresenceTracker _presenceTracker;
+        // the first host of the match is the first player to join. after that, we use alphanumeric sort on the userids.
+        // we do this because if we used alphanumeric sort the whole time, there would be a lot of host changes
+        // right as users enter the match.
+        private readonly SharedVar<string> _stickyHostId = new SharedVar<string>(VarRegistry.STICKY_HOST_OPCODE);
+        private readonly PresenceTracker _presenceTracker;
 
-        public HostTracker(PresenceTracker presenceTracker)
+        public HostTracker(PresenceTracker presenceTracker, VarRegistry registry)
         {
             _presenceTracker = presenceTracker;
+            registry.Register(_stickyHostId);
         }
 
         public void Subscribe(ISocket socket)
@@ -45,16 +50,16 @@ namespace NakamaSync
 
         private void HandlePresenceRemoved(IUserPresence leaver)
         {
-
             Logger?.DebugFormat($"Host tracker for {_presenceTracker.UserId} saw leaver: {leaver.UserId}");
 
-            var host = GetHost();
+            var newHost = GetHost();
 
-            bool leaverWasHost = string.Compare(leaver.UserId, host.UserId, StringComparison.InvariantCulture) < 0;
+            bool leaverWasHost = string.Compare(leaver.UserId, newHost.UserId, StringComparison.InvariantCulture) < 0;
 
             if (leaverWasHost)
             {
-                OnHostChanged?.Invoke(new HostChangedEvent(leaver, host));
+                _stickyHostId.SetValue(null);
+                OnHostChanged?.Invoke(new HostChangedEvent(leaver, newHost));
             }
             else
             {
@@ -64,6 +69,12 @@ namespace NakamaSync
 
         private void HandlePresenceAdded(IUserPresence joiner)
         {
+            if (joiner.UserId == _presenceTracker.GetSelf().UserId && _presenceTracker.GetPresenceCount() == 1)
+            {
+                // first to match is host
+                _stickyHostId.SetValue(joiner.UserId);
+            }
+
             Logger?.DebugFormat($"Host tracker for {_presenceTracker.UserId} saw joiner added: {joiner.UserId}");
 
             IUserPresence host = GetHost();
@@ -102,6 +113,11 @@ namespace NakamaSync
             if (_presenceTracker.GetPresenceCount() == 0)
             {
                 return null;
+            }
+
+            if (_stickyHostId.GetValue() != null && _presenceTracker.HasPresence(_stickyHostId.GetValue()))
+            {
+                return _presenceTracker.GetPresence(_stickyHostId.GetValue());
             }
 
             string hostId = _presenceTracker.GetSortedUserIds().First();
