@@ -39,7 +39,7 @@ namespace NakamaSync
         internal bool HasSyncMatch => _syncMatch != null;
 
         protected T Value { get; private set; }
-        protected SyncMatch SyncMatch => _syncMatch;
+        protected ISyncMatch SyncMatch => _syncMatch;
 
         private T _lastValue;
         private int _lockVersion;
@@ -273,14 +273,14 @@ namespace NakamaSync
                 Value = default;
                 return;
             }
-            
+
             var type = incomingValue.GetType();
             if (Value != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
                 var existingDictionary = (IDictionary) Value;
                 var incomingDictionary = (IDictionary) incomingValue;
                 var newDictionary = (IDictionary) Activator.CreateInstance(type);
-                
+
                 foreach (var key in existingDictionary.Keys)
                 {
                     newDictionary[key] = existingDictionary[key];

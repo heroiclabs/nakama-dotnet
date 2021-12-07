@@ -27,7 +27,7 @@ namespace Nakama.Tests.Sync
         public bool Param3Result { get; private set; }
         public SyncTestRpcObjectImplicit Param4Result { get; private set; }
 
-        private SyncMatch _syncMatch;
+        private ISyncMatch _syncMatch;
 
         private const string ObjectId = "SyncTestRpcs";
 
@@ -36,14 +36,14 @@ namespace Nakama.Tests.Sync
             registry.AddTarget(ObjectId, this);
         }
 
-        public void ReceiveMatch(SyncMatch syncMatch)
+        public void ReceiveMatch(ISyncMatch syncMatch)
         {
             _syncMatch = syncMatch;
         }
 
         public void Invoke(IEnumerable<IUserPresence> presences, string testDel, object[] requiredParameters, object[] optionalParameters)
         {
-            _syncMatch.SendRpc(presences, testDel, ObjectId, requiredParameters, optionalParameters);
+            _syncMatch.SendRpc(testDel, ObjectId, presences, requiredParameters, optionalParameters);
         }
 
         private void TestRpcDelegateImplicit(string param1, int param2, bool param3, SyncTestRpcObjectImplicit param4)

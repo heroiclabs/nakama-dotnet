@@ -71,7 +71,7 @@ namespace Nakama.Tests.Sync
             await testEnv.StartAll();
             var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
             var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
-            env1.Match.SetHost(env2.Self.UserId);
+            env1.Match.SetHost(env2.Self);
 
             await Task.Delay(1000);
 

@@ -21,7 +21,7 @@ using Nakama;
 
 namespace NakamaSync
 {
-    public class SyncMatch : IMatch
+    internal class SyncMatch : ISyncMatch
     {
         public bool Authoritative => _match.Authoritative;
         public string Id => _match.Id;
@@ -87,7 +87,7 @@ namespace NakamaSync
             return HostTracker.GetHost();
         }
 
-        public List<IUserPresence> GetOtherPresences()
+        public List<IUserPresence> GetGuestPresences()
         {
             return  PresenceTracker.GetSortedOthers();
         }
@@ -102,7 +102,7 @@ namespace NakamaSync
             return HostTracker.IsSelfHost();
         }
 
-        public void SendRpc(IEnumerable<IUserPresence> targetPresences, string rpcId, string targetId, object[] requiredParameters, object[] optionalParameters = null)
+        public void SendRpc(string rpcId, string targetId, IEnumerable<IUserPresence> targetPresences, object[] requiredParameters, object[] optionalParameters = null)
         {
             // todo name sure match exists
             var envelope = new RpcEnvelope();
@@ -143,9 +143,9 @@ namespace NakamaSync
             _socket.SendMatchStateAsync(_match.Id, _rpcRegistry.Opcode, _encoding.Encode(envelope));
         }
 
-        public void SetHost(string newHostId)
+        public void SetHost(IUserPresence newHost)
         {
-            _syncTrackers.HostTracker.SetHost(newHostId);
+            _syncTrackers.HostTracker.SetHost(newHost.UserId);
         }
     }
 }

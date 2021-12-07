@@ -29,7 +29,7 @@ namespace Nakama.Tests.Sync
         public SyncTestSharedVars SharedVars => _sharedVars;
         public SyncTestGroupVars GroupVars => _groupVars;
         public SyncTestRpcs Rpcs => _rpcs;
-        public SyncMatch Match => _match;
+        public ISyncMatch Match => _match;
         public VarRegistry VarRegistry => _varRegistry;
         public ISocket Socket => _socket;
 
@@ -43,7 +43,7 @@ namespace Nakama.Tests.Sync
         private SyncTestRpcs _rpcs;
         private readonly ILogger _logger;
 
-        private SyncMatch _match;
+        private ISyncMatch _match;
         private ISession _session;
         private ISocket _socket;
 

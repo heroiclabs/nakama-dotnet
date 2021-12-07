@@ -26,7 +26,7 @@ namespace NakamaSync
     public static class SyncExtensions
     {
         // todo maybe don't require session as a parameter here since we pass it to socket.
-        public static async Task<SyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry varRegistry, RpcRegistry rpcRegistry, string name = null)
+        public static async Task<ISyncMatch> CreateSyncMatch(this ISocket socket, ISession session, VarRegistry varRegistry, RpcRegistry rpcRegistry, string name = null)
         {
             // TODO think about how to properly deregister, if at all.
             socket.ReceivedMatchState += varRegistry.HandleReceivedMatchState;
@@ -39,7 +39,7 @@ namespace NakamaSync
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, IMatchmakerMatched matched, VarRegistry varRegistry, RpcRegistry rpcRegistry)
+        public static async Task<ISyncMatch> JoinSyncMatch(this ISocket socket, ISession session, IMatchmakerMatched matched, VarRegistry varRegistry, RpcRegistry rpcRegistry)
         {
             // TODO think about how to properly deregister, if at all.
             socket.ReceivedMatchState += varRegistry.HandleReceivedMatchState;
@@ -52,7 +52,7 @@ namespace NakamaSync
             return syncMatch;
         }
 
-        public static async Task<SyncMatch> JoinSyncMatch(this ISocket socket, ISession session, string matchId, VarRegistry varRegistry, RpcRegistry rpcRegistry)
+        public static async Task<ISyncMatch> JoinSyncMatch(this ISocket socket, ISession session, string matchId, VarRegistry varRegistry, RpcRegistry rpcRegistry)
         {
             // TODO think about how to properly deregister, if at all.
             socket.ReceivedMatchState += varRegistry.HandleReceivedMatchState;
