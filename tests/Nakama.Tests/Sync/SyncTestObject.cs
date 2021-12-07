@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+using System;
 using System.Runtime.Serialization;
 
 namespace Nakama.Tests.Sync
 {
+    [Serializable]
     public class SyncTestObject
     {
         [DataMember(Name = "test_value")]

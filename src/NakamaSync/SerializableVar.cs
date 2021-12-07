@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using System.Runtime.Serialization;
 
 namespace NakamaSync
@@ -21,6 +22,7 @@ namespace NakamaSync
     /// <summary>
     /// A data-transfer object for a sync var.
     /// </summary>
+    [Serializable]
     internal class SerializableVar<T> : ISerializableVar<T>
     {
         [DataMember(Name="value"), Preserve]
