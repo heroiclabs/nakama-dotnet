@@ -14,20 +14,73 @@
 * limitations under the License.
 */
 
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using Nakama.TinyJson;
 
 namespace NakamaSync
 {
-    internal class SyncEncoding
+    public enum SyncEncodingFormat
     {
+        Binary,
+        Json
+    }
+    
+    public class SyncEncoding
+    {
+        private readonly SyncEncodingFormat _format;
+
+        public SyncEncoding(SyncEncodingFormat format = SyncEncodingFormat.Binary)
+        {
+            _format = format;
+        }
+        
         public T Decode<T>(byte[] data)
         {
-            return Nakama.TinyJson.JsonParser.FromJson<T>(System.Text.Encoding.UTF8.GetString(data));
+            if (_format == SyncEncodingFormat.Json)
+            {
+                return System.Text.Encoding.UTF8.GetString(data).FromJson<T>();
+            }
+
+            var bytes = Convert.FromBase64String(System.Text.Encoding.UTF8.GetString(data));
+            using (var ms = new MemoryStream(bytes))
+            {
+                var formatter = new BinaryFormatter();
+                var obj = formatter.Deserialize(ms);
+
+                try
+                {
+                    var castedObj = (T)obj;
+                    return castedObj;
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidCastException(
+                        $"Unable to cast object of type {obj.GetType()} as type {typeof(T)}", ex);
+                }
+            }
         }
 
         public byte[] Encode(object data)
         {
-            return System.Text.Encoding.UTF8.GetBytes(data.ToJson());
+            if (_format == SyncEncodingFormat.Json)
+            {
+                return System.Text.Encoding.UTF8.GetBytes(data.ToJson());
+            }
+            
+            if (!data.GetType().IsSerializable)
+            {
+                throw new InvalidOperationException($"Type {data.GetType()} is not marked as Serializable");
+            }
+
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, data);
+                var base64 = Convert.ToBase64String(ms.ToArray());
+                return System.Text.Encoding.UTF8.GetBytes(base64);
+            }
         }
     }
 }
