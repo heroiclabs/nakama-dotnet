@@ -71,9 +71,9 @@ namespace Nakama
         /// <param name="ids">The ids of the users to add or invite as friends.</param>
         /// <param name="usernames">The usernames of the users to add as friends.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Add one or more users to the group.
@@ -82,9 +82,9 @@ namespace Nakama
         /// <param name="groupId">The id of the group to add users into.</param>
         /// <param name="ids">The ids of the users to add or invite to the group.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with an Apple ID against the server.
@@ -93,10 +93,10 @@ namespace Nakama
         /// <param name="token">The ID token received from Apple to validate.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with a custom id.
@@ -106,10 +106,10 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with a device id.
@@ -119,10 +119,10 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with an email and password.
@@ -133,10 +133,10 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateEmailAsync(string email, string password, string username = null,
-            bool create = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            bool create = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with a Facebook auth token.
@@ -147,10 +147,10 @@ namespace Nakama
         /// <param name="import">If the Facebook friends should be imported.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
-            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with Apple Game Center.
@@ -165,11 +165,11 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
             string signature, string timestamp, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with a Google auth token.
@@ -179,10 +179,10 @@ namespace Nakama
         /// <param name="create">If the user should be created when authenticated.</param>
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with a Steam auth token.
@@ -193,10 +193,10 @@ namespace Nakama
         /// <param name="vars">Extra information that will be bundled in the session token.</param>
         /// <param name="import">If the Steam friends should be imported.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true,
-            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Ban a set of users from a group.
@@ -205,9 +205,9 @@ namespace Nakama
         /// <param name="groupId">The group to ban the users from.</param>
         /// <param name="ids">The ids of the users to ban.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Block one or more friends by id or username.
@@ -216,9 +216,9 @@ namespace Nakama
         /// <param name="ids">The ids of the users to block.</param>
         /// <param name="usernames">The usernames of the users to block.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Create a group.
@@ -231,10 +231,10 @@ namespace Nakama
         /// <param name="open">If the group should have open membership.</param>
         /// <param name="maxCount">The maximum number of members allowed.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a new group object.</returns>
         Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description = "",
-            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Delete one more or users by id or username from friends.
@@ -243,9 +243,9 @@ namespace Nakama
         /// <param name="ids">The user ids to remove as friends.</param>
         /// <param name="usernames">The usernames to remove as friends.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Delete a group by id.
@@ -253,9 +253,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="groupId">The group id to to remove.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task DeleteGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Delete a leaderboard record.
@@ -263,9 +263,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="leaderboardId">The id of the leaderboard with the record to be deleted.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Delete one or more notifications by id.
@@ -273,9 +273,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The notification ids to remove.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Delete one or more storage objects.
@@ -283,20 +283,20 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The ids of the objects to delete.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Demote a set of users in a group to the next role down.
         /// <param name="groupId">The group to demote users in.</param>
         /// <param name="userIds">The users to demote.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <remarks>Members who are already at the lowest rank will be skipped.</remarks>
         /// <returns>A task which represents the asynchronous operation.</returns>
         /// </summary>
-        Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> userIds, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> userIds, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Submit an event for processing in the server's registered runtime custom events handler.
@@ -305,18 +305,18 @@ namespace Nakama
         /// <param name="name">The name of the event.</param>
         /// <param name="properties">The properties of the event.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task EventAsync(ISession session, string name, Dictionary<string, string> properties, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task EventAsync(ISession session, string name, Dictionary<string, string> properties, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Fetch the user account owned by the session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the account object.</returns>
-        Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Fetch one or more users by id, usernames, and Facebook ids.
@@ -326,10 +326,10 @@ namespace Nakama
         /// <param name="usernames">The usernames of the users to retrieve.</param>
         /// <param name="facebookIds">The facebook IDs of the users to retrieve.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a collection of user objects.</returns>
         Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null,
-            IEnumerable<string> facebookIds = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            IEnumerable<string> facebookIds = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Import Facebook friends and add them to the user's account.
@@ -342,9 +342,9 @@ namespace Nakama
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
         /// <param name="reset">If the Facebook friend import for the user should be reset.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Import Steam friends and add them to the user's account.
@@ -357,9 +357,9 @@ namespace Nakama
         /// <param name="token">An access token from Steam.</param>
         /// <param name="reset">If the Steam friend import for the user should be reset.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Join a group if it has open membership or request to join it.
@@ -367,9 +367,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="groupId">The ID of the group to join.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task JoinGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task JoinGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Join a tournament by ID.
@@ -377,9 +377,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="tournamentId">The ID of the tournament to join.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task JoinTournamentAsync(ISession session, string tournamentId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task JoinTournamentAsync(ISession session, string tournamentId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Kick one or more users from the group.
@@ -388,9 +388,9 @@ namespace Nakama
         /// <param name="groupId">The ID of the group.</param>
         /// <param name="ids">The IDs of the users to kick.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Leave a group by ID.
@@ -398,9 +398,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="groupId">The ID of the group to leave.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LeaveGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task LeaveGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link an Apple ID to the social profiles on the current user's account.
@@ -408,9 +408,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="token">The ID token received from Apple to validate.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link a custom ID to the user account owned by the session.
@@ -418,9 +418,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="id">A custom identifier usually obtained from an external authentication service.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task LinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link a device ID to the user account owned by the session.
@@ -428,9 +428,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="id">A device identifier usually obtained from a platform API.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task LinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link an email with password to the user account owned by the session.
@@ -439,9 +439,9 @@ namespace Nakama
         /// <param name="email">The email address of the user.</param>
         /// <param name="password">The password for the user.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task LinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link a Facebook profile to a user account.
@@ -450,9 +450,9 @@ namespace Nakama
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
         /// <param name="import">If the Facebook friends should be imported.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkFacebookAsync(ISession session, string token, bool? import = true, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task LinkFacebookAsync(ISession session, string token, bool? import = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link a Game Center profile to a user account.
@@ -465,20 +465,20 @@ namespace Nakama
         /// <param name="signature">The verification signature data generated.</param>
         /// <param name="timestamp">The date and time that the signature was created.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string signature, string timestamp, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link a Google profile to a user account.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="token">An OAuth access token from the Google SDK.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link a Steam profile to a user account.
@@ -487,9 +487,9 @@ namespace Nakama
         /// <param name="token">An authentication token from the Steam network.</param>
         /// <param name="import">If the Steam friends should be imported.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task LinkSteamAsync(ISession session, string token, bool import, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task LinkSteamAsync(ISession session, string token, bool import, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List messages from a chat channel.
@@ -497,13 +497,13 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="channel">The chat channel object.</param>
         /// <param name="limit">The number of chat messages to list.</param>
-        /// <param name="forward">Fetch messages forward from the current cursor (or the start, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null).</param>
+        /// <param name="forward">Fetch messages forward from the current cursor (or the start, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default).</param>
         /// <param name="cursor">A cursor for the current position in the messages history to list.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the channel message list object.</returns>
         Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, IChannel channel, int limit = 1,
-            bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List messages from a chat channel.
@@ -511,13 +511,13 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="channelId">A channel identifier.</param>
         /// <param name="limit">The number of chat messages to list.</param>
-        /// <param name="forward">Fetch messages forward from the current cursor (or the start, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null).</param>
+        /// <param name="forward">Fetch messages forward from the current cursor (or the start, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default).</param>
         /// <param name="cursor">A cursor for the current position in the messages history to list.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the channel message list object.</returns>
         Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit = 1,
-            bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List of friends of the current user.
@@ -527,9 +527,9 @@ namespace Nakama
         /// <param name="limit">The number of friends to list.</param>
         /// <param name="cursor">A cursor for the current position in the friends list.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the friend objects.</returns>
-        Task<IApiFriendList> ListFriendsAsync(ISession session, int? state = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiFriendList> ListFriendsAsync(ISession session, int? state = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List all users part of the group.
@@ -540,10 +540,10 @@ namespace Nakama
         /// <param name="limit">The number of groups to list.</param>
         /// <param name="cursor">A cursor for the current position in the group listing.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the group user objects.</returns>
         Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state = null, int limit = 1,
-            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List groups on the server.
@@ -556,9 +556,9 @@ namespace Nakama
         /// <param name="members">The number of group members filter to apply to the group list.</param>
         /// <param name="open">The open/closed filter to apply to the group list.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task to resolve group objects.</returns>
-        Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1, string cursor = null, string langTag = null, int? members = null, bool? open = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1, string cursor = null, string langTag = null, int? members = null, bool? open = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List records from a leaderboard.
@@ -570,10 +570,10 @@ namespace Nakama
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">A cursor for the current position in the leaderboard records to list.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the leaderboard record objects.</returns>
         Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
-            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List leaderboard records that belong to a user.
@@ -584,10 +584,10 @@ namespace Nakama
         /// <param name="expiry">Expiry in seconds (since epoch) to begin fetching records from. Optional. 0 means from current time.</param>
         /// <param name="limit">The limit of the listings.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the leaderboard record objects.</returns>
         Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session, string leaderboardId,
-            string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Fetch a list of matches active on the server.
@@ -600,10 +600,10 @@ namespace Nakama
         /// <param name="label">The label to filter the match list on.</param>
         /// <param name="query">A query for the matches to filter.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the match list object.</returns>
         Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
-            string label, string query, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string label, string query, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List notifications for the user with an optional cursor.
@@ -612,14 +612,14 @@ namespace Nakama
         /// <param name="limit">The number of notifications to list.</param>
         /// <param name="cacheableCursor">A cursor for the current position in notifications to list.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task to resolve notifications objects.</returns>
         Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
-            string cacheableCursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string cacheableCursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         [Obsolete("ListStorageObjects is obsolete, please use ListStorageObjectsAsync instead.", false)]
         Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit = 1,
-            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List storage objects in a collection which have public read access.
@@ -629,10 +629,10 @@ namespace Nakama
         /// <param name="limit">The number of objects to list. Maximum 100.</param>
         /// <param name="cursor">A cursor to paginate over the collection. May be null.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection, int limit = 1,
-            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List tournament records around the owner.
@@ -643,10 +643,10 @@ namespace Nakama
         /// <param name="expiry">Expiry in seconds (since epoch) to begin fetching records from.</param>
         /// <param name="limit">The number of records to list.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the tournament record list object.</returns>
         Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session, string tournamentId,
-            string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List records from a tournament.
@@ -658,10 +658,10 @@ namespace Nakama
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">An optional cursor for the next page of tournament records.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the list of tournament records.</returns>
         Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
-            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List current or upcoming tournaments.
@@ -669,15 +669,15 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="categoryStart">The start of the category of tournaments to include.</param>
         /// <param name="categoryEnd">The end of the category of tournaments to include.</param>
-        /// <param name="startTime">The start time of the tournaments. (UNIX timestamp, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null). If null, tournaments will not be filtered by start time.</param>
-        /// <param name="endTime">The end time of the tournaments. (UNIX timestamp, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null). If null, tournaments will not be filtered by end time.</param>
+        /// <param name="startTime">The start time of the tournaments. (UNIX timestamp, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default). If null, tournaments will not be filtered by start time.</param>
+        /// <param name="endTime">The end time of the tournaments. (UNIX timestamp, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default). If null, tournaments will not be filtered by end time.</param>
         /// <param name="limit">The number of tournaments to list.</param>
         /// <param name="cursor">An optional cursor for the next page of tournaments.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the list of tournament objects.</returns>
         Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
-            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List of groups the current user is a member of.
@@ -687,10 +687,10 @@ namespace Nakama
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">A cursor for the current position in the listing.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the group list object.</returns>
         Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state = null, int limit = 1,
-            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List groups a user is a member of.
@@ -701,10 +701,10 @@ namespace Nakama
         /// <param name="limit">The number of records to list.</param>
         /// <param name="cursor">A cursor for the current position in the listing.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the group list object.</returns>
         Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state = null, int limit = 1,
-            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List storage objects in a collection which belong to a specific user and have public read access.
@@ -715,10 +715,10 @@ namespace Nakama
         /// <param name="limit">The number of objects to list.</param>
         /// <param name="cursor">A cursor to paginate over the collection.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
-            int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Promote one or more users in the group.
@@ -727,9 +727,9 @@ namespace Nakama
         /// <param name="groupId">The ID of the group to promote users into.</param>
         /// <param name="ids">The IDs of the users to promote.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Read one or more objects from the storage engine.
@@ -737,9 +737,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The objects to read.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the storage batch object.</returns>
-        Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session, IApiReadStorageObjectId[] ids, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session, IApiReadStorageObjectId[] ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Execute a function with an input payload on the server.
@@ -748,9 +748,9 @@ namespace Nakama
         /// <param name="id">The ID of the function to execute on the server.</param>
         /// <param name="payload">The payload to send with the function call.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the RPC response.</returns>
-        Task<IApiRpc> RpcAsync(ISession session, string id, string payload, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiRpc> RpcAsync(ISession session, string id, string payload, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Execute a function on the server.
@@ -758,9 +758,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="id">The ID of the function to execute on the server.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the RPC response.</returns>
-        Task<IApiRpc> RpcAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiRpc> RpcAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Execute a function on the server without a session.
@@ -772,18 +772,18 @@ namespace Nakama
         /// <param name="id">The id of the function to execute on the server.</param>
         /// <param name="payload">A payload to send with the function call.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task to resolve an RPC response.</returns>
-        Task<IApiRpc> RpcAsync(string httpKey, string id, string payload = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiRpc> RpcAsync(string httpKey, string id, string payload = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Log out a session which invalidates the authorization and refresh token.
         /// </summary>
         /// <param name="session">The session to logout.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task SessionLogoutAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task SessionLogoutAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Log out a session which optionally invalidates the authorization and/or refresh tokens.
@@ -791,9 +791,9 @@ namespace Nakama
         /// <param name="authToken">The authorization token to invalidate, may be <c>null</c>.</param>
         /// <param name="refreshToken">The refresh token to invalidate, may be <c>null</c>.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task SessionLogoutAsync(string authToken, string refreshToken, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task SessionLogoutAsync(string authToken, string refreshToken, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Refresh the session unless the current refresh token has expired. If vars are specified they will replace
@@ -802,9 +802,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="vars">Extra information which should be bundled inside the session token.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a new session object.</returns>
-        Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Remove the Apple ID from the social profiles on the current user's account.
@@ -812,9 +812,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="token">The ID token received from Apple.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a new session object.</returns>
-        Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Unlink a custom ID from the user account owned by the session.
@@ -822,9 +822,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="id">A custom identifier usually obtained from an external authentication service.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task UnlinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Unlink a device ID from the user account owned by the session.
@@ -832,9 +832,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="id">A device identifier usually obtained from a platform API.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task UnlinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Unlink an email with password from the user account owned by the session.
@@ -843,9 +843,9 @@ namespace Nakama
         /// <param name="email">The email address of the user.</param>
         /// <param name="password">The password for the user.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task UnlinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Unlink a Facebook profile from the user account owned by the session.
@@ -853,9 +853,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An OAuth access token from the Facebook SDK.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkFacebookAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task UnlinkFacebookAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Unlink a Game Center profile from the user account owned by the session.
@@ -868,10 +868,10 @@ namespace Nakama
         /// <param name="signature">The verification signature data generated.</param>
         /// <param name="timestamp">The date and time that the signature was created.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string signature, string timestamp, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Unlink a Google profile from the user account owned by the session.
@@ -879,9 +879,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An OAuth access token from the Google SDK.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task UnlinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Unlink a Steam profile from the user account owned by the session.
@@ -889,9 +889,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="token">An authentication token from the Steam network.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task UnlinkSteamAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task UnlinkSteamAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Update the current user's account on the server.
@@ -904,10 +904,10 @@ namespace Nakama
         /// <param name="location">A new location for the user.</param>
         /// <param name="timezone">New timezone information for the user.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UpdateAccountAsync(ISession session, string username, string displayName = null,
-            string avatarUrl = null, string langTag = null, string location = null, string timezone = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string avatarUrl = null, string langTag = null, string location = null, string timezone = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Update a group.
@@ -923,10 +923,10 @@ namespace Nakama
         /// <param name="avatarUrl">A new avatar url for the group.</param>
         /// <param name="langTag">A new language tag in BCP-47 format for the group.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task UpdateGroupAsync(ISession session, string groupId, string name, bool open, string description = null,
-            string avatarUrl = null, string langTag = null, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string avatarUrl = null, string langTag = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Validate a purchase receipt against the Apple App Store.
@@ -934,9 +934,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="receipt">The purchase receipt to be validated.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Validate a purchase receipt against the Google Play Store.
@@ -944,9 +944,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="receipt">The purchase receipt to be validated.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Validate a purchase receipt against the Huawei AppGallery.
@@ -955,10 +955,10 @@ namespace Nakama
         /// <param name="receipt">The purchase receipt to be validated.</param>
         /// <param name="signature">The signature of the purchase receipt.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
         Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
-            string signature, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            string signature, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Write a record to a leaderboard.
@@ -970,10 +970,10 @@ namespace Nakama
         /// <param name="metadata">The metadata for the leaderboard record.</param>
         /// <param name="operator"> The operator for the record that can be used to override the one set in the leaderboard.
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the leaderboard record object written.</returns>
         Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
-            long subScore = 0L, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+            long subScore = 0L, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Write objects to the storage engine.
@@ -981,9 +981,9 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="objects">The objects to write.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the storage write acknowledgements.</returns>
-        Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session, IApiWriteStorageObject[] objects, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
+        Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session, IApiWriteStorageObject[] objects, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Write a record to a tournament.
@@ -995,9 +995,271 @@ namespace Nakama
         /// <param name="metadata">The metadata for the tournament record.</param>
         /// <param name="operator"> The operator for the record that can be used to override the one set in the tournament.
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <param name="canceller">The <see cref="CancellationTokenSource"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the tournament record object written.</returns>
         Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
-            long subScore = 0L, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationTokenSource canceller = null);
-    }
+            long subScore = 0L, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+		#region Obsolete functions
+		[Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<ISession> AuthenticateAppleAsync(string token, string username, bool create,
+            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<ISession> AuthenticateCustomAsync(string id, string username, bool create,
+            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<ISession> AuthenticateDeviceAsync(string id, string username, bool create,
+            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<ISession> AuthenticateEmailAsync(string email, string password, string username,
+            bool create, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<ISession> AuthenticateFacebookAsync(string token, string username, bool create,
+            bool import, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
+            string signature, string timestamp, string username, bool create,
+            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<ISession> AuthenticateGoogleAsync(string token, string username, bool create,
+            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<ISession> AuthenticateSteamAsync(string token, string username, bool create,
+            bool import, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description,
+            string avatarUrl, string langTag, bool open, int maxCount, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task DeleteGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> userIds, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task EventAsync(ISession session, string name, Dictionary<string, string> properties, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames,
+            IEnumerable<string> facebookIds, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task ImportSteamFriendsAsync(ISession session, string token, bool? reset, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task JoinGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task JoinTournamentAsync(ISession session, string tournamentId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task LeaveGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task LinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task LinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task LinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task LinkFacebookAsync(ISession session, string token, bool? import, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
+            string signature, string timestamp, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task LinkSteamAsync(ISession session, string token, bool import, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, IChannel channel, int limit,
+            bool forward, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit,
+            bool forward, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state, int limit,
+            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiGroupList> ListGroupsAsync(ISession session, string name, int limit, string cursor, string langTag, int? members, bool? open, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
+            IEnumerable<string> ownerIds, long? expiry, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session, string leaderboardId,
+            string ownerId, long? expiry, int limit, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
+            string label, string query, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit,
+            string cacheableCursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection, int limit,
+            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session, string tournamentId,
+            string ownerId, long? expiry, int limit, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
+            IEnumerable<string> ownerIds, long? expiry, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
+            int? startTime, int? endTime, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state, int limit,
+            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state, int limit,
+            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
+            int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session, IApiReadStorageObjectId[] ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiRpc> RpcAsync(ISession session, string id, string payload, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiRpc> RpcAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiRpc> RpcAsync(string httpKey, string id, string payload, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task SessionLogoutAsync(ISession session, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task SessionLogoutAsync(string authToken, string refreshToken, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UnlinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UnlinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UnlinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UnlinkFacebookAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
+            string signature, string timestamp, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UnlinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UnlinkSteamAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UpdateAccountAsync(ISession session, string username, string displayName,
+            string avatarUrl, string langTag, string location, string timezone, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task UpdateGroupAsync(ISession session, string groupId, string name, bool open, string description,
+            string avatarUrl, string langTag, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
+            string signature, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
+            long subScore, string metadata, ApiOperator apiOperator, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session, IApiWriteStorageObject[] objects, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+
+        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
+        Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
+            long subScore, string metadata, ApiOperator apiOperator, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+		#endregion
+	}
 }
