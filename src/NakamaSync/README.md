@@ -58,11 +58,10 @@ class SyncTest
 
 ### Connecting
 
-An enriched `IMatch` object called an `ISyncMatch`. Unlike `IMatch`, it will keep its presence list up-to-date with as users join and leave the match. `ISyncMatch` is also host-aware. The user who created the match will be the initial host. If that user leaves or you decide to manually set a new host, `ISyncMatch` will dispatch an `OnHostChangedEvent`.
+In order to use synchronized variables, you must create or join a an enriched `IMatch` object called a `ISyncMatch`. Unlike `IMatch`, `ISyncMatch` will keep its presence list up-to-date as users join and leave. `ISyncMatch` is also host-aware. The creator will be the initial host. If the host leaves or you decide to manually set a new host, `ISyncMatch` will dispatch an `OnHostChangedEvent`.
 
 
 ```
-
 ISyncMatch match = await socket.JoinSyncMatch();
 
 match.OnHostChanged += evt =>
