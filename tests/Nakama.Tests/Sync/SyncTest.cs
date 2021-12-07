@@ -237,7 +237,7 @@ namespace Nakama.Tests.Sync
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        private async Task SharedVarShouldSyncDict()
+        private async Task SharedVarShouldSyncDictPreregistered()
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,

@@ -33,7 +33,6 @@ namespace Nakama.Tests.Sync
         public VarRegistry VarRegistry => _varRegistry;
         public ISocket Socket => _socket;
 
-
         private readonly string _userId;
         private readonly IClient _client;
         private readonly VarRegistry _varRegistry = new VarRegistry();
@@ -53,6 +52,7 @@ namespace Nakama.Tests.Sync
             _client = TestsUtil.FromSettingsFile();
             _logger = TestsUtil.LoadConfiguration().StdOut ? new StdoutLogger() : null;
             _socket = Nakama.Socket.From(_client);
+            _socket.ReceivedError += e => _logger.ErrorFormat($"{e.Message}{e.StackTrace}");
             _sharedVars = new SyncTestSharedVars(_userId, _varRegistry, delayRegistration);
             _groupVars = new SyncTestGroupVars(_varRegistry, delayRegistration);
             _rpcs = new SyncTestRpcs(_rpcRegistry);

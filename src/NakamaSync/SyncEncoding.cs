@@ -43,8 +43,7 @@ namespace NakamaSync
                 return System.Text.Encoding.UTF8.GetString(data).FromJson<T>();
             }
 
-            var bytes = Convert.FromBase64String(System.Text.Encoding.UTF8.GetString(data));
-            using (var ms = new MemoryStream(bytes))
+            using (var ms = new MemoryStream(data))
             {
                 var formatter = new BinaryFormatter();
                 var obj = formatter.Deserialize(ms);
@@ -78,8 +77,7 @@ namespace NakamaSync
             {
                 var formatter = new BinaryFormatter();
                 formatter.Serialize(ms, data);
-                var base64 = Convert.ToBase64String(ms.ToArray());
-                return System.Text.Encoding.UTF8.GetBytes(base64);
+                return ms.ToArray();
             }
         }
     }
