@@ -87,7 +87,7 @@ namespace NakamaSync
             return HostTracker.GetHost();
         }
 
-        public List<IUserPresence> GetGuestPresences()
+        public List<IUserPresence> GetOtherPresences()
         {
             return  PresenceTracker.GetSortedOthers();
         }

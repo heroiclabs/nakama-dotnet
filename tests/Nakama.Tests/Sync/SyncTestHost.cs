@@ -32,8 +32,6 @@ namespace Nakama.Tests.Sync
             var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
             var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
 
-            System.Console.WriteLine("self is " + env1.Match.Self.UserId);
-
             Assert.True(env1.Match.IsSelfHost());
             Assert.False(env2.Match.IsSelfHost());
             Assert.Equal(env1.Match.Self.UserId, env2.Match.GetHostPresence().UserId);
@@ -49,11 +47,11 @@ namespace Nakama.Tests.Sync
                 creatorIndex: 0);
 
             await testEnv.StartAll();
+
             var env1 = testEnv.GetUserEnv(testEnv.GetCreatorPresence());
             var env2 = testEnv.GetUserEnv(testEnv.GetRandomNonCreatorPresence());
 
             await env1.Socket.LeaveMatchAsync(env1.Match);
-
             await Task.Delay(1000);
 
             Assert.True(env2.Match.IsSelfHost());

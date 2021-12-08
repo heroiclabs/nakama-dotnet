@@ -25,7 +25,7 @@ namespace NakamaSync
         event Action<IHostChangedEvent> OnHostChanged;
 
         IUserPresence GetHostPresence();
-        List<IUserPresence> GetGuestPresences();
+        List<IUserPresence> GetOtherPresences();
         List<IUserPresence> GetAllPresences();
         bool IsSelfHost();
         void SetHost(IUserPresence newHost);
