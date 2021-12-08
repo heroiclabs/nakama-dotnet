@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
+    [Serializable]
     internal struct RpcKey
     {
         [DataMember(Name="method_name"), Preserve]

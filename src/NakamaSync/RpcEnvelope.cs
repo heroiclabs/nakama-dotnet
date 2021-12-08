@@ -14,10 +14,12 @@
 * limitations under the License.
 */
 
+using System;
 using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
+    [Serializable]
     internal class RpcEnvelope
     {
         [DataMember(Name="rpc_key"), Preserve]
