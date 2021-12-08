@@ -35,6 +35,7 @@ namespace NakamaSync
         public ValidationHandler<T> ValidationHandler { get; set; }
         public long Opcode { get; }
         public ValidationStatus Status { get; private set; }
+        public Task HandshakeTask => _handshakeTcs.Task;
 
         internal bool HasSyncMatch => _syncMatch != null;
 
@@ -68,6 +69,7 @@ namespace NakamaSync
                 _handshakeTcs.SetCanceled();
             }
 
+            System.Console.WriteLine("var " + this + " is dispatching reset");
             _handshakeTcs = new TaskCompletionSource<bool>();
             OnReset?.Invoke();
         }

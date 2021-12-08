@@ -121,8 +121,11 @@ namespace NakamaSync
                 {
                     if (evt.Leaves.Any(leave => leave.UserId == match.Self.UserId))
                     {
+                            System.Console.WriteLine("resetting sub registry");
+
                         foreach (IVarSubRegistry subRegistry in _subregistriesByType.Values)
                         {
+                            System.Console.WriteLine("resetting sub registry");
                             subRegistry.Reset();
                         }
                     }

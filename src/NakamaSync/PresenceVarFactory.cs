@@ -158,6 +158,11 @@ namespace NakamaSync
 
         private void HandlePresenceRemoved(IUserPresence presence)
         {
+            if (presence.UserId != _syncMatch.Self.UserId)
+            {
+                return;
+            }
+
             if (!_varsByUser.ContainsKey(presence.UserId))
             {
                 // todo log error
