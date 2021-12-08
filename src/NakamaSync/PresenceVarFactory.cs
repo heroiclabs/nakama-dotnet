@@ -164,7 +164,7 @@ namespace NakamaSync
                 return;
             }
 
-            List<PresenceVar<T>> userVars = _varsByUser[_userId];
+            List<PresenceVar<T>> userVars = _varsByUser[presence.UserId];
 
             foreach (PresenceVar<T> presenceVar in userVars)
             {

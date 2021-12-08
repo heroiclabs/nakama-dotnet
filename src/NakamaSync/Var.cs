@@ -63,13 +63,13 @@ namespace NakamaSync
             Status = ValidationStatus.None;
             _syncMatch = null;
 
-            if (!_handshakeTcs.Task.IsCanceled)
+            if (!_handshakeTcs.Task.IsCompleted)
             {
                 _handshakeTcs.SetCanceled();
             }
 
             _handshakeTcs = new TaskCompletionSource<bool>();
-            OnReset();
+            OnReset?.Invoke();
         }
 
         internal void InvokeOnValueChanged(IVarEvent<T> e)

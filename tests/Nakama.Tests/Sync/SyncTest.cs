@@ -502,7 +502,7 @@ namespace Nakama.Tests.Sync
             {
                 { "Env1", "Foo" }
             };
-            
+
             var dict2 = new Dictionary<string, string>
             {
                 { "Env2", "Bar" }
@@ -512,13 +512,13 @@ namespace Nakama.Tests.Sync
             allUserEnvs[1].SharedVars.SharedDict.SetValue(dict2);
 
             await Task.Delay(1000);
-            
+
             Assert.Equal("Foo", allUserEnvs[0].SharedVars.SharedDict.GetValue()["Env1"]);
             Assert.Equal("Foo", allUserEnvs[1].SharedVars.SharedDict.GetValue()["Env1"]);
             Assert.Equal("Bar", allUserEnvs[0].SharedVars.SharedDict.GetValue()["Env2"]);
             Assert.Equal("Bar", allUserEnvs[1].SharedVars.SharedDict.GetValue()["Env2"]);
         }
-        
+
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async Task SharedVarDictionaryShouldOverwriteValues()
         {
@@ -533,20 +533,20 @@ namespace Nakama.Tests.Sync
             {
                 { "OverwriteMe", "1" }
             };
-            
+
             var dict2 = new Dictionary<string, string>
             {
                 { "OverwriteMe", "2" }
             };
 
             allUserEnvs[0].SharedVars.SharedDict.SetValue(dict1);
-            
+
             await Task.Delay(1000);
-            
+
             allUserEnvs[1].SharedVars.SharedDict.SetValue(dict2);
 
             await Task.Delay(1000);
-            
+
             Assert.Equal("2", allUserEnvs[0].SharedVars.SharedDict.GetValue()["OverwriteMe"]);
             Assert.Equal("2", allUserEnvs[1].SharedVars.SharedDict.GetValue()["OverwriteMe"]);
         }
@@ -804,6 +804,82 @@ namespace Nakama.Tests.Sync
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         private async void GroupVarGivesInitialState()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+            testEnv.GetCreatorEnv().GroupVars.GroupBool.Self.SetValue(true);
+
+            await testEnv.StartAll();
+
+            IUserPresence nonCreator = testEnv.GetRandomNonCreatorPresence();
+            var nonCreatorEnv = testEnv.GetTestEnvironment(nonCreator);
+
+            Assert.True(nonCreatorEnv.GroupVars.GroupBool.GetVar(testEnv.GetCreatorPresence()).GetValue());
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void SharedVarResets()
+        {
+            var testEnv = new SyncTestEnvironment(
+                numClients: 2,
+                creatorIndex: 0);
+
+
+            await testEnv.StartAll();
+
+            IUserPresence nonCreator = testEnv.GetRandomNonCreatorPresence();
+            var creatorEnv = testEnv.GetCreatorEnv();
+            var nonCreatorEnv = testEnv.GetTestEnvironment(nonCreator);
+
+            testEnv.GetCreatorEnv().SharedVars.SharedBool.SetValue(true);
+
+            await Task.Delay(1000);
+
+            bool creatorBoolReset = false;
+            bool creatorValChangedOnReset = false;
+            bool nonCreatorBoolReset = false;
+            bool nonCreatorValChangedOnReset = false;
+
+            creatorEnv.SharedVars.SharedBool.OnValueChanged += (evt) =>
+            {
+                creatorValChangedOnReset = true;
+            };
+
+            creatorEnv.SharedVars.SharedBool.OnReset += () =>
+            {
+                creatorBoolReset = true;
+            };
+
+            nonCreatorEnv.SharedVars.SharedBool.OnReset += () =>
+            {
+                nonCreatorBoolReset = true;
+            };
+
+            nonCreatorEnv.SharedVars.SharedBool.OnValueChanged += (evt) =>
+            {
+                nonCreatorValChangedOnReset = true;
+            };
+
+            await testEnv.GetCreatorEnv().Socket.LeaveMatchAsync(creatorEnv.Match);
+            await nonCreatorEnv.Socket.LeaveMatchAsync(nonCreatorEnv.Match);
+
+            await Task.Delay(1000);
+
+            Assert.True(creatorBoolReset);
+            Assert.True(nonCreatorBoolReset);
+            Assert.True(creatorValChangedOnReset);
+            Assert.True(nonCreatorValChangedOnReset);
+            Assert.False(creatorEnv.SharedVars.SharedBool.GetValue());
+            Assert.False(nonCreatorEnv.SharedVars.SharedBool.GetValue());
+
+            testEnv.Dispose();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private async void GroupVarResets()
         {
             var testEnv = new SyncTestEnvironment(
                 numClients: 2,

@@ -130,12 +130,10 @@ namespace NakamaSync
 
         private IUserPresence GetHost(IEnumerable<string> sortedPresenceIds, string stickyHostId)
         {
-            System.Console.WriteLine("This is a test");
             if (!sortedPresenceIds.Any())
             {
                 return null;
             }
-
 
             if (!string.IsNullOrEmpty(stickyHostId) && _presenceTracker.HasPresence(stickyHostId))
             {
