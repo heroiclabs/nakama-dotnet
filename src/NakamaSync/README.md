@@ -32,7 +32,7 @@ related to synchronized variables are routed through the socket's `ReceivedError
 
 ### Connecting and Match Hosting
 
-In order to use synchronized variables, you must create or join an enriched `IMatch` object called a `ISyncMatch`. Unlike `IMatch`, `ISyncMatch` will keep its presence list up-to-date as users join and leave. `ISyncMatch` is also host-aware. The creator will be the initial host. If the host leaves or you decide to manually set a new host, `ISyncMatch` will dispatch an `OnHostChangedEvent`.
+In order to use synchronized variables, you must create or join an enriched `IMatch` implementation, `ISyncMatch`. Unlike `IMatch`, `ISyncMatch` will keep its presence list up-to-date as users join and leave. `ISyncMatch` is also host-aware. The creator will be the initial host. If the host leaves or you decide to manually set a new host, `ISyncMatch` will dispatch an `OnHostChangedEvent`.
 
 
 ```csharp
@@ -59,29 +59,45 @@ synchronized values are trusted by all clients. But you may add a handler to any
 upon receiving a new value.
 
 ```csharp
+// Host client
+
 SharedVar<string> helloWorld = new SharedVar<string>(opcode: 0);
 
-helloWorld.ValidationHandler =
+helloWorld.ValidationHandler = (source, change) =>
+{
+    if (!string.IsNullOrEmpty(change.ValueChange.OldValue))
+    {
+        // Invalid -- "Hello World" should have only been written to once!
+        return false;
+    }
+
+    return true;
+};
 ```
 
-There is no need to check if you are the host prior to adding the validation handler. The handler can be added on all clients and will only be used if the client is currently the host.
-
- The host
-can validate incoming values from other clients to either accept or rollback the value.
-
- Upon doing so, it rebroadcasts an acknowledgment to ot
+Invalid values will be observed by guest clients through a synchronized variable's `OnValueChange.StatusChange` member.
 
 ```csharp
+// Guest client
 
+SharedVar<string> helloWorld = new SharedVar<string>(opcode: 0);
+
+helloWorld.OnValueChanged = (source, change) =>
+{
+    if (change.ValidationChange.NewStatus == ValidationStatus.Invalid)
+    {
+        System.Console.Writeline(change.ValueChange.OldValue); // the invalid value
+        System.Console.Writeline(change.ValueChange.NewValue); // null - this is the original value of the variable.
+    }
+};
 ```
 
-The underlying
+Do not check if you are the host prior to adding the validation handler. The handler should be added on all clients and will only be utilized when the client becomes the host.
 
+When a guest broadcasts a new value to other players, the new status of those values are `ValidationStatus.Pending`. This allows clients to optimistically apply each value until receiving a `ValidationStatus.Invalid` or
+`ValidationStatus.Valid`.
 
-Note that optimistic rollback is built in to broadcast-receive-validate flow of synchronized variables. Each time a value is set, the
-
-### Handshaking
-
+### Variable handshaking
 All variables registered before a match join will sync their values as part of the initial sync match task:
 
 ```csharp
@@ -116,7 +132,7 @@ to prevent bad actors from preloading an invalid match state and dumping it onto
 
 ### Shared Var
 The shared var is the most basic and permissive type of shared var. Anyone can write to or read from a shared var.
-Any conflicting writes will
+Any conflicting writes will be rolled back for the writing client to resolve.
 
 ### Self Var
 On a user's
