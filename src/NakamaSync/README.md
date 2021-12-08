@@ -34,6 +34,9 @@ hello.OnValueChanged += evt =>
 world.SetValue("world!");
 ```
 
+### Exception Handling
+
+Add handler to the socket
 
 ### TODO WRITE THIS ATTRIBUTE CODE
 We provide a `[SyncVar]` attribute to allow users to easily register variables at compile time without manually
@@ -67,7 +70,7 @@ ISyncMatch match = await socket.JoinSyncMatch();
 match.OnHostChanged += evt =>
 {
     System.Console.Writeline("Old host was " + evt.OldHost.UserId);
-    System.Console.Writeline("New host is " + evt.Oldhost.UserId);
+    System.Console.Writeline("New host is " + evt.NewHost.UserId);
 
 };
 

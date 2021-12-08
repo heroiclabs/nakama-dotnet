@@ -41,6 +41,17 @@ namespace NakamaSync
         {
             _presenceTracker = presenceTracker;
             _stickyHostId = stickyHostId;
+            _stickyHostId.OnValueChanged += HandleStickyHostChanged;
+        }
+
+        private void HandleStickyHostChanged(IVarEvent<string> evt)
+        {
+            string oldSticky = evt.ValueChange.OldValue;
+            string newSticky = evt.ValueChange.OldValue;
+            var sortedPresences = _presenceTracker.GetSortedPresenceIds();
+            var oldHost = GetHost(sortedPresences, oldSticky);
+            var newHost = GetHost(sortedPresences, newSticky);
+            OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
         }
 
         public void SetHost(string userId)
@@ -62,16 +73,15 @@ namespace NakamaSync
 
         private void HandlePresenceRemoved(IUserPresence leaver)
         {
-            Logger?.DebugFormat($"Host tracker for {_presenceTracker.UserId} saw leaver: {leaver.UserId}");
+            var oldIds = _presenceTracker.GetSortedPresenceIds().Except(new string[]{leaver.UserId});
+            var oldHost = GetHost(oldIds, _stickyHostId.GetValue());
+            var newHost = GetHost(_presenceTracker.GetSortedPresenceIds(), _stickyHostId.GetValue());
 
-            var newHost = GetHost();
-
-            bool leaverWasHost = string.Compare(leaver.UserId, newHost.UserId, StringComparison.InvariantCulture) < 0;
-
-            if (leaverWasHost)
+            // old host cannot have been null
+            if (leaver.UserId == oldHost.UserId)
             {
                 _stickyHostId.SetValue(null);
-                OnHostChanged?.Invoke(new HostChangedEvent(leaver, newHost));
+                OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
             }
             else
             {
@@ -83,14 +93,13 @@ namespace NakamaSync
         {
             Logger?.DebugFormat($"Host tracker for {_presenceTracker.UserId} saw joiner added: {joiner.UserId}");
 
-            IUserPresence host = GetHost();
+            var oldIds = _presenceTracker.GetSortedPresenceIds().Except(new string[]{joiner.UserId});
+            var oldHost = GetHost(oldIds, _stickyHostId.GetValue());
+            var newHost = GetHost(_presenceTracker.GetSortedPresenceIds(), _stickyHostId.GetValue());
 
-            if (joiner.UserId != host.UserId)
+            if (oldHost.UserId != newHost.UserId)
             {
-                // get the next presence in the alphanumeric list
-                IUserPresence oldHost = _presenceTracker.GetPresence(index: 1);
-                Logger?.DebugFormat($"Host tracker changing host from {oldHost?.UserId} to {host.UserId}");
-                OnHostChanged?.Invoke(new HostChangedEvent(oldHost, host));
+                OnHostChanged?.Invoke(new HostChangedEvent(oldHost, newHost));
             }
             else
             {
@@ -107,7 +116,7 @@ namespace NakamaSync
                 return new IUserPresence[]{};
             }
 
-            var ids = _presenceTracker.GetSortedUserIds();
+            var ids = _presenceTracker.GetSortedPresenceIds();
             ids.Reverse();
             var guestIds = ids.Take(presenceCount);
 
@@ -116,24 +125,28 @@ namespace NakamaSync
 
         public IUserPresence GetHost()
         {
-            if (_presenceTracker.GetPresenceCount() == 0)
+            return GetHost(_presenceTracker.GetSortedPresenceIds(), _stickyHostId.GetValue());
+        }
+
+        private IUserPresence GetHost(IEnumerable<string> sortedPresenceIds, string stickyHostId)
+        {
+            if (!sortedPresenceIds.Any())
             {
                 return null;
             }
 
-            if (_stickyHostId.GetValue() != null && _presenceTracker.HasPresence(_stickyHostId.GetValue()))
+            if (!string.IsNullOrEmpty(stickyHostId) && _presenceTracker.HasPresence(stickyHostId))
             {
-                return _presenceTracker.GetPresence(_stickyHostId.GetValue());
+                return _presenceTracker.GetPresence(stickyHostId);
             }
 
-            string hostId = _presenceTracker.GetSortedUserIds().First();
+            string hostId = _presenceTracker.GetSortedPresenceIds().First();
             return _presenceTracker.GetPresence(hostId);
         }
 
         public bool IsSelfHost()
         {
-            System.Console.WriteLine("sticky host is " + _stickyHostId.GetValue());
-            return _presenceTracker.GetSelf().UserId == GetHost()?.UserId;
+            return _presenceTracker.GetSelf().UserId == GetHost(_presenceTracker.GetSortedPresenceIds(), _stickyHostId.GetValue())?.UserId;
         }
     }
 }

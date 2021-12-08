@@ -51,7 +51,7 @@ namespace NakamaSync
             return _presences.Count;
         }
 
-        public List<string> GetSortedUserIds()
+        public List<string> GetSortedPresenceIds()
         {
             return new List<string>(_presences.Keys);
         }
@@ -85,7 +85,7 @@ namespace NakamaSync
         {
             var presences = new List<IUserPresence>();
 
-            foreach (string userId in GetSortedUserIds())
+            foreach (string userId in GetSortedPresenceIds())
             {
                 presences.Add(GetPresence(userId));
             }
@@ -107,7 +107,7 @@ namespace NakamaSync
 
         public List<IUserPresence> GetSortedOthers()
         {
-            var otherIds = GetSortedUserIds().Except(new string[]{_userId});
+            var otherIds = GetSortedPresenceIds().Except(new string[]{_userId});
             return GetPresences(otherIds);
         }
 
