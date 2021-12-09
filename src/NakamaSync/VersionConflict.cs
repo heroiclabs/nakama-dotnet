@@ -14,8 +14,11 @@
 * limitations under the License.
 */
 
+using System;
+
 namespace NakamaSync
 {
+    [Serializable]
     internal class VersionConflict<T> : IVersionConflict<T>
     {
         public IVersionedWrite<T> RejectedWrite { get; }

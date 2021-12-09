@@ -147,15 +147,13 @@ helloWorld.OnVersionConflict += conflict =>
     System.Console.Writeline(conflict.RejectedWrite.Source.UserId); // "Client B"
     System.Console.Writeline(conflict.RejectedWrite.Value); // "Hello World From B"
     System.Console.Writeline(conflict.RejectedWrite.Version); // 1
-
-    conflict.Select();
 };
 
 // Client A writes
 helloWorld.SetValue("Hello World from A!");
 
 // Client B writes before observing Client A's write.
-helloWorld.SetValue("Hello World From B!");
+helloWorld.SetValue("Hello World from B!");
 ```
 
 ### Self Var
@@ -166,14 +164,6 @@ Any other presences in the match.
 
 You do not directly register Self and Presence variables. Instead, these are created for you by a Group variable.
 This variable reflects
-
-### Accepted var types
-- Serializer
-
-### Lock versioning and rollbacks
-
-
-### Synced Collections
 
 ### Clearing the var registry or reusing it for a match
 
