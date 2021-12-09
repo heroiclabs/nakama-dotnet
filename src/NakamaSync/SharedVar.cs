@@ -1,6 +1,5 @@
-
-
 using Nakama;
+
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -20,7 +19,6 @@ namespace NakamaSync
 {
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
-    /// TODO implement an ownership model?
     /// </summary>
     public class SharedVar<T> : Var<T>
     {
@@ -54,7 +52,11 @@ namespace NakamaSync
         {
             if (_lockVersion > incomingSerialized.LockVersion)
             {
+                var rejectedWrite = new VersionedWrite<T>(source, incomingSerialized.Value, incomingSerialized.LockVersion);
+                var acceptedWrite = new VersionedWrite<T>(source, GetValue(), _lockVersion);
+
                 // expected race to occur
+                OnVersionConflict?.Invoke(new VersionConflict<T>(rejectedWrite, acceptedWrite));
                 return;
             }
 

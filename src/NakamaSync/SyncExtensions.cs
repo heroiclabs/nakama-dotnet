@@ -14,10 +14,6 @@
 * limitations under the License.
 */
 
-// todo think about fact that user can still attach to presence handler without being able to sequence presence events as they see fit.
-// todo potential race when creating and joining a match between the construction of this object
-// and the dispatching of presence objects off the socket.
-
 using System.Threading.Tasks;
 using Nakama;
 
