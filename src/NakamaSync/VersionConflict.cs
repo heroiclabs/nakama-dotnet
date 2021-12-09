@@ -15,16 +15,24 @@
 */
 
 using System;
+using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
     [Serializable]
     internal class VersionConflict<T> : IVersionConflict<T>
     {
-        public IVersionedWrite<T> RejectedWrite { get; }
-        public IVersionedWrite<T> AcceptedWrite { get; }
+        [DataMember(Name = "rejected_write")]
+        internal VersionedWrite<T> RejectedWrite { get; }
 
-        public VersionConflict(IVersionedWrite<T> rejectedWrite, IVersionedWrite<T> acceptedWrite)
+        [DataMember(Name = "accepted_write")]
+        internal VersionedWrite<T> AcceptedWrite { get; }
+
+        IVersionedWrite<T> IVersionConflict<T>.RejectedWrite => this.RejectedWrite;
+
+        IVersionedWrite<T> IVersionConflict<T>.AcceptedWrite => this.AcceptedWrite;
+
+        public VersionConflict(VersionedWrite<T> rejectedWrite, VersionedWrite<T> acceptedWrite)
         {
             RejectedWrite = rejectedWrite;
             AcceptedWrite = acceptedWrite;

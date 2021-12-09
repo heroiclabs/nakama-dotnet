@@ -40,9 +40,9 @@ namespace NakamaSync
             this.SetLocalValue(SyncMatch?.Self, value);
         }
 
-        internal override void ReceiveSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
+        internal override void ReceiveSerialized(UserPresence source, SerializableVar<T> incomingSerialized)
         {
-            if (_lockVersion >= incomingSerialized.LockVersion)
+            if (_lockVersion > incomingSerialized.LockVersion)
             {
                 var rejectedWrite = new VersionedWrite<T>(source, incomingSerialized.Value, incomingSerialized.LockVersion);
                 var acceptedWrite = new VersionedWrite<T>(source, GetValue(), _lockVersion);

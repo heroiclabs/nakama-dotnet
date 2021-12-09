@@ -176,7 +176,7 @@ namespace NakamaSync
             _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(serializable), presences);
         }
 
-        internal virtual void ReceiveSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
+        internal virtual void ReceiveSerialized(UserPresence source, SerializableVar<T> incomingSerialized)
         {
             bool valueChange = false;
 
@@ -208,6 +208,7 @@ namespace NakamaSync
                 // complete the task after the first handshake and no-op the remaining.
                 _handshakeTcs.TrySetResult(true);
             }
+
             else if (incomingSerialized.AckType == AckType.HandshakeRequest)
             {
                 // new client registered variable

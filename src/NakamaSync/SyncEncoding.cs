@@ -26,16 +26,16 @@ namespace NakamaSync
         Binary,
         Json
     }
-    
+
     public class SyncEncoding
     {
         private readonly SyncEncodingFormat _format;
 
-        public SyncEncoding(SyncEncodingFormat format = SyncEncodingFormat.Binary)
+        public SyncEncoding(SyncEncodingFormat format = SyncEncodingFormat.Json)
         {
             _format = format;
         }
-        
+
         public T Decode<T>(byte[] data)
         {
             if (_format == SyncEncodingFormat.Json)
@@ -67,7 +67,7 @@ namespace NakamaSync
             {
                 return System.Text.Encoding.UTF8.GetBytes(data.ToJson());
             }
-            
+
             if (!data.GetType().IsSerializable)
             {
                 throw new InvalidOperationException($"Type {data.GetType()} is not marked as Serializable");

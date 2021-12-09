@@ -14,17 +14,27 @@
 * limitations under the License.
 */
 
+using System;
+using System.Runtime.Serialization;
 using Nakama;
 
 namespace NakamaSync
 {
+    [Serializable]
     internal class VersionedWrite<T> : IVersionedWrite<T>
     {
-        public IUserPresence Source { get; }
+        [DataMember(Name = "source")]
+        public UserPresence Source { get; }
+
+        [DataMember(Name = "value")]
         public T Value { get; }
+
+        [DataMember(Name = "version")]
         public int Version { get; }
 
-        public VersionedWrite(IUserPresence source, T value, int version)
+        IUserPresence IVersionedWrite<T>.Source => this.Source;
+
+        public VersionedWrite(UserPresence source, T value, int version)
         {
             Source = source;
             Value = value;
