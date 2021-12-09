@@ -26,10 +26,7 @@ namespace NakamaSync
 
         private int _lockVersion;
 
-        public SharedVar(long opcode) : base(opcode)
-        {
-
-        }
+        public SharedVar(long opcode) : base(opcode) {}
 
         public void SetValue(T value)
         {
@@ -43,25 +40,33 @@ namespace NakamaSync
             this.SetLocalValue(SyncMatch?.Self, value);
         }
 
-        internal override ISerializableVar<T> ToSerializable(AckType ackType)
-        {
-            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, AckType = ackType};
-        }
-
         internal override void ReceiveSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
         {
-            if (_lockVersion > incomingSerialized.LockVersion)
+            if (_lockVersion >= incomingSerialized.LockVersion)
             {
                 var rejectedWrite = new VersionedWrite<T>(source, incomingSerialized.Value, incomingSerialized.LockVersion);
                 var acceptedWrite = new VersionedWrite<T>(source, GetValue(), _lockVersion);
+                var conflict = new VersionConflict<T>(rejectedWrite, acceptedWrite);
+                var serializable = new SerializableVar<T>
+                {
+                    Value = Value,
+                    LockVersion = _lockVersion,
+                    Status = ValidationStatus.Valid,
+                    AckType = AckType.LockVersionConflict,
+                    LockVersionConflict = conflict,
+                };
 
-                // expected race to occur
-                OnVersionConflict?.Invoke(new VersionConflict<T>(rejectedWrite, acceptedWrite));
+                Send(serializable, new IUserPresence[]{source});
+                return;
+            }
+
+            if (incomingSerialized.AckType == AckType.LockVersionConflict)
+            {
+                OnVersionConflict?.Invoke(incomingSerialized.LockVersionConflict);
                 return;
             }
 
             _lockVersion = incomingSerialized.LockVersion;
-
             base.ReceiveSerialized(source, incomingSerialized);
         }
     }

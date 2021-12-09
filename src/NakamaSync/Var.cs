@@ -90,7 +90,7 @@ namespace NakamaSync
             // defer synchronization until reception of sync match.
             if (_syncMatch != null)
             {
-                Send(AckType.None);
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.None});
                 return;
             }
         }
@@ -104,12 +104,12 @@ namespace NakamaSync
             if (this.Value != null && !this.Value.Equals(default(T)))
             {
                 ValidateAndDispatch(self, _lastValue, Value);
-                Send(AckType.None);
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.None});
             }
             else
             {
                 // don't have value to share, request it from other clients.
-                Send(AckType.HandshakeRequest);
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.HandshakeRequest});
             }
 
             syncMatch.PresenceTracker.OnPresenceAdded += (p) =>
@@ -123,7 +123,7 @@ namespace NakamaSync
                 // when all clients try to greet the new one.
                 // todo put this into its own method and virtualize it instead
                 // of doing a type check?
-                Send(AckType.HandshakeResponse, new IUserPresence[]{p});
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.HandshakeRequest}, new IUserPresence[]{p});
             };
 
             // not match creator
@@ -171,9 +171,9 @@ namespace NakamaSync
             // todo also check that there is an actual change!!! think about how to do for collections
         }
 
-        private void Send(AckType ackType, IUserPresence[] presences = null)
+        internal void Send(SerializableVar<T> serializable, IUserPresence[] presences = null)
         {
-            _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(ackType)), presences);
+            _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(serializable), presences);
         }
 
         internal virtual void ReceiveSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
@@ -211,7 +211,7 @@ namespace NakamaSync
             else if (incomingSerialized.AckType == AckType.HandshakeRequest)
             {
                 // new client registered variable
-                Send(AckType.HandshakeResponse, new IUserPresence[]{source});
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.HandshakeResponse}, new IUserPresence[]{source});
             }
 
             if (valueChange)
@@ -239,7 +239,7 @@ namespace NakamaSync
                     }
                     else
                     {
-                        responseSerialized = ToSerializable(AckType.Validation);
+                        responseSerialized = new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.Validation};
                         newStatus = ValidationStatus.Invalid;
                     }
 
@@ -283,11 +283,6 @@ namespace NakamaSync
             {
                 Value = incomingValue;
             }
-        }
-
-        internal virtual ISerializableVar<T> ToSerializable(AckType ackType)
-        {
-            return new SerializableVar<T>{Value = Value, LockVersion = 0, Status = Status, AckType = ackType};
         }
     }
 }

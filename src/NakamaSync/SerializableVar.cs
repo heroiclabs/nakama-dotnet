@@ -36,16 +36,8 @@ namespace NakamaSync
 
         [DataMember(Name="ack_type"), Preserve]
         public AckType AckType { get; set; }
-    }
 
-    internal enum AckType
-    {
-        None = 1,
-        // other client acknowledging new client
-        HandshakeResponse = 2,
-        // host acknowledging value that needs validation
-        Validation = 3,
-        // new client request initial state from existing clients.
-        HandshakeRequest = 4,
+        [DataMember(Name="lock_version_conflict"), Preserve]
+        public VersionConflict<T> LockVersionConflict { get; set; }
     }
 }

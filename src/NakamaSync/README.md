@@ -7,7 +7,6 @@ a straightforward, event-driven manner.
 ### Basic Usage
 
 ```csharp
-
 // Clients A and B
 SharedVar<string> helloWorld = new SharedVar<string>(opcode: 0);
 
@@ -24,7 +23,6 @@ helloWorld.OnValueChanged += evt =>
 {
     System.Console.WriteLine(evt.ValueChange.NewValue); // "Hello World!"
 };
-
 ```
 
 Any serializable type can be inserted as the generic type parameter to a synchronized variable. Any exceptions
@@ -53,14 +51,13 @@ creator leaves, the host become the first user in an alphanumeric sort on the ma
 (1) The client has lower latency than the others and is therefore better suited to the increased traffic demands on the host.
 (2) The client is, for some reason, trusted over the others.
 
-### Broadcast, Validate, Acknowledge
+### Host Validation
 The notion of a host is important to the security of the synchronized variables system. By default, all
 synchronized values are trusted by all clients. But you may add a handler to any variable for the host to invoke
 upon receiving a new value.
 
 ```csharp
 // Host client
-
 SharedVar<string> helloWorld = new SharedVar<string>(opcode: 0);
 
 helloWorld.ValidationHandler = (source, change) =>
@@ -131,9 +128,35 @@ to prevent bad actors from preloading an invalid match state and dumping it onto
 ## Variable types
 
 ### Shared Var
-`SharedVar` is a writable synchronized variable with loose permissions. Anyone can write to or read from a shared var. Any conflicting writes will be rolled back for the writing client to resolve.
+`SharedVar` is a writable synchronized variable with loose permissions. Any client can write to or read from a shared var. Any conflicting writes will be rolled back for the writing client to resolve.
 
+```csharp
+// Clients A and B
+SharedVar<string> helloWorld = new SharedVar<string>(opcode: 0);
 
+var registry = new VarRegistry();
+registry.Register(helloWorld);
+
+IMatch match = await socket.JoinSyncMatch(registry);
+
+helloWorld.OnVersionConflict += conflict =>
+{
+    System.Console.Writeline(conflict.AcceptedWrite.Source.UserId); // "Client A"
+    System.Console.Writeline(conflict.AcceptedWrite.Value); // "Hello World From A"
+    System.Console.Writeline(conflict.AcceptedWrite.Version); // 1
+    System.Console.Writeline(conflict.RejectedWrite.Source.UserId); // "Client B"
+    System.Console.Writeline(conflict.RejectedWrite.Value); // "Hello World From B"
+    System.Console.Writeline(conflict.RejectedWrite.Version); // 1
+
+    conflict.Select();
+};
+
+// Client A writes
+helloWorld.SetValue("Hello World from A!");
+
+// Client B writes before observing Client A's write.
+helloWorld.SetValue("Hello World From B!");
+```
 
 ### Self Var
 On a user's
@@ -155,12 +178,10 @@ This variable reflects
 ### Clearing the var registry or reusing it for a match
 
 ### Managing opcodes
+We recommend putting each variable opcode into an `enum` for readability. Attempting to register variables with duplicate opcodes will provoke an exception. There is also set of reserved opcodes on the VarRegistry. See `VarRegistry.GetReservedOpcodes`.
 
-We recommend putting each var opcode into an `enum` for readability. There is a set of Reserved opcodes on the SyncMatch. TODO add the reserved opcodes
-Attempting to register duplicate opcodes will provoke an exception.
-
-### Use in authoritative matches
-They are a natural fit for relay matches but can also be used in authoritative matches
+Synchronized variables are a natural fit for relay matches, but can also be used in authoritative matches. For both
+relay and authoritative matches, be sure not to reuse any opcodes assigned to synchronized variables.
 
 ### Deferred Variable Registration
 
@@ -169,7 +190,5 @@ Sometimes you want to register a variable after the match has started.
 In fact, `GroupVar` uses deferred variable registration under the hood in order to create and remove
 presence vars as users come and go.
 
-
-### Handshake process
 
 ### Await on handshake task for a deferred variable
