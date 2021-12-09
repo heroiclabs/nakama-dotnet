@@ -69,7 +69,6 @@ namespace NakamaSync
                 _handshakeTcs.SetCanceled();
             }
 
-            System.Console.WriteLine("var " + this + " is dispatching reset");
             _handshakeTcs = new TaskCompletionSource<bool>();
             OnReset?.Invoke();
         }
@@ -205,7 +204,6 @@ namespace NakamaSync
                 if (newStatus != ValidationStatus.Invalid)
                 {
                     _lastValue = Value;
-                    System.Console.WriteLine("SETTING VALUE " + incomingSerialized.Value);
                     SetValueFromIncoming(incomingSerialized.Value);
                     _lockVersion = incomingSerialized.LockVersion;
                     Status = incomingSerialized.Status;
@@ -225,7 +223,6 @@ namespace NakamaSync
             }
             else if (incomingSerialized.AckType == AckType.HandshakeRequest)
             {
-                System.Console.WriteLine("RECEIVED HANDSHAKE REQUEST");
                 // new client registered variable
                 Send(AckType.HandshakeResponse, new IUserPresence[]{source});
             }

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NakamaSync;
@@ -78,6 +79,7 @@ namespace Nakama.Tests.Sync
         }
     }
 
+    [Serializable]
     public class SyncTestRpcObjectImplicit
     {
         [DataMember(Name="TestMember")]
@@ -87,6 +89,7 @@ namespace Nakama.Tests.Sync
         public static implicit operator SyncTestRpcObjectImplicit(SyncTestRpcObjectNoImplicit v) => new SyncTestRpcObjectImplicit{TestMember = v.TestMember};
     }
 
+    [Serializable]
     public class SyncTestRpcObjectNoImplicit
     {
         [DataMember(Name = "TestMember")]
