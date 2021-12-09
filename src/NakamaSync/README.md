@@ -125,14 +125,15 @@ System.Console.Writeline(hello.GetValue()); // "Hello"
 ```
 
 You may also set your variable value prior to joining a sync match. But be aware that any remote clients
-that contain a conflicting value for your variable will overwrite your joining value. This is by design
+that have already written a value to your variable will overwrite your initial value. This is by design
 to prevent bad actors from preloading an invalid match state and dumping it onto existing clients.
 
 ## Variable types
 
 ### Shared Var
-The shared var is the most basic and permissive type of shared var. Anyone can write to or read from a shared var.
-Any conflicting writes will be rolled back for the writing client to resolve.
+`SharedVar` is a writable synchronized variable with loose permissions. Anyone can write to or read from a shared var. Any conflicting writes will be rolled back for the writing client to resolve.
+
+
 
 ### Self Var
 On a user's

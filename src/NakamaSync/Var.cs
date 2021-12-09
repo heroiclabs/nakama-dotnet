@@ -26,11 +26,13 @@ namespace NakamaSync
 {
     public delegate void ResetHandler();
     public delegate bool ValidationHandler<T>(IUserPresence source, IValueChange<T> change);
+    public delegate void ValueChangedHandler<T>(IVarEvent<T> evt);
+    public delegate void VersionConflictHandler<T>(IVersionConflict<T> conflict);
 
     public abstract class Var<T>
     {
-        public event Action<IVarEvent<T>> OnValueChanged;
         public event ResetHandler OnReset;
+        public event ValueChangedHandler<T> OnValueChanged;
 
         public ValidationHandler<T> ValidationHandler { get; set; }
         public long Opcode { get; }
@@ -43,7 +45,6 @@ namespace NakamaSync
         protected ISyncMatch SyncMatch => _syncMatch;
 
         private T _lastValue;
-        private int _lockVersion;
         private SyncMatch _syncMatch;
         private TaskCompletionSource<bool> _handshakeTcs = new TaskCompletionSource<bool>();
 
@@ -69,7 +70,6 @@ namespace NakamaSync
                 _handshakeTcs.SetCanceled();
             }
 
-            System.Console.WriteLine("var " + this + " is dispatching reset");
             _handshakeTcs = new TaskCompletionSource<bool>();
             OnReset?.Invoke();
         }
@@ -84,13 +84,6 @@ namespace NakamaSync
             _lastValue = Value;
 
             SetValueFromIncoming(newValue);
-
-            // don't increment lock version if haven't done handshake yet.
-            // remote clients should overwrite any local value during the handshake.
-            if (_syncMatch != null)
-            {
-                _lockVersion++;
-            }
 
             ValidateAndDispatch(source, _lastValue, newValue);
 
@@ -183,14 +176,8 @@ namespace NakamaSync
             _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(ackType)), presences);
         }
 
-        internal void ReceiveSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
+        internal virtual void ReceiveSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
         {
-            if (_lockVersion > incomingSerialized.LockVersion)
-            {
-                // expected race to occur
-                return;
-            }
-
             bool valueChange = false;
 
             ValidationStatus oldStatus = default(ValidationStatus);
@@ -205,9 +192,7 @@ namespace NakamaSync
                 if (newStatus != ValidationStatus.Invalid)
                 {
                     _lastValue = Value;
-                    System.Console.WriteLine("SETTING VALUE " + incomingSerialized.Value);
                     SetValueFromIncoming(incomingSerialized.Value);
-                    _lockVersion = incomingSerialized.LockVersion;
                     Status = incomingSerialized.Status;
                     valueChange = true;
                 }
@@ -225,7 +210,6 @@ namespace NakamaSync
             }
             else if (incomingSerialized.AckType == AckType.HandshakeRequest)
             {
-                System.Console.WriteLine("RECEIVED HANDSHAKE REQUEST");
                 // new client registered variable
                 Send(AckType.HandshakeResponse, new IUserPresence[]{source});
             }
@@ -301,9 +285,9 @@ namespace NakamaSync
             }
         }
 
-        internal ISerializableVar<T> ToSerializable(AckType ackType)
+        internal virtual ISerializableVar<T> ToSerializable(AckType ackType)
         {
-            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, AckType = ackType};
+            return new SerializableVar<T>{Value = Value, LockVersion = 0, Status = Status, AckType = ackType};
         }
     }
 }
