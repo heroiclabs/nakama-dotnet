@@ -80,7 +80,7 @@ namespace NakamaSync
             return Task.WhenAll(taskList);
         }
 
-        public void HandleSerialized(IUserPresence source, long opcode, SerializableVar<T> serializable)
+        public void HandleSerialized(UserPresence source, long opcode, SerializableVar<T> serializable)
         {
             if (!_varsByOpcode.ContainsKey(opcode))
             {

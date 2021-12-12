@@ -75,10 +75,12 @@ namespace NakamaSync
                         continue;
                     }
 
-                    var.ReceiveSerialized(state.UserPresence, serialized);
+                    // todo tinyjson requires concrete structs
+                    var.ReceiveSerialized(state.UserPresence as UserPresence, serialized);
                 }
 
-                _factory.HandleSerialized(state.UserPresence, _opcodeStart + state.OpCode, serialized);
+                // todo tinyjson requires concrete structs
+                _factory.HandleSerialized(state.UserPresence as UserPresence, _opcodeStart + state.OpCode, serialized);
             }
         }
 

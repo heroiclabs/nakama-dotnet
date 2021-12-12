@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -55,6 +56,7 @@ namespace Nakama
     }
 
     /// <inheritdoc cref="IUserPresence"/>
+    [Serializable]
     internal class UserPresence : IUserPresence
     {
         internal static readonly IReadOnlyList<UserPresence> NoPresences = new List<UserPresence>(0);

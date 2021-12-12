@@ -26,11 +26,13 @@ namespace NakamaSync
 {
     public delegate void ResetHandler();
     public delegate bool ValidationHandler<T>(IUserPresence source, IValueChange<T> change);
+    public delegate void ValueChangedHandler<T>(IVarEvent<T> evt);
+    public delegate void VersionConflictHandler<T>(IVersionConflict<T> conflict);
 
     public abstract class Var<T>
     {
-        public event Action<IVarEvent<T>> OnValueChanged;
         public event ResetHandler OnReset;
+        public event ValueChangedHandler<T> OnValueChanged;
 
         public ValidationHandler<T> ValidationHandler { get; set; }
         public long Opcode { get; }
@@ -43,7 +45,6 @@ namespace NakamaSync
         protected ISyncMatch SyncMatch => _syncMatch;
 
         private T _lastValue;
-        private int _lockVersion;
         private SyncMatch _syncMatch;
         private TaskCompletionSource<bool> _handshakeTcs = new TaskCompletionSource<bool>();
 
@@ -84,19 +85,12 @@ namespace NakamaSync
 
             SetValueFromIncoming(newValue);
 
-            // don't increment lock version if haven't done handshake yet.
-            // remote clients should overwrite any local value during the handshake.
-            if (_syncMatch != null)
-            {
-                _lockVersion++;
-            }
-
             ValidateAndDispatch(source, _lastValue, newValue);
 
             // defer synchronization until reception of sync match.
             if (_syncMatch != null)
             {
-                Send(AckType.None);
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.None});
                 return;
             }
         }
@@ -110,12 +104,12 @@ namespace NakamaSync
             if (this.Value != null && !this.Value.Equals(default(T)))
             {
                 ValidateAndDispatch(self, _lastValue, Value);
-                Send(AckType.None);
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.None});
             }
             else
             {
                 // don't have value to share, request it from other clients.
-                Send(AckType.HandshakeRequest);
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.HandshakeRequest});
             }
 
             syncMatch.PresenceTracker.OnPresenceAdded += (p) =>
@@ -129,7 +123,7 @@ namespace NakamaSync
                 // when all clients try to greet the new one.
                 // todo put this into its own method and virtualize it instead
                 // of doing a type check?
-                Send(AckType.HandshakeResponse, new IUserPresence[]{p});
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.HandshakeRequest}, new IUserPresence[]{p});
             };
 
             // not match creator
@@ -177,19 +171,13 @@ namespace NakamaSync
             // todo also check that there is an actual change!!! think about how to do for collections
         }
 
-        private void Send(AckType ackType, IUserPresence[] presences = null)
+        internal void Send(SerializableVar<T> serializable, IUserPresence[] presences = null)
         {
-            _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(ToSerializable(ackType)), presences);
+            _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(serializable), presences);
         }
 
-        internal void ReceiveSerialized(IUserPresence source, SerializableVar<T> incomingSerialized)
+        internal virtual void ReceiveSerialized(UserPresence source, SerializableVar<T> incomingSerialized)
         {
-            if (_lockVersion > incomingSerialized.LockVersion)
-            {
-                // expected race to occur
-                return;
-            }
-
             bool valueChange = false;
 
             ValidationStatus oldStatus = default(ValidationStatus);
@@ -205,7 +193,6 @@ namespace NakamaSync
                 {
                     _lastValue = Value;
                     SetValueFromIncoming(incomingSerialized.Value);
-                    _lockVersion = incomingSerialized.LockVersion;
                     Status = incomingSerialized.Status;
                     valueChange = true;
                 }
@@ -221,10 +208,11 @@ namespace NakamaSync
                 // complete the task after the first handshake and no-op the remaining.
                 _handshakeTcs.TrySetResult(true);
             }
+
             else if (incomingSerialized.AckType == AckType.HandshakeRequest)
             {
                 // new client registered variable
-                Send(AckType.HandshakeResponse, new IUserPresence[]{source});
+                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.HandshakeResponse}, new IUserPresence[]{source});
             }
 
             if (valueChange)
@@ -252,7 +240,7 @@ namespace NakamaSync
                     }
                     else
                     {
-                        responseSerialized = ToSerializable(AckType.Validation);
+                        responseSerialized = new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.Validation};
                         newStatus = ValidationStatus.Invalid;
                     }
 
@@ -296,11 +284,6 @@ namespace NakamaSync
             {
                 Value = incomingValue;
             }
-        }
-
-        internal ISerializableVar<T> ToSerializable(AckType ackType)
-        {
-            return new SerializableVar<T>{Value = Value, LockVersion = _lockVersion, Status = Status, AckType = ackType};
         }
     }
 }

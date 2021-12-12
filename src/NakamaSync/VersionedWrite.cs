@@ -16,28 +16,29 @@
 
 using System;
 using System.Runtime.Serialization;
+using Nakama;
 
 namespace NakamaSync
 {
-    /// <summary>
-    /// A data-transfer object for a sync var.
-    /// </summary>
     [Serializable]
-    internal class SerializableVar<T> : ISerializableVar<T>
+    internal class VersionedWrite<T> : IVersionedWrite<T>
     {
-        [DataMember(Name="value"), Preserve]
-        public T Value { get; set; }
+        [DataMember(Name = "source")]
+        public UserPresence Source { get; }
 
-        [DataMember(Name="lock_version"), Preserve]
-        public int LockVersion { get; set; }
+        [DataMember(Name = "value")]
+        public T Value { get; }
 
-        [DataMember(Name="validation_status"), Preserve]
-        public ValidationStatus Status { get; set; }
+        [DataMember(Name = "version")]
+        public int Version { get; }
 
-        [DataMember(Name="ack_type"), Preserve]
-        public AckType AckType { get; set; }
+        IUserPresence IVersionedWrite<T>.Source => this.Source;
 
-        [DataMember(Name="lock_version_conflict"), Preserve]
-        public VersionConflict<T> LockVersionConflict { get; set; }
+        public VersionedWrite(UserPresence source, T value, int version)
+        {
+            Source = source;
+            Value = value;
+            Version = version;
+        }
     }
 }

@@ -1,3 +1,5 @@
+using Nakama;
+
 /**
 * Copyright 2021 The Nakama Authors
 *
@@ -13,22 +15,59 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
 namespace NakamaSync
 {
     /// <summary>
     /// A variable whose single value is synchronized across all clients connected to the same match.
-    /// TODO implement an ownership model?
     /// </summary>
     public class SharedVar<T> : Var<T>
     {
-        public SharedVar(long opcode) : base(opcode)
-        {
-        }
+        public event VersionConflictHandler<T> OnVersionConflict;
+
+        private int _lockVersion;
+
+        public SharedVar(long opcode) : base(opcode) {}
 
         public void SetValue(T value)
         {
+            // don't increment lock version if haven't done handshake yet.
+            // remote clients should overwrite any local value during the handshake.
+            if (SyncMatch != null)
+            {
+                _lockVersion++;
+            }
+
             this.SetLocalValue(SyncMatch?.Self, value);
+        }
+
+        internal override void ReceiveSerialized(UserPresence source, SerializableVar<T> incomingSerialized)
+        {
+            if (_lockVersion > incomingSerialized.LockVersion)
+            {
+                var rejectedWrite = new VersionedWrite<T>(source, incomingSerialized.Value, incomingSerialized.LockVersion);
+                var acceptedWrite = new VersionedWrite<T>(source, GetValue(), _lockVersion);
+                var conflict = new VersionConflict<T>(rejectedWrite, acceptedWrite);
+                var serializable = new SerializableVar<T>
+                {
+                    Value = Value,
+                    LockVersion = _lockVersion,
+                    Status = ValidationStatus.Valid,
+                    AckType = AckType.LockVersionConflict,
+                    LockVersionConflict = conflict,
+                };
+
+                Send(serializable, new IUserPresence[]{source});
+                return;
+            }
+
+            if (incomingSerialized.AckType == AckType.LockVersionConflict)
+            {
+                OnVersionConflict?.Invoke(incomingSerialized.LockVersionConflict);
+                return;
+            }
+
+            _lockVersion = incomingSerialized.LockVersion;
+            base.ReceiveSerialized(source, incomingSerialized);
         }
     }
 }

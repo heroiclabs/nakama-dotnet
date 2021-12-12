@@ -19,25 +19,23 @@ using System.Runtime.Serialization;
 
 namespace NakamaSync
 {
-    /// <summary>
-    /// A data-transfer object for a sync var.
-    /// </summary>
     [Serializable]
-    internal class SerializableVar<T> : ISerializableVar<T>
+    internal class VersionConflict<T> : IVersionConflict<T>
     {
-        [DataMember(Name="value"), Preserve]
-        public T Value { get; set; }
+        [DataMember(Name = "rejected_write")]
+        internal VersionedWrite<T> RejectedWrite { get; }
 
-        [DataMember(Name="lock_version"), Preserve]
-        public int LockVersion { get; set; }
+        [DataMember(Name = "accepted_write")]
+        internal VersionedWrite<T> AcceptedWrite { get; }
 
-        [DataMember(Name="validation_status"), Preserve]
-        public ValidationStatus Status { get; set; }
+        IVersionedWrite<T> IVersionConflict<T>.RejectedWrite => this.RejectedWrite;
 
-        [DataMember(Name="ack_type"), Preserve]
-        public AckType AckType { get; set; }
+        IVersionedWrite<T> IVersionConflict<T>.AcceptedWrite => this.AcceptedWrite;
 
-        [DataMember(Name="lock_version_conflict"), Preserve]
-        public VersionConflict<T> LockVersionConflict { get; set; }
+        public VersionConflict(VersionedWrite<T> rejectedWrite, VersionedWrite<T> acceptedWrite)
+        {
+            RejectedWrite = rejectedWrite;
+            AcceptedWrite = acceptedWrite;
+        }
     }
 }

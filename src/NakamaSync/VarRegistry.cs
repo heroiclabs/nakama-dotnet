@@ -24,7 +24,7 @@ namespace NakamaSync
 {
     public class VarRegistry
     {
-        public const long STICKY_HOST_OPCODE = -1;
+        private const long _STICKY_HOST_OPCODE = -1;
 
         internal SharedVar<string> StickyHostId => _stickyHostId;
         internal ILogger Logger { get; set; }
@@ -38,14 +38,14 @@ namespace NakamaSync
         private readonly int _handshakeTimeoutSec;
         private readonly object _lock = new object();
         private readonly HashSet<long> _reservedOpcodes = new HashSet<long>();
-        private readonly SharedVar<string> _stickyHostId = new SharedVar<string>(VarRegistry.STICKY_HOST_OPCODE);
+        private readonly SharedVar<string> _stickyHostId = new SharedVar<string>(VarRegistry._STICKY_HOST_OPCODE);
 
         public VarRegistry(int opcodeStart = 0, int handshakeTimeoutSec = 5)
         {
             _opcodeStart = opcodeStart;
             _handshakeTimeoutSec = handshakeTimeoutSec;
 
-            _reservedOpcodes.Add(STICKY_HOST_OPCODE);
+            _reservedOpcodes.Add(_STICKY_HOST_OPCODE);
             RegisterInternal(_stickyHostId);
         }
         public bool HasOpCode(long opcode)
@@ -63,6 +63,13 @@ namespace NakamaSync
         {
             ThrowIfReserved(var.Opcode);
             RegisterInternal(var);
+        }
+
+        public HashSet<long> GetReservedOpcodes()
+        {
+            var opcodes = new HashSet<long>();
+            opcodes.Add(_STICKY_HOST_OPCODE);
+            return opcodes;
         }
 
         internal void RegisterInternal<T>(GroupVar<T> var)

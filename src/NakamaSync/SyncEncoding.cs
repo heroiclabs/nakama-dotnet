@@ -31,7 +31,7 @@ namespace NakamaSync
     {
         private readonly SyncEncodingFormat _format;
 
-        public SyncEncoding(SyncEncodingFormat format = SyncEncodingFormat.Binary)
+        public SyncEncoding(SyncEncodingFormat format = SyncEncodingFormat.Json)
         {
             _format = format;
         }
