@@ -100,7 +100,7 @@ namespace Nakama
         /// <summary>
         /// The logger to use with the socket.
         /// </summary>
-        public ILogger Logger { get; set; }
+        internal ILogger Logger { get; private set; }
 
         private readonly ISocketAdapter _adapter;
         private readonly Uri _baseUri;

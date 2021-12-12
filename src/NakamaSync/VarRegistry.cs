@@ -27,6 +27,7 @@ namespace NakamaSync
         public const long STICKY_HOST_OPCODE = -1;
 
         internal SharedVar<string> StickyHostId => _stickyHostId;
+        internal ILogger Logger { get; set; }
 
         private readonly Dictionary<Type, IVarSubRegistry> _subregistriesByType = new Dictionary<Type, IVarSubRegistry>();
         private readonly Dictionary<long, IVarSubRegistry> _subregistriesByOpcode = new Dictionary<long, IVarSubRegistry>();
@@ -46,6 +47,10 @@ namespace NakamaSync
 
             _reservedOpcodes.Add(STICKY_HOST_OPCODE);
             RegisterInternal(_stickyHostId);
+        }
+        public bool HasOpCode(long opcode)
+        {
+            return _subregistriesByOpcode.ContainsKey(opcode);
         }
 
         public void Register<T>(SharedVar<T> var)
@@ -94,11 +99,6 @@ namespace NakamaSync
 
                 subRegistry.Register(var);
             }
-        }
-
-        public bool HasOpCode(long opcode)
-        {
-            return _subregistriesByOpcode.ContainsKey(opcode);
         }
 
         internal async Task ReceiveMatch(SyncMatch match)
