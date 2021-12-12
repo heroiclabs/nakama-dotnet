@@ -87,17 +87,19 @@ namespace NakamaSync
 
             ValidateAndDispatch(source, _lastValue, newValue);
 
-            // defer synchronization until reception of sync match.
             if (_syncMatch != null)
             {
                 Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.None});
                 return;
             }
+
+            // if no sync match, defer synchronization until reception of sync match.
         }
 
         internal Task ReceiveSyncMatch(SyncMatch syncMatch, int handshakeTimeoutSec)
         {
             _syncMatch = syncMatch;
+            _syncMatch.HostTracker.OnHostChanged += HandleHostChanged;
 
             var self = syncMatch.PresenceTracker.GetSelf();
 
@@ -118,6 +120,7 @@ namespace NakamaSync
                 {
                     return;
                 }
+
                 // share state with the new user
                 // note that in the case of a shared var, last lock version will win
                 // when all clients try to greet the new one.
@@ -149,6 +152,20 @@ namespace NakamaSync
             return Task.CompletedTask;
         }
 
+        private void HandleHostChanged(IHostChangedEvent obj)
+        {
+            if (obj.NewHost.UserId == SyncMatch.Self.UserId && Status == ValidationStatus.Pending)
+            {
+                // todo perhaps we should store the last sender and pass that to invoke here, instead of self
+                if (ValidationHandler.Invoke(_syncMatch.Self, new ValueChange<T>(_lastValue, Value)))
+                {
+                    var valueChange = new ValueChange<T>(_lastValue, Value);
+                    var statusChange = new ValidationChange(ValidationStatus.Pending, ValidationStatus.Valid);
+                    InvokeOnValueChanged(new VarEvent<T>(_syncMatch.Self, valueChange, statusChange));
+                }
+            }
+        }
+
         private void ValidateAndDispatch(IUserPresence source, T oldValue, T newValue)
         {
             ValidationStatus oldStatus = this.Status;
@@ -159,16 +176,13 @@ namespace NakamaSync
             }
             else
             {
-                // todo if this user becomes host let's move validation status to valid
                 Status = ValidationHandler == null ? ValidationStatus.Pending : ValidationStatus.Valid;
             }
 
             var evt = new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, Status));
 
-            InvokeOnValueChanged(evt);
-
             // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
-            // todo also check that there is an actual change!!! think about how to do for collections
+            InvokeOnValueChanged(evt);
         }
 
         internal void Send(SerializableVar<T> serializable, IUserPresence[] presences = null)
@@ -208,7 +222,6 @@ namespace NakamaSync
                 // complete the task after the first handshake and no-op the remaining.
                 _handshakeTcs.TrySetResult(true);
             }
-
             else if (incomingSerialized.AckType == AckType.HandshakeRequest)
             {
                 // new client registered variable
@@ -219,7 +232,6 @@ namespace NakamaSync
             {
                 InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(_lastValue, Value), new ValidationChange(oldStatus, Status)));
             }
-
         }
 
         private ValidationStatus TryHostIntercept(IUserPresence source, ISerializableVar<T> serialized)
@@ -255,35 +267,44 @@ namespace NakamaSync
 
         private void SetValueFromIncoming(T incomingValue)
         {
-            if (incomingValue == null)
+            if (Value != null)
             {
-                Value = default;
-                return;
-            }
-
-            var type = incomingValue.GetType();
-            if (Value != null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
-            {
-                var existingDictionary = (IDictionary) Value;
-                var incomingDictionary = (IDictionary) incomingValue;
-                var newDictionary = (IDictionary) Activator.CreateInstance(type);
-
-                foreach (var key in existingDictionary.Keys)
-                {
-                    newDictionary[key] = existingDictionary[key];
-                }
-
-                foreach (var key in incomingDictionary.Keys)
-                {
-                    newDictionary[key] = incomingDictionary[key];
-                }
-
-                Value = (T) newDictionary;
+                Value = ProcessIncomingValue(Value, incomingValue);
             }
             else
             {
                 Value = incomingValue;
             }
+        }
+
+        private T ProcessIncomingValue(T existingValue, T incomingValue)
+        {
+            if (typeof(T) == typeof(IDictionary))
+            {
+                return MergeDictionary((IDictionary) Value, (IDictionary) incomingValue);
+            }
+
+            return incomingValue;
+        }
+
+        private T MergeDictionary(IDictionary existingDict, IDictionary incomingDict)
+        {
+            var newDictionary = (IDictionary) Activator.CreateInstance(typeof(T));
+
+            var existingDictionary = (IDictionary) Value;
+            var incomingDictionary = (IDictionary) incomingDict;
+
+            foreach (var key in existingDictionary.Keys)
+            {
+                newDictionary[key] = existingDictionary[key];
+            }
+
+            foreach (var key in incomingDictionary.Keys)
+            {
+                newDictionary[key] = incomingDictionary[key];
+            }
+
+            return (T) newDictionary;
         }
     }
 }
