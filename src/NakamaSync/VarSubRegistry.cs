@@ -93,7 +93,7 @@ namespace NakamaSync
 
             _vars[_opcodeStart + var.Opcode].Add(var);
 
-            if (_syncMatch != null && !var.HasSyncMatch)
+            if (_syncMatch != null)
             {
                 // deferred registration of variable
                 var.ReceiveSyncMatch(_syncMatch, _handshakeTimeoutSec);

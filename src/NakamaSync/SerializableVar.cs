@@ -28,16 +28,16 @@ namespace NakamaSync
         [DataMember(Name="value"), Preserve]
         public T Value { get; set; }
 
-        [DataMember(Name="lock_version"), Preserve]
-        public int LockVersion { get; set; }
+        [DataMember(Name="version"), Preserve]
+        public int Version { get; set; }
 
         [DataMember(Name="validation_status"), Preserve]
         public ValidationStatus Status { get; set; }
 
         [DataMember(Name="ack_type"), Preserve]
-        public AckType AckType { get; set; }
+        public VarMessageType AckType { get; set; }
 
-        [DataMember(Name="lock_version_conflict"), Preserve]
-        public VersionConflict<T> LockVersionConflict { get; set; }
+        [DataMember(Name="version_conflict"), Preserve]
+        public VersionConflict<T> VersionConflict { get; set; }
     }
 }

@@ -14,14 +14,18 @@
 * limitations under the License.
 */
 
-using Nakama;
-
 namespace NakamaSync
 {
-    public interface IVarEvent<T>
+    internal enum VarMessageType
     {
-        IUserPresence Source { get; }
-        IValueChange<T> ValueChange { get; }
-        IValidationChange ValidationChange { get; }
+        None = 1,
+        // other client acknowledging new client.
+        HandshakeResponse = 2,
+        // host responding to var requiring validation.
+        ValidationStatus = 3,
+        // new client requesting initial state from existing clients.
+        HandshakeRequest = 4,
+        // version conflict due to an unobserved write.
+        VersionConflict = 5,
     }
 }

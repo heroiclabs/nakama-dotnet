@@ -14,23 +14,15 @@
 * limitations under the License.
 */
 
+using Nakama;
+
 namespace NakamaSync
 {
-    /// <summary>
-    /// A data-transfer object for a sync var.
-    /// </summary>
-    internal interface ISerializableVar<T> : ISerializableVar
+    public interface IVarValue<T>
     {
+        int Version { get; }
+        IUserPresence Source { get; }
+        ValidationStatus ValidationStatus { get; }
         T Value { get; }
-    }
-
-    /// <summary>
-    /// A data-transfer object for a sync var.
-    /// </summary>
-    internal interface ISerializableVar
-    {
-        int LockVersion { get; set; }
-        ValidationStatus Status { get; set; }
-        AckType AckType { get; set; }
     }
 }

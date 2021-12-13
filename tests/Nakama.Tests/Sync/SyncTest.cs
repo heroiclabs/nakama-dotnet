@@ -692,8 +692,8 @@ namespace Nakama.Tests.Sync
             bool newValue = false;
 
             creatorEnv.SharedBool.OnValueChanged += evt => {
-                oldValue = evt.ValueChange.OldValue;
-                newValue = evt.ValueChange.NewValue;
+                oldValue = evt.OldValue.Value;
+                newValue = evt.NewValue.Value;
             };
 
             creatorEnv.SharedBool.SetValue(true);
@@ -716,8 +716,8 @@ namespace Nakama.Tests.Sync
 
 
             creatorEnv.SharedDict.OnValueChanged += evt => {
-                oldValueHasKey = evt.ValueChange.OldValue != null && evt.ValueChange.OldValue.ContainsKey("hello");
-                newValueHasKey = evt.ValueChange.NewValue.ContainsKey("hello");
+                oldValueHasKey = evt.OldValue != null && evt.OldValue.Value.ContainsKey("hello");
+                newValueHasKey = evt.NewValue.Value.ContainsKey("hello");
             };
 
             creatorEnv.SharedDict.SetValue(new Dictionary<string, string>{{"hello", "world"}});
@@ -751,8 +751,8 @@ namespace Nakama.Tests.Sync
             nonCreatorOtherVar.OnValueChanged += evt =>
             {
                 eventDispatched = true;
-                oldValueHasKey = evt.ValueChange.OldValue != null && evt.ValueChange.OldValue.ContainsKey("hello");
-                newValueHasKey = evt.ValueChange.NewValue.ContainsKey("hello");
+                oldValueHasKey = evt.OldValue != null && evt.OldValue.Value.ContainsKey("hello");
+                newValueHasKey = evt.NewValue.Value.ContainsKey("hello");
             };
 
             creatorEnv.GroupDict.Self.SetValue(new Dictionary<string, string>{{"hello", "world"}});

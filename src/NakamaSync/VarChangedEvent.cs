@@ -14,14 +14,17 @@
 * limitations under the License.
 */
 
-using Nakama;
-
 namespace NakamaSync
 {
-    public interface IVersionedWrite<T>
+    public class VarChangedEvent<T> : IVarChangedEvent<T>
     {
-        IUserPresence Source { get; }
-        T Value { get; }
-        int Version { get; }
+        public IVarValue<T> OldValue { get; }
+        public IVarValue<T> NewValue { get; }
+
+        public VarChangedEvent(IVarValue<T> oldValue, IVarValue<T> newValue)
+        {
+            OldValue = oldValue;
+            NewValue = newValue;
+        }
     }
 }

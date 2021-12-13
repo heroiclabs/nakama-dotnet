@@ -44,10 +44,10 @@ namespace NakamaSync
             _stickyHostId.OnValueChanged += HandleStickyHostChanged;
         }
 
-        private void HandleStickyHostChanged(IVarEvent<string> evt)
+        private void HandleStickyHostChanged(IVarChangedEvent<string> evt)
         {
-            string oldSticky = evt.ValueChange.OldValue;
-            string newSticky = evt.ValueChange.OldValue;
+            string oldSticky = evt.OldValue.Value;
+            string newSticky = evt.NewValue.Value;
             var sortedPresences = _presenceTracker.GetSortedPresenceIds();
             var oldHost = GetHost(sortedPresences, oldSticky);
             var newHost = GetHost(sortedPresences, newSticky);

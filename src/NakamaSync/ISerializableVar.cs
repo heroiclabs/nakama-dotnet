@@ -14,21 +14,23 @@
 * limitations under the License.
 */
 
-using Nakama;
-
 namespace NakamaSync
 {
-    public class VarEvent<T> : IVarEvent<T>
+    /// <summary>
+    /// A data-transfer object for a sync var.
+    /// </summary>
+    internal interface ISerializableVar<T> : ISerializableVar
     {
-        public IUserPresence Source { get; }
-        public IValueChange<T> ValueChange { get; }
-        public IValidationChange ValidationChange { get; }
+        T Value { get; }
+    }
 
-        public VarEvent(IUserPresence source, IValueChange<T> valueChange, IValidationChange validationChange)
-        {
-            Source = source;
-            ValueChange = valueChange;
-            ValidationChange = validationChange;
-        }
+    /// <summary>
+    /// A data-transfer object for a sync var.
+    /// </summary>
+    internal interface ISerializableVar
+    {
+        int Version { get; set; }
+        ValidationStatus Status { get; set; }
+        VarMessageType AckType { get; set; }
     }
 }

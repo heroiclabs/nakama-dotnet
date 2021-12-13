@@ -15,8 +15,6 @@
 */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,44 +23,70 @@ using Nakama;
 namespace NakamaSync
 {
     public delegate void ResetHandler();
-    public delegate bool ValidationHandler<T>(IUserPresence source, IValueChange<T> change);
-    public delegate void ValueChangedHandler<T>(IVarEvent<T> evt);
+    public delegate bool ValidationHandler<T>(IVarChangedEvent<T> evt);
+    public delegate void ValueChangedHandler<T>(IVarChangedEvent<T> evt);
     public delegate void VersionConflictHandler<T>(IVersionConflict<T> conflict);
 
     public abstract class Var<T>
     {
+        /// <summary>
+        /// An event dispatched when the variable is reset, typically after a match has ended.
+        /// </summary>
         public event ResetHandler OnReset;
+
+        /// <summary>
+        /// An event dispatched when the variable's value or validation status changes.
+        /// </summary>
         public event ValueChangedHandler<T> OnValueChanged;
 
+        /// <summary>
+        /// A callback to be invoked whenever this user is the host and a potential value requires validation.
+        /// If the callback returns true, the value is valid and accepted. Otherwise, the value is rejected and
+        /// this client rolls back to the last valid value.
+        ///
+        /// In both cases, the resulting validation status is broadcast to all other clients in the match.
+        /// </summary>
         public ValidationHandler<T> ValidationHandler { get; set; }
         public long Opcode { get; }
-        public ValidationStatus Status { get; private set; }
+
+        /// <summary>
+        /// A task representing the initial sharing of state, i.e., "handshake", between this
+        /// variable and other variables.
+        ///
+        /// In cases where this variable was registered prior to the match starting, this task
+        /// will be internally awaited by <see cref="SocketExtensions.JoinSyncMatch"/>.
+        ///
+        /// This property is primarily inteded for use for variables registered after match join, i.e.,
+        /// "deferred registration."
+        /// </summary>
         public Task HandshakeTask => _handshakeTcs.Task;
 
-        internal bool HasSyncMatch => _syncMatch != null;
-
-        protected T Value { get; private set; }
         protected ISyncMatch SyncMatch => _syncMatch;
+        protected IVarValue<T> LastValue { get; set; }
+        protected IVarValue<T> Value { get; set; }
+        private IVarValue<T> _lastValid;
 
-        private T _lastValue;
         private SyncMatch _syncMatch;
         private TaskCompletionSource<bool> _handshakeTcs = new TaskCompletionSource<bool>();
 
         public Var(long opcode)
         {
+            LastValue = new VarValue<T>();
+            Value = new VarValue<T>();
+
             Opcode = opcode;
         }
 
         public T GetValue()
         {
-            return Value;
+            return Value.Value;
         }
 
         internal virtual void Reset()
         {
-            _lastValue = default(T);
-            Value = default(T);
-            Status = ValidationStatus.None;
+            Value = new VarValue<T>();
+            LastValue = new VarValue<T>();
+
             _syncMatch = null;
 
             if (!_handshakeTcs.Task.IsCompleted)
@@ -74,60 +98,54 @@ namespace NakamaSync
             OnReset?.Invoke();
         }
 
-        internal void InvokeOnValueChanged(IVarEvent<T> e)
+        internal void SetValueViaSelf(T newValue)
         {
-            OnValueChanged?.Invoke(e);
-        }
+            LastValue = Value;
 
-        internal void SetLocalValue(IUserPresence source, T newValue)
-        {
-            _lastValue = Value;
+            ValidationStatus oldStatus = this.Value.ValidationStatus;
+            ValidationStatus newStatus;
 
-            SetValueFromIncoming(newValue);
-
-            ValidateAndDispatch(source, _lastValue, newValue);
-
-            if (_syncMatch != null)
+            // are we doing deferred registration, or is current user hostt?
+            if (_syncMatch != null && _syncMatch.HostTracker.IsSelfHost())
             {
-                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.None});
-                return;
+                newStatus = ValidationHandler == null ? ValidationStatus.None : ValidationStatus.Valid;
+            }
+            else
+            {
+                newStatus = ValidationHandler == null ? ValidationStatus.None : ValidationStatus.Pending;
             }
 
-            // if no sync match, defer synchronization until reception of sync match.
+            // todo are we handling a null source presence in other places in the code?
+            // sync match will be null here sometimes.
+            Value = new VarValue<T> (LastValue.Version + 1, SyncMatch?.Self, newStatus, newValue);
+
+            var evt = new VarChangedEvent<T>(LastValue, Value);
+            OnValueChanged?.Invoke(evt);
+
+            // normal case where var is set before sync match has started.
+            if (_syncMatch != null)
+            {
+                Send(new SerializableVar<T>{Value = Value.Value, Status = Value.ValidationStatus, AckType = VarMessageType.None, Version = Value.Version});
+            }
         }
 
         internal Task ReceiveSyncMatch(SyncMatch syncMatch, int handshakeTimeoutSec)
         {
             _syncMatch = syncMatch;
-            _syncMatch.HostTracker.OnHostChanged += HandleHostChanged;
 
             var self = syncMatch.PresenceTracker.GetSelf();
 
-            if (this.Value != null && !this.Value.Equals(default(T)))
+            // begin handshake process
+            if (this.Value.Value != null && !this.Value.Value.Equals(default(T)))
             {
-                ValidateAndDispatch(self, _lastValue, Value);
-                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.None});
+                // share value with other clients
+                Send(new SerializableVar<T>{Value = Value.Value, Status = Value.ValidationStatus, AckType = VarMessageType.None, Version = Value.Version});
             }
             else
             {
                 // don't have value to share, request it from other clients.
-                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.HandshakeRequest});
+                Send(new SerializableVar<T>{Value = Value.Value, Status = Value.ValidationStatus, AckType = VarMessageType.HandshakeRequest, Version = Value.Version});
             }
-
-            syncMatch.PresenceTracker.OnPresenceAdded += (p) =>
-            {
-                if (p.UserId == syncMatch.PresenceTracker.GetSelf().UserId)
-                {
-                    return;
-                }
-
-                // share state with the new user
-                // note that in the case of a shared var, last lock version will win
-                // when all clients try to greet the new one.
-                // todo put this into its own method and virtualize it instead
-                // of doing a type check?
-                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.HandshakeRequest}, new IUserPresence[]{p});
-            };
 
             // not match creator
             // todo hack on self var type check.
@@ -148,41 +166,7 @@ namespace NakamaSync
                 return _handshakeTcs.Task;
             }
 
-
             return Task.CompletedTask;
-        }
-
-        private void HandleHostChanged(IHostChangedEvent obj)
-        {
-            if (obj.NewHost.UserId == SyncMatch.Self.UserId && Status == ValidationStatus.Pending)
-            {
-                // todo perhaps we should store the last sender and pass that to invoke here, instead of self
-                if (ValidationHandler.Invoke(_syncMatch.Self, new ValueChange<T>(_lastValue, Value)))
-                {
-                    var valueChange = new ValueChange<T>(_lastValue, Value);
-                    var statusChange = new ValidationChange(ValidationStatus.Pending, ValidationStatus.Valid);
-                    InvokeOnValueChanged(new VarEvent<T>(_syncMatch.Self, valueChange, statusChange));
-                }
-            }
-        }
-
-        private void ValidateAndDispatch(IUserPresence source, T oldValue, T newValue)
-        {
-            ValidationStatus oldStatus = this.Status;
-
-            if (_syncMatch != null && _syncMatch.HostTracker.IsSelfHost())
-            {
-                Status = ValidationHandler == null ? ValidationStatus.None : ValidationStatus.Valid;
-            }
-            else
-            {
-                Status = ValidationHandler == null ? ValidationStatus.Pending : ValidationStatus.Valid;
-            }
-
-            var evt = new VarEvent<T>(source, new ValueChange<T>(oldValue, newValue), new ValidationChange(oldStatus, Status));
-
-            // todo should we create a separate event for validation changes or even throw this event if var changes to invalid?
-            InvokeOnValueChanged(evt);
         }
 
         internal void Send(SerializableVar<T> serializable, IUserPresence[] presences = null)
@@ -190,121 +174,94 @@ namespace NakamaSync
             _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode, _syncMatch.Encoding.Encode(serializable), presences);
         }
 
-        internal virtual void ReceiveSerialized(UserPresence source, SerializableVar<T> incomingSerialized)
+        internal void ReceiveSerialized(UserPresence source, SerializableVar<T> incomingSerialized)
         {
-            bool valueChange = false;
 
-            ValidationStatus oldStatus = default(ValidationStatus);
-            ValidationStatus newStatus = default(ValidationStatus);
-
-            if (incomingSerialized.AckType != AckType.HandshakeRequest)
+            if (incomingSerialized.AckType == VarMessageType.VersionConflict)
             {
-                oldStatus = Status;
-                newStatus = TryHostIntercept(source, incomingSerialized);
-
-                // todo notify if invalid?
-                if (newStatus != ValidationStatus.Invalid)
-                {
-                    _lastValue = Value;
-                    SetValueFromIncoming(incomingSerialized.Value);
-                    Status = incomingSerialized.Status;
-                    valueChange = true;
-                }
+                HandleVersionConflict(incomingSerialized.VersionConflict);
+                return;
             }
 
-            // complete the task before invoking a value changed.
-            // we want the top level user-facing match task to end
-            // prior to the event dispatching. this is so they can
-            // handle any match received events prior to handling specific var events.
-            if (incomingSerialized.AckType == AckType.HandshakeResponse)
+            if (incomingSerialized.AckType == VarMessageType.HandshakeResponse)
             {
-                // if multiple users in match, they will all send handshake responses.
-                // complete the task after the first handshake and no-op the remaining.
                 _handshakeTcs.TrySetResult(true);
             }
-            else if (incomingSerialized.AckType == AckType.HandshakeRequest)
+
+            if (incomingSerialized.AckType == VarMessageType.HandshakeRequest)
             {
-                // new client registered variable
-                Send(new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.HandshakeResponse}, new IUserPresence[]{source});
+                Send(new SerializableVar<T>{Value = Value.Value, Status = Value.ValidationStatus, AckType = VarMessageType.HandshakeResponse, Version = Value.Version}, new IUserPresence[]{source});
             }
 
-            if (valueChange)
+            // ensure the lock versions match so this validation status isn't for a stale value
+            if (incomingSerialized.Status == ValidationStatus.Invalid && incomingSerialized.Version != Value.Version)
             {
-                InvokeOnValueChanged(new VarEvent<T>(source, new ValueChange<T>(_lastValue, Value), new ValidationChange(oldStatus, Status)));
+                // rollback to serialized value
+                LastValue = Value;
+                Value = _lastValid;
+                OnValueChanged?.Invoke(new VarChangedEvent<T>(LastValue, Value));
+            }
+            else if (incomingSerialized.Version > Value.Version)
+            {
+                SetValueViaRemote(source, incomingSerialized);
+            }
+            else
+            {
+                var rejectedWrite = new VarValue<T>(incomingSerialized.Version, source, incomingSerialized.Status, incomingSerialized.Value);
+                var conflict = new VersionConflict<T>(rejectedWrite, Value);
+                HandleVersionConflict(conflict);
             }
         }
 
-        private ValidationStatus TryHostIntercept(IUserPresence source, ISerializableVar<T> serialized)
+        internal virtual void HandleVersionConflict(VersionConflict<T> conflict)
+        {
+
+        }
+
+        private void SetValueViaRemote(IUserPresence source, SerializableVar<T> incomingSerialized)
+        {
+            if (_syncMatch.HostTracker.IsSelfHost())
+            {
+                ValidationStatus newStatus = Validate(source, incomingSerialized);
+                incomingSerialized.Status = newStatus;
+                incomingSerialized.AckType = VarMessageType.ValidationStatus;
+                Send(incomingSerialized);
+            }
+
+            LastValue = Value;
+
+            if (LastValue.ValidationStatus == ValidationStatus.Valid || LastValue.ValidationStatus == ValidationStatus.None)
+            {
+                // last valid value can have ValidationStatus.None in the case that a handler
+                // wasn't added to the variable at the time the value was received.
+                // todo we could also force the validation handler to immutable and passed via constructor
+                // to avoid this type of edge case.
+                _lastValid = LastValue;
+            }
+
+            Value = new VarValue<T>(incomingSerialized.Version, source, incomingSerialized.Status, incomingSerialized.Value);
+            OnValueChanged?.Invoke(new VarChangedEvent<T>(LastValue, Value));
+        }
+
+        private ValidationStatus Validate(IUserPresence source, ISerializableVar<T> serialized)
         {
             ValidationStatus newStatus = serialized.Status;
 
-            if (_syncMatch.HostTracker.IsSelfHost())
+            if (ValidationHandler != null)
             {
-                if (ValidationHandler != null)
+                var potentialValue = new VarValue<T>(serialized.Version, source, newStatus, serialized.Value);
+                var validationEvt = new VarChangedEvent<T>(Value, potentialValue);
+                if (ValidationHandler != null && ValidationHandler.Invoke(validationEvt))
                 {
-                    ISerializableVar<T> responseSerialized = null;
-
-                    if (ValidationHandler.Invoke(source, new ValueChange<T>(Value, serialized.Value)))
-                    {
-                        responseSerialized = serialized;
-                        responseSerialized.AckType = AckType.Validation;
-                        newStatus = ValidationStatus.Valid;
-                    }
-                    else
-                    {
-                        responseSerialized = new SerializableVar<T>{Value = Value, Status = Status, AckType = AckType.Validation};
-                        newStatus = ValidationStatus.Invalid;
-                    }
-
-                    responseSerialized.Status = newStatus;
-                    responseSerialized.AckType = AckType.Validation;
-                    _syncMatch.Socket.SendMatchStateAsync(_syncMatch.Id, Opcode,  _syncMatch.Encoding.Encode(responseSerialized));
+                    newStatus = ValidationStatus.Valid;
+                }
+                else
+                {
+                    newStatus = ValidationStatus.Invalid;
                 }
             }
 
             return newStatus;
-        }
-
-        private void SetValueFromIncoming(T incomingValue)
-        {
-            if (Value != null)
-            {
-                Value = ProcessIncomingValue(Value, incomingValue);
-            }
-            else
-            {
-                Value = incomingValue;
-            }
-        }
-
-        private T ProcessIncomingValue(T existingValue, T incomingValue)
-        {
-            if (typeof(T) == typeof(IDictionary))
-            {
-                return MergeDictionary((IDictionary) Value, (IDictionary) incomingValue);
-            }
-
-            return incomingValue;
-        }
-
-        private T MergeDictionary(IDictionary existingDict, IDictionary incomingDict)
-        {
-            var newDictionary = (IDictionary) Activator.CreateInstance(typeof(T));
-
-            var existingDictionary = (IDictionary) Value;
-            var incomingDictionary = (IDictionary) incomingDict;
-
-            foreach (var key in existingDictionary.Keys)
-            {
-                newDictionary[key] = existingDictionary[key];
-            }
-
-            foreach (var key in incomingDictionary.Keys)
-            {
-                newDictionary[key] = incomingDictionary[key];
-            }
-
-            return (T) newDictionary;
         }
     }
 }

@@ -23,16 +23,16 @@ namespace NakamaSync
     internal class VersionConflict<T> : IVersionConflict<T>
     {
         [DataMember(Name = "rejected_write")]
-        internal VersionedWrite<T> RejectedWrite { get; }
+        internal IVarValue<T> RejectedWrite { get; }
 
         [DataMember(Name = "accepted_write")]
-        internal VersionedWrite<T> AcceptedWrite { get; }
+        internal IVarValue<T> AcceptedWrite { get; }
 
-        IVersionedWrite<T> IVersionConflict<T>.RejectedWrite => this.RejectedWrite;
+        IVarValue<T> IVersionConflict<T>.RejectedWrite => this.RejectedWrite;
 
-        IVersionedWrite<T> IVersionConflict<T>.AcceptedWrite => this.AcceptedWrite;
+        IVarValue<T> IVersionConflict<T>.AcceptedWrite => this.AcceptedWrite;
 
-        public VersionConflict(VersionedWrite<T> rejectedWrite, VersionedWrite<T> acceptedWrite)
+        public VersionConflict(IVarValue<T> rejectedWrite, IVarValue<T> acceptedWrite)
         {
             RejectedWrite = rejectedWrite;
             AcceptedWrite = acceptedWrite;

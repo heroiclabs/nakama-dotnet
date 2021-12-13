@@ -24,50 +24,35 @@ namespace NakamaSync
     {
         public event VersionConflictHandler<T> OnVersionConflict;
 
-        private int _lockVersion;
-
         public SharedVar(long opcode) : base(opcode) {}
 
         public void SetValue(T value)
         {
-            // don't increment lock version if haven't done handshake yet.
-            // remote clients should overwrite any local value during the handshake.
-            if (SyncMatch != null)
-            {
-                _lockVersion++;
-            }
-
-            this.SetLocalValue(SyncMatch?.Self, value);
+            this.SetValueViaSelf(value);
         }
 
-        internal override void ReceiveSerialized(UserPresence source, SerializableVar<T> incomingSerialized)
+        internal override void HandleVersionConflict(VersionConflict<T> conflict)
         {
-            if (_lockVersion > incomingSerialized.LockVersion && SyncMatch.IsSelfHost())
+            // only host is responsible for notifying other clients of lock version conflicts.
+            // imagine if they weren't -- every client would report a lock version conflict to the sender
+            // the sender would be spammed for just a single unobserved write!
+            if (!SyncMatch.IsSelfHost())
             {
-                var rejectedWrite = new VersionedWrite<T>(source, incomingSerialized.Value, incomingSerialized.LockVersion);
-                var acceptedWrite = new VersionedWrite<T>(source, GetValue(), _lockVersion);
-                var conflict = new VersionConflict<T>(rejectedWrite, acceptedWrite);
-                var serializable = new SerializableVar<T>
-                {
-                    Value = Value,
-                    LockVersion = _lockVersion,
-                    Status = ValidationStatus.Valid,
-                    AckType = AckType.LockVersionConflict,
-                    LockVersionConflict = conflict,
-                };
-
-                Send(serializable, new IUserPresence[]{source});
                 return;
             }
 
-            if (incomingSerialized.AckType == AckType.LockVersionConflict)
+            var serializable = new SerializableVar<T>
             {
-                OnVersionConflict?.Invoke(incomingSerialized.LockVersionConflict);
-                return;
-            }
+                Value = Value.Value,
+                Version = Value.Version,
+                Status = ValidationStatus.Valid,
+                AckType = VarMessageType.VersionConflict,
+                VersionConflict = conflict
+            };
 
-            _lockVersion = incomingSerialized.LockVersion;
-            base.ReceiveSerialized(source, incomingSerialized);
+            Send(serializable, new IUserPresence[]{conflict.RejectedWrite.Source});
+
+            OnVersionConflict?.Invoke(conflict);
         }
     }
 }

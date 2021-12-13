@@ -37,8 +37,7 @@ namespace NakamaSync
 
         public void SetValue(T value)
         {
-            // sync match can be null if deferred registration
-            this.SetLocalValue(SyncMatch?.Self, value);
+            this.SetValueViaSelf(value);
         }
     }
 }

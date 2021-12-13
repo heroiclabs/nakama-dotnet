@@ -16,21 +16,9 @@
 
 namespace NakamaSync
 {
-    public class ValueChange<T> : IValueChange<T>
+    public interface IVarChangedEvent<T>
     {
-        public T OldValue { get; }
-        public T NewValue { get; }
-
-        internal ValueChange(T oldValue, T newValue)
-        {
-            OldValue = oldValue;
-            NewValue = newValue;
-        }
-    }
-
-    public interface IValueChange<out T>
-    {
-        T OldValue { get; }
-        T NewValue { get; }
+        IVarValue<T> OldValue { get; }
+        IVarValue<T> NewValue { get; }
     }
 }

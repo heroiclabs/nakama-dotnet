@@ -18,7 +18,7 @@ namespace NakamaSync
 {
     public interface IVersionConflict<T>
     {
-        IVersionedWrite<T> RejectedWrite { get; }
-        IVersionedWrite<T> AcceptedWrite { get; }
+        IVarValue<T> RejectedWrite { get; }
+        IVarValue<T> AcceptedWrite { get; }
     }
 }
