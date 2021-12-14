@@ -128,12 +128,13 @@ namespace NakamaSync
 
         internal Task ReceiveSyncMatch(SyncMatch syncMatch, int handshakeTimeoutSec)
         {
+            System.Console.WriteLine("receive sync match called for " +syncMatch.Self.UserId + " " + Opcode);
             _syncMatch = syncMatch;
 
             if (syncMatch.Presences.Any())
             {
                 // begin handshake process
-                if (this._values.CurrentValue.Value != null && !this._values.CurrentValue.Value.Equals(default(T)))
+                if (HasHandshakeResponse())
                 {
                     // share value with other clients.
                     Send(SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.DataTransfer, _syncMatch.Self));
@@ -173,6 +174,7 @@ namespace NakamaSync
 
         internal void ReceiveSerialized(UserPresence source, SerializableVar<T> incomingSerialized)
         {
+            System.Console.WriteLine("client " + source.UserId + " received type " + incomingSerialized.MessageType);
             if (incomingSerialized.MessageType == VarMessageType.VersionConflict)
             {
                 var serializedConflict = incomingSerialized.VersionConflict;
@@ -188,7 +190,7 @@ namespace NakamaSync
                 _handshakeTcs.TrySetResult(true);
             }
 
-            if (incomingSerialized.MessageType == VarMessageType.HandshakeRequest)
+            if (incomingSerialized.MessageType == VarMessageType.HandshakeRequest && HasHandshakeResponse())
             {
                 var serializable = SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.HandshakeResponse, _syncMatch.Self);
                 Send(serializable, new IUserPresence[]{source});
@@ -253,6 +255,13 @@ namespace NakamaSync
             }
 
             return newStatus;
+        }
+
+        // todo what if a client explicitly sets their value to nothing and wants this to be authoratitve?
+        // is this issue solved by just having the host be the handshake responder?
+        private bool HasHandshakeResponse()
+        {
+            return this._values.CurrentValue.Value != null && !this._values.CurrentValue.Value.Equals(default(T));
         }
     }
 }

@@ -821,7 +821,11 @@ namespace Nakama.Tests.Sync
 
             await testEnv.StartAll();
 
+
+            System.Console.WriteLine("creator is " + testEnv.GetCreatorEnv().Self.UserId);
+
             IUserPresence nonCreator = testEnv.GetRandomNonCreatorPresence();
+            System.Console.WriteLine("non creator is " + nonCreator.UserId);
             var nonCreatorEnv = testEnv.GetTestEnvironment(nonCreator);
 
             Assert.True(nonCreatorEnv.GroupVars.GroupBool.GetVar(testEnv.GetCreatorPresence()).GetValue());
