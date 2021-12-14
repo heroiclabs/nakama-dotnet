@@ -32,6 +32,7 @@ namespace Nakama.Tests.Sync
 
         public SyncTestSharedVars(string userId, VarRegistry registry, bool delayRegistration)
         {
+            return;
             SharedBool = new SharedVar<bool>(100);
             SharedDict = new SharedVar<Dictionary<string, string>>(101);
             SharedFloat = new SharedVar<float>(102);

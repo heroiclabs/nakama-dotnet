@@ -120,7 +120,7 @@ namespace NakamaSync
             OnValueChanged?.Invoke(evt);
 
             // normal case where var is set before sync match has started.
-            if (_syncMatch != null)
+            if (_syncMatch != null && _syncMatch.Presences.Any())
             {
                 Send(SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.DataTransfer, _syncMatch?.Self));
             }
@@ -130,18 +130,19 @@ namespace NakamaSync
         {
             _syncMatch = syncMatch;
 
-            var self = syncMatch.PresenceTracker.GetSelf();
-
-            // begin handshake process
-            if (this._values.CurrentValue.Value != null && !this._values.CurrentValue.Value.Equals(default(T)))
+            if (syncMatch.Presences.Any())
             {
-                // share value with other clients.
-                Send(SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.DataTransfer, _syncMatch.Self));
-            }
-            else
-            {
-                // don't have value to share, request it from other clients. todo only request from host?
-                Send(SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.HandshakeRequest, _syncMatch.Self));
+                // begin handshake process
+                if (this._values.CurrentValue.Value != null && !this._values.CurrentValue.Value.Equals(default(T)))
+                {
+                    // share value with other clients.
+                    Send(SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.DataTransfer, _syncMatch.Self));
+                }
+                else
+                {
+                    // don't have value to share, request it from other clients. todo only request from host?
+                    Send(SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.HandshakeRequest, _syncMatch.Self));
+                }
             }
 
             // not match creator
@@ -189,7 +190,6 @@ namespace NakamaSync
 
             if (incomingSerialized.MessageType == VarMessageType.HandshakeRequest)
             {
-                System.Console.WriteLine("sending handshake response " + _values.CurrentValue);
                 var serializable = SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.HandshakeResponse, _syncMatch.Self);
                 Send(serializable, new IUserPresence[]{source});
             }

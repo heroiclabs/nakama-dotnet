@@ -30,18 +30,19 @@ namespace Nakama.Tests.Sync
         public SyncTestGroupVars(VarRegistry varRegistry, bool delayRegistration)
         {
             GroupBool = new GroupVar<bool>(opcode: 0);
+            /*
             GroupFloat = new GroupVar<float>(opcode: 1);
             GroupInt = new GroupVar<int>(opcode: 2);
             GroupString = new GroupVar<string>(opcode: 3);
-            GroupDict = new GroupVar<Dictionary<string, string>>(opcode: 4);
+            GroupDict = new GroupVar<Dictionary<string, string>>(opcode: 4);*/
 
             if (!delayRegistration)
             {
                 varRegistry.Register(GroupBool);
-                varRegistry.Register(GroupFloat);
+                /*varRegistry.Register(GroupFloat);
                 varRegistry.Register(GroupInt);
                 varRegistry.Register(GroupString);
-                varRegistry.Register(GroupDict);
+                varRegistry.Register(GroupDict);*/
             }
         }
     }

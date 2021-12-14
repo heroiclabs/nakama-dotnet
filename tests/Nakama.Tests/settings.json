@@ -4,5 +4,6 @@
   "SCHEME": "http",
   "SERVER_KEY": "defaultkey",
   "STDOUT": true,
-  "LOG_LEVEL": "Debug"
+  "LOG_LEVEL": "Debug",
+
 }
