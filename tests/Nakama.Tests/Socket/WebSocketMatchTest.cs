@@ -171,6 +171,53 @@ namespace Nakama.Tests.Socket
             await _socket.LeaveMatchAsync(match.Id);
         }
 
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task EachClientShouldReceiveTwoPresencesWhenJoinById()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket2 = Nakama.Socket.From(_client);
+
+            HashSet<string> socket1PresenceIds = new HashSet<string>();
+            HashSet<string> socket2PresenceIds = new HashSet<string>();
+
+            _socket.ReceivedMatchPresence += (evt) =>
+            {
+                foreach (string joinerId in evt.Joins.Select(joiner => joiner.UserId))
+                {
+                    socket1PresenceIds.Add(joinerId);
+                }
+            };
+
+            socket2.ReceivedMatchPresence += (evt) =>
+            {
+                foreach (string joinerId in evt.Joins.Select(joiner => joiner.UserId))
+                {
+                    socket2PresenceIds.Add(joinerId);
+                }
+            };
+
+            await _socket.ConnectAsync(session);
+            await socket2.ConnectAsync(session2);
+
+            var match = await _socket.CreateMatchAsync("testMatch");
+            var match2 = await socket2.JoinMatchAsync(match.Id);
+
+            foreach (string existingId in match2.Presences.Select(joiner => joiner.UserId))
+            {
+                socket2PresenceIds.Add(existingId);
+            }
+
+            await Task.Delay(1000);
+
+            Assert.Equal(2, socket1PresenceIds.Count);
+            Assert.Equal(2, socket2PresenceIds.Count);
+
+            await _socket.LeaveMatchAsync(match.Id);
+        }
+
+
         Task IAsyncLifetime.InitializeAsync()
         {
             return Task.CompletedTask;
