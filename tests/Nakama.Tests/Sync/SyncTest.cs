@@ -495,8 +495,14 @@ namespace Nakama.Tests.Sync
                 numClients: 2,
                 creatorIndex: 0);
 
+            System.Console.WriteLine("Starting");
             await testEnv.StartAll();
+
+            System.Console.WriteLine("Done starting");
+
             var allUserEnvs = testEnv.GetAllUserEnvs();
+            System.Console.WriteLine("Creator is " + allUserEnvs[0].Self.UserId);
+            System.Console.WriteLine("Guest is " + allUserEnvs[1].Self.UserId);
 
             var dict1 = new Dictionary<string, string>
             {
@@ -507,6 +513,7 @@ namespace Nakama.Tests.Sync
             {
                 { "Env2", "Bar" }
             };
+
 
             allUserEnvs[0].SharedVars.SharedDict.SetValue(dict1);
             allUserEnvs[1].SharedVars.SharedDict.SetValue(dict2);

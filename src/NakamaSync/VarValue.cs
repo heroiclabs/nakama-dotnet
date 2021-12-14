@@ -73,6 +73,7 @@ namespace NakamaSync
 
             if ((typeof(IDictionary).IsAssignableFrom(typeof(T))))
             {
+                System.Console.WriteLine("Value is " + Value);
                 Value = MergeDictionary((IDictionary) Value, (IDictionary) value);
             }
             else
@@ -87,6 +88,8 @@ namespace NakamaSync
 
             var existingDictionary = (IDictionary) Value;
             var incomingDictionary = (IDictionary) incomingDict;
+
+            System.Console.WriteLine("existing dictionary " + existingDict);
 
             if (existingDictionary != null)
             {

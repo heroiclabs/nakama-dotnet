@@ -145,12 +145,12 @@ namespace NakamaSync
             // begin handshake process
             if (this._value.Value != null && !this._value.Value.Equals(default(T)))
             {
-                // share value with other clients
+                // share value with other clients.
                 Send(new SerializableVar<T>{Value = _value.Value, ValidationStatus = _value.ValidationStatus, MessageType = VarMessageType.DataTransfer, Version = _value.Version});
             }
             else
             {
-                // don't have value to share, request it from other clients.
+                // don't have value to share, request it from other clients. todo only request from host?
                 Send(new SerializableVar<T>{Value = _value.Value, ValidationStatus = _value.ValidationStatus, MessageType = VarMessageType.HandshakeRequest, Version = _value.Version});
             }
 
@@ -199,6 +199,8 @@ namespace NakamaSync
 
             if (incomingSerialized.MessageType == VarMessageType.HandshakeRequest)
             {
+                System.Console.WriteLine("sending handshake response " + _value.Value);
+
                 Send(new SerializableVar<T>{Value = _value.Value, ValidationStatus = _value.ValidationStatus, MessageType = VarMessageType.HandshakeResponse, Version = _value.Version}, new IUserPresence[]{source});
             }
 
@@ -222,7 +224,7 @@ namespace NakamaSync
             else if (incomingSerialized.MessageType == VarMessageType.DataTransfer)
             {
                 System.Console.WriteLine("Detected version conflict " + incomingSerialized.MessageType);
-                var rejectedWrite = new VarValue<T>(incomingSerialized.Version, source, incomingSerialized.ValidationStatus, incomingSerialized.Value);
+                var rejectedWrite = incomingSerialized.ToVarValue();
                 var conflict = new VersionConflict<T>(_value, rejectedWrite);
                 DetectedVersionConflict(conflict);
             }
@@ -233,9 +235,9 @@ namespace NakamaSync
 
         private void SetValueViaRemote(UserPresence source, SerializableVar<T> incomingSerialized)
         {
-            if (_syncMatch.HostTracker.IsSelfHost())
+            if (_syncMatch.HostTracker.IsSelfHost() && ValidationHandler != null)
             {
-                ValidationStatus newStatus = Validate(source, incomingSerialized);
+                ValidationStatus newStatus = Validate(incomingSerialized);
                 incomingSerialized.ValidationStatus = newStatus;
                 incomingSerialized.MessageType = VarMessageType.ValidationStatus;
                 Send(incomingSerialized);
@@ -243,7 +245,8 @@ namespace NakamaSync
 
             _lastValue = _value;
 
-            if (_lastValue.ValidationStatus == ValidationStatus.Valid || _lastValue.ValidationStatus == ValidationStatus.None)
+            if (_lastValue.ValidationStatus == ValidationStatus.Valid ||
+                _lastValue.ValidationStatus == ValidationStatus.None)
             {
                 // last valid value can have ValidationStatus.None in the case that a handler
                 // wasn't added to the variable at the time the value was received.
@@ -252,26 +255,24 @@ namespace NakamaSync
                 _lastValid = _lastValue;
             }
 
-            _value = new VarValue<T>(incomingSerialized.Version, source, incomingSerialized.ValidationStatus, incomingSerialized.Value);
+            _value = incomingSerialized.ToVarValue();
             OnValueChanged?.Invoke(new VarChangedEvent<T>(_lastValue, _value));
         }
 
-        private ValidationStatus Validate(UserPresence source, SerializableVar<T> serialized)
+        private ValidationStatus Validate(SerializableVar<T> serialized)
         {
             ValidationStatus newStatus = serialized.ValidationStatus;
 
-            if (ValidationHandler != null)
+            var potentialValue = serialized.ToVarValue();
+            var validationEvt = new VarChangedEvent<T>(_value, potentialValue);
+
+            if (ValidationHandler.Invoke(validationEvt))
             {
-                var potentialValue = new VarValue<T>(serialized.Version, source, newStatus, serialized.Value);
-                var validationEvt = new VarChangedEvent<T>(_value, potentialValue);
-                if (ValidationHandler != null && ValidationHandler.Invoke(validationEvt))
-                {
-                    newStatus = ValidationStatus.Valid;
-                }
-                else
-                {
-                    newStatus = ValidationStatus.Invalid;
-                }
+                newStatus = ValidationStatus.Valid;
+            }
+            else
+            {
+                newStatus = ValidationStatus.Invalid;
             }
 
             return newStatus;
