@@ -38,7 +38,15 @@ namespace NakamaSync
             Value = default(T);
         }
 
-        public bool CanMergeWith(T otherValue)
+        public VarValue(int version, UserPresence writer, ValidationStatus status, T value)
+        {
+            Version = version;
+            Writer = writer;
+            ValidationStatus = status;
+            Value = value;
+        }
+
+        public bool CanMerge(T otherValue)
         {
             // todo refactor this spaghetti method
             if (typeof(IDictionary).IsAssignableFrom(typeof(T)))
@@ -65,20 +73,11 @@ namespace NakamaSync
             return false;
         }
 
-        public VarValue(int version, UserPresence writer, ValidationStatus status, T value)
+        public void Merge(T value)
         {
-            Version = version;
-            Writer = writer;
-            ValidationStatus = status;
-
             if ((typeof(IDictionary).IsAssignableFrom(typeof(T))))
             {
-                System.Console.WriteLine("Value is " + Value);
                 Value = MergeDictionary((IDictionary) Value, (IDictionary) value);
-            }
-            else
-            {
-                Value = value;
             }
         }
 

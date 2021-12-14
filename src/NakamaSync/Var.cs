@@ -63,40 +63,33 @@ namespace NakamaSync
 
         protected ISyncMatch SyncMatch => _syncMatch;
 
-        private VarValue<T> _lastValue;
-        private VarValue<T> _value;
-        private VarValue<T> _lastValid;
+        private readonly LocalValues<T> _values = new LocalValues<T>();
         private SyncMatch _syncMatch;
         private TaskCompletionSource<bool> _handshakeTcs = new TaskCompletionSource<bool>();
 
         public Var(long opcode)
         {
-            _lastValue = new VarValue<T>();
-            _value = new VarValue<T>();
             Opcode = opcode;
         }
 
         public T GetValue()
         {
-            return _value.Value;
+            return _values.CurrentValue.Value;
         }
 
         public int GetVersion()
         {
-            return _value.Version;
+            return _values.CurrentValue.Version;
         }
 
         internal virtual void Reset()
         {
-            _value = new VarValue<T>();
-            _lastValue = new VarValue<T>();
+            _values.Reset();
 
             _syncMatch = null;
 
             if (!_handshakeTcs.Task.IsCompleted)
             {
-                                        System.Console.WriteLine("setting canceled from reset");
-
                 _handshakeTcs.SetCanceled();
             }
 
@@ -106,9 +99,7 @@ namespace NakamaSync
 
         internal void SetValueViaSelf(T newValue)
         {
-            _lastValue = _value;
-
-            ValidationStatus oldStatus = this._value.ValidationStatus;
+            ValidationStatus oldStatus = this._values.CurrentValue.ValidationStatus;
             ValidationStatus newStatus;
 
             // are we doing deferred registration, or is current user hostt?
@@ -123,15 +114,15 @@ namespace NakamaSync
 
             // todo are we handling a null source presence in other places in the code?
             // sync match will be null here sometimes.
-            _value = new VarValue<T> (_lastValue.Version + 1, _syncMatch?.Self, newStatus, newValue);
+            _values.SetNew(new VarValue<T> (_values.LastValue.Version + 1, _syncMatch?.Self, newStatus, newValue));
 
-            var evt = new VarChangedEvent<T>(_lastValue, _value);
+            var evt = new VarChangedEvent<T>(_values.LastValue, _values.CurrentValue);
             OnValueChanged?.Invoke(evt);
 
             // normal case where var is set before sync match has started.
             if (_syncMatch != null)
             {
-                Send(SerializableVar<T>.FromVarValue(_value, VarMessageType.DataTransfer, _syncMatch?.Self));
+                Send(SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.DataTransfer, _syncMatch?.Self));
             }
         }
 
@@ -142,15 +133,15 @@ namespace NakamaSync
             var self = syncMatch.PresenceTracker.GetSelf();
 
             // begin handshake process
-            if (this._value.Value != null && !this._value.Value.Equals(default(T)))
+            if (this._values.CurrentValue.Value != null && !this._values.CurrentValue.Value.Equals(default(T)))
             {
                 // share value with other clients.
-                Send(SerializableVar<T>.FromVarValue(_value, VarMessageType.DataTransfer, _syncMatch.Self));
+                Send(SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.DataTransfer, _syncMatch.Self));
             }
             else
             {
                 // don't have value to share, request it from other clients. todo only request from host?
-                Send(SerializableVar<T>.FromVarValue(_value, VarMessageType.HandshakeRequest, _syncMatch.Self));
+                Send(SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.HandshakeRequest, _syncMatch.Self));
             }
 
             // not match creator
@@ -198,24 +189,23 @@ namespace NakamaSync
 
             if (incomingSerialized.MessageType == VarMessageType.HandshakeRequest)
             {
-                System.Console.WriteLine("sending handshake response " + _value.Value);
-                var serializable = SerializableVar<T>.FromVarValue(_value, VarMessageType.HandshakeResponse, _syncMatch.Self);
+                System.Console.WriteLine("sending handshake response " + _values.CurrentValue);
+                var serializable = SerializableVar<T>.FromVarValue(_values.CurrentValue, VarMessageType.HandshakeResponse, _syncMatch.Self);
                 Send(serializable, new IUserPresence[]{source});
             }
 
             // ensure the lock versions match so this validation status isn't for a stale value
-            if (incomingSerialized.ValidationStatus == ValidationStatus.Invalid && incomingSerialized.Version != _value.Version)
+            if (incomingSerialized.ValidationStatus == ValidationStatus.Invalid && incomingSerialized.Version != _values.CurrentValue.Version)
             {
                 // rollback to serialized value
-                _lastValue = _value;
-                _value = _lastValid;
-                OnValueChanged?.Invoke(new VarChangedEvent<T>(_lastValue, _value));
+                _values.Rollback();
+                OnValueChanged?.Invoke(new VarChangedEvent<T>(_values.LastValidValue, _values.CurrentValue));
             }
             // handshake responses are not subject to lock version checks.
             // they are considered authoritative from the perspective of the joining client, at least in this iteration of the library.
-            else if (incomingSerialized.Version > _value.Version ||
+            else if (incomingSerialized.Version > _values.CurrentValue.Version ||
             incomingSerialized.MessageType == VarMessageType.HandshakeResponse ||
-            _value.CanMergeWith(incomingSerialized.Value))
+            _values.CurrentValue.CanMerge(incomingSerialized.Value))
             {
                 System.Console.WriteLine($"{_syncMatch.Self.UserId} setting from remote");
                 SetValueViaRemote(source, incomingSerialized);
@@ -224,7 +214,7 @@ namespace NakamaSync
             {
                 System.Console.WriteLine("Detected version conflict " + incomingSerialized.MessageType);
                 var rejectedWrite = incomingSerialized.ToVarValue();
-                var conflict = new VersionConflict<T>(_value, rejectedWrite);
+                var conflict = new VersionConflict<T>(_values.CurrentValue, rejectedWrite);
                 DetectedVersionConflict(conflict);
             }
         }
@@ -242,20 +232,8 @@ namespace NakamaSync
                 Send(incomingSerialized);
             }
 
-            _lastValue = _value;
-
-            if (_lastValue.ValidationStatus == ValidationStatus.Valid ||
-                _lastValue.ValidationStatus == ValidationStatus.None)
-            {
-                // last valid value can have ValidationStatus.None in the case that a handler
-                // wasn't added to the variable at the time the value was received.
-                // todo we could also force the validation handler to immutable and passed via constructor
-                // to avoid this type of edge case.
-                _lastValid = _lastValue;
-            }
-
-            _value = incomingSerialized.ToVarValue();
-            OnValueChanged?.Invoke(new VarChangedEvent<T>(_lastValue, _value));
+            _values.SetNew(incomingSerialized.ToVarValue());
+            OnValueChanged?.Invoke(new VarChangedEvent<T>(_values.LastValue, _values.CurrentValue));
         }
 
         private ValidationStatus Validate(SerializableVar<T> serialized)
@@ -263,7 +241,7 @@ namespace NakamaSync
             ValidationStatus newStatus = serialized.ValidationStatus;
 
             var potentialValue = serialized.ToVarValue();
-            var validationEvt = new VarChangedEvent<T>(_value, potentialValue);
+            var validationEvt = new VarChangedEvent<T>(_values.CurrentValue, potentialValue);
 
             if (ValidationHandler.Invoke(validationEvt))
             {

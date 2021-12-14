@@ -59,5 +59,6 @@ namespace NakamaSync
                 Version = value.Version,
                 Writer = writer
             };
+        }
     }
 }
