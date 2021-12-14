@@ -21,7 +21,7 @@ namespace NakamaSync
     public interface IVarValue<T>
     {
         int Version { get; }
-        IUserPresence Source { get; }
+        IUserPresence Writer { get; }
         ValidationStatus ValidationStatus { get; }
         T Value { get; }
     }

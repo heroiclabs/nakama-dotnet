@@ -235,6 +235,7 @@ namespace Nakama
         /// <inheritdoc cref="CloseAsync"/>
         public Task CloseAsync()
         {
+            System.Console.WriteLine("CLOSING SOCKET");
             _adapter.Close();
             return Task.CompletedTask;
         }

@@ -173,7 +173,7 @@ namespace NakamaSync
 
             foreach (PresenceVar<T> presenceVar in userVars)
             {
-                presenceVar.Reset();
+                // TODO invoke Reset() on presence var?
                 _varsByUser.Remove(presence.UserId);
             }
         }

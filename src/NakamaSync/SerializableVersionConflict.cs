@@ -14,23 +14,24 @@
 * limitations under the License.
 */
 
+using System;
+using System.Runtime.Serialization;
+
 namespace NakamaSync
 {
-    /// <summary>
-    /// A data-transfer object for a sync var.
-    /// </summary>
-    internal interface ISerializableVar<T> : ISerializableVar
+    [Serializable]
+    internal class SerializableVersionConflict<T>
     {
-        T Value { get; }
-    }
+        [DataMember(Name = "accepted_write"), Preserve]
+        public SerializableVar<T> AcceptedWrite { get; set; }
 
-    /// <summary>
-    /// A data-transfer object for a sync var.
-    /// </summary>
-    internal interface ISerializableVar
-    {
-        int Version { get; set; }
-        ValidationStatus Status { get; set; }
-        VarMessageType AckType { get; set; }
+        [DataMember(Name = "rejected_write"), Preserve]
+        public SerializableVar<T> RejectedWrite { get; set; }
+
+        public SerializableVersionConflict(SerializableVar<T> acceptedWrite, SerializableVar<T> rejectedWrite)
+        {
+            AcceptedWrite = acceptedWrite;
+            RejectedWrite = rejectedWrite;
+        }
     }
 }

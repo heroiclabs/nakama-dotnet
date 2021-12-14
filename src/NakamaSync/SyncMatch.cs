@@ -28,7 +28,8 @@ namespace NakamaSync
         public string Label => _match.Label;
         public IEnumerable<IUserPresence> Presences => _match.Presences;
         public int Size => _match.Size;
-        public IUserPresence Self => _match.Self;
+
+        IUserPresence IMatch.Self => _match.Self;
 
         public event Action<IHostChangedEvent> OnHostChanged
         {
@@ -47,15 +48,16 @@ namespace NakamaSync
         internal ISession Session => _session;
         internal ISocket Socket => _socket;
         internal SyncEncoding Encoding => _encoding;
+        internal UserPresence Self => _match._self;
 
-        private readonly IMatch _match;
+        private readonly Match _match;
         private readonly ISession _session;
         private readonly SyncTrackers _syncTrackers;
         private ISocket _socket;
         private readonly SyncEncoding _encoding = new SyncEncoding();
         private readonly RpcRegistry _rpcRegistry;
 
-        internal SyncMatch(ISocket socket, ISession session, IMatch match, VarRegistry varRegistry, RpcRegistry rpcRegistry, SyncTrackers syncTrackers)
+        internal SyncMatch(ISocket socket, ISession session, Match match, VarRegistry varRegistry, RpcRegistry rpcRegistry, SyncTrackers syncTrackers)
         {
             _socket = socket;
             _session = session;

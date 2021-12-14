@@ -32,23 +32,23 @@ namespace Nakama.Tests.Sync
 
         public SyncTestSharedVars(string userId, VarRegistry registry, bool delayRegistration)
         {
-            SharedBool = new SharedVar<bool>(100);
+            //SharedBool = new SharedVar<bool>(100);
             SharedDict = new SharedVar<Dictionary<string, string>>(101);
-            SharedFloat = new SharedVar<float>(102);
-            SharedInt = new SharedVar<int>(103);
-            SharedObject = new SharedVar<SyncTestObject>(104);
-            SharedString = new SharedVar<string>(105);
-            SharedAnonymousDict = new SharedVar<Dictionary<object, object>>(106);
+            //SharedFloat = new SharedVar<float>(102);
+            //SharedInt = new SharedVar<int>(103);
+            //SharedObject = new SharedVar<SyncTestObject>(104);
+            //SharedString = new SharedVar<string>(105);
+            //SharedAnonymousDict = new SharedVar<Dictionary<object, object>>(106);
 
             if (!delayRegistration)
             {
-                registry.Register(SharedBool);
+                //registry.Register(SharedBool);
                 registry.Register(SharedDict);
-                registry.Register(SharedFloat);
-                registry.Register(SharedInt);
-                registry.Register(SharedObject);
-                registry.Register(SharedString);
-                registry.Register(SharedAnonymousDict);
+                //registry.Register(SharedFloat);
+                //registry.Register(SharedInt);
+                //registry.Register(SharedObject);
+                //registry.Register(SharedString);
+                //registry.Register(SharedAnonymousDict);
             }
         }
     }

@@ -31,7 +31,12 @@ namespace NakamaSync
             this.SetValueViaSelf(value);
         }
 
-        internal override void HandleVersionConflict(VersionConflict<T> conflict)
+        internal override void ReceivedVersionConflict(VersionConflict<T> conflict)
+        {
+            OnVersionConflict?.Invoke(conflict);
+        }
+
+        internal override void DetectedVersionConflict(VersionConflict<T> conflict)
         {
             // only host is responsible for notifying other clients of lock version conflicts.
             // imagine if they weren't -- every client would report a lock version conflict to the sender
@@ -41,18 +46,34 @@ namespace NakamaSync
                 return;
             }
 
-            var serializable = new SerializableVar<T>
+            var acceptedSerializable = new SerializableVar<T>
             {
-                Value = Value.Value,
-                Version = Value.Version,
-                Status = ValidationStatus.Valid,
-                AckType = VarMessageType.VersionConflict,
-                VersionConflict = conflict
+                MessageType = VarMessageType.DataTransfer,
+                ValidationStatus = conflict.AcceptedWrite.ValidationStatus,
+                Value = conflict.AcceptedWrite.Value,
+                Version = conflict.AcceptedWrite.Version,
+                Writer = conflict.AcceptedWrite.Writer
             };
 
-            Send(serializable, new IUserPresence[]{conflict.RejectedWrite.Source});
+            var rejectedSerializable = new SerializableVar<T>
+            {
+                MessageType = VarMessageType.DataTransfer,
+                ValidationStatus = conflict.RejectedWrite.ValidationStatus,
+                Value = conflict.RejectedWrite.Value,
+                Version = conflict.RejectedWrite.Version,
+                Writer = conflict.RejectedWrite.Writer
+            };
 
-            OnVersionConflict?.Invoke(conflict);
+            var serializable = new SerializableVar<T>
+            {
+                Value = GetValue(),
+                Version = GetVersion(),
+                ValidationStatus = ValidationStatus.Valid,
+                MessageType = VarMessageType.VersionConflict,
+                VersionConflict = new SerializableVersionConflict<T>(acceptedSerializable, rejectedSerializable)
+            };
+
+            Send(serializable, new IUserPresence[]{conflict.RejectedWrite.Writer});
         }
     }
 }

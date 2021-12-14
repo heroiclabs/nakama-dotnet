@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Linq;
 using System.Collections;
 using Nakama;
 
@@ -23,25 +24,54 @@ namespace NakamaSync
     internal class VarValue<T> : IVarValue<T>
     {
         public int Version { get; private set; }
-        public IUserPresence Source { get; private set; }
+        public UserPresence Writer { get; private set; }
         public ValidationStatus ValidationStatus { get; private set; }
         public T Value { get; private set; }
+
+        IUserPresence IVarValue<T>.Writer => Writer;
 
         public VarValue()
         {
             Version = 0;
-            Source = null;
+            Writer = null;
             ValidationStatus = ValidationStatus.None;
             Value = default(T);
         }
 
-        public VarValue(int version, IUserPresence source, ValidationStatus status, T value)
+        public bool CanMergeWith(T otherValue)
+        {
+            // todo refactor this spaghetti method
+            if (typeof(IDictionary).IsAssignableFrom(typeof(T)))
+            {
+                IDictionary otherValueAsDict = (IDictionary) otherValue;
+                IDictionary valueAsDict = (IDictionary) Value;
+
+                if (otherValueAsDict == null || valueAsDict == null)
+                {
+                    return false;
+                }
+
+                foreach (var key in valueAsDict.Keys)
+                {
+                    if (otherValueAsDict.Contains(key))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public VarValue(int version, UserPresence writer, ValidationStatus status, T value)
         {
             Version = version;
-            Source = source;
+            Writer = writer;
             ValidationStatus = status;
 
-            if (typeof(T) == typeof(IDictionary))
+            if ((typeof(IDictionary).IsAssignableFrom(typeof(T))))
             {
                 Value = MergeDictionary((IDictionary) Value, (IDictionary) value);
             }
@@ -62,6 +92,7 @@ namespace NakamaSync
             {
                 foreach (var key in existingDictionary.Keys)
                 {
+                    System.Console.WriteLine("adding key from existing " + key);
                     newDictionary[key] = existingDictionary[key];
                 }
             }
@@ -70,6 +101,7 @@ namespace NakamaSync
             {
                 foreach (var key in incomingDictionary.Keys)
                 {
+                    System.Console.WriteLine($"user adding key from incoming " + key);
                     newDictionary[key] = incomingDictionary[key];
                 }
             }

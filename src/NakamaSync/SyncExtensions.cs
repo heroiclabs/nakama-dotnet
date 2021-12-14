@@ -29,7 +29,8 @@ namespace NakamaSync
             var trackers = new SyncTrackers(session, varRegistry, socket);
             IMatch match = await socket.CreateMatchAsync(name);
             trackers.PresenceTracker.ReceiveMatch(match);
-            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry, trackers);
+            // todo give ability to provide hooks to internal classes for serialization through JoinMatch
+            var syncMatch = new SyncMatch(socket, session, match as Match, varRegistry, rpcRegistry, trackers);
             await varRegistry.ReceiveMatch(syncMatch);
             trackers.HostTracker.ReceiveMatch(match);
             return syncMatch;
@@ -42,7 +43,8 @@ namespace NakamaSync
             var trackers = new SyncTrackers(session, varRegistry, socket);
             IMatch match = await socket.JoinMatchAsync(matched);
             trackers.PresenceTracker.ReceiveMatch(match);
-            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry, trackers);
+            // todo give ability to provide hooks to internal classes for serialization through JoinMatch
+            var syncMatch = new SyncMatch(socket, session, match as Match, varRegistry, rpcRegistry, trackers);
             await varRegistry.ReceiveMatch(syncMatch);
             trackers.HostTracker.ReceiveMatch(match);
             return syncMatch;
@@ -55,7 +57,8 @@ namespace NakamaSync
             var trackers = new SyncTrackers(session, varRegistry, socket);
             IMatch match = await socket.JoinMatchAsync(matchId);
             trackers.PresenceTracker.ReceiveMatch(match);
-            var syncMatch = new SyncMatch(socket, session, match, varRegistry, rpcRegistry, trackers);
+            // todo give ability to provide hooks to internal classes for serialization through JoinMatch
+            var syncMatch = new SyncMatch(socket, session, match as Match, varRegistry, rpcRegistry, trackers);
             await varRegistry.ReceiveMatch(syncMatch);
             return syncMatch;
         }

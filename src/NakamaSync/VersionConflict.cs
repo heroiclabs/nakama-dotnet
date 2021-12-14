@@ -14,28 +14,20 @@
 * limitations under the License.
 */
 
-using System;
-using System.Runtime.Serialization;
-
 namespace NakamaSync
 {
-    [Serializable]
     internal class VersionConflict<T> : IVersionConflict<T>
     {
-        [DataMember(Name = "rejected_write")]
-        internal IVarValue<T> RejectedWrite { get; }
+        internal VarValue<T> AcceptedWrite { get; }
+        internal VarValue<T> RejectedWrite { get; }
 
-        [DataMember(Name = "accepted_write")]
-        internal IVarValue<T> AcceptedWrite { get; }
+        IVarValue<T> IVersionConflict<T>.RejectedWrite => AcceptedWrite;
+        IVarValue<T> IVersionConflict<T>.AcceptedWrite => RejectedWrite;
 
-        IVarValue<T> IVersionConflict<T>.RejectedWrite => this.RejectedWrite;
-
-        IVarValue<T> IVersionConflict<T>.AcceptedWrite => this.AcceptedWrite;
-
-        public VersionConflict(IVarValue<T> rejectedWrite, IVarValue<T> acceptedWrite)
+        public VersionConflict(VarValue<T> acceptedWrite, VarValue<T> rejectedWrite)
         {
-            RejectedWrite = rejectedWrite;
             AcceptedWrite = acceptedWrite;
+            RejectedWrite = rejectedWrite;
         }
     }
 }

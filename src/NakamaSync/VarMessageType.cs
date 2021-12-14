@@ -18,14 +18,15 @@ namespace NakamaSync
 {
     internal enum VarMessageType
     {
-        None = 1,
+        // standard synchronization of data
+        DataTransfer = 0,
         // other client acknowledging new client.
-        HandshakeResponse = 2,
+        HandshakeResponse = 1,
         // host responding to var requiring validation.
-        ValidationStatus = 3,
+        ValidationStatus = 2,
         // new client requesting initial state from existing clients.
-        HandshakeRequest = 4,
+        HandshakeRequest = 3,
         // version conflict due to an unobserved write.
-        VersionConflict = 5,
+        VersionConflict = 4,
     }
 }

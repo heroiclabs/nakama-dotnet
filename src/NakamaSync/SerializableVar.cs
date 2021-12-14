@@ -16,6 +16,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using Nakama;
 
 namespace NakamaSync
 {
@@ -23,21 +24,29 @@ namespace NakamaSync
     /// A data-transfer object for a sync var.
     /// </summary>
     [Serializable]
-    internal class SerializableVar<T> : ISerializableVar<T>
+    internal class SerializableVar<T>
     {
+        [DataMember(Name="ack_type"), Preserve]
+        public VarMessageType MessageType { get; set; }
+
         [DataMember(Name="value"), Preserve]
         public T Value { get; set; }
+
+        [DataMember(Name="validation_status"), Preserve]
+        public ValidationStatus ValidationStatus { get; set; }
 
         [DataMember(Name="version"), Preserve]
         public int Version { get; set; }
 
-        [DataMember(Name="validation_status"), Preserve]
-        public ValidationStatus Status { get; set; }
-
-        [DataMember(Name="ack_type"), Preserve]
-        public VarMessageType AckType { get; set; }
-
         [DataMember(Name="version_conflict"), Preserve]
-        public VersionConflict<T> VersionConflict { get; set; }
+        public SerializableVersionConflict<T> VersionConflict { get; set; }
+
+        [DataMember(Name="writer"), Preserve]
+        public UserPresence Writer { get; set; }
+
+        public VarValue<T> ToVarValue()
+        {
+            return new VarValue<T>(Version, Writer, ValidationStatus, Value);
+        }
     }
 }
