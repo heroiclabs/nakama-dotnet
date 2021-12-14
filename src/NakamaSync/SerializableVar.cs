@@ -48,5 +48,16 @@ namespace NakamaSync
         {
             return new VarValue<T>(Version, Writer, ValidationStatus, Value);
         }
+
+        public static SerializableVar<T> FromVarValue(VarValue<T> value, VarMessageType messageType, UserPresence writer)
+        {
+            return new SerializableVar<T>
+            {
+                Value = value.Value,
+                ValidationStatus = value.ValidationStatus,
+                MessageType = messageType,
+                Version = value.Version,
+                Writer = writer
+            };
     }
 }

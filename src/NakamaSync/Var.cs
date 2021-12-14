@@ -73,7 +73,6 @@ namespace NakamaSync
         {
             _lastValue = new VarValue<T>();
             _value = new VarValue<T>();
-
             Opcode = opcode;
         }
 
@@ -132,7 +131,7 @@ namespace NakamaSync
             // normal case where var is set before sync match has started.
             if (_syncMatch != null)
             {
-                Send(new SerializableVar<T>{Value = _value.Value, ValidationStatus = _value.ValidationStatus, MessageType = VarMessageType.DataTransfer, Version = _value.Version});
+                Send(SerializableVar<T>.FromVarValue(_value, VarMessageType.DataTransfer, _syncMatch?.Self));
             }
         }
 
@@ -146,12 +145,12 @@ namespace NakamaSync
             if (this._value.Value != null && !this._value.Value.Equals(default(T)))
             {
                 // share value with other clients.
-                Send(new SerializableVar<T>{Value = _value.Value, ValidationStatus = _value.ValidationStatus, MessageType = VarMessageType.DataTransfer, Version = _value.Version});
+                Send(SerializableVar<T>.FromVarValue(_value, VarMessageType.DataTransfer, _syncMatch.Self));
             }
             else
             {
                 // don't have value to share, request it from other clients. todo only request from host?
-                Send(new SerializableVar<T>{Value = _value.Value, ValidationStatus = _value.ValidationStatus, MessageType = VarMessageType.HandshakeRequest, Version = _value.Version});
+                Send(SerializableVar<T>.FromVarValue(_value, VarMessageType.HandshakeRequest, _syncMatch.Self));
             }
 
             // not match creator
@@ -200,8 +199,8 @@ namespace NakamaSync
             if (incomingSerialized.MessageType == VarMessageType.HandshakeRequest)
             {
                 System.Console.WriteLine("sending handshake response " + _value.Value);
-
-                Send(new SerializableVar<T>{Value = _value.Value, ValidationStatus = _value.ValidationStatus, MessageType = VarMessageType.HandshakeResponse, Version = _value.Version}, new IUserPresence[]{source});
+                var serializable = SerializableVar<T>.FromVarValue(_value, VarMessageType.HandshakeResponse, _syncMatch.Self);
+                Send(serializable, new IUserPresence[]{source});
             }
 
             // ensure the lock versions match so this validation status isn't for a stale value
