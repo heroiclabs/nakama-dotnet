@@ -46,7 +46,7 @@ namespace NakamaSync
             // to avoid this type of edge case.
             if (newValue.ValidationStatus == ValidationStatus.Valid || newValue.ValidationStatus == ValidationStatus.None)
             {
-                LastValue = newValue;
+                LastValidValue = newValue;
             }
         }
 

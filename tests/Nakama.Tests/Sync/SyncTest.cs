@@ -629,9 +629,9 @@ namespace Nakama.Tests.Sync
 
             await testEnv.StartAll();
 
-            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
-
             IUserPresence nonCreatorPresence = testEnv.GetRandomNonCreatorPresence();
+
+            SyncTestUserEnvironment creatorEnv = testEnv.GetCreatorEnv();
             SyncTestUserEnvironment nonCreatorEnv = testEnv.GetUserEnv(nonCreatorPresence);
 
             creatorEnv.VarRegistry.Register(creatorEnv.GroupVars.GroupBool);
@@ -650,7 +650,9 @@ namespace Nakama.Tests.Sync
             Assert.False(nonCreatorSelfBool.GetValue());
             Assert.False(nonCreatorEnv.GroupVars.GroupBool.Self.GetValue());
 
+            System.Console.WriteLine("count " + nonCreatorPresenceBools.Count());
             var creatorPresenceVarInGuest = nonCreatorPresenceBools.First(var => {
+                System.Console.WriteLine("presence user id " + var.Presence.UserId + " creator id  " + creatorId);
                 return var.Presence.UserId == creatorId;
             });
 
@@ -721,9 +723,8 @@ namespace Nakama.Tests.Sync
             bool oldValueHasKey = true;
             bool newValueHasKey = false;
 
-
             creatorEnv.SharedDict.OnValueChanged += evt => {
-                oldValueHasKey = evt.OldValue != null && evt.OldValue.Value.ContainsKey("hello");
+                oldValueHasKey = evt.OldValue.Value != null && evt.OldValue.Value.ContainsKey("hello");
                 newValueHasKey = evt.NewValue.Value.ContainsKey("hello");
             };
 
@@ -758,7 +759,7 @@ namespace Nakama.Tests.Sync
             nonCreatorOtherVar.OnValueChanged += evt =>
             {
                 eventDispatched = true;
-                oldValueHasKey = evt.OldValue != null && evt.OldValue.Value.ContainsKey("hello");
+                oldValueHasKey = evt.OldValue.Value != null && evt.OldValue.Value.ContainsKey("hello");
                 newValueHasKey = evt.NewValue.Value.ContainsKey("hello");
             };
 

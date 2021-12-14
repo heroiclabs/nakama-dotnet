@@ -114,7 +114,7 @@ namespace NakamaSync
 
             // todo are we handling a null source presence in other places in the code?
             // sync match will be null here sometimes.
-            _values.SetNew(new VarValue<T> (_values.LastValue.Version + 1, _syncMatch?.Self, newStatus, newValue));
+            _values.SetNew(new VarValue<T> (_values.CurrentValue.Version + 1, _syncMatch?.Self, newStatus, newValue));
 
             var evt = new VarChangedEvent<T>(_values.LastValue, _values.CurrentValue);
             OnValueChanged?.Invoke(evt);

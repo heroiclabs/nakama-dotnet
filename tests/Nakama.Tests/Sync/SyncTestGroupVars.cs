@@ -29,7 +29,6 @@ namespace Nakama.Tests.Sync
 
         public SyncTestGroupVars(VarRegistry varRegistry, bool delayRegistration)
         {
-            return;
             GroupBool = new GroupVar<bool>(opcode: 0);
             GroupFloat = new GroupVar<float>(opcode: 1);
             GroupInt = new GroupVar<int>(opcode: 2);
