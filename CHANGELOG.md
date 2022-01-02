@@ -11,6 +11,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 - Use DualMode in TcpClient to handle NAT64 overlay networks (some mobile carriers).
 
+### Fixed
+- Expose base exception if retry handler fails.
+
 ## [3.2.0] - 2021-10-11
 ### Added
 - Added additional group listing filters.

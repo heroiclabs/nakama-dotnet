@@ -47,7 +47,7 @@ namespace Nakama
 
         /// <inheritdoc cref="IClient.GlobalRetryConfiguration"/>
         public RetryConfiguration GlobalRetryConfiguration { get; set; } = new RetryConfiguration(
-            baseDelay: 500,
+            baseDelayMs: 500,
             jitter: RetryJitter.FullJitter,
             listener: null,
             maxRetries: 4);
@@ -89,7 +89,7 @@ namespace Nakama
 
         private readonly ApiClient _apiClient;
         private ILogger _logger;
-        private readonly RetryInvoker _retryInvoker = new RetryInvoker();
+        private readonly RetryInvoker _retryInvoker;
 
         private const int DefaultTimeout = 15;
 
@@ -117,6 +117,8 @@ namespace Nakama
             ServerKey = serverKey;
             _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, DefaultTimeout);
             Logger = NullLogger.Instance; // must set logger last.
+
+            _retryInvoker = new RetryInvoker(0, adapter.TransientExceptionDelegate);
         }
 
         /// <inheritdoc cref="AddFriendsAsync"/>

@@ -21,15 +21,30 @@ using System.Threading.Tasks;
 namespace Nakama
 {
     /// <summary>
+    /// A delegate used by the retry invoker to determine whether or not an exception from the server is
+    /// considered "transient" from the client. For example, timeouts can be transient in cases where
+    /// the server is experiencing temporarily high load.
+    /// </summary>
+    public delegate bool TransientExceptionDelegate(Exception e);
+
+    /// <summary>
     /// Invokes requests with retry and exponential backoff.
     /// </summary>
     internal class RetryInvoker
     {
         public int JitterSeed { get; private set; }
+        private readonly TransientExceptionDelegate _del;
 
-        public RetryInvoker(int jitterSeed = 0)
+        public RetryInvoker(int jitterSeed, TransientExceptionDelegate del)
         {
             JitterSeed = jitterSeed;
+
+            if (del == null)
+            {
+                throw new ArgumentException("Cannot initialize retry invoker with a null transient exception delegate.");
+            }
+
+            _del = del;
         }
 
         public async Task<T> InvokeWithRetry<T>(Func<Task<T>> request, RetryHistory history)
@@ -40,7 +55,7 @@ namespace Nakama
             }
             catch (Exception e)
             {
-                if (IsTransientException(e))
+                if (history.Configuration != null && _del(e))
                 {
                     await Backoff(history, e);
                     return await InvokeWithRetry<T>(request, history);
@@ -60,7 +75,7 @@ namespace Nakama
             }
             catch (Exception e)
             {
-                if (IsTransientException(e))
+                if (history.Configuration != null && _del(e))
                 {
                     await Backoff(history, e);
                     await InvokeWithRetry(request, history);
@@ -72,18 +87,9 @@ namespace Nakama
             }
         }
 
-        /// <summary>
-        /// Whether or not the provided exception represents a temporary erroroneous state in the connection
-        /// or on the server.
-        /// </summary>
-        private bool IsTransientException(Exception e)
-        {
-            return (e is ApiResponseException apiException && apiException.StatusCode >= 500) || e is HttpRequestException;
-        }
-
         private Retry CreateNewRetry(RetryHistory history)
         {
-            int expoBackoff = System.Convert.ToInt32(Math.Pow(history.Configuration.BaseDelay, history.Retries.Count + 1));
+            int expoBackoff = System.Convert.ToInt32(Math.Pow(2, history.Retries.Count)) * history.Configuration.BaseDelayMs;
             int jitteredBackoff = history.Configuration.Jitter(history.Retries, expoBackoff, new Random(JitterSeed));
             return new Retry(expoBackoff, jitteredBackoff);
         }

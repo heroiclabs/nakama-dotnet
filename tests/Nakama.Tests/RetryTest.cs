@@ -27,7 +27,7 @@ namespace Nakama.Tests
         [Fact]
         public async void TransientHttpAdapter_ServerDefault_CreatesSession()
         {
-            var adapterSchedule = new TransientAdapterResponseType[1]{TransientAdapterResponseType.ServerOk};
+            var adapterSchedule = new TransientAdapterResponseType[1] { TransientAdapterResponseType.ServerOk };
 
             var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
             var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
@@ -38,18 +38,17 @@ namespace Nakama.Tests
         [Fact]
         public async void RetryConfiguration_OneRetries_RetriesExactlyOnce()
         {
-            var adapterSchedule = new TransientAdapterResponseType[2]{TransientAdapterResponseType.TransientError, TransientAdapterResponseType.ServerOk};
+            var adapterSchedule = new TransientAdapterResponseType[2]
+                { TransientAdapterResponseType.TransientError, TransientAdapterResponseType.ServerOk };
 
             var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
             var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
 
             int lastNumRetry = -1;
 
-            RetryListener retryListener = (int numRetry, Retry retry) => {
-                lastNumRetry = numRetry;
-            };
+            RetryListener retryListener = (int numRetry, Retry retry) => { lastNumRetry = numRetry; };
 
-            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 1, retryListener);
+            var config = new RetryConfiguration(baseDelayMs: 10, maxRetries: 1, retryListener);
             client.GlobalRetryConfiguration = config;
 
             ISession session = await client.AuthenticateCustomAsync("test_id");
@@ -61,7 +60,8 @@ namespace Nakama.Tests
         [Fact]
         public async void RetryConfiguration_FiveRetries_RetriesExactlyFiveTimes()
         {
-            var adapterSchedule = new TransientAdapterResponseType[6] {
+            var adapterSchedule = new TransientAdapterResponseType[6]
+            {
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
@@ -75,11 +75,9 @@ namespace Nakama.Tests
 
             int lastNumRetry = -1;
 
-            RetryListener retryListener = (int numRetry, Retry retry) => {
-                lastNumRetry = numRetry;
-            };
+            RetryListener retryListener = (int numRetry, Retry retry) => { lastNumRetry = numRetry; };
 
-            var config = new RetryConfiguration(baseDelay: 1, maxRetries: 5, retryListener);
+            var config = new RetryConfiguration(baseDelayMs: 1, maxRetries: 5, retryListener);
             client.GlobalRetryConfiguration = config;
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
@@ -92,24 +90,23 @@ namespace Nakama.Tests
         [Fact]
         public async void RetryConfiguration_PastMaxRetries_ThrowsTaskCancelledException()
         {
-            var adapterSchedule = new TransientAdapterResponseType[4]{
+            var adapterSchedule = new TransientAdapterResponseType[4]
+            {
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
-                TransientAdapterResponseType.TransientError};
+                TransientAdapterResponseType.TransientError
+            };
 
             var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
             var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
 
             int lastNumRetry = 3;
 
-            RetryListener retryListener = (int numRetry, Retry retry) => {
-                lastNumRetry = numRetry;
-            };
+            RetryListener retryListener = (int numRetry, Retry retry) => { lastNumRetry = numRetry; };
 
-            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
+            var config = new RetryConfiguration(baseDelayMs: 500, maxRetries: 3, retryListener);
             client.GlobalRetryConfiguration = config;
-
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
 
@@ -120,18 +117,16 @@ namespace Nakama.Tests
         [Fact]
         public async void RetryConfiguration_ZeroRetries_RetriesZeroTimes()
         {
-            var adapterSchedule = new TransientAdapterResponseType[1]{TransientAdapterResponseType.TransientError};
+            var adapterSchedule = new TransientAdapterResponseType[1] { TransientAdapterResponseType.TransientError };
 
             var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
             var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
 
             int lastNumRetry = -1;
 
-            RetryListener retryListener = (int numRetry, Retry retry) => {
-                lastNumRetry = numRetry;
-            };
+            RetryListener retryListener = (int numRetry, Retry retry) => { lastNumRetry = numRetry; };
 
-            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 0, retryListener);
+            var config = new RetryConfiguration(baseDelayMs: 10, maxRetries: 0, retryListener);
             client.GlobalRetryConfiguration = config;
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
@@ -143,7 +138,8 @@ namespace Nakama.Tests
         [Fact]
         public async void RetryConfiguration_OverrideSet_OverridesGlobal()
         {
-            var adapterSchedule = new TransientAdapterResponseType[4] {
+            var adapterSchedule = new TransientAdapterResponseType[4]
+            {
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
@@ -155,24 +151,23 @@ namespace Nakama.Tests
 
             int lastNumRetry = -1;
 
-            RetryListener retryListener = (int numRetry, Retry retry) => {
-                lastNumRetry = numRetry;
-            };
+            RetryListener retryListener = (int numRetry, Retry retry) => { lastNumRetry = numRetry; };
 
-            var globalConfig = new RetryConfiguration(baseDelay: 10, maxRetries: 1, retryListener);
+            var globalConfig = new RetryConfiguration(baseDelayMs: 10, maxRetries: 1, retryListener);
             client.GlobalRetryConfiguration = globalConfig;
 
-            var localConfig = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
+            var localConfig = new RetryConfiguration(baseDelayMs: 10, maxRetries: 3, retryListener);
             var session = await client.AuthenticateCustomAsync("test_id", null, true, null, localConfig);
+
             Assert.NotNull(session);
             Assert.Equal(3, lastNumRetry);
-
         }
 
         [Fact]
         public async void RetryConfiguration_Delay_ExpectedExponentialTimes()
         {
-            var adapterSchedule = new TransientAdapterResponseType[4] {
+            var adapterSchedule = new TransientAdapterResponseType[4]
+            {
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
@@ -185,11 +180,9 @@ namespace Nakama.Tests
 
             var retries = new List<Retry>();
 
-            RetryListener retryListener = (int numRetry, Retry retry) => {
-                retries.Add(retry);
-            };
+            RetryListener retryListener = (int numRetry, Retry retry) => { retries.Add(retry); };
 
-            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
+            var config = new RetryConfiguration(baseDelayMs: 10, maxRetries: 3, retryListener);
             client.GlobalRetryConfiguration = config;
 
             Task<ISession> sessionTask = client.AuthenticateCustomAsync("test_id");
@@ -198,14 +191,15 @@ namespace Nakama.Tests
             Assert.NotNull(session);
 
             Assert.Equal(10, retries[0].ExponentialBackoff);
-            Assert.Equal(100, retries[1].ExponentialBackoff);
-            Assert.Equal(1000, retries[2].ExponentialBackoff);
+            Assert.Equal(20, retries[1].ExponentialBackoff);
+            Assert.Equal(40, retries[2].ExponentialBackoff);
         }
 
         [Fact]
         public async void RetryConfiguration_Delay_ExpectedDelays()
         {
-            var adapterSchedule = new TransientAdapterResponseType[3] {
+            var adapterSchedule = new TransientAdapterResponseType[3]
+            {
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
                 TransientAdapterResponseType.TransientError,
@@ -215,11 +209,9 @@ namespace Nakama.Tests
             var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
             var retries = new List<Retry>();
 
-            RetryListener retryListener = (int numRetry, Retry retry) => {
-                retries.Add(retry);
-            };
+            RetryListener retryListener = (int numRetry, Retry retry) => { retries.Add(retry); };
 
-            var config = new RetryConfiguration(baseDelay: 10, maxRetries: 3, retryListener);
+            var config = new RetryConfiguration(baseDelayMs: 10, maxRetries: 3, retryListener);
             client.GlobalRetryConfiguration = config;
 
             DateTime timeBeforeRequest = DateTime.Now;
@@ -235,10 +227,76 @@ namespace Nakama.Tests
             }
 
             int expectedElapsedTime = retries.Sum(retry => retry.JitterBackoff);
-            int actualElapsedTime = (int) (timeAfterRequest - timeBeforeRequest).TotalMilliseconds;
+            int actualElapsedTime = (int)(timeAfterRequest - timeBeforeRequest).TotalMilliseconds;
 
             // actual will be slightly higher due to cpu elapsed time
             Assert.True(expectedElapsedTime < actualElapsedTime);
+        }
+
+        [Fact]
+        public async void RetryConfiguration_NullConfiguration_DoesNotThrowNullRef()
+        {
+            var adapterSchedule = new TransientAdapterResponseType[3]
+            {
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+            };
+
+            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
+            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
+
+            client.GlobalRetryConfiguration = null;
+
+            await Assert.ThrowsAsync<ApiResponseException>(async () => await client.AuthenticateCustomAsync("test_id"));
+        }
+
+        [Fact]
+        public async void RetryConfiguration_NoRetries_ThrowsBaseApiResponseException()
+        {
+            var adapterSchedule = new TransientAdapterResponseType[3]
+            {
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+                TransientAdapterResponseType.TransientError,
+            };
+
+            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
+            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
+
+            client.GlobalRetryConfiguration = new RetryConfiguration(baseDelayMs: 1, maxRetries: 0);
+
+            try
+            {
+                await client.AuthenticateCustomAsync("test_id");
+                throw new Exception("Test failed due to not throwing an exception");
+            }
+            catch (TaskCanceledException e)
+            {
+                Assert.True(e.GetBaseException() != null && e.GetBaseException() is ApiResponseException);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [Fact]
+        public async void RetryConfiguration_NonTransientError_Throws()
+        {
+            var adapterSchedule = new TransientAdapterResponseType[1]
+            {
+                TransientAdapterResponseType.NonTransientError,
+            };
+
+            var adapter = new TransientExceptionHttpAdapter(adapterSchedule);
+            var client = TestsUtil.FromSettingsFile(TestsUtil.DefaultSettingsPath, adapter);
+
+            client.GlobalRetryConfiguration = new RetryConfiguration(baseDelayMs: 1, maxRetries: 3);
+
+            ApiResponseException e =
+                await Assert.ThrowsAsync<ApiResponseException>(async () =>
+                    await client.AuthenticateCustomAsync("test_id"));
         }
     }
 }

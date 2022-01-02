@@ -26,6 +26,10 @@ namespace Nakama
     /// </summary>
     public interface IHttpAdapter
     {
+        // A delegate used by the adapter to determine whether or not an error from the server
+        // should be retried or not (i.e., is 'transient').
+        TransientExceptionDelegate TransientExceptionDelegate { get; }
+
         /// <summary>
         /// The logger to use with the adapter.
         /// </summary>

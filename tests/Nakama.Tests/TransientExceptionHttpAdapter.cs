@@ -24,7 +24,8 @@ namespace Nakama.Tests
     public enum TransientAdapterResponseType
     {
         ServerOk,
-        TransientError
+        TransientError,
+        NonTransientError
     }
 
     /// <summary>
@@ -33,6 +34,8 @@ namespace Nakama.Tests
     public class TransientExceptionHttpAdapter : IHttpAdapter
     {
         public ILogger Logger { get; set; }
+
+        public TransientExceptionDelegate TransientExceptionDelegate => IsTransientException;
 
         private int _sendAttempts = 0;
         private readonly TransientAdapterResponseType[] _sendSchedule;
@@ -57,9 +60,16 @@ namespace Nakama.Tests
             {
                 case TransientAdapterResponseType.TransientError:
                     throw new ApiResponseException(500, "This exception represents a transient error.", -1);
+                case TransientAdapterResponseType.NonTransientError:
+                    throw new ApiResponseException(401, "This exception represents a non-transient error.", -1);
                 default:
                     return _httpRequestAdapter.SendAsync(method, uri, headers, body, timeoutSec);
             }
+        }
+
+        private bool IsTransientException(Exception e)
+        {
+            return (e is ApiResponseException apiException && apiException.StatusCode >= 500);
         }
     }
 }

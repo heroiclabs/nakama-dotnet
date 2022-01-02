@@ -60,6 +60,21 @@ namespace Nakama.Tests.Api
             Assert.Equal(1, account.Devices.Count(d => d.Id == deviceid));
         }
 
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldAuthenticateDeviceAndSaveUsername()
+        {
+            var deviceid = Guid.NewGuid().ToString();
+            var username = Guid.NewGuid().ToString();
+            var session = await _client.AuthenticateDeviceAsync(deviceid, username);
+
+
+            var account = await _client.GetAccountAsync(session);
+
+            Assert.Equal(username, session.Username);
+            Assert.Equal(username, account.User.Username);
+        }
+
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldAuthenticateEmail()
         {
