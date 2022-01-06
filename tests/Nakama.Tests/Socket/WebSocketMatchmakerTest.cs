@@ -55,6 +55,40 @@ namespace Nakama.Tests.Socket
             await _socket.RemoveMatchmakerAsync(matchmakerTicket);
         }
 
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldCompleteMatchmaker()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket2 = Nakama.Socket.From(_client);
+
+            await _socket.ConnectAsync(session);
+            await socket2.ConnectAsync(session2);
+
+            var completer = new TaskCompletionSource<IMatchmakerMatched>();
+            var completer2 = new TaskCompletionSource<IMatchmakerMatched>();
+            _socket.ReceivedMatchmakerMatched += (state) => completer.SetResult(state);
+            socket2.ReceivedMatchmakerMatched += (state) => completer2.SetResult(state);
+
+            var matchmakerTicket = await _socket.AddMatchmakerAsync("*", 2, 2);
+            var matchmakerTicket2 = await socket2.AddMatchmakerAsync("*", 2, 2);
+
+            Assert.NotNull(matchmakerTicket);
+            Assert.NotEmpty(matchmakerTicket.Ticket);
+            Assert.NotNull(matchmakerTicket2);
+            Assert.NotEmpty(matchmakerTicket2.Ticket);
+
+            await Task.Delay(1000);
+
+            var result = await completer.Task;
+            var result2 = await completer2.Task;
+            Assert.NotNull(result);
+            Assert.NotNull(result2);
+            Assert.NotEmpty(result.Token);
+            Assert.NotEmpty(result2.Token);
+            Assert.Equal(result.Token, result2.Token);
+        }
+
         Task IAsyncLifetime.InitializeAsync()
         {
             return Task.CompletedTask;
