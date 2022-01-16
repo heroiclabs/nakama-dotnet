@@ -34,6 +34,11 @@ namespace Nakama
         /// </summary>
         public const int DefaultConnectTimeout = 30;
 
+        /// <summary>
+        /// The default timeout for when the socket sends a message.
+        /// </summary>
+        public const int DefaultSendTimeout = 10;
+
         /// <inheritdoc cref="Closed"/>
         public event Action Closed;
 
@@ -105,8 +110,9 @@ namespace Nakama
         private readonly ISocketAdapter _adapter;
         private readonly Uri _baseUri;
         private readonly Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
+        private readonly TimeSpan _sendTimeoutSec;
 
-        private Object _lockObj = new Object();
+        private readonly object _lockObj = new object();
 
         /// <summary>
         /// A new socket with default options.
@@ -131,12 +137,14 @@ namespace Nakama
         /// <param name="host">The host address of the server.</param>
         /// <param name="port">The port number of the server.</param>
         /// <param name="adapter">The adapter for use with the socket.</param>
-        public Socket(string scheme, string host, int port, ISocketAdapter adapter)
+        /// <param name="sendTimeoutSec">The maximum time allowed for a message to be sent.</param>
+        public Socket(string scheme, string host, int port, ISocketAdapter adapter, int sendTimeoutSec = DefaultSendTimeout)
         {
             Logger = NullLogger.Instance;
             _adapter = adapter;
             _baseUri = new UriBuilder(scheme, host, port).Uri;
             _responses = new Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>>();
+            _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
 
             _adapter.Connected += () => Connected?.Invoke();
             _adapter.Closed += () =>
@@ -159,7 +167,6 @@ namespace Nakama
                 {
                     lock (_lockObj)
                     {
-
                         foreach (var response in _responses)
                         {
                             response.Value.TrySetCanceled();
@@ -172,7 +179,7 @@ namespace Nakama
                 ReceivedError?.Invoke(e);
             };
 
-            _adapter.Received += ReceivedMessage;
+            _adapter.Received += ProcessMessage;
         }
 
         /// <inheritdoc cref="AcceptPartyMemberAsync"/>
@@ -212,7 +219,9 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="AddMatchmakerPartyAsync"/>
-        public async Task<IPartyMatchmakerTicket> AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount, Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null)
+        public async Task<IPartyMatchmakerTicket> AddMatchmakerPartyAsync(string partyId, string query, int minCount,
+            int maxCount, Dictionary<string, string> stringProperties = null,
+            Dictionary<string, double> numericProperties = null)
         {
             var envelope = new WebSocketMessageEnvelope
             {
@@ -233,34 +242,18 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="CloseAsync"/>
-        public Task CloseAsync()
-        {
-            _adapter.Close();
-            return Task.CompletedTask;
-        }
+        public Task CloseAsync() => _adapter.CloseAsync();
 
         /// <inheritdoc cref="ConnectAsync"/>
         public Task ConnectAsync(ISession session, bool appearOnline = false,
             int connectTimeoutSec = DefaultConnectTimeout, string langTag = "en")
         {
-            var tcs = new TaskCompletionSource<bool>();
-            Action callback = () => tcs.TrySetResult(true);
-            Action<Exception> errback = e => tcs.TrySetException(e);
-            _adapter.Connected += callback;
-            _adapter.ReceivedError += errback;
             var uri = new UriBuilder(_baseUri)
             {
                 Path = "/ws",
                 Query = $"lang={langTag}&status={appearOnline}&token={session.AuthToken}"
             }.Uri;
-            tcs.Task.ContinueWith(_ =>
-            {
-                // NOTE Not fired in Unity WebGL builds.
-                _adapter.Connected -= callback;
-                _adapter.ReceivedError -= errback;
-            });
-            _adapter.Connect(uri, connectTimeoutSec);
-            return tcs.Task;
+            return _adapter.ConnectAsync(uri, connectTimeoutSec);
         }
 
         /// <inheritdoc cref="ClosePartyAsync"/>
@@ -304,18 +297,6 @@ namespace Nakama
             return response.Party;
         }
 
-        /// <summary>
-        /// Dispose will destroy the active socket and clean up all associated resources.
-        /// </summary>
-        /// <remarks>
-        /// NOTE: This method will block to close the socket if it is open when called. Use <c>CloseAsync</c> instead
-        /// wherever possible.
-        /// </remarks>
-        public void Dispose()
-        {
-            _adapter.Dispose();
-        }
-
         /// <inheritdoc cref="FollowUsersAsync(System.Collections.Generic.IEnumerable{Nakama.IApiUser})"/>
         public Task<IStatus> FollowUsersAsync(IEnumerable<IApiUser> users) =>
             FollowUsersAsync(users.Select(user => user.Id));
@@ -348,7 +329,7 @@ namespace Nakama
                     Hidden = hidden,
                     Persistence = persistence,
                     Target = target,
-                    Type = (int) type
+                    Type = (int)type
                 }
             };
             var response = await SendAsync(envelope);
@@ -527,7 +508,7 @@ namespace Nakama
             return SendAsync(envelope);
         }
 
-        /// <inheritdoc="RemoveMatchmakerPartyAsync"/>
+        /// <inheritdoc cref="RemoveMatchmakerPartyAsync"/>
         public Task RemoveMatchmakerPartyAsync(string partyId, string ticket)
         {
             var envelope = new WebSocketMessageEnvelope
@@ -543,7 +524,7 @@ namespace Nakama
             return SendAsync(envelope);
         }
 
-        /// <inheritdoc="RemovePartyMemberAsync"/>
+        /// <inheritdoc cref="RemovePartyMemberAsync"/>
         public Task RemovePartyMemberAsync(string partyId, IUserPresence presence)
         {
             var envelope = new WebSocketMessageEnvelope
@@ -592,7 +573,8 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="SendMatchStateAsync(string,long,ArraySegment{byte},System.Collections.Generic.IEnumerable{Nakama.IUserPresence})"/>
-        public Task SendMatchStateAsync(string matchId, long opCode, ArraySegment<byte> state, IEnumerable<IUserPresence> presences = null)
+        public Task SendMatchStateAsync(string matchId, long opCode, ArraySegment<byte> state,
+            IEnumerable<IUserPresence> presences = null)
         {
             var envelope = new WebSocketMessageEnvelope
             {
@@ -604,8 +586,7 @@ namespace Nakama
                     State = Convert.ToBase64String(state.Array, state.Offset, state.Count)
                 }
             };
-            SendAsync(envelope);
-            return Task.CompletedTask;
+            return SendAsync(envelope);
         }
 
         /// <inheritdoc cref="SendMatchStateAsync(string,long,string,System.Collections.Generic.IEnumerable{Nakama.IUserPresence})"/>
@@ -627,8 +608,7 @@ namespace Nakama
                     State = Convert.ToBase64String(state)
                 }
             };
-            SendAsync(envelope);
-            return Task.CompletedTask;
+            return SendAsync(envelope);
         }
 
         /// <inheritdoc cref="SendPartyDataAsync(string,long,ArraySegment{byte})"/>
@@ -643,9 +623,7 @@ namespace Nakama
                     Data = Convert.ToBase64String(data.Array, data.Offset, data.Count)
                 }
             };
-
-            SendAsync(envelope);
-            return Task.CompletedTask;
+            return SendAsync(envelope);
         }
 
         /// <inheritdoc cref="SendPartyDataAsync(string,long,string)"/>
@@ -665,8 +643,7 @@ namespace Nakama
                 }
             };
 
-            SendAsync(envelope);
-            return Task.CompletedTask;
+            return SendAsync(envelope);
         }
 
         public override string ToString()
@@ -765,10 +742,10 @@ namespace Nakama
         {
             var scheme = client.Scheme.ToLower().Equals("http") ? "ws" : "wss";
             // TODO improve how logger is passed into socket object.
-            return new Socket(scheme, client.Host, client.Port, adapter) {Logger = (client as Client)?.Logger};
+            return new Socket(scheme, client.Host, client.Port, adapter) { Logger = (client as Client)?.Logger };
         }
 
-        private void ReceivedMessage(ArraySegment<byte> buffer)
+        private void ProcessMessage(ArraySegment<byte> buffer)
         {
             var contents = System.Text.Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
 
@@ -784,12 +761,13 @@ namespace Nakama
                         // Handle message response.
                         if (_responses.ContainsKey(envelope.Cid))
                         {
-                            TaskCompletionSource<WebSocketMessageEnvelope> completer = _responses[envelope.Cid];
+                            var completer = _responses[envelope.Cid];
                             _responses.Remove(envelope.Cid);
 
                             if (envelope.Error != null)
                             {
-                                completer.SetException(new WebSocketException(WebSocketError.InvalidState, envelope.Error.Message));
+                                completer.SetException(new WebSocketException(WebSocketError.InvalidState,
+                                    envelope.Error.Message));
                             }
                             else
                             {
@@ -884,34 +862,35 @@ namespace Nakama
             }
         }
 
-        private Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope envelope)
+        private async Task<WebSocketMessageEnvelope> SendAsync(WebSocketMessageEnvelope envelope)
         {
             var json = envelope.ToJson();
 
             Logger?.DebugFormat("Sending JSON over web socket: {0}", json);
 
             var buffer = System.Text.Encoding.UTF8.GetBytes(json);
+            var cts = new CancellationTokenSource(_sendTimeoutSec);
             if (string.IsNullOrEmpty(envelope.Cid))
             {
-                _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
+                await _adapter.SendAsync(new ArraySegment<byte>(buffer), true, cts.Token);
                 return null; // No response required.
             }
-            var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
 
+            var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
             lock (_lockObj)
             {
                 _responses[envelope.Cid] = completer;
             }
-
-            _adapter.Send(new ArraySegment<byte>(buffer), CancellationToken.None);
-            return completer.Task;
+            cts.Token.Register(() => completer.TrySetCanceled());
+            await _adapter.SendAsync(new ArraySegment<byte>(buffer), true, cts.Token);
+            return await completer.Task;
         }
 
         private static List<UserPresence> BuildPresenceList(IEnumerable<IUserPresence> presences)
         {
             if (presences == null)
             {
-                return (List<UserPresence>) UserPresence.NoPresences;
+                return (List<UserPresence>)UserPresence.NoPresences;
             }
 
             var presenceList = presences as List<UserPresence>;
@@ -923,7 +902,7 @@ namespace Nakama
             presenceList = new List<UserPresence>();
             foreach (var userPresence in presences)
             {
-                var concretePresence = (UserPresence) userPresence;
+                var concretePresence = (UserPresence)userPresence;
                 presenceList.Add(concretePresence);
             }
 

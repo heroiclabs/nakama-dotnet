@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Changed
 - Use DualMode in TcpClient to handle NAT64 overlay networks (some mobile carriers).
+- Refactor the socket adapter design to use Tasks (previously avoided for Unity WebGL compat.).
+- Socket messages which exceed the internal buffer size now generate an "InternalBufferOverflowException" type.
+- A socket connect made on an already connected socket will no longer raise an exception.
+- Propagate up the "WebSocketException" type thrown on socket messages sent over a disconnected socket.
 
 ### Fixed
 - Expose base exception if retry handler fails.
