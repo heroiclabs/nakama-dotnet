@@ -38,7 +38,7 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// Therefore, there are no cryptographic concerns
         /// </summary>
         private static readonly Random _random;
-        
+
         static WebSocketFrameWriter()
         {
             _random = new Random((int)DateTime.Now.Ticks);
@@ -51,7 +51,8 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// <param name="fromPayload">Array segment to get payload data from</param>
         /// <param name="toStream">Stream to write to</param>
         /// <param name="isLastFrame">True is this is the last frame in this message (usually true)</param>
-        public static void Write(WebSocketOpCode opCode, ArraySegment<byte> fromPayload, MemoryStream toStream, bool isLastFrame, bool isClient)
+        public static void Write(WebSocketOpCode opCode, ArraySegment<byte> fromPayload, MemoryStream toStream,
+            bool isLastFrame, bool isClient)
         {
             MemoryStream memoryStream = toStream;
             byte finBitSetAsByte = isLastFrame ? (byte)0x80 : (byte)0x00;

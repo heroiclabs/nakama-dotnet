@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Socket messages which exceed the internal buffer size now generate an "InternalBufferOverflowException" type.
 - A socket connect made on an already connected socket will no longer raise an exception.
 - Propagate up the "WebSocketException" type thrown on socket messages sent over a disconnected socket.
+- Update bundled "Ninja.WebSockets" library to commit 0b698a733f0e8711da7a5854154fe7d8a01fbd06.
 
 ### Fixed
 - Expose base exception if retry handler fails.
@@ -54,7 +55,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 - AddMatchmakerPartyAsync now returns an IPartyMatchmakerTicket.
 - Renamed PromotePartyMember to PromotePartyMemberAsync.
->>>>>>> master
 
 ## [2.9.1] - 2021-05-19
 ### Added

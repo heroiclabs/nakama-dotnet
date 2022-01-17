@@ -36,7 +36,8 @@ namespace Nakama.Ninja.WebSockets
         /// <param name="httpHeader">The raw http header extracted from the stream</param>
         /// <param name="path">The Path extracted from the http header</param>
         /// <param name="stream">The stream AFTER the header has already been read</param>
-        public WebSocketHttpContext(bool isWebSocketRequest, IList<string> webSocketRequestedProtocols, string httpHeader, string path, System.IO.Stream stream)
+        public WebSocketHttpContext(bool isWebSocketRequest, IList<string> webSocketRequestedProtocols,
+            string httpHeader, string path, System.IO.Stream stream)
         {
             IsWebSocketRequest = isWebSocketRequest;
             WebSocketRequestedProtocols = webSocketRequestedProtocols;

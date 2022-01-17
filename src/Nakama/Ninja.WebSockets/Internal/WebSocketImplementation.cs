@@ -53,6 +53,7 @@ namespace Nakama.Ninja.WebSockets.Internal
         private readonly IPingPongManager _pingPongManager;
         private bool _isContinuationFrame;
         private WebSocketMessageType _continuationFrameMessageType = WebSocketMessageType.Binary;
+        private WebSocketReadCursor _readCursor;
         private readonly bool _usePerMessageDeflate = false;
         private bool _tryGetBufferFailureLogged = false;
         const int MAX_PING_PONG_PAYLOAD_LEN = 125;
@@ -62,7 +63,9 @@ namespace Nakama.Ninja.WebSockets.Internal
 
         public event EventHandler<PongEventArgs> Pong;
 
-        internal WebSocketImplementation(Guid guid, Func<MemoryStream> recycledStreamFactory, System.IO.Stream stream, TimeSpan keepAliveInterval, string secWebSocketExtensions, bool includeExceptionInCloseResponse, bool isClient, string subProtocol)
+        internal WebSocketImplementation(Guid guid, Func<MemoryStream> recycledStreamFactory, System.IO.Stream stream,
+            TimeSpan keepAliveInterval, string secWebSocketExtensions, bool includeExceptionInCloseResponse,
+            bool isClient, string subProtocol)
         {
             _guid = guid;
             _recycledStreamFactory = recycledStreamFactory;
@@ -71,6 +74,7 @@ namespace Nakama.Ninja.WebSockets.Internal
             _subProtocol = subProtocol;
             _internalReadCts = new CancellationTokenSource();
             _state = WebSocketState.Open;
+            _readCursor = new WebSocketReadCursor(null, 0, 0);
 
             if (secWebSocketExtensions?.IndexOf("permessage-deflate") >= 0)
             {
@@ -106,7 +110,8 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// <param name="buffer">The buffer to copy data into</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The web socket result details</returns>
-        public override async Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
+        public override async Task<WebSocketReceiveResult> ReceiveAsync(ArraySegment<byte> buffer,
+            CancellationToken cancellationToken)
         {
             try
             {
@@ -114,49 +119,73 @@ namespace Nakama.Ninja.WebSockets.Internal
                 while (true)
                 {
                     // allow this operation to be cancelled from iniside OR outside this instance
-                    using (CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_internalReadCts.Token, cancellationToken))
+                    using (CancellationTokenSource linkedCts =
+                           CancellationTokenSource.CreateLinkedTokenSource(_internalReadCts.Token, cancellationToken))
                     {
-                        WebSocketFrame frame = null;
+                        WebSocketFrame frame;
+
                         try
                         {
-                            frame = await WebSocketFrameReader.ReadAsync(_stream, buffer, linkedCts.Token);
+                            if (_readCursor.NumBytesLeftToRead > 0)
+                            {
+                                // If the buffer used to read the frame was too small to fit the whole frame then we need to "remember" this frame
+                                // and return what we have. Subsequent calls to the read function will simply continue reading off the stream without 
+                                // decoding the first few bytes as a websocket header.
+                                _readCursor =
+                                    await WebSocketFrameReader.ReadFromCursorAsync(_stream, buffer, _readCursor,
+                                        linkedCts.Token);
+                                frame = _readCursor.WebSocketFrame;
+                            }
+                            else
+                            {
+                                _readCursor = await WebSocketFrameReader.ReadAsync(_stream, buffer, linkedCts.Token);
+                                frame = _readCursor.WebSocketFrame;
+                            }
                         }
                         catch (InternalBufferOverflowException ex)
                         {
-                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.MessageTooBig, "Frame too large to fit in buffer. Use message fragmentation", ex);
+                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.MessageTooBig,
+                                "Frame too large to fit in buffer. Use message fragmentation", ex);
                             throw;
                         }
                         catch (ArgumentOutOfRangeException ex)
                         {
-                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.ProtocolError, "Payload length out of range", ex);
+                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.ProtocolError,
+                                "Payload length out of range", ex);
                             throw;
                         }
                         catch (EndOfStreamException ex)
                         {
-                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.InvalidPayloadData, "Unexpected end of stream encountered", ex);
+                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.InvalidPayloadData,
+                                "Unexpected end of stream encountered", ex);
                             throw;
                         }
                         catch (OperationCanceledException ex)
                         {
-                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.EndpointUnavailable, "Operation cancelled", ex);
+                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.EndpointUnavailable,
+                                "Operation cancelled", ex);
                             throw;
                         }
                         catch (Exception ex)
                         {
-                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.InternalServerError, "Error reading WebSocket frame", ex);
+                            await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.InternalServerError,
+                                "Error reading WebSocket frame", ex);
                             throw;
                         }
 
+                        var endOfMessage = frame.IsFinBitSet && _readCursor.NumBytesLeftToRead == 0;
                         switch (frame.OpCode)
                         {
                             case WebSocketOpCode.ConnectionClose:
                                 return await RespondToCloseFrame(frame, buffer, linkedCts.Token);
                             case WebSocketOpCode.Ping:
-                                ArraySegment<byte> pingPayload = new ArraySegment<byte>(buffer.Array, buffer.Offset, frame.Count);
+                                ArraySegment<byte> pingPayload = new ArraySegment<byte>(buffer.Array, buffer.Offset,
+                                    _readCursor.NumBytesRead);
                                 await SendPongAsync(pingPayload, linkedCts.Token);
                                 break;
                             case WebSocketOpCode.Pong:
-                                ArraySegment<byte> pongBuffer = new ArraySegment<byte>(buffer.Array, frame.Count, buffer.Offset);
+                                ArraySegment<byte> pongBuffer = new ArraySegment<byte>(buffer.Array,
+                                    _readCursor.NumBytesRead, buffer.Offset);
                                 Pong?.Invoke(this, new PongEventArgs(pongBuffer));
                                 break;
                             case WebSocketOpCode.TextFrame:
@@ -165,16 +194,21 @@ namespace Nakama.Ninja.WebSockets.Internal
                                     // continuation frames will follow, record the message type Text
                                     _continuationFrameMessageType = WebSocketMessageType.Text;
                                 }
-                                return new WebSocketReceiveResult(frame.Count, WebSocketMessageType.Text, frame.IsFinBitSet);
+
+                                return new WebSocketReceiveResult(_readCursor.NumBytesRead, WebSocketMessageType.Text,
+                                    endOfMessage);
                             case WebSocketOpCode.BinaryFrame:
                                 if (!frame.IsFinBitSet)
                                 {
                                     // continuation frames will follow, record the message type Binary
                                     _continuationFrameMessageType = WebSocketMessageType.Binary;
                                 }
-                                return new WebSocketReceiveResult(frame.Count, WebSocketMessageType.Binary, frame.IsFinBitSet);
+
+                                return new WebSocketReceiveResult(_readCursor.NumBytesRead, WebSocketMessageType.Binary,
+                                    endOfMessage);
                             case WebSocketOpCode.ContinuationFrame:
-                                return new WebSocketReceiveResult(frame.Count, _continuationFrameMessageType, frame.IsFinBitSet);
+                                return new WebSocketReceiveResult(_readCursor.NumBytesRead,
+                                    _continuationFrameMessageType, endOfMessage);
                             default:
                                 Exception ex = new NotSupportedException($"Unknown WebSocket opcode {frame.OpCode}");
                                 await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.ProtocolError, ex.Message, ex);
@@ -189,7 +223,8 @@ namespace Nakama.Ninja.WebSockets.Internal
                 // However, if an unhandled exception is encountered and a close message not sent then send one here
                 if (_state == WebSocketState.Open)
                 {
-                    await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.InternalServerError, "Unexpected error reading from WebSocket", catchAll);
+                    await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.InternalServerError,
+                        "Unexpected error reading from WebSocket", catchAll);
                 }
 
                 throw;
@@ -204,7 +239,8 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// <param name="endOfMessage">True if this message is a standalone message (this is the norm)
         /// If it is a multi-part message then false (and true for the last message)</param>
         /// <param name="cancellationToken">the cancellation token</param>
-        public override async Task SendAsync(ArraySegment<byte> buffer, WebSocketMessageType messageType, bool endOfMessage, CancellationToken cancellationToken)
+        public override async Task SendAsync(ArraySegment<byte> buffer, WebSocketMessageType messageType,
+            bool endOfMessage, CancellationToken cancellationToken)
         {
             using (MemoryStream stream = _recycledStreamFactory())
             {
@@ -242,7 +278,8 @@ namespace Nakama.Ninja.WebSockets.Internal
         {
             if (payload.Count > MAX_PING_PONG_PAYLOAD_LEN)
             {
-                throw new InvalidOperationException($"Cannot send Ping: Max ping message size {MAX_PING_PONG_PAYLOAD_LEN} exceeded: {payload.Count}");
+                throw new InvalidOperationException(
+                    $"Cannot send Ping: Max ping message size {MAX_PING_PONG_PAYLOAD_LEN} exceeded: {payload.Count}");
             }
 
             if (_state == WebSocketState.Open)
@@ -267,7 +304,8 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// <summary>
         /// Polite close (use the close handshake)
         /// </summary>
-        public override async Task CloseAsync(WebSocketCloseStatus closeStatus, string statusDescription, CancellationToken cancellationToken)
+        public override async Task CloseAsync(WebSocketCloseStatus closeStatus, string statusDescription,
+            CancellationToken cancellationToken)
         {
             if (_state == WebSocketState.Open)
             {
@@ -284,7 +322,8 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// <summary>
         /// Fire and forget close
         /// </summary>
-        public override async Task CloseOutputAsync(WebSocketCloseStatus closeStatus, string statusDescription, CancellationToken cancellationToken)
+        public override async Task CloseOutputAsync(WebSocketCloseStatus closeStatus, string statusDescription,
+            CancellationToken cancellationToken)
         {
             if (_state == WebSocketState.Open)
             {
@@ -314,7 +353,8 @@ namespace Nakama.Ninja.WebSockets.Internal
                     CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                     try
                     {
-                        CloseOutputAsync(WebSocketCloseStatus.EndpointUnavailable, "Service is Disposed", cts.Token).Wait(cts.Token);
+                        CloseOutputAsync(WebSocketCloseStatus.EndpointUnavailable, "Service is Disposed", cts.Token)
+                            .Wait();
                     }
                     catch (OperationCanceledException) {}
                 }
@@ -323,7 +363,10 @@ namespace Nakama.Ninja.WebSockets.Internal
                 _internalReadCts.Cancel();
                 _stream.Close();
             }
-            catch {}
+            catch
+            {
+                // ignored
+            }
         }
 
         /// <summary>
@@ -367,7 +410,9 @@ namespace Nakama.Ninja.WebSockets.Internal
             // as per websocket spec
             if (payload.Count > MAX_PING_PONG_PAYLOAD_LEN)
             {
-                Exception ex = new InvalidOperationException($"Max ping message size {MAX_PING_PONG_PAYLOAD_LEN} exceeded: {payload.Count}");
+                Exception ex =
+                    new InvalidOperationException(
+                        $"Max ping message size {MAX_PING_PONG_PAYLOAD_LEN} exceeded: {payload.Count}");
                 await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.ProtocolError, ex.Message, ex);
                 throw ex;
             }
@@ -385,7 +430,8 @@ namespace Nakama.Ninja.WebSockets.Internal
             }
             catch (Exception ex)
             {
-                await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.EndpointUnavailable, "Unable to send Pong response", ex);
+                await CloseOutputAutoTimeoutAsync(WebSocketCloseStatus.EndpointUnavailable,
+                    "Unable to send Pong response", ex);
                 throw;
             }
         }
@@ -394,7 +440,8 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// Called when a Close frame is received
         /// Send a response close frame if applicable
         /// </summary>
-        private async Task<WebSocketReceiveResult> RespondToCloseFrame(WebSocketFrame frame, ArraySegment<byte> buffer, CancellationToken token)
+        private async Task<WebSocketReceiveResult> RespondToCloseFrame(WebSocketFrame frame, ArraySegment<byte> buffer,
+            CancellationToken token)
         {
             _closeStatus = frame.CloseStatus;
             _closeStatusDescription = frame.CloseStatusDescription;
@@ -418,7 +465,8 @@ namespace Nakama.Ninja.WebSockets.Internal
                 }
             }
 
-            return new WebSocketReceiveResult(frame.Count, WebSocketMessageType.Close, frame.IsFinBitSet, frame.CloseStatus, frame.CloseStatusDescription);
+            return new WebSocketReceiveResult(frame.Count, WebSocketMessageType.Close, frame.IsFinBitSet,
+                frame.CloseStatus, frame.CloseStatusDescription);
         }
 
         /// <summary>
@@ -502,7 +550,8 @@ namespace Nakama.Ninja.WebSockets.Internal
                     case WebSocketMessageType.Text:
                         return WebSocketOpCode.TextFrame;
                     case WebSocketMessageType.Close:
-                        throw new NotSupportedException("Cannot use Send function to send a close frame. Use Close function.");
+                        throw new NotSupportedException(
+                            "Cannot use Send function to send a close frame. Use Close function.");
                     default:
                         throw new NotSupportedException($"MessageType {messageType} not supported");
                 }
@@ -515,7 +564,8 @@ namespace Nakama.Ninja.WebSockets.Internal
         /// <param name="closeStatus">The close status to use</param>
         /// <param name="statusDescription">A description of why we are closing</param>
         /// <param name="ex">The exception (for logging)</param>
-        private async Task CloseOutputAutoTimeoutAsync(WebSocketCloseStatus closeStatus, string statusDescription, Exception ex)
+        private async Task CloseOutputAutoTimeoutAsync(WebSocketCloseStatus closeStatus, string statusDescription,
+            Exception ex)
         {
             TimeSpan timeSpan = TimeSpan.FromSeconds(5);
 

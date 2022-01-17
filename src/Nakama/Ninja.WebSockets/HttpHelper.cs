@@ -47,7 +47,7 @@ namespace Nakama.Ninja.WebSockets
             byte[] keyAsBytes = new byte[16];
             rand.NextBytes(keyAsBytes);
             return Convert.ToBase64String(keyAsBytes);
-        }        
+        }
 
         /// <summary>
         /// Computes a WebSocket accept string from a given key
@@ -75,7 +75,7 @@ namespace Nakama.Ninja.WebSockets
         /// <returns>The HTTP header</returns>
         public static async Task<string> ReadHttpHeaderAsync(System.IO.Stream stream, CancellationToken token)
         {
-            int length = 1024*16; // 16KB buffer more than enough for http header
+            int length = 1024 * 16; // 16KB buffer more than enough for http header
             byte[] buffer = new byte[length];
             int offset = 0;
             int bytesRead = 0;
@@ -96,7 +96,6 @@ namespace Nakama.Ninja.WebSockets
                 {
                     return header;
                 }
-
             } while (bytesRead > 0);
 
             return string.Empty;
@@ -152,7 +151,8 @@ namespace Nakama.Ninja.WebSockets
                 const int MAX_LEN = 2048;
                 if (match.Length > MAX_LEN)
                 {
-                    throw new EntityTooLargeException($"Sec-WebSocket-Protocol exceeded the maximum of length of {MAX_LEN}");
+                    throw new EntityTooLargeException(
+                        $"Sec-WebSocket-Protocol exceeded the maximum of length of {MAX_LEN}");
                 }
 
                 // extract a csv list of sub protocols (in order of highest preference first)

@@ -65,7 +65,8 @@ namespace Nakama.Ninja.WebSockets
         /// <param name="stream">The network stream</param>
         /// <param name="token">The optional cancellation token</param>
         /// <returns>Http data read from the stream</returns>
-        public async Task<WebSocketHttpContext> ReadHttpHeaderFromStreamAsync(System.IO.Stream stream, CancellationToken token = default(CancellationToken))
+        public async Task<WebSocketHttpContext> ReadHttpHeaderFromStreamAsync(System.IO.Stream stream,
+            CancellationToken token = default(CancellationToken))
         {
             string header = await HttpHelper.ReadHttpHeaderAsync(stream, token);
             string path = HttpHelper.GetPathFromHeader(header);
@@ -81,7 +82,8 @@ namespace Nakama.Ninja.WebSockets
         /// <param name="context">The http context used to initiate this web socket request</param>
         /// <param name="token">The optional cancellation token</param>
         /// <returns>A connected web socket</returns>
-        public async Task<WebSocket> AcceptWebSocketAsync(WebSocketHttpContext context, CancellationToken token = default(CancellationToken))
+        public async Task<WebSocket> AcceptWebSocketAsync(WebSocketHttpContext context,
+            CancellationToken token = default(CancellationToken))
         {
             return await AcceptWebSocketAsync(context, new WebSocketServerOptions(), token);
         }
@@ -94,12 +96,14 @@ namespace Nakama.Ninja.WebSockets
         /// <param name="options">The web socket options</param>
         /// <param name="token">The optional cancellation token</param>
         /// <returns>A connected web socket</returns>
-        public async Task<WebSocket> AcceptWebSocketAsync(WebSocketHttpContext context, WebSocketServerOptions options, CancellationToken token = default(CancellationToken))
+        public async Task<WebSocket> AcceptWebSocketAsync(WebSocketHttpContext context, WebSocketServerOptions options,
+            CancellationToken token = default(CancellationToken))
         {
             Guid guid = Guid.NewGuid();
             await PerformHandshakeAsync(guid, context.HttpHeader, options.SubProtocol, context.Stream, token);
             string secWebSocketExtensions = null;
-            return new WebSocketImplementation(guid, _bufferFactory, context.Stream, options.KeepAliveInterval, secWebSocketExtensions, options.IncludeExceptionInCloseResponse, false, options.SubProtocol);
+            return new WebSocketImplementation(guid, _bufferFactory, context.Stream, options.KeepAliveInterval,
+                secWebSocketExtensions, options.IncludeExceptionInCloseResponse, false, options.SubProtocol);
         }
 
         private static void CheckWebSocketVersion(string httpHeader)
@@ -114,7 +118,8 @@ namespace Nakama.Ninja.WebSockets
                 int secWebSocketVersion = Convert.ToInt32(match.Groups[1].Value.Trim());
                 if (secWebSocketVersion < WebSocketVersion)
                 {
-                    throw new WebSocketVersionNotSupportedException(string.Format("WebSocket Version {0} not suported. Must be {1} or above", secWebSocketVersion, WebSocketVersion));
+                    throw new WebSocketVersionNotSupportedException(
+                        $"WebSocket Version {secWebSocketVersion} not suported. Must be {WebSocketVersion} or above");
                 }
             }
             else
@@ -123,7 +128,8 @@ namespace Nakama.Ninja.WebSockets
             }
         }
 
-        private static async Task PerformHandshakeAsync(Guid guid, String httpHeader, string subProtocol, System.IO.Stream stream, CancellationToken token)
+        private static async Task PerformHandshakeAsync(Guid guid, String httpHeader, string subProtocol,
+            System.IO.Stream stream, CancellationToken token)
         {
             try
             {

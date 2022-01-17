@@ -46,10 +46,7 @@ namespace Nakama.Ninja.WebSockets
                 _ms = new MemoryStream(buffer, 0, buffer.Length, true, true);
             }
 
-            public override long Length
-            {
-                get { return base.Length; }
-            }
+            public override long Length => base.Length;
 
             public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback,
                 object state)
@@ -63,36 +60,21 @@ namespace Nakama.Ninja.WebSockets
                 return _ms.BeginWrite(buffer, offset, count, callback, state);
             }
 
-            public override bool CanRead
-            {
-                get { return _ms.CanRead; }
-            }
-
-            public override bool CanSeek
-            {
-                get { return _ms.CanSeek; }
-            }
-
-            public override bool CanTimeout
-            {
-                get { return _ms.CanTimeout; }
-            }
-
-            public override bool CanWrite
-            {
-                get { return _ms.CanWrite; }
-            }
+            public override bool CanRead => _ms.CanRead;
+            public override bool CanSeek => _ms.CanSeek;
+            public override bool CanTimeout => _ms.CanTimeout;
+            public override bool CanWrite => _ms.CanWrite;
 
             public override int Capacity
             {
-                get { return _ms.Capacity; }
-                set { _ms.Capacity = value; }
+                get => _ms.Capacity;
+                set => _ms.Capacity = value;
             }
 
             public override void Close()
             {
                 // clear the buffer - we only need to clear up to the number of bytes we have already written
-                Array.Clear(_buffer, 0, (int) _ms.Position);
+                Array.Clear(_buffer, 0, (int)_ms.Position);
 
                 _ms.Close();
 
@@ -132,8 +114,8 @@ namespace Nakama.Ninja.WebSockets
 
             public override long Position
             {
-                get { return _ms.Position; }
-                set { _ms.Position = value; }
+                get => _ms.Position;
+                set => _ms.Position = value;
             }
 
             public override int Read(byte[] buffer, int offset, int count)
@@ -146,13 +128,13 @@ namespace Nakama.Ninja.WebSockets
                 // we cannot fit the data into the existing buffer, time for a new buffer
                 if (count > (_buffer.Length - _ms.Position))
                 {
-                    int position = (int) _ms.Position;
+                    int position = (int)_ms.Position;
 
                     // double the buffer size
-                    long newSize = (long) _buffer.Length * 2;
+                    long newSize = (long)_buffer.Length * 2;
 
                     // make sure the new size is big enough
-                    long requiredSize = (long) count + _buffer.Length - position;
+                    long requiredSize = (long)count + _buffer.Length - position;
 
                     if (requiredSize > int.MaxValue)
                     {
@@ -163,7 +145,7 @@ namespace Nakama.Ninja.WebSockets
                     if (requiredSize > newSize)
                     {
                         // compute the power of two larger than requiredSize. so 40000 => 65536
-                        long candidateSize = (long) Math.Pow(2, Math.Ceiling(Math.Log(requiredSize) / Math.Log(2)));
+                        long candidateSize = (long)Math.Pow(2, Math.Ceiling(Math.Log(requiredSize) / Math.Log(2)));
                         if (candidateSize > int.MaxValue)
                         {
                             newSize = requiredSize;
@@ -221,8 +203,8 @@ namespace Nakama.Ninja.WebSockets
 
             public override int ReadTimeout
             {
-                get { return _ms.ReadTimeout; }
-                set { _ms.ReadTimeout = value; }
+                get => _ms.ReadTimeout;
+                set => _ms.ReadTimeout = value;
             }
 
             public override long Seek(long offset, SeekOrigin loc)
@@ -235,7 +217,7 @@ namespace Nakama.Ninja.WebSockets
             /// </summary>
             public override void SetLength(long value)
             {
-                EnlargeBufferIfRequired((int) value);
+                EnlargeBufferIfRequired((int)value);
             }
 
             public override byte[] ToArray()
@@ -246,14 +228,14 @@ namespace Nakama.Ninja.WebSockets
 
             public override int WriteTimeout
             {
-                get { return _ms.WriteTimeout; }
-                set { _ms.WriteTimeout = value; }
+                get => _ms.WriteTimeout;
+                set => _ms.WriteTimeout = value;
             }
 
 #if !NET45
             public override bool TryGetBuffer(out ArraySegment<byte> buffer)
             {
-                buffer = new ArraySegment<byte>(_buffer, 0, (int) _ms.Position);
+                buffer = new ArraySegment<byte>(_buffer, 0, (int)_ms.Position);
                 return true;
             }
 #endif

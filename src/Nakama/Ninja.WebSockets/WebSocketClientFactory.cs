@@ -171,7 +171,12 @@ namespace Nakama.Ninja.WebSockets
         private void ThrowIfInvalidResponseCode(string responseHeader)
         {
             string responseCode = HttpHelper.ReadHttpResponseCode(responseHeader);
-            if (!string.Equals(responseCode, "101 Switching Protocols", StringComparison.InvariantCultureIgnoreCase))
+            if (responseCode == null)
+            {
+                throw new InvalidHttpResponseCodeException(null, null, responseHeader);
+            }
+
+            if (!responseCode.StartsWith("101 ", StringComparison.InvariantCultureIgnoreCase))
             {
                 string[] lines = responseHeader.Split(new string[] { "\r\n" }, StringSplitOptions.None);
 
@@ -211,11 +216,11 @@ namespace Nakama.Ninja.WebSockets
         /// <param name="port">The destination port</param>
         /// <param name="cancellationToken">Used to cancel the request</param>
         /// <returns>A connected and open stream</returns>
-        protected virtual async Task<System.IO.Stream> GetStream(Guid loggingGuid, bool isSecure, bool noDelay,
-            string host, int port, CancellationToken cancellationToken)
+        protected virtual async Task<System.IO.Stream> GetStream(Guid loggingGuid, bool isSecure, bool noDelay, string host,
+            int port, CancellationToken cancellationToken)
         {
             var tcpClient = new TcpClient(AddressFamily.InterNetworkV6);
-            tcpClient.Client.NoDelay = true;
+            tcpClient.Client.NoDelay = noDelay;
             tcpClient.Client.DualMode = true;
             IPAddress ipAddress;
             if (IPAddress.TryParse(host, out ipAddress))
