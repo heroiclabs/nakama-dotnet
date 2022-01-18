@@ -61,7 +61,7 @@ namespace Nakama
         {
             _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
             _webSocket = new ClientWebSocket();
-            _webSocket.Options.KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec);
+           // not currently supported on wasm _webSocket.Options.KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec);
         }
 
         public WebsocketWasmAdapter(ClientWebSocket webSocket)
