@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## [Unreleased]
 ### Added
 - Add overload methods in Client which take a CancellationToken. Thanks @gamecentric.
+- Add websocketwasmadapter allows nakama dotnet to be used in WASM and Blazor. Thanks @mattkanwisher
 
 ### Changed
 - Use DualMode in TcpClient to handle NAT64 overlay networks (some mobile carriers).
