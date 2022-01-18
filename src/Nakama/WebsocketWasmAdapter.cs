@@ -96,12 +96,11 @@ namespace Nakama
             _uri = uri;
             IsConnecting = true;
 
-            var client = new ClientWebSocket();
             try
             {
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
-                await client.ConnectAsync(_uri, linkedCts.Token).ConfigureAwait(false);
+                await _webSocket.ConnectAsync(_uri, linkedCts.Token).ConfigureAwait(false);
                 _ = ReceiveLoop(_webSocket, _cancellationSource.Token);
                 Connected?.Invoke();
                 IsConnected = true;
