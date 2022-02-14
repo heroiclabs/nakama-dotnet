@@ -52,21 +52,21 @@ namespace Nakama
         public bool IsConnecting { get; private set; }
 
         private CancellationTokenSource _cancellationSource;
-        private ClientWebSocket _webSocket;
         private Uri _uri;
+        private ClientWebSocket _webSocket;
+        private readonly int _maxMessageReadSize;
         private readonly TimeSpan _sendTimeoutSec;
 
-
-        public WebsocketWasmAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec, int sendTimeoutSec = SendTimeoutSec) 
+        public WebsocketWasmAdapter(int sendTimeoutSec = SendTimeoutSec, int maxMessageReadSize = MaxMessageReadSize)
         {
+            _maxMessageReadSize = maxMessageReadSize;
             _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
             _webSocket = new ClientWebSocket();
-           // not currently supported on wasm _webSocket.Options.KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec);
         }
 
         public WebsocketWasmAdapter(ClientWebSocket webSocket)
         {
-            //There is no way to override options so allow contructor to take a websocket that already has options
+            // There is no way to override options so allow constructor to take a websocket that already has options.
             _webSocket = webSocket;
         }
 
@@ -94,6 +94,7 @@ namespace Nakama
 
             _cancellationSource = new CancellationTokenSource();
             _uri = uri;
+            _webSocket = new ClientWebSocket();
             IsConnecting = true;
 
             try
@@ -117,8 +118,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.SendAsync"/>
-        public Task SendAsync(ArraySegment<byte> buffer, bool reliable = true,
-            CancellationToken canceller = default)
+        public Task SendAsync(ArraySegment<byte> buffer, bool reliable = true, CancellationToken canceller = default)
         {
             if (_webSocket == null || _webSocket.State != WebSocketState.Open)
             {
@@ -143,13 +143,13 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="object.ToString" />
-        public override string ToString() => $"WebSocketDriver(MaxMessageSize={MaxMessageReadSize}, Uri='{_uri}')";
+        public override string ToString() => $"WebSocketDriver(MaxMessageSize={_maxMessageReadSize}, Uri='{_uri}')";
 
         private async Task ReceiveLoop(WebSocket webSocket, CancellationToken canceller)
         {
             canceller.ThrowIfCancellationRequested();
 
-            var buffer = new byte[MaxMessageReadSize];
+            var buffer = new byte[_maxMessageReadSize];
             var bufferReadCount = 0;
 
             try
@@ -157,7 +157,7 @@ namespace Nakama
                 do
                 {
                     var bufferSegment =
-                        new ArraySegment<byte>(buffer, bufferReadCount, MaxMessageReadSize - bufferReadCount);
+                        new ArraySegment<byte>(buffer, bufferReadCount, _maxMessageReadSize - bufferReadCount);
                     var result = await webSocket.ReceiveAsync(bufferSegment, canceller).ConfigureAwait(false);
                     if (result == null)
                     {
