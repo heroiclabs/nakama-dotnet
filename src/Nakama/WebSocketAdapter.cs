@@ -52,24 +52,27 @@ namespace Nakama
         /// </summary>
         public bool IsConnecting { get; private set; }
 
+        private readonly int _maxMessageReadSize;
         private readonly WebSocketClientOptions _options;
         private readonly TimeSpan _sendTimeoutSec;
         private CancellationTokenSource _cancellationSource;
         private WebSocket _webSocket;
         private Uri _uri;
 
-        public WebSocketAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec, int sendTimeoutSec = SendTimeoutSec) :
+        public WebSocketAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec, int sendTimeoutSec = SendTimeoutSec,
+            int maxMessageReadSize = MaxMessageReadSize) :
             this(new WebSocketClientOptions
             {
                 IncludeExceptionInCloseResponse = true,
                 KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec),
                 NoDelay = true
-            }, sendTimeoutSec)
+            }, sendTimeoutSec, maxMessageReadSize)
         {
         }
 
-        public WebSocketAdapter(WebSocketClientOptions options, int sendTimeoutSec)
+        public WebSocketAdapter(WebSocketClientOptions options, int sendTimeoutSec, int maxMessageReadSize)
         {
+            _maxMessageReadSize = maxMessageReadSize;
             _options = options;
             _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
         }
@@ -148,13 +151,13 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="object.ToString" />
-        public override string ToString() => $"WebSocketDriver(MaxMessageSize={MaxMessageReadSize}, Uri='{_uri}')";
+        public override string ToString() => $"WebSocketDriver(MaxMessageSize={_maxMessageReadSize}, Uri='{_uri}')";
 
         private async Task ReceiveLoop(WebSocket webSocket, CancellationToken canceller)
         {
             canceller.ThrowIfCancellationRequested();
 
-            var buffer = new byte[MaxMessageReadSize];
+            var buffer = new byte[_maxMessageReadSize];
             var bufferReadCount = 0;
 
             try
@@ -162,7 +165,7 @@ namespace Nakama
                 do
                 {
                     var bufferSegment =
-                        new ArraySegment<byte>(buffer, bufferReadCount, MaxMessageReadSize - bufferReadCount);
+                        new ArraySegment<byte>(buffer, bufferReadCount, _maxMessageReadSize - bufferReadCount);
                     var result = await webSocket.ReceiveAsync(bufferSegment, canceller).ConfigureAwait(false);
                     if (result == null)
                     {
