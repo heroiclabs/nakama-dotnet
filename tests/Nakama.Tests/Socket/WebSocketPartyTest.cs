@@ -99,10 +99,7 @@ namespace Nakama.Tests.Socket
 
             var partyPresenceJoinedTcs = new TaskCompletionSource<IPartyPresenceEvent>();
             socket1.ReceivedPartyPresence += presenceEvt => partyPresenceJoinedTcs.SetResult(presenceEvt);
-
-            var partyMatchmakingTcs = new TaskCompletionSource<IPartyMatchmakerTicket>();
-            socket1.ReceivedPartyMatchmakerTicket += matchmakerTicket => partyMatchmakingTcs.SetResult(matchmakerTicket);
-
+            
             var party = await socket1.CreatePartyAsync(false, 2);
             Assert.NotNull(party);
             Assert.NotEmpty(party.Id);
@@ -116,8 +113,7 @@ namespace Nakama.Tests.Socket
 
             await partyPresenceJoinedTcs.Task;
 
-            await socket1.AddMatchmakerPartyAsync(party.Id, "*", 2, 2);
-            var result = await partyMatchmakingTcs.Task;
+            var result = await socket1.AddMatchmakerPartyAsync(party.Id, "*", 2, 2);
 
             Assert.NotEmpty(result.Ticket);
             await socket1.RemoveMatchmakerPartyAsync(party.Id, result.Ticket);
