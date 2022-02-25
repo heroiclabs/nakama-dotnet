@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
+  <PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
+    <Authors>Nakama Authors &amp; contributors</Authors>
+    <Company>Heroic Labs</Company>
+    <Description>
+      Nakama is an open-source server designed to power modern games and apps.
+      
+      Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much more. The official client which implements the full API and socket options for Nakama server. It's written in C# with minimal dependencies to support Unity, Xamarin, Godot, XNA, and other engines and frameworks.
+    </Description>
+    <PackageId>NakamaClient</PackageId>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageTags>clientsdk;nakama;gameserver;backend;restapi</PackageTags>
+    <RepositoryUrl>https://github.com/heroiclabs/nakama-dotnet</RepositoryUrl>
+  </PropertyGroup>
+</Project>
