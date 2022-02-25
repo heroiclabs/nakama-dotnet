@@ -109,7 +109,8 @@ namespace Nakama
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
                 _webSocket = await clientFactory.ConnectAsync(_uri, _options, linkedCts.Token).ConfigureAwait(false);
-                _ = ReceiveLoop(_webSocket, _cancellationSource.Token);
+                _ = Task.Factory.StartNew(_ => ReceiveLoop(_webSocket, _cancellationSource.Token),
+                    TaskCreationOptions.LongRunning, _cancellationSource.Token);
                 Connected?.Invoke();
                 IsConnected = true;
             }
@@ -186,11 +187,16 @@ namespace Nakama
                     }
                     catch (Exception e)
                     {
+                        // Don't stop receive loop if received function throws.
                         ReceivedError?.Invoke(e);
                     }
 
                     bufferReadCount = 0;
                 } while (_webSocket.State == WebSocketState.Open && !canceller.IsCancellationRequested);
+            }
+            catch (Exception e)
+            {
+                ReceivedError?.Invoke(e);
             }
             finally
             {
