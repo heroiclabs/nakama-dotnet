@@ -184,6 +184,10 @@ namespace Nakama
                     bufferReadCount = 0;
                 } while (_webSocket.State == WebSocketState.Open && !canceller.IsCancellationRequested);
             }
+            catch (Exception e)
+            {
+                ReceivedError?.Invoke(e);
+            }
             finally
             {
                 Closed?.Invoke();
