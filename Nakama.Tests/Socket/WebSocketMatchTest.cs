@@ -52,6 +52,38 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldCreateMatchWithName()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.ConnectAsync(session);
+            var match = await _socket.CreateMatchAsync("TestMatch");
+
+            Assert.NotNull(match);
+            Assert.NotNull(match.Id);
+            Assert.NotEmpty(match.Id);
+            Assert.False(match.Authoritative);
+            Assert.True(match.Size > 0);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldJoinMatchWithName()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.ConnectAsync(session);
+            var match = await _socket.CreateMatchAsync("TestMatch");
+
+            // Currently MatchCreate is an upsert operation so there is no MatchJoin that accepts a name, calling MatchCreate with a match name
+            // will return a deterministic match Id and place the user on the appropriate stream
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.ConnectAsync(session2);
+            var match2 = await _socket.CreateMatchAsync("TestMatch");
+            
+            Assert.NotNull(match);
+            Assert.NotNull(match2);
+            Assert.Equal(match.Id, match2.Id);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldCreateMatchAndSecondUserJoin()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
