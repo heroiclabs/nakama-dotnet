@@ -238,7 +238,7 @@ namespace {{.Namespace}}
     {{- end }}
 
     /// <summary>
-    /// The low level client for the Nakama API.
+    /// The low level client for the {{ .Namespace }} API.
     /// </summary>
     internal class ApiClient
     {

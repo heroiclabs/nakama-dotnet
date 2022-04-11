@@ -656,18 +656,18 @@ namespace Satori
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface IProtobufAny
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string TypeUrl { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string Value { get; }
     }
@@ -694,23 +694,23 @@ namespace Satori
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string Message { get; }
     }
@@ -743,7 +743,7 @@ namespace Satori
     }
 
     /// <summary>
-    /// The low level client for the Nakama API.
+    /// The low level client for the Satori API.
     /// </summary>
     internal class ApiClient
     {
