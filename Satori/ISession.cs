@@ -28,16 +28,6 @@ namespace Satori
         string AuthToken { get; }
 
         /// <summary>
-        /// If the user account for this session was just created.
-        /// </summary>
-        bool Created { get; }
-
-        /// <summary>
-        /// The UNIX timestamp when this session was created.
-        /// </summary>
-        long CreateTime { get; }
-
-        /// <summary>
         /// The UNIX timestamp when this session will expire.
         /// </summary>
         long ExpireTime { get; }
@@ -61,11 +51,6 @@ namespace Satori
         /// Refresh token that can be used for session token renewal.
         /// </summary>
         string RefreshToken { get; }
-
-        /// <summary>
-        /// Any custom properties associated with this session.
-        /// </summary>
-        IDictionary<string, string> Vars { get; }
 
         /// <summary>
         /// The username of the user who owns this session.

@@ -26,12 +26,6 @@ namespace Satori
         /// <inheritdoc cref="ISession.AuthToken"/>
         public string AuthToken { get; private set; }
 
-        /// <inheritdoc cref="ISession.Created"/>
-        public bool Created { get; }
-
-        /// <inheritdoc cref="ISession.CreateTime"/>
-        public long CreateTime { get; }
-
         /// <inheritdoc cref="ISession.ExpireTime"/>
         public long ExpireTime { get; private set; }
 
@@ -46,9 +40,6 @@ namespace Satori
 
         /// <inheritdoc cref="ISession.RefreshToken"/>
         public string RefreshToken { get; private set; }
-
-        /// <inheritdoc cref="ISession.Vars"/>
-        public IDictionary<string, string> Vars { get; }
 
         /// <inheritdoc cref="ISession.Username"/>
         public string Username { get; private set; }
@@ -88,7 +79,6 @@ namespace Satori
             var span = DateTime.UtcNow - Epoch;
             CreateTime = span.Seconds;
             RefreshExpireTime = 0L;
-            Vars = new Dictionary<string, string>();
 
             Update(authToken, refreshToken);
         }
@@ -108,13 +98,6 @@ namespace Satori
             ExpireTime = Convert.ToInt64(decoded["exp"]);
             Username = decoded["usn"].ToString();
             UserId = decoded["uid"].ToString();
-            if (decoded.ContainsKey("vrs") && decoded["vrs"] is Dictionary<string, object> dictionary)
-            {
-                foreach (var variable in dictionary)
-                {
-                    Vars[variable.Key] = variable.Value.ToString();
-                }
-            }
 
             // Check in case clients have not updated to use refresh tokens yet.
             if (!string.IsNullOrEmpty(refreshToken))
