@@ -63,23 +63,13 @@ namespace Satori
 
         public override string ToString()
         {
-            var variables = "{";
-            foreach (var variable in Vars)
-            {
-                variables = string.Concat(variables, " '", variable.Key, "': '", variable.Value, "', ");
-            }
-            variables = string.Concat(variables, "}");
             return
-                $"Session(AuthToken='{AuthToken}', Created={Created}, CreateTime={CreateTime}, ExpireTime={ExpireTime}, RefreshToken={RefreshToken}, RefreshExpireTime={RefreshExpireTime}, Variables={variables}, Username='{Username}', UserId='{UserId}')";
+                $"Session(AuthToken='{AuthToken}', ExpireTime={ExpireTime}, RefreshToken={RefreshToken}, RefreshExpireTime={RefreshExpireTime}, Username='{Username}', UserId='{UserId}')";
         }
 
         internal Session(string authToken, string refreshToken, bool created)
         {
-            Created = created;
-            var span = DateTime.UtcNow - Epoch;
-            CreateTime = span.Seconds;
             RefreshExpireTime = 0L;
-
             Update(authToken, refreshToken);
         }
 

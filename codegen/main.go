@@ -38,7 +38,7 @@ namespace {{.Namespace}}
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using TinyJson;
+    using Nakama.TinyJson;
 
     /// <summary>
     /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
@@ -122,8 +122,12 @@ namespace {{.Namespace}}
         IEnumerable<I{{ $property.Items.Ref | cleanRef }}> {{ $fieldname }} { get; }
             {{- end }}
         {{- else if eq $property.Type "object"}}
-            {{- if eq $property.AdditionalProperties.Type "string"}}
+            {{- if eq $property.AdditionalProperties.Type "string" }}
+                {{- if eq $property.AdditionalProperties.Format "int64" }}
+        IDictionary<string, int> {{$fieldname}} { get; }
+                {{- else }}
         IDictionary<string, string> {{$fieldname}} { get; }
+                {{- end }}
             {{- else if eq $property.AdditionalProperties.Type "integer"}}
         IDictionary<string, int> {{$fieldname}} { get; }
             {{- else if eq $property.AdditionalProperties.Type "number"}}
@@ -181,9 +185,15 @@ namespace {{.Namespace}}
             {{- end }}
         {{- else if eq $property.Type "object"}}
             {{- if eq $property.AdditionalProperties.Type "string"}}
+                {{- if eq $property.AdditionalProperties.Format "int64" }}
+        public IDictionary<string, int> {{ $fieldname }} => ApiClient.DeserializeIntProperties(_{{ $propname | snakeToCamel }}) ?? new Dictionary<string, int>();
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public Dictionary<string, string> _{{ $propname | snakeToCamel }} { get; set; }
+                {{- else }}
         public IDictionary<string, string> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, string>();
         [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public Dictionary<string, string> _{{ $propname | snakeToCamel }} { get; set; }
+                 {{- end }}
             {{- else if eq $property.AdditionalProperties.Type "integer"}}
         public IDictionary<string, int> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, int>();
         [DataMember(Name="{{ $attrDataName }}"), Preserve]
@@ -219,12 +229,12 @@ namespace {{.Namespace}}
             output = string.Concat(output, "{{ $fieldname | snakeToPascal }}: [", string.Join(", ", {{ $fieldname | snakeToPascal }}), "], ");
             {{- else if eq $property.Type "object" }}
 
-            var mapString = "";
+            var {{ $fieldname }}String = "";
             foreach (var kvp in {{ $fieldname | snakeToPascal }})
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                {{ $fieldname }}String = string.Concat({{ $fieldname }}String, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "{{ $fieldname | snakeToPascal }}: [" + mapString + "]");
+            output = string.Concat(output, "{{ $fieldname | snakeToPascal }}: [" + {{ $fieldname }}String + "]");
             {{- else }}
             output = string.Concat(output, "{{ $fieldname | snakeToPascal }}: ", {{ $fieldname | snakeToPascal }}, ", ");
             {{- end }}
@@ -242,12 +252,12 @@ namespace {{.Namespace}}
     /// </summary>
     internal class ApiClient
     {
-        public readonly IHttpAdapter HttpAdapter;
+        public readonly Nakama.IHttpAdapter HttpAdapter;
         public int Timeout { get; set; }
 
         private readonly Uri _baseUri;
 
-        public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
+        public ApiClient(Uri baseUri, Nakama.IHttpAdapter httpAdapter, int timeout = 10)
         {
             _baseUri = baseUri;
             HttpAdapter = httpAdapter;
@@ -421,6 +431,41 @@ namespace {{.Namespace}}
         }
         {{- end }}
         {{- end }}
+
+
+        public static IDictionary<string, int> DeserializeIntProperties(IDictionary<string, string> intProperties)
+        {
+            if (intProperties == null)
+            {
+                return null;
+            }
+
+            var deserialized = new Dictionary<string, int>();
+
+            foreach (var prop in intProperties)
+            {
+                deserialized[prop.Key] = int.Parse(prop.Value);
+            }
+
+            return deserialized;
+        }
+
+        public static IDictionary<string, string> SerializeIntProperties(IDictionary<string, int> intProperties)
+        {
+            if (intProperties == null)
+            {
+                return null;
+            }
+
+            var serialized = new Dictionary<string, string>();
+
+            foreach (var prop in intProperties)
+            {
+                serialized[prop.Key] = prop.Value.ToString();
+            }
+
+            return serialized;
+        }
     }
 }
 `
@@ -608,7 +653,8 @@ func main() {
 					Ref  string `json:"$ref"`
 				}
 				AdditionalProperties struct {
-					Type string // used with type "map"
+					Type   string // used with type "map"
+					Format string // used with type "map"
 				}
 				Format      string // used with type "boolean"
 				Description string

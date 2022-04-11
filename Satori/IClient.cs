@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,108 +24,121 @@ namespace Satori
     public interface IClient
     {
         /// <summary>
-        /// The host address of the server. Defaults to "127.0.0.1".
-        /// </summary>
-        string Host { get; }
-
-        /// <summary>
-        /// The port number of the server. Defaults to 7350.
-        /// </summary>
-        int Port { get; }
-
-        /// <summary>
-        /// The protocol scheme used to connect with the server. Must be either "http" or "https".
-        /// </summary>
-        string Scheme { get; }
-
-        /// <summary>
-        /// Set the timeout in seconds on requests sent to the server.
-        /// </summary>
-        int Timeout { get; set; }
-
-        /// <summary>
         /// Authenticate against the server.
         /// </summary>
-        public async Task<IApiSession> AuthenticateAsync(
-            string basicAuthUsername,
-            string basicAuthPassword,
-            ApiAuthenticateRequest body,
-            CancellationToken? cancellationToken);
+        /// <param name="id">An optional user id.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to a user session.</returns>
+        public Task<IApiSession> AuthenticateAsync(
+            string id = null,
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
         /// </summary>
-        public async Task AuthenticateLogoutAsync(
-            string bearerToken,
-            ApiAuthenticateLogoutRequest body,
+        /// <param name="session">The session of the user.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        public Task AuthenticateLogoutAsync(
+            ISession session,
             CancellationToken? cancellationToken);
 
         /// <summary>
         /// Refresh a user's session using a refresh token retrieved from a previous authentication request.
         /// </summary>
-        public async Task<IApiSession> AuthenticateRefreshAsync(
-            string basicAuthUsername,
-            string basicAuthPassword,
-            ApiAuthenticateRefreshRequest body,
-            CancellationToken? cancellationToken);
+        /// <param name="session">The session of the user.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to a user session.</returns>
+        public Task<IApiSession> AuthenticateRefreshAsync(
+            ISession session,
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// Publish an event for this session.
         /// </summary>
-        public async Task EventAsync(
-            string bearerToken,
-            ApiEventRequest body,
-            CancellationToken? cancellationToken);
-
+        /// <param name="session">The session of the user.</param>
+        /// <param name="name">The name of the event.</param>
+        /// <param name="properties">The event properties.</param>
+        /// <param name="timestamp">The time when the event was triggered.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        public Task EventAsync(
+            ISession session,
+            string name,
+            IApiProperties properties,
+            string timestamp,
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
-        /// Get or list all available experiments for this identity.
+        /// Get all experiments data.
         /// </summary>
-        public async Task<IApiExperimentList> GetExperimentsAsync(
-            string bearerToken,
+        /// <param name="session">The session of the user.</param>
+        /// <param name="names">Experiment names; if empty string all experiments are returned.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to all experiments that this identity is involved with.</returns>
+        public Task<IApiExperimentList> GetExperimentsAsync(
+            ISession session,
             IEnumerable<string> names,
             CancellationToken? cancellationToken);
 
         /// <summary>
         /// List all available flags for this identity.
         /// </summary>
-        public async Task<IApiFlagList> GetFlagsAsync(
-            string bearerToken,
+        /// <param name="session">The session of the user.</param>
+        /// <param name="names"> Flag names; if empty string all flags are returned. </param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to all flags available to this identity.</returns>
+        public Task<IApiFlagList> GetFlagsAsync(
+            ISession session,
             IEnumerable<string> names,
-            CancellationToken? cancellationToken);
-
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
-        /// Enrich/replace the current session with new identifier.
+        /// List all available flags for this identity.
         /// </summary>
-        public async Task<IApiSession> IdentifyAsync(
-            string bearerToken,
-            ApiIdentifyRequest body,
-            CancellationToken? cancellationToken);
-
+        /// <param name="session">The session of the user.</param>
+        /// <param name="id"> Identity ID to enrich the current session and return a new session. Old session will no longer be usable.</param>
+        /// <param name="properties"> Properties to update with this call. If not set, properties are left as they are on the server.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the session of the user.</returns>
+        public Task<IApiSession> IdentifyAsync(
+            ISession session,
+            string id,
+            IApiProperties properties = null,
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// List available live events.
         /// </summary>
-        public async Task<IApiLiveEventList> GetLiveEventsAsync(
-            string bearerToken,
-            IEnumerable<string> names,
-            CancellationToken? cancellationToken);
+        /// <param name="session">The session of the user.</param>
+        /// <param name="names">Live event names; if null or empty, all live events are returned.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to a list of live events.</returns>
+        public Task<IApiLiveEventList> GetLiveEventsAsync(
+            ISession session,
+            IEnumerable<string> names = null,
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// List properties associated with this identity.
         /// </summary>
-        public async Task<IApiProperties> ListPropertiesAsync(
-            string bearerToken,
-            CancellationToken? cancellationToken);
-
+        /// <param name="session">The session of the user.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to a list of live events.</returns>
+        public Task<IApiProperties> ListPropertiesAsync(
+            ISession session,
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
-        /// Update identity properties.
+        /// Update properties associated with this identity.
         /// </summary>
-        public async Task UpdatePropertiesAsync(
-            string bearerToken,
-            ApiUpdatePropertiesRequest body,
-            CancellationToken? cancellationToken);
-	}
+        /// <param name="session">The session of the user.</param>
+        /// <param name="properties">The session of the user.</param>
+        /// <param name="cancellationToken">The session of the user.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        public Task UpdatePropertiesAsync(
+            ISession session,
+            IApiProperties properties,
+            CancellationToken? cancellationToken = default);
+    }
 }

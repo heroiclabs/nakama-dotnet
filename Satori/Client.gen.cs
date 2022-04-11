@@ -7,7 +7,7 @@ namespace Satori
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using TinyJson;
+    using Nakama.TinyJson;
 
     /// <summary>
     /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
@@ -499,7 +499,7 @@ namespace Satori
         /// <summary>
         /// Event properties containing integers.
         /// </summary>
-        IDictionary<string, string> PropertiesInt { get; }
+        IDictionary<string, int> PropertiesInt { get; }
 
         /// <summary>
         /// Event properties containing either string or JSON.
@@ -517,7 +517,7 @@ namespace Satori
         public Dictionary<string, bool> _propertiesBool { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, string> PropertiesInt => _propertiesInt ?? new Dictionary<string, string>();
+        public IDictionary<string, int> PropertiesInt => ApiClient.DeserializeIntProperties(_propertiesInt) ?? new Dictionary<string, int>();
         [DataMember(Name="properties_int"), Preserve]
         public Dictionary<string, string> _propertiesInt { get; set; }
 
@@ -530,26 +530,26 @@ namespace Satori
         {
             var output = "";
 
-            var mapString = "";
+            var propertiesBoolString = "";
             foreach (var kvp in PropertiesBool)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                propertiesBoolString = string.Concat(propertiesBoolString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "PropertiesBool: [" + mapString + "]");
+            output = string.Concat(output, "PropertiesBool: [" + propertiesBoolString + "]");
 
-            var mapString = "";
+            var propertiesIntString = "";
             foreach (var kvp in PropertiesInt)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                propertiesIntString = string.Concat(propertiesIntString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "PropertiesInt: [" + mapString + "]");
+            output = string.Concat(output, "PropertiesInt: [" + propertiesIntString + "]");
 
-            var mapString = "";
+            var propertiesStringString = "";
             foreach (var kvp in PropertiesString)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                propertiesStringString = string.Concat(propertiesStringString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "PropertiesString: [" + mapString + "]");
+            output = string.Concat(output, "PropertiesString: [" + propertiesStringString + "]");
             return output;
         }
     }
@@ -747,12 +747,12 @@ namespace Satori
     /// </summary>
     internal class ApiClient
     {
-        public readonly IHttpAdapter HttpAdapter;
+        public readonly Nakama.IHttpAdapter HttpAdapter;
         public int Timeout { get; set; }
 
         private readonly Uri _baseUri;
 
-        public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
+        public ApiClient(Uri baseUri, Nakama.IHttpAdapter httpAdapter, int timeout = 10)
         {
             _baseUri = baseUri;
             HttpAdapter = httpAdapter;
@@ -1122,6 +1122,41 @@ namespace Satori
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+        }
+
+
+        public static IDictionary<string, int> DeserializeIntProperties(IDictionary<string, string> intProperties)
+        {
+            if (intProperties == null)
+            {
+                return null;
+            }
+
+            var deserialized = new Dictionary<string, int>();
+
+            foreach (var prop in intProperties)
+            {
+                deserialized[prop.Key] = int.Parse(prop.Value);
+            }
+
+            return deserialized;
+        }
+
+        public static IDictionary<string, string> SerializeIntProperties(IDictionary<string, int> intProperties)
+        {
+            if (intProperties == null)
+            {
+                return null;
+            }
+
+            var serialized = new Dictionary<string, string>();
+
+            foreach (var prop in intProperties)
+            {
+                serialized[prop.Key] = prop.Value.ToString();
+            }
+
+            return serialized;
         }
     }
 }

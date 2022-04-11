@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Nakama;
 
 namespace Satori
 {
@@ -25,29 +26,56 @@ namespace Satori
         /// <summary>
         /// The host address of the server. Defaults to "127.0.0.1".
         /// </summary>
-        string Host { get; }
+        public string Host { get; }
 
         /// <summary>
         /// The port number of the server. Defaults to 7350.
         /// </summary>
-        int Port { get; }
+        public int Port { get; }
 
         /// <summary>
         /// The protocol scheme used to connect with the server. Must be either "http" or "https".
         /// </summary>
-        string Scheme { get; }
+        public string Scheme { get; }
 
         /// <summary>
         /// The key used to authenticate with the server without a session. Defaults to "defaultkey".
         /// </summary>
-        string ServerKey { get; }
+        public string ServerKey { get; }
 
         /// <summary>
         /// Set the timeout in seconds on requests sent to the server.
         /// </summary>
-        int Timeout { get; set; }
+        public int Timeout { get; set; }
 
-        public Client(string serverKey) : this(serverKey, HttpRequestAdapter.WithGzip())
+        /// <summary>
+        /// The default host address of the server.
+        /// </summary>
+        public const string DefaultHost = "127.0.0.1";
+
+        /// <summary>
+        /// The default protocol scheme for the socket connection.
+        /// </summary>
+        public const string DefaultScheme = "http";
+
+        /// <summary>
+        /// The default port number of the server.
+        /// </summary>
+        public const int DefaultPort = 7350;
+
+        /// <summary>
+        /// The default timeout of the server.
+        /// </summary>
+        public const int DefaultTimeout = 15;
+
+        /// <summary>
+        /// The default expired timespan used to check session lifetime.
+        /// </summary>
+        public static TimeSpan DefaultExpiredTimeSpan = TimeSpan.FromMinutes(5);
+
+        private readonly ApiClient _apiClient;
+
+        public Client(string serverKey) : this(serverKey, Nakama.HttpRequestAdapter.WithGzip())
         {
         }
 
@@ -56,8 +84,7 @@ namespace Satori
         {
         }
 
-        public Client(string scheme, string host, int port, string serverKey) : this(
-            scheme, host, port, serverKey, HttpRequestAdapter.WithGzip())
+        public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter)
         {
             Host = host;
             Port = port;
@@ -67,94 +94,108 @@ namespace Satori
         }
 
         /// <inheritdoc cref="IClient.AuthenticateAsync"/>
-        public async Task<IApiSession> AuthenticateAsync(
-            string basicAuthUsername,
-            string basicAuthPassword,
-            ApiAuthenticateRequest body,
-            CancellationToken? cancellationToken)
+        public Task<IApiSession> AuthenticateAsync(
+            string id = null,
+            CancellationToken? cancellationToken = null)
             {
-
+                return _apiClient.SatoriAuthenticateAsync(ServerKey, string.Empty, new ApiAuthenticateRequest{Id = id}, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.AuthenticateLogoutAsync"/>
-        public async Task AuthenticateLogoutAsync(
+        public Task AuthenticateLogoutAsync(
             ISession session,
-            ApiAuthenticateLogoutRequest body,
             CancellationToken? cancellationToken)
             {
-
+                return _apiClient.SatoriAuthenticateLogoutAsync(session.AuthToken, new ApiAuthenticateLogoutRequest{RefreshToken = session.RefreshToken, Token = session.AuthToken}, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.AuthenticateRefreshAsync"/>
-        public async Task<IApiSession> AuthenticateRefreshAsync(
-            string basicAuthUsername,
-            string basicAuthPassword,
-            ApiAuthenticateRefreshRequest body,
+        public Task<IApiSession> AuthenticateRefreshAsync(
+            ISession session,
             CancellationToken? cancellationToken)
             {
-
+                return _apiClient.SatoriAuthenticateRefreshAsync(ServerKey, string.Empty, new ApiAuthenticateRefreshRequest{RefreshToken = session.RefreshToken}, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.EventAsync"/>
-        public async Task EventAsync(
+        public Task EventAsync(
             ISession session,
-            ApiEventRequest body,
+            string name,
+            IApiProperties properties,
+            string timestamp,
             CancellationToken? cancellationToken)
             {
-
+                return _apiClient.SatoriEventAsync(session.AuthToken, new ApiEventRequest{Name = name, _properties = new ApiProperties{
+                    _propertiesBool = new Dictionary<string, bool>(properties.PropertiesBool),
+                    _propertiesInt = new Dictionary<string, string>(ApiClient.SerializeIntProperties(properties.PropertiesInt)),
+                    _propertiesString = new Dictionary<string, string>(properties.PropertiesString)
+                }, Timestamp = timestamp}, cancellationToken);
             }
 
 
         /// <inheritdoc cref="IClient.GetExperimentsAsync"/>
-        public async Task<IApiExperimentList> GetExperimentsAsync(
+        public Task<IApiExperimentList> GetExperimentsAsync(
             ISession session,
             IEnumerable<string> names,
             CancellationToken? cancellationToken)
             {
-
+                return _apiClient.SatoriGetExperimentsAsync(session.AuthToken, names, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.GetFlagsAsync"/>
-        public async Task<IApiFlagList> GetFlagsAsync(
+        public Task<IApiFlagList> GetFlagsAsync(
             ISession session,
             IEnumerable<string> names,
-            CancellationToken? cancellationToken);
+            CancellationToken? cancellationToken)
+            {
+                return _apiClient.SatoriGetFlagsAsync(session.AuthToken, names, cancellationToken);
+            }
 
 
         /// <inheritdoc cref="IClient.IdentifyAsync"/>
-        public async Task<IApiSession> IdentifyAsync(
+        public Task<IApiSession> IdentifyAsync(
             ISession session,
-            ApiIdentifyRequest body,
+            string id,
+            IApiProperties properties,
             CancellationToken? cancellationToken)
             {
-
+                return _apiClient.SatoriIdentifyAsync(session.AuthToken, new ApiIdentifyRequest{Id = id, _properties = new ApiProperties{
+                    _propertiesBool = new Dictionary<string, bool>(properties.PropertiesBool),
+                    _propertiesInt = new Dictionary<string, string>(ApiClient.SerializeIntProperties(properties.PropertiesInt)),
+                    _propertiesString = new Dictionary<string, string>(properties.PropertiesString)
+                }}, cancellationToken);
             }
 
 
         /// <inheritdoc cref="IClient.GetLiveEentsAsync"/>
-        public async Task<IApiLiveEventList> GetLiveEventsAsync(
+        public Task<IApiLiveEventList> GetLiveEventsAsync(
             ISession session,
             IEnumerable<string> names,
             CancellationToken? cancellationToken)
             {
-
+                return _apiClient.SatoriGetLiveEventsAsync(session.AuthToken, names, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.ListPropertiesAsync"/>
-        public async Task<IApiProperties> ListPropertiesAsync(
+        public Task<IApiProperties> ListPropertiesAsync(
             ISession session,
             CancellationToken? cancellationToken)
             {
-
+                return _apiClient.SatoriListPropertiesAsync(session.AuthToken, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.UpdatePropertiesAsync"/>
-        public async Task UpdatePropertiesAsync(
+        public Task UpdatePropertiesAsync(
             ISession session,
-            ApiUpdatePropertiesRequest body,
+            IApiProperties properties,
             CancellationToken? cancellationToken)
             {
-
+                return _apiClient.SatoriUpdatePropertiesAsync(session.AuthToken,
+                new ApiUpdatePropertiesRequest{_properties = new ApiProperties{
+                    _propertiesBool = new Dictionary<string, bool>(properties.PropertiesBool),
+                    _propertiesInt = new Dictionary<string, string>(ApiClient.SerializeIntProperties(properties.PropertiesInt)),
+                    _propertiesString = new Dictionary<string, string>(properties.PropertiesString)
+                }},  cancellationToken);
             }
 	}
 }
