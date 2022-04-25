@@ -67,7 +67,7 @@ namespace Satori
                 $"Session(AuthToken='{AuthToken}', ExpireTime={ExpireTime}, RefreshToken={RefreshToken}, RefreshExpireTime={RefreshExpireTime}, Username='{Username}', UserId='{UserId}')";
         }
 
-        internal Session(string authToken, string refreshToken, bool created)
+        internal Session(string authToken, string refreshToken)
         {
             RefreshExpireTime = 0L;
             Update(authToken, refreshToken);
@@ -109,7 +109,7 @@ namespace Satori
         /// <returns>A session.</returns>
         public static ISession Restore(string authToken, string refreshToken = null)
         {
-            return string.IsNullOrEmpty(authToken) ? null : new Session(authToken, refreshToken, false);
+            return string.IsNullOrEmpty(authToken) ? null : new Session(authToken, refreshToken);
         }
 
         private static string JwtUnpack(string jwt)

@@ -94,11 +94,12 @@ namespace Satori
         }
 
         /// <inheritdoc cref="IClient.AuthenticateAsync"/>
-        public Task<IApiSession> AuthenticateAsync(
+        public async Task<ISession> AuthenticateAsync(
             string id = null,
             CancellationToken? cancellationToken = null)
             {
-                return _apiClient.SatoriAuthenticateAsync(ServerKey, string.Empty, new ApiAuthenticateRequest{Id = id}, cancellationToken);
+                var response = await _apiClient.SatoriAuthenticateAsync(ServerKey, string.Empty, new ApiAuthenticateRequest{Id = id}, cancellationToken);
+                return new Session(response.Token, response.RefreshToken);
             }
 
         /// <inheritdoc cref="IClient.AuthenticateLogoutAsync"/>
@@ -110,11 +111,12 @@ namespace Satori
             }
 
         /// <inheritdoc cref="IClient.AuthenticateRefreshAsync"/>
-        public Task<IApiSession> AuthenticateRefreshAsync(
+        public async Task<ISession> AuthenticateRefreshAsync(
             ISession session,
             CancellationToken? cancellationToken)
             {
-                return _apiClient.SatoriAuthenticateRefreshAsync(ServerKey, string.Empty, new ApiAuthenticateRefreshRequest{RefreshToken = session.RefreshToken}, cancellationToken);
+                var response = await _apiClient.SatoriAuthenticateRefreshAsync(ServerKey, string.Empty, new ApiAuthenticateRefreshRequest{RefreshToken = session.RefreshToken}, cancellationToken);
+                return new Session(response.Token, response.RefreshToken);
             }
 
         /// <inheritdoc cref="IClient.EventAsync"/>
@@ -157,17 +159,19 @@ namespace Satori
 
 
         /// <inheritdoc cref="IClient.IdentifyAsync"/>
-        public Task<IApiSession> IdentifyAsync(
+        public async Task<ISession> IdentifyAsync(
             ISession session,
             string id,
             Dictionary<string, string> defaultProperties,
             Dictionary<string, string> customProperties,
             CancellationToken? cancellationToken)
             {
+                // TODO generated properties?
                 var properties = new ApiProperties{_default = default, _custom = customProperties};
                 var request = new ApiIdentifyRequest{Id = id, _properties = properties};
-                // TODO generated properties?
-                return _apiClient.SatoriIdentifyAsync(session.AuthToken, request, cancellationToken);
+
+                var response = await _apiClient.SatoriIdentifyAsync(session.AuthToken, request, cancellationToken);
+                return new Session(response.Token, response.RefreshToken);
             }
 
 

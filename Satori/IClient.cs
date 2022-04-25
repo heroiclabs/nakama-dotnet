@@ -29,7 +29,7 @@ namespace Satori
         /// <param name="id">An optional user id.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a user session.</returns>
-        public Task<IApiSession> AuthenticateAsync(
+        public Task<ISession> AuthenticateAsync(
             string id = null,
             CancellationToken? cancellationToken = default);
 
@@ -49,7 +49,7 @@ namespace Satori
         /// <param name="session">The session of the user.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a user session.</returns>
-        public Task<IApiSession> AuthenticateRefreshAsync(
+        public Task<ISession> AuthenticateRefreshAsync(
             ISession session,
             CancellationToken? cancellationToken = default);
 
@@ -101,7 +101,7 @@ namespace Satori
         /// <param name="properties"> Properties to update with this call. If not set, properties are left as they are on the server.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the session of the user.</returns>
-        public Task<IApiSession> IdentifyAsync(
+        public Task<ISession> IdentifyAsync(
             ISession session,
             string id,
             Dictionary<string, string> defaultProperties,
