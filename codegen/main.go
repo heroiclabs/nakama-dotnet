@@ -431,41 +431,6 @@ namespace {{.Namespace}}
         }
         {{- end }}
         {{- end }}
-
-
-        public static IDictionary<string, int> DeserializeIntProperties(IDictionary<string, string> intProperties)
-        {
-            if (intProperties == null)
-            {
-                return null;
-            }
-
-            var deserialized = new Dictionary<string, int>();
-
-            foreach (var prop in intProperties)
-            {
-                deserialized[prop.Key] = int.Parse(prop.Value);
-            }
-
-            return deserialized;
-        }
-
-        public static IDictionary<string, string> SerializeIntProperties(IDictionary<string, int> intProperties)
-        {
-            if (intProperties == null)
-            {
-                return null;
-            }
-
-            var serialized = new Dictionary<string, string>();
-
-            foreach (var prop in intProperties)
-            {
-                serialized[prop.Key] = prop.Value.ToString();
-            }
-
-            return serialized;
-        }
     }
 }
 `

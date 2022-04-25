@@ -486,25 +486,25 @@ namespace Satori
     }
 
     /// <summary>
-    /// Properties associated with this identity.
+    /// Properties associated with an identity.
     /// </summary>
     public interface IApiProperties
     {
 
         /// <summary>
-        /// Event properties containing booleans.
+        /// Event computed properties.
         /// </summary>
-        IDictionary<string, bool> PropertiesBool { get; }
+        IDictionary<string, string> Computed { get; }
 
         /// <summary>
-        /// Event properties containing integers.
+        /// Event custom properties.
         /// </summary>
-        IDictionary<string, int> PropertiesInt { get; }
+        IDictionary<string, string> Custom { get; }
 
         /// <summary>
-        /// Event properties containing either string or JSON.
+        /// Event default properties.
         /// </summary>
-        IDictionary<string, string> PropertiesString { get; }
+        IDictionary<string, string> Default { get; }
     }
 
     /// <inheritdoc />
@@ -512,44 +512,44 @@ namespace Satori
     {
 
         /// <inheritdoc />
-        public IDictionary<string, bool> PropertiesBool => _propertiesBool ?? new Dictionary<string, bool>();
-        [DataMember(Name="properties_bool"), Preserve]
-        public Dictionary<string, bool> _propertiesBool { get; set; }
+        public IDictionary<string, string> Computed => _computed ?? new Dictionary<string, string>();
+        [DataMember(Name="computed"), Preserve]
+        public Dictionary<string, string> _computed { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, int> PropertiesInt => ApiClient.DeserializeIntProperties(_propertiesInt) ?? new Dictionary<string, int>();
-        [DataMember(Name="properties_int"), Preserve]
-        public Dictionary<string, string> _propertiesInt { get; set; }
+        public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
+        [DataMember(Name="custom"), Preserve]
+        public Dictionary<string, string> _custom { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, string> PropertiesString => _propertiesString ?? new Dictionary<string, string>();
-        [DataMember(Name="properties_string"), Preserve]
-        public Dictionary<string, string> _propertiesString { get; set; }
+        public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
+        [DataMember(Name="default"), Preserve]
+        public Dictionary<string, string> _default { get; set; }
 
         public override string ToString()
         {
             var output = "";
 
-            var propertiesBoolString = "";
-            foreach (var kvp in PropertiesBool)
+            var computedString = "";
+            foreach (var kvp in Computed)
             {
-                propertiesBoolString = string.Concat(propertiesBoolString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                computedString = string.Concat(computedString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "PropertiesBool: [" + propertiesBoolString + "]");
+            output = string.Concat(output, "Computed: [" + computedString + "]");
 
-            var propertiesIntString = "";
-            foreach (var kvp in PropertiesInt)
+            var customString = "";
+            foreach (var kvp in Custom)
             {
-                propertiesIntString = string.Concat(propertiesIntString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                customString = string.Concat(customString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "PropertiesInt: [" + propertiesIntString + "]");
+            output = string.Concat(output, "Custom: [" + customString + "]");
 
-            var propertiesStringString = "";
-            foreach (var kvp in PropertiesString)
+            var defaultString = "";
+            foreach (var kvp in Default)
             {
-                propertiesStringString = string.Concat(propertiesStringString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                defaultString = string.Concat(defaultString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "PropertiesString: [" + propertiesStringString + "]");
+            output = string.Concat(output, "Default: [" + defaultString + "]");
             return output;
         }
     }
@@ -610,9 +610,14 @@ namespace Satori
     {
 
         /// <summary>
-        /// Properties to update with this call; If this is not set, all properties are removed.
+        /// Event custom properties.
         /// </summary>
-        IApiProperties Properties { get; }
+        IDictionary<string, string> Custom { get; }
+
+        /// <summary>
+        /// Event default properties.
+        /// </summary>
+        IDictionary<string, string> Default { get; }
     }
 
     /// <inheritdoc />
@@ -620,14 +625,32 @@ namespace Satori
     {
 
         /// <inheritdoc />
-        public IApiProperties Properties => _properties;
-        [DataMember(Name="properties"), Preserve]
-        public ApiProperties _properties { get; set; }
+        public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
+        [DataMember(Name="custom"), Preserve]
+        public Dictionary<string, string> _custom { get; set; }
+
+        /// <inheritdoc />
+        public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
+        [DataMember(Name="default"), Preserve]
+        public Dictionary<string, string> _default { get; set; }
 
         public override string ToString()
         {
             var output = "";
-            output = string.Concat(output, "Properties: ", Properties, ", ");
+
+            var customString = "";
+            foreach (var kvp in Custom)
+            {
+                customString = string.Concat(customString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Custom: [" + customString + "]");
+
+            var defaultString = "";
+            foreach (var kvp in Default)
+            {
+                defaultString = string.Concat(defaultString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Default: [" + defaultString + "]");
             return output;
         }
     }
@@ -656,18 +679,18 @@ namespace Satori
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IProtobufAny
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string TypeUrl { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Value { get; }
     }
@@ -694,23 +717,23 @@ namespace Satori
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Message { get; }
     }

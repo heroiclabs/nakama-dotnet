@@ -104,7 +104,8 @@ namespace Satori
         public Task<IApiSession> IdentifyAsync(
             ISession session,
             string id,
-            IApiProperties properties = null,
+            Dictionary<string, string> defaultProperties,
+            Dictionary<string, string> customProperties,
             CancellationToken? cancellationToken = default);
 
         /// <summary>
@@ -138,7 +139,8 @@ namespace Satori
         /// <returns>A task which represents the asynchronous operation.</returns>
         public Task UpdatePropertiesAsync(
             ISession session,
-            IApiProperties properties,
+            Dictionary<string, string> defaultProperties,
+            Dictionary<string, string> customProperties,
             CancellationToken? cancellationToken = default);
     }
 }

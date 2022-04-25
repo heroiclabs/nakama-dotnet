@@ -125,13 +125,17 @@ namespace Satori
             string timestamp,
             CancellationToken? cancellationToken)
             {
-                return _apiClient.SatoriEventAsync(session.AuthToken, new ApiEventRequest{Name = name, _properties = new ApiProperties{
-                    _propertiesBool = new Dictionary<string, bool>(properties.PropertiesBool),
-                    _propertiesInt = new Dictionary<string, string>(ApiClient.SerializeIntProperties(properties.PropertiesInt)),
-                    _propertiesString = new Dictionary<string, string>(properties.PropertiesString)
-                }, Timestamp = timestamp}, cancellationToken);
-            }
+                var request = new ApiEventRequest{
+                        Name = name, _properties = new ApiProperties{
+                        _computed = new Dictionary<string, string>(properties.Computed),
+                        _custom = new Dictionary<string, string>(properties.Custom),
+                        _default = new Dictionary<string, string>(properties.Default)
+                    },
+                    Timestamp = timestamp
+                };
 
+                return _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken);
+            }
 
         /// <inheritdoc cref="IClient.GetExperimentsAsync"/>
         public Task<IApiExperimentList> GetExperimentsAsync(
@@ -156,18 +160,18 @@ namespace Satori
         public Task<IApiSession> IdentifyAsync(
             ISession session,
             string id,
-            IApiProperties properties,
+            Dictionary<string, string> defaultProperties,
+            Dictionary<string, string> customProperties,
             CancellationToken? cancellationToken)
             {
-                return _apiClient.SatoriIdentifyAsync(session.AuthToken, new ApiIdentifyRequest{Id = id, _properties = new ApiProperties{
-                    _propertiesBool = new Dictionary<string, bool>(properties.PropertiesBool),
-                    _propertiesInt = new Dictionary<string, string>(ApiClient.SerializeIntProperties(properties.PropertiesInt)),
-                    _propertiesString = new Dictionary<string, string>(properties.PropertiesString)
-                }}, cancellationToken);
+                var properties = new ApiProperties{_default = default, _custom = customProperties};
+                var request = new ApiIdentifyRequest{Id = id, _properties = properties};
+                // TODO generated properties?
+                return _apiClient.SatoriIdentifyAsync(session.AuthToken, request, cancellationToken);
             }
 
 
-        /// <inheritdoc cref="IClient.GetLiveEentsAsync"/>
+        /// <inheritdoc cref="IClient.GetLiveEventsAsync"/>
         public Task<IApiLiveEventList> GetLiveEventsAsync(
             ISession session,
             IEnumerable<string> names,
@@ -187,15 +191,15 @@ namespace Satori
         /// <inheritdoc cref="IClient.UpdatePropertiesAsync"/>
         public Task UpdatePropertiesAsync(
             ISession session,
-            IApiProperties properties,
+            Dictionary<string, string> defaultProperties,
+            Dictionary<string, string> customProperties,
             CancellationToken? cancellationToken)
             {
                 return _apiClient.SatoriUpdatePropertiesAsync(session.AuthToken,
-                new ApiUpdatePropertiesRequest{_properties = new ApiProperties{
-                    _propertiesBool = new Dictionary<string, bool>(properties.PropertiesBool),
-                    _propertiesInt = new Dictionary<string, string>(ApiClient.SerializeIntProperties(properties.PropertiesInt)),
-                    _propertiesString = new Dictionary<string, string>(properties.PropertiesString)
-                }},  cancellationToken);
+                new ApiUpdatePropertiesRequest{
+                    _default = defaultProperties,
+                    _custom = customProperties
+                },  cancellationToken);
             }
 	}
 }
