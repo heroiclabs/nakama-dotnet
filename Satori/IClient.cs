@@ -58,14 +58,16 @@ namespace Satori
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="name">The name of the event.</param>
-        /// <param name="properties">The event properties.</param>
+        /// <param name="defaultProperties">The default event properties.</param>
+        /// <param name="customProperties">The custom event properties.</param>
         /// <param name="timestamp">The time when the event was triggered.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         public Task EventAsync(
             ISession session,
             string name,
-            IApiProperties properties,
+            Dictionary<string, string> defaultProperties,
+            Dictionary<string, string> customProperties,
             string timestamp,
             CancellationToken? cancellationToken = default);
 
@@ -98,7 +100,8 @@ namespace Satori
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="id"> Identity ID to enrich the current session and return a new session. Old session will no longer be usable.</param>
-        /// <param name="properties"> Properties to update with this call. If not set, properties are left as they are on the server.</param>
+        /// <param name="defaultProperties">The default event properties.</param>
+        /// <param name="customProperties">The custom event properties.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the session of the user.</returns>
         public Task<ISession> IdentifyAsync(
@@ -134,7 +137,8 @@ namespace Satori
         /// Update properties associated with this identity.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="properties">The session of the user.</param>
+        /// <param name="defaultProperties">The default event properties.</param>
+        /// <param name="customProperties">The custom event properties.</param>
         /// <param name="cancellationToken">The session of the user.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         public Task UpdatePropertiesAsync(

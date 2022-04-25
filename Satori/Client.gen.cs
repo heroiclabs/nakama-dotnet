@@ -141,14 +141,19 @@ namespace Satori
     {
 
         /// <summary>
+        /// Optional custom event properties to update with this call.
+        /// </summary>
+        IDictionary<string, string> Custom { get; }
+
+        /// <summary>
+        /// Event properties. Optional default event properties to update with this call.
+        /// </summary>
+        IDictionary<string, string> Default { get; }
+
+        /// <summary>
         /// Event name.
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Event properties.
-        /// </summary>
-        IApiProperties Properties { get; }
 
         /// <summary>
         /// The time when the event was triggered.
@@ -161,13 +166,18 @@ namespace Satori
     {
 
         /// <inheritdoc />
-        [DataMember(Name="name"), Preserve]
-        public string Name { get; set; }
+        public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
+        [DataMember(Name="custom"), Preserve]
+        public Dictionary<string, string> _custom { get; set; }
 
         /// <inheritdoc />
-        public IApiProperties Properties => _properties;
-        [DataMember(Name="properties"), Preserve]
-        public ApiProperties _properties { get; set; }
+        public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
+        [DataMember(Name="default"), Preserve]
+        public Dictionary<string, string> _default { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="timestamp"), Preserve]
@@ -176,8 +186,21 @@ namespace Satori
         public override string ToString()
         {
             var output = "";
+
+            var customString = "";
+            foreach (var kvp in Custom)
+            {
+                customString = string.Concat(customString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Custom: [" + customString + "]");
+
+            var defaultString = "";
+            foreach (var kvp in Default)
+            {
+                defaultString = string.Concat(defaultString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Default: [" + defaultString + "]");
             output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "Properties: ", Properties, ", ");
             output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
             return output;
         }
@@ -356,14 +379,19 @@ namespace Satori
     {
 
         /// <summary>
+        /// Optional custom properties to update with this call. If not set, properties are left as they are on the server.
+        /// </summary>
+        IDictionary<string, string> Custom { get; }
+
+        /// <summary>
+        /// Optional default properties to update with this call. If not set, properties are left as they are on the server.
+        /// </summary>
+        IDictionary<string, string> Default { get; }
+
+        /// <summary>
         /// Identity ID to enrich the current session and return a new session. Old session will no longer be usable.
         /// </summary>
         string Id { get; }
-
-        /// <summary>
-        /// Optional - Properties to update with this call. If not set, properties are left as they are on the server.
-        /// </summary>
-        IApiProperties Properties { get; }
     }
 
     /// <inheritdoc />
@@ -371,19 +399,37 @@ namespace Satori
     {
 
         /// <inheritdoc />
-        [DataMember(Name="id"), Preserve]
-        public string Id { get; set; }
+        public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
+        [DataMember(Name="custom"), Preserve]
+        public Dictionary<string, string> _custom { get; set; }
 
         /// <inheritdoc />
-        public IApiProperties Properties => _properties;
-        [DataMember(Name="properties"), Preserve]
-        public ApiProperties _properties { get; set; }
+        public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
+        [DataMember(Name="default"), Preserve]
+        public Dictionary<string, string> _default { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
 
         public override string ToString()
         {
             var output = "";
+
+            var customString = "";
+            foreach (var kvp in Custom)
+            {
+                customString = string.Concat(customString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Custom: [" + customString + "]");
+
+            var defaultString = "";
+            foreach (var kvp in Default)
+            {
+                defaultString = string.Concat(defaultString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Default: [" + defaultString + "]");
             output = string.Concat(output, "Id: ", Id, ", ");
-            output = string.Concat(output, "Properties: ", Properties, ", ");
             return output;
         }
     }
@@ -1145,41 +1191,6 @@ namespace Satori
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-
-
-        public static IDictionary<string, int> DeserializeIntProperties(IDictionary<string, string> intProperties)
-        {
-            if (intProperties == null)
-            {
-                return null;
-            }
-
-            var deserialized = new Dictionary<string, int>();
-
-            foreach (var prop in intProperties)
-            {
-                deserialized[prop.Key] = int.Parse(prop.Value);
-            }
-
-            return deserialized;
-        }
-
-        public static IDictionary<string, string> SerializeIntProperties(IDictionary<string, int> intProperties)
-        {
-            if (intProperties == null)
-            {
-                return null;
-            }
-
-            var serialized = new Dictionary<string, string>();
-
-            foreach (var prop in intProperties)
-            {
-                serialized[prop.Key] = prop.Value.ToString();
-            }
-
-            return serialized;
         }
     }
 }

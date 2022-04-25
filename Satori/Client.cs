@@ -123,16 +123,15 @@ namespace Satori
         public Task EventAsync(
             ISession session,
             string name,
-            IApiProperties properties,
+            Dictionary<string, string> defaultProperties,
+            Dictionary<string, string> customProperties,
             string timestamp,
             CancellationToken? cancellationToken)
             {
                 var request = new ApiEventRequest{
-                        Name = name, _properties = new ApiProperties{
-                        _computed = new Dictionary<string, string>(properties.Computed),
-                        _custom = new Dictionary<string, string>(properties.Custom),
-                        _default = new Dictionary<string, string>(properties.Default)
-                    },
+                    Name = name,
+                    _default = defaultProperties,
+                    _custom = customProperties,
                     Timestamp = timestamp
                 };
 
@@ -168,7 +167,7 @@ namespace Satori
             {
                 // TODO generated properties?
                 var properties = new ApiProperties{_default = default, _custom = customProperties};
-                var request = new ApiIdentifyRequest{Id = id, _properties = properties};
+                var request = new ApiIdentifyRequest{Id = id, _default = defaultProperties, _custom = customProperties};
 
                 var response = await _apiClient.SatoriIdentifyAsync(session.AuthToken, request, cancellationToken);
                 return new Session(response.Token, response.RefreshToken);
