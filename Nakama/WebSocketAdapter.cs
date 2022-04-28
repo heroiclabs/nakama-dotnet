@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading;
@@ -109,7 +110,8 @@ namespace Nakama
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
                 _webSocket = await clientFactory.ConnectAsync(_uri, _options, linkedCts.Token).ConfigureAwait(false);
-                _ = ReceiveLoop(_webSocket, _cancellationSource.Token);
+                _ = Task.Factory.StartNew(_ => ReceiveLoop(_webSocket, _cancellationSource.Token),
+                    TaskCreationOptions.LongRunning, _cancellationSource.Token);
                 Connected?.Invoke();
                 IsConnected = true;
             }
@@ -186,14 +188,41 @@ namespace Nakama
                     }
                     catch (Exception e)
                     {
+                        // Don't stop receive loop if received function throws.
                         ReceivedError?.Invoke(e);
                     }
 
                     bufferReadCount = 0;
                 } while (_webSocket.State == WebSocketState.Open && !canceller.IsCancellationRequested);
             }
+            catch (EndOfStreamException)
+            {
+                // IGNORE:
+                // "Unexpected end of stream encountered whilst attempting to read 2 bytes."
+            }
+            catch (IOException)
+            {
+                // IGNORE.
+            }
+            catch (SocketException)
+            {
+                // IGNORE:
+                // "Unable to read data from the transport connection: Access denied."
+                // "Unable to read data from the transport connection: Network subsystem is down."
+                // "Unable to write data to the transport connection: The socket has been shut down."
+                // "The socket is not connected"
+                // "Unable to read data from the transport connection: Connection reset by peer."
+                // "Unable to read data from the transport connection: Connection timed out."
+                // "Unable to read data from the transport connection: Connection refused."
+            }
+            catch (Exception e)
+            {
+                ReceivedError?.Invoke(e);
+            }
             finally
             {
+                IsConnecting = false;
+                IsConnected = false;
                 Closed?.Invoke();
             }
         }
