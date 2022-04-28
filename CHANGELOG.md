@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Allow max message size limit with socket messages to be overridden in the adapter.
+- Relayed multiplayer matches can now be created with a custom name (i.e. room name).
+
 ### Fixed
 - Fix background read loop to update 'IsConnecting' and 'IsConnected' when close is detected.
 
