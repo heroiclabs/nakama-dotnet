@@ -30,7 +30,7 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a user session.</returns>
         public Task<ISession> AuthenticateAsync(
-            string id = null,
+            string id,
             CancellationToken? cancellationToken = default);
 
         /// <summary>

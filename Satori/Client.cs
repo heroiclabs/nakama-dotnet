@@ -95,7 +95,7 @@ namespace Satori
 
         /// <inheritdoc cref="IClient.AuthenticateAsync"/>
         public async Task<ISession> AuthenticateAsync(
-            string id = null,
+            string id,
             CancellationToken? cancellationToken = null)
             {
                 var response = await _apiClient.SatoriAuthenticateAsync(ServerKey, string.Empty, new ApiAuthenticateRequest{Id = id}, cancellationToken);
