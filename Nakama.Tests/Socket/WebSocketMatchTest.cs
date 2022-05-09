@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+using System.Net.Sockets;
+
 namespace Nakama.Tests.Socket
 {
     using System;
@@ -189,6 +191,19 @@ namespace Nakama.Tests.Socket
             await _socket.LeaveMatchAsync(match.Id);
         }
 
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldThrowSocketExceptionWhenSendingMatchDataAfterClosingSocket()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.ConnectAsync(session);
+            var match = await _socket.CreateMatchAsync();
+            await _socket.CloseAsync();
+
+            await Assert.ThrowsAsync<SocketException>(async () =>
+            {
+                await _socket.SendMatchStateAsync(match.Id, 1, new { hello = "world" }.ToJson(), null);
+            });
+        }
 
         Task IAsyncLifetime.InitializeAsync()
         {
