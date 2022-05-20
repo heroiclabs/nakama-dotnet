@@ -70,14 +70,13 @@ namespace Nakama.Tests.Socket
             socket2.ReceivedMatchmakerMatched += (state) => completer2.SetResult(state);
 
             var matchmakerTicket = await _socket.AddMatchmakerAsync("*", 2, 2);
+            await Task.Delay(2000);
             var matchmakerTicket2 = await socket2.AddMatchmakerAsync("*", 2, 2);
 
             Assert.NotNull(matchmakerTicket);
             Assert.NotEmpty(matchmakerTicket.Ticket);
             Assert.NotNull(matchmakerTicket2);
             Assert.NotEmpty(matchmakerTicket2.Ticket);
-
-            await Task.Delay(1000);
 
             var result = await completer.Task;
             var result2 = await completer2.Task;

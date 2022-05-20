@@ -39,18 +39,14 @@ namespace Nakama.Tests.Api
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             const string funcid = "clientrpc.rpc_error";
+            
+            _client.GlobalRetryConfiguration = null;
 
             var exception = await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
             await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
             Assert.NotNull(exception.Message);
             Assert.NotEmpty(exception.Message);
-            Assert.NotNull(exception.Data);
-            Assert.NotEmpty(exception.Data);
-            Assert.True(exception.Data is IDictionary);
-            Assert.True(exception.Data.Contains("Type"));
-            Assert.True(exception.Data.Contains("Object"));
-            Assert.True(exception.Data.Contains("StackTrace"));
-            Assert.True(exception.Data.Contains("Cause"));
+            Assert.Equal("Some error occured.", exception.Message);
         }
 
         [Fact(Skip = "requires go plugin")]
