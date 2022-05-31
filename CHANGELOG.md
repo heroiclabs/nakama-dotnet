@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Ability to `persist` Apple, Huawei, and Google purchase receipts in the Nakama database.
+- Added a `SeenBefore` property to `IApiValidatedPurchase`.
+- Added `ListSubscriptionsAsync` which returns a list of the user's subscriptions.
+- Added `ValidateSubscriptionAppleAsync` which returns details about a user's Apple subscription.
+- Added `ValidateSubscriptionGoogleAsync` which returns details about a user's Google subscription.
+- Added `GetSubscriptionAsync` which returns a subscription for the provided product id.
+
 ### Changed
 - `ValidatedPurchaseEnvironment` has been renamed to `ApiStoreEnvironment`.
 - `ValidatedPurchaseStore` has been renamed to `ApiStoreProvider`.

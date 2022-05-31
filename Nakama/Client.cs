@@ -394,6 +394,18 @@ namespace Nakama
             return await  _retryInvoker.InvokeWithRetry(() => _apiClient.GetAccountAsync(session.AuthToken, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
+        /// <inheritdoc cref="GetSubscriptionAsync"/>
+        public async Task<IApiValidatedSubscription> GetSubscriptionAsync(ISession session, string productId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.GetSubscriptionAsync(session.AuthToken, productId, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
         /// <inheritdoc cref="GetUsersAsync"/>
         public async Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids,
             IEnumerable<string> usernames = null, IEnumerable<string> facebookIds = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
@@ -714,6 +726,18 @@ namespace Nakama
             }
 
             return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
+        /// <inheritdoc cref="ListSubscriptionsAsync"/>
+        public async Task<IApiSubscriptionList> ListSubscriptionsAsync(ISession session, int limit, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ListSubscriptionsAsync(session.AuthToken, new ApiListSubscriptionsRequest{Cursor = cursor, Limit = limit}, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListTournamentRecordsAroundOwnerAsync"/>
@@ -1052,7 +1076,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ValidatePurchaseAppleAsync"/>
-        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1062,12 +1086,13 @@ namespace Nakama
 
             return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseAppleAsync(session.AuthToken, new ApiValidatePurchaseAppleRequest
             {
-                Receipt = receipt
+                Receipt = receipt,
+                Persist = persist
             }, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ValidatePurchaseGoogleAsync"/>
-        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1077,12 +1102,13 @@ namespace Nakama
 
             return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseGoogleAsync(session.AuthToken, new ApiValidatePurchaseGoogleRequest
             {
-                Purchase = receipt
+                Purchase = receipt,
+                Persist = persist
             }, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ValidatePurchaseHuaweiAsync"/>
-        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt, string signature, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt, string signature, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1093,7 +1119,38 @@ namespace Nakama
             return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseHuaweiAsync(session.AuthToken, new ApiValidatePurchaseHuaweiRequest
             {
                 Purchase = receipt,
-                Signature = signature
+                Signature = signature,
+                Persist = persist
+            }, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
+        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidateSubscriptionAppleAsync(session.AuthToken, new ApiValidateSubscriptionAppleRequest
+            {
+                Receipt = receipt,
+                Persist = persist
+            }, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
+        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionGoogleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidateSubscriptionGoogleAsync(session.AuthToken, new ApiValidateSubscriptionGoogleRequest
+            {
+                Receipt = receipt,
+                Persist = persist
             }, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
@@ -1407,15 +1464,15 @@ namespace Nakama
             string avatarUrl, string langTag, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
             => UpdateGroupAsync(session, groupId, name, open, description, avatarUrl, langTag, retryConfiguration, canceller.Token);
 
-        public Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ValidatePurchaseAppleAsync(session, receipt, retryConfiguration, canceller.Token);
+        public Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
+            => ValidatePurchaseAppleAsync(session, receipt, persist, retryConfiguration, canceller.Token);
 
-        public Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ValidatePurchaseGoogleAsync(session, receipt, retryConfiguration, canceller.Token);
+        public Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
+            => ValidatePurchaseGoogleAsync(session, receipt, persist, retryConfiguration, canceller.Token);
 
         public Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
-            string signature, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ValidatePurchaseHuaweiAsync(session, receipt, signature, retryConfiguration, canceller.Token);
+            string signature, bool persist, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
+            => ValidatePurchaseHuaweiAsync(session, receipt, signature, persist, retryConfiguration, canceller.Token);
 
         public Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
             long subScore, string metadata, ApiOperator apiOperator, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
