@@ -119,44 +119,6 @@ namespace Nakama
     }
 
     /// <summary>
-    /// Environment where the purchase took place
-    /// </summary>
-    public enum ValidatedPurchaseEnvironment
-    {
-        /// <summary>
-        /// - UNKNOWN: Unknown environment.
-        /// </summary>
-        UNKNOWN = 0,
-        /// <summary>
-        ///  - SANDBOX: Sandbox/test environment.
-        /// </summary>
-        SANDBOX = 1,
-        /// <summary>
-        ///  - PRODUCTION: Production environment.
-        /// </summary>
-        PRODUCTION = 2,
-    }
-
-    /// <summary>
-    /// Validation Provider
-    /// </summary>
-    public enum ValidatedPurchaseStore
-    {
-        /// <summary>
-        /// - APPLE_APP_STORE: Apple App Store
-        /// </summary>
-        APPLE_APP_STORE = 0,
-        /// <summary>
-        ///  - GOOGLE_PLAY_STORE: Google Play Store
-        /// </summary>
-        GOOGLE_PLAY_STORE = 1,
-        /// <summary>
-        ///  - HUAWEI_APP_GALLERY: Huawei App Gallery
-        /// </summary>
-        HUAWEI_APP_GALLERY = 2,
-    }
-
-    /// <summary>
     /// Record values to write.
     /// </summary>
     public interface IWriteLeaderboardRecordRequestLeaderboardRecordWrite
@@ -1798,6 +1760,44 @@ namespace Nakama
     }
 
     /// <summary>
+    /// List user subscriptions.
+    /// </summary>
+    public interface IApiListSubscriptionsRequest
+    {
+
+        /// <summary>
+        /// Cursor to retrieve a page of records from
+        /// </summary>
+        string Cursor { get; }
+
+        /// <summary>
+        /// Max number of results per page
+        /// </summary>
+        int Limit { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiListSubscriptionsRequest : IApiListSubscriptionsRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="limit"), Preserve]
+        public int Limit { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Cursor: ", Cursor, ", ");
+            output = string.Concat(output, "Limit: ", Limit, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Represents a realtime match.
     /// </summary>
     public interface IApiMatch
@@ -2578,6 +2578,93 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Environment where a purchase/subscription took place,
+    /// </summary>
+    public enum ApiStoreEnvironment
+    {
+        /// <summary>
+        /// - UNKNOWN: Unknown environment.
+        /// </summary>
+        UNKNOWN = 0,
+        /// <summary>
+        ///  - SANDBOX: Sandbox/test environment.
+        /// </summary>
+        SANDBOX = 1,
+        /// <summary>
+        ///  - PRODUCTION: Production environment.
+        /// </summary>
+        PRODUCTION = 2,
+    }
+
+    /// <summary>
+    /// Validation Provider,
+    /// </summary>
+    public enum ApiStoreProvider
+    {
+        /// <summary>
+        /// - APPLE_APP_STORE: Apple App Store
+        /// </summary>
+        APPLE_APP_STORE = 0,
+        /// <summary>
+        ///  - GOOGLE_PLAY_STORE: Google Play Store
+        /// </summary>
+        GOOGLE_PLAY_STORE = 1,
+        /// <summary>
+        ///  - HUAWEI_APP_GALLERY: Huawei App Gallery
+        /// </summary>
+        HUAWEI_APP_GALLERY = 2,
+    }
+
+    /// <summary>
+    /// A list of validated subscriptions stored by Nakama.
+    /// </summary>
+    public interface IApiSubscriptionList
+    {
+
+        /// <summary>
+        /// The cursor to send when retrieving the next page, if any.
+        /// </summary>
+        string Cursor { get; }
+
+        /// <summary>
+        /// The cursor to send when retrieving the previous page, if any.
+        /// </summary>
+        string PrevCursor { get; }
+
+        /// <summary>
+        /// Stored validated subscriptions.
+        /// </summary>
+        IEnumerable<IApiValidatedSubscription> ValidatedSubscriptions { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiSubscriptionList : IApiSubscriptionList
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<IApiValidatedSubscription> ValidatedSubscriptions => _validatedSubscriptions ?? new List<ApiValidatedSubscription>(0);
+        [DataMember(Name="validated_subscriptions"), Preserve]
+        public List<ApiValidatedSubscription> _validatedSubscriptions { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Cursor: ", Cursor, ", ");
+            output = string.Concat(output, "PrevCursor: ", PrevCursor, ", ");
+            output = string.Concat(output, "ValidatedSubscriptions: [", string.Join(", ", ValidatedSubscriptions), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A tournament on the server.
     /// </summary>
     public interface IApiTournament
@@ -2964,84 +3051,6 @@ namespace Nakama
     }
 
     /// <summary>
-    /// Update fields in a given group.
-    /// </summary>
-    public interface IApiUpdateGroupRequest
-    {
-
-        /// <summary>
-        /// Avatar URL.
-        /// </summary>
-        string AvatarUrl { get; }
-
-        /// <summary>
-        /// Description string.
-        /// </summary>
-        string Description { get; }
-
-        /// <summary>
-        /// The ID of the group to update.
-        /// </summary>
-        string GroupId { get; }
-
-        /// <summary>
-        /// Lang tag.
-        /// </summary>
-        string LangTag { get; }
-
-        /// <summary>
-        /// Name.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
-        /// </summary>
-        bool Open { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiUpdateGroupRequest : IApiUpdateGroupRequest
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="avatar_url"), Preserve]
-        public string AvatarUrl { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="description"), Preserve]
-        public string Description { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="group_id"), Preserve]
-        public string GroupId { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="lang_tag"), Preserve]
-        public string LangTag { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="name"), Preserve]
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="open"), Preserve]
-        public bool Open { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
-            output = string.Concat(output, "Description: ", Description, ", ");
-            output = string.Concat(output, "GroupId: ", GroupId, ", ");
-            output = string.Concat(output, "LangTag: ", LangTag, ", ");
-            output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "Open: ", Open, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
     /// A user in the server.
     /// </summary>
     public interface IApiUser
@@ -3314,6 +3323,11 @@ namespace Nakama
     {
 
         /// <summary>
+        /// Persist the purchase
+        /// </summary>
+        bool Persist { get; }
+
+        /// <summary>
         /// Base64 encoded Apple receipt data payload.
         /// </summary>
         string Receipt { get; }
@@ -3324,12 +3338,17 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="receipt"), Preserve]
         public string Receipt { get; set; }
 
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "Persist: ", Persist, ", ");
             output = string.Concat(output, "Receipt: ", Receipt, ", ");
             return output;
         }
@@ -3342,6 +3361,11 @@ namespace Nakama
     {
 
         /// <summary>
+        /// Persist the purchase
+        /// </summary>
+        bool Persist { get; }
+
+        /// <summary>
         /// JSON encoded Google purchase payload.
         /// </summary>
         string Purchase { get; }
@@ -3352,12 +3376,17 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="purchase"), Preserve]
         public string Purchase { get; set; }
 
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "Persist: ", Persist, ", ");
             output = string.Concat(output, "Purchase: ", Purchase, ", ");
             return output;
         }
@@ -3368,6 +3397,11 @@ namespace Nakama
     /// </summary>
     public interface IApiValidatePurchaseHuaweiRequest
     {
+
+        /// <summary>
+        /// Persist the purchase
+        /// </summary>
+        bool Persist { get; }
 
         /// <summary>
         /// JSON encoded Huawei InAppPurchaseData.
@@ -3385,6 +3419,10 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="purchase"), Preserve]
         public string Purchase { get; set; }
 
@@ -3395,6 +3433,7 @@ namespace Nakama
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "Persist: ", Persist, ", ");
             output = string.Concat(output, "Purchase: ", Purchase, ", ");
             output = string.Concat(output, "Signature: ", Signature, ", ");
             return output;
@@ -3402,7 +3441,7 @@ namespace Nakama
     }
 
     /// <summary>
-    /// Validate IAP response
+    /// Validate IAP response.
     /// </summary>
     public interface IApiValidatePurchaseResponse
     {
@@ -3431,6 +3470,111 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Apple Subscription validation request
+    /// </summary>
+    public interface IApiValidateSubscriptionAppleRequest
+    {
+
+        /// <summary>
+        /// Persist the subscription.
+        /// </summary>
+        bool Persist { get; }
+
+        /// <summary>
+        /// Base64 encoded Apple receipt data payload.
+        /// </summary>
+        string Receipt { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidateSubscriptionAppleRequest : IApiValidateSubscriptionAppleRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="receipt"), Preserve]
+        public string Receipt { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Persist: ", Persist, ", ");
+            output = string.Concat(output, "Receipt: ", Receipt, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Google Subscription validation request
+    /// </summary>
+    public interface IApiValidateSubscriptionGoogleRequest
+    {
+
+        /// <summary>
+        /// Persist the subscription.
+        /// </summary>
+        bool Persist { get; }
+
+        /// <summary>
+        /// JSON encoded Google purchase payload.
+        /// </summary>
+        string Receipt { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidateSubscriptionGoogleRequest : IApiValidateSubscriptionGoogleRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="receipt"), Preserve]
+        public string Receipt { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Persist: ", Persist, ", ");
+            output = string.Concat(output, "Receipt: ", Receipt, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Validate Subscription response.
+    /// </summary>
+    public interface IApiValidateSubscriptionResponse
+    {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IApiValidatedSubscription ValidatedSubscription { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidateSubscriptionResponse : IApiValidateSubscriptionResponse
+    {
+
+        /// <inheritdoc />
+        public IApiValidatedSubscription ValidatedSubscription => _validatedSubscription;
+        [DataMember(Name="validated_subscription"), Preserve]
+        public ApiValidatedSubscription _validatedSubscription { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "ValidatedSubscription: ", ValidatedSubscription, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Validated Purchase stored by Nakama.
     /// </summary>
     public interface IApiValidatedPurchase
@@ -3444,7 +3588,7 @@ namespace Nakama
         /// <summary>
         /// Whether the purchase was done in production or sandbox environment.
         /// </summary>
-        ValidatedPurchaseEnvironment Environment { get; }
+        ApiStoreEnvironment Environment { get; }
 
         /// <summary>
         /// Purchase Product ID.
@@ -3462,9 +3606,14 @@ namespace Nakama
         string PurchaseTime { get; }
 
         /// <summary>
+        /// Whether the purchase had already been validated by Nakama before.
+        /// </summary>
+        bool SeenBefore { get; }
+
+        /// <summary>
         /// Store identifier
         /// </summary>
-        ValidatedPurchaseStore Store { get; }
+        ApiStoreProvider Store { get; }
 
         /// <summary>
         /// Purchase Transaction ID.
@@ -3486,9 +3635,9 @@ namespace Nakama
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
-        public ValidatedPurchaseEnvironment Environment => _environment;
+        public ApiStoreEnvironment Environment => _environment;
         [DataMember(Name="environment"), Preserve]
-        public ValidatedPurchaseEnvironment _environment { get; set; }
+        public ApiStoreEnvironment _environment { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="product_id"), Preserve]
@@ -3503,9 +3652,13 @@ namespace Nakama
         public string PurchaseTime { get; set; }
 
         /// <inheritdoc />
-        public ValidatedPurchaseStore Store => _store;
+        [DataMember(Name="seen_before"), Preserve]
+        public bool SeenBefore { get; set; }
+
+        /// <inheritdoc />
+        public ApiStoreProvider Store => _store;
         [DataMember(Name="store"), Preserve]
-        public ValidatedPurchaseStore _store { get; set; }
+        public ApiStoreProvider _store { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="transaction_id"), Preserve]
@@ -3523,8 +3676,119 @@ namespace Nakama
             output = string.Concat(output, "ProductId: ", ProductId, ", ");
             output = string.Concat(output, "ProviderResponse: ", ProviderResponse, ", ");
             output = string.Concat(output, "PurchaseTime: ", PurchaseTime, ", ");
+            output = string.Concat(output, "SeenBefore: ", SeenBefore, ", ");
             output = string.Concat(output, "Store: ", Store, ", ");
             output = string.Concat(output, "TransactionId: ", TransactionId, ", ");
+            output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IApiValidatedSubscription
+    {
+
+        /// <summary>
+        /// Whether the subscription is currently active or not.
+        /// </summary>
+        bool Active { get; }
+
+        /// <summary>
+        /// UNIX Timestamp when the receipt validation was stored in DB.
+        /// </summary>
+        string CreateTime { get; }
+
+        /// <summary>
+        /// Whether the purchase was done in production or sandbox environment.
+        /// </summary>
+        ApiStoreEnvironment Environment { get; }
+
+        /// <summary>
+        /// Subscription expiration time. The subscription can still be auto-renewed to extend the expiration time further.
+        /// </summary>
+        string ExpiryTime { get; }
+
+        /// <summary>
+        /// Purchase Original transaction ID (we only keep track of the original subscription, not subsequent renewals).
+        /// </summary>
+        string OriginalTransactionId { get; }
+
+        /// <summary>
+        /// Purchase Product ID.
+        /// </summary>
+        string ProductId { get; }
+
+        /// <summary>
+        /// UNIX Timestamp when the purchase was done.
+        /// </summary>
+        string PurchaseTime { get; }
+
+        /// <summary>
+        /// Store identifier
+        /// </summary>
+        ApiStoreProvider Store { get; }
+
+        /// <summary>
+        /// UNIX Timestamp when the receipt validation was updated in DB.
+        /// </summary>
+        string UpdateTime { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatedSubscription : IApiValidatedSubscription
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="active"), Preserve]
+        public bool Active { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
+
+        /// <inheritdoc />
+        public ApiStoreEnvironment Environment => _environment;
+        [DataMember(Name="environment"), Preserve]
+        public ApiStoreEnvironment _environment { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="expiry_time"), Preserve]
+        public string ExpiryTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="original_transaction_id"), Preserve]
+        public string OriginalTransactionId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="product_id"), Preserve]
+        public string ProductId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="purchase_time"), Preserve]
+        public string PurchaseTime { get; set; }
+
+        /// <inheritdoc />
+        public ApiStoreProvider Store => _store;
+        [DataMember(Name="store"), Preserve]
+        public ApiStoreProvider _store { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Active: ", Active, ", ");
+            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
+            output = string.Concat(output, "Environment: ", Environment, ", ");
+            output = string.Concat(output, "ExpiryTime: ", ExpiryTime, ", ");
+            output = string.Concat(output, "OriginalTransactionId: ", OriginalTransactionId, ", ");
+            output = string.Concat(output, "ProductId: ", ProductId, ", ");
+            output = string.Concat(output, "PurchaseTime: ", PurchaseTime, ", ");
+            output = string.Concat(output, "Store: ", Store, ", ");
             output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
             return output;
         }
@@ -3646,12 +3910,7 @@ namespace Nakama
         /// <summary>
         /// 
         /// </summary>
-        string TypeUrl { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        string Value { get; }
+        string @type { get; }
     }
 
     /// <inheritdoc />
@@ -3659,18 +3918,13 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="type_url"), Preserve]
-        public string TypeUrl { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="value"), Preserve]
-        public string Value { get; set; }
+        [DataMember(Name="@type"), Preserve]
+        public string @type { get; set; }
 
         public override string ToString()
         {
             var output = "";
-            output = string.Concat(output, "TypeUrl: ", TypeUrl, ", ");
-            output = string.Concat(output, "Value: ", Value, ", ");
+            output = string.Concat(output, "@type: ", @type, ", ");
             return output;
         }
     }
@@ -5329,7 +5583,7 @@ namespace Nakama
         public async Task UpdateGroupAsync(
             string bearerToken,
             string groupId,
-            ApiUpdateGroupRequest body,
+             body,
             CancellationToken? cancellationToken)
         {
             if (groupId == null)
@@ -5451,10 +5705,6 @@ namespace Nakama
             if (groupId == null)
             {
                 throw new ArgumentException("'groupId' is required but was null.");
-            }
-            if (userIds == null)
-            {
-                throw new ArgumentException("'userIds' is required but was null.");
             }
 
             var urlpath = "/v2/group/{groupId}/demote";
@@ -5772,6 +6022,145 @@ namespace Nakama
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatePurchaseResponse>();
+        }
+
+        /// <summary>
+        /// List user's subscriptions.
+        /// </summary>
+        public async Task<IApiSubscriptionList> ListSubscriptionsAsync(
+            string bearerToken,
+            ApiListSubscriptionsRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/subscription";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiSubscriptionList>();
+        }
+
+        /// <summary>
+        /// Validate Apple Subscription Receipt
+        /// </summary>
+        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(
+            string bearerToken,
+            ApiValidateSubscriptionAppleRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/subscription/apple";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiValidateSubscriptionResponse>();
+        }
+
+        /// <summary>
+        /// Validate Google Subscription Receipt
+        /// </summary>
+        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionGoogleAsync(
+            string bearerToken,
+            ApiValidateSubscriptionGoogleRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/subscription/google";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiValidateSubscriptionResponse>();
+        }
+
+        /// <summary>
+        /// Get subscription by product id.
+        /// </summary>
+        public async Task<IApiValidatedSubscription> GetSubscriptionAsync(
+            string bearerToken,
+            string productId,
+            CancellationToken? cancellationToken)
+        {
+            if (productId == null)
+            {
+                throw new ArgumentException("'productId' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/subscription/{productId}";
+            urlpath = urlpath.Replace("{productId}", Uri.EscapeDataString(productId));
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiValidatedSubscription>();
         }
 
         /// <summary>
