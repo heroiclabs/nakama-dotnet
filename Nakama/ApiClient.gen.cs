@@ -3051,6 +3051,84 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Update fields in a given group.
+    /// </summary>
+    public interface IApiUpdateGroupRequest
+    {
+
+        /// <summary>
+        /// Avatar URL.
+        /// </summary>
+        string AvatarUrl { get; }
+
+        /// <summary>
+        /// Description string.
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
+        /// The ID of the group to update.
+        /// </summary>
+        string GroupId { get; }
+
+        /// <summary>
+        /// Lang tag.
+        /// </summary>
+        string LangTag { get; }
+
+        /// <summary>
+        /// Name.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
+        /// </summary>
+        bool Open { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiUpdateGroupRequest : IApiUpdateGroupRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="avatar_url"), Preserve]
+        public string AvatarUrl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="group_id"), Preserve]
+        public string GroupId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="lang_tag"), Preserve]
+        public string LangTag { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="open"), Preserve]
+        public bool Open { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
+            output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "GroupId: ", GroupId, ", ");
+            output = string.Concat(output, "LangTag: ", LangTag, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "Open: ", Open, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A user in the server.
     /// </summary>
     public interface IApiUser
@@ -3910,7 +3988,12 @@ namespace Nakama
         /// <summary>
         /// 
         /// </summary>
-        string @type { get; }
+        string TypeUrl { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string Value { get; }
     }
 
     /// <inheritdoc />
@@ -3918,13 +4001,18 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="@type"), Preserve]
-        public string @type { get; set; }
+        [DataMember(Name="type_url"), Preserve]
+        public string TypeUrl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
 
         public override string ToString()
         {
             var output = "";
-            output = string.Concat(output, "@type: ", @type, ", ");
+            output = string.Concat(output, "TypeUrl: ", TypeUrl, ", ");
+            output = string.Concat(output, "Value: ", Value, ", ");
             return output;
         }
     }
@@ -5583,7 +5671,7 @@ namespace Nakama
         public async Task UpdateGroupAsync(
             string bearerToken,
             string groupId,
-             body,
+            ApiUpdateGroupRequest body,
             CancellationToken? cancellationToken)
         {
             if (groupId == null)
