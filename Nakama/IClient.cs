@@ -319,6 +319,16 @@ namespace Nakama
         Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Get the subscription represented by the provided product id.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="productId">The product id.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the subscription.</returns>
+        Task<IApiValidatedSubscription> GetSubscriptionAsync(ISession session, string productId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Fetch one or more users by id, usernames, and Facebook ids.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -635,6 +645,17 @@ namespace Nakama
             string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// List the user's subscriptions.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="limit">The number of subscriptions to list.</param>
+        /// <param name="cursor">An optional cursor for the next page of subscriptions.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the subscription list.</returns>
+        Task<IApiSubscriptionList> ListSubscriptionsAsync(ISession session, int limit, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// List tournament records around the owner.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -933,20 +954,22 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="receipt">The purchase receipt to be validated.</param>
+        /// <param name="persist">Whether or not to track the receipt in the Nakama database.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Validate a purchase receipt against the Google Play Store.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="receipt">The purchase receipt to be validated.</param>
+        /// <param name="persist">Whether or not to track the receipt in the Nakama database.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Validate a purchase receipt against the Huawei AppGallery.
@@ -954,11 +977,34 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="receipt">The purchase receipt to be validated.</param>
         /// <param name="signature">The signature of the purchase receipt.</param>
+        /// <param name="persist">Whether or not to track the receipt in the Nakama database.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
         Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
-            string signature, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+            string signature, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Validate an Apple subscription receipt.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="receipt">The receipt to validate.</param>
+        /// <param name="persist">Whether or not to persist the receipt to Nakama's database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns> A task which resolves to the subscription validation response. </returns>
+        Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Validate a Google subscription receipt.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="receipt">The receipt to validate.</param>
+        /// <param name="persist">Whether or not to persist the receipt to Nakama's database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns> A task which resolves to the subscription validation response. </returns>
+        Task<IApiValidateSubscriptionResponse> ValidateSubscriptionGoogleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Write a record to a leaderboard.
@@ -1241,14 +1287,14 @@ namespace Nakama
             string avatarUrl, string langTag, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
 
         [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
 
         [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
 
         [Obsolete("Prefer the overload taking a CancellationToken canceller")]
         Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
-            string signature, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
+            string signature, bool persist, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
 
         [Obsolete("Prefer the overload taking a CancellationToken canceller")]
         Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
