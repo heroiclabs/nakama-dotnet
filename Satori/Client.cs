@@ -156,6 +156,14 @@ namespace Satori
                 return _apiClient.SatoriGetFlagsAsync(session.AuthToken, names, cancellationToken);
             }
 
+        /// <inheritdoc cref="IClient.GetFlagsDefaultAsync"/>
+        public Task<IApiFlagList> GetFlagsDefaultAsync(
+            string apiKey,
+            IEnumerable<string> names,
+            CancellationToken? cancellationToken)
+            {
+                return _apiClient.SatoriGetFlagsAsync(apiKey, names, cancellationToken);
+            }
 
         /// <inheritdoc cref="IClient.IdentifyAsync"/>
         public async Task<ISession> IdentifyAsync(

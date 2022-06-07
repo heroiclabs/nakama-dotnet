@@ -96,6 +96,18 @@ namespace Satori
             CancellationToken? cancellationToken = default);
 
         /// <summary>
+        /// List all available default flags.
+        /// </summary>
+        /// <param name="session">The API key.</param>
+        /// <param name="names"> Flag names; if empty string all flags are returned. </param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to all available default flags.</returns>
+        public Task<IApiFlagList> GetFlagsDefaultAsync(
+            string apiKey,
+            IEnumerable<string> names,
+            CancellationToken? cancellationToken = default);
+
+        /// <summary>
         /// List all available flags for this identity.
         /// </summary>
         /// <param name="session">The session of the user.</param>
