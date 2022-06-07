@@ -6,7 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Added
-- Ability to `persist` Apple, Huawei, and Google purchase receipts in the Nakama database.
+- Ability to `persist` Apple, Huawei, and Google purchase receipts in the Nakama database. This is
+set to `true` by default in order to allow the server to detect replay attacks.
 - Added a `SeenBefore` property to `IApiValidatedPurchase`.
 - Added `ListSubscriptionsAsync` which returns a list of the user's subscriptions.
 - Added `ValidateSubscriptionAppleAsync` which returns details about a user's Apple subscription.
@@ -16,6 +17,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 - `ValidatedPurchaseEnvironment` has been renamed to `ApiStoreEnvironment`.
 - `ValidatedPurchaseStore` has been renamed to `ApiStoreProvider`.
+- Removed obsolete client methods that accept a `CancellationTokenSource`. These have been replaced in favor
+of methods that accept a `CancellationToken` that were added in v3.3.
+
 
 ## [3.4.0] - 2022-04-28
 ### Added

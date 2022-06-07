@@ -1076,7 +1076,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ValidatePurchaseAppleAsync"/>
-        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1092,7 +1092,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ValidatePurchaseGoogleAsync"/>
-        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1108,7 +1108,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ValidatePurchaseHuaweiAsync"/>
-        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt, string signature, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt, string signature, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1124,7 +1124,7 @@ namespace Nakama
             }, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
-        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1139,7 +1139,7 @@ namespace Nakama
             }, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
-        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionGoogleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionGoogleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1223,267 +1223,5 @@ namespace Nakama
                     _operator = apiOperator
                 }, canceller), new RetryHistory(retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
-
-        #region Obsolete functions
-        public Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AddFriendsAsync(session, ids, usernames, retryConfiguration, canceller.Token);
-
-        public Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AddGroupUsersAsync(session, groupId, ids, retryConfiguration, canceller.Token);
-
-        public Task<ISession> AuthenticateAppleAsync(string token, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AuthenticateAppleAsync(token, username, create, vars, retryConfiguration, canceller.Token);
-
-        public Task<ISession> AuthenticateCustomAsync(string id, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AuthenticateCustomAsync(id, username, create, vars, retryConfiguration, canceller.Token);
-
-        public Task<ISession> AuthenticateDeviceAsync(string id, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AuthenticateDeviceAsync(id, username, create, vars, retryConfiguration, canceller.Token);
-
-        public Task<ISession> AuthenticateEmailAsync(string email, string password, string username,
-            bool create, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AuthenticateEmailAsync(email, password, username, create, vars, retryConfiguration, canceller.Token);
-
-        public Task<ISession> AuthenticateFacebookAsync(string token, string username, bool create,
-            bool import, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AuthenticateFacebookAsync(token, username, create, import, vars, retryConfiguration, canceller.Token);
-
-        public Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AuthenticateGameCenterAsync(bundleId, playerId, publicKeyUrl, salt, signature, timestamp, username, create, vars, retryConfiguration, canceller.Token);
-
-        public Task<ISession> AuthenticateGoogleAsync(string token, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AuthenticateGoogleAsync(token, username, create, vars, retryConfiguration, canceller.Token);
-
-        public Task<ISession> AuthenticateSteamAsync(string token, string username, bool create,
-            bool import, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => AuthenticateSteamAsync(token, username, create, import, vars, retryConfiguration, canceller.Token);
-
-        public Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => BanGroupUsersAsync(session, groupId, ids, retryConfiguration, canceller.Token);
-
-        public Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => BlockFriendsAsync(session, ids, usernames, retryConfiguration, canceller.Token);
-
-        public Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description,
-            string avatarUrl, string langTag, bool open, int maxCount, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => CreateGroupAsync(session, name, description, avatarUrl, langTag, open, maxCount, retryConfiguration, canceller.Token);
-
-        public Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => DeleteFriendsAsync(session, ids, usernames, retryConfiguration, canceller.Token);
-
-        public Task DeleteGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => DeleteGroupAsync(session, groupId, retryConfiguration, canceller.Token);
-
-        public Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => DeleteLeaderboardRecordAsync(session, leaderboardId, retryConfiguration, canceller.Token);
-
-        public Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => DeleteNotificationsAsync(session, ids, retryConfiguration, canceller.Token);
-
-        public Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => DeleteStorageObjectsAsync(session, ids, retryConfiguration, canceller.Token);
-
-        public Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> userIds, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => DemoteGroupUsersAsync(session, groupId, userIds, retryConfiguration, canceller.Token);
-
-        public Task EventAsync(ISession session, string name, Dictionary<string, string> properties, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => EventAsync(session, name, properties, retryConfiguration, canceller.Token);
-
-        public Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => GetAccountAsync(session, retryConfiguration, canceller.Token);
-
-        public Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames,
-            IEnumerable<string> facebookIds, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => GetUsersAsync(session, ids, usernames, facebookIds, retryConfiguration, canceller.Token);
-
-        public Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ImportFacebookFriendsAsync(session, token, reset, retryConfiguration, canceller.Token);
-
-        public Task ImportSteamFriendsAsync(ISession session, string token, bool? reset, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ImportSteamFriendsAsync(session, token, reset, retryConfiguration, canceller.Token);
-
-        public Task JoinGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => JoinGroupAsync(session, groupId, retryConfiguration, canceller.Token);
-
-        public Task JoinTournamentAsync(ISession session, string tournamentId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => JoinTournamentAsync(session, tournamentId, retryConfiguration, canceller.Token);
-
-        public Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => KickGroupUsersAsync(session, groupId, ids, retryConfiguration, canceller.Token);
-
-        public Task LeaveGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => LeaveGroupAsync(session, groupId, retryConfiguration, canceller.Token);
-
-        public Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => LinkAppleAsync(session, token, retryConfiguration, canceller.Token);
-
-        public Task LinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => LinkCustomAsync(session, id, retryConfiguration, canceller.Token);
-
-        public Task LinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => LinkDeviceAsync(session, id, retryConfiguration, canceller.Token);
-
-        public Task LinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => LinkEmailAsync(session, email, password, retryConfiguration, canceller.Token);
-
-        public Task LinkFacebookAsync(ISession session, string token, bool? import, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => LinkFacebookAsync(session, token, import, retryConfiguration, canceller.Token);
-
-        public Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => LinkGameCenterAsync(session, bundleId, playerId, publicKeyUrl, salt, signature, timestamp, retryConfiguration, canceller.Token);
-
-        public Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => LinkGoogleAsync(session, token, retryConfiguration, canceller.Token);
-
-        public Task LinkSteamAsync(ISession session, string token, bool import, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => LinkSteamAsync(session, token, import, retryConfiguration, canceller.Token);
-
-        public Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, IChannel channel, int limit,
-            bool forward, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListChannelMessagesAsync(session, channel, limit, forward, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit,
-            bool forward, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListChannelMessagesAsync(session, channelId, limit, forward, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListFriendsAsync(session, state, limit, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state, int limit,
-            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListGroupUsersAsync(session, groupId, state, limit, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiGroupList> ListGroupsAsync(ISession session, string name, int limit, string cursor, string langTag, int? members, bool? open, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListGroupsAsync(session, name, limit, cursor, langTag, members, open, retryConfiguration, canceller.Token);
-
-        public Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
-            IEnumerable<string> ownerIds, long? expiry, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListLeaderboardRecordsAsync(session, leaderboardId, ownerIds, expiry, limit, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session, string leaderboardId,
-            string ownerId, long? expiry, int limit, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListLeaderboardRecordsAroundOwnerAsync(session, leaderboardId, ownerId, expiry, limit, retryConfiguration, canceller.Token);
-
-        public Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
-            string label, string query, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListMatchesAsync(session, min, max, limit, authoritative, label, query, retryConfiguration, canceller.Token);
-
-        public Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit,
-            string cacheableCursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListNotificationsAsync(session, limit, cacheableCursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection, int limit,
-            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListStorageObjectsAsync(session, collection, limit, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session, string tournamentId,
-            string ownerId, long? expiry, int limit, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListTournamentRecordsAroundOwnerAsync(session, tournamentId, ownerId, expiry, limit, retryConfiguration, canceller.Token);
-
-        public Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
-            IEnumerable<string> ownerIds, long? expiry, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListTournamentRecordsAsync(session, tournamentId, ownerIds, expiry, limit, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
-            int? startTime, int? endTime, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListTournamentsAsync(session, categoryStart, categoryEnd, startTime, endTime, limit, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state, int limit,
-            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListUserGroupsAsync(session, state, limit, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state, int limit,
-            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListUserGroupsAsync(session, userId, state, limit, cursor, retryConfiguration, canceller.Token);
-
-        public Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
-            int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ListUsersStorageObjectsAsync(session, collection, userId, limit, cursor, retryConfiguration, canceller.Token);
-
-        public Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => PromoteGroupUsersAsync(session, groupId, ids, retryConfiguration, canceller.Token);
-
-        public Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session, IApiReadStorageObjectId[] ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ReadStorageObjectsAsync(session, ids, retryConfiguration, canceller.Token);
-
-        public Task<IApiRpc> RpcAsync(ISession session, string id, string payload, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => RpcAsync(session, id, payload, retryConfiguration, canceller.Token);
-
-        public Task<IApiRpc> RpcAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => RpcAsync(session, id, retryConfiguration, canceller.Token);
-
-        public Task<IApiRpc> RpcAsync(string httpKey, string id, string payload, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => RpcAsync(httpKey, id, payload, retryConfiguration, canceller.Token);
-
-        public Task SessionLogoutAsync(ISession session, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => SessionLogoutAsync(session, retryConfiguration, canceller.Token);
-
-        public Task SessionLogoutAsync(string authToken, string refreshToken, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => SessionLogoutAsync(authToken, refreshToken, retryConfiguration, canceller.Token);
-
-        public Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => SessionRefreshAsync(session, vars, retryConfiguration, canceller.Token);
-
-        public Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UnlinkAppleAsync(session, token, retryConfiguration, canceller.Token);
-
-        public Task UnlinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UnlinkCustomAsync(session, id, retryConfiguration, canceller.Token);
-
-        public Task UnlinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UnlinkDeviceAsync(session, id, retryConfiguration, canceller.Token);
-
-        public Task UnlinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UnlinkEmailAsync(session, email, password, retryConfiguration, canceller.Token);
-
-        public Task UnlinkFacebookAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UnlinkFacebookAsync(session, token, retryConfiguration, canceller.Token);
-
-        public Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UnlinkGameCenterAsync(session, bundleId, playerId, publicKeyUrl, salt, signature, timestamp, retryConfiguration, canceller.Token);
-
-        public Task UnlinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UnlinkGoogleAsync(session, token, retryConfiguration, canceller.Token);
-
-        public Task UnlinkSteamAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UnlinkSteamAsync(session, token, retryConfiguration, canceller.Token);
-
-        public Task UpdateAccountAsync(ISession session, string username, string displayName,
-            string avatarUrl, string langTag, string location, string timezone, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UpdateAccountAsync(session, username, displayName, avatarUrl, langTag, location, timezone, retryConfiguration, canceller.Token);
-
-        public Task UpdateGroupAsync(ISession session, string groupId, string name, bool open, string description,
-            string avatarUrl, string langTag, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => UpdateGroupAsync(session, groupId, name, open, description, avatarUrl, langTag, retryConfiguration, canceller.Token);
-
-        public Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ValidatePurchaseAppleAsync(session, receipt, persist, retryConfiguration, canceller.Token);
-
-        public Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, bool persist, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ValidatePurchaseGoogleAsync(session, receipt, persist, retryConfiguration, canceller.Token);
-
-        public Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
-            string signature, bool persist, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => ValidatePurchaseHuaweiAsync(session, receipt, signature, persist, retryConfiguration, canceller.Token);
-
-        public Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
-            long subScore, string metadata, ApiOperator apiOperator, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => WriteLeaderboardRecordAsync(session, leaderboardId, score, subScore, metadata, apiOperator, retryConfiguration, canceller.Token);
-
-        public Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session, IApiWriteStorageObject[] objects, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => WriteStorageObjectsAsync(session, objects, retryConfiguration, canceller.Token);
-
-        public Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
-            long subScore, string metadata, ApiOperator apiOperator, RetryConfiguration retryConfiguration, CancellationTokenSource canceller)
-            => WriteTournamentRecordAsync(session, tournamentId, score, subScore, metadata, apiOperator, retryConfiguration, canceller.Token);
-        #endregion
     }
 }
