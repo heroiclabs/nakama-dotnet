@@ -319,6 +319,16 @@ namespace Nakama
         Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Get the subscription represented by the provided product id.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="productId">The product id.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the subscription.</returns>
+        Task<IApiValidatedSubscription> GetSubscriptionAsync(ISession session, string productId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Fetch one or more users by id, usernames, and Facebook ids.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -635,6 +645,17 @@ namespace Nakama
             string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// List the user's subscriptions.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="limit">The number of subscriptions to list.</param>
+        /// <param name="cursor">An optional cursor for the next page of subscriptions.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the subscription list.</returns>
+        Task<IApiSubscriptionList> ListSubscriptionsAsync(ISession session, int limit, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// List tournament records around the owner.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -933,20 +954,22 @@ namespace Nakama
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="receipt">The purchase receipt to be validated.</param>
+        /// <param name="persist">Whether or not to track the receipt in the Nakama database.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Validate a purchase receipt against the Google Play Store.
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="receipt">The purchase receipt to be validated.</param>
+        /// <param name="persist">Whether or not to track the receipt in the Nakama database.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Validate a purchase receipt against the Huawei AppGallery.
@@ -954,11 +977,34 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="receipt">The purchase receipt to be validated.</param>
         /// <param name="signature">The signature of the purchase receipt.</param>
+        /// <param name="persist">Whether or not to track the receipt in the Nakama database.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
         Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
-            string signature, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+            string signature, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Validate an Apple subscription receipt.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="receipt">The receipt to validate.</param>
+        /// <param name="persist">Whether or not to persist the receipt to Nakama's database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns> A task which resolves to the subscription validation response. </returns>
+        Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Validate a Google subscription receipt.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="receipt">The receipt to validate.</param>
+        /// <param name="persist">Whether or not to persist the receipt to Nakama's database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns> A task which resolves to the subscription validation response. </returns>
+        Task<IApiValidateSubscriptionResponse> ValidateSubscriptionGoogleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Write a record to a leaderboard.
@@ -999,267 +1045,5 @@ namespace Nakama
         /// <returns>A task which resolves to the tournament record object written.</returns>
         Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
             long subScore = 0L, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
-
-		#region Obsolete functions
-		[Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<ISession> AuthenticateAppleAsync(string token, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<ISession> AuthenticateCustomAsync(string id, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<ISession> AuthenticateDeviceAsync(string id, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<ISession> AuthenticateEmailAsync(string email, string password, string username,
-            bool create, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<ISession> AuthenticateFacebookAsync(string token, string username, bool create,
-            bool import, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<ISession> AuthenticateGoogleAsync(string token, string username, bool create,
-            Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<ISession> AuthenticateSteamAsync(string token, string username, bool create,
-            bool import, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task BlockFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description,
-            string avatarUrl, string langTag, bool open, int maxCount, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task DeleteGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> userIds, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task EventAsync(ISession session, string name, Dictionary<string, string> properties, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames,
-            IEnumerable<string> facebookIds, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task ImportSteamFriendsAsync(ISession session, string token, bool? reset, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task JoinGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task JoinTournamentAsync(ISession session, string tournamentId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task LeaveGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task LinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task LinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task LinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task LinkFacebookAsync(ISession session, string token, bool? import, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task LinkSteamAsync(ISession session, string token, bool import, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, IChannel channel, int limit,
-            bool forward, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId, int limit,
-            bool forward, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state, int limit,
-            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiGroupList> ListGroupsAsync(ISession session, string name, int limit, string cursor, string langTag, int? members, bool? open, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
-            IEnumerable<string> ownerIds, long? expiry, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session, string leaderboardId,
-            string ownerId, long? expiry, int limit, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit, bool authoritative,
-            string label, string query, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit,
-            string cacheableCursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection, int limit,
-            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session, string tournamentId,
-            string ownerId, long? expiry, int limit, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
-            IEnumerable<string> ownerIds, long? expiry, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
-            int? startTime, int? endTime, int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state, int limit,
-            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state, int limit,
-            string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
-            int limit, string cursor, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session, IApiReadStorageObjectId[] ids, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiRpc> RpcAsync(ISession session, string id, string payload, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiRpc> RpcAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiRpc> RpcAsync(string httpKey, string id, string payload, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task SessionLogoutAsync(ISession session, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task SessionLogoutAsync(string authToken, string refreshToken, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UnlinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UnlinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UnlinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UnlinkFacebookAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl, string salt,
-            string signature, string timestamp, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UnlinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UnlinkSteamAsync(ISession session, string token, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UpdateAccountAsync(ISession session, string username, string displayName,
-            string avatarUrl, string langTag, string location, string timezone, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task UpdateGroupAsync(ISession session, string groupId, string name, bool open, string description,
-            string avatarUrl, string langTag, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
-            string signature, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId, long score,
-            long subScore, string metadata, ApiOperator apiOperator, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session, IApiWriteStorageObject[] objects, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-
-        [Obsolete("Prefer the overload taking a CancellationToken canceller")]
-        Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId, long score,
-            long subScore, string metadata, ApiOperator apiOperator, RetryConfiguration retryConfiguration, CancellationTokenSource canceller);
-		#endregion
 	}
 }

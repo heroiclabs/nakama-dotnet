@@ -5,7 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Ability to `persist` Apple, Huawei, and Google purchase receipts in the Nakama database. This is
+set to `true` by default in order to allow the server to detect replay attacks.
+- Added a `SeenBefore` property to `IApiValidatedPurchase`.
+- Added `ListSubscriptionsAsync` which returns a list of the user's subscriptions.
+- Added `ValidateSubscriptionAppleAsync` which returns details about a user's Apple subscription.
+- Added `ValidateSubscriptionGoogleAsync` which returns details about a user's Google subscription.
+- Added `GetSubscriptionAsync` which returns a subscription for the provided product id.
 
+### Changed
+- `ValidatedPurchaseEnvironment` has been renamed to `ApiStoreEnvironment`.
+- `ValidatedPurchaseStore` has been renamed to `ApiStoreProvider`.
+- Removed obsolete client methods that accept a `CancellationTokenSource`. These have been replaced in favor
+of methods that accept a `CancellationToken` that were added in v3.3.
+
+
+## [3.4.0] - 2022-04-28
+### Added
+- Allow max message size limit with socket messages to be overridden in the adapter.
+- Relayed multiplayer matches can now be created with a custom name (i.e. room name).
+
+### Fixed
+- Fix background read loop to update 'IsConnecting' and 'IsConnected' when close is detected.
 
 ## [3.3.0] - 2022-01-24
 ### Added

@@ -12,8 +12,9 @@ go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger
 ### Console API
 
 To generate a client for the Nakama Console, run the following:
+
 ```shell
-go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/console/console.swagger.json" "Nakama.Console" > ../Nakama/ConsoleClient.gen.cs
+go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/console/console.swagger.json" "Console" > ../Nakama/Console/ConsoleClient.gen.cs
 ```
 
 ### Satori API

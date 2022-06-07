@@ -21,7 +21,7 @@ These instructions guide the release process for new official Nakama client SDK 
 4. Create a release build of the code.
 
    ```shell
-   dotnet build -c Release src/Nakama/Nakama.csproj
+   dotnet build -c Release ./Nakama/Nakama.csproj
    ```
 
 5. Create a release on GitHub: https://github.com/heroiclabs/nakama-dotnet/releases/new
@@ -31,7 +31,7 @@ These instructions guide the release process for new official Nakama client SDK 
 7. Package and push the release to Nuget. Don't put a `v` prefix before the version number.
 
    ```shell
-   dotnet pack -p:AssemblyVersion=<package-version> -p:PackageVersion=<package-version> -c Release src/Nakama/Nakama.csproj
+   dotnet pack -p:AssemblyVersion=<package-version> -p:PackageVersion=<package-version> -c Release ./Nakama/Nakama.csproj
    ```
 
    ```shell

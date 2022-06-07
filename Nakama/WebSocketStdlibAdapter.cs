@@ -23,7 +23,7 @@ namespace Nakama
     /// <summary>
     /// An adapter which uses the WebSocket protocol with Nakama server.
     /// </summary>
-    public class WebsocketWasmAdapter : ISocketAdapter
+    public class WebSocketStdlibAdapter : ISocketAdapter
     {
         private const int KeepAliveIntervalSec = 15;
         private const int MaxMessageReadSize = 1024 * 256;
@@ -57,14 +57,14 @@ namespace Nakama
         private readonly int _maxMessageReadSize;
         private readonly TimeSpan _sendTimeoutSec;
 
-        public WebsocketWasmAdapter(int sendTimeoutSec = SendTimeoutSec, int maxMessageReadSize = MaxMessageReadSize)
+        public WebSocketStdlibAdapter(int sendTimeoutSec = SendTimeoutSec, int maxMessageReadSize = MaxMessageReadSize)
         {
             _maxMessageReadSize = maxMessageReadSize;
             _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
             _webSocket = new ClientWebSocket();
         }
 
-        public WebsocketWasmAdapter(ClientWebSocket webSocket)
+        public WebSocketStdlibAdapter(ClientWebSocket webSocket)
         {
             // There is no way to override options so allow constructor to take a websocket that already has options.
             _webSocket = webSocket;
@@ -184,8 +184,14 @@ namespace Nakama
                     bufferReadCount = 0;
                 } while (_webSocket.State == WebSocketState.Open && !canceller.IsCancellationRequested);
             }
+            catch (Exception e)
+            {
+                ReceivedError?.Invoke(e);
+            }
             finally
             {
+                IsConnecting = false;
+                IsConnected = false;
                 Closed?.Invoke();
             }
         }

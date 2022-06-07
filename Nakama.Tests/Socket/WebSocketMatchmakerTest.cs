@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -186,6 +186,103 @@ namespace Nakama.Tests.Socket
             await socket1.CloseAsync();
             await socket2.CloseAsync();
             await socket3.CloseAsync();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldCompleteMatchmakerAsymmetricQuery()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket2 = Nakama.Socket.From(_client);
+
+            await _socket.ConnectAsync(session);
+            await socket2.ConnectAsync(session2);
+
+            var completer = new TaskCompletionSource<IMatchmakerMatched>();
+            var completer2 = new TaskCompletionSource<IMatchmakerMatched>();
+            _socket.ReceivedMatchmakerMatched += (state) => completer.SetResult(state);
+            socket2.ReceivedMatchmakerMatched += (state) => completer2.SetResult(state);
+
+            var properties = new Dictionary<string, string>();
+            properties.Add("code", "test1");
+            var properties2 = new Dictionary<string, string>();
+            properties2.Add("code", "test2");
+
+            var matchmakerTicket = await _socket.AddMatchmakerAsync("properties.code:* properties.code:test1^5", 2, 2, properties);
+            var matchmakerTicket2 = await socket2.AddMatchmakerAsync("*", 2, 2, properties2);
+
+            Assert.NotNull(matchmakerTicket);
+            Assert.NotEmpty(matchmakerTicket.Ticket);
+            Assert.NotNull(matchmakerTicket2);
+            Assert.NotEmpty(matchmakerTicket2.Ticket);
+
+            await Task.Delay(1000);
+
+            var result = await completer.Task;
+            var result2 = await completer2.Task;
+            Assert.NotNull(result);
+            Assert.NotNull(result2);
+            Assert.NotEmpty(result.Token);
+            Assert.NotEmpty(result2.Token);
+            Assert.Equal(result.Token, result2.Token);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldCompleteMatchmakerSymmetricQueryMidSize()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session3 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket2 = Nakama.Socket.From(_client);
+            var socket3 = Nakama.Socket.From(_client);
+
+            await _socket.ConnectAsync(session);
+            await socket2.ConnectAsync(session2);
+            await socket3.ConnectAsync(session3);
+
+            var completer = new TaskCompletionSource<IMatchmakerMatched>();
+            var completer2 = new TaskCompletionSource<IMatchmakerMatched>();
+            var completer3 = new TaskCompletionSource<IMatchmakerMatched>();
+            _socket.ReceivedMatchmakerMatched += (state) => completer.SetResult(state);
+            socket2.ReceivedMatchmakerMatched += (state) => completer2.SetResult(state);
+            socket3.ReceivedMatchmakerMatched += (state) => completer3.SetResult(state);
+
+            var properties = new Dictionary<string, string>();
+            properties.Add("foo", "bar");
+            var properties2 = new Dictionary<string, string>();
+            properties2.Add("foo", "bar");
+            var properties3 = new Dictionary<string, string>();
+            properties3.Add("foo", "bar");
+
+            var query = "+properties.foo:bar";
+            var query2 = "+properties.foo:bar";
+            var query3 = "+properties.foo:bar";
+
+            var matchmakerTicket = await _socket.AddMatchmakerAsync(query, 2, 4, properties);
+            var matchmakerTicket2 = await socket2.AddMatchmakerAsync(query2, 2, 4, properties2);
+            var matchmakerTicket3 = await socket3.AddMatchmakerAsync(query3, 2, 4, properties3);
+
+            Assert.NotNull(matchmakerTicket);
+            Assert.NotEmpty(matchmakerTicket.Ticket);
+            Assert.NotNull(matchmakerTicket2);
+            Assert.NotEmpty(matchmakerTicket2.Ticket);
+            Assert.NotNull(matchmakerTicket3);
+            Assert.NotEmpty(matchmakerTicket3.Ticket);
+
+            await Task.Delay(3000);
+
+            var result = await completer.Task;
+            var result2 = await completer2.Task;
+            var result3 = await completer3.Task;
+            Assert.NotNull(result);
+            Assert.NotNull(result2);
+            Assert.NotNull(result3);
+            Assert.NotEmpty(result.Token);
+            Assert.NotEmpty(result2.Token);
+            Assert.NotEmpty(result3.Token);
+            Assert.Equal(result.Token, result2.Token);
+            Assert.Equal(result2.Token, result3.Token);
+            Assert.Equal(result.Token, result3.Token);
         }
 
         Task IAsyncLifetime.InitializeAsync()

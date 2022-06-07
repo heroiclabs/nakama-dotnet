@@ -68,6 +68,8 @@ namespace Nakama.Tests.Socket
             await _socket.CloseAsync();
 
             Assert.True(await completer.Task);
+            Assert.False(_socket.IsConnecting);
+            Assert.False(_socket.IsConnected);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
