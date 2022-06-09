@@ -187,7 +187,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyAccept = new PartyAccept
                 {
                     PartyId = partyId,
@@ -195,6 +195,7 @@ namespace Nakama
                 }
             };
 
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -204,7 +205,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 MatchmakerAdd = new MatchmakerAddMessage
                 {
                     Query = query,
@@ -214,6 +215,8 @@ namespace Nakama
                     NumericProperties = numericProperties
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.MatchmakerTicket;
         }
@@ -225,7 +228,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyMatchmakerAdd = new PartyMatchmakerAdd
                 {
                     PartyId = partyId,
@@ -237,6 +240,7 @@ namespace Nakama
                 }
             };
 
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.PartyMatchmakerTicket;
         }
@@ -261,10 +265,11 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyClose = new PartyClose { PartyId = partyId }
             };
 
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -273,9 +278,11 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 MatchCreate = new MatchCreateMessage { Name = name }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.Match;
         }
@@ -285,7 +292,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyCreate = new PartyCreate
                 {
                     Open = open,
@@ -293,6 +300,7 @@ namespace Nakama
                 }
             };
 
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.Party;
         }
@@ -306,13 +314,15 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 StatusFollow = new StatusFollowMessage
                 {
                     UserIds = new List<string>(userIDs),
                     Usernames = usernames != null ? new List<string>(usernames) : new List<string>()
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.Status;
         }
@@ -323,7 +333,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 ChannelJoin = new ChannelJoinMessage
                 {
                     Hidden = hidden,
@@ -332,6 +342,8 @@ namespace Nakama
                     Type = (int)type
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.Channel;
         }
@@ -351,9 +363,11 @@ namespace Nakama
 
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 MatchJoin = message
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.Match;
         }
@@ -363,13 +377,15 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 MatchJoin = new MatchJoinMessage
                 {
                     MatchId = matchId,
                     Metadata = metadata
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.Match;
         }
@@ -379,13 +395,14 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyJoin = new PartyJoin
                 {
                     PartyId = partyId
                 }
             };
 
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -397,12 +414,14 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 ChannelLeave = new ChannelLeaveMessage
                 {
                     ChannelId = channelId
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -414,12 +433,14 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 MatchLeave = new MatchLeaveMessage
                 {
                     MatchId = matchId
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -428,13 +449,14 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyLeave = new PartyLeave
                 {
                     PartyId = partyId
                 }
             };
 
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -443,13 +465,14 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyJoinRequestList = new PartyJoinRequestList
                 {
                     PartyId = partyId,
                 }
             };
 
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.PartyJoinRequest;
         }
@@ -459,7 +482,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyPromote = new PartyPromote
                 {
                     PartyId = partyId,
@@ -467,6 +490,8 @@ namespace Nakama
                 }
             };
 
+
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -479,13 +504,15 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 ChannelMessageRemove = new ChannelRemoveMessage
                 {
                     ChannelId = channelId,
                     MessageId = messageId
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.ChannelMessageAck;
         }
@@ -498,13 +525,14 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 MatchmakerRemove = new MatchmakerRemoveMessage
                 {
                     Ticket = ticket
                 }
             };
 
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -513,7 +541,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyMatchmakerRemove = new PartyMatchmakerRemove
                 {
                     PartyId = partyId,
@@ -521,6 +549,7 @@ namespace Nakama
                 }
             };
 
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -529,7 +558,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 PartyMemberRemove = new PartyMemberRemove
                 {
                     PartyId = partyId,
@@ -537,6 +566,7 @@ namespace Nakama
                 }
             };
 
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -545,13 +575,15 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 Rpc = new ApiRpc
                 {
                     Id = funcId,
                     Payload = payload
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.Rpc;
         }
@@ -561,13 +593,15 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 Rpc = new ApiRpc
                 {
                     Id = funcId,
                     Payload = Convert.ToBase64String(payload.Array, payload.Offset, payload.Count)
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.Rpc;
         }
@@ -661,12 +695,14 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 StatusUnfollow = new StatusUnfollowMessage
                 {
                     UserIds = new List<string>(userIDs)
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -679,7 +715,7 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 ChannelMessageUpdate = new ChannelUpdateMessage
                 {
                     ChannelId = channelId,
@@ -687,6 +723,8 @@ namespace Nakama
                     Content = content
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.ChannelMessageAck;
         }
@@ -696,12 +734,14 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 StatusUpdate = new StatusUpdateMessage
                 {
                     Status = status
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             return SendAsync(envelope);
         }
 
@@ -714,13 +754,15 @@ namespace Nakama
         {
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{_cid}",
                 ChannelMessageSend = new ChannelSendMessage
                 {
                     ChannelId = channelId,
                     Content = content
                 }
             };
+
+            Interlocked.Increment(ref _cid);
             var response = await SendAsync(envelope);
             return response.ChannelMessageAck;
         }
