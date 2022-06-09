@@ -27,7 +27,7 @@ namespace Nakama
     /// </summary>
     public class Socket : ISocket
     {
-        private static int _cid; // callback id.
+        private int _cid; // callback id.
 
         /// <summary>
         /// The default timeout for when the socket connects.
