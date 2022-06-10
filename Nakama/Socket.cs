@@ -112,7 +112,7 @@ namespace Nakama
         private readonly Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
         private readonly TimeSpan _sendTimeoutSec;
 
-        private readonly object _lockObj = new object();
+        private readonly object _responsesLock = new object();
 
         /// <summary>
         /// A new socket with default options.
@@ -149,7 +149,7 @@ namespace Nakama
             _adapter.Connected += () => Connected?.Invoke();
             _adapter.Closed += () =>
             {
-                lock (_lockObj)
+                lock (_responsesLock)
                 {
                     foreach (var response in _responses)
                     {
@@ -165,7 +165,7 @@ namespace Nakama
             {
                 if (!_adapter.IsConnected)
                 {
-                    lock (_lockObj)
+                    lock (_responsesLock)
                     {
                         foreach (var response in _responses)
                         {
@@ -798,7 +798,7 @@ namespace Nakama
             {
                 if (!string.IsNullOrEmpty(envelope.Cid))
                 {
-                    lock (_lockObj)
+                    lock (_responsesLock)
                     {
                         // Handle message response.
                         if (_responses.ContainsKey(envelope.Cid))
@@ -818,7 +818,9 @@ namespace Nakama
                         }
                         else
                         {
-                            Logger?.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
+                            // it is valid for this to occur if a completer timed out and was
+                            // removed from the responses dictionary after the timeout.
+                            Logger?.WarnFormat("No completer for message cid: {0}", envelope.Cid);
                         }
                     }
                 }
@@ -919,11 +921,22 @@ namespace Nakama
             }
 
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
-            lock (_lockObj)
+            lock (_responsesLock)
             {
                 _responses[envelope.Cid] = completer;
             }
-            cts.Token.Register(() => completer.TrySetCanceled());
+            cts.Token.Register(() => {
+                lock (_responsesLock)
+                {
+                    if (_responses.ContainsKey(envelope.Cid))
+                    {
+                        _responses.Remove(envelope.Cid);
+                    }
+                }
+
+                completer.TrySetCanceled();
+            });
+
             await _adapter.SendAsync(new ArraySegment<byte>(buffer), true, cts.Token);
             return await completer.Task;
         }
