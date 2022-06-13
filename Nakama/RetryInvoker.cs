@@ -32,13 +32,10 @@ namespace Nakama
     /// </summary>
     internal class RetryInvoker
     {
-        public int JitterSeed { get; private set; }
         private readonly TransientExceptionDelegate _del;
 
-        public RetryInvoker(int jitterSeed, TransientExceptionDelegate del)
+        public RetryInvoker(TransientExceptionDelegate del)
         {
-            JitterSeed = jitterSeed;
-
             if (del == null)
             {
                 throw new ArgumentException("Cannot initialize retry invoker with a null transient exception delegate.");
@@ -90,7 +87,7 @@ namespace Nakama
         private Retry CreateNewRetry(RetryHistory history)
         {
             int expoBackoff = System.Convert.ToInt32(Math.Pow(2, history.Retries.Count)) * history.Configuration.BaseDelayMs;
-            int jitteredBackoff = history.Configuration.Jitter(history.Retries, expoBackoff, new Random(JitterSeed));
+            int jitteredBackoff = history.Configuration.Jitter(history.Retries, expoBackoff, history.Random);
             return new Retry(expoBackoff, jitteredBackoff);
         }
 
