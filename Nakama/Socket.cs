@@ -27,7 +27,7 @@ namespace Nakama
     /// </summary>
     public class Socket : ISocket
     {
-        private static int _cid; // callback id.
+        private int _cid; // callback id.
 
         /// <summary>
         /// The default timeout for when the socket connects.
@@ -112,7 +112,7 @@ namespace Nakama
         private readonly Dictionary<string, TaskCompletionSource<WebSocketMessageEnvelope>> _responses;
         private readonly TimeSpan _sendTimeoutSec;
 
-        private readonly object _lockObj = new object();
+        private readonly object _responsesLock = new object();
 
         /// <summary>
         /// A new socket with default options.
@@ -149,7 +149,7 @@ namespace Nakama
             _adapter.Connected += () => Connected?.Invoke();
             _adapter.Closed += () =>
             {
-                lock (_lockObj)
+                lock (_responsesLock)
                 {
                     foreach (var response in _responses)
                     {
@@ -165,7 +165,7 @@ namespace Nakama
             {
                 if (!_adapter.IsConnected)
                 {
-                    lock (_lockObj)
+                    lock (_responsesLock)
                     {
                         foreach (var response in _responses)
                         {
@@ -185,9 +185,10 @@ namespace Nakama
         /// <inheritdoc cref="AcceptPartyMemberAsync"/>
         public Task AcceptPartyMemberAsync(string partyId, IUserPresence presence)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyAccept = new PartyAccept
                 {
                     PartyId = partyId,
@@ -202,9 +203,10 @@ namespace Nakama
         public async Task<IMatchmakerTicket> AddMatchmakerAsync(string query = "*", int minCount = 2, int maxCount = 8,
             Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 MatchmakerAdd = new MatchmakerAddMessage
                 {
                     Query = query,
@@ -214,6 +216,7 @@ namespace Nakama
                     NumericProperties = numericProperties
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.MatchmakerTicket;
         }
@@ -223,9 +226,10 @@ namespace Nakama
             int maxCount, Dictionary<string, string> stringProperties = null,
             Dictionary<string, double> numericProperties = null)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyMatchmakerAdd = new PartyMatchmakerAdd
                 {
                     PartyId = partyId,
@@ -259,9 +263,10 @@ namespace Nakama
         /// <inheritdoc cref="ClosePartyAsync"/>
         public Task ClosePartyAsync(string partyId)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyClose = new PartyClose { PartyId = partyId }
             };
 
@@ -271,11 +276,13 @@ namespace Nakama
         /// <inheritdoc cref="CreateMatchAsync"/>
         public async Task<IMatch> CreateMatchAsync(string name = null)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 MatchCreate = new MatchCreateMessage { Name = name }
             };
+
             var response = await SendAsync(envelope);
             return response.Match;
         }
@@ -283,9 +290,10 @@ namespace Nakama
         /// <inheritdoc cref="CreatePartyAsync"/>
         public async Task<IParty> CreatePartyAsync(bool open, int maxSize)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyCreate = new PartyCreate
                 {
                     Open = open,
@@ -304,15 +312,17 @@ namespace Nakama
         /// <inheritdoc cref="FollowUsersAsync(System.Collections.Generic.IEnumerable{string},System.Collections.Generic.IEnumerable{string})"/>
         public async Task<IStatus> FollowUsersAsync(IEnumerable<string> userIDs, IEnumerable<string> usernames = null)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 StatusFollow = new StatusFollowMessage
                 {
                     UserIds = new List<string>(userIDs),
                     Usernames = usernames != null ? new List<string>(usernames) : new List<string>()
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.Status;
         }
@@ -321,9 +331,10 @@ namespace Nakama
         public async Task<IChannel> JoinChatAsync(string target, ChannelType type, bool persistence = false,
             bool hidden = false)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 ChannelJoin = new ChannelJoinMessage
                 {
                     Hidden = hidden,
@@ -332,6 +343,7 @@ namespace Nakama
                     Type = (int)type
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.Channel;
         }
@@ -349,11 +361,13 @@ namespace Nakama
                 message.MatchId = matched.MatchId;
             }
 
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 MatchJoin = message
             };
+
             var response = await SendAsync(envelope);
             return response.Match;
         }
@@ -361,15 +375,18 @@ namespace Nakama
         /// <inheritdoc cref="JoinMatchAsync(string,IDictionary{string, string})"/>
         public async Task<IMatch> JoinMatchAsync(string matchId, IDictionary<string, string> metadata = null)
         {
+            int cid = Interlocked.Increment(ref _cid);
+
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 MatchJoin = new MatchJoinMessage
                 {
                     MatchId = matchId,
                     Metadata = metadata
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.Match;
         }
@@ -377,9 +394,10 @@ namespace Nakama
         /// <inheritdoc cref="JoinPartyAsync"/>
         public Task JoinPartyAsync(string partyId)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyJoin = new PartyJoin
                 {
                     PartyId = partyId
@@ -395,14 +413,16 @@ namespace Nakama
         /// <inheritdoc cref="LeaveChatAsync(string)"/>
         public Task LeaveChatAsync(string channelId)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 ChannelLeave = new ChannelLeaveMessage
                 {
                     ChannelId = channelId
                 }
             };
+
             return SendAsync(envelope);
         }
 
@@ -412,23 +432,26 @@ namespace Nakama
         /// <inheritdoc cref="LeaveMatchAsync(string)"/>
         public Task LeaveMatchAsync(string matchId)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 MatchLeave = new MatchLeaveMessage
                 {
                     MatchId = matchId
                 }
             };
+
             return SendAsync(envelope);
         }
 
         /// <inheritdoc cref="LeavePartyAsync"/>
         public Task LeavePartyAsync(string partyId)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyLeave = new PartyLeave
                 {
                     PartyId = partyId
@@ -441,9 +464,10 @@ namespace Nakama
         /// <inheritdoc cref="ListPartyJoinRequestsAsync"/>
         public async Task<IPartyJoinRequest> ListPartyJoinRequestsAsync(string partyId)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyJoinRequestList = new PartyJoinRequestList
                 {
                     PartyId = partyId,
@@ -457,15 +481,17 @@ namespace Nakama
         /// <inheritdoc cref="PromotePartyMemberAsync"/>
         public Task PromotePartyMemberAsync(string partyId, IUserPresence partyMember)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyPromote = new PartyPromote
                 {
                     PartyId = partyId,
                     Presence = partyMember as UserPresence // TODO serialize interface directly in protobuf
                 }
             };
+
 
             return SendAsync(envelope);
         }
@@ -477,15 +503,17 @@ namespace Nakama
         /// <inheritdoc cref="RemoveChatMessageAsync(string,string)"/>
         public async Task<IChannelMessageAck> RemoveChatMessageAsync(string channelId, string messageId)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 ChannelMessageRemove = new ChannelRemoveMessage
                 {
                     ChannelId = channelId,
                     MessageId = messageId
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.ChannelMessageAck;
         }
@@ -496,9 +524,10 @@ namespace Nakama
         /// <inheritdoc cref="RemoveMatchmakerAsync(string)"/>
         public Task RemoveMatchmakerAsync(string ticket)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 MatchmakerRemove = new MatchmakerRemoveMessage
                 {
                     Ticket = ticket
@@ -511,9 +540,10 @@ namespace Nakama
         /// <inheritdoc cref="RemoveMatchmakerPartyAsync"/>
         public Task RemoveMatchmakerPartyAsync(string partyId, string ticket)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyMatchmakerRemove = new PartyMatchmakerRemove
                 {
                     PartyId = partyId,
@@ -527,9 +557,10 @@ namespace Nakama
         /// <inheritdoc cref="RemovePartyMemberAsync"/>
         public Task RemovePartyMemberAsync(string partyId, IUserPresence presence)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 PartyMemberRemove = new PartyMemberRemove
                 {
                     PartyId = partyId,
@@ -543,15 +574,17 @@ namespace Nakama
         /// <inheritdoc cref="RpcAsync(string,string)"/>
         public async Task<IApiRpc> RpcAsync(string funcId, string payload = null)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 Rpc = new ApiRpc
                 {
                     Id = funcId,
                     Payload = payload
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.Rpc;
         }
@@ -559,15 +592,17 @@ namespace Nakama
         /// <inheritdoc cref="RpcAsync(string,ArraySegment{byte})"/>
         public async Task<IApiRpc> RpcAsync(string funcId, ArraySegment<byte> payload)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 Rpc = new ApiRpc
                 {
                     Id = funcId,
                     Payload = Convert.ToBase64String(payload.Array, payload.Offset, payload.Count)
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.Rpc;
         }
@@ -659,14 +694,16 @@ namespace Nakama
         /// <inheritdoc cref="UnfollowUsersAsync(System.Collections.Generic.IEnumerable{string})"/>
         public Task UnfollowUsersAsync(IEnumerable<string> userIDs)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 StatusUnfollow = new StatusUnfollowMessage
                 {
                     UserIds = new List<string>(userIDs)
                 }
             };
+
             return SendAsync(envelope);
         }
 
@@ -677,9 +714,10 @@ namespace Nakama
         /// <inheritdoc cref="UpdateChatMessageAsync(string,string,string)"/>
         public async Task<IChannelMessageAck> UpdateChatMessageAsync(string channelId, string messageId, string content)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 ChannelMessageUpdate = new ChannelUpdateMessage
                 {
                     ChannelId = channelId,
@@ -687,6 +725,7 @@ namespace Nakama
                     Content = content
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.ChannelMessageAck;
         }
@@ -694,14 +733,16 @@ namespace Nakama
         /// <inheritdoc cref="UpdateStatusAsync"/>
         public Task UpdateStatusAsync(string status)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 StatusUpdate = new StatusUpdateMessage
                 {
                     Status = status
                 }
             };
+
             return SendAsync(envelope);
         }
 
@@ -712,15 +753,17 @@ namespace Nakama
         /// <inheritdoc cref="WriteChatMessageAsync(string,string)"/>
         public async Task<IChannelMessageAck> WriteChatMessageAsync(string channelId, string content)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
-                Cid = $"{_cid++}",
+                Cid = $"{cid}",
                 ChannelMessageSend = new ChannelSendMessage
                 {
                     ChannelId = channelId,
                     Content = content
                 }
             };
+
             var response = await SendAsync(envelope);
             return response.ChannelMessageAck;
         }
@@ -756,7 +799,7 @@ namespace Nakama
             {
                 if (!string.IsNullOrEmpty(envelope.Cid))
                 {
-                    lock (_lockObj)
+                    lock (_responsesLock)
                     {
                         // Handle message response.
                         if (_responses.ContainsKey(envelope.Cid))
@@ -776,7 +819,9 @@ namespace Nakama
                         }
                         else
                         {
-                            Logger?.ErrorFormat("No completer for message cid: {0}", envelope.Cid);
+                            // it is valid for this to occur if a completer timed out and was
+                            // removed from the responses dictionary after the timeout.
+                            Logger?.WarnFormat("No completer for message cid: {0}", envelope.Cid);
                         }
                     }
                 }
@@ -877,11 +922,22 @@ namespace Nakama
             }
 
             var completer = new TaskCompletionSource<WebSocketMessageEnvelope>();
-            lock (_lockObj)
+            lock (_responsesLock)
             {
                 _responses[envelope.Cid] = completer;
             }
-            cts.Token.Register(() => completer.TrySetCanceled());
+            cts.Token.Register(() => {
+                lock (_responsesLock)
+                {
+                    if (_responses.ContainsKey(envelope.Cid))
+                    {
+                        _responses.Remove(envelope.Cid);
+                    }
+                }
+
+                completer.TrySetCanceled();
+            });
+
             await _adapter.SendAsync(new ArraySegment<byte>(buffer), true, cts.Token);
             return await completer.Task;
         }
