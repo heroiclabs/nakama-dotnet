@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -24,12 +25,18 @@ namespace Nakama
         public RetryConfiguration Configuration { get; }
         public List<Retry> Retries { get; }
         public CancellationToken? UserCancelToken { get; }
+        public Random Random { get; }
 
-        public RetryHistory(RetryConfiguration configuration, CancellationToken? userCancelToken)
+        public RetryHistory(ISession session, RetryConfiguration configuration, CancellationToken? userCancelToken) : this(session.AuthToken, configuration, userCancelToken)
+        {
+        }
+
+        public RetryHistory(string jitterHashKey, RetryConfiguration configuration, CancellationToken? userCancelToken)
         {
             Configuration = configuration;
             Retries = new List<Retry>();
             UserCancelToken = userCancelToken;
+            Random = new Random(jitterHashKey.GetHashCode());
         }
     }
 }
