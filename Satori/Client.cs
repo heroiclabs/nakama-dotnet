@@ -39,7 +39,7 @@ namespace Satori
         public string Scheme { get; }
 
         /// <summary>
-        /// The key used to authenticate with the server without a session. Defaults to "defaultkey".
+        /// The key used to authenticate with the server without a session.
         /// </summary>
         public string ServerKey { get; }
 
