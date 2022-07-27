@@ -111,5 +111,24 @@ namespace Nakama.Tests.Socket
             Assert.True(_socket.IsConnected);
             _ = _socket.CloseAsync();
         }
+
+        [Fact(Skip = "Test requires you to disconnect the internet and wait for 60 seconds minimum")]
+        public async Task SocketDetectsLossOfInternet()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.ConnectAsync(session, false, 5);
+            var closeTriggered = false;
+            
+            _socket.Closed += () =>
+            {
+                _testOutputHelper.WriteLine($"Socket was closed");
+                closeTriggered = true;
+            };
+            
+            _testOutputHelper.WriteLine("---Disconnect Internet Now---");
+            await Task.Delay(TimeSpan.FromSeconds(60));
+            Assert.False(_socket.IsConnected);
+            Assert.True(closeTriggered);
+        }
     }
 }

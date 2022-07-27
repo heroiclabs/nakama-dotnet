@@ -20,6 +20,8 @@ set to `true` by default in order to allow the server to detect replay attacks.
 - Removed obsolete client methods that accept a `CancellationTokenSource`. These have been replaced in favor
 of methods that accept a `CancellationToken` that were added in v3.3.
 
+### Fixed
+- Fix an issue with Socket Closed event taking a significant length of time or not firing at all when internet connection is lost
 
 ## [3.4.0] - 2022-04-28
 ### Added
