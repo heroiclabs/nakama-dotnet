@@ -35,7 +35,7 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void FromJson_JsonInput_LongToString()
+        public void FromJson_JsonInput_NumberToString()
         {
             const string json = @"{""key"":12345}";
             var obj = json.FromJson<Dictionary<string, string>>();
