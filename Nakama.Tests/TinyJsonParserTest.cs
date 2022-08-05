@@ -51,6 +51,16 @@ namespace Nakama.Tests
             
             Assert.Equal("12345", obj["key"]);
         }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void ToJson_LongToUnquotedJson()
+        {
+            var obj = new Dictionary<string, long>();
+            obj["key"] = 1234567891234;
+            var json = obj.ToJson();
+            
+            Assert.Equal("{\"key\":1234567891234}", json);
+        }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void FromJson_JsonInput_ParsedTwice()

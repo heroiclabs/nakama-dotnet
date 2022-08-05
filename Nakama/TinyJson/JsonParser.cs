@@ -170,8 +170,8 @@ namespace Nakama.TinyJson
         {
             if (type == typeof(string))
             {
-                var isUnquotedNumber = Regex.Match(json, "^\\d+$").Success;
-                if (isUnquotedNumber)
+                // Return the raw value if it is unquoted (e.g. a number)
+                if (json[0] != '"')
                 {
                     return json;
                 }
