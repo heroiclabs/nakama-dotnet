@@ -35,6 +35,24 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_LongToString()
+        {
+            const string json = @"{""key"":12345}";
+            var obj = json.FromJson<Dictionary<string, string>>();
+            
+            Assert.Equal("12345", obj["key"]);
+        }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_StringToString()
+        {
+            const string json = @"{""key"":""12345""}";
+            var obj = json.FromJson<Dictionary<string, string>>();
+            
+            Assert.Equal("12345", obj["key"]);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void FromJson_JsonInput_ParsedTwice()
         {
             const string json1 = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}]}";
