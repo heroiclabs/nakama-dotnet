@@ -84,9 +84,17 @@ namespace Nakama
                 linkedSource = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken, userCancelToken.Value);
             }
 
+            var response = await _httpClient.SendAsync(request, linkedSource == null ? timeoutToken : linkedSource.Token);
+
             Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri, body);
 
-            var response = await _httpClient.SendAsync(request, linkedSource == null ? timeoutToken : linkedSource.Token);
+            if (((int)response.StatusCode) >= 500)
+            {
+                // TODO think of best way to map HTTP code to GRPC code since we can't rely
+                // on server to process it. Manually adding the mapping to SDK seems brittle.
+                throw new ApiResponseException((int) response.StatusCode, "", -1);
+            }
+
             var contents = await response.Content.ReadAsStringAsync();
             response.Content?.Dispose();
 
