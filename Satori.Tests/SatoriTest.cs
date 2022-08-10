@@ -17,16 +17,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace Nakama.Tests
+namespace Satori.Tests
 {
     public class SatoriTest
     {
         public const int TIMEOUT_MILLISECONDS = 5000;
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void SatoriTest()
+        public void TestAuthenticate()
         {
-
+            var client = new Client();
         }
 
     }

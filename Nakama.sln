@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nakama", "Nakama\Nakama.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nakama.Tests", "Nakama.Tests\Nakama.Tests.csproj", "{65EA41AD-C2EF-4F94-A466-927FAD7E8C1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Satori.Tests", "Satori.Tests\Satori.Tests.csproj", "{8801930E-55DC-43D8-841D-186E5F08B8C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{65EA41AD-C2EF-4F94-A466-927FAD7E8C1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65EA41AD-C2EF-4F94-A466-927FAD7E8C1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65EA41AD-C2EF-4F94-A466-927FAD7E8C1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8801930E-55DC-43D8-841D-186E5F08B8C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8801930E-55DC-43D8-841D-186E5F08B8C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8801930E-55DC-43D8-841D-186E5F08B8C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8801930E-55DC-43D8-841D-186E5F08B8C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
