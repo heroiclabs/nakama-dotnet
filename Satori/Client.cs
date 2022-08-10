@@ -41,7 +41,7 @@ namespace Satori
         /// <summary>
         /// The key used to authenticate with the server without a session.
         /// </summary>
-        public string ServerKey { get; }
+        public string ApiKey { get; }
 
         /// <summary>
         /// Set the timeout in seconds on requests sent to the server.
@@ -55,12 +55,12 @@ namespace Satori
 
         private readonly ApiClient _apiClient;
 
-        public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter)
+        public Client(string scheme, string host, int port, string apiKey, IHttpAdapter adapter)
         {
             Host = host;
             Port = port;
             Scheme = scheme;
-            ServerKey = serverKey;
+            ApiKey = apiKey;
             _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, DefaultTimeout);
         }
 
@@ -69,7 +69,7 @@ namespace Satori
             string id,
             CancellationToken? cancellationToken = null)
             {
-                var response = await _apiClient.SatoriAuthenticateAsync(ServerKey, string.Empty, new ApiAuthenticateRequest{Id = id}, cancellationToken);
+                var response = await _apiClient.SatoriAuthenticateAsync(ApiKey, string.Empty, new ApiAuthenticateRequest{Id = id}, cancellationToken);
                 return new Session(response.Token, response.RefreshToken);
             }
 
@@ -86,7 +86,7 @@ namespace Satori
             ISession session,
             CancellationToken? cancellationToken)
             {
-                var response = await _apiClient.SatoriAuthenticateRefreshAsync(ServerKey, string.Empty, new ApiAuthenticateRefreshRequest{RefreshToken = session.RefreshToken}, cancellationToken);
+                var response = await _apiClient.SatoriAuthenticateRefreshAsync(ApiKey, string.Empty, new ApiAuthenticateRefreshRequest{RefreshToken = session.RefreshToken}, cancellationToken);
                 return new Session(response.Token, response.RefreshToken);
             }
 

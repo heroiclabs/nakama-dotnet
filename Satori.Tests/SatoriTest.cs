@@ -12,22 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace Satori.Tests
 {
     public class SatoriTest
     {
-        public const int TIMEOUT_MILLISECONDS = 5000;
+        public const int _TIMEOUT_MILLISECONDS = 5000;
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        private readonly Client _testClient = new Client("http", "localhost", 7450, "", Nakama.HttpRequestAdapter.WithGzip());
+
+        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
         public void TestAuthenticate()
         {
-            var client = new Client();
+            _testClient.AuthenticateAsync()
         }
-
     }
 }
