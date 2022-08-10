@@ -24,12 +24,12 @@ namespace Satori
     public class Client : IClient
     {
         /// <summary>
-        /// The host address of the server. Defaults to "127.0.0.1".
+        /// The host address of the server.
         /// </summary>
         public string Host { get; }
 
         /// <summary>
-        /// The port number of the server. Defaults to 7350.
+        /// The port number of the server.
         /// </summary>
         public int Port { get; }
 
@@ -49,40 +49,11 @@ namespace Satori
         public int Timeout { get; set; }
 
         /// <summary>
-        /// The default host address of the server.
-        /// </summary>
-        public const string DefaultHost = "127.0.0.1";
-
-        /// <summary>
-        /// The default protocol scheme for the socket connection.
-        /// </summary>
-        public const string DefaultScheme = "http";
-
-        /// <summary>
-        /// The default port number of the server.
-        /// </summary>
-        public const int DefaultPort = 7350;
-
-        /// <summary>
         /// The default timeout of the server.
         /// </summary>
         public const int DefaultTimeout = 15;
 
-        /// <summary>
-        /// The default expired timespan used to check session lifetime.
-        /// </summary>
-        public static TimeSpan DefaultExpiredTimeSpan = TimeSpan.FromMinutes(5);
-
         private readonly ApiClient _apiClient;
-
-        public Client(string serverKey) : this(serverKey, Nakama.HttpRequestAdapter.WithGzip())
-        {
-        }
-
-        public Client(string serverKey, IHttpAdapter adapter) : this(DefaultScheme,
-            DefaultHost, DefaultPort, serverKey,  adapter)
-        {
-        }
 
         public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter)
         {
@@ -189,10 +160,8 @@ namespace Satori
             Dictionary<string, string> customProperties,
             CancellationToken? cancellationToken)
             {
-                // TODO generated properties?
                 var properties = new ApiProperties{_default = default, _custom = customProperties};
                 var request = new ApiIdentifyRequest{Id = id, _default = defaultProperties, _custom = customProperties};
-
                 var response = await _apiClient.SatoriIdentifyAsync(session.AuthToken, request, cancellationToken);
                 return new Session(response.Token, response.RefreshToken);
             }
