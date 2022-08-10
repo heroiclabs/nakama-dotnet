@@ -111,9 +111,9 @@ namespace Nakama.Ninja.WebSockets
 
                     if (_pingSentTicks != 0)
                     {
-                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure,
+                        await _webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure,
                             $"No Pong message received in response to a Ping after KeepAliveInterval {_keepAliveInterval}",
-                            _cancellationToken);
+                        _cancellationToken);
                         break;
                     }
 

@@ -45,11 +45,6 @@ namespace Nakama
         int Port { get; }
 
         /// <summary>
-        /// Used to seed random values generated during request retries.
-        /// </summary>
-        int RetryJitterSeed { get; }
-
-        /// <summary>
         /// The protocol scheme used to connect with the server. Must be either "http" or "https".
         /// </summary>
         string Scheme { get; }
