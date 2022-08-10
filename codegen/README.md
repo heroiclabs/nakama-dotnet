@@ -21,7 +21,7 @@ go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/console/console.swagger
 
 To generate a client for Satori, run the following:
 ```shell
-go run main.go "$GOPATH/src/github.com/heroiclabs/satori/api/satori.swagger.json" "Satori" > ../Satori/Client.gen.cs
+go run main.go "$GOPATH/src/github.com/heroiclabs/satori/api/satori.swagger.json" "Satori" > ../Satori/ApiClient.gen.cs
 ```
 
 

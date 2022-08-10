@@ -113,7 +113,7 @@ namespace Satori
     {
 
         /// <summary>
-        /// Optional Identity ID
+        /// Identity ID. Must be between eight and 128 characters (inclusive). Must be an alphanumeric string with only underscores and hyphens allowed.
         /// </summary>
         string Id { get; }
     }
@@ -135,20 +135,20 @@ namespace Satori
     }
 
     /// <summary>
-    /// Publish an event to the server
+    /// A single event. Usually, but not necessarily, part of a batch.
     /// </summary>
-    public interface IApiEventRequest
+    public interface IApiEvent
     {
 
         /// <summary>
-        /// Optional custom event properties to update with this call.
+        /// Optional event ID assigned by the client, used to de-duplicate in retransmission scenarios. If not supplied the server will assign a randomly generated unique event identifier.
         /// </summary>
-        IDictionary<string, string> Custom { get; }
+        string Id { get; }
 
         /// <summary>
-        /// Event properties. Optional default event properties to update with this call.
+        /// Event metadata, if any.
         /// </summary>
-        IDictionary<string, string> Default { get; }
+        IDictionary<string, string> Metadata { get; }
 
         /// <summary>
         /// Event name.
@@ -156,24 +156,28 @@ namespace Satori
         string Name { get; }
 
         /// <summary>
-        /// The time when the event was triggered.
+        /// The time when the event was triggered on the producer side.
         /// </summary>
         string Timestamp { get; }
+
+        /// <summary>
+        /// Optional value.
+        /// </summary>
+        string Value { get; }
     }
 
     /// <inheritdoc />
-    internal class ApiEventRequest : IApiEventRequest
+    internal class ApiEvent : IApiEvent
     {
 
         /// <inheritdoc />
-        public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
-        [DataMember(Name="custom"), Preserve]
-        public Dictionary<string, string> _custom { get; set; }
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
 
         /// <inheritdoc />
-        public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
-        [DataMember(Name="default"), Preserve]
-        public Dictionary<string, string> _default { get; set; }
+        public IDictionary<string, string> Metadata => _metadata ?? new Dictionary<string, string>();
+        [DataMember(Name="metadata"), Preserve]
+        public Dictionary<string, string> _metadata { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
@@ -183,25 +187,53 @@ namespace Satori
         [DataMember(Name="timestamp"), Preserve]
         public string Timestamp { get; set; }
 
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
+
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "Id: ", Id, ", ");
 
-            var customString = "";
-            foreach (var kvp in Custom)
+            var metadataString = "";
+            foreach (var kvp in Metadata)
             {
-                customString = string.Concat(customString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                metadataString = string.Concat(metadataString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Custom: [" + customString + "]");
-
-            var defaultString = "";
-            foreach (var kvp in Default)
-            {
-                defaultString = string.Concat(defaultString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Default: [" + defaultString + "]");
+            output = string.Concat(output, "Metadata: [" + metadataString + "]");
             output = string.Concat(output, "Name: ", Name, ", ");
             output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
+            output = string.Concat(output, "Value: ", Value, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Publish an event to the server
+    /// </summary>
+    public interface IApiEventRequest
+    {
+
+        /// <summary>
+        /// Some number of events produced by a client.
+        /// </summary>
+        IEnumerable<IApiEvent> Events { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiEventRequest : IApiEventRequest
+    {
+
+        /// <inheritdoc />
+        public IEnumerable<IApiEvent> Events => _events ?? new List<ApiEvent>(0);
+        [DataMember(Name="events"), Preserve]
+        public List<ApiEvent> _events { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Events: [", string.Join(", ", Events), "], ");
             return output;
         }
     }
@@ -218,11 +250,6 @@ namespace Satori
         string Name { get; }
 
         /// <summary>
-        /// Experiment value type
-        /// </summary>
-        ApiValueType Type { get; }
-
-        /// <summary>
         /// Value associated with this Experiment.
         /// </summary>
         string Value { get; }
@@ -237,11 +264,6 @@ namespace Satori
         public string Name { get; set; }
 
         /// <inheritdoc />
-        public ApiValueType Type => _type;
-        [DataMember(Name="type"), Preserve]
-        public ApiValueType _type { get; set; }
-
-        /// <inheritdoc />
         [DataMember(Name="value"), Preserve]
         public string Value { get; set; }
 
@@ -249,7 +271,6 @@ namespace Satori
         {
             var output = "";
             output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "Type: ", Type, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
         }
@@ -301,11 +322,6 @@ namespace Satori
         string Name { get; }
 
         /// <summary>
-        /// Flag value type
-        /// </summary>
-        ApiValueType Type { get; }
-
-        /// <summary>
         /// Value associated with this flag.
         /// </summary>
         string Value { get; }
@@ -324,11 +340,6 @@ namespace Satori
         public string Name { get; set; }
 
         /// <inheritdoc />
-        public ApiValueType Type => _type;
-        [DataMember(Name="type"), Preserve]
-        public ApiValueType _type { get; set; }
-
-        /// <inheritdoc />
         [DataMember(Name="value"), Preserve]
         public string Value { get; set; }
 
@@ -337,7 +348,6 @@ namespace Satori
             var output = "";
             output = string.Concat(output, "ConditionChanged: ", ConditionChanged, ", ");
             output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "Type: ", Type, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
         }
@@ -441,24 +451,24 @@ namespace Satori
     {
 
         /// <summary>
+        /// End time of current event run.
+        /// </summary>
+        string ActiveEndTimeSec { get; }
+
+        /// <summary>
+        /// Start time of current event run.
+        /// </summary>
+        string ActiveStartTimeSec { get; }
+
+        /// <summary>
         /// Description.
         /// </summary>
         string Description { get; }
 
         /// <summary>
-        /// End time.
-        /// </summary>
-        string EndTime { get; }
-
-        /// <summary>
         /// Name.
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Start time.
-        /// </summary>
-        string StartTime { get; }
 
         /// <summary>
         /// Event data, always JSON.
@@ -471,20 +481,20 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [DataMember(Name="active_end_time_sec"), Preserve]
+        public string ActiveEndTimeSec { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="active_start_time_sec"), Preserve]
+        public string ActiveStartTimeSec { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="description"), Preserve]
         public string Description { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="end_time"), Preserve]
-        public string EndTime { get; set; }
-
-        /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="start_time"), Preserve]
-        public string StartTime { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="value"), Preserve]
@@ -493,10 +503,10 @@ namespace Satori
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "ActiveEndTimeSec: ", ActiveEndTimeSec, ", ");
+            output = string.Concat(output, "ActiveStartTimeSec: ", ActiveStartTimeSec, ", ");
             output = string.Concat(output, "Description: ", Description, ", ");
-            output = string.Concat(output, "EndTime: ", EndTime, ", ");
             output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "StartTime: ", StartTime, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
         }
@@ -702,29 +712,6 @@ namespace Satori
     }
 
     /// <summary>
-    /// Type of value returned from server
-    /// </summary>
-    public enum ApiValueType
-    {
-        /// <summary>
-        /// - STRING: String value
-        /// </summary>
-        STRING = 0,
-        /// <summary>
-        ///  - INT: Int64 value
-        /// </summary>
-        INT = 1,
-        /// <summary>
-        ///  - BOOLEAN: Boolean value
-        /// </summary>
-        BOOLEAN = 2,
-        /// <summary>
-        ///  - JSON: JSON value
-        /// </summary>
-        JSON = 3,
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     public interface IProtobufAny
@@ -733,12 +720,7 @@ namespace Satori
         /// <summary>
         /// 
         /// </summary>
-        string TypeUrl { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        string Value { get; }
+        string @type { get; }
     }
 
     /// <inheritdoc />
@@ -746,18 +728,13 @@ namespace Satori
     {
 
         /// <inheritdoc />
-        [DataMember(Name="type_url"), Preserve]
-        public string TypeUrl { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="value"), Preserve]
-        public string Value { get; set; }
+        [DataMember(Name="@type"), Preserve]
+        public string @type { get; set; }
 
         public override string ToString()
         {
             var output = "";
-            output = string.Concat(output, "TypeUrl: ", TypeUrl, ", ");
-            output = string.Concat(output, "Value: ", Value, ", ");
+            output = string.Concat(output, "@type: ", @type, ", ");
             return output;
         }
     }
@@ -1055,8 +1032,11 @@ namespace Satori
 
             var method = "GET";
             var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(bearerToken))
+            {
+                var header = string.Concat("Bearer ", bearerToken);
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);

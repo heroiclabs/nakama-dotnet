@@ -54,22 +54,16 @@ namespace Satori
             CancellationToken? cancellationToken = default);
 
         /// <summary>
-        /// Publish an event for this session.
+        /// Send an event for this session.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="name">The name of the event.</param>
-        /// <param name="defaultProperties">The default event properties.</param>
-        /// <param name="customProperties">The custom event properties.</param>
-        /// <param name="timestamp">The time when the event was triggered.</param>
+        /// <param name="event">The event to send.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        public Task EventAsync(
+        public Task SendEventAsync(
             ISession session,
-            string name,
-            Dictionary<string, string> defaultProperties,
-            Dictionary<string, string> customProperties,
-            string timestamp,
-            CancellationToken? cancellationToken = default);
+            Event @event,
+            CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Get all experiments data.
@@ -111,7 +105,9 @@ namespace Satori
         /// List all available flags for this identity.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="id"> Identity ID to enrich the current session and return a new session. Old session will no longer be usable.</param>
+        /// <param name="id"> Identity ID to enrich the current session and return a new session.
+        /// Old session will no longer be usable. Must be between eight and 128 characters (inclusive).
+        //  Must be an alphanumeric string with only underscores and hyphens allowed. </param>
         /// <param name="defaultProperties">The default event properties.</param>
         /// <param name="customProperties">The custom event properties.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>

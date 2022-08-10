@@ -120,19 +120,35 @@ namespace Satori
             }
 
         /// <inheritdoc cref="IClient.EventAsync"/>
-        public Task EventAsync(
+        public Task SendEventAsync(
             ISession session,
-            string name,
-            Dictionary<string, string> defaultProperties,
-            Dictionary<string, string> customProperties,
-            string timestamp,
-            CancellationToken? cancellationToken)
+            Event @event,
+            CancellationToken? cancellationToken = null)
             {
                 var request = new ApiEventRequest{
-                    Name = name,
-                    _default = defaultProperties,
-                    _custom = customProperties,
-                    Timestamp = timestamp
+                    _events = new List<ApiEvent>{
+                        @event.ToApiEvent()
+                    }
+                };
+
+                return _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken);
+            }
+
+                    /// <inheritdoc cref="IClient.EventAsync"/>
+        public Task SendEventsAsync(
+            ISession session,
+            IEnumerable<Event> events,
+            CancellationToken? cancellationToken = null)
+            {
+                var apiEventList = new List<ApiEvent>();
+
+                foreach (Event e in events)
+                {
+                    apiEventList.Add(e.ToApiEvent());
+                }
+
+                var request = new ApiEventRequest{
+                    _events = apiEventList
                 };
 
                 return _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken);
