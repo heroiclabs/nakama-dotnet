@@ -41,11 +41,8 @@ namespace Satori
         /// <inheritdoc cref="ISession.RefreshToken"/>
         public string RefreshToken { get; private set; }
 
-        /// <inheritdoc cref="ISession.Username"/>
-        public string Username { get; private set; }
-
-        /// <inheritdoc cref="ISession.UserId"/>
-        public string UserId { get; private set; }
+        /// <inheritdoc cref="ISession.IdentityId"/>
+        public string IdentityId { get; private set; }
 
         /// <inheritdoc cref="ISession.HasExpired"/>
         public bool HasExpired(DateTime offset)
@@ -64,7 +61,7 @@ namespace Satori
         public override string ToString()
         {
             return
-                $"Session(AuthToken='{AuthToken}', ExpireTime={ExpireTime}, RefreshToken={RefreshToken}, RefreshExpireTime={RefreshExpireTime}, Username='{Username}', UserId='{UserId}')";
+                $"Session(AuthToken='{AuthToken}', ExpireTime={ExpireTime}, RefreshToken={RefreshToken}, RefreshExpireTime={RefreshExpireTime}, UserId='{IdentityId}')";
         }
 
         internal Session(string authToken, string refreshToken)
@@ -86,8 +83,7 @@ namespace Satori
             var json = JwtUnpack(authToken);
             var decoded = json.FromJson<Dictionary<string, object>>();
             ExpireTime = Convert.ToInt64(decoded["exp"]);
-            Username = decoded["usn"].ToString();
-            UserId = decoded["uid"].ToString();
+            IdentityId = decoded["uid"].ToString();
 
             // Check in case clients have not updated to use refresh tokens yet.
             if (!string.IsNullOrEmpty(refreshToken))

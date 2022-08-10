@@ -53,14 +53,9 @@ namespace Satori
         string RefreshToken { get; }
 
         /// <summary>
-        /// The username of the user who owns this session.
-        /// </summary>
-        string Username { get; }
-
-        /// <summary>
         /// The ID of the user who owns this session.
         /// </summary>
-        string UserId { get; }
+        string IdentityId { get; }
 
         /// <summary>
         /// Check the session has expired against the offset time.
