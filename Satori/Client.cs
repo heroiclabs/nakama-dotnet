@@ -76,7 +76,7 @@ namespace Satori
         /// <inheritdoc cref="IClient.AuthenticateLogoutAsync"/>
         public Task AuthenticateLogoutAsync(
             ISession session,
-            CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriAuthenticateLogoutAsync(session.AuthToken, new ApiAuthenticateLogoutRequest{RefreshToken = session.RefreshToken, Token = session.AuthToken}, cancellationToken);
             }
@@ -84,7 +84,7 @@ namespace Satori
         /// <inheritdoc cref="IClient.AuthenticateRefreshAsync"/>
         public async Task<ISession> AuthenticateRefreshAsync(
             ISession session,
-            CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken = default)
             {
                 var response = await _apiClient.SatoriAuthenticateRefreshAsync(ApiKey, string.Empty, new ApiAuthenticateRefreshRequest{RefreshToken = session.RefreshToken}, cancellationToken);
                 return new Session(response.Token, response.RefreshToken);
@@ -129,7 +129,7 @@ namespace Satori
         public Task<IApiExperimentList> GetExperimentsAsync(
             ISession session,
             IEnumerable<string> names,
-            CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriGetExperimentsAsync(session.AuthToken, names, cancellationToken);
             }
@@ -138,7 +138,7 @@ namespace Satori
         public Task<IApiFlagList> GetFlagsAsync(
             ISession session,
             IEnumerable<string> names,
-            CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriGetFlagsAsync(session.AuthToken, names, cancellationToken);
             }
@@ -147,7 +147,7 @@ namespace Satori
         public Task<IApiFlagList> GetFlagsDefaultAsync(
             string apiKey,
             IEnumerable<string> names,
-            CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriGetFlagsAsync(apiKey, names, cancellationToken);
             }
@@ -158,7 +158,7 @@ namespace Satori
             string id,
             Dictionary<string, string> defaultProperties,
             Dictionary<string, string> customProperties,
-            CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken = default)
             {
                 var properties = new ApiProperties{_default = default, _custom = customProperties};
                 var request = new ApiIdentifyRequest{Id = id, _default = defaultProperties, _custom = customProperties};
@@ -171,7 +171,7 @@ namespace Satori
         public Task<IApiLiveEventList> GetLiveEventsAsync(
             ISession session,
             IEnumerable<string> names,
-            CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriGetLiveEventsAsync(session.AuthToken, names, cancellationToken);
             }
@@ -179,7 +179,7 @@ namespace Satori
         /// <inheritdoc cref="IClient.ListPropertiesAsync"/>
         public Task<IApiProperties> ListPropertiesAsync(
             ISession session,
-            CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriListPropertiesAsync(session.AuthToken, cancellationToken);
             }
@@ -189,7 +189,7 @@ namespace Satori
             ISession session,
             Dictionary<string, string> defaultProperties,
             Dictionary<string, string> customProperties,
-            CancellationToken? cancellationToken)
+            CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriUpdatePropertiesAsync(session.AuthToken,
                 new ApiUpdatePropertiesRequest{

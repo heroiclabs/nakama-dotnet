@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Satori.Tests
@@ -20,12 +22,14 @@ namespace Satori.Tests
     {
         public const int _TIMEOUT_MILLISECONDS = 5000;
 
-        private readonly Client _testClient = new Client("http", "localhost", 7450, "", Nakama.HttpRequestAdapter.WithGzip());
+        private readonly Client _testClient = new Client("http", "localhost", 7450, "bb4b2da1-71ba-429e-b5f3-36556abbf4c9", Nakama.HttpRequestAdapter.WithGzip());
 
         [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
-        public void TestAuthenticate()
+        public async Task TestAuthenticateAndLogout()
         {
-            _testClient.AuthenticateAsync()
+            var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
+            await _testClient.AuthenticateLogoutAsync(session);
+            await Assert.ThrowsAsync<Exception>(() => _testClient.GetExperimentsAsync(session, new string[]{}));
         }
     }
 }

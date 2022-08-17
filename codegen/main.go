@@ -134,8 +134,8 @@ namespace {{.Namespace}}
         IDictionary<string, double> {{$fieldname}} { get; }
             {{- else if eq $property.AdditionalProperties.Type "boolean"}}
         IDictionary<string, bool> {{$fieldname}} { get; }
-            {{- else}}
-        IDictionary<string, {{$property.AdditionalProperties | cleanRef}}> {{$fieldname}} { get; }
+            {{- else }}
+        IDictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}> {{$fieldname}} { get; }
             {{- end}}
         {{- else if isRefToEnum (cleanRef $property.Ref) }}
         {{ $property.Ref | cleanRef }} {{ $fieldname }} { get; }
@@ -206,9 +206,9 @@ namespace {{.Namespace}}
         [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public Dictionary<string, bool> _{{ $propname | snakeToCamel }} { get; set; }
             {{- else}}
-        public IDictionary<string, {{$property.AdditionalProperties | cleanRef}}> {{ $fieldname }}  => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, {{$property.AdditionalProperties | cleanRef}}>();
+        public IDictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}> {{ $fieldname }}  => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}>();
         [DataMember(Name="{{ $attrDataName }}"), Preserve]
-        public Dictionary<string, {{$property.AdditionalProperties | cleanRef}}> _{{ $propname | snakeToCamel }} { get; set; }
+        public Dictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}> _{{ $propname | snakeToCamel }} { get; set; }
             {{- end}}
         {{- else if isRefToEnum (cleanRef $property.Ref) }}
         public {{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | snakeToCamel }};
@@ -620,6 +620,7 @@ func main() {
 				AdditionalProperties struct {
 					Type   string // used with type "map"
 					Format string // used with type "map"
+					Ref   string   `json:"$ref"` // used with object
 				}
 				Format      string // used with type "boolean"
 				Description string

@@ -41,7 +41,7 @@ namespace Satori
         /// <returns>A task which represents the asynchronous operation.</returns>
         public Task AuthenticateLogoutAsync(
             ISession session,
-            CancellationToken? cancellationToken);
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// Refresh a user's session using a refresh token retrieved from a previous authentication request.
@@ -75,7 +75,7 @@ namespace Satori
         public Task<IApiExperimentList> GetExperimentsAsync(
             ISession session,
             IEnumerable<string> names,
-            CancellationToken? cancellationToken);
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// List all available flags for this identity.
