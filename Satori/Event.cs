@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace Satori
 {
@@ -32,7 +34,7 @@ namespace Satori
         /// <summary>
         /// The time when the event was triggered.
         /// </summary>
-        public string Timestamp
+        public DateTime Timestamp
         {
             get;
         }
@@ -71,7 +73,7 @@ namespace Satori
         /// <param name="metadata">The <see cref="Event.Metadata"/></param>
         /// <param name="id">The <see cref="Event.Id"/></param>
         public Event(string name,
-            string timestamp,
+            DateTime timestamp,
             string value = null,
             Dictionary<string, string> metadata = null,
             string id = null)
@@ -88,7 +90,8 @@ namespace Satori
             return new ApiEvent
             {
                 Name = this.Name,
-                Timestamp = this.Timestamp,
+                // Protobuf requires a DateTime string formatted as per RFC 3339
+                Timestamp = XmlConvert.ToString(this.Timestamp),
                 Value = this.Value,
                 _metadata = this.Metadata,
                 Id = this.Id

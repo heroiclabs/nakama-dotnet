@@ -1,4 +1,4 @@
-// Copyright 2018 The Nakama Authors
+// Copyright 2022 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -58,6 +58,23 @@ namespace Satori.Tests
         {
             var flags = await _testClient.GetFlagsDefaultAsync(_API_KEY, new string[]{});
             Assert.True(flags.Flags.Count() == 3);
+        }
+
+        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        public async Task TestSendEvents()
+        {
+            var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
+            await _testClient.SendEventAsync(session, new Event("event", DateTime.UtcNow));
+            await _testClient.SendEventsAsync(session, new Event[]{new Event("event1", DateTime.UtcNow), new Event("event2", DateTime.UtcNow)});
+        }
+
+        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        public async Task TestGetLiveEvent()
+        {
+            var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
+            var liveEvents = await _testClient.GetLiveEventsAsync(session);
+            // should not receive any event because not in the targeted audiences
+            Assert.True(liveEvents.LiveEvents.Count() == 0);
         }
     }
 }

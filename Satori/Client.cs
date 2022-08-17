@@ -128,7 +128,7 @@ namespace Satori
         /// <inheritdoc cref="IClient.GetExperimentsAsync"/>
         public Task<IApiExperimentList> GetExperimentsAsync(
             ISession session,
-            IEnumerable<string> names,
+            IEnumerable<string> names = null,
             CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriGetExperimentsAsync(session.AuthToken, names, cancellationToken);
@@ -137,7 +137,7 @@ namespace Satori
         /// <inheritdoc cref="IClient.GetFlagsAsync"/>
         public Task<IApiFlagList> GetFlagsAsync(
             ISession session,
-            IEnumerable<string> names,
+            IEnumerable<string> names = null,
             CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriGetFlagsAsync(session.AuthToken, string.Empty, string.Empty, names, cancellationToken);
@@ -146,7 +146,7 @@ namespace Satori
         /// <inheritdoc cref="IClient.GetFlagsDefaultAsync"/>
         public Task<IApiFlagList> GetFlagsDefaultAsync(
             string apiKey,
-            IEnumerable<string> names,
+            IEnumerable<string> names = null,
             CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriGetFlagsAsync(string.Empty, apiKey, string.Empty, names, cancellationToken);
@@ -170,7 +170,7 @@ namespace Satori
         /// <inheritdoc cref="IClient.GetLiveEventsAsync"/>
         public Task<IApiLiveEventList> GetLiveEventsAsync(
             ISession session,
-            IEnumerable<string> names,
+            IEnumerable<string> names = null,
             CancellationToken? cancellationToken = default)
             {
                 return _apiClient.SatoriGetLiveEventsAsync(session.AuthToken, names, cancellationToken);
