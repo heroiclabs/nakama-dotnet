@@ -273,24 +273,24 @@ namespace {{.Namespace}}
         {{- if $operation.Responses.Ok.Schema.Ref }}
         public async Task<I{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}> {{ $operation.OperationId | stripOperationPrefix | snakeToPascal }}Async(
         {{- else }}
-        public async Task {{ $operation.OperationId | stripOperationPrefix |snakeToPascal }}Async(
+        public async Task {{ $operation.OperationId | stripOperationPrefix | snakeToPascal }}Async(
         {{- end}}
 
         {{- $isPreviousParam := false}}
 
         {{- if $operation.Security }}
-        {{- with (index $operation.Security 0) }}
-            {{- range $key, $value := . }}
-                {{- if eq $key "BasicAuth" }}
+			{{- range $idx, $security := $operation.Security}}
+				{{- range $key, $value := $security}}
+            	    {{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
             string basicAuthUsername,
             string basicAuthPassword
-            {{- $isPreviousParam = true}}
-                {{- else if eq $key "HttpKeyAuth" }}
-            {{- $isPreviousParam = true}}
-            string bearerToken
+            			{{- $isPreviousParam = true}}
+             	    {{- else if (eq $key "BearerJwt") }}
+            			{{- $isPreviousParam = true}}
+            string bearerToken,
+					{{- end }}
                 {{- end }}
             {{- end }}
-        {{- end }}
         {{- else }}
            {{- $isPreviousParam = true}}
             string bearerToken
@@ -393,22 +393,24 @@ namespace {{.Namespace}}
             var headers = new Dictionary<string, string>();
 
             {{- if $operation.Security }}
-            {{- with (index $operation.Security 0) }}
-                {{- range $key, $value := . }}
-                    {{- if eq $key "BasicAuth" }}
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
-
-                    {{- else if eq $key "HttpKeyAuth" }}
+				{{- range $idx, $security := $operation.Security }}
+                	{{- range $key, $value := $security }}
+            	    	{{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
+			if (!string.IsNullOrEmpty(basicAuthUsername))
+			{
+				var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+				var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+				headers.Add("Authorization", header);
+			}
+						{{- else }}
             if (!string.IsNullOrEmpty(bearerToken))
             {
                 var header = string.Concat("Bearer ", bearerToken);
                 headers.Add("Authorization", header);
             }
-                    {{- end }}
-                {{- end }}
-            {{- end }}
+                    	{{- end }}
+               		{{- end }}
+				{{- end }}
             {{- else }}
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);

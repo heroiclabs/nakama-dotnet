@@ -140,7 +140,7 @@ namespace Satori
             IEnumerable<string> names,
             CancellationToken? cancellationToken = default)
             {
-                return _apiClient.SatoriGetFlagsAsync(session.AuthToken, names, cancellationToken);
+                return _apiClient.SatoriGetFlagsAsync(session.AuthToken, string.Empty, string.Empty, names, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.GetFlagsDefaultAsync"/>
@@ -149,7 +149,7 @@ namespace Satori
             IEnumerable<string> names,
             CancellationToken? cancellationToken = default)
             {
-                return _apiClient.SatoriGetFlagsAsync(apiKey, names, cancellationToken);
+                return _apiClient.SatoriGetFlagsAsync(string.Empty, apiKey, string.Empty, names, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.IdentifyAsync"/>

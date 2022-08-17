@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,16 +21,43 @@ namespace Satori.Tests
 {
     public class SatoriTest
     {
+        private const string _API_KEY = "bb4b2da1-71ba-429e-b5f3-36556abbf4c9";
         public const int _TIMEOUT_MILLISECONDS = 5000;
 
-        private readonly Client _testClient = new Client("http", "localhost", 7450, "bb4b2da1-71ba-429e-b5f3-36556abbf4c9", Nakama.HttpRequestAdapter.WithGzip());
+        private readonly Client _testClient = new Client("http", "localhost", 7450, _API_KEY, Nakama.HttpRequestAdapter.WithGzip());
 
         [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
         public async Task TestAuthenticateAndLogout()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
             await _testClient.AuthenticateLogoutAsync(session);
-            await Assert.ThrowsAsync<Exception>(() => _testClient.GetExperimentsAsync(session, new string[]{}));
+            await Assert.ThrowsAsync<Nakama.ApiResponseException>(() => _testClient.GetExperimentsAsync(session, new string[]{}));
+        }
+
+        [Fact(Timeout = _TIMEOUT_MILLISECONDS, Skip = "Experients not implemented yet")]
+        public async Task TestGetExperiments()
+        {
+            var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
+            var experiments = await _testClient.GetExperimentsAsync(session, new string[]{"Piggybank"});
+
+            Assert.True(experiments.Experiments.Count() == 1);
+        }
+
+        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        public async Task TestGetFlags()
+        {
+            var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
+            var flags = await _testClient.GetFlagsAsync(session, new string[]{});
+            Assert.True(flags.Flags.Count() == 3);
+            var namedFlags = await _testClient.GetFlagsAsync(session, new string[]{"MinBuildNumber"});
+            Assert.True(namedFlags.Flags.Count() == 1);
+        }
+
+        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        public async Task TestGetFlagsDefault()
+        {
+            var flags = await _testClient.GetFlagsDefaultAsync(_API_KEY, new string[]{});
+            Assert.True(flags.Flags.Count() == 3);
         }
     }
 }

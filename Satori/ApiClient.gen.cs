@@ -858,9 +858,12 @@ namespace Satori
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+			if (!string.IsNullOrEmpty(basicAuthUsername))
+			{
+				var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+				var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+				headers.Add("Authorization", header);
+			}
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -929,9 +932,12 @@ namespace Satori
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+			if (!string.IsNullOrEmpty(basicAuthUsername))
+			{
+				var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+				var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+				headers.Add("Authorization", header);
+			}
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -1012,6 +1018,8 @@ namespace Satori
         /// </summary>
         public async Task<IApiFlagList> SatoriGetFlagsAsync(
             string bearerToken,
+            string basicAuthUsername,
+            string basicAuthPassword,
             IEnumerable<string> names,
             CancellationToken? cancellationToken)
         {
@@ -1037,6 +1045,12 @@ namespace Satori
                 var header = string.Concat("Bearer ", bearerToken);
                 headers.Add("Authorization", header);
             }
+			if (!string.IsNullOrEmpty(basicAuthUsername))
+			{
+				var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+				var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+				headers.Add("Authorization", header);
+			}
 
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
