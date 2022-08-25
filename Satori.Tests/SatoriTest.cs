@@ -34,11 +34,11 @@ namespace Satori.Tests
             await Assert.ThrowsAsync<Nakama.ApiResponseException>(() => _testClient.GetExperimentsAsync(session, new string[]{}));
         }
 
-        [Fact(Timeout = _TIMEOUT_MILLISECONDS, Skip = "Experients not implemented yet")]
+        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
         public async Task TestGetExperiments()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
-            var experiments = await _testClient.GetExperimentsAsync(session, new string[]{"Piggybank"});
+            var experiments = await _testClient.GetExperimentsAsync(session);
 
             Assert.True(experiments.Experiments.Count() == 1);
         }
