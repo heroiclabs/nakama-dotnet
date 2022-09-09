@@ -145,9 +145,10 @@ namespace Nakama
         /// <param name="maxCount">The maximum number of players to compete against in a match.</param>
         /// <param name="stringProperties">A set of key/value properties to provide to searches.</param>
         /// <param name="numericProperties">A set of key/value numeric properties to provide to searches.</param>
+        /// <param name="countMultiple">An optional integer to force the matchmaker to match in multiples of.</param>
         /// <returns>A task which resolves to a matchmaker ticket object.</returns>
         Task<IMatchmakerTicket> AddMatchmakerAsync(string query = "*", int minCount = 2, int maxCount = 8,
-            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null);
+            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null, int? countMultiple = null);
 
         /// <summary>
         /// Begin matchmaking as a party.
@@ -160,7 +161,7 @@ namespace Nakama
         /// <param name="numericProperties">Numeric properties.</param>
         /// <returns>A task which resolves to a party matchmaker ticket object.</returns>
         Task<IPartyMatchmakerTicket> AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount,
-            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null);
+            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null, int? countMultiple = null);
 
         /// <summary>
         /// End a party, kicking all party members and closing it.
