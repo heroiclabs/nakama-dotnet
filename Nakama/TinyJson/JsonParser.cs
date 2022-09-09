@@ -171,7 +171,7 @@ namespace Nakama.TinyJson
             if (type == typeof(string))
             {
                 // Return the raw value if it is unquoted (e.g. a number)
-                if (json[0] != '"' && json[json.Length-1] != '"')
+                if (json.Length > 0 && json[0] != '"' && json[json.Length-1] != '"')
                 {
                     return json;
                 }

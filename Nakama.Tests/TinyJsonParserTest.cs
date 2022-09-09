@@ -44,6 +44,15 @@ namespace Nakama.Tests
         }
         
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_SingleDigitNumberToString()
+        {
+            const string json = @"{""key"":1}";
+            var obj = json.FromJson<Dictionary<string, string>>();
+            
+            Assert.Equal("1", obj["key"]);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void FromJson_JsonInput_StringToString()
         {
             const string json = @"{""key"":""12345""}";
