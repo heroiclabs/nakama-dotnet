@@ -159,6 +159,7 @@ namespace Nakama
         /// <param name="maxCount">Maximum total user count to match together.</param>
         /// <param name="stringProperties">String properties.</param>
         /// <param name="numericProperties">Numeric properties.</param>
+        /// <param name="countMultiple">An optional integer to force the matchmaker to match in multiples of.</param>
         /// <returns>A task which resolves to a party matchmaker ticket object.</returns>
         Task<IPartyMatchmakerTicket> AddMatchmakerPartyAsync(string partyId, string query, int minCount, int maxCount,
             Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null, int? countMultiple = null);
