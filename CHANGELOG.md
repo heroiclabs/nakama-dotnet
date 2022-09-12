@@ -22,6 +22,7 @@ of methods that accept a `CancellationToken` that were added in v3.3.
 
 ### Fixed
 - Fix an issue with Socket Closed event taking a significant length of time or not firing at all when internet connection is lost
+- Fixed an issue when parsing unquoted numbers as strings in TinyJson
 
 ## [3.4.0] - 2022-04-28
 ### Added
