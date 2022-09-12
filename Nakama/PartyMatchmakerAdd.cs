@@ -38,8 +38,11 @@ namespace Nakama
 
         [DataMember(Name = "numeric_properties"), Preserve]
         public Dictionary<string, double> NumericProperties { get; set; }
+        
+        [DataMember(Name = "count_multiple"), Preserve]
+        public int? CountMultiple { get; set; }
 
         public override string ToString() =>
-            $"PartyMatchmakerAdd(PartyId='{PartyId}', MaxCount={MaxCount}, MinCount={MinCount}, NumericProperties={NumericProperties}, Query='{Query}', StringProperties={StringProperties})";
+            $"PartyMatchmakerAdd(PartyId='{PartyId}', MaxCount={MaxCount}, MinCount={MinCount}, NumericProperties={NumericProperties}, Query='{Query}', StringProperties={StringProperties}, CountMultiple={CountMultiple})";
     }
 }

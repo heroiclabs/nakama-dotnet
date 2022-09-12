@@ -201,7 +201,7 @@ namespace Nakama
 
         /// <inheritdoc cref="AddMatchmakerAsync"/>
         public async Task<IMatchmakerTicket> AddMatchmakerAsync(string query = "*", int minCount = 2, int maxCount = 8,
-            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null)
+            Dictionary<string, string> stringProperties = null, Dictionary<string, double> numericProperties = null, int? countMultiple = null)
         {
             int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
@@ -213,7 +213,8 @@ namespace Nakama
                     MinCount = minCount,
                     MaxCount = maxCount,
                     StringProperties = stringProperties,
-                    NumericProperties = numericProperties
+                    NumericProperties = numericProperties,
+                    CountMultiple = countMultiple
                 }
             };
 
@@ -224,7 +225,7 @@ namespace Nakama
         /// <inheritdoc cref="AddMatchmakerPartyAsync"/>
         public async Task<IPartyMatchmakerTicket> AddMatchmakerPartyAsync(string partyId, string query, int minCount,
             int maxCount, Dictionary<string, string> stringProperties = null,
-            Dictionary<string, double> numericProperties = null)
+            Dictionary<string, double> numericProperties = null, int? countMultiple = null)
         {
             int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
@@ -237,7 +238,8 @@ namespace Nakama
                     MinCount = minCount,
                     MaxCount = maxCount,
                     StringProperties = stringProperties,
-                    NumericProperties = numericProperties
+                    NumericProperties = numericProperties,
+                    CountMultiple = countMultiple
                 }
             };
 
