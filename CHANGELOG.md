@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Added
-- Added support for `countMultiple` in `AddMatchmakerAsync` and `AddPartyMatchmakerAsync`.
+- Added support for `countMultiple` in `AddMatchmakerAsync` and `AddMatchmakerPartyAsync`.
 
 ### Fixed
 - Fixed an issue when parsing unquoted numbers as strings in TinyJson.
