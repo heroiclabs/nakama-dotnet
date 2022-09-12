@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.5.0] - 2022-09-06
 ### Added
 - Ability to `persist` Apple, Huawei, and Google purchase receipts in the Nakama database. This is
 set to `true` by default in order to allow the server to detect replay attacks.
@@ -21,8 +23,11 @@ set to `true` by default in order to allow the server to detect replay attacks.
 of methods that accept a `CancellationToken` that were added in v3.3.
 
 ### Fixed
-- Fix an issue with Socket Closed event taking a significant length of time or not firing at all when internet connection is lost
+- Fixed an issue with Socket Closed event taking a significant length of time or not firing at all when internet connection is lost
 - Fixed an issue when parsing unquoted numbers as strings in TinyJson
+- Fixed an issue with `SocketClosed` event taking a significant length of time or not firing at all when internet connection is lost.
+- Fixed an issue that would occur when sending messages over the socket from multiple threads.
+- Fixed automatic retry seeding to be random across devices.
 
 ## [3.4.0] - 2022-04-28
 ### Added
