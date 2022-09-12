@@ -35,6 +35,43 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_NumberToString()
+        {
+            const string json = @"{""key"":12345}";
+            var obj = json.FromJson<Dictionary<string, string>>();
+            
+            Assert.Equal("12345", obj["key"]);
+        }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_SingleDigitNumberToString()
+        {
+            const string json = @"{""key"":1}";
+            var obj = json.FromJson<Dictionary<string, string>>();
+            
+            Assert.Equal("1", obj["key"]);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_StringToString()
+        {
+            const string json = @"{""key"":""12345""}";
+            var obj = json.FromJson<Dictionary<string, string>>();
+            
+            Assert.Equal("12345", obj["key"]);
+        }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void ToJson_LongToUnquotedJson()
+        {
+            var obj = new Dictionary<string, long>();
+            obj["key"] = 1234567891234;
+            var json = obj.ToJson();
+            
+            Assert.Equal("{\"key\":1234567891234}", json);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public void FromJson_JsonInput_ParsedTwice()
         {
             const string json1 = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}]}";
