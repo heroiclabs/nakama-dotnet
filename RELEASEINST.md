@@ -35,7 +35,7 @@ These instructions guide the release process for new official Nakama client SDK 
    ```
 
    ```shell
-   dotnet nuget push ./src/Nakama/bin/Release/NakamaClient.<package-version>.nupkg -k "somekey" -s https://api.nuget.org/v3/index.json
+   dotnet nuget push ./Nakama/bin/Release/NakamaClient.<package-version>.nupkg -k "somekey" -s https://api.nuget.org/v3/index.json
    ```
 
 8. Update CHANGELOG with section for new unreleased changes.
