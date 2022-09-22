@@ -279,23 +279,22 @@ namespace {{.Namespace}}
         {{- $isPreviousParam := false}}
 
         {{- if $operation.Security }}
-			{{- range $idx, $security := $operation.Security}}
-				{{- range $key, $value := $security}}
-            	    {{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
+            {{- range $idx, $security := $operation.Security}}
+                {{- range $key, $value := $security}}
+                    {{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
             string basicAuthUsername,
             string basicAuthPassword
-            			{{- $isPreviousParam = true}}
-             	    {{- else if (eq $key "BearerJwt") }}
-            			{{- $isPreviousParam = true}}
+                        {{- $isPreviousParam = true}}
+                     {{- else if (eq $key "BearerJwt") }}
+                        {{- $isPreviousParam = true}}
             string bearerToken,
-					{{- end }}
+                    {{- end }}
                 {{- end }}
             {{- end }}
         {{- else }}
            {{- $isPreviousParam = true}}
             string bearerToken
         {{- end }}
-
 
         {{- range $parameter := $operation.Parameters }}
 
@@ -330,7 +329,7 @@ namespace {{.Namespace}}
             {{ $parameter.Type }} {{ $parameter.Name }}
         {{- end }}
         {{- $isPreviousParam = true}}
-        {{- end }},
+    {{- end }},
             CancellationToken? cancellationToken)
         {
             {{- range $parameter := $operation.Parameters }}
@@ -340,17 +339,16 @@ namespace {{.Namespace}}
                 throw new ArgumentException("'{{ $parameter.Name | snakeToCamel }}' is required but was null.");
             }
             {{- end }}
-            {{- end }}
+        {{- end }}
 
             var urlpath = "{{- $url }}";
-
 
             {{- range $parameter := $operation.Parameters }}
             {{- $camelToSnake := $parameter.Name | camelToSnake }}
             {{- if eq $parameter.In "path" }}
             urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $parameter.Name }}));
             {{- end }}
-            {{- end }}
+        {{- end }}
 
             var queryParams = "";
             {{- range $parameter := $operation.Parameters }}
@@ -381,7 +379,7 @@ namespace {{.Namespace}}
             {{ $parameter }} // ERROR
                 {{- end }}
             {{- end }}
-            {{- end }}
+        {{- end }}
 
             var uri = new UriBuilder(_baseUri)
             {
@@ -429,10 +427,10 @@ namespace {{.Namespace}}
             return contents.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>();
             {{- else }}
             await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            {{- end}}
+            {{- end }}
         }
         {{- end }}
-        {{- end }}
+    {{- end }}
     }
 }
 `
