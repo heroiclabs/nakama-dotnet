@@ -393,24 +393,24 @@ namespace {{.Namespace}}
             var headers = new Dictionary<string, string>();
 
             {{- if $operation.Security }}
-				{{- range $idx, $security := $operation.Security }}
-                	{{- range $key, $value := $security }}
-            	    	{{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
-			if (!string.IsNullOrEmpty(basicAuthUsername))
-			{
-				var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-				var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-				headers.Add("Authorization", header);
-			}
-						{{- else }}
+                {{- range $idx, $security := $operation.Security }}
+                    {{- range $key, $value := $security }}
+                        {{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
+            {{- else }}
             if (!string.IsNullOrEmpty(bearerToken))
             {
                 var header = string.Concat("Bearer ", bearerToken);
                 headers.Add("Authorization", header);
             }
-                    	{{- end }}
-               		{{- end }}
-				{{- end }}
+                       {{- end }}
+                   {{- end }}
+                {{- end }}
             {{- else }}
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -622,7 +622,7 @@ func main() {
 				AdditionalProperties struct {
 					Type   string // used with type "map"
 					Format string // used with type "map"
-					Ref   string   `json:"$ref"` // used with object
+					Ref    string `json:"$ref"` // used with object
 				}
 				Format      string // used with type "boolean"
 				Description string
