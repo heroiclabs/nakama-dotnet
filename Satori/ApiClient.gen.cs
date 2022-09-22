@@ -712,13 +712,13 @@ namespace Satori
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface IProtobufAny
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string @type { get; }
     }
@@ -740,23 +740,23 @@ namespace Satori
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string Message { get; }
     }
@@ -814,6 +814,33 @@ namespace Satori
         {
 
             var urlpath = "/healthcheck";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// A readycheck which load balancers can use to check the service.
+        /// </summary>
+        public async Task SatoriReadycheckAsync(
+            string bearerToken,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/readycheck";
 
             var queryParams = "";
 
