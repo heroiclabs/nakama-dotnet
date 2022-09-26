@@ -90,6 +90,9 @@ namespace Nakama
 
         private const int DefaultTimeout = 15;
 
+        /// There is a bug in Unity's WebGL implementation that prevents the proper invocation of constructors with more
+        /// than four parameters. For this reason, avoid defining constructors that do this.
+
         public Client(string serverKey) : this(serverKey, HttpRequestAdapter.WithGzip())
         {
         }
