@@ -27,7 +27,6 @@ set to `true` by default in order to allow the server to detect replay attacks.
 of methods that accept a `CancellationToken` that were added in v3.3.
 
 ### Fixed
-- Fixed an issue with Socket Closed event taking a significant length of time or not firing at all when internet connection is lost.
 - Fixed an issue with `SocketClosed` event taking a significant length of time or not firing at all when internet connection is lost.
 - Fixed an issue that would occur when sending messages over the socket from multiple threads.
 - Fixed automatic retry seeding to be random across devices.

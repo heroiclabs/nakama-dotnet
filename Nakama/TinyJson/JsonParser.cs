@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Nakama.TinyJson
 {
@@ -170,17 +169,9 @@ namespace Nakama.TinyJson
         {
             if (type == typeof(string))
             {
-                // Return the raw value if it is unquoted (e.g. a number)
-                if (json.Length > 0 && json[0] != '"' && json[json.Length-1] != '"')
-                {
-                    return json;
-                }
-                
                 if (json.Length <= 2)
                     return string.Empty;
-
                 var parseStringBuilder = new StringBuilder(json.Length);
-
                 for (var i = 1; i < json.Length - 1; ++i)
                 {
                     if (json[i] == '\\' && i + 1 < json.Length - 1)
@@ -197,7 +188,7 @@ namespace Nakama.TinyJson
                         {
                             uint c;
                             if (uint.TryParse(json.Substring(i + 2, 4),
-                                    System.Globalization.NumberStyles.AllowHexSpecifier, null, out c))
+                                System.Globalization.NumberStyles.AllowHexSpecifier, null, out c))
                             {
                                 parseStringBuilder.Append((char) c);
                                 i += 5;
