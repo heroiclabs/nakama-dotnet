@@ -252,12 +252,12 @@ namespace {{.Namespace}}
     /// </summary>
     internal class ApiClient
     {
-        public readonly Nakama.IHttpAdapter HttpAdapter;
+        public readonly IHttpAdapter HttpAdapter;
         public int Timeout { get; set; }
 
         private readonly Uri _baseUri;
 
-        public ApiClient(Uri baseUri, Nakama.IHttpAdapter httpAdapter, int timeout = 10)
+        public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
         {
             _baseUri = baseUri;
             HttpAdapter = httpAdapter;

@@ -7,7 +7,7 @@ namespace Satori
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Nakama.TinyJson;
+    using Satori.TinyJson;
 
     /// <summary>
     /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
@@ -793,12 +793,12 @@ namespace Satori
     /// </summary>
     internal class ApiClient
     {
-        public readonly Nakama.IHttpAdapter HttpAdapter;
+        public readonly IHttpAdapter HttpAdapter;
         public int Timeout { get; set; }
 
         private readonly Uri _baseUri;
 
-        public ApiClient(Uri baseUri, Nakama.IHttpAdapter httpAdapter, int timeout = 10)
+        public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
         {
             _baseUri = baseUri;
             HttpAdapter = httpAdapter;
@@ -814,33 +814,6 @@ namespace Satori
         {
 
             var urlpath = "/healthcheck";
-
-            var queryParams = "";
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = urlpath,
-                Query = queryParams
-            }.Uri;
-
-            var method = "GET";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// A readycheck which load balancers can use to check the service.
-        /// </summary>
-        public async Task SatoriReadycheckAsync(
-            string bearerToken,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/readycheck";
 
             var queryParams = "";
 
@@ -885,12 +858,12 @@ namespace Satori
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-			if (!string.IsNullOrEmpty(basicAuthUsername))
-			{
-				var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-				var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-				headers.Add("Authorization", header);
-			}
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -959,12 +932,12 @@ namespace Satori
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-			if (!string.IsNullOrEmpty(basicAuthUsername))
-			{
-				var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-				var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-				headers.Add("Authorization", header);
-			}
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -1072,12 +1045,12 @@ namespace Satori
                 var header = string.Concat("Bearer ", bearerToken);
                 headers.Add("Authorization", header);
             }
-			if (!string.IsNullOrEmpty(basicAuthUsername))
-			{
-				var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-				var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-				headers.Add("Authorization", header);
-			}
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);

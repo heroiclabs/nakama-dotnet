@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using Nakama.TinyJson;
+using Satori.TinyJson;
 
 namespace Satori
 {
