@@ -24,14 +24,14 @@ namespace Satori.Tests
         private const string _API_KEY = "bb4b2da1-71ba-429e-b5f3-36556abbf4c9";
         public const int _TIMEOUT_MILLISECONDS = 5000;
 
-        private readonly Client _testClient = new Client("http", "localhost", 7450, _API_KEY, Nakama.HttpRequestAdapter.WithGzip());
+        private readonly Client _testClient = new Client("http", "localhost", 7450, _API_KEY, HttpRequestAdapter.WithGzip());
 
         [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
         public async Task TestAuthenticateAndLogout()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
             await _testClient.AuthenticateLogoutAsync(session);
-            await Assert.ThrowsAsync<Nakama.ApiResponseException>(() => _testClient.GetExperimentsAsync(session, new string[]{}));
+            await Assert.ThrowsAsync<ApiResponseException>(() => _testClient.GetExperimentsAsync(session, new string[]{}));
         }
 
         [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
