@@ -24,6 +24,11 @@ namespace Satori
     public interface IClient
     {
         /// <summary>
+        /// True if the session should be refreshed with an active refresh token.
+        /// </summary>
+        bool AutoRefreshSession { get; }
+
+        /// <summary>
         /// Authenticate against the server.
         /// </summary>
         /// <param name="id">An optional user id.</param>

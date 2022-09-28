@@ -22,6 +22,9 @@ namespace Satori
     /// <inheritdoc cref="IClient"/>
     public class Client : IClient
     {
+        /// <inheritdoc cref="IClient"/>
+        public bool AutoRefreshSession { get; }
+
         /// <summary>
         /// The host address of the server.
         /// </summary>
@@ -54,12 +57,17 @@ namespace Satori
 
         private readonly ApiClient _apiClient;
 
-        public Client(string scheme, string host, int port, string apiKey, IHttpAdapter adapter)
+        public Client(string scheme, string host, int port, string apiKey) : this(scheme, host, port, apiKey, HttpRequestAdapter.WithGzip(), true)
+        {
+        }
+
+        public Client(string scheme, string host, int port, string apiKey, IHttpAdapter adapter, bool autoRefreshSession = true)
         {
             Host = host;
             Port = port;
             Scheme = scheme;
             ApiKey = apiKey;
+            AutoRefreshSession = autoRefreshSession;
             _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, DefaultTimeout);
         }
 
