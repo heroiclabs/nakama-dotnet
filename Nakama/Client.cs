@@ -121,6 +121,24 @@ namespace Nakama
             _retryInvoker = new RetryInvoker(adapter.TransientExceptionDelegate);
         }
 
+        public Client(Uri uri, string serverKey) : this(
+            uri, serverKey, HttpRequestAdapter.WithGzip())
+        {
+        }
+
+        public Client(Uri uri, string serverKey, IHttpAdapter adapter, bool autoRefreshSession = true)
+        {
+            AutoRefreshSession = autoRefreshSession;
+            Host = uri.Host;
+            Port = uri.Port;
+            Scheme = uri.Scheme;
+            ServerKey = serverKey;
+            _apiClient = new ApiClient(uri, adapter, DefaultTimeout);
+            Logger = NullLogger.Instance; // must set logger last.
+            
+            _retryInvoker = new RetryInvoker(adapter.TransientExceptionDelegate);
+        }
+
         /// <inheritdoc cref="AddFriendsAsync"/>
         public async Task AddFriendsAsync(ISession session, IEnumerable<string> ids,
             IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
