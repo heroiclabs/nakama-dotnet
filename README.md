@@ -204,6 +204,10 @@ This repository also contains the Satori client for use with the [Satori Liveops
 
 It follows the same authentication patterns as Nakama but is used for managing your live game via sending analytics events, updating properties, getting feature flags and experiments, and more.
 
+In order to run tests for Satori, create sample data via the Satori console.
+
+Then run `dotnet test` from this directory.
+
 # Licenses
 
 This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/nakama-dotnet/blob/master/LICENSE).
