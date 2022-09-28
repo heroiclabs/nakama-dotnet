@@ -54,7 +54,7 @@ namespace Satori
         /// <param name="session">The session of the user.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a user session.</returns>
-        public Task<ISession> AuthenticateRefreshAsync(
+        public Task<ISession> SessionRefreshAsync(
             ISession session,
             CancellationToken? cancellationToken = default);
 

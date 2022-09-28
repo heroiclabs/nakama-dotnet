@@ -22,6 +22,11 @@ namespace Satori
     /// <inheritdoc cref="IClient"/>
     public class Client : IClient
     {
+        /// <summary>
+        /// The default expired timespan used to check session lifetime.
+        /// </summary>
+        public static TimeSpan DefaultExpiredTimeSpan = TimeSpan.FromMinutes(5);
+
         /// <inheritdoc cref="IClient"/>
         public bool AutoRefreshSession { get; }
 
@@ -88,36 +93,56 @@ namespace Satori
                 return _apiClient.SatoriAuthenticateLogoutAsync(session.AuthToken, new ApiAuthenticateLogoutRequest{RefreshToken = session.RefreshToken, Token = session.AuthToken}, cancellationToken);
             }
 
-        /// <inheritdoc cref="IClient.AuthenticateRefreshAsync"/>
-        public async Task<ISession> AuthenticateRefreshAsync(
+        /// <inheritdoc cref="IClient.SessionRefreshAsync"/>
+        public async Task<ISession> SessionRefreshAsync(
             ISession session,
             CancellationToken? cancellationToken = default)
+        {
+            var response = await _apiClient.SatoriAuthenticateRefreshAsync(ApiKey, string.Empty, new ApiAuthenticateRefreshRequest{RefreshToken = session.RefreshToken}, cancellationToken);
+
+            if (session is Session updatedSession)
             {
-                var response = await _apiClient.SatoriAuthenticateRefreshAsync(ApiKey, string.Empty, new ApiAuthenticateRefreshRequest{RefreshToken = session.RefreshToken}, cancellationToken);
-                return new Session(response.Token, response.RefreshToken);
+                // Update session object in place if we can.
+                updatedSession.Update(response.Token, response.RefreshToken);
+                return updatedSession;
             }
 
+            return new Session(response.Token, response.RefreshToken);
+        }
+
         /// <inheritdoc cref="IClient.EventAsync"/>
-        public Task SendEventAsync(
+        public async Task SendEventAsync(
             ISession session,
             Event @event,
             CancellationToken? cancellationToken = null)
             {
+                if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                    session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                {
+                    await SessionRefreshAsync(session, cancellationToken);
+                }
+
                 var request = new ApiEventRequest{
                     _events = new List<ApiEvent>{
                         @event.ToApiEvent()
                     }
                 };
 
-                return _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken);
+                await _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken);
             }
 
                     /// <inheritdoc cref="IClient.EventAsync"/>
-        public Task SendEventsAsync(
+        public async Task SendEventsAsync(
             ISession session,
             IEnumerable<Event> events,
             CancellationToken? cancellationToken = null)
             {
+                if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                    session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                {
+                    await SessionRefreshAsync(session, cancellationToken);
+                }
+
                 var apiEventList = new List<ApiEvent>();
 
                 foreach (Event e in events)
@@ -129,25 +154,37 @@ namespace Satori
                     _events = apiEventList
                 };
 
-                return _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken);
+                await _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.GetExperimentsAsync"/>
-        public Task<IApiExperimentList> GetExperimentsAsync(
+        public async Task<IApiExperimentList> GetExperimentsAsync(
             ISession session,
             IEnumerable<string> names = null,
             CancellationToken? cancellationToken = default)
             {
-                return _apiClient.SatoriGetExperimentsAsync(session.AuthToken, names, cancellationToken);
+                if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                    session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                {
+                    await SessionRefreshAsync(session, cancellationToken);
+                }
+
+                return await _apiClient.SatoriGetExperimentsAsync(session.AuthToken, names, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.GetFlagsAsync"/>
-        public Task<IApiFlagList> GetFlagsAsync(
+        public async Task<IApiFlagList> GetFlagsAsync(
             ISession session,
             IEnumerable<string> names = null,
             CancellationToken? cancellationToken = default)
             {
-                return _apiClient.SatoriGetFlagsAsync(session.AuthToken, string.Empty, string.Empty, names, cancellationToken);
+                if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                    session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                {
+                    await SessionRefreshAsync(session, cancellationToken);
+                }
+
+                return await _apiClient.SatoriGetFlagsAsync(session.AuthToken, string.Empty, string.Empty, names, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.GetFlagsDefaultAsync"/>
@@ -167,6 +204,12 @@ namespace Satori
             Dictionary<string, string> customProperties,
             CancellationToken? cancellationToken = default)
             {
+                if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                    session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                {
+                    await SessionRefreshAsync(session, cancellationToken);
+                }
+
                 var properties = new ApiProperties{_default = default, _custom = customProperties};
                 var request = new ApiIdentifyRequest{Id = id, _default = defaultProperties, _custom = customProperties};
                 var response = await _apiClient.SatoriIdentifyAsync(session.AuthToken, request, cancellationToken);
@@ -175,30 +218,48 @@ namespace Satori
 
 
         /// <inheritdoc cref="IClient.GetLiveEventsAsync"/>
-        public Task<IApiLiveEventList> GetLiveEventsAsync(
+        public async Task<IApiLiveEventList> GetLiveEventsAsync(
             ISession session,
             IEnumerable<string> names = null,
             CancellationToken? cancellationToken = default)
             {
-                return _apiClient.SatoriGetLiveEventsAsync(session.AuthToken, names, cancellationToken);
+                if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                    session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                {
+                    await SessionRefreshAsync(session, cancellationToken);
+                }
+
+                return await _apiClient.SatoriGetLiveEventsAsync(session.AuthToken, names, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.ListPropertiesAsync"/>
-        public Task<IApiProperties> ListPropertiesAsync(
+        public async Task<IApiProperties> ListPropertiesAsync(
             ISession session,
             CancellationToken? cancellationToken = default)
             {
-                return _apiClient.SatoriListPropertiesAsync(session.AuthToken, cancellationToken);
+                if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                    session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                {
+                    await SessionRefreshAsync(session, cancellationToken);
+                }
+
+                return await _apiClient.SatoriListPropertiesAsync(session.AuthToken, cancellationToken);
             }
 
         /// <inheritdoc cref="IClient.UpdatePropertiesAsync"/>
-        public Task UpdatePropertiesAsync(
+        public async Task UpdatePropertiesAsync(
             ISession session,
             Dictionary<string, string> defaultProperties,
             Dictionary<string, string> customProperties,
             CancellationToken? cancellationToken = default)
             {
-                return _apiClient.SatoriUpdatePropertiesAsync(session.AuthToken,
+                if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                    session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                {
+                    await SessionRefreshAsync(session, cancellationToken);
+                }
+
+                await _apiClient.SatoriUpdatePropertiesAsync(session.AuthToken,
                 new ApiUpdatePropertiesRequest{
                     _default = defaultProperties,
                     _custom = customProperties
