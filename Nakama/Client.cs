@@ -103,21 +103,16 @@ namespace Nakama
             scheme, host, port, serverKey, HttpRequestAdapter.WithGzip())
         {
         }
-        
-        public Client(string scheme, string host, int port, string serverKey, string path) : this(
-            scheme, host, port, serverKey, HttpRequestAdapter.WithGzip(), path: path)
-        {
-        }
 
         public Client(string scheme, string host, int port, string serverKey, IHttpAdapter adapter,
-            bool autoRefreshSession = true, string path = "")
+            bool autoRefreshSession = true)
         {
             AutoRefreshSession = autoRefreshSession;
             Host = host;
             Port = port;
             Scheme = scheme;
             ServerKey = serverKey;
-            _apiClient = new ApiClient(new UriBuilder(scheme, host, port, path).Uri, adapter, DefaultTimeout);
+            _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, DefaultTimeout);
             Logger = NullLogger.Instance; // must set logger last.
 
             _retryInvoker = new RetryInvoker(adapter.TransientExceptionDelegate);
