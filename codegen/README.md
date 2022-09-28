@@ -28,7 +28,7 @@ go run main.go "${SATORI}/api/satori.swagger.json" "Satori" > ../Satori/ApiClien
 
 To generate a client for the Satori Console, run the following:
 ```shell
-go run main.go "${SATORI}/console/console.swagger.json" "Satori.Tests" > ../Satori.Tests/ConsoleClient.gen.cs
+go run main.go "${SATORI}/console/console.swagger.json" "Satori" > ../Satori/ConsoleClient.gen.cs
 ```
 
 ### Rationale
