@@ -118,20 +118,19 @@ namespace Nakama
             _retryInvoker = new RetryInvoker(adapter.TransientExceptionDelegate);
         }
 
-        public Client(string uri, string serverKey) : this(
+        public Client(Uri uri, string serverKey) : this(
             uri, serverKey, HttpRequestAdapter.WithGzip())
         {
         }
 
-        public Client(string uri, string serverKey, IHttpAdapter adapter, bool autoRefreshSession = true)
+        public Client(Uri uri, string serverKey, IHttpAdapter adapter, bool autoRefreshSession = true)
         {
-            Uri iUri = new Uri(uri);
             AutoRefreshSession = autoRefreshSession;
-            Host = iUri.Host;
-            Port = iUri.Port;
-            Scheme = iUri.Scheme;
+            Host = uri.Host;
+            Port = uri.Port;
+            Scheme = uri.Scheme;
             ServerKey = serverKey;
-            _apiClient = new ApiClient(iUri, adapter, DefaultTimeout);
+            _apiClient = new ApiClient(uri, adapter, DefaultTimeout);
             Logger = NullLogger.Instance; // must set logger last.
             
             _retryInvoker = new RetryInvoker(adapter.TransientExceptionDelegate);
