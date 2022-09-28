@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace Satori
+namespace Nakama
 {
     /// <summary>
     /// Utility methods for the <see cref="IHttpAdapter"> interface.
