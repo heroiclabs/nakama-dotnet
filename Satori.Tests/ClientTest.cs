@@ -19,7 +19,7 @@ using Xunit;
 
 namespace Satori.Tests
 {
-    public class SatoriTest
+    public class ClientTest
     {
         private const string _API_KEY = "bb4b2da1-71ba-429e-b5f3-36556abbf4c9";
         public const int _TIMEOUT_MILLISECONDS = 5000;
