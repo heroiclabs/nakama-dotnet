@@ -36,7 +36,6 @@ namespace Nakama
         /// <inheritdoc cref="IHttpAdapter.Logger"/>
         public ILogger Logger { get; set; }
 
-        //
         public TransientExceptionDelegate TransientExceptionDelegate => IsTransientException;
 
         private readonly HttpClient _httpClient;

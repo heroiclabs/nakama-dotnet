@@ -15,18 +15,10 @@
  */
 
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Nakama
 {
-    /// <summary>
-    /// A delegate used by the retry invoker to determine whether or not an exception from the server is
-    /// considered "transient" from the client. For example, timeouts can be transient in cases where
-    /// the server is experiencing temporarily high load.
-    /// </summary>
-    public delegate bool TransientExceptionDelegate(Exception e);
-
     /// <summary>
     /// Invokes requests with retry and exponential backoff.
     /// </summary>
