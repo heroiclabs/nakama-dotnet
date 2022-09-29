@@ -83,7 +83,7 @@ namespace Satori
             var json = JwtUnpack(authToken);
             var decoded = json.FromJson<Dictionary<string, object>>();
             ExpireTime = Convert.ToInt64(decoded["exp"]);
-            IdentityId = decoded["uid"].ToString();
+            IdentityId = decoded["iid"].ToString();
 
             // Check in case clients have not updated to use refresh tokens yet.
             if (!string.IsNullOrEmpty(refreshToken))
