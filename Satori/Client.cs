@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -61,6 +62,7 @@ namespace Satori
         public const int DefaultTimeout = 15;
 
         private readonly ApiClient _apiClient;
+        private readonly TransientExceptionDelegate _transientExceptionDelegate;
 
         public Client(string scheme, string host, int port, string apiKey) : this(scheme, host, port, apiKey, HttpRequestAdapter.WithGzip(), true)
         {
@@ -74,6 +76,13 @@ namespace Satori
             ApiKey = apiKey;
             AutoRefreshSession = autoRefreshSession;
             _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, DefaultTimeout);
+
+            if (adapter.TransientExceptionDelegate == null)
+            {
+                throw new ArgumentException("HttpAdapter supplied null transient exception delegate.");
+            }
+
+            _transientExceptionDelegate = adapter.TransientExceptionDelegate;
         }
 
         /// <inheritdoc cref="IClient.AuthenticateAsync"/>
@@ -175,25 +184,49 @@ namespace Satori
         /// <inheritdoc cref="IClient.GetFlagsAsync"/>
         public async Task<IApiFlagList> GetFlagsAsync(
             ISession session,
-            IEnumerable<string> names = null,
+            IEnumerable<FlagRequest> flagRequests,
             CancellationToken? cancellationToken = default)
             {
-                if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
-                    session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                try
                 {
-                    await SessionRefreshAsync(session, cancellationToken);
-                }
+                    if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                        session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+                    {
+                        await SessionRefreshAsync(session, cancellationToken);
+                    }
 
-                return await _apiClient.SatoriGetFlagsAsync(session.AuthToken, string.Empty, string.Empty, names, cancellationToken);
+                    return await _apiClient.SatoriGetFlagsAsync(session.AuthToken, string.Empty, string.Empty, flagRequests.Select(r => r.Name), cancellationToken);
+                }
+                catch (ApiResponseException e)
+                {
+                    if (_transientExceptionDelegate.Invoke(e))
+                    {
+                        throw new FlagResponseException(e.StatusCode, e.Message, e.GrpcStatusCode, flagRequests);
+                    }
+
+                    throw e;
+                }
             }
 
         /// <inheritdoc cref="IClient.GetFlagsDefaultAsync"/>
         public Task<IApiFlagList> GetFlagsDefaultAsync(
             string apiKey,
-            IEnumerable<string> names = null,
+            IEnumerable<FlagRequest> flagRequests,
             CancellationToken? cancellationToken = default)
             {
-                return _apiClient.SatoriGetFlagsAsync(string.Empty, apiKey, string.Empty, names, cancellationToken);
+                try
+                {
+                    return _apiClient.SatoriGetFlagsAsync(string.Empty, apiKey, string.Empty, flagRequests.Select(r => r.Name), cancellationToken);
+                }
+                catch (ApiResponseException e)
+                {
+                    if (_transientExceptionDelegate.Invoke(e))
+                    {
+                        throw new FlagResponseException(e.StatusCode, e.Message, e.GrpcStatusCode, flagRequests);
+                    }
+
+                    throw e;
+                }
             }
 
         /// <inheritdoc cref="IClient.IdentifyAsync"/>

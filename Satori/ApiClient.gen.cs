@@ -12,7 +12,7 @@ namespace Satori
     /// <summary>
     /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
     /// </summary>
-    public sealed class ApiResponseException : Exception
+    public class ApiResponseException : Exception
     {
         public long StatusCode { get; }
 

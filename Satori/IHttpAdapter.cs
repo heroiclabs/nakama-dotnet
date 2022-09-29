@@ -26,6 +26,10 @@ namespace Satori
     /// </summary>
     public interface IHttpAdapter
     {
+        // A delegate used to determine whether or not an error from the server
+        // is due to a temporary bad state on the server (i.e., is 'transient').
+        TransientExceptionDelegate TransientExceptionDelegate { get; }
+
         /// <summary>
         /// The logger to use with the adapter.
         /// </summary>

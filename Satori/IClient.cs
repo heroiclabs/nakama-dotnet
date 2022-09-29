@@ -89,9 +89,10 @@ namespace Satori
         /// <param name="names"> Flag names; if empty string all flags are returned. </param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to all flags available to this identity.</returns>
+        /// <exception cref="FlagResponseException">A special type of <see cref="ApiResponseException"/> that returns the offline flag values.</exception>
         public Task<IApiFlagList> GetFlagsAsync(
             ISession session,
-            IEnumerable<string> names,
+            IEnumerable<FlagRequest> flagRequests,
             CancellationToken? cancellationToken = default);
 
         /// <summary>
@@ -101,9 +102,10 @@ namespace Satori
         /// <param name="names"> Flag names; if empty string all flags are returned. </param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to all available default flags.</returns>
+        /// <exception cref="FlagResponseException">A special type of <see cref="ApiResponseException"/> that returns the offline flag values.</exception>
         public Task<IApiFlagList> GetFlagsDefaultAsync(
             string apiKey,
-            IEnumerable<string> names,
+            IEnumerable<FlagRequest> flagRequests,
             CancellationToken? cancellationToken = default);
 
         /// <summary>
