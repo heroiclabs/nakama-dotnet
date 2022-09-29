@@ -26,43 +26,28 @@ namespace Satori
         /// <summary>
         /// The name of the event.
         /// </summary>
-        public string Name
-        {
-            get;
-        }
+        public string Name { get; }
 
         /// <summary>
         /// The time when the event was triggered.
         /// </summary>
-        public DateTime Timestamp
-        {
-            get;
-        }
+        public DateTime Timestamp { get; }
 
         /// <summary>
         /// Optional value.
         /// </summary>
-        public string Value
-        {
-             get;
-        }
+        public string Value { get; }
 
         /// <summary>
         /// Event metadata, if any.
         /// </summary>
-        public Dictionary<string, string> Metadata
-        {
-            get;
-        }
+        public Dictionary<string, string> Metadata { get; }
 
         /// <summary>
         /// Optional event ID assigned by the client, used to de-duplicate in retransmission scenarios.
         /// If not supplied the server will assign a randomly generated unique event identifier.
         /// </summary>
-        public string Id
-        {
-            get;
-        }
+        public string Id { get; }
 
         /// <summary>
         /// The event constructor.
