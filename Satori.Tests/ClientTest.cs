@@ -47,16 +47,16 @@ namespace Satori.Tests
         public async Task TestGetFlags()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
-            var flags = await _testClient.GetFlagsAsync(session, new string[]{});
+            var flags = await _testClient.GetFlagsAsync(session, new FlagRequest[]{});
             Assert.True(flags.Flags.Count() == 3);
-            var namedFlags = await _testClient.GetFlagsAsync(session, new string[]{"MinBuildNumber"});
+            var namedFlags = await _testClient.GetFlagsAsync(session, new FlagRequest[]{new FlagRequest("MinBuildNumber", "1")});
             Assert.True(namedFlags.Flags.Count() == 1);
         }
 
         [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
         public async Task TestGetFlagsDefault()
         {
-            var flags = await _testClient.GetFlagsDefaultAsync(_API_KEY, new string[]{});
+            var flags = await _testClient.GetFlagsDefaultAsync(_API_KEY, new FlagRequest[]{});
             Assert.True(flags.Flags.Count() == 3);
         }
 
