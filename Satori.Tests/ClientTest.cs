@@ -64,8 +64,8 @@ namespace Satori.Tests
         public async Task TestSendEvents()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
-            await _testClient.SendEventAsync(session, new Event("event", DateTime.UtcNow));
-            await _testClient.SendEventsAsync(session, new Event[]{new Event("event1", DateTime.UtcNow), new Event("event2", DateTime.UtcNow)});
+            await _testClient.SendEventAsync(session, new Event("gameFinished", DateTime.UtcNow));
+            await _testClient.SendEventsAsync(session, new Event[]{new Event("adStarted", DateTime.UtcNow), new Event("appLaunched", DateTime.UtcNow)});
         }
 
         [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
