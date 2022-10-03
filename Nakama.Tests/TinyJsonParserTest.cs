@@ -99,6 +99,15 @@ namespace Nakama.Tests
             
             Assert.Equal(new [] { "foo", "bar" }, obj["key"]);
         }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_ParseBool()
+        {
+            const string json = @"{""key"":true}";
+            var obj = json.FromJson<Dictionary<string, bool>>();
+            
+            Assert.Equal(true, obj["key"]);
+        }
     }
 
     public interface ITestObject
