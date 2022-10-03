@@ -81,6 +81,33 @@ namespace Nakama.Tests
 
             Assert.Equal(result1.SomeVal, result2.SomeVal);
         }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_ParseSingleQuotesAsString()
+        {
+            const string json = @"{""key"":'foo'}";
+            var obj = json.FromJson<Dictionary<string, string>>();
+            
+            Assert.Equal("foo", obj["key"]);
+        }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_ParseSingleQuotesAsStringInArray()
+        {
+            const string json = @"{""key"":['foo', 'bar']}";
+            var obj = json.FromJson<Dictionary<string, string[]>>();
+            
+            Assert.Equal(new [] { "foo", "bar" }, obj["key"]);
+        }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_JsonInput_ParseBool()
+        {
+            const string json = @"{""key"":true}";
+            var obj = json.FromJson<Dictionary<string, bool>>();
+            
+            Assert.Equal(true, obj["key"]);
+        }
     }
 
     public interface ITestObject
