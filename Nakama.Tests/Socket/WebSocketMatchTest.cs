@@ -65,6 +65,11 @@ namespace Nakama.Tests.Socket
             Assert.NotEmpty(match.Id);
             Assert.False(match.Authoritative);
             Assert.True(match.Size > 0);
+
+            var matchList = await _client.ListMatchesAsync(session, 1, 10, 10, false, null, null);
+            Assert.True(matchList.Matches.Count() == 1);
+            Assert.True(matchList.Matches.First().Size == 1);
+            Assert.False(matchList.Matches.First().Authoritative);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
@@ -79,7 +84,7 @@ namespace Nakama.Tests.Socket
             var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             await _socket.ConnectAsync(session2);
             var match2 = await _socket.CreateMatchAsync("TestMatch");
-            
+
             Assert.NotNull(match);
             Assert.NotNull(match2);
             Assert.Equal(match.Id, match2.Id);
