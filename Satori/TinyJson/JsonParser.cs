@@ -23,6 +23,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
@@ -171,7 +172,8 @@ namespace Satori.TinyJson
             if (type == typeof(string))
             {
                 // Return the raw value if it is unquoted (e.g. a number)
-                if (json.Length > 0 && json[0] != '"' && json[json.Length-1] != '"')
+                var validQuotes = new[] {'"', '\''};
+                if (json.Length > 0 && !validQuotes.Contains(json[0]) && !validQuotes.Contains(json[json.Length-1]))
                 {
                     return json;
                 }
