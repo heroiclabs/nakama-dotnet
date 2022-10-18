@@ -1,6 +1,8 @@
 Nakama .NET
 ===========
 
+# Nakama
+
 > .NET client for Nakama server written in C#.
 
 [Nakama](https://github.com/heroiclabs/nakama) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
@@ -196,10 +198,20 @@ cd docs/
 doxygen
 ```
 
-### Licenses
+# Satori
+
+This repository also contains the Satori client for use with the [Satori Liveops Server](https://heroiclabs.com/satori/).
+
+It follows the same authentication patterns as Nakama but is used for managing your live game via sending analytics events, updating properties, getting feature flags and experiments, and more.
+
+In order to run tests for Satori, create sample data via the Satori console.
+
+Then run `dotnet test` from this directory.
+
+# Licenses
 
 This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/nakama-dotnet/blob/master/LICENSE).
 
-### Special Thanks
+# Special Thanks
 
 Thanks to Alex Parker (@zanders3) for the excellent [json](https://github.com/zanders3/json) library and David Haig (@ninjasource) for [Ninja.WebSockets](https://github.com/ninjasource/Ninja.WebSockets).

@@ -1,18 +1,16 @@
-/**
- * Copyright 2019 The Nakama Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2022 The Satori Authors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 using System;
 using System.Collections.Generic;
@@ -21,9 +19,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Nakama.TinyJson;
+using Satori.TinyJson;
 
-namespace Nakama
+namespace Satori
 {
     /// <summary>
     /// HTTP Request adapter which uses the .NET HttpClient to send requests.
@@ -86,16 +84,8 @@ namespace Nakama
             Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri, body);
 
             var response = await _httpClient.SendAsync(request, linkedSource == null ? timeoutToken : linkedSource.Token);
-
             var contents = await response.Content.ReadAsStringAsync();
             response.Content?.Dispose();
-
-            if (((int)response.StatusCode) >= 500)
-            {
-                // TODO think of best way to map HTTP code to GRPC code since we can't rely
-                // on server to process it. Manually adding the mapping to SDK seems brittle.
-                throw new ApiResponseException((int) response.StatusCode, contents, -1);
-            }
 
             Logger?.InfoFormat("Received: status={0}, contents='{1}'", response.StatusCode, contents);
 
@@ -112,7 +102,7 @@ namespace Nakama
 
             if (decoded.ContainsKey("error"))
             {
-                IHttpAdapterUtil.CopyResponseError(this, decoded["error"], exception);
+                HttpAdapterUtil.CopyResponseError(this, decoded["error"], exception);
             }
 
             throw exception;

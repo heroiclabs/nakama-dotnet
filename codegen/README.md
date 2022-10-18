@@ -6,15 +6,29 @@ codegen
 ## Usage
 
 ```shell
-go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger.json" > ../Nakama/ApiClient.gen.cs
+go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger.json" "Nakama" > ../Nakama/ApiClient.gen.cs
 ```
 
-### Console API
+### Nakama Console API
 
 To generate a client for the Nakama Console, run the following:
 
 ```shell
-go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/console/console.swagger.json" "Console" > ../Nakama/Console/ConsoleClient.gen.cs
+go run main.go "$GOPATH/src/github.com/heroiclabs/nakama/console/console.swagger.json" "NakamaConsole" > ../Nakama/Console/ConsoleClient.gen.cs
+```
+
+### Satori API
+
+To generate a client for Satori, run the following:
+```shell
+go run main.go "${SATORI}/api/satori.swagger.json" "Satori" > ../Satori/ApiClient.gen.cs
+```
+
+### Satori Console API
+
+To generate a client for the Satori Console, run the following:
+```shell
+go run main.go "${SATORI}/console/console.swagger.json" "Satori" > ../Satori/ConsoleClient.gen.cs
 ```
 
 ### Rationale

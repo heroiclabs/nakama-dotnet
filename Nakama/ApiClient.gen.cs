@@ -7,7 +7,7 @@ namespace Nakama
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using TinyJson;
+    using Nakama.TinyJson;
 
     /// <summary>
     /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
@@ -2032,7 +2032,7 @@ namespace Nakama
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public enum ApiOperator
     {
@@ -2041,7 +2041,7 @@ namespace Nakama
         /// </summary>
         NO_OVERRIDE = 0,
         /// <summary>
-        /// 
+        ///
         /// </summary>
         BEST = 1,
         /// <summary>
@@ -3980,18 +3980,18 @@ namespace Nakama
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface IProtobufAny
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string TypeUrl { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string Value { get; }
     }
@@ -4018,23 +4018,23 @@ namespace Nakama
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string Message { get; }
     }
