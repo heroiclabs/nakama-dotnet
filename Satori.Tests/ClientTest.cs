@@ -21,20 +21,22 @@ namespace Satori.Tests
 {
     public class ClientTest
     {
-        private const string _API_KEY = "bb4b2da1-71ba-429e-b5f3-36556abbf4c9";
-        public const int _TIMEOUT_MILLISECONDS = 5000;
+        private const string ApiKey = "a23d2dbc-9333-48af-90ec-9f0b8574bdf6";
+        public const int TimeoutMilliseconds = 5000;
 
-        private readonly Client _testClient = new Client("http", "localhost", 7450, _API_KEY, HttpRequestAdapter.WithGzip());
+        private readonly Client _testClient =
+            new Client("http", "localhost", 7450, ApiKey, HttpRequestAdapter.WithGzip());
 
-        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TimeoutMilliseconds)]
         public async Task TestAuthenticateAndLogout()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
             await _testClient.AuthenticateLogoutAsync(session);
-            await Assert.ThrowsAsync<ApiResponseException>(() => _testClient.GetExperimentsAsync(session, new string[]{}));
+            await Assert.ThrowsAsync<ApiResponseException>(() =>
+                _testClient.GetExperimentsAsync(session, Array.Empty<string>()));
         }
 
-        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TimeoutMilliseconds)]
         public async Task TestGetExperiments()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
@@ -43,38 +45,39 @@ namespace Satori.Tests
             Assert.True(experiments.Experiments.Count() == 1);
         }
 
-        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TimeoutMilliseconds)]
         public async Task TestGetFlags()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
-            var flags = await _testClient.GetFlagsAsync(session, new FlagRequest[]{});
+            var flags = await _testClient.GetFlagsAsync(session, new string[] { });
             Assert.True(flags.Flags.Count() == 3);
-            var namedFlags = await _testClient.GetFlagsAsync(session, new FlagRequest[]{new FlagRequest("MinBuildNumber", "1")});
+            var namedFlags = await _testClient.GetFlagsAsync(session, new[] { "MinBuildNumber" });
             Assert.True(namedFlags.Flags.Count() == 1);
         }
 
-        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TimeoutMilliseconds)]
         public async Task TestGetFlagsDefault()
         {
-            var flags = await _testClient.GetFlagsDefaultAsync(_API_KEY, new FlagRequest[]{});
+            var flags = await _testClient.GetFlagsDefaultAsync(ApiKey, new string[] { });
             Assert.True(flags.Flags.Count() == 3);
         }
 
-        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TimeoutMilliseconds)]
         public async Task TestSendEvents()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
-            await _testClient.SendEventAsync(session, new Event("gameFinished", DateTime.UtcNow));
-            await _testClient.SendEventsAsync(session, new Event[]{new Event("adStarted", DateTime.UtcNow), new Event("appLaunched", DateTime.UtcNow)});
+            await _testClient.EventAsync(session, new Event("gameFinished", DateTime.UtcNow));
+            await _testClient.EventsAsync(session,
+                new[] { new Event("adStarted", DateTime.UtcNow), new Event("appLaunched", DateTime.UtcNow) });
         }
 
-        [Fact(Timeout = _TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TimeoutMilliseconds)]
         public async Task TestGetLiveEvent()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
             var liveEvents = await _testClient.GetLiveEventsAsync(session);
             // should not receive any event because not in the targeted audiences
-            Assert.True(liveEvents.LiveEvents.Count() == 0);
+            Assert.True(!liveEvents.LiveEvents.Any());
         }
     }
 }

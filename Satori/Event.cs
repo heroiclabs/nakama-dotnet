@@ -57,10 +57,7 @@ namespace Satori
         /// <param name="value">The <see cref="Event.Value"/></param>
         /// <param name="metadata">The <see cref="Event.Metadata"/></param>
         /// <param name="id">The <see cref="Event.Id"/></param>
-        public Event(string name,
-            DateTime timestamp,
-            string value = null,
-            Dictionary<string, string> metadata = null,
+        public Event(string name, DateTime timestamp, string value = null, Dictionary<string, string> metadata = null,
             string id = null)
         {
             Name = name;
@@ -76,7 +73,7 @@ namespace Satori
             {
                 Name = this.Name,
                 // Protobuf requires a DateTime string formatted as per RFC 3339
-                Timestamp = XmlConvert.ToString(this.Timestamp),
+                Timestamp = XmlConvert.ToString(this.Timestamp, XmlDateTimeSerializationMode.Utc),
                 Value = this.Value,
                 _metadata = this.Metadata,
                 Id = this.Id
