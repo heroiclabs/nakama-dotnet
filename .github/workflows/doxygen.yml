@@ -9,8 +9,11 @@ jobs:
   doxygen:
     runs-on: ubuntu-latest
     steps:
-      - name: Doxygen Action
-        uses: mattnotmitt/doxygen-action@1.9.4
+      - uses: actions/checkout@v2
+      - uses: mattnotmitt/doxygen-action@1.9.4
         with:
-          working-directory: 'docs/'
+          working-directory: './docs'
           doxyfile-path: 'Doxyfile'
+      - uses: stefanzweifel/git-auto-commit-action@v4.15.1
+        with:
+          commit_message: Update Doxygen docs
