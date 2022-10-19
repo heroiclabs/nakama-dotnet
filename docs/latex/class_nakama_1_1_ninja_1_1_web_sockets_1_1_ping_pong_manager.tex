@@ -1,0 +1,86 @@
+\hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets.\+Ping\+Pong\+Manager Class Reference}
+\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager}\index{Nakama.Ninja.WebSockets.PingPongManager@{Nakama.Ninja.WebSockets.PingPongManager}}
+
+
+Ping Pong Manager used to facilitate ping pong Web\+Socket messages   
+
+
+Inheritance diagram for Nakama.\+Ninja.\+Web\+Sockets.\+Ping\+Pong\+Manager\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_a28b64f995bd9dfc95b4b2981c24219df}{Ping\+Pong\+Manager}} (Guid guid, Web\+Socket web\+Socket, Time\+Span keep\+Alive\+Interval, Cancellation\+Token cancellation\+Token)
+\begin{DoxyCompactList}\small\item\em Initialises a new instance of the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager}{Ping\+Pong\+Manager}} to facilitate ping pong Web\+Socket messages. If you are manually creating an instance of this class then it is advisable to set keep\+Alive\+Interval to Time\+Span.\+Zero when you create the Web\+Socket instance (using a factory) otherwise you may be automatically be sending duplicate Ping messages (see keep\+Alive\+Interval below)  \end{DoxyCompactList}\item 
+async Task \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_ad8ad09c265a7ade2143b855911c1f1cf}{Send\+Ping}} (Array\+Segment$<$ byte $>$ payload, Cancellation\+Token cancellation)
+\begin{DoxyCompactList}\small\item\em Sends a ping frame  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_a6033a08ddfa5dc60e5c98bd1bc4abe29}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_a6033a08ddfa5dc60e5c98bd1bc4abe29}} 
+virtual void {\bfseries On\+Pong} (\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_pong_event_args}{Pong\+Event\+Args}} e)
+\end{DoxyCompactItemize}
+\doxysubsection*{Events}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_a2f1ae430d5ee59981e308167590b941c}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_a2f1ae430d5ee59981e308167590b941c}} 
+Event\+Handler$<$ \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_pong_event_args}{Pong\+Event\+Args}} $>$ {\bfseries Pong}
+\begin{DoxyCompactList}\small\item\em Raised when a Pong frame is received  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Ping Pong Manager used to facilitate ping pong Web\+Socket messages  
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_a28b64f995bd9dfc95b4b2981c24219df}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_a28b64f995bd9dfc95b4b2981c24219df}} 
+\index{Nakama.Ninja.WebSockets.PingPongManager@{Nakama.Ninja.WebSockets.PingPongManager}!PingPongManager@{PingPongManager}}
+\index{PingPongManager@{PingPongManager}!Nakama.Ninja.WebSockets.PingPongManager@{Nakama.Ninja.WebSockets.PingPongManager}}
+\doxysubsubsection{\texorpdfstring{PingPongManager()}{PingPongManager()}}
+{\footnotesize\ttfamily Nakama.\+Ninja.\+Web\+Sockets.\+Ping\+Pong\+Manager.\+Ping\+Pong\+Manager (\begin{DoxyParamCaption}\item[{Guid}]{guid,  }\item[{Web\+Socket}]{web\+Socket,  }\item[{Time\+Span}]{keep\+Alive\+Interval,  }\item[{Cancellation\+Token}]{cancellation\+Token }\end{DoxyParamCaption})}
+
+
+
+Initialises a new instance of the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager}{Ping\+Pong\+Manager}} to facilitate ping pong Web\+Socket messages. If you are manually creating an instance of this class then it is advisable to set keep\+Alive\+Interval to Time\+Span.\+Zero when you create the Web\+Socket instance (using a factory) otherwise you may be automatically be sending duplicate Ping messages (see keep\+Alive\+Interval below)  
+
+
+\begin{DoxyParams}{Parameters}
+{\em web\+Socket} & The web socket used to listen to ping messages and send pong messages\\
+\hline
+{\em keep\+Alive\+Interval} & The time between automatically sending ping messages. Set this to Time\+Span.\+Zero if you with to manually control sending ping messages. \\
+\hline
+{\em cancellation\+Token} & The token used to cancel a pending ping send AND the automatic sending of ping messages if keep\+Alive\+Interval is positive\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_ad8ad09c265a7ade2143b855911c1f1cf}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_ad8ad09c265a7ade2143b855911c1f1cf}} 
+\index{Nakama.Ninja.WebSockets.PingPongManager@{Nakama.Ninja.WebSockets.PingPongManager}!SendPing@{SendPing}}
+\index{SendPing@{SendPing}!Nakama.Ninja.WebSockets.PingPongManager@{Nakama.Ninja.WebSockets.PingPongManager}}
+\doxysubsubsection{\texorpdfstring{SendPing()}{SendPing()}}
+{\footnotesize\ttfamily async Task Nakama.\+Ninja.\+Web\+Sockets.\+Ping\+Pong\+Manager.\+Send\+Ping (\begin{DoxyParamCaption}\item[{Array\+Segment$<$ byte $>$}]{payload,  }\item[{Cancellation\+Token}]{cancellation }\end{DoxyParamCaption})}
+
+
+
+Sends a ping frame  
+
+
+\begin{DoxyParams}{Parameters}
+{\em payload} & The payload (must be 125 bytes of less)\\
+\hline
+{\em cancellation} & The cancellation token\\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager_a9e454afd70ec36b728aad46d32282941}{Nakama.\+Ninja.\+Web\+Sockets.\+IPing\+Pong\+Manager}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Ninja.\+Web\+Sockets/Ping\+Pong\+Manager.\+cs\end{DoxyCompactItemize}

@@ -1,0 +1,129 @@
+\hypertarget{namespace_nakama_1_1_console}{}\doxysection{Nakama.\+Console Namespace Reference}
+\label{namespace_nakama_1_1_console}\index{Nakama.Console@{Nakama.Console}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class {\bfseries Api\+Account\+Device}
+\item 
+class {\bfseries Api\+Channel\+Message}
+\item 
+class {\bfseries Api\+Client}
+\begin{DoxyCompactList}\small\item\em The low level client for the \mbox{\hyperlink{namespace_nakama}{Nakama}} API.  \end{DoxyCompactList}\item 
+class {\bfseries Api\+Friend}
+\item 
+class {\bfseries Api\+Friend\+List}
+\item 
+class {\bfseries Api\+Group}
+\item 
+class {\bfseries Api\+Leaderboard\+Record}
+\item 
+class {\bfseries Api\+Notification}
+\item 
+class \mbox{\hyperlink{class_nakama_1_1_console_1_1_api_response_exception}{Api\+Response\+Exception}}
+\begin{DoxyCompactList}\small\item\em An exception generated for {\ttfamily Http\+Response} objects don\textquotesingle{}t return a success status.  \end{DoxyCompactList}\item 
+class {\bfseries Api\+Storage\+Object}
+\item 
+class {\bfseries Api\+Storage\+Object\+Ack}
+\item 
+class {\bfseries Api\+User}
+\item 
+class {\bfseries Api\+User\+Group\+List}
+\item 
+class {\bfseries Config\+Warning}
+\item 
+class {\bfseries Console\+Account\+Export}
+\item 
+class {\bfseries Console\+Authenticate\+Request}
+\item 
+class {\bfseries Console\+Config}
+\item 
+class {\bfseries Console\+Console\+Session}
+\item 
+class {\bfseries Console\+Status\+List}
+\item 
+class {\bfseries Console\+Storage\+List}
+\item 
+class {\bfseries Console\+Unlink\+Device\+Request}
+\item 
+class {\bfseries Console\+User\+List}
+\item 
+class {\bfseries Console\+Wallet\+Ledger}
+\item 
+class {\bfseries Console\+Wallet\+Ledger\+List}
+\item 
+class {\bfseries Console\+Write\+Storage\+Object\+Request}
+\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_account_device}{IApi\+Account\+Device}}
+\begin{DoxyCompactList}\small\item\em Send a device to the server. Used with authenticate/link/unlink and user.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_channel_message}{IApi\+Channel\+Message}}
+\begin{DoxyCompactList}\small\item\em A message sent on a channel.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_friend}{IApi\+Friend}}
+\begin{DoxyCompactList}\small\item\em A friend of a user.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_friend_list}{IApi\+Friend\+List}}
+\begin{DoxyCompactList}\small\item\em A collection of zero or more friends of the user.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_group}{IApi\+Group}}
+\begin{DoxyCompactList}\small\item\em A group in the server.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_leaderboard_record}{IApi\+Leaderboard\+Record}}
+\begin{DoxyCompactList}\small\item\em Represents a complete leaderboard record with all scores and associated metadata.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_notification}{IApi\+Notification}}
+\begin{DoxyCompactList}\small\item\em A notification in the server.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_storage_object}{IApi\+Storage\+Object}}
+\begin{DoxyCompactList}\small\item\em An object within the storage engine.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_storage_object_ack}{IApi\+Storage\+Object\+Ack}}
+\begin{DoxyCompactList}\small\item\em A storage acknowledgement.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_user}{IApi\+User}}
+\begin{DoxyCompactList}\small\item\em A user in the server.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_api_user_group_list}{IApi\+User\+Group\+List}}
+\begin{DoxyCompactList}\small\item\em A list of groups belonging to a user, along with the user\textquotesingle{}s role in each group.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_config_warning}{IConfig\+Warning}}
+\begin{DoxyCompactList}\small\item\em A warning for a configuration field.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_account_export}{IConsole\+Account\+Export}}
+\begin{DoxyCompactList}\small\item\em An export of all information stored for a user account.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_authenticate_request}{IConsole\+Authenticate\+Request}}
+\begin{DoxyCompactList}\small\item\em Authenticate a console user with username and password.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_config}{IConsole\+Config}}
+\begin{DoxyCompactList}\small\item\em The current server configuration and any associated warnings.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_console_session}{IConsole\+Console\+Session}}
+\begin{DoxyCompactList}\small\item\em A console user session.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_status_list}{IConsole\+Status\+List}}
+\begin{DoxyCompactList}\small\item\em List of nodes and their stats.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_storage_list}{IConsole\+Storage\+List}}
+\begin{DoxyCompactList}\small\item\em List of storage objects.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_unlink_device_request}{IConsole\+Unlink\+Device\+Request}}
+\begin{DoxyCompactList}\small\item\em Unlink a particular device ID from a user\textquotesingle{}s account.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_user_list}{IConsole\+User\+List}}
+\begin{DoxyCompactList}\small\item\em A list of users.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_wallet_ledger}{IConsole\+Wallet\+Ledger}}
+\begin{DoxyCompactList}\small\item\em An individual update to a user\textquotesingle{}s wallet.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_wallet_ledger_list}{IConsole\+Wallet\+Ledger\+List}}
+\begin{DoxyCompactList}\small\item\em List of wallet ledger items for a particular user.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_console_write_storage_object_request}{IConsole\+Write\+Storage\+Object\+Request}}
+\begin{DoxyCompactList}\small\item\em Write a new storage object or update an existing one.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_nakamaapi_account}{INakamaapi\+Account}}
+\begin{DoxyCompactList}\small\item\em A user with additional account details. Always the current user.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_nakamaconsole_account}{INakamaconsole\+Account}}
+\begin{DoxyCompactList}\small\item\em Account information.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_nakamaconsole_update_account_request}{INakamaconsole\+Update\+Account\+Request}}
+\begin{DoxyCompactList}\small\item\em Update user account information.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_protobuf_any}{IProtobuf\+Any}}
+\begin{DoxyCompactList}\small\item\em {\ttfamily Any} contains an arbitrary serialized protocol buffer message along with a URL that describes the type of the serialized message. Protobuf library provides support to pack/unpack Any values in the form of utility functions or additional generated methods of the Any type. Example 1\+: Pack and unpack a message in C++. Foo foo = ...; Any any; any.\+Pack\+From(foo); ... if (any.\+Unpack\+To(\&foo)) \{ ... \} Example 2\+: Pack and unpack a message in Java. Foo foo = ...; Any any = Any.\+pack(foo); ... if (any.\+is(Foo.\+class)) \{ foo = any.\+unpack(Foo.\+class); \} Example 3\+: Pack and unpack a message in Python. foo = Foo(...) any = Any() any.\+Pack(foo) ... if any.\+Is(Foo.\+DESCRIPTOR)\+: any.\+Unpack(foo) ... Example 4\+: Pack and unpack a message in Go foo \+:= \&pb.\+Foo\{...\} any, err \+:= ptypes.\+Marshal\+Any(foo) ... foo \+:= \&pb.\+Foo\{\} if err \+:= ptypes.\+Unmarshal\+Any(any, foo); err != nil \{ ... \} The pack methods provided by protobuf library will by default use \textquotesingle{}type.\+googleapis.\+com/full.type.\+name\textquotesingle{} as the type URL and the unpack methods only use the fully qualified type name after the last \textquotesingle{}/\textquotesingle{} in the type URL, for example \char`\"{}foo.\+bar.\+com/x/y.\+z\char`\"{} will yield type name \char`\"{}y.\+z\char`\"{}. JSON ==== The JSON representation of an {\ttfamily Any} value uses the regular representation of the deserialized, embedded message, with an additional field {\ttfamily @type} which contains the type URL. Example\+: package google.\+profile; message Person \{ string first\+\_\+name = 1; string last\+\_\+name = 2; \} \{ \char`\"{}@type\char`\"{}\+: \char`\"{}type.\+googleapis.\+com/google.\+profile.\+Person\char`\"{}, \char`\"{}first\+Name\char`\"{}\+: $<$string$>$, \char`\"{}last\+Name\char`\"{}\+: $<$string$>$ \} If the embedded message type is well-\/known and has a custom JSON representation, that representation will be embedded adding a field {\ttfamily value} which holds the custom JSON in addition to the {\ttfamily @type} field. Example (for message \mbox{[}google.\+protobuf.\+Duration\mbox{]}\mbox{[}\mbox{]})\+: \{ \char`\"{}@type\char`\"{}\+: \char`\"{}type.\+googleapis.\+com/google.\+protobuf.\+Duration\char`\"{}, \char`\"{}value\char`\"{}\+: \char`\"{}1.\+212s\char`\"{} \}  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_runtime_error}{IRuntime\+Error}}
+\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_status_list_status}{IStatus\+List\+Status}}
+\begin{DoxyCompactList}\small\item\em The status of a \mbox{\hyperlink{namespace_nakama}{Nakama}} node.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_console_1_1_i_user_group_list_user_group}{IUser\+Group\+List\+User\+Group}}
+\begin{DoxyCompactList}\small\item\em A single group-\/role pair.  \end{DoxyCompactList}\item 
+class {\bfseries Nakamaapi\+Account}
+\item 
+class {\bfseries Nakamaconsole\+Account}
+\item 
+class {\bfseries Nakamaconsole\+Update\+Account\+Request}
+\item 
+class {\bfseries Protobuf\+Any}
+\item 
+class {\bfseries Runtime\+Error}
+\item 
+class {\bfseries Status\+List\+Status}
+\item 
+class {\bfseries User\+Group\+List\+User\+Group}
+\end{DoxyCompactItemize}

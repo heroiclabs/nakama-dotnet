@@ -1,0 +1,177 @@
+\hypertarget{class_nakama_1_1_web_socket_adapter}{}\doxysection{Nakama.\+Web\+Socket\+Adapter Class Reference}
+\label{class_nakama_1_1_web_socket_adapter}\index{Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}}
+
+
+An adapter which uses the Web\+Socket protocol with \mbox{\hyperlink{namespace_nakama}{Nakama}} server.   
+
+
+Inheritance diagram for Nakama.\+Web\+Socket\+Adapter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_nakama_1_1_web_socket_adapter}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_a6ec693e73a378241ad1a8f5c02f36f4e}\label{class_nakama_1_1_web_socket_adapter_a6ec693e73a378241ad1a8f5c02f36f4e}} 
+{\bfseries Web\+Socket\+Adapter} (int keep\+Alive\+Interval\+Sec=Keep\+Alive\+Interval\+Sec, int send\+Timeout\+Sec=Send\+Timeout\+Sec, int max\+Message\+Read\+Size=Max\+Message\+Read\+Size)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_aef611fb9113a550341cc2f631ef0dfe5}\label{class_nakama_1_1_web_socket_adapter_aef611fb9113a550341cc2f631ef0dfe5}} 
+{\bfseries Web\+Socket\+Adapter} (\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options}{Web\+Socket\+Client\+Options}} options, int send\+Timeout\+Sec, int max\+Message\+Read\+Size)
+\item 
+Task \mbox{\hyperlink{class_nakama_1_1_web_socket_adapter_af03fe39fb508d2ac716d63b0a7e2c71d}{Close\+Async}} ()
+\begin{DoxyCompactList}\small\item\em Close the socket with an asynchronous operation.  \end{DoxyCompactList}\item 
+async Task \mbox{\hyperlink{class_nakama_1_1_web_socket_adapter_a3097564c6c6ff6ff8945d0def0d4c1e0}{Connect\+Async}} (Uri uri, int timeout)
+\begin{DoxyCompactList}\small\item\em Connect to the server with an asynchronous operation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uri} & The URI of the server.\\
+\hline
+{\em timeout} & The timeout for the connect attempt on the socket.\\
+\hline
+\end{DoxyParams}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_web_socket_adapter_ad3a05cb8ff2ece38c4b40b36b96710e4}{Send\+Async}} (Array\+Segment$<$ byte $>$ buffer, bool reliable=true, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Send data to the server with an asynchronous operation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The buffer with the message to send.\\
+\hline
+{\em reliable} & If the message should be sent reliably (will be ignored by some protocols).\\
+\hline
+{\em canceller} & A cancellation token used to propagate when the operation should be canceled.\\
+\hline
+\end{DoxyParams}
+ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_ac91f2ff65f7450ecb11574922989d457}\label{class_nakama_1_1_web_socket_adapter_ac91f2ff65f7450ecb11574922989d457}} 
+override string {\bfseries To\+String} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_nakama_1_1_web_socket_adapter_af4d122fde2ef8ca67f3a05533f2b23d3}{Is\+Connected}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If the Web\+Socket is connected.  \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_nakama_1_1_web_socket_adapter_a57bbc818963586e72fc39f7dbbe28ad8}{Is\+Connecting}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If the Web\+Socket is connecting.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Events}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_af8d0fc4d17f63c187397e777c10ecb7a}\label{class_nakama_1_1_web_socket_adapter_af8d0fc4d17f63c187397e777c10ecb7a}} 
+Action {\bfseries Connected}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_a2266ef4818b6ed5d211d056a66b7c21b}\label{class_nakama_1_1_web_socket_adapter_a2266ef4818b6ed5d211d056a66b7c21b}} 
+Action {\bfseries Closed}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_a9b94af8c8f2bd785e67e01ab521e1fb5}\label{class_nakama_1_1_web_socket_adapter_a9b94af8c8f2bd785e67e01ab521e1fb5}} 
+Action$<$ Exception $>$ {\bfseries Received\+Error}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_a81ef85e5dae12ff8168055a0594e8c76}\label{class_nakama_1_1_web_socket_adapter_a81ef85e5dae12ff8168055a0594e8c76}} 
+Action$<$ Array\+Segment$<$ byte $>$ $>$ {\bfseries Received}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+An adapter which uses the Web\+Socket protocol with \mbox{\hyperlink{namespace_nakama}{Nakama}} server.  
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_af03fe39fb508d2ac716d63b0a7e2c71d}\label{class_nakama_1_1_web_socket_adapter_af03fe39fb508d2ac716d63b0a7e2c71d}} 
+\index{Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}!CloseAsync@{CloseAsync}}
+\index{CloseAsync@{CloseAsync}!Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}}
+\doxysubsubsection{\texorpdfstring{CloseAsync()}{CloseAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Web\+Socket\+Adapter.\+Close\+Async (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Close the socket with an asynchronous operation.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter_ac4fdf85f7e31f3ef6fb573656081130e}{Nakama.\+ISocket\+Adapter}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_a3097564c6c6ff6ff8945d0def0d4c1e0}\label{class_nakama_1_1_web_socket_adapter_a3097564c6c6ff6ff8945d0def0d4c1e0}} 
+\index{Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}!ConnectAsync@{ConnectAsync}}
+\index{ConnectAsync@{ConnectAsync}!Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}}
+\doxysubsubsection{\texorpdfstring{ConnectAsync()}{ConnectAsync()}}
+{\footnotesize\ttfamily async Task Nakama.\+Web\+Socket\+Adapter.\+Connect\+Async (\begin{DoxyParamCaption}\item[{Uri}]{uri,  }\item[{int}]{timeout }\end{DoxyParamCaption})}
+
+
+
+Connect to the server with an asynchronous operation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em uri} & The URI of the server.\\
+\hline
+{\em timeout} & The timeout for the connect attempt on the socket.\\
+\hline
+\end{DoxyParams}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter_a98391b86100741424b89284cd2db8e06}{Nakama.\+ISocket\+Adapter}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_ad3a05cb8ff2ece38c4b40b36b96710e4}\label{class_nakama_1_1_web_socket_adapter_ad3a05cb8ff2ece38c4b40b36b96710e4}} 
+\index{Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}!SendAsync@{SendAsync}}
+\index{SendAsync@{SendAsync}!Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}}
+\doxysubsubsection{\texorpdfstring{SendAsync()}{SendAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Web\+Socket\+Adapter.\+Send\+Async (\begin{DoxyParamCaption}\item[{Array\+Segment$<$ byte $>$}]{buffer,  }\item[{bool}]{reliable = {\ttfamily true},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Send data to the server with an asynchronous operation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The buffer with the message to send.\\
+\hline
+{\em reliable} & If the message should be sent reliably (will be ignored by some protocols).\\
+\hline
+{\em canceller} & A cancellation token used to propagate when the operation should be canceled.\\
+\hline
+\end{DoxyParams}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter_ab814436b863363b8f8991c01336d77e4}{Nakama.\+ISocket\+Adapter}}.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_af4d122fde2ef8ca67f3a05533f2b23d3}\label{class_nakama_1_1_web_socket_adapter_af4d122fde2ef8ca67f3a05533f2b23d3}} 
+\index{Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}!IsConnected@{IsConnected}}
+\index{IsConnected@{IsConnected}!Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}}
+\doxysubsubsection{\texorpdfstring{IsConnected}{IsConnected}}
+{\footnotesize\ttfamily bool Nakama.\+Web\+Socket\+Adapter.\+Is\+Connected\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+If the Web\+Socket is connected.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter_ae42c16c31ecc0e7db8ad53b427cc7fb2}{Nakama.\+ISocket\+Adapter}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_web_socket_adapter_a57bbc818963586e72fc39f7dbbe28ad8}\label{class_nakama_1_1_web_socket_adapter_a57bbc818963586e72fc39f7dbbe28ad8}} 
+\index{Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}!IsConnecting@{IsConnecting}}
+\index{IsConnecting@{IsConnecting}!Nakama.WebSocketAdapter@{Nakama.WebSocketAdapter}}
+\doxysubsubsection{\texorpdfstring{IsConnecting}{IsConnecting}}
+{\footnotesize\ttfamily bool Nakama.\+Web\+Socket\+Adapter.\+Is\+Connecting\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+If the Web\+Socket is connecting.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter_a9ef33b94d5bc9e6a343f21b1b01229a2}{Nakama.\+ISocket\+Adapter}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/Web\+Socket\+Adapter.\+cs\end{DoxyCompactItemize}

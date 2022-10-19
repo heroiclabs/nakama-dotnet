@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['secwebsocketkeymissingexception_0',['SecWebSocketKeyMissingException',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_sec_web_socket_key_missing_exception.html',1,'Nakama::Ninja::WebSockets::Exceptions']]],
-  ['serverlistenersocketexception_1',['ServerListenerSocketException',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_server_listener_socket_exception.html',1,'Nakama::Ninja::WebSockets::Exceptions']]],
-  ['session_2',['Session',['../class_nakama_1_1_session.html',1,'Nakama']]],
-  ['socket_3',['Socket',['../class_nakama_1_1_socket.html',1,'Nakama']]],
-  ['storageobjectid_4',['StorageObjectId',['../class_nakama_1_1_storage_object_id.html',1,'Nakama']]]
+  ['pingpongmanager_0',['PingPongManager',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager.html',1,'Nakama::Ninja::WebSockets']]],
+  ['pongeventargs_1',['PongEventArgs',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_pong_event_args.html',1,'Nakama::Ninja::WebSockets']]],
+  ['publicbuffermemorystream_2',['PublicBufferMemoryStream',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html',1,'Nakama::Ninja::WebSockets::BufferPool']]]
 ];

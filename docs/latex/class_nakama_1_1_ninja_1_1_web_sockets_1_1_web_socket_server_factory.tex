@@ -1,0 +1,130 @@
+\hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Server\+Factory Class Reference}
+\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory}\index{Nakama.Ninja.WebSockets.WebSocketServerFactory@{Nakama.Ninja.WebSockets.WebSocketServerFactory}}
+
+
+Web socket server factory used to open web socket server connections   
+
+
+Inheritance diagram for Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Server\+Factory\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_af85018d663e9cc04e4d9e8cd2886fcbe}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_af85018d663e9cc04e4d9e8cd2886fcbe}} 
+{\bfseries Web\+Socket\+Server\+Factory} ()
+\begin{DoxyCompactList}\small\item\em Initialises a new instance of the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory}{Web\+Socket\+Server\+Factory}} class without caring about internal buffers  \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_a955e882752665598157e9a5d02deca23}{Web\+Socket\+Server\+Factory}} (Func$<$ Memory\+Stream $>$ buffer\+Factory)
+\begin{DoxyCompactList}\small\item\em Initialises a new instance of the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_factory}{Web\+Socket\+Client\+Factory}} class with control over internal buffer creation  \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}} $>$ \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_ade4d2f2f4962ed47fc4419dff1cc76c4}{Read\+Http\+Header\+From\+Stream\+Async}} (System.\+IO.\+Stream stream, Cancellation\+Token token=default(Cancellation\+Token))
+\begin{DoxyCompactList}\small\item\em Reads a http header information from a stream and decodes the parts relating to the Web\+Socket protocot upgrade  \end{DoxyCompactList}\item 
+async Task$<$ Web\+Socket $>$ \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_a047b8446ad6f83559eed6d9203efaf4d}{Accept\+Web\+Socket\+Async}} (\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}} context, Cancellation\+Token token=default(Cancellation\+Token))
+\begin{DoxyCompactList}\small\item\em Accept web socket with default options Call Read\+Http\+Header\+From\+Stream\+Async first to get \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}}  \end{DoxyCompactList}\item 
+async Task$<$ Web\+Socket $>$ \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_a6f531a90110af6ae8015aebf690cf27f}{Accept\+Web\+Socket\+Async}} (\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}} context, \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options}{Web\+Socket\+Server\+Options}} options, Cancellation\+Token token=default(Cancellation\+Token))
+\begin{DoxyCompactList}\small\item\em Accept web socket with options specified Call Read\+Http\+Header\+From\+Stream\+Async first to get \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}}  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Web socket server factory used to open web socket server connections  
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_a955e882752665598157e9a5d02deca23}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_a955e882752665598157e9a5d02deca23}} 
+\index{Nakama.Ninja.WebSockets.WebSocketServerFactory@{Nakama.Ninja.WebSockets.WebSocketServerFactory}!WebSocketServerFactory@{WebSocketServerFactory}}
+\index{WebSocketServerFactory@{WebSocketServerFactory}!Nakama.Ninja.WebSockets.WebSocketServerFactory@{Nakama.Ninja.WebSockets.WebSocketServerFactory}}
+\doxysubsubsection{\texorpdfstring{WebSocketServerFactory()}{WebSocketServerFactory()}}
+{\footnotesize\ttfamily Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Server\+Factory.\+Web\+Socket\+Server\+Factory (\begin{DoxyParamCaption}\item[{Func$<$ Memory\+Stream $>$}]{buffer\+Factory }\end{DoxyParamCaption})}
+
+
+
+Initialises a new instance of the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_factory}{Web\+Socket\+Client\+Factory}} class with control over internal buffer creation  
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer\+Pool} & Used to get a memory stream. Feel free to implement your own buffer pool. Memory\+Streams will be disposed when no longer needed and can be returned to the pool.\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_a047b8446ad6f83559eed6d9203efaf4d}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_a047b8446ad6f83559eed6d9203efaf4d}} 
+\index{Nakama.Ninja.WebSockets.WebSocketServerFactory@{Nakama.Ninja.WebSockets.WebSocketServerFactory}!AcceptWebSocketAsync@{AcceptWebSocketAsync}}
+\index{AcceptWebSocketAsync@{AcceptWebSocketAsync}!Nakama.Ninja.WebSockets.WebSocketServerFactory@{Nakama.Ninja.WebSockets.WebSocketServerFactory}}
+\doxysubsubsection{\texorpdfstring{AcceptWebSocketAsync()}{AcceptWebSocketAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily async Task$<$ Web\+Socket $>$ Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Server\+Factory.\+Accept\+Web\+Socket\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}}}]{context,  }\item[{Cancellation\+Token}]{token = {\ttfamily default(CancellationToken)} }\end{DoxyParamCaption})}
+
+
+
+Accept web socket with default options Call Read\+Http\+Header\+From\+Stream\+Async first to get \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}}  
+
+
+\begin{DoxyParams}{Parameters}
+{\em context} & The http context used to initiate this web socket request\\
+\hline
+{\em token} & The optional cancellation token\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A connected web socket
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_server_factory_a324539f6e78653fdc0dc5808a32382f9}{Nakama.\+Ninja.\+Web\+Sockets.\+IWeb\+Socket\+Server\+Factory}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_a6f531a90110af6ae8015aebf690cf27f}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_a6f531a90110af6ae8015aebf690cf27f}} 
+\index{Nakama.Ninja.WebSockets.WebSocketServerFactory@{Nakama.Ninja.WebSockets.WebSocketServerFactory}!AcceptWebSocketAsync@{AcceptWebSocketAsync}}
+\index{AcceptWebSocketAsync@{AcceptWebSocketAsync}!Nakama.Ninja.WebSockets.WebSocketServerFactory@{Nakama.Ninja.WebSockets.WebSocketServerFactory}}
+\doxysubsubsection{\texorpdfstring{AcceptWebSocketAsync()}{AcceptWebSocketAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily async Task$<$ Web\+Socket $>$ Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Server\+Factory.\+Accept\+Web\+Socket\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}}}]{context,  }\item[{\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options}{Web\+Socket\+Server\+Options}}}]{options,  }\item[{Cancellation\+Token}]{token = {\ttfamily default(CancellationToken)} }\end{DoxyParamCaption})}
+
+
+
+Accept web socket with options specified Call Read\+Http\+Header\+From\+Stream\+Async first to get \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}}  
+
+
+\begin{DoxyParams}{Parameters}
+{\em context} & The http context used to initiate this web socket request\\
+\hline
+{\em options} & The web socket options\\
+\hline
+{\em token} & The optional cancellation token\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A connected web socket
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_server_factory_a8606821c9e7ab2e7e314406740c93669}{Nakama.\+Ninja.\+Web\+Sockets.\+IWeb\+Socket\+Server\+Factory}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_ade4d2f2f4962ed47fc4419dff1cc76c4}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory_ade4d2f2f4962ed47fc4419dff1cc76c4}} 
+\index{Nakama.Ninja.WebSockets.WebSocketServerFactory@{Nakama.Ninja.WebSockets.WebSocketServerFactory}!ReadHttpHeaderFromStreamAsync@{ReadHttpHeaderFromStreamAsync}}
+\index{ReadHttpHeaderFromStreamAsync@{ReadHttpHeaderFromStreamAsync}!Nakama.Ninja.WebSockets.WebSocketServerFactory@{Nakama.Ninja.WebSockets.WebSocketServerFactory}}
+\doxysubsubsection{\texorpdfstring{ReadHttpHeaderFromStreamAsync()}{ReadHttpHeaderFromStreamAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}} $>$ Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Server\+Factory.\+Read\+Http\+Header\+From\+Stream\+Async (\begin{DoxyParamCaption}\item[{System.\+IO.\+Stream}]{stream,  }\item[{Cancellation\+Token}]{token = {\ttfamily default(CancellationToken)} }\end{DoxyParamCaption})}
+
+
+
+Reads a http header information from a stream and decodes the parts relating to the Web\+Socket protocot upgrade  
+
+
+\begin{DoxyParams}{Parameters}
+{\em stream} & The network stream\\
+\hline
+{\em token} & The optional cancellation token\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Http data read from the stream
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_server_factory_a317ffba9297f7d6ed0dc899ad1143fc6}{Nakama.\+Ninja.\+Web\+Sockets.\+IWeb\+Socket\+Server\+Factory}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Ninja.\+Web\+Sockets/Web\+Socket\+Server\+Factory.\+cs\end{DoxyCompactItemize}

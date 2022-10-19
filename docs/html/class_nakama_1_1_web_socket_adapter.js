@@ -1,11 +1,8 @@
 var class_nakama_1_1_web_socket_adapter =
 [
-    [ "WebSocketAdapter", "class_nakama_1_1_web_socket_adapter.html#ac4302edc7f43e93c5e5c29f34dc2e015", null ],
-    [ "WebSocketAdapter", "class_nakama_1_1_web_socket_adapter.html#a778e6c84534a56692973467ed16117f3", null ],
-    [ "Close", "class_nakama_1_1_web_socket_adapter.html#ad80dd01bf561c90da22184e937df2121", null ],
-    [ "Connect", "class_nakama_1_1_web_socket_adapter.html#aa6cbc0691a73ae0a990f0715d42482d8", null ],
-    [ "Dispose", "class_nakama_1_1_web_socket_adapter.html#a506992159f99828ac1ff80bd617ca791", null ],
-    [ "Send", "class_nakama_1_1_web_socket_adapter.html#afaa14d61bdea4ddaa17de249b2a24efe", null ],
+    [ "CloseAsync", "class_nakama_1_1_web_socket_adapter.html#af03fe39fb508d2ac716d63b0a7e2c71d", null ],
+    [ "ConnectAsync", "class_nakama_1_1_web_socket_adapter.html#a3097564c6c6ff6ff8945d0def0d4c1e0", null ],
+    [ "SendAsync", "class_nakama_1_1_web_socket_adapter.html#ad3a05cb8ff2ece38c4b40b36b96710e4", null ],
     [ "ToString", "class_nakama_1_1_web_socket_adapter.html#ac91f2ff65f7450ecb11574922989d457", null ],
     [ "IsConnected", "class_nakama_1_1_web_socket_adapter.html#af4d122fde2ef8ca67f3a05533f2b23d3", null ],
     [ "IsConnecting", "class_nakama_1_1_web_socket_adapter.html#a57bbc818963586e72fc39f7dbbe28ad8", null ],

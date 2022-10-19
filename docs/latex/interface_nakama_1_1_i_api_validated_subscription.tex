@@ -1,0 +1,51 @@
+\hypertarget{interface_nakama_1_1_i_api_validated_subscription}{}\doxysection{Nakama.\+IApi\+Validated\+Subscription Interface Reference}
+\label{interface_nakama_1_1_i_api_validated_subscription}\index{Nakama.IApiValidatedSubscription@{Nakama.IApiValidatedSubscription}}
+
+
+ 
+
+
+
+
+Inherited by Nakama.\+Api\+Validated\+Subscription.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_validated_subscription_ad295f4a89fa4d5b54a691e086cfdb013}\label{interface_nakama_1_1_i_api_validated_subscription_ad295f4a89fa4d5b54a691e086cfdb013}} 
+bool {\bfseries Active}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Whether the subscription is currently active or not.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_validated_subscription_a2d25263a204ac800dfcab8a1f24bcfc6}\label{interface_nakama_1_1_i_api_validated_subscription_a2d25263a204ac800dfcab8a1f24bcfc6}} 
+string {\bfseries Create\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em UNIX Timestamp when the receipt validation was stored in DB.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_validated_subscription_a85d85cc53beb77e429f8f5416f7e2ee3}\label{interface_nakama_1_1_i_api_validated_subscription_a85d85cc53beb77e429f8f5416f7e2ee3}} 
+\mbox{\hyperlink{namespace_nakama_a216a2d7c4acbc3a4f29a98514c483cd6}{Api\+Store\+Environment}} {\bfseries Environment}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Whether the purchase was done in production or sandbox environment.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_validated_subscription_a0d0a1443f00326171a35e53cd9294b73}\label{interface_nakama_1_1_i_api_validated_subscription_a0d0a1443f00326171a35e53cd9294b73}} 
+string {\bfseries Expiry\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Subscription expiration time. The subscription can still be auto-\/renewed to extend the expiration time further.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_validated_subscription_afae954930e5534383653571ba5261a8a}\label{interface_nakama_1_1_i_api_validated_subscription_afae954930e5534383653571ba5261a8a}} 
+string {\bfseries Original\+Transaction\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Purchase Original transaction ID (we only keep track of the original subscription, not subsequent renewals).  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_validated_subscription_a27b8546445c82ef0ec29e2e19e7012bb}\label{interface_nakama_1_1_i_api_validated_subscription_a27b8546445c82ef0ec29e2e19e7012bb}} 
+string {\bfseries Product\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Purchase Product ID.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_validated_subscription_a1f5e26f1891e4ec02d7f977e924a5e3f}\label{interface_nakama_1_1_i_api_validated_subscription_a1f5e26f1891e4ec02d7f977e924a5e3f}} 
+string {\bfseries Purchase\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em UNIX Timestamp when the purchase was done.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_validated_subscription_a0823f4340d5db22b3e765c624df8ad24}\label{interface_nakama_1_1_i_api_validated_subscription_a0823f4340d5db22b3e765c624df8ad24}} 
+\mbox{\hyperlink{namespace_nakama_a80ae1f687aff9e2cdddb9e69a557cc49}{Api\+Store\+Provider}} {\bfseries Store}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Store identifier  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_validated_subscription_a491121c001aceae5d066dd6fa71a2695}\label{interface_nakama_1_1_i_api_validated_subscription_a491121c001aceae5d066dd6fa71a2695}} 
+string {\bfseries Update\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em UNIX Timestamp when the receipt validation was updated in DB.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/Api\+Client.\+gen.\+cs\end{DoxyCompactItemize}

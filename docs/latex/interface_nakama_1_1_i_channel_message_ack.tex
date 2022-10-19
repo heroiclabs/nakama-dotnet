@@ -1,0 +1,55 @@
+\hypertarget{interface_nakama_1_1_i_channel_message_ack}{}\doxysection{Nakama.\+IChannel\+Message\+Ack Interface Reference}
+\label{interface_nakama_1_1_i_channel_message_ack}\index{Nakama.IChannelMessageAck@{Nakama.IChannelMessageAck}}
+
+
+An acknowledgement from the server when a chat message is delivered to a channel.   
+
+
+
+
+Inherited by Nakama.\+Channel\+Message\+Ack.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_ab36b2166bedb2f2351928c522625e98c}\label{interface_nakama_1_1_i_channel_message_ack_ab36b2166bedb2f2351928c522625e98c}} 
+string {\bfseries Channel\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The server-\/assigned channel ID.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a744bd46919f589756c68de87742d2d7f}\label{interface_nakama_1_1_i_channel_message_ack_a744bd46919f589756c68de87742d2d7f}} 
+int {\bfseries Code}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em A user-\/defined code for the chat message.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a81d7672e04b8754dcf092e7da18a2029}\label{interface_nakama_1_1_i_channel_message_ack_a81d7672e04b8754dcf092e7da18a2029}} 
+string {\bfseries Create\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the message was created.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a60f3a5535d86d01fc98faa1855416671}\label{interface_nakama_1_1_i_channel_message_ack_a60f3a5535d86d01fc98faa1855416671}} 
+string {\bfseries Message\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em A unique ID for the chat message.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a5f9c378b048f1385c56ac13c5ba0a2bd}\label{interface_nakama_1_1_i_channel_message_ack_a5f9c378b048f1385c56ac13c5ba0a2bd}} 
+bool {\bfseries Persistent}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True if the chat message has been stored in history.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a6fa47244793ad1dafc89693e5300e8b3}\label{interface_nakama_1_1_i_channel_message_ack_a6fa47244793ad1dafc89693e5300e8b3}} 
+string {\bfseries Update\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the message was updated.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a56bc2256e0ca3ad47b75db8768a66517}\label{interface_nakama_1_1_i_channel_message_ack_a56bc2256e0ca3ad47b75db8768a66517}} 
+string {\bfseries Username}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The username of the sender of the message.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a5227455826725648e96df53f9e6130aa}\label{interface_nakama_1_1_i_channel_message_ack_a5227455826725648e96df53f9e6130aa}} 
+string {\bfseries Room\+Name}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The name of the chat room, or an empty string if this message was not sent through a chat room.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a5db4380a1a4c44165c8bcc8e32eebcbf}\label{interface_nakama_1_1_i_channel_message_ack_a5db4380a1a4c44165c8bcc8e32eebcbf}} 
+string {\bfseries Group\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the group, or an empty string if this message was not sent through a group channel.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a38b5540111c8089d37403631f21e27b4}\label{interface_nakama_1_1_i_channel_message_ack_a38b5540111c8089d37403631f21e27b4}} 
+string {\bfseries User\+Id\+One}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the first DM user, or an empty string if this message was not sent through a DM chat.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_message_ack_a80b2ccd63418af2d2498d47e3bc815d1}\label{interface_nakama_1_1_i_channel_message_ack_a80b2ccd63418af2d2498d47e3bc815d1}} 
+string {\bfseries User\+Id\+Two}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the second DM user, or an empty string if this message was not sent through a DM chat.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+An acknowledgement from the server when a chat message is delivered to a channel.  
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IChannel\+Message\+Ack.\+cs\end{DoxyCompactItemize}

@@ -1,0 +1,111 @@
+\hypertarget{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets.\+IWeb\+Socket\+Client\+Factory Interface Reference}
+\label{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory}\index{Nakama.Ninja.WebSockets.IWebSocketClientFactory@{Nakama.Ninja.WebSockets.IWebSocketClientFactory}}
+
+
+Web socket client factory used to open web socket client connections   
+
+
+Inheritance diagram for Nakama.\+Ninja.\+Web\+Sockets.\+IWeb\+Socket\+Client\+Factory\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Task$<$ Web\+Socket $>$ \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory_a09487c4902848a49ab288c6349135075}{Connect\+Async}} (Uri uri, Cancellation\+Token token=default(Cancellation\+Token))
+\begin{DoxyCompactList}\small\item\em Connect with default options  \end{DoxyCompactList}\item 
+Task$<$ Web\+Socket $>$ \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory_aa6292760fcc97b83660588a66d427f68}{Connect\+Async}} (Uri uri, \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options}{Web\+Socket\+Client\+Options}} options, Cancellation\+Token token=default(Cancellation\+Token))
+\begin{DoxyCompactList}\small\item\em Connect with options specified  \end{DoxyCompactList}\item 
+Task$<$ Web\+Socket $>$ \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory_af8ed478fd433a7261c2ed1010e19592d}{Connect\+Async}} (System.\+IO.\+Stream response\+Stream, string sec\+Web\+Socket\+Key, \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options}{Web\+Socket\+Client\+Options}} options, Cancellation\+Token token=default(Cancellation\+Token))
+\begin{DoxyCompactList}\small\item\em Connect with a stream that has already been opened and HTTP websocket upgrade request sent This function will check the handshake response from the server and proceed if successful Use this function if you have specific requirements to open a conenction like using special http headers and cookies You will have to build your own HTTP websocket upgrade request You may not even choose to use TCP/\+IP and this function will allow you to do that  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Web socket client factory used to open web socket client connections  
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory_af8ed478fd433a7261c2ed1010e19592d}\label{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory_af8ed478fd433a7261c2ed1010e19592d}} 
+\index{Nakama.Ninja.WebSockets.IWebSocketClientFactory@{Nakama.Ninja.WebSockets.IWebSocketClientFactory}!ConnectAsync@{ConnectAsync}}
+\index{ConnectAsync@{ConnectAsync}!Nakama.Ninja.WebSockets.IWebSocketClientFactory@{Nakama.Ninja.WebSockets.IWebSocketClientFactory}}
+\doxysubsubsection{\texorpdfstring{ConnectAsync()}{ConnectAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Task$<$ Web\+Socket $>$ Nakama.\+Ninja.\+Web\+Sockets.\+IWeb\+Socket\+Client\+Factory.\+Connect\+Async (\begin{DoxyParamCaption}\item[{System.\+IO.\+Stream}]{response\+Stream,  }\item[{string}]{sec\+Web\+Socket\+Key,  }\item[{\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options}{Web\+Socket\+Client\+Options}}}]{options,  }\item[{Cancellation\+Token}]{token = {\ttfamily default(CancellationToken)} }\end{DoxyParamCaption})}
+
+
+
+Connect with a stream that has already been opened and HTTP websocket upgrade request sent This function will check the handshake response from the server and proceed if successful Use this function if you have specific requirements to open a conenction like using special http headers and cookies You will have to build your own HTTP websocket upgrade request You may not even choose to use TCP/\+IP and this function will allow you to do that  
+
+
+\begin{DoxyParams}{Parameters}
+{\em response\+Stream} & The full duplex response stream from the server\\
+\hline
+{\em sec\+Web\+Socket\+Key} & The sec\+Web\+Socket\+Key you used in the handshake request\\
+\hline
+{\em options} & The Web\+Socket client options\\
+\hline
+{\em token} & The optional cancellation token\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_factory_ada652ae0129477188e577b13ee36bd04}{Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Client\+Factory}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory_a09487c4902848a49ab288c6349135075}\label{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory_a09487c4902848a49ab288c6349135075}} 
+\index{Nakama.Ninja.WebSockets.IWebSocketClientFactory@{Nakama.Ninja.WebSockets.IWebSocketClientFactory}!ConnectAsync@{ConnectAsync}}
+\index{ConnectAsync@{ConnectAsync}!Nakama.Ninja.WebSockets.IWebSocketClientFactory@{Nakama.Ninja.WebSockets.IWebSocketClientFactory}}
+\doxysubsubsection{\texorpdfstring{ConnectAsync()}{ConnectAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Task$<$ Web\+Socket $>$ Nakama.\+Ninja.\+Web\+Sockets.\+IWeb\+Socket\+Client\+Factory.\+Connect\+Async (\begin{DoxyParamCaption}\item[{Uri}]{uri,  }\item[{Cancellation\+Token}]{token = {\ttfamily default(CancellationToken)} }\end{DoxyParamCaption})}
+
+
+
+Connect with default options  
+
+
+\begin{DoxyParams}{Parameters}
+{\em uri} & The Web\+Socket uri to connect to (e.\+g. ws\+://example.com or wss\+://example.com for SSL)\\
+\hline
+{\em token} & The optional cancellation token\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A connected web socket instance
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_factory_ac2b906812572c082e8d283ea7edca1d1}{Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Client\+Factory}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory_aa6292760fcc97b83660588a66d427f68}\label{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory_aa6292760fcc97b83660588a66d427f68}} 
+\index{Nakama.Ninja.WebSockets.IWebSocketClientFactory@{Nakama.Ninja.WebSockets.IWebSocketClientFactory}!ConnectAsync@{ConnectAsync}}
+\index{ConnectAsync@{ConnectAsync}!Nakama.Ninja.WebSockets.IWebSocketClientFactory@{Nakama.Ninja.WebSockets.IWebSocketClientFactory}}
+\doxysubsubsection{\texorpdfstring{ConnectAsync()}{ConnectAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Task$<$ Web\+Socket $>$ Nakama.\+Ninja.\+Web\+Sockets.\+IWeb\+Socket\+Client\+Factory.\+Connect\+Async (\begin{DoxyParamCaption}\item[{Uri}]{uri,  }\item[{\mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options}{Web\+Socket\+Client\+Options}}}]{options,  }\item[{Cancellation\+Token}]{token = {\ttfamily default(CancellationToken)} }\end{DoxyParamCaption})}
+
+
+
+Connect with options specified  
+
+
+\begin{DoxyParams}{Parameters}
+{\em uri} & The Web\+Socket uri to connect to (e.\+g. ws\+://example.com or wss\+://example.com for SSL)\\
+\hline
+{\em options} & The Web\+Socket client options\\
+\hline
+{\em token} & The optional cancellation token\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A connected web socket instance
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_factory_a08071ad49b700843123a9eee3593338a}{Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Client\+Factory}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Ninja.\+Web\+Sockets/IWeb\+Socket\+Client\+Factory.\+cs\end{DoxyCompactItemize}

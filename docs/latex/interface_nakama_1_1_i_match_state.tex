@@ -1,0 +1,46 @@
+\hypertarget{interface_nakama_1_1_i_match_state}{}\doxysection{Nakama.\+IMatch\+State Interface Reference}
+\label{interface_nakama_1_1_i_match_state}\index{Nakama.IMatchState@{Nakama.IMatchState}}
+
+
+Some game state update in a match.   
+
+
+
+
+Inherited by Nakama.\+Match\+State.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_state_a2050d924ff200392b7a20e9d92ed8d73}\label{interface_nakama_1_1_i_match_state_a2050d924ff200392b7a20e9d92ed8d73}} 
+string {\bfseries Match\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The unique match identifier.  \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{interface_nakama_1_1_i_match_state_adc672df3ed004ec960eb94389d850cca}{Op\+Code}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The operation code for the state change.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_state_a381837d92c6e9af9f0d777f8afec5aae}\label{interface_nakama_1_1_i_match_state_a381837d92c6e9af9f0d777f8afec5aae}} 
+byte\mbox{[}$\,$\mbox{]} {\bfseries State}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The byte contents of the state change.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_state_aea019216d3cf58b88b5511b0d6790bc3}\label{interface_nakama_1_1_i_match_state_aea019216d3cf58b88b5511b0d6790bc3}} 
+\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} {\bfseries User\+Presence}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Information on the user who sent the state change.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Some game state update in a match.  
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_state_adc672df3ed004ec960eb94389d850cca}\label{interface_nakama_1_1_i_match_state_adc672df3ed004ec960eb94389d850cca}} 
+\index{Nakama.IMatchState@{Nakama.IMatchState}!OpCode@{OpCode}}
+\index{OpCode@{OpCode}!Nakama.IMatchState@{Nakama.IMatchState}}
+\doxysubsubsection{\texorpdfstring{OpCode}{OpCode}}
+{\footnotesize\ttfamily long Nakama.\+IMatch\+State.\+Op\+Code\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The operation code for the state change.  
+
+This value can be used to mark the type of the contents of the state. 
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IMatch\+State.\+cs\end{DoxyCompactItemize}

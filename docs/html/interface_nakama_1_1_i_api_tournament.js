@@ -12,6 +12,8 @@ var interface_nakama_1_1_i_api_tournament =
     [ "MaxSize", "interface_nakama_1_1_i_api_tournament.html#a42f5ceae3569e5d4081a501f08e0b7b9", null ],
     [ "Metadata", "interface_nakama_1_1_i_api_tournament.html#a47768bcf7dd97abea99e001f7c9695f7", null ],
     [ "NextReset", "interface_nakama_1_1_i_api_tournament.html#a95b05c4d22f3e44c458e082b28696ca1", null ],
+    [ "Operator", "interface_nakama_1_1_i_api_tournament.html#ac176de4d1c0e1442861bf0de5d64edef", null ],
+    [ "PrevReset", "interface_nakama_1_1_i_api_tournament.html#aa9795e55a84d977b4858193f667015fb", null ],
     [ "Size", "interface_nakama_1_1_i_api_tournament.html#a2b6ac3469abfb67c9cbc6f8929f04bb7", null ],
     [ "SortOrder", "interface_nakama_1_1_i_api_tournament.html#acb01044753093c9ab2311f51f9c01cdf", null ],
     [ "StartActive", "interface_nakama_1_1_i_api_tournament.html#aceca06fc1dd464d9635399e4add87cbf", null ],

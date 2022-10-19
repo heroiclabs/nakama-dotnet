@@ -1,0 +1,58 @@
+\hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record}{}\doxysection{Nakama.\+Console.\+IApi\+Leaderboard\+Record Interface Reference}
+\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record}\index{Nakama.Console.IApiLeaderboardRecord@{Nakama.Console.IApiLeaderboardRecord}}
+
+
+Represents a complete leaderboard record with all scores and associated metadata.   
+
+
+
+
+Inherited by Nakama.\+Console.\+Api\+Leaderboard\+Record.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_af4136c3f77e0c7dbc63c1c5ea78f0f04}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_af4136c3f77e0c7dbc63c1c5ea78f0f04}} 
+string {\bfseries Create\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the leaderboard record was created.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_aa5fa79acece56b4c28e2e596db5d8af3}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_aa5fa79acece56b4c28e2e596db5d8af3}} 
+string {\bfseries Expiry\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the leaderboard record expires.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a46ee642ea9931908910e06f2b85783d1}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a46ee642ea9931908910e06f2b85783d1}} 
+string {\bfseries Leaderboard\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the leaderboard this score belongs to.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_aca0a7ff0d76f0bc5af0030e81e13c4b1}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_aca0a7ff0d76f0bc5af0030e81e13c4b1}} 
+int {\bfseries Max\+Num\+Score}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The maximum number of score updates allowed by the owner.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a3894b31e8b47c3f5b145ddce285f946e}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a3894b31e8b47c3f5b145ddce285f946e}} 
+string {\bfseries Metadata}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Metadata.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_af6f57c01af5acb5c311940e6ac3852e3}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_af6f57c01af5acb5c311940e6ac3852e3}} 
+int {\bfseries Num\+Score}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The number of submissions to this score record.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a3688e871dc2c924d90abd682e49c888d}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a3688e871dc2c924d90abd682e49c888d}} 
+string {\bfseries Owner\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the score owner, usually a user or group.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a8b6fe15ce1ef65f85b99d8881a0ab07e}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a8b6fe15ce1ef65f85b99d8881a0ab07e}} 
+string {\bfseries Rank}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The rank of this record.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_ad99e6355419cdf19385b3a7980b20807}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_ad99e6355419cdf19385b3a7980b20807}} 
+string {\bfseries Score}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The score value.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a8adc2b089935523b0c0ba298605a98e7}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a8adc2b089935523b0c0ba298605a98e7}} 
+string {\bfseries Subscore}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em An optional subscore value.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_ada7130274d01b270c3943314da01c2d4}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_ada7130274d01b270c3943314da01c2d4}} 
+string {\bfseries Update\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the leaderboard record was updated.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a9714cff05af36be455a99b2c46d34dbb}\label{interface_nakama_1_1_console_1_1_i_api_leaderboard_record_a9714cff05af36be455a99b2c46d34dbb}} 
+string {\bfseries Username}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The username of the score owner, if the owner is a user.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a complete leaderboard record with all scores and associated metadata.  
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Console/Console\+Client.\+gen.\+cs\end{DoxyCompactItemize}

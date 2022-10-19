@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['websocketadapter_0',['WebSocketAdapter',['../class_nakama_1_1_web_socket_adapter.html',1,'Nakama']]],
+  ['websocketbufferoverflowexception_1',['WebSocketBufferOverflowException',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_buffer_overflow_exception.html',1,'Nakama::Ninja::WebSockets::Exceptions']]],
+  ['websocketchanneltest_2',['WebSocketChannelTest',['../class_nakama_1_1_tests_1_1_socket_1_1_web_socket_channel_test.html',1,'Nakama::Tests::Socket']]],
+  ['websocketclientfactory_3',['WebSocketClientFactory',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_factory.html',1,'Nakama::Ninja::WebSockets']]],
+  ['websocketclientoptions_4',['WebSocketClientOptions',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options.html',1,'Nakama::Ninja::WebSockets']]],
+  ['websockethandshakefailedexception_5',['WebSocketHandshakeFailedException',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_handshake_failed_exception.html',1,'Nakama::Ninja::WebSockets::Exceptions']]],
+  ['websockethttpcontext_6',['WebSocketHttpContext',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context.html',1,'Nakama::Ninja::WebSockets']]],
+  ['websocketmatchmakertest_7',['WebSocketMatchmakerTest',['../class_nakama_1_1_tests_1_1_socket_1_1_web_socket_matchmaker_test.html',1,'Nakama::Tests::Socket']]],
+  ['websocketmatchtest_8',['WebSocketMatchTest',['../class_nakama_1_1_tests_1_1_socket_1_1_web_socket_match_test.html',1,'Nakama::Tests::Socket']]],
+  ['websocketnotificationtest_9',['WebSocketNotificationTest',['../class_nakama_1_1_tests_1_1_socket_1_1_web_socket_notification_test.html',1,'Nakama::Tests::Socket']]],
+  ['websocketpartytest_10',['WebSocketPartyTest',['../class_nakama_1_1_tests_1_1_socket_1_1_web_socket_party_test.html',1,'Nakama::Tests::Socket']]],
+  ['websocketrpctest_11',['WebSocketRpcTest',['../class_nakama_1_1_tests_1_1_socket_1_1_web_socket_rpc_test.html',1,'Nakama::Tests::Socket']]],
+  ['websocketserverfactory_12',['WebSocketServerFactory',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory.html',1,'Nakama::Ninja::WebSockets']]],
+  ['websocketserveroptions_13',['WebSocketServerOptions',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html',1,'Nakama::Ninja::WebSockets']]],
+  ['websocketstdlibadapter_14',['WebSocketStdlibAdapter',['../class_nakama_1_1_web_socket_stdlib_adapter.html',1,'Nakama']]],
+  ['websockettest_15',['WebSocketTest',['../class_nakama_1_1_tests_1_1_socket_1_1_web_socket_test.html',1,'Nakama::Tests::Socket']]],
+  ['websocketuserstatustest_16',['WebSocketUserStatusTest',['../class_nakama_1_1_tests_1_1_socket_1_1_web_socket_user_status_test.html',1,'Nakama::Tests::Socket']]],
+  ['websocketversionnotsupportedexception_17',['WebSocketVersionNotSupportedException',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_version_not_supported_exception.html',1,'Nakama::Ninja::WebSockets::Exceptions']]],
+  ['writestorageobject_18',['WriteStorageObject',['../class_nakama_1_1_write_storage_object.html',1,'Nakama']]]
+];

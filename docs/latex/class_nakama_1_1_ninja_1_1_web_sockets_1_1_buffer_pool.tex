@@ -1,0 +1,57 @@
+\hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets.\+Buffer\+Pool Class Reference}
+\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool}\index{Nakama.Ninja.WebSockets.BufferPool@{Nakama.Ninja.WebSockets.BufferPool}}
+
+
+This buffer pool is instance thread safe Use Get\+Buffer to get a Memory\+Stream (with a publically accessible buffer) Calling Close on this Memory\+Stream will clear its internal buffer and return the buffer to the pool for reuse Memory\+Streams can grow larger than the DEFAULT\+\_\+\+BUFFER\+\_\+\+SIZE (or whatever you passed in) and the underlying buffers will be returned to the pool at their larger sizes   
+
+
+Inheritance diagram for Nakama.\+Ninja.\+Web\+Sockets.\+Buffer\+Pool\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream}{Public\+Buffer\+Memory\+Stream}}
+\begin{DoxyCompactList}\small\item\em This memory stream is not instance thread safe (not to be confused with the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool}{Buffer\+Pool}} which is instance thread safe)  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_abb99536c0129f9ccbba8ad57e772d5fc}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_abb99536c0129f9ccbba8ad57e772d5fc}} 
+{\bfseries Buffer\+Pool} (int buffer\+Size)
+\item 
+Memory\+Stream \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_a3eacbad8a136b33a3c2e859c0cf6fe67}{Get\+Buffer}} ()
+\begin{DoxyCompactList}\small\item\em Gets a Memory\+Stream built from a buffer plucked from a thread safe pool The pool grows automatically. Closing the memory stream clears the buffer and returns it to the pool  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_ae69844db9d6751407ef246703ec64574}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_ae69844db9d6751407ef246703ec64574}} 
+void {\bfseries Return\+Buffer} (byte\mbox{[}$\,$\mbox{]} buffer)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This buffer pool is instance thread safe Use Get\+Buffer to get a Memory\+Stream (with a publically accessible buffer) Calling Close on this Memory\+Stream will clear its internal buffer and return the buffer to the pool for reuse Memory\+Streams can grow larger than the DEFAULT\+\_\+\+BUFFER\+\_\+\+SIZE (or whatever you passed in) and the underlying buffers will be returned to the pool at their larger sizes  
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_a3eacbad8a136b33a3c2e859c0cf6fe67}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_a3eacbad8a136b33a3c2e859c0cf6fe67}} 
+\index{Nakama.Ninja.WebSockets.BufferPool@{Nakama.Ninja.WebSockets.BufferPool}!GetBuffer@{GetBuffer}}
+\index{GetBuffer@{GetBuffer}!Nakama.Ninja.WebSockets.BufferPool@{Nakama.Ninja.WebSockets.BufferPool}}
+\doxysubsubsection{\texorpdfstring{GetBuffer()}{GetBuffer()}}
+{\footnotesize\ttfamily Memory\+Stream Nakama.\+Ninja.\+Web\+Sockets.\+Buffer\+Pool.\+Get\+Buffer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Gets a Memory\+Stream built from a buffer plucked from a thread safe pool The pool grows automatically. Closing the memory stream clears the buffer and returns it to the pool  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_buffer_pool_aba30a1520b1f1733d019704827fbcef2}{Nakama.\+Ninja.\+Web\+Sockets.\+IBuffer\+Pool}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Ninja.\+Web\+Sockets/Buffer\+Pool.\+cs\end{DoxyCompactItemize}

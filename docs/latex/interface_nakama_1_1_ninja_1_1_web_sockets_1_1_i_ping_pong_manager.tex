@@ -1,0 +1,56 @@
+\hypertarget{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets.\+IPing\+Pong\+Manager Interface Reference}
+\label{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager}\index{Nakama.Ninja.WebSockets.IPingPongManager@{Nakama.Ninja.WebSockets.IPingPongManager}}
+
+
+Ping Pong Manager used to facilitate ping pong Web\+Socket messages   
+
+
+Inheritance diagram for Nakama.\+Ninja.\+Web\+Sockets.\+IPing\+Pong\+Manager\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager_a9e454afd70ec36b728aad46d32282941}{Send\+Ping}} (Array\+Segment$<$ byte $>$ payload, Cancellation\+Token cancellation)
+\begin{DoxyCompactList}\small\item\em Sends a ping frame  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Events}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager_a745f1289cfea320742116e665442b4b8}\label{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager_a745f1289cfea320742116e665442b4b8}} 
+Event\+Handler$<$ \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_pong_event_args}{Pong\+Event\+Args}} $>$ {\bfseries Pong}
+\begin{DoxyCompactList}\small\item\em Raised when a Pong frame is received  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Ping Pong Manager used to facilitate ping pong Web\+Socket messages  
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager_a9e454afd70ec36b728aad46d32282941}\label{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager_a9e454afd70ec36b728aad46d32282941}} 
+\index{Nakama.Ninja.WebSockets.IPingPongManager@{Nakama.Ninja.WebSockets.IPingPongManager}!SendPing@{SendPing}}
+\index{SendPing@{SendPing}!Nakama.Ninja.WebSockets.IPingPongManager@{Nakama.Ninja.WebSockets.IPingPongManager}}
+\doxysubsubsection{\texorpdfstring{SendPing()}{SendPing()}}
+{\footnotesize\ttfamily Task Nakama.\+Ninja.\+Web\+Sockets.\+IPing\+Pong\+Manager.\+Send\+Ping (\begin{DoxyParamCaption}\item[{Array\+Segment$<$ byte $>$}]{payload,  }\item[{Cancellation\+Token}]{cancellation }\end{DoxyParamCaption})}
+
+
+
+Sends a ping frame  
+
+
+\begin{DoxyParams}{Parameters}
+{\em payload} & The payload (must be 125 bytes of less)\\
+\hline
+{\em cancellation} & The cancellation token\\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager_ad8ad09c265a7ade2143b855911c1f1cf}{Nakama.\+Ninja.\+Web\+Sockets.\+Ping\+Pong\+Manager}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Ninja.\+Web\+Sockets/IPing\+Pong\+Manager.\+cs\end{DoxyCompactItemize}

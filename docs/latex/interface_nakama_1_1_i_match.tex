@@ -1,0 +1,40 @@
+\hypertarget{interface_nakama_1_1_i_match}{}\doxysection{Nakama.\+IMatch Interface Reference}
+\label{interface_nakama_1_1_i_match}\index{Nakama.IMatch@{Nakama.IMatch}}
+
+
+A multiplayer match.   
+
+
+
+
+Inherited by Nakama.\+Match.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_ae082ee8c9b89c975ba3a4ae8365c631b}\label{interface_nakama_1_1_i_match_ae082ee8c9b89c975ba3a4ae8365c631b}} 
+bool {\bfseries Authoritative}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If this match has an authoritative handler on the server.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_a70ec08c29ae2f928e191fc13c5694ccb}\label{interface_nakama_1_1_i_match_a70ec08c29ae2f928e191fc13c5694ccb}} 
+string {\bfseries Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The unique match identifier.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_ae26c0fcd9c1f2f8473125a5a64da5a91}\label{interface_nakama_1_1_i_match_ae26c0fcd9c1f2f8473125a5a64da5a91}} 
+string {\bfseries Label}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em A label for the match which can be filtered on.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_a507c528b18eb5cb4c8efb6b86361961e}\label{interface_nakama_1_1_i_match_a507c528b18eb5cb4c8efb6b86361961e}} 
+IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ {\bfseries Presences}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The presences already in the match.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_aafdd659e29dd31f2360657d2703d63e5}\label{interface_nakama_1_1_i_match_aafdd659e29dd31f2360657d2703d63e5}} 
+int {\bfseries Size}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The number of users currently in the match.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_match_a007362b403742126106c65e023a9185f}\label{interface_nakama_1_1_i_match_a007362b403742126106c65e023a9185f}} 
+\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} {\bfseries Self}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The current user in this match. i.\+e. Yourself.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A multiplayer match.  
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IMatch.\+cs\end{DoxyCompactItemize}

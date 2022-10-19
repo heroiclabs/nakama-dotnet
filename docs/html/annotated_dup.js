@@ -2,7 +2,7 @@ var annotated_dup =
 [
     [ "Nakama", "namespace_nakama.html", [
       [ "Console", "namespace_nakama_1_1_console.html", [
-        [ "ApiResponseException", "class_nakama_1_1_console_1_1_api_response_exception.html", "class_nakama_1_1_console_1_1_api_response_exception" ],
+        [ "ApiResponseException", "class_nakama_1_1_console_1_1_api_response_exception.html", null ],
         [ "IApiAccountDevice", "interface_nakama_1_1_console_1_1_i_api_account_device.html", "interface_nakama_1_1_console_1_1_i_api_account_device" ],
         [ "IApiChannelMessage", "interface_nakama_1_1_console_1_1_i_api_channel_message.html", "interface_nakama_1_1_console_1_1_i_api_channel_message" ],
         [ "IApiFriend", "interface_nakama_1_1_console_1_1_i_api_friend.html", "interface_nakama_1_1_console_1_1_i_api_friend" ],
@@ -38,12 +38,12 @@ var annotated_dup =
         [ "WebSockets", "namespace_nakama_1_1_ninja_1_1_web_sockets.html", [
           [ "Exceptions", "namespace_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions.html", [
             [ "EntityTooLargeException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_entity_too_large_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_entity_too_large_exception" ],
-            [ "InvalidHttpResponseCodeException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_invalid_http_response_code_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_invalid_http_response_code_exception" ],
-            [ "SecWebSocketKeyMissingException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_sec_web_socket_key_missing_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_sec_web_socket_key_missing_exception" ],
-            [ "ServerListenerSocketException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_server_listener_socket_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_server_listener_socket_exception" ],
-            [ "WebSocketBufferOverflowException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_buffer_overflow_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_buffer_overflow_exception" ],
-            [ "WebSocketHandshakeFailedException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_handshake_failed_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_handshake_failed_exception" ],
-            [ "WebSocketVersionNotSupportedException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_version_not_supported_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_version_not_supported_exception" ]
+            [ "InvalidHttpResponseCodeException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_invalid_http_response_code_exception.html", null ],
+            [ "SecWebSocketKeyMissingException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_sec_web_socket_key_missing_exception.html", null ],
+            [ "ServerListenerSocketException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_server_listener_socket_exception.html", null ],
+            [ "WebSocketBufferOverflowException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_buffer_overflow_exception.html", null ],
+            [ "WebSocketHandshakeFailedException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_handshake_failed_exception.html", null ],
+            [ "WebSocketVersionNotSupportedException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_version_not_supported_exception.html", null ]
           ] ],
           [ "BufferPool", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool" ],
           [ "HttpHelper", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper.html", null ],
@@ -60,7 +60,37 @@ var annotated_dup =
           [ "WebSocketServerOptions", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options" ]
         ] ]
       ] ],
-      [ "ApiResponseException", "class_nakama_1_1_api_response_exception.html", "class_nakama_1_1_api_response_exception" ],
+      [ "Tests", "namespace_nakama_1_1_tests.html", [
+        [ "Api", "namespace_nakama_1_1_tests_1_1_api.html", [
+          [ "AuthenticateTest", "class_nakama_1_1_tests_1_1_api_1_1_authenticate_test.html", null ],
+          [ "GroupTest", "class_nakama_1_1_tests_1_1_api_1_1_group_test.html", null ],
+          [ "HttpErrorTest", "class_nakama_1_1_tests_1_1_api_1_1_http_error_test.html", null ],
+          [ "LeaderboardAroundOwnerTest", "class_nakama_1_1_tests_1_1_api_1_1_leaderboard_around_owner_test.html", null ],
+          [ "LeaderboardTest", "class_nakama_1_1_tests_1_1_api_1_1_leaderboard_test.html", null ],
+          [ "LinkUnlinkTest", "class_nakama_1_1_tests_1_1_api_1_1_link_unlink_test.html", null ],
+          [ "RpcTest", "class_nakama_1_1_tests_1_1_api_1_1_rpc_test.html", null ]
+        ] ],
+        [ "Socket", "namespace_nakama_1_1_tests_1_1_socket.html", [
+          [ "WebSocketChannelTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_channel_test.html", null ],
+          [ "WebSocketMatchmakerTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_matchmaker_test.html", null ],
+          [ "WebSocketMatchTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_match_test.html", null ],
+          [ "WebSocketNotificationTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_notification_test.html", null ],
+          [ "WebSocketPartyTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_party_test.html", null ],
+          [ "WebSocketRpcTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_rpc_test.html", null ],
+          [ "WebSocketTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_test.html", null ],
+          [ "WebSocketUserStatusTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_user_status_test.html", null ]
+        ] ],
+        [ "AwaitedSocketTaskTest", "class_nakama_1_1_tests_1_1_awaited_socket_task_test.html", null ],
+        [ "CancelTest", "class_nakama_1_1_tests_1_1_cancel_test.html", null ],
+        [ "INestedTestObject", "interface_nakama_1_1_tests_1_1_i_nested_test_object.html", null ],
+        [ "ITestObject", "interface_nakama_1_1_tests_1_1_i_test_object.html", null ],
+        [ "RetryTest", "class_nakama_1_1_tests_1_1_retry_test.html", null ],
+        [ "SessionTest", "class_nakama_1_1_tests_1_1_session_test.html", null ],
+        [ "StdoutLogger", "class_nakama_1_1_tests_1_1_stdout_logger.html", "class_nakama_1_1_tests_1_1_stdout_logger" ],
+        [ "TinyJsonParserTest", "class_nakama_1_1_tests_1_1_tiny_json_parser_test.html", null ],
+        [ "TransientExceptionHttpAdapter", "class_nakama_1_1_tests_1_1_transient_exception_http_adapter.html", "class_nakama_1_1_tests_1_1_transient_exception_http_adapter" ]
+      ] ],
+      [ "ApiResponseException", "class_nakama_1_1_api_response_exception.html", null ],
       [ "Client", "class_nakama_1_1_client.html", "class_nakama_1_1_client" ],
       [ "HttpRequestAdapter", "class_nakama_1_1_http_request_adapter.html", "class_nakama_1_1_http_request_adapter" ],
       [ "IApiAccount", "interface_nakama_1_1_i_api_account.html", "interface_nakama_1_1_i_api_account" ],
@@ -87,6 +117,7 @@ var annotated_dup =
       [ "IApiLeaderboardRecord", "interface_nakama_1_1_i_api_leaderboard_record.html", "interface_nakama_1_1_i_api_leaderboard_record" ],
       [ "IApiLeaderboardRecordList", "interface_nakama_1_1_i_api_leaderboard_record_list.html", "interface_nakama_1_1_i_api_leaderboard_record_list" ],
       [ "IApiLinkSteamRequest", "interface_nakama_1_1_i_api_link_steam_request.html", "interface_nakama_1_1_i_api_link_steam_request" ],
+      [ "IApiListSubscriptionsRequest", "interface_nakama_1_1_i_api_list_subscriptions_request.html", "interface_nakama_1_1_i_api_list_subscriptions_request" ],
       [ "IApiMatch", "interface_nakama_1_1_i_api_match.html", "interface_nakama_1_1_i_api_match" ],
       [ "IApiMatchList", "interface_nakama_1_1_i_api_match_list.html", "interface_nakama_1_1_i_api_match_list" ],
       [ "IApiNotification", "interface_nakama_1_1_i_api_notification.html", "interface_nakama_1_1_i_api_notification" ],
@@ -102,6 +133,7 @@ var annotated_dup =
       [ "IApiStorageObjectAcks", "interface_nakama_1_1_i_api_storage_object_acks.html", "interface_nakama_1_1_i_api_storage_object_acks" ],
       [ "IApiStorageObjectList", "interface_nakama_1_1_i_api_storage_object_list.html", "interface_nakama_1_1_i_api_storage_object_list" ],
       [ "IApiStorageObjects", "interface_nakama_1_1_i_api_storage_objects.html", "interface_nakama_1_1_i_api_storage_objects" ],
+      [ "IApiSubscriptionList", "interface_nakama_1_1_i_api_subscription_list.html", "interface_nakama_1_1_i_api_subscription_list" ],
       [ "IApiTournament", "interface_nakama_1_1_i_api_tournament.html", "interface_nakama_1_1_i_api_tournament" ],
       [ "IApiTournamentList", "interface_nakama_1_1_i_api_tournament_list.html", "interface_nakama_1_1_i_api_tournament_list" ],
       [ "IApiTournamentRecordList", "interface_nakama_1_1_i_api_tournament_record_list.html", "interface_nakama_1_1_i_api_tournament_record_list" ],
@@ -111,10 +143,14 @@ var annotated_dup =
       [ "IApiUserGroupList", "interface_nakama_1_1_i_api_user_group_list.html", "interface_nakama_1_1_i_api_user_group_list" ],
       [ "IApiUsers", "interface_nakama_1_1_i_api_users.html", "interface_nakama_1_1_i_api_users" ],
       [ "IApiValidatedPurchase", "interface_nakama_1_1_i_api_validated_purchase.html", "interface_nakama_1_1_i_api_validated_purchase" ],
+      [ "IApiValidatedSubscription", "interface_nakama_1_1_i_api_validated_subscription.html", "interface_nakama_1_1_i_api_validated_subscription" ],
       [ "IApiValidatePurchaseAppleRequest", "interface_nakama_1_1_i_api_validate_purchase_apple_request.html", "interface_nakama_1_1_i_api_validate_purchase_apple_request" ],
       [ "IApiValidatePurchaseGoogleRequest", "interface_nakama_1_1_i_api_validate_purchase_google_request.html", "interface_nakama_1_1_i_api_validate_purchase_google_request" ],
       [ "IApiValidatePurchaseHuaweiRequest", "interface_nakama_1_1_i_api_validate_purchase_huawei_request.html", "interface_nakama_1_1_i_api_validate_purchase_huawei_request" ],
       [ "IApiValidatePurchaseResponse", "interface_nakama_1_1_i_api_validate_purchase_response.html", "interface_nakama_1_1_i_api_validate_purchase_response" ],
+      [ "IApiValidateSubscriptionAppleRequest", "interface_nakama_1_1_i_api_validate_subscription_apple_request.html", "interface_nakama_1_1_i_api_validate_subscription_apple_request" ],
+      [ "IApiValidateSubscriptionGoogleRequest", "interface_nakama_1_1_i_api_validate_subscription_google_request.html", "interface_nakama_1_1_i_api_validate_subscription_google_request" ],
+      [ "IApiValidateSubscriptionResponse", "interface_nakama_1_1_i_api_validate_subscription_response.html", "interface_nakama_1_1_i_api_validate_subscription_response" ],
       [ "IApiWriteStorageObject", "interface_nakama_1_1_i_api_write_storage_object.html", "interface_nakama_1_1_i_api_write_storage_object" ],
       [ "IApiWriteStorageObjectsRequest", "interface_nakama_1_1_i_api_write_storage_objects_request.html", "interface_nakama_1_1_i_api_write_storage_objects_request" ],
       [ "IChannel", "interface_nakama_1_1_i_channel.html", "interface_nakama_1_1_i_channel" ],
@@ -157,6 +193,38 @@ var annotated_dup =
       [ "Socket", "class_nakama_1_1_socket.html", "class_nakama_1_1_socket" ],
       [ "StorageObjectId", "class_nakama_1_1_storage_object_id.html", "class_nakama_1_1_storage_object_id" ],
       [ "WebSocketAdapter", "class_nakama_1_1_web_socket_adapter.html", "class_nakama_1_1_web_socket_adapter" ],
+      [ "WebSocketStdlibAdapter", "class_nakama_1_1_web_socket_stdlib_adapter.html", "class_nakama_1_1_web_socket_stdlib_adapter" ],
       [ "WriteStorageObject", "class_nakama_1_1_write_storage_object.html", "class_nakama_1_1_write_storage_object" ]
+    ] ],
+    [ "Satori", "namespace_satori.html", [
+      [ "Tests", "namespace_satori_1_1_tests.html", [
+        [ "ClientTest", "class_satori_1_1_tests_1_1_client_test.html", null ]
+      ] ],
+      [ "ApiResponseException", "class_satori_1_1_api_response_exception.html", null ],
+      [ "Client", "class_satori_1_1_client.html", "class_satori_1_1_client" ],
+      [ "Event", "class_satori_1_1_event.html", "class_satori_1_1_event" ],
+      [ "HttpRequestAdapter", "class_satori_1_1_http_request_adapter.html", "class_satori_1_1_http_request_adapter" ],
+      [ "IApiAuthenticateLogoutRequest", "interface_satori_1_1_i_api_authenticate_logout_request.html", "interface_satori_1_1_i_api_authenticate_logout_request" ],
+      [ "IApiAuthenticateRefreshRequest", "interface_satori_1_1_i_api_authenticate_refresh_request.html", "interface_satori_1_1_i_api_authenticate_refresh_request" ],
+      [ "IApiAuthenticateRequest", "interface_satori_1_1_i_api_authenticate_request.html", "interface_satori_1_1_i_api_authenticate_request" ],
+      [ "IApiEvent", "interface_satori_1_1_i_api_event.html", "interface_satori_1_1_i_api_event" ],
+      [ "IApiEventRequest", "interface_satori_1_1_i_api_event_request.html", "interface_satori_1_1_i_api_event_request" ],
+      [ "IApiExperiment", "interface_satori_1_1_i_api_experiment.html", "interface_satori_1_1_i_api_experiment" ],
+      [ "IApiExperimentList", "interface_satori_1_1_i_api_experiment_list.html", "interface_satori_1_1_i_api_experiment_list" ],
+      [ "IApiFlag", "interface_satori_1_1_i_api_flag.html", "interface_satori_1_1_i_api_flag" ],
+      [ "IApiFlagList", "interface_satori_1_1_i_api_flag_list.html", "interface_satori_1_1_i_api_flag_list" ],
+      [ "IApiIdentifyRequest", "interface_satori_1_1_i_api_identify_request.html", "interface_satori_1_1_i_api_identify_request" ],
+      [ "IApiLiveEvent", "interface_satori_1_1_i_api_live_event.html", "interface_satori_1_1_i_api_live_event" ],
+      [ "IApiLiveEventList", "interface_satori_1_1_i_api_live_event_list.html", "interface_satori_1_1_i_api_live_event_list" ],
+      [ "IApiProperties", "interface_satori_1_1_i_api_properties.html", "interface_satori_1_1_i_api_properties" ],
+      [ "IApiSession", "interface_satori_1_1_i_api_session.html", "interface_satori_1_1_i_api_session" ],
+      [ "IApiUpdatePropertiesRequest", "interface_satori_1_1_i_api_update_properties_request.html", "interface_satori_1_1_i_api_update_properties_request" ],
+      [ "IClient", "interface_satori_1_1_i_client.html", "interface_satori_1_1_i_client" ],
+      [ "IHttpAdapter", "interface_satori_1_1_i_http_adapter.html", "interface_satori_1_1_i_http_adapter" ],
+      [ "ILogger", "interface_satori_1_1_i_logger.html", "interface_satori_1_1_i_logger" ],
+      [ "IProtobufAny", "interface_satori_1_1_i_protobuf_any.html", "interface_satori_1_1_i_protobuf_any" ],
+      [ "IRpcStatus", "interface_satori_1_1_i_rpc_status.html", "interface_satori_1_1_i_rpc_status" ],
+      [ "ISession", "interface_satori_1_1_i_session.html", "interface_satori_1_1_i_session" ],
+      [ "Session", "class_satori_1_1_session.html", "class_satori_1_1_session" ]
     ] ]
 ];

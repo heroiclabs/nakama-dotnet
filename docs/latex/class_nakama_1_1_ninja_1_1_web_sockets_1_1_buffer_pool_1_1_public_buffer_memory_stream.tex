@@ -1,0 +1,120 @@
+\hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets.\+Buffer\+Pool.\+Public\+Buffer\+Memory\+Stream Class Reference}
+\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream}\index{Nakama.Ninja.WebSockets.BufferPool.PublicBufferMemoryStream@{Nakama.Ninja.WebSockets.BufferPool.PublicBufferMemoryStream}}
+
+
+This memory stream is not instance thread safe (not to be confused with the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool}{Buffer\+Pool}} which is instance thread safe)   
+
+
+Inheritance diagram for Nakama.\+Ninja.\+Web\+Sockets.\+Buffer\+Pool.\+Public\+Buffer\+Memory\+Stream\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a9e132ec51a7e7b44148bbc0174b087db}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a9e132ec51a7e7b44148bbc0174b087db}} 
+{\bfseries Public\+Buffer\+Memory\+Stream} (byte\mbox{[}$\,$\mbox{]} buffer, \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool}{Buffer\+Pool}} buffer\+Pool)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a282c64e19a381ae3112c1c6dcc9edbc1}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a282c64e19a381ae3112c1c6dcc9edbc1}} 
+override IAsync\+Result {\bfseries Begin\+Read} (byte\mbox{[}$\,$\mbox{]} buffer, int offset, int count, Async\+Callback callback, object state)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a0817a70e52ee58f07dc7b2439ff4e118}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a0817a70e52ee58f07dc7b2439ff4e118}} 
+override IAsync\+Result {\bfseries Begin\+Write} (byte\mbox{[}$\,$\mbox{]} buffer, int offset, int count, Async\+Callback callback, object state)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a3f1bc42f24e76c1e6bdd1aa40cdd1a01}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a3f1bc42f24e76c1e6bdd1aa40cdd1a01}} 
+override void {\bfseries Close} ()
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ad9c1a68bbd0be9674b1836a387e1fb99}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ad9c1a68bbd0be9674b1836a387e1fb99}} 
+override Task {\bfseries Copy\+To\+Async} (System.\+IO.\+Stream destination, int buffer\+Size, Cancellation\+Token cancellation\+Token)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a59594ae24d7d39ef08e9b73292324ee7}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a59594ae24d7d39ef08e9b73292324ee7}} 
+override int {\bfseries End\+Read} (IAsync\+Result async\+Result)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a71d425d0d6626926a04dc11d01886a8c}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a71d425d0d6626926a04dc11d01886a8c}} 
+override void {\bfseries End\+Write} (IAsync\+Result async\+Result)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a1b7518b4364bf38343f92a307d2c6b43}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a1b7518b4364bf38343f92a307d2c6b43}} 
+override void {\bfseries Flush} ()
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a5372442ce53b399347db05b9e733945c}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a5372442ce53b399347db05b9e733945c}} 
+override Task {\bfseries Flush\+Async} (Cancellation\+Token cancellation\+Token)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a1122a5146dc370748b8581da8c0ab41d}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a1122a5146dc370748b8581da8c0ab41d}} 
+override byte\mbox{[}$\,$\mbox{]} {\bfseries Get\+Buffer} ()
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a7daab5da199e393bc7abdc0436e170f3}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a7daab5da199e393bc7abdc0436e170f3}} 
+override int {\bfseries Read} (byte\mbox{[}$\,$\mbox{]} buffer, int offset, int count)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ac1c46516d90ca145d1bd7094ac258ebd}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ac1c46516d90ca145d1bd7094ac258ebd}} 
+override void {\bfseries Write\+Byte} (byte value)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ab3c4ef8d23b7a74be94cc3e92346a38f}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ab3c4ef8d23b7a74be94cc3e92346a38f}} 
+override void {\bfseries Write} (byte\mbox{[}$\,$\mbox{]} buffer, int offset, int count)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ae5791506aa3049962dba047ebacffa6c}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ae5791506aa3049962dba047ebacffa6c}} 
+override Task {\bfseries Write\+Async} (byte\mbox{[}$\,$\mbox{]} buffer, int offset, int count, Cancellation\+Token cancellation\+Token)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ab3f81c5158946e3dc9d88de4157278fb}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ab3f81c5158946e3dc9d88de4157278fb}} 
+override object {\bfseries Initialize\+Lifetime\+Service} ()
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a955801633531e75dd0253f10549eeb20}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a955801633531e75dd0253f10549eeb20}} 
+override Task$<$ int $>$ {\bfseries Read\+Async} (byte\mbox{[}$\,$\mbox{]} buffer, int offset, int count, Cancellation\+Token cancellation\+Token)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a7c2849628d872035ec9cc20b5b5f70dc}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a7c2849628d872035ec9cc20b5b5f70dc}} 
+override int {\bfseries Read\+Byte} ()
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a8948a34a2cd6cc6e8a037fd5367ed1c2}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a8948a34a2cd6cc6e8a037fd5367ed1c2}} 
+override long {\bfseries Seek} (long offset, Seek\+Origin loc)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a00482a87fdede1c9c58bc5b5e5b270bb}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a00482a87fdede1c9c58bc5b5e5b270bb}} 
+override void {\bfseries Set\+Length} (long value)
+\begin{DoxyCompactList}\small\item\em Note\+: This will not make the Memory\+Stream any smaller, only larger  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_aedb7be72f275938ff045731903d69c0b}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_aedb7be72f275938ff045731903d69c0b}} 
+override byte\mbox{[}$\,$\mbox{]} {\bfseries To\+Array} ()
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_aa52f535e992c3dd6b6c20ad130e66cf1}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_aa52f535e992c3dd6b6c20ad130e66cf1}} 
+override bool {\bfseries Try\+Get\+Buffer} (out Array\+Segment$<$ byte $>$ buffer)
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a013c3a3c4ea163fb9c77c73af20ff246}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a013c3a3c4ea163fb9c77c73af20ff246}} 
+override void {\bfseries Write\+To} (System.\+IO.\+Stream stream)
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a61cb4f87023656278059afed1a06ba4d}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a61cb4f87023656278059afed1a06ba4d}} 
+override long {\bfseries Length}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_af24f9eaf71916c050aad99177b594538}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_af24f9eaf71916c050aad99177b594538}} 
+override bool {\bfseries Can\+Read}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_aa607a424a8839dcb11a385f6e0fc1c5c}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_aa607a424a8839dcb11a385f6e0fc1c5c}} 
+override bool {\bfseries Can\+Seek}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a9b8a44104d76c5333e4efa28a60723bf}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a9b8a44104d76c5333e4efa28a60723bf}} 
+override bool {\bfseries Can\+Timeout}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ad13235eb0b005d96a0cb80a8cc00a0fd}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ad13235eb0b005d96a0cb80a8cc00a0fd}} 
+override bool {\bfseries Can\+Write}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ac0de8f527f01c8f7a94abdaedffa350b}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_ac0de8f527f01c8f7a94abdaedffa350b}} 
+override int {\bfseries Capacity}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a75bd09da03497aa32ad309d4b47f9ad5}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a75bd09da03497aa32ad309d4b47f9ad5}} 
+override long {\bfseries Position}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a0791ccdc5eff12b7627d094e745a98c5}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a0791ccdc5eff12b7627d094e745a98c5}} 
+override int {\bfseries Read\+Timeout}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a59b4d264b544d539ef53be7fcbfc2add}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream_a59b4d264b544d539ef53be7fcbfc2add}} 
+override int {\bfseries Write\+Timeout}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This memory stream is not instance thread safe (not to be confused with the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool}{Buffer\+Pool}} which is instance thread safe)  
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Ninja.\+Web\+Sockets/Buffer\+Pool.\+cs\end{DoxyCompactItemize}

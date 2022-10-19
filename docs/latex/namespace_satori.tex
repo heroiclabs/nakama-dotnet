@@ -1,0 +1,107 @@
+\hypertarget{namespace_satori}{}\doxysection{Satori Namespace Reference}
+\label{namespace_satori}\index{Satori@{Satori}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class {\bfseries Api\+Authenticate\+Logout\+Request}
+\item 
+class {\bfseries Api\+Authenticate\+Refresh\+Request}
+\item 
+class {\bfseries Api\+Authenticate\+Request}
+\item 
+class {\bfseries Api\+Client}
+\begin{DoxyCompactList}\small\item\em The low level client for the \mbox{\hyperlink{namespace_satori}{Satori}} API.  \end{DoxyCompactList}\item 
+class {\bfseries Api\+Event}
+\item 
+class {\bfseries Api\+Event\+Request}
+\item 
+class {\bfseries Api\+Experiment}
+\item 
+class {\bfseries Api\+Experiment\+List}
+\item 
+class {\bfseries Api\+Flag}
+\item 
+class {\bfseries Api\+Flag\+List}
+\item 
+class {\bfseries Api\+Identify\+Request}
+\item 
+class {\bfseries Api\+Live\+Event}
+\item 
+class {\bfseries Api\+Live\+Event\+List}
+\item 
+class {\bfseries Api\+Properties}
+\item 
+class \mbox{\hyperlink{class_satori_1_1_api_response_exception}{Api\+Response\+Exception}}
+\begin{DoxyCompactList}\small\item\em An exception generated for {\ttfamily Http\+Response} objects don\textquotesingle{}t return a success status.  \end{DoxyCompactList}\item 
+class {\bfseries Api\+Session}
+\item 
+class {\bfseries Api\+Update\+Properties\+Request}
+\item 
+class \mbox{\hyperlink{class_satori_1_1_client}{Client}}
+\item 
+class \mbox{\hyperlink{class_satori_1_1_event}{Event}}
+\begin{DoxyCompactList}\small\item\em An event to be published to the server.  \end{DoxyCompactList}\item 
+class {\bfseries GZip\+Content}
+\item 
+class {\bfseries GZip\+Http\+Client\+Handler}
+\item 
+class {\bfseries Http\+Adapter\+Util}
+\begin{DoxyCompactList}\small\item\em Utility methods for the \mbox{\hyperlink{interface_satori_1_1_i_http_adapter}{interface. NOTE\+: DO NOT USE EXTENSION METHODS as Unity cannot cross-\/compile them properly to Web\+GL. }} \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_satori_1_1_http_request_adapter}{Http\+Request\+Adapter}}
+\begin{DoxyCompactList}\small\item\em HTTP Request adapter which uses the .NET Http\+Client to send requests.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_authenticate_logout_request}{IApi\+Authenticate\+Logout\+Request}}
+\begin{DoxyCompactList}\small\item\em Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_authenticate_refresh_request}{IApi\+Authenticate\+Refresh\+Request}}
+\begin{DoxyCompactList}\small\item\em Authenticate against the server with a refresh token.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_authenticate_request}{IApi\+Authenticate\+Request}}
+\begin{DoxyCompactList}\small\item\em Authentication request  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_event}{IApi\+Event}}
+\begin{DoxyCompactList}\small\item\em A single event. Usually, but not necessarily, part of a batch.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_event_request}{IApi\+Event\+Request}}
+\begin{DoxyCompactList}\small\item\em Publish an event to the server  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_experiment}{IApi\+Experiment}}
+\begin{DoxyCompactList}\small\item\em An experiment that this user is partaking.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_experiment_list}{IApi\+Experiment\+List}}
+\begin{DoxyCompactList}\small\item\em All experiments that this identity is involved with.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_flag}{IApi\+Flag}}
+\begin{DoxyCompactList}\small\item\em Feature flag available to the identity.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_flag_list}{IApi\+Flag\+List}}
+\begin{DoxyCompactList}\small\item\em All flags available to the identity  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_identify_request}{IApi\+Identify\+Request}}
+\begin{DoxyCompactList}\small\item\em Enrich/replace the current session with a new ID.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_live_event}{IApi\+Live\+Event}}
+\begin{DoxyCompactList}\small\item\em A single live event.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_live_event_list}{IApi\+Live\+Event\+List}}
+\begin{DoxyCompactList}\small\item\em List of Live events.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_properties}{IApi\+Properties}}
+\begin{DoxyCompactList}\small\item\em Properties associated with an identity.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_session}{IApi\+Session}}
+\begin{DoxyCompactList}\small\item\em A session.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_api_update_properties_request}{IApi\+Update\+Properties\+Request}}
+\begin{DoxyCompactList}\small\item\em Update Properties associated with this identity.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_client}{IClient}}
+\begin{DoxyCompactList}\small\item\em A client for the API in \mbox{\hyperlink{namespace_satori}{Satori}} server.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_http_adapter}{IHttp\+Adapter}}
+\begin{DoxyCompactList}\small\item\em An adapter which implements the HTTP protocol.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_logger}{ILogger}}
+\begin{DoxyCompactList}\small\item\em A simple logger to write log messages to an output sink.  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_protobuf_any}{IProtobuf\+Any}}
+\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_rpc_status}{IRpc\+Status}}
+\item 
+interface \mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}
+\begin{DoxyCompactList}\small\item\em A session authenticated for a user with \mbox{\hyperlink{namespace_satori}{Satori}} server.  \end{DoxyCompactList}\item 
+class {\bfseries Preserve\+Attribute}
+\begin{DoxyCompactList}\small\item\em A custom attribute recognized by Unity3D. When added to a class member, it prevents the Unity linker from stripping the code it is associated with. This is used in addition to the link.\+xml file because the Unity Package Manager does not recognize link.\+xml files inside Unity packages. \href{https://docs.unity3d.com/2018.3/Documentation/Manual/ManagedCodeStripping.html}{\texttt{ https\+://docs.\+unity3d.\+com/2018.\+3/\+Documentation/\+Manual/\+Managed\+Code\+Stripping.\+html}}  \end{DoxyCompactList}\item 
+class {\bfseries Protobuf\+Any}
+\item 
+class {\bfseries Rpc\+Status}
+\item 
+class \mbox{\hyperlink{class_satori_1_1_session}{Session}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespace_satori_a511888108671df4cff6cd4bbb1ff498f}\label{namespace_satori_a511888108671df4cff6cd4bbb1ff498f}} 
+delegate bool {\bfseries Transient\+Exception\+Delegate} (Exception e)
+\begin{DoxyCompactList}\small\item\em A delegate used to determine whether or not a network exception is due to a temporary bad state on the server. For example, timeouts can be transient in cases where the server is experiencing temporarily high load.  \end{DoxyCompactList}\end{DoxyCompactItemize}

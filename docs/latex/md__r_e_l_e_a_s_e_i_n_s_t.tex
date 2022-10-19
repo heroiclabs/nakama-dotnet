@@ -1,0 +1,52 @@
+These instructions guide the release process for new official \mbox{\hyperlink{namespace_nakama}{Nakama}} client SDK build and releases to \href{https://www.nuget.org/packages/NakamaClient/}{\texttt{ Nuget}}.\hypertarget{md__r_e_l_e_a_s_e_i_n_s_t_autotoc_md92}{}\doxysection{Steps}\label{md__r_e_l_e_a_s_e_i_n_s_t_autotoc_md92}
+
+\begin{DoxyEnumerate}
+\item Update and tidy up the CHANGELOG.
+\item Run the test suite for the codebase. See the README for steps.
+\item Create the release commit and tag it.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git add CHANGELOG}
+\DoxyCodeLine{git commit -\/m "{}Nakama .NET <version> release."{}}
+\DoxyCodeLine{git tag -\/a <version> -\/m "{}<version>"{}}
+\DoxyCodeLine{git push origin <version> master}
+
+\end{DoxyCode}
+
+\item Create a release build of the code.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{dotnet build -\/c Release ./Nakama/Nakama.csproj}
+
+\end{DoxyCode}
+
+\item Create a release on Git\+Hub\+: \href{https://github.com/heroiclabs/nakama-dotnet/releases/new}{\texttt{ https\+://github.\+com/heroiclabs/nakama-\/dotnet/releases/new}}
+\item Copy the CHANGELOG section to the release notes. Upload the release DLL to be part of the Git\+Hub release. Publish it.
+\item Package and push the release to Nuget. Don\textquotesingle{}t put a {\ttfamily v} prefix before the version number.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{dotnet pack -\/p:AssemblyVersion=<package-\/version> -\/p:PackageVersion=<package-\/version> -\/c Release ./Nakama/Nakama.csproj}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{dotnet nuget push ./Nakama/bin/Release/NakamaClient.<package-\/version>.nupkg -\/k "{}somekey"{} -\/s https://api.nuget.org/v3/index.json}
+
+\end{DoxyCode}
+
+\item Update CHANGELOG with section for new unreleased changes.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git add CHANGELOG.md}
+\DoxyCodeLine{git commit -\/m "{}Set new development version."{}}
+\DoxyCodeLine{git push origin master}
+
+\end{DoxyCode}
+ 
+\end{DoxyEnumerate}

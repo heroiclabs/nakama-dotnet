@@ -1,0 +1,317 @@
+\hypertarget{class_nakama_1_1_session}{}\doxysection{Nakama.\+Session Class Reference}
+\label{class_nakama_1_1_session}\index{Nakama.Session@{Nakama.Session}}
+
+
+ 
+
+
+Inheritance diagram for Nakama.\+Session\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_nakama_1_1_session}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_nakama_1_1_session_a32aa5055ec8b4629d48574c14ca52929}{Has\+Expired}} (Date\+Time offset)
+\begin{DoxyCompactList}\small\item\em Check the session has expired against the offset time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em offset} & The datetime to compare against this session.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the session has expired.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_nakama_1_1_session_a292f6d27e68f068d5b71a5e998f93adc}{Has\+Refresh\+Expired}} (Date\+Time offset)
+\begin{DoxyCompactList}\small\item\em Check if the refresh token has expired against the offset time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em offset} & The datetime to compare against this refresh token.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If refresh token has expired.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_session_a8387864684cbee2f57ed82211c12e6cd}\label{class_nakama_1_1_session_a8387864684cbee2f57ed82211c12e6cd}} 
+override string {\bfseries To\+String} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} \mbox{\hyperlink{class_nakama_1_1_session_ac3615441ca8d14d464fd610c22ce5582}{Restore}} (string auth\+Token, string refresh\+Token=null)
+\begin{DoxyCompactList}\small\item\em Restore a session from the auth token.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_session_ae2346092b17fd6cecea2e5371f748b4f}\label{class_nakama_1_1_session_ae2346092b17fd6cecea2e5371f748b4f}} 
+static readonly Date\+Time {\bfseries Epoch} = new Date\+Time(1970, 1, 1, 0, 0, 0, Date\+Time\+Kind.\+Utc)
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_nakama_1_1_session_a6109a78f8514b76f1a0977937dcaaaaf}{Auth\+Token}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The authorization token used to construct this session.  \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_nakama_1_1_session_a07dd0bf598118762c5d4ac81f1f234fb}{Created}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If the user account for this session was just created.  \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{class_nakama_1_1_session_ad29e88275b3bb763a8153944e0bb9912}{Create\+Time}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX timestamp when this session was created.  \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{class_nakama_1_1_session_acb53fd22e6b8a815c5cddb2686b2df91}{Expire\+Time}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX timestamp when this session will expire.  \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_nakama_1_1_session_a2fc70f9f9afb4440faa5936c0f4f1129}{Is\+Expired}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If the session has expired.  \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_nakama_1_1_session_a8b0cbb6a8f2c7f8a6bb41a77a05739ac}{Is\+Refresh\+Expired}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If the refresh token has expired.  \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{class_nakama_1_1_session_aa220b017e0bb05a9e55f437268338002}{Refresh\+Expire\+Time}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX timestamp when the refresh token will expire.  \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_nakama_1_1_session_a3b756ff336a724af7cb65b2711ffd8d0}{Refresh\+Token}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Refresh token that can be used for session token renewal.  \end{DoxyCompactList}\item 
+IDictionary$<$ string, string $>$ \mbox{\hyperlink{class_nakama_1_1_session_a3c15d4dd38f96f5920516e9b0bd599d7}{Vars}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Any custom properties associated with this session.  \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_nakama_1_1_session_aaa6a5d93c2578c8c83aafdafc8ac724e}{Username}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The username of the user who owns this session.  \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_nakama_1_1_session_abb1e6deb54c15459678f13a8b0feaa1f}{User\+Id}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the user who owns this session.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_session_a32aa5055ec8b4629d48574c14ca52929}\label{class_nakama_1_1_session_a32aa5055ec8b4629d48574c14ca52929}} 
+\index{Nakama.Session@{Nakama.Session}!HasExpired@{HasExpired}}
+\index{HasExpired@{HasExpired}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{HasExpired()}{HasExpired()}}
+{\footnotesize\ttfamily bool Nakama.\+Session.\+Has\+Expired (\begin{DoxyParamCaption}\item[{Date\+Time}]{offset }\end{DoxyParamCaption})}
+
+
+
+Check the session has expired against the offset time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em offset} & The datetime to compare against this session.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the session has expired.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_aea82fdba74d6b20eb203b4fc2ccd19e6}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_a292f6d27e68f068d5b71a5e998f93adc}\label{class_nakama_1_1_session_a292f6d27e68f068d5b71a5e998f93adc}} 
+\index{Nakama.Session@{Nakama.Session}!HasRefreshExpired@{HasRefreshExpired}}
+\index{HasRefreshExpired@{HasRefreshExpired}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{HasRefreshExpired()}{HasRefreshExpired()}}
+{\footnotesize\ttfamily bool Nakama.\+Session.\+Has\+Refresh\+Expired (\begin{DoxyParamCaption}\item[{Date\+Time}]{offset }\end{DoxyParamCaption})}
+
+
+
+Check if the refresh token has expired against the offset time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em offset} & The datetime to compare against this refresh token.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If refresh token has expired.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_a8c7f2700402ab995544a4ff852ad5f35}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_ac3615441ca8d14d464fd610c22ce5582}\label{class_nakama_1_1_session_ac3615441ca8d14d464fd610c22ce5582}} 
+\index{Nakama.Session@{Nakama.Session}!Restore@{Restore}}
+\index{Restore@{Restore}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{Restore()}{Restore()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} Nakama.\+Session.\+Restore (\begin{DoxyParamCaption}\item[{string}]{auth\+Token,  }\item[{string}]{refresh\+Token = {\ttfamily null} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Restore a session from the auth token.  
+
+A {\ttfamily null} or empty authentication token will return null. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & The authorization token to restore as a session.\\
+\hline
+{\em refresh\+Token} & The refresh token for the session.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A session.
+\end{DoxyReturn}
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_session_a6109a78f8514b76f1a0977937dcaaaaf}\label{class_nakama_1_1_session_a6109a78f8514b76f1a0977937dcaaaaf}} 
+\index{Nakama.Session@{Nakama.Session}!AuthToken@{AuthToken}}
+\index{AuthToken@{AuthToken}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{AuthToken}{AuthToken}}
+{\footnotesize\ttfamily string Nakama.\+Session.\+Auth\+Token\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The authorization token used to construct this session.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_a49d091792a2145d7dbc72cbf36a60d91}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_a07dd0bf598118762c5d4ac81f1f234fb}\label{class_nakama_1_1_session_a07dd0bf598118762c5d4ac81f1f234fb}} 
+\index{Nakama.Session@{Nakama.Session}!Created@{Created}}
+\index{Created@{Created}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{Created}{Created}}
+{\footnotesize\ttfamily bool Nakama.\+Session.\+Created\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+If the user account for this session was just created.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_a37d250a03d534d84538f4aa9473427bd}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_ad29e88275b3bb763a8153944e0bb9912}\label{class_nakama_1_1_session_ad29e88275b3bb763a8153944e0bb9912}} 
+\index{Nakama.Session@{Nakama.Session}!CreateTime@{CreateTime}}
+\index{CreateTime@{CreateTime}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{CreateTime}{CreateTime}}
+{\footnotesize\ttfamily long Nakama.\+Session.\+Create\+Time\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The UNIX timestamp when this session was created.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_a0b12e1f2b4c2095ec96bc3c63e4177d7}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_acb53fd22e6b8a815c5cddb2686b2df91}\label{class_nakama_1_1_session_acb53fd22e6b8a815c5cddb2686b2df91}} 
+\index{Nakama.Session@{Nakama.Session}!ExpireTime@{ExpireTime}}
+\index{ExpireTime@{ExpireTime}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{ExpireTime}{ExpireTime}}
+{\footnotesize\ttfamily long Nakama.\+Session.\+Expire\+Time\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The UNIX timestamp when this session will expire.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_ae66907a1582b6c57eb96358cc27c93fc}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_a2fc70f9f9afb4440faa5936c0f4f1129}\label{class_nakama_1_1_session_a2fc70f9f9afb4440faa5936c0f4f1129}} 
+\index{Nakama.Session@{Nakama.Session}!IsExpired@{IsExpired}}
+\index{IsExpired@{IsExpired}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{IsExpired}{IsExpired}}
+{\footnotesize\ttfamily bool Nakama.\+Session.\+Is\+Expired\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+If the session has expired.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_abe374a4f8e250ffb5207740ee935e791}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_a8b0cbb6a8f2c7f8a6bb41a77a05739ac}\label{class_nakama_1_1_session_a8b0cbb6a8f2c7f8a6bb41a77a05739ac}} 
+\index{Nakama.Session@{Nakama.Session}!IsRefreshExpired@{IsRefreshExpired}}
+\index{IsRefreshExpired@{IsRefreshExpired}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{IsRefreshExpired}{IsRefreshExpired}}
+{\footnotesize\ttfamily bool Nakama.\+Session.\+Is\+Refresh\+Expired\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+If the refresh token has expired.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_a34a46ea21fd6d69cab5130eda5dee813}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_aa220b017e0bb05a9e55f437268338002}\label{class_nakama_1_1_session_aa220b017e0bb05a9e55f437268338002}} 
+\index{Nakama.Session@{Nakama.Session}!RefreshExpireTime@{RefreshExpireTime}}
+\index{RefreshExpireTime@{RefreshExpireTime}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{RefreshExpireTime}{RefreshExpireTime}}
+{\footnotesize\ttfamily long Nakama.\+Session.\+Refresh\+Expire\+Time\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The UNIX timestamp when the refresh token will expire.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_a8a56822b1939c90ba048c64a5522a83f}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_a3b756ff336a724af7cb65b2711ffd8d0}\label{class_nakama_1_1_session_a3b756ff336a724af7cb65b2711ffd8d0}} 
+\index{Nakama.Session@{Nakama.Session}!RefreshToken@{RefreshToken}}
+\index{RefreshToken@{RefreshToken}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{RefreshToken}{RefreshToken}}
+{\footnotesize\ttfamily string Nakama.\+Session.\+Refresh\+Token\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Refresh token that can be used for session token renewal.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_add730c3a5733264132cc63f39eb53b31}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_abb1e6deb54c15459678f13a8b0feaa1f}\label{class_nakama_1_1_session_abb1e6deb54c15459678f13a8b0feaa1f}} 
+\index{Nakama.Session@{Nakama.Session}!UserId@{UserId}}
+\index{UserId@{UserId}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{UserId}{UserId}}
+{\footnotesize\ttfamily string Nakama.\+Session.\+User\+Id\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The ID of the user who owns this session.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_aa830ae1045ddd2590e36f8c4feef7c9d}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_aaa6a5d93c2578c8c83aafdafc8ac724e}\label{class_nakama_1_1_session_aaa6a5d93c2578c8c83aafdafc8ac724e}} 
+\index{Nakama.Session@{Nakama.Session}!Username@{Username}}
+\index{Username@{Username}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{Username}{Username}}
+{\footnotesize\ttfamily string Nakama.\+Session.\+Username\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The username of the user who owns this session.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_a29cddbd0cb5b8ec5cbffa1ec028e4ee5}{Nakama.\+ISession}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_session_a3c15d4dd38f96f5920516e9b0bd599d7}\label{class_nakama_1_1_session_a3c15d4dd38f96f5920516e9b0bd599d7}} 
+\index{Nakama.Session@{Nakama.Session}!Vars@{Vars}}
+\index{Vars@{Vars}!Nakama.Session@{Nakama.Session}}
+\doxysubsubsection{\texorpdfstring{Vars}{Vars}}
+{\footnotesize\ttfamily IDictionary$<$string, string$>$ Nakama.\+Session.\+Vars\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Any custom properties associated with this session.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_session_a35d8154eb7deff8e2bf953b23561bf19}{Nakama.\+ISession}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/Session.\+cs\end{DoxyCompactItemize}

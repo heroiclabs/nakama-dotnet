@@ -1,0 +1,86 @@
+\hypertarget{interface_nakama_1_1_i_http_adapter}{}\doxysection{Nakama.\+IHttp\+Adapter Interface Reference}
+\label{interface_nakama_1_1_i_http_adapter}\index{Nakama.IHttpAdapter@{Nakama.IHttpAdapter}}
+
+
+An adapter which implements the HTTP protocol.   
+
+
+Inheritance diagram for Nakama.\+IHttp\+Adapter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_nakama_1_1_i_http_adapter}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Task$<$ string $>$ \mbox{\hyperlink{interface_nakama_1_1_i_http_adapter_af4eea04aef9ed0ccf2ee990bcb294b53}{Send\+Async}} (string method, Uri uri, IDictionary$<$ string, string $>$ headers, byte\mbox{[}$\,$\mbox{]} body, int timeout\+Sec=3, Cancellation\+Token? user\+Cancel\+Token=null)
+\begin{DoxyCompactList}\small\item\em Send a HTTP request.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_http_adapter_a276f20c0cdbc85177ace2cc336579cf8}\label{interface_nakama_1_1_i_http_adapter_a276f20c0cdbc85177ace2cc336579cf8}} 
+Transient\+Exception\+Delegate {\bfseries Transient\+Exception\+Delegate}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\hyperlink{interface_nakama_1_1_i_logger}{ILogger}} \mbox{\hyperlink{interface_nakama_1_1_i_http_adapter_ad0514214ba7fce3b8c0697d70874ff1e}{Logger}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The logger to use with the adapter.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+An adapter which implements the HTTP protocol.  
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_nakama_1_1_i_http_adapter_af4eea04aef9ed0ccf2ee990bcb294b53}\label{interface_nakama_1_1_i_http_adapter_af4eea04aef9ed0ccf2ee990bcb294b53}} 
+\index{Nakama.IHttpAdapter@{Nakama.IHttpAdapter}!SendAsync@{SendAsync}}
+\index{SendAsync@{SendAsync}!Nakama.IHttpAdapter@{Nakama.IHttpAdapter}}
+\doxysubsubsection{\texorpdfstring{SendAsync()}{SendAsync()}}
+{\footnotesize\ttfamily Task$<$ string $>$ Nakama.\+IHttp\+Adapter.\+Send\+Async (\begin{DoxyParamCaption}\item[{string}]{method,  }\item[{Uri}]{uri,  }\item[{IDictionary$<$ string, string $>$}]{headers,  }\item[{byte\mbox{[}$\,$\mbox{]}}]{body,  }\item[{int}]{timeout\+Sec = {\ttfamily 3},  }\item[{Cancellation\+Token?}]{user\+Cancel\+Token = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Send a HTTP request.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em method} & HTTP method to use for this request.\\
+\hline
+{\em uri} & The fully qualified URI to use.\\
+\hline
+{\em headers} & Request headers to set.\\
+\hline
+{\em body} & Request content body to set.\\
+\hline
+{\em timeout\+Sec} & Request timeout.\\
+\hline
+{\em user\+Cancel\+Token} & A user-\/generated token that can be used to cancel the request.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the contents of the response.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_http_request_adapter_a7562e1777699f16911ed2d5e245eb5b7}{Nakama.\+Http\+Request\+Adapter}}.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{interface_nakama_1_1_i_http_adapter_ad0514214ba7fce3b8c0697d70874ff1e}\label{interface_nakama_1_1_i_http_adapter_ad0514214ba7fce3b8c0697d70874ff1e}} 
+\index{Nakama.IHttpAdapter@{Nakama.IHttpAdapter}!Logger@{Logger}}
+\index{Logger@{Logger}!Nakama.IHttpAdapter@{Nakama.IHttpAdapter}}
+\doxysubsubsection{\texorpdfstring{Logger}{Logger}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_nakama_1_1_i_logger}{ILogger}} Nakama.\+IHttp\+Adapter.\+Logger\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The logger to use with the adapter.  
+
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_tests_1_1_transient_exception_http_adapter_a13fdded7b12cc20e46b433fbe4e808f6}{Nakama.\+Tests.\+Transient\+Exception\+Http\+Adapter}}, and \mbox{\hyperlink{class_nakama_1_1_http_request_adapter_a7365d2d5c82d5d0d6b8ac64941a8e533}{Nakama.\+Http\+Request\+Adapter}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IHttp\+Adapter.\+cs\end{DoxyCompactItemize}

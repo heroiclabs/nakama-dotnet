@@ -1,0 +1,193 @@
+\hypertarget{interface_satori_1_1_i_session}{}\doxysection{Satori.\+ISession Interface Reference}
+\label{interface_satori_1_1_i_session}\index{Satori.ISession@{Satori.ISession}}
+
+
+A session authenticated for a user with \mbox{\hyperlink{namespace_satori}{Satori}} server.   
+
+
+Inheritance diagram for Satori.\+ISession\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_satori_1_1_i_session}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{interface_satori_1_1_i_session_aabe1a8aae689ca7d1eaca3537ffa55f5}{Has\+Expired}} (Date\+Time offset)
+\begin{DoxyCompactList}\small\item\em Check the session has expired against the offset time.  \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{interface_satori_1_1_i_session_aa690bf2fd9e3cebdc597a17ad95eb8ac}{Has\+Refresh\+Expired}} (Date\+Time offset)
+\begin{DoxyCompactList}\small\item\em Check if the refresh token has expired against the offset time.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{interface_satori_1_1_i_session_a3a090ee3fe0d7a6f01d45f185ec8f3ba}{Auth\+Token}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The authorization token used to construct this session.  \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{interface_satori_1_1_i_session_a2ac53e0aab134b3df05bd46f29d5e34f}{Expire\+Time}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX timestamp when this session will expire.  \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{interface_satori_1_1_i_session_a8fe379446411cfdff5e11cabc83eed9d}{Is\+Expired}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If the session has expired.  \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{interface_satori_1_1_i_session_a35ce1adb322ea67137bce06d711c9779}{Is\+Refresh\+Expired}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If the refresh token has expired.  \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{interface_satori_1_1_i_session_a4303314d30ab93e5297842327ef97571}{Refresh\+Expire\+Time}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX timestamp when the refresh token will expire.  \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{interface_satori_1_1_i_session_abfc2880c5080481f9ea718e18c2845cf}{Refresh\+Token}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Refresh token that can be used for session token renewal.  \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{interface_satori_1_1_i_session_ad2cf0bf88e2f23a3f3fdff64502a799e}{Identity\+Id}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the user who owns this session.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A session authenticated for a user with \mbox{\hyperlink{namespace_satori}{Satori}} server.  
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_satori_1_1_i_session_aabe1a8aae689ca7d1eaca3537ffa55f5}\label{interface_satori_1_1_i_session_aabe1a8aae689ca7d1eaca3537ffa55f5}} 
+\index{Satori.ISession@{Satori.ISession}!HasExpired@{HasExpired}}
+\index{HasExpired@{HasExpired}!Satori.ISession@{Satori.ISession}}
+\doxysubsubsection{\texorpdfstring{HasExpired()}{HasExpired()}}
+{\footnotesize\ttfamily bool Satori.\+ISession.\+Has\+Expired (\begin{DoxyParamCaption}\item[{Date\+Time}]{offset }\end{DoxyParamCaption})}
+
+
+
+Check the session has expired against the offset time.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em offset} & The datetime to compare against this session.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If the session has expired.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_session_ac0337cc38b9a04e5d812a8b87720e407}{Satori.\+Session}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_session_aa690bf2fd9e3cebdc597a17ad95eb8ac}\label{interface_satori_1_1_i_session_aa690bf2fd9e3cebdc597a17ad95eb8ac}} 
+\index{Satori.ISession@{Satori.ISession}!HasRefreshExpired@{HasRefreshExpired}}
+\index{HasRefreshExpired@{HasRefreshExpired}!Satori.ISession@{Satori.ISession}}
+\doxysubsubsection{\texorpdfstring{HasRefreshExpired()}{HasRefreshExpired()}}
+{\footnotesize\ttfamily bool Satori.\+ISession.\+Has\+Refresh\+Expired (\begin{DoxyParamCaption}\item[{Date\+Time}]{offset }\end{DoxyParamCaption})}
+
+
+
+Check if the refresh token has expired against the offset time.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em offset} & The datetime to compare against this refresh token.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If refresh token has expired.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_session_a4a4cc7d98de34718e385241eaa9984fe}{Satori.\+Session}}.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{interface_satori_1_1_i_session_a3a090ee3fe0d7a6f01d45f185ec8f3ba}\label{interface_satori_1_1_i_session_a3a090ee3fe0d7a6f01d45f185ec8f3ba}} 
+\index{Satori.ISession@{Satori.ISession}!AuthToken@{AuthToken}}
+\index{AuthToken@{AuthToken}!Satori.ISession@{Satori.ISession}}
+\doxysubsubsection{\texorpdfstring{AuthToken}{AuthToken}}
+{\footnotesize\ttfamily string Satori.\+ISession.\+Auth\+Token\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The authorization token used to construct this session.  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_session_afdc7cdcad28bc4c95c1b6244f9b208bf}{Satori.\+Session}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_session_a2ac53e0aab134b3df05bd46f29d5e34f}\label{interface_satori_1_1_i_session_a2ac53e0aab134b3df05bd46f29d5e34f}} 
+\index{Satori.ISession@{Satori.ISession}!ExpireTime@{ExpireTime}}
+\index{ExpireTime@{ExpireTime}!Satori.ISession@{Satori.ISession}}
+\doxysubsubsection{\texorpdfstring{ExpireTime}{ExpireTime}}
+{\footnotesize\ttfamily long Satori.\+ISession.\+Expire\+Time\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The UNIX timestamp when this session will expire.  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_session_afe0f9228873dbd047a024b16e45d368e}{Satori.\+Session}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_session_ad2cf0bf88e2f23a3f3fdff64502a799e}\label{interface_satori_1_1_i_session_ad2cf0bf88e2f23a3f3fdff64502a799e}} 
+\index{Satori.ISession@{Satori.ISession}!IdentityId@{IdentityId}}
+\index{IdentityId@{IdentityId}!Satori.ISession@{Satori.ISession}}
+\doxysubsubsection{\texorpdfstring{IdentityId}{IdentityId}}
+{\footnotesize\ttfamily string Satori.\+ISession.\+Identity\+Id\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The ID of the user who owns this session.  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_session_a17977d09db716a100515246046689acb}{Satori.\+Session}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_session_a8fe379446411cfdff5e11cabc83eed9d}\label{interface_satori_1_1_i_session_a8fe379446411cfdff5e11cabc83eed9d}} 
+\index{Satori.ISession@{Satori.ISession}!IsExpired@{IsExpired}}
+\index{IsExpired@{IsExpired}!Satori.ISession@{Satori.ISession}}
+\doxysubsubsection{\texorpdfstring{IsExpired}{IsExpired}}
+{\footnotesize\ttfamily bool Satori.\+ISession.\+Is\+Expired\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+If the session has expired.  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_session_aa933c455425edfd02a68c52e2ea52135}{Satori.\+Session}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_session_a35ce1adb322ea67137bce06d711c9779}\label{interface_satori_1_1_i_session_a35ce1adb322ea67137bce06d711c9779}} 
+\index{Satori.ISession@{Satori.ISession}!IsRefreshExpired@{IsRefreshExpired}}
+\index{IsRefreshExpired@{IsRefreshExpired}!Satori.ISession@{Satori.ISession}}
+\doxysubsubsection{\texorpdfstring{IsRefreshExpired}{IsRefreshExpired}}
+{\footnotesize\ttfamily bool Satori.\+ISession.\+Is\+Refresh\+Expired\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+If the refresh token has expired.  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_session_a6467393cfe6d024d0a3526f0ee29eec9}{Satori.\+Session}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_session_a4303314d30ab93e5297842327ef97571}\label{interface_satori_1_1_i_session_a4303314d30ab93e5297842327ef97571}} 
+\index{Satori.ISession@{Satori.ISession}!RefreshExpireTime@{RefreshExpireTime}}
+\index{RefreshExpireTime@{RefreshExpireTime}!Satori.ISession@{Satori.ISession}}
+\doxysubsubsection{\texorpdfstring{RefreshExpireTime}{RefreshExpireTime}}
+{\footnotesize\ttfamily long Satori.\+ISession.\+Refresh\+Expire\+Time\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The UNIX timestamp when the refresh token will expire.  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_session_aa3ff3bfb4404d71172a2fcb323632f9e}{Satori.\+Session}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_session_abfc2880c5080481f9ea718e18c2845cf}\label{interface_satori_1_1_i_session_abfc2880c5080481f9ea718e18c2845cf}} 
+\index{Satori.ISession@{Satori.ISession}!RefreshToken@{RefreshToken}}
+\index{RefreshToken@{RefreshToken}!Satori.ISession@{Satori.ISession}}
+\doxysubsubsection{\texorpdfstring{RefreshToken}{RefreshToken}}
+{\footnotesize\ttfamily string Satori.\+ISession.\+Refresh\+Token\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Refresh token that can be used for session token renewal.  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_session_a6de405afc91032a2c328ae863decc122}{Satori.\+Session}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Satori/ISession.\+cs\end{DoxyCompactItemize}

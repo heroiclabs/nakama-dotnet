@@ -1,0 +1,33 @@
+\hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Server\+Options Class Reference}
+\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options}\index{Nakama.Ninja.WebSockets.WebSocketServerOptions@{Nakama.Ninja.WebSockets.WebSocketServerOptions}}
+
+
+Server Web\+Socket init options   
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options_a6426bfca9608a20915f11ef0955d1984}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options_a6426bfca9608a20915f11ef0955d1984}} 
+{\bfseries Web\+Socket\+Server\+Options} ()
+\begin{DoxyCompactList}\small\item\em Initialises a new instance of the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options}{Web\+Socket\+Server\+Options}} class  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options_a6cb09bf00c31ac1c361a95a8daec0ddd}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options_a6cb09bf00c31ac1c361a95a8daec0ddd}} 
+Time\+Span {\bfseries Keep\+Alive\+Interval}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em How often to send ping requests to the \mbox{\hyperlink{class_nakama_1_1_client}{Client}} The default is 60 seconds This is done to prevent proxy servers from closing your connection A timespan of zero will disable the automatic ping pong mechanism You can manually control ping pong messages using the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager}{Ping\+Pong\+Manager}} class. If you do that it is advisible to set this Keep\+Alive\+Interval to zero in the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory}{Web\+Socket\+Server\+Factory}}  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options_a27fc45e264a324caeb170709872fe12d}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options_a27fc45e264a324caeb170709872fe12d}} 
+bool {\bfseries Include\+Exception\+In\+Close\+Response}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Include the full exception (with stack trace) in the close response when an exception is encountered and the Web\+Socket connection is closed The default is false  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options_afa0e3b2185d29c0d5be60327e5ef2640}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options_afa0e3b2185d29c0d5be60327e5ef2640}} 
+string {\bfseries Sub\+Protocol}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Specifies the sub protocol to send back to the client in the opening handshake Can be null (the most common use case) The client can specify multiple preferred protocols in the opening handshake header The server should use the first supported one or set this to null if none of the requested sub protocols are supported  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Server Web\+Socket init options  
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Ninja.\+Web\+Sockets/Web\+Socket\+Server\+Options.\+cs\end{DoxyCompactItemize}

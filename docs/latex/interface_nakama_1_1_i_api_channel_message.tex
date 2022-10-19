@@ -1,0 +1,61 @@
+\hypertarget{interface_nakama_1_1_i_api_channel_message}{}\doxysection{Nakama.\+IApi\+Channel\+Message Interface Reference}
+\label{interface_nakama_1_1_i_api_channel_message}\index{Nakama.IApiChannelMessage@{Nakama.IApiChannelMessage}}
+
+
+A message sent on a channel.   
+
+
+
+
+Inherited by Nakama.\+Api\+Channel\+Message.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_a1259cb0c701a188655f3afaf10cc7a96}\label{interface_nakama_1_1_i_api_channel_message_a1259cb0c701a188655f3afaf10cc7a96}} 
+string {\bfseries Channel\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The channel this message belongs to.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_aa68dd9505b869e995f44f4f3c06a3051}\label{interface_nakama_1_1_i_api_channel_message_aa68dd9505b869e995f44f4f3c06a3051}} 
+int {\bfseries Code}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The code representing a message type or category.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_abd910f2d7721923835792460cad8996a}\label{interface_nakama_1_1_i_api_channel_message_abd910f2d7721923835792460cad8996a}} 
+string {\bfseries Content}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The content payload.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_a3a3bf603099483eca0dbf727ca1817ec}\label{interface_nakama_1_1_i_api_channel_message_a3a3bf603099483eca0dbf727ca1817ec}} 
+string {\bfseries Create\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the message was created.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_ab3c2b53aca6445ef0686fa63aba534b5}\label{interface_nakama_1_1_i_api_channel_message_ab3c2b53aca6445ef0686fa63aba534b5}} 
+string {\bfseries Group\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the group, or an empty string if this message was not sent through a group channel.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_a6b83ec9fec3fe2f236d0983a8d6143a6}\label{interface_nakama_1_1_i_api_channel_message_a6b83ec9fec3fe2f236d0983a8d6143a6}} 
+string {\bfseries Message\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The unique ID of this message.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_aaf9dc2c4247b2d1589dd17f3c0735800}\label{interface_nakama_1_1_i_api_channel_message_aaf9dc2c4247b2d1589dd17f3c0735800}} 
+bool {\bfseries Persistent}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True if the message was persisted to the channel\textquotesingle{}s history, false otherwise.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_ac2b13020832c4cb54dbf0cc582c76f06}\label{interface_nakama_1_1_i_api_channel_message_ac2b13020832c4cb54dbf0cc582c76f06}} 
+string {\bfseries Room\+Name}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The name of the chat room, or an empty string if this message was not sent through a chat room.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_acc6f10451b49e3868082df10fed11414}\label{interface_nakama_1_1_i_api_channel_message_acc6f10451b49e3868082df10fed11414}} 
+string {\bfseries Sender\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Message sender, usually a user ID.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_a8667392822e75cf8bc7f940653514e18}\label{interface_nakama_1_1_i_api_channel_message_a8667392822e75cf8bc7f940653514e18}} 
+string {\bfseries Update\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the message was last updated.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_a5d041bf33e573269cec36a7531fafe0a}\label{interface_nakama_1_1_i_api_channel_message_a5d041bf33e573269cec36a7531fafe0a}} 
+string {\bfseries User\+Id\+One}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the first DM user, or an empty string if this message was not sent through a DM chat.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_afcb15b942b92f9da8b6c66e6fb7397b9}\label{interface_nakama_1_1_i_api_channel_message_afcb15b942b92f9da8b6c66e6fb7397b9}} 
+string {\bfseries User\+Id\+Two}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the second DM user, or an empty string if this message was not sent through a DM chat.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_channel_message_af7c5ac495951fc3b0ed606466af8033e}\label{interface_nakama_1_1_i_api_channel_message_af7c5ac495951fc3b0ed606466af8033e}} 
+string {\bfseries Username}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The username of the message sender, if any.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A message sent on a channel.  
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/Api\+Client.\+gen.\+cs\end{DoxyCompactItemize}
