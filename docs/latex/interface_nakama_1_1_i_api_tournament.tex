@@ -1,0 +1,79 @@
+\hypertarget{interface_nakama_1_1_i_api_tournament}{}\doxysection{Nakama.\+IApi\+Tournament Interface Reference}
+\label{interface_nakama_1_1_i_api_tournament}\index{Nakama.IApiTournament@{Nakama.IApiTournament}}
+
+
+A tournament on the server.   
+
+
+
+
+Inherited by Nakama.\+Api\+Tournament.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_abca204c196b0a90e4342e18f4c935630}\label{interface_nakama_1_1_i_api_tournament_abca204c196b0a90e4342e18f4c935630}} 
+bool {\bfseries Can\+Enter}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True if the tournament is active and can enter. A computed value.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_ad4d095c5500d084ae1071979320f4803}\label{interface_nakama_1_1_i_api_tournament_ad4d095c5500d084ae1071979320f4803}} 
+int {\bfseries Category}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The category of the tournament. e.\+g. \char`\"{}vip\char`\"{} could be category 1.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a327d36c0623cd95772505dbde9029671}\label{interface_nakama_1_1_i_api_tournament_a327d36c0623cd95772505dbde9029671}} 
+string {\bfseries Create\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the tournament was created.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_aa7ee9f3fa78017bed567b84b7af1d356}\label{interface_nakama_1_1_i_api_tournament_aa7ee9f3fa78017bed567b84b7af1d356}} 
+string {\bfseries Description}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The description of the tournament. May be blank.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a8229e8ffce987b19036dd1af156f4748}\label{interface_nakama_1_1_i_api_tournament_a8229e8ffce987b19036dd1af156f4748}} 
+int {\bfseries Duration}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Duration of the tournament in seconds.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a28f939c5594b45c2a8f517b5646f0f06}\label{interface_nakama_1_1_i_api_tournament_a28f939c5594b45c2a8f517b5646f0f06}} 
+int {\bfseries End\+Active}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the tournament stops being active until next reset. A computed value.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a2fe168cd7f9b5adf8aca1074d14f6bee}\label{interface_nakama_1_1_i_api_tournament_a2fe168cd7f9b5adf8aca1074d14f6bee}} 
+string {\bfseries End\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the tournament will be stopped.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a451f344a2984712b711f89e49198fa57}\label{interface_nakama_1_1_i_api_tournament_a451f344a2984712b711f89e49198fa57}} 
+string {\bfseries Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the tournament.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a437455a81843911cf56fcb6d2a8a80a7}\label{interface_nakama_1_1_i_api_tournament_a437455a81843911cf56fcb6d2a8a80a7}} 
+int {\bfseries Max\+Num\+Score}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The maximum score updates allowed per player for the current tournament.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a42f5ceae3569e5d4081a501f08e0b7b9}\label{interface_nakama_1_1_i_api_tournament_a42f5ceae3569e5d4081a501f08e0b7b9}} 
+int {\bfseries Max\+Size}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The maximum number of players for the tournament.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a47768bcf7dd97abea99e001f7c9695f7}\label{interface_nakama_1_1_i_api_tournament_a47768bcf7dd97abea99e001f7c9695f7}} 
+string {\bfseries Metadata}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Additional information stored as a JSON object.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a95b05c4d22f3e44c458e082b28696ca1}\label{interface_nakama_1_1_i_api_tournament_a95b05c4d22f3e44c458e082b28696ca1}} 
+int {\bfseries Next\+Reset}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the tournament is next playable. A computed value.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_ac176de4d1c0e1442861bf0de5d64edef}\label{interface_nakama_1_1_i_api_tournament_ac176de4d1c0e1442861bf0de5d64edef}} 
+\mbox{\hyperlink{namespace_nakama_a8e9c42a36e780e31a03f2ba94a3bb6e7}{Api\+Operator}} {\bfseries Operator}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Operator.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_aa9795e55a84d977b4858193f667015fb}\label{interface_nakama_1_1_i_api_tournament_aa9795e55a84d977b4858193f667015fb}} 
+int {\bfseries Prev\+Reset}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the tournament was last reset. A computed value.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a2b6ac3469abfb67c9cbc6f8929f04bb7}\label{interface_nakama_1_1_i_api_tournament_a2b6ac3469abfb67c9cbc6f8929f04bb7}} 
+int {\bfseries Size}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The current number of players in the tournament.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_acb01044753093c9ab2311f51f9c01cdf}\label{interface_nakama_1_1_i_api_tournament_acb01044753093c9ab2311f51f9c01cdf}} 
+int {\bfseries Sort\+Order}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em ASC (0) or DESC (1) sort mode of scores in the tournament.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_aceca06fc1dd464d9635399e4add87cbf}\label{interface_nakama_1_1_i_api_tournament_aceca06fc1dd464d9635399e4add87cbf}} 
+int {\bfseries Start\+Active}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the tournament start being active. A computed value.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a02aea8c93c075cbb364bf9215916dfda}\label{interface_nakama_1_1_i_api_tournament_a02aea8c93c075cbb364bf9215916dfda}} 
+string {\bfseries Start\+Time}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The UNIX time when the tournament will start.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_tournament_a0d1cdd84f43595345239d58b5a56cd41}\label{interface_nakama_1_1_i_api_tournament_a0d1cdd84f43595345239d58b5a56cd41}} 
+string {\bfseries Title}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The title for the tournament.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A tournament on the server.  
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/Api\+Client.\+gen.\+cs\end{DoxyCompactItemize}

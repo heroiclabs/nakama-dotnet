@@ -1,0 +1,49 @@
+\hypertarget{interface_nakama_1_1_i_status_presence_event}{}\doxysection{Nakama.\+IStatus\+Presence\+Event Interface Reference}
+\label{interface_nakama_1_1_i_status_presence_event}\index{Nakama.IStatusPresenceEvent@{Nakama.IStatusPresenceEvent}}
+
+
+A status update event about other users who\textquotesingle{}ve come online or gone offline.   
+
+
+
+
+Inherited by Nakama.\+Status\+Presence\+Event.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_status_presence_event_ab55b13ffb490c5f503df00289ec79f95}{Leaves}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Presences of users who left the server.  \end{DoxyCompactList}\item 
+IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_status_presence_event_af42429c8328a1f1c00bad3442a8067bb}{Joins}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Presences of users who joined the server.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A status update event about other users who\textquotesingle{}ve come online or gone offline.  
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{interface_nakama_1_1_i_status_presence_event_af42429c8328a1f1c00bad3442a8067bb}\label{interface_nakama_1_1_i_status_presence_event_af42429c8328a1f1c00bad3442a8067bb}} 
+\index{Nakama.IStatusPresenceEvent@{Nakama.IStatusPresenceEvent}!Joins@{Joins}}
+\index{Joins@{Joins}!Nakama.IStatusPresenceEvent@{Nakama.IStatusPresenceEvent}}
+\doxysubsubsection{\texorpdfstring{Joins}{Joins}}
+{\footnotesize\ttfamily IEnumerable$<$\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}}$>$ Nakama.\+IStatus\+Presence\+Event.\+Joins\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Presences of users who joined the server.  
+
+This join information is in response to a subscription made to be notified when a user comes online. \mbox{\Hypertarget{interface_nakama_1_1_i_status_presence_event_ab55b13ffb490c5f503df00289ec79f95}\label{interface_nakama_1_1_i_status_presence_event_ab55b13ffb490c5f503df00289ec79f95}} 
+\index{Nakama.IStatusPresenceEvent@{Nakama.IStatusPresenceEvent}!Leaves@{Leaves}}
+\index{Leaves@{Leaves}!Nakama.IStatusPresenceEvent@{Nakama.IStatusPresenceEvent}}
+\doxysubsubsection{\texorpdfstring{Leaves}{Leaves}}
+{\footnotesize\ttfamily IEnumerable$<$\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}}$>$ Nakama.\+IStatus\+Presence\+Event.\+Leaves\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Presences of users who left the server.  
+
+This leave information is in response to a subscription made to be notified when a user goes offline. 
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IStatus\+Presence\+Event.\+cs\end{DoxyCompactItemize}

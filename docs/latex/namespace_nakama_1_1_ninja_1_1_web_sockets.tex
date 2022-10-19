@@ -1,0 +1,31 @@
+\hypertarget{namespace_nakama_1_1_ninja_1_1_web_sockets}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets Namespace Reference}
+\label{namespace_nakama_1_1_ninja_1_1_web_sockets}\index{Nakama.Ninja.WebSockets@{Nakama.Ninja.WebSockets}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool}{Buffer\+Pool}}
+\begin{DoxyCompactList}\small\item\em This buffer pool is instance thread safe Use Get\+Buffer to get a Memory\+Stream (with a publically accessible buffer) Calling Close on this Memory\+Stream will clear its internal buffer and return the buffer to the pool for reuse Memory\+Streams can grow larger than the DEFAULT\+\_\+\+BUFFER\+\_\+\+SIZE (or whatever you passed in) and the underlying buffers will be returned to the pool at their larger sizes  \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper}{Http\+Helper}}
+\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_buffer_pool}{IBuffer\+Pool}}
+\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager}{IPing\+Pong\+Manager}}
+\begin{DoxyCompactList}\small\item\em Ping Pong Manager used to facilitate ping pong Web\+Socket messages  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_client_factory}{IWeb\+Socket\+Client\+Factory}}
+\begin{DoxyCompactList}\small\item\em Web socket client factory used to open web socket client connections  \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_server_factory}{IWeb\+Socket\+Server\+Factory}}
+\begin{DoxyCompactList}\small\item\em Web socket server factory used to open web socket server connections  \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager}{Ping\+Pong\+Manager}}
+\begin{DoxyCompactList}\small\item\em Ping Pong Manager used to facilitate ping pong Web\+Socket messages  \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_pong_event_args}{Pong\+Event\+Args}}
+\begin{DoxyCompactList}\small\item\em Pong Event\+Args  \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_factory}{Web\+Socket\+Client\+Factory}}
+\begin{DoxyCompactList}\small\item\em Web socket client factory used to open web socket client connections  \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options}{Web\+Socket\+Client\+Options}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_nakama_1_1_client}{Client}} Web\+Socket init options  \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context}{Web\+Socket\+Http\+Context}}
+\begin{DoxyCompactList}\small\item\em The Web\+Socket HTTP Context used to initiate a Web\+Socket handshake  \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory}{Web\+Socket\+Server\+Factory}}
+\begin{DoxyCompactList}\small\item\em Web socket server factory used to open web socket server connections  \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options}{Web\+Socket\+Server\+Options}}
+\begin{DoxyCompactList}\small\item\em Server Web\+Socket init options  \end{DoxyCompactList}\end{DoxyCompactItemize}

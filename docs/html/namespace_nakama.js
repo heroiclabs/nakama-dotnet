@@ -30,6 +30,7 @@ var namespace_nakama =
     [ "IApiLeaderboardRecord", "interface_nakama_1_1_i_api_leaderboard_record.html", "interface_nakama_1_1_i_api_leaderboard_record" ],
     [ "IApiLeaderboardRecordList", "interface_nakama_1_1_i_api_leaderboard_record_list.html", "interface_nakama_1_1_i_api_leaderboard_record_list" ],
     [ "IApiLinkSteamRequest", "interface_nakama_1_1_i_api_link_steam_request.html", "interface_nakama_1_1_i_api_link_steam_request" ],
+    [ "IApiListSubscriptionsRequest", "interface_nakama_1_1_i_api_list_subscriptions_request.html", "interface_nakama_1_1_i_api_list_subscriptions_request" ],
     [ "IApiMatch", "interface_nakama_1_1_i_api_match.html", "interface_nakama_1_1_i_api_match" ],
     [ "IApiMatchList", "interface_nakama_1_1_i_api_match_list.html", "interface_nakama_1_1_i_api_match_list" ],
     [ "IApiNotification", "interface_nakama_1_1_i_api_notification.html", "interface_nakama_1_1_i_api_notification" ],
@@ -45,6 +46,7 @@ var namespace_nakama =
     [ "IApiStorageObjectAcks", "interface_nakama_1_1_i_api_storage_object_acks.html", "interface_nakama_1_1_i_api_storage_object_acks" ],
     [ "IApiStorageObjectList", "interface_nakama_1_1_i_api_storage_object_list.html", "interface_nakama_1_1_i_api_storage_object_list" ],
     [ "IApiStorageObjects", "interface_nakama_1_1_i_api_storage_objects.html", "interface_nakama_1_1_i_api_storage_objects" ],
+    [ "IApiSubscriptionList", "interface_nakama_1_1_i_api_subscription_list.html", "interface_nakama_1_1_i_api_subscription_list" ],
     [ "IApiTournament", "interface_nakama_1_1_i_api_tournament.html", "interface_nakama_1_1_i_api_tournament" ],
     [ "IApiTournamentList", "interface_nakama_1_1_i_api_tournament_list.html", "interface_nakama_1_1_i_api_tournament_list" ],
     [ "IApiTournamentRecordList", "interface_nakama_1_1_i_api_tournament_record_list.html", "interface_nakama_1_1_i_api_tournament_record_list" ],
@@ -54,10 +56,14 @@ var namespace_nakama =
     [ "IApiUserGroupList", "interface_nakama_1_1_i_api_user_group_list.html", "interface_nakama_1_1_i_api_user_group_list" ],
     [ "IApiUsers", "interface_nakama_1_1_i_api_users.html", "interface_nakama_1_1_i_api_users" ],
     [ "IApiValidatedPurchase", "interface_nakama_1_1_i_api_validated_purchase.html", "interface_nakama_1_1_i_api_validated_purchase" ],
+    [ "IApiValidatedSubscription", "interface_nakama_1_1_i_api_validated_subscription.html", "interface_nakama_1_1_i_api_validated_subscription" ],
     [ "IApiValidatePurchaseAppleRequest", "interface_nakama_1_1_i_api_validate_purchase_apple_request.html", "interface_nakama_1_1_i_api_validate_purchase_apple_request" ],
     [ "IApiValidatePurchaseGoogleRequest", "interface_nakama_1_1_i_api_validate_purchase_google_request.html", "interface_nakama_1_1_i_api_validate_purchase_google_request" ],
     [ "IApiValidatePurchaseHuaweiRequest", "interface_nakama_1_1_i_api_validate_purchase_huawei_request.html", "interface_nakama_1_1_i_api_validate_purchase_huawei_request" ],
     [ "IApiValidatePurchaseResponse", "interface_nakama_1_1_i_api_validate_purchase_response.html", "interface_nakama_1_1_i_api_validate_purchase_response" ],
+    [ "IApiValidateSubscriptionAppleRequest", "interface_nakama_1_1_i_api_validate_subscription_apple_request.html", "interface_nakama_1_1_i_api_validate_subscription_apple_request" ],
+    [ "IApiValidateSubscriptionGoogleRequest", "interface_nakama_1_1_i_api_validate_subscription_google_request.html", "interface_nakama_1_1_i_api_validate_subscription_google_request" ],
+    [ "IApiValidateSubscriptionResponse", "interface_nakama_1_1_i_api_validate_subscription_response.html", "interface_nakama_1_1_i_api_validate_subscription_response" ],
     [ "IApiWriteStorageObject", "interface_nakama_1_1_i_api_write_storage_object.html", "interface_nakama_1_1_i_api_write_storage_object" ],
     [ "IApiWriteStorageObjectsRequest", "interface_nakama_1_1_i_api_write_storage_objects_request.html", "interface_nakama_1_1_i_api_write_storage_objects_request" ],
     [ "IChannel", "interface_nakama_1_1_i_channel.html", "interface_nakama_1_1_i_channel" ],
@@ -100,22 +106,13 @@ var namespace_nakama =
     [ "Socket", "class_nakama_1_1_socket.html", "class_nakama_1_1_socket" ],
     [ "StorageObjectId", "class_nakama_1_1_storage_object_id.html", "class_nakama_1_1_storage_object_id" ],
     [ "WebSocketAdapter", "class_nakama_1_1_web_socket_adapter.html", "class_nakama_1_1_web_socket_adapter" ],
+    [ "WebSocketStdlibAdapter", "class_nakama_1_1_web_socket_stdlib_adapter.html", "class_nakama_1_1_web_socket_stdlib_adapter" ],
     [ "WriteStorageObject", "class_nakama_1_1_write_storage_object.html", "class_nakama_1_1_write_storage_object" ],
-    [ "ChannelType", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307", [
-      [ "Room", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307acc3abcf4426bff80257d22999d0eda8f", null ],
-      [ "DirectMessage", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307a1189cba3ed448908f0ab3b5af22dbffa", null ],
-      [ "Group", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307a03937134cedab9078be39a77ee3a48a0", null ]
-    ] ],
-    [ "ValidatedPurchaseEnvironment", "namespace_nakama.html#ac6bc0f689ba2cf1af997a138312f948c", [
-      [ "UNKNOWN", "namespace_nakama.html#ac6bc0f689ba2cf1af997a138312f948ca696b031073e74bf2cb98e5ef201d4aa3", null ],
-      [ "SANDBOX", "namespace_nakama.html#ac6bc0f689ba2cf1af997a138312f948ca439d8eeff1670efd5d1eb2a4232254e8", null ],
-      [ "PRODUCTION", "namespace_nakama.html#ac6bc0f689ba2cf1af997a138312f948ca86601675138015edb458866e7d879118", null ]
-    ] ],
-    [ "ValidatedPurchaseStore", "namespace_nakama.html#a02c7a48fe2c90b177a534bc0f3558ebb", [
-      [ "APPLE_APP_STORE", "namespace_nakama.html#a02c7a48fe2c90b177a534bc0f3558ebba4142ec218b299cb29da17393e166a0bf", null ],
-      [ "GOOGLE_PLAY_STORE", "namespace_nakama.html#a02c7a48fe2c90b177a534bc0f3558ebbae8126d6db8bb0ca0c6557130eb2d4c7f", null ],
-      [ "HUAWEI_APP_GALLERY", "namespace_nakama.html#a02c7a48fe2c90b177a534bc0f3558ebba76c8d7237ca9427f64e470d61d34246c", null ]
-    ] ],
+    [ "ApiOperator", "namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7", null ],
+    [ "ApiStoreEnvironment", "namespace_nakama.html#a216a2d7c4acbc3a4f29a98514c483cd6", null ],
+    [ "ApiStoreProvider", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49", null ],
+    [ "ChannelType", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307", null ],
     [ "Jitter", "namespace_nakama.html#a127d52a41cb18b64e939f4b06b316b59", null ],
-    [ "RetryListener", "namespace_nakama.html#a54689fcf19366a415851641cb61947d4", null ]
+    [ "RetryListener", "namespace_nakama.html#a54689fcf19366a415851641cb61947d4", null ],
+    [ "TransientExceptionDelegate", "namespace_nakama.html#a016772f008c1c294bf609c6ece102445", null ]
 ];

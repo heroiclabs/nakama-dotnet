@@ -1,0 +1,39 @@
+\hypertarget{interface_nakama_1_1_i_user_presence}{}\doxysection{Nakama.\+IUser\+Presence Interface Reference}
+\label{interface_nakama_1_1_i_user_presence}\index{Nakama.IUserPresence@{Nakama.IUserPresence}}
+
+
+An object which represents a connected user in the server.   
+
+
+
+
+Inherited by Nakama.\+User\+Presence.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_user_presence_a1c44578acc447b46fe8baf2341a80830}\label{interface_nakama_1_1_i_user_presence_a1c44578acc447b46fe8baf2341a80830}} 
+bool {\bfseries Persistence}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If this presence generates stored events like persistent chat messages or notifications.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_user_presence_a2456c3637f0883d30490386ab59957af}\label{interface_nakama_1_1_i_user_presence_a2456c3637f0883d30490386ab59957af}} 
+string {\bfseries Session\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The session id of the user.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_user_presence_af88838cb8175fab5d0ea73ff772a4954}\label{interface_nakama_1_1_i_user_presence_af88838cb8175fab5d0ea73ff772a4954}} 
+string {\bfseries Status}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The status of the user with the presence on the server.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_user_presence_a43bdab47959724045eaaec39a4a40e0f}\label{interface_nakama_1_1_i_user_presence_a43bdab47959724045eaaec39a4a40e0f}} 
+string {\bfseries Username}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The username for the user.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_user_presence_a5fb27d3f3743bb43d5aa514a8267672a}\label{interface_nakama_1_1_i_user_presence_a5fb27d3f3743bb43d5aa514a8267672a}} 
+string {\bfseries User\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The id of the user.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+An object which represents a connected user in the server.  
+
+The server allows the same user to be connected with multiple sessions. To uniquely identify them a tuple of {\ttfamily \{ node\+\_\+id, user\+\_\+id, session\+\_\+id \}} is used which is exposed as this object. 
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IUser\+Presence.\+cs\end{DoxyCompactItemize}

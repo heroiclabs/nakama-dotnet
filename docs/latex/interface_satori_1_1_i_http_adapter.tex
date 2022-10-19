@@ -1,0 +1,99 @@
+\hypertarget{interface_satori_1_1_i_http_adapter}{}\doxysection{Satori.\+IHttp\+Adapter Interface Reference}
+\label{interface_satori_1_1_i_http_adapter}\index{Satori.IHttpAdapter@{Satori.IHttpAdapter}}
+
+
+An adapter which implements the HTTP protocol.   
+
+
+Inheritance diagram for Satori.\+IHttp\+Adapter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_satori_1_1_i_http_adapter}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Task$<$ string $>$ \mbox{\hyperlink{interface_satori_1_1_i_http_adapter_a5a8263afb745168a52c3e9a778b36344}{Send\+Async}} (string method, Uri uri, IDictionary$<$ string, string $>$ headers, byte\mbox{[}$\,$\mbox{]} body, int timeout\+Sec=3, Cancellation\+Token? user\+Cancel\+Token=null)
+\begin{DoxyCompactList}\small\item\em Send a HTTP request.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+Transient\+Exception\+Delegate \mbox{\hyperlink{interface_satori_1_1_i_http_adapter_a4a1fd5b9edeccda3485b62d94f22578f}{Transient\+Exception\+Delegate}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em A delegate used to determine whether or not an error from the server is due to a temporary bad state on the server (i.\+e., is \textquotesingle{}transient\textquotesingle{}).  \end{DoxyCompactList}\item 
+\mbox{\hyperlink{interface_satori_1_1_i_logger}{ILogger}} \mbox{\hyperlink{interface_satori_1_1_i_http_adapter_a60f7f315f6269aa15eea61fa0155dc0b}{Logger}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The logger to use with the adapter.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+An adapter which implements the HTTP protocol.  
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_satori_1_1_i_http_adapter_a5a8263afb745168a52c3e9a778b36344}\label{interface_satori_1_1_i_http_adapter_a5a8263afb745168a52c3e9a778b36344}} 
+\index{Satori.IHttpAdapter@{Satori.IHttpAdapter}!SendAsync@{SendAsync}}
+\index{SendAsync@{SendAsync}!Satori.IHttpAdapter@{Satori.IHttpAdapter}}
+\doxysubsubsection{\texorpdfstring{SendAsync()}{SendAsync()}}
+{\footnotesize\ttfamily Task$<$ string $>$ Satori.\+IHttp\+Adapter.\+Send\+Async (\begin{DoxyParamCaption}\item[{string}]{method,  }\item[{Uri}]{uri,  }\item[{IDictionary$<$ string, string $>$}]{headers,  }\item[{byte\mbox{[}$\,$\mbox{]}}]{body,  }\item[{int}]{timeout\+Sec = {\ttfamily 3},  }\item[{Cancellation\+Token?}]{user\+Cancel\+Token = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Send a HTTP request.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em method} & HTTP method to use for this request.\\
+\hline
+{\em uri} & The fully qualified URI to use.\\
+\hline
+{\em headers} & Request headers to set.\\
+\hline
+{\em body} & Request content body to set.\\
+\hline
+{\em timeout\+Sec} & Request timeout.\\
+\hline
+{\em user\+Cancel\+Token} & A user-\/generated token that can be used to cancel the request.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the contents of the response.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_http_request_adapter_a68c34ab8213a4658b431c1d28646dc9a}{Satori.\+Http\+Request\+Adapter}}.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{interface_satori_1_1_i_http_adapter_a60f7f315f6269aa15eea61fa0155dc0b}\label{interface_satori_1_1_i_http_adapter_a60f7f315f6269aa15eea61fa0155dc0b}} 
+\index{Satori.IHttpAdapter@{Satori.IHttpAdapter}!Logger@{Logger}}
+\index{Logger@{Logger}!Satori.IHttpAdapter@{Satori.IHttpAdapter}}
+\doxysubsubsection{\texorpdfstring{Logger}{Logger}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_satori_1_1_i_logger}{ILogger}} Satori.\+IHttp\+Adapter.\+Logger\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The logger to use with the adapter.  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_http_request_adapter_a6736d4ab9046b2b991c1a0e7260f8def}{Satori.\+Http\+Request\+Adapter}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_http_adapter_a4a1fd5b9edeccda3485b62d94f22578f}\label{interface_satori_1_1_i_http_adapter_a4a1fd5b9edeccda3485b62d94f22578f}} 
+\index{Satori.IHttpAdapter@{Satori.IHttpAdapter}!TransientExceptionDelegate@{TransientExceptionDelegate}}
+\index{TransientExceptionDelegate@{TransientExceptionDelegate}!Satori.IHttpAdapter@{Satori.IHttpAdapter}}
+\doxysubsubsection{\texorpdfstring{TransientExceptionDelegate}{TransientExceptionDelegate}}
+{\footnotesize\ttfamily Transient\+Exception\+Delegate Satori.\+IHttp\+Adapter.\+Transient\+Exception\+Delegate\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+A delegate used to determine whether or not an error from the server is due to a temporary bad state on the server (i.\+e., is \textquotesingle{}transient\textquotesingle{}).  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_http_request_adapter_a546f98fc502df23332f3cfce7101d1e3}{Satori.\+Http\+Request\+Adapter}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Satori/IHttp\+Adapter.\+cs\end{DoxyCompactItemize}

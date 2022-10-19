@@ -1,0 +1,2835 @@
+\hypertarget{interface_nakama_1_1_i_client}{}\doxysection{Nakama.\+IClient Interface Reference}
+\label{interface_nakama_1_1_i_client}\index{Nakama.IClient@{Nakama.IClient}}
+
+
+A client for the API in \mbox{\hyperlink{namespace_nakama}{Nakama}} server.   
+
+
+Inheritance diagram for Nakama.\+IClient\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_nakama_1_1_i_client}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_ac21ff4d771b8ce9c77ee2755cea4ca07}{Add\+Friends\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, IEnumerable$<$ string $>$ ids, IEnumerable$<$ string $>$ usernames=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Add one or more friends by id or username.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_abec54a30d216a009e04cb7df410e15f3}{Add\+Group\+Users\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, IEnumerable$<$ string $>$ ids, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Add one or more users to the group.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_af56a59b69e6416645041852198bbc220}{Authenticate\+Apple\+Async}} (string token, string username=null, bool create=true, Dictionary$<$ string, string $>$ vars=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Authenticate a user with an Apple ID against the server.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a1081470b3d1dc65a43e57e158118dde0}{Authenticate\+Custom\+Async}} (string id, string username=null, bool create=true, Dictionary$<$ string, string $>$ vars=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Authenticate a user with a custom id.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_ad9a6d4b73bc4ac965a7d913fcc7d5ee3}{Authenticate\+Device\+Async}} (string id, string username=null, bool create=true, Dictionary$<$ string, string $>$ vars=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Authenticate a user with a device id.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a1b77958ff52a879a27a5bfd0b97dfa6b}{Authenticate\+Email\+Async}} (string email, string password, string username=null, bool create=true, Dictionary$<$ string, string $>$ vars=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Authenticate a user with an email and password.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a94137b0b4dd44bae5fcf4d112d4cab4d}{Authenticate\+Facebook\+Async}} (string token, string username=null, bool create=true, bool import=true, Dictionary$<$ string, string $>$ vars=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Authenticate a user with a Facebook auth token.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_ab1b035116f1e0a1cf22d2f5fd8ed9233}{Authenticate\+Game\+Center\+Async}} (string bundle\+Id, string player\+Id, string public\+Key\+Url, string salt, string signature, string timestamp, string username=null, bool create=true, Dictionary$<$ string, string $>$ vars=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Authenticate a user with Apple Game Center.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_aa7d5ea6ff35652864256236b6a298e16}{Authenticate\+Google\+Async}} (string token, string username=null, bool create=true, Dictionary$<$ string, string $>$ vars=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Authenticate a user with a Google auth token.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a2f1dee9bd5c5761d55e5ab5a4d12690c}{Authenticate\+Steam\+Async}} (string token, string username=null, bool create=true, bool import=true, Dictionary$<$ string, string $>$ vars=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Authenticate a user with a Steam auth token.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_ab22184136c797808a2aebe53100804e2}{Ban\+Group\+Users\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, IEnumerable$<$ string $>$ ids, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Ban a set of users from a group.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a625ec426d7062f4c118f3f014dd6e378}{Block\+Friends\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, IEnumerable$<$ string $>$ ids, IEnumerable$<$ string $>$ usernames=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Block one or more friends by id or username.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_group}{IApi\+Group}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_aae0252ef30e7b6f9a1e2dc518f7478ee}{Create\+Group\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string name, string description=\char`\"{}\char`\"{}, string avatar\+Url=null, string lang\+Tag=null, bool open=true, int max\+Count=100, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Create a group.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a6c9418726e8c74b0cefff24bccf335e1}{Delete\+Friends\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, IEnumerable$<$ string $>$ ids, IEnumerable$<$ string $>$ usernames=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Delete one more or users by id or username from friends.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a90a221604c5aee514bae83bfce921005}{Delete\+Group\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Delete a group by id.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_ae50039a13b1b5d75613030d130f9d5e3}{Delete\+Leaderboard\+Record\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string leaderboard\+Id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Delete a leaderboard record.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_adab62219d9b6f091995738a8746b8bcb}{Delete\+Notifications\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, IEnumerable$<$ string $>$ ids, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Delete one or more notifications by id.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a359f19ae1aad413e47565b355380b63a}{Delete\+Storage\+Objects\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, \mbox{\hyperlink{class_nakama_1_1_storage_object_id}{Storage\+Object\+Id}}\mbox{[}$\,$\mbox{]} ids, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Delete one or more storage objects.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a134eedfe28270dc3086b490fd16c5efb}{Demote\+Group\+Users\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, IEnumerable$<$ string $>$ user\+Ids, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Demote a set of users in a group to the next role down. 
+\begin{DoxyParams}{Parameters}
+{\em group\+Id} & The group to demote users in.\\
+\hline
+{\em user\+Ids} & The users to demote.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a5a255470f06a9004673ba8fc6f8af682}{Event\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string name, Dictionary$<$ string, string $>$ properties, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Submit an event for processing in the server\textquotesingle{}s registered runtime custom events handler.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_account}{IApi\+Account}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a291886d28a053ef9db0d231b1f74140e}{Get\+Account\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Fetch the user account owned by the session.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validated_subscription}{IApi\+Validated\+Subscription}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a8ad3b6d4f866d3b4d8cd54cbeaf5a01e}{Get\+Subscription\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string product\+Id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Get the subscription represented by the provided product id.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_users}{IApi\+Users}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a8b4075bc49ee57670e94a56557be05d2}{Get\+Users\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, IEnumerable$<$ string $>$ ids, IEnumerable$<$ string $>$ usernames=null, IEnumerable$<$ string $>$ facebook\+Ids=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Fetch one or more users by id, usernames, and Facebook ids.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_ad63c0cfb18480592c8eff4583cc16233}{Import\+Facebook\+Friends\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, bool? reset=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Import Facebook friends and add them to the user\textquotesingle{}s account.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a8ff7dfd40f14d3161d7fc4426e078214}{Import\+Steam\+Friends\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, bool? reset=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Import Steam friends and add them to the user\textquotesingle{}s account.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a6662dc402c9867c647ea300eae380bc0}{Join\+Group\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Join a group if it has open membership or request to join it.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a8520e2e99a83f3cac309f2a0354c2e65}{Join\+Tournament\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string tournament\+Id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Join a tournament by ID.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_ae1643a627d5b2733349b2a3eb8811829}{Kick\+Group\+Users\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, IEnumerable$<$ string $>$ ids, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Kick one or more users from the group.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_abe13990afd23fbf8257ff448970e1bfa}{Leave\+Group\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Leave a group by ID.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_aed84d3ba843ee53c3fc62bfac3d56aef}{Link\+Apple\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Link an Apple ID to the social profiles on the current user\textquotesingle{}s account.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_ab18171e22bdc5d997ff5d87a206fbc18}{Link\+Custom\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Link a custom ID to the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_accadcf9970bbc108cae1eaa386b2ad0c}{Link\+Device\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Link a device ID to the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_ae6bd9267c215b0df2246862d566c6d63}{Link\+Email\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string email, string password, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Link an email with password to the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a68926218392683fb7112bf26d7b1814c}{Link\+Facebook\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, bool? import=true, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Link a Facebook profile to a user account.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a15277cc6c181d77784a87da9383df7e4}{Link\+Game\+Center\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string bundle\+Id, string player\+Id, string public\+Key\+Url, string salt, string signature, string timestamp, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Link a Game Center profile to a user account.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a3fa471a46116248041a080016ad181cf}{Link\+Google\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Link a Google profile to a user account.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_aaa180e86df389caf7cc42d82760aabf0}{Link\+Steam\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, bool import, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Link a Steam profile to a user account.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_channel_message_list}{IApi\+Channel\+Message\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_ac7cad85806c3824a967959455d828440}{List\+Channel\+Messages\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, \mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}} channel, int limit=1, bool forward=true, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List messages from a chat channel.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_channel_message_list}{IApi\+Channel\+Message\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a0fd095e04016f75de9d589891a1518ac}{List\+Channel\+Messages\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string channel\+Id, int limit=1, bool forward=true, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List messages from a chat channel.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_friend_list}{IApi\+Friend\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_af4b8829ce42c75274ab62e4692b748a8}{List\+Friends\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, int? state=null, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List of friends of the current user.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_group_user_list}{IApi\+Group\+User\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_ac77e1bbf873d728d622b627943e64351}{List\+Group\+Users\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, int? state=null, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List all users part of the group.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_group_list}{IApi\+Group\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a93b462ed1236ba5839cdb811b19524bc}{List\+Groups\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string name=null, int limit=1, string cursor=null, string lang\+Tag=null, int? members=null, bool? open=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List groups on the server.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_leaderboard_record_list}{IApi\+Leaderboard\+Record\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a90b33da885f5fee1267420a0acbc1e87}{List\+Leaderboard\+Records\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string leaderboard\+Id, IEnumerable$<$ string $>$ owner\+Ids=null, long? expiry=null, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List records from a leaderboard.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_leaderboard_record_list}{IApi\+Leaderboard\+Record\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a5fac82246b40a4df8311f51b3d565dae}{List\+Leaderboard\+Records\+Around\+Owner\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string leaderboard\+Id, string owner\+Id, long? expiry=null, int limit=1, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List leaderboard records that belong to a user.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_match_list}{IApi\+Match\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_af52b743a4d334b23a43fad156f0eb54c}{List\+Matches\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, int min, int max, int limit, bool authoritative, string label, string query, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Fetch a list of matches active on the server.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_notification_list}{IApi\+Notification\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a9443bb244b7a51c6a493900822c654f1}{List\+Notifications\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, int limit=1, string cacheable\+Cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List notifications for the user with an optional cursor.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a0dae35b8820b90e23303cdb58336dddc}\label{interface_nakama_1_1_i_client_a0dae35b8820b90e23303cdb58336dddc}} 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_storage_object_list}{IApi\+Storage\+Object\+List}} $>$ {\bfseries List\+Storage\+Objects} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string collection, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_storage_object_list}{IApi\+Storage\+Object\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_afeec7a75562cfc1c9f51d35095580046}{List\+Storage\+Objects\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string collection, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List storage objects in a collection which have public read access.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_subscription_list}{IApi\+Subscription\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a3e2cf89415aebbfdecb0f7015b37ba37}{List\+Subscriptions\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, int limit, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List the user\textquotesingle{}s subscriptions.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_tournament_record_list}{IApi\+Tournament\+Record\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a0165ccd67746f2775a70387b9f5f7cfb}{List\+Tournament\+Records\+Around\+Owner\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string tournament\+Id, string owner\+Id, long? expiry=null, int limit=1, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List tournament records around the owner.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_tournament_record_list}{IApi\+Tournament\+Record\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_ac4a420dab57716222bbb8151700b1cdc}{List\+Tournament\+Records\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string tournament\+Id, IEnumerable$<$ string $>$ owner\+Ids=null, long? expiry=null, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List records from a tournament.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_tournament_list}{IApi\+Tournament\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a43e7575784efc55785124576651ac617}{List\+Tournaments\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, int category\+Start, int category\+End, int? start\+Time=null, int? end\+Time=null, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List current or upcoming tournaments.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_user_group_list}{IApi\+User\+Group\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a20b9a6e164506988f758a00d0dd68efe}{List\+User\+Groups\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, int? state=null, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List of groups the current user is a member of.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_user_group_list}{IApi\+User\+Group\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_aceddfd721720890ee6de3d4c67d699f6}{List\+User\+Groups\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string user\+Id, int? state=null, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List groups a user is a member of.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_storage_object_list}{IApi\+Storage\+Object\+List}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_aeb5b5a9f8920ee2e287fc15e6dbae5d9}{List\+Users\+Storage\+Objects\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string collection, string user\+Id, int limit=1, string cursor=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em List storage objects in a collection which belong to a specific user and have public read access.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a6f9bf7b5dc74dfab741e7aadfba89e4b}{Promote\+Group\+Users\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, IEnumerable$<$ string $>$ ids, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Promote one or more users in the group.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_storage_objects}{IApi\+Storage\+Objects}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a1b2f0ed3a7a73e8263d98036d53817fc}{Read\+Storage\+Objects\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, \mbox{\hyperlink{interface_nakama_1_1_i_api_read_storage_object_id}{IApi\+Read\+Storage\+Object\+Id}}\mbox{[}$\,$\mbox{]} ids, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Read one or more objects from the storage engine.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a29b2534c256578fc1868d488e8f553f8}{Rpc\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string id, string payload, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Execute a function with an input payload on the server.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a3b15daa0defb16913157e3fed94b1aab}{Rpc\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Execute a function on the server.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a929523abb193fede9a6db74056d57ac4}{Rpc\+Async}} (string http\+Key, string id, string payload=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Execute a function on the server without a session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_ac0bf64fd0de7fe6a73a737b5ef514d93}{Session\+Logout\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Log out a session which invalidates the authorization and refresh token.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a6c53fa09b45cde7987ca6e3dc1f877bc}{Session\+Logout\+Async}} (string auth\+Token, string refresh\+Token, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Log out a session which optionally invalidates the authorization and/or refresh tokens.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_af75a6a3aceaddf452fb714e08b0d3b0b}{Session\+Refresh\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, Dictionary$<$ string, string $>$ vars=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Refresh the session unless the current refresh token has expired. If vars are specified they will replace what is currently stored inside the session token.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a4ba0c6637b9685eb0474352de1797a2e}{Unlink\+Apple\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Remove the Apple ID from the social profiles on the current user\textquotesingle{}s account.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a2c4af0c1a411fff04f6f68427d9c82ae}{Unlink\+Custom\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Unlink a custom ID from the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a4be577065a26f40b5c8fcf501b83c7fc}{Unlink\+Device\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string id, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Unlink a device ID from the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a94c94fa13db5528abe5fc6a13cb469f1}{Unlink\+Email\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string email, string password, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Unlink an email with password from the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a9209cbf097fc5d612df113dc1f7a380e}{Unlink\+Facebook\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Unlink a Facebook profile from the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a8db620f585a3b1c6b33c83ffa959759c}{Unlink\+Game\+Center\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string bundle\+Id, string player\+Id, string public\+Key\+Url, string salt, string signature, string timestamp, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Unlink a Game Center profile from the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_aec2588fcb68ad3807af840f6886f79e7}{Unlink\+Google\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Unlink a Google profile from the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a0b5ce7e1a9d3707e2a098ea531a26b5d}{Unlink\+Steam\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string token, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Unlink a Steam profile from the user account owned by the session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a981b2780f9f9bf2b8e2b4f423680013f}{Update\+Account\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string username, string display\+Name=null, string avatar\+Url=null, string lang\+Tag=null, string location=null, string timezone=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Update the current user\textquotesingle{}s account on the server.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_nakama_1_1_i_client_a1ab56488f06c34d4c8e7a184ef923176}{Update\+Group\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string group\+Id, string name, bool open, string description=null, string avatar\+Url=null, string lang\+Tag=null, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Update a group.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_purchase_response}{IApi\+Validate\+Purchase\+Response}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a3b4319cfed8f66406e01105fcbd46286}{Validate\+Purchase\+Apple\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string receipt, bool persist=true, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Validate a purchase receipt against the Apple App Store.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_purchase_response}{IApi\+Validate\+Purchase\+Response}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a58ec876cf25e2c0a096fa02dac977985}{Validate\+Purchase\+Google\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string receipt, bool persist=true, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Validate a purchase receipt against the Google Play Store.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_purchase_response}{IApi\+Validate\+Purchase\+Response}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a04cd45c9b6e5cc2333f7299a55a182a3}{Validate\+Purchase\+Huawei\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string receipt, string signature, bool persist=true, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Validate a purchase receipt against the Huawei App\+Gallery.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_subscription_response}{IApi\+Validate\+Subscription\+Response}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_abc626bfa5a312f23033b1dcce16abe90}{Validate\+Subscription\+Apple\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string receipt, bool persist=true, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Validate an Apple subscription receipt.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_subscription_response}{IApi\+Validate\+Subscription\+Response}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_abdceffcc291e56bf4de8683fb6386fe9}{Validate\+Subscription\+Google\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string receipt, bool persist=true, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Validate a Google subscription receipt.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_leaderboard_record}{IApi\+Leaderboard\+Record}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a75172b3237e2c1a0dd2df2d1e0a19ec1}{Write\+Leaderboard\+Record\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string leaderboard\+Id, long score, long sub\+Score=0L, string metadata=null, \mbox{\hyperlink{namespace_nakama_a8e9c42a36e780e31a03f2ba94a3bb6e7}{Api\+Operator}} api\+Operator=Api\+Operator.\+NO\+\_\+\+OVERRIDE, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Write a record to a leaderboard.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_storage_object_acks}{IApi\+Storage\+Object\+Acks}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_adc8f34b5cacc6e61d0240d53c1383935}{Write\+Storage\+Objects\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, \mbox{\hyperlink{interface_nakama_1_1_i_api_write_storage_object}{IApi\+Write\+Storage\+Object}}\mbox{[}$\,$\mbox{]} objects, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Write objects to the storage engine.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_leaderboard_record}{IApi\+Leaderboard\+Record}} $>$ \mbox{\hyperlink{interface_nakama_1_1_i_client_a0e18257ebdd85c9a0d56c501e221e90a}{Write\+Tournament\+Record\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, string tournament\+Id, long score, long sub\+Score=0L, string metadata=null, \mbox{\hyperlink{namespace_nakama_a8e9c42a36e780e31a03f2ba94a3bb6e7}{Api\+Operator}} api\+Operator=Api\+Operator.\+NO\+\_\+\+OVERRIDE, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration=null, Cancellation\+Token canceller=default)
+\begin{DoxyCompactList}\small\item\em Write a record to a tournament.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{interface_nakama_1_1_i_client_a65ce1849bf8c639c0d11853be12f22f8}{Auto\+Refresh\+Session}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True if the session should be refreshed with an active refresh token.  \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} \mbox{\hyperlink{interface_nakama_1_1_i_client_ad86bc2c00a137d35243e977086a00ffa}{Global\+Retry\+Configuration}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The global retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}.  \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{interface_nakama_1_1_i_client_a93e9759631f1a3106dc4ec47477f3eb8}{Host}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The host address of the server. Defaults to \char`\"{}127.\+0.\+0.\+1\char`\"{}.  \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{interface_nakama_1_1_i_client_ad5d7b98d99d381d0340e7d8e90a54d26}{Port}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The port number of the server. Defaults to 7350.  \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{interface_nakama_1_1_i_client_a5ce30e2720c3b831e249bf19452eb340}{Scheme}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The protocol scheme used to connect with the server. Must be either \char`\"{}http\char`\"{} or \char`\"{}https\char`\"{}.  \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{interface_nakama_1_1_i_client_a6b13274c171e19e07f26ea5334f8ab23}{Server\+Key}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The key used to authenticate with the server without a session. Defaults to \char`\"{}defaultkey\char`\"{}.  \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{interface_nakama_1_1_i_client_aadcfb5308770d73098d9ba66534074af}{Timeout}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Set the timeout in seconds on requests sent to the server.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A client for the API in \mbox{\hyperlink{namespace_nakama}{Nakama}} server.  
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ac21ff4d771b8ce9c77ee2755cea4ca07}\label{interface_nakama_1_1_i_client_ac21ff4d771b8ce9c77ee2755cea4ca07}} 
+\index{Nakama.IClient@{Nakama.IClient}!AddFriendsAsync@{AddFriendsAsync}}
+\index{AddFriendsAsync@{AddFriendsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AddFriendsAsync()}{AddFriendsAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Add\+Friends\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{IEnumerable$<$ string $>$}]{ids,  }\item[{IEnumerable$<$ string $>$}]{usernames = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Add one or more friends by id or username.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em ids} & The ids of the users to add or invite as friends.\\
+\hline
+{\em usernames} & The usernames of the users to add as friends.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a0348314e04b0b80057e8383cdd5c8d50}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_abec54a30d216a009e04cb7df410e15f3}\label{interface_nakama_1_1_i_client_abec54a30d216a009e04cb7df410e15f3}} 
+\index{Nakama.IClient@{Nakama.IClient}!AddGroupUsersAsync@{AddGroupUsersAsync}}
+\index{AddGroupUsersAsync@{AddGroupUsersAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AddGroupUsersAsync()}{AddGroupUsersAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Add\+Group\+Users\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{IEnumerable$<$ string $>$}]{ids,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Add one or more users to the group.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em group\+Id} & The id of the group to add users into.\\
+\hline
+{\em ids} & The ids of the users to add or invite to the group.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a769d19ca9593f14fc8a3f91d1950f155}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_af56a59b69e6416645041852198bbc220}\label{interface_nakama_1_1_i_client_af56a59b69e6416645041852198bbc220}} 
+\index{Nakama.IClient@{Nakama.IClient}!AuthenticateAppleAsync@{AuthenticateAppleAsync}}
+\index{AuthenticateAppleAsync@{AuthenticateAppleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateAppleAsync()}{AuthenticateAppleAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ Nakama.\+IClient.\+Authenticate\+Apple\+Async (\begin{DoxyParamCaption}\item[{string}]{token,  }\item[{string}]{username = {\ttfamily null},  }\item[{bool}]{create = {\ttfamily true},  }\item[{Dictionary$<$ string, string $>$}]{vars = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Authenticate a user with an Apple ID against the server.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em username} & A username used to create the user.\\
+\hline
+{\em token} & The ID token received from Apple to validate.\\
+\hline
+{\em vars} & Extra information that will be bundled in the session token.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ae30e21d72b2f12cdb23d03994e6dfd35}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a1081470b3d1dc65a43e57e158118dde0}\label{interface_nakama_1_1_i_client_a1081470b3d1dc65a43e57e158118dde0}} 
+\index{Nakama.IClient@{Nakama.IClient}!AuthenticateCustomAsync@{AuthenticateCustomAsync}}
+\index{AuthenticateCustomAsync@{AuthenticateCustomAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateCustomAsync()}{AuthenticateCustomAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ Nakama.\+IClient.\+Authenticate\+Custom\+Async (\begin{DoxyParamCaption}\item[{string}]{id,  }\item[{string}]{username = {\ttfamily null},  }\item[{bool}]{create = {\ttfamily true},  }\item[{Dictionary$<$ string, string $>$}]{vars = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Authenticate a user with a custom id.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & A custom identifier usually obtained from an external authentication service.\\
+\hline
+{\em username} & A username used to create the user. May be {\ttfamily null}.\\
+\hline
+{\em create} & If the user should be created when authenticated.\\
+\hline
+{\em vars} & Extra information that will be bundled in the session token.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aecf7fd6a4745f23d3e411b3911ef7b8d}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ad9a6d4b73bc4ac965a7d913fcc7d5ee3}\label{interface_nakama_1_1_i_client_ad9a6d4b73bc4ac965a7d913fcc7d5ee3}} 
+\index{Nakama.IClient@{Nakama.IClient}!AuthenticateDeviceAsync@{AuthenticateDeviceAsync}}
+\index{AuthenticateDeviceAsync@{AuthenticateDeviceAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateDeviceAsync()}{AuthenticateDeviceAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ Nakama.\+IClient.\+Authenticate\+Device\+Async (\begin{DoxyParamCaption}\item[{string}]{id,  }\item[{string}]{username = {\ttfamily null},  }\item[{bool}]{create = {\ttfamily true},  }\item[{Dictionary$<$ string, string $>$}]{vars = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Authenticate a user with a device id.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & A device identifier usually obtained from a platform API.\\
+\hline
+{\em username} & A username used to create the user. May be {\ttfamily null}.\\
+\hline
+{\em create} & If the user should be created when authenticated.\\
+\hline
+{\em vars} & Extra information that will be bundled in the session token.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_afe268da1eb4063933420c27ac8ce6bfe}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a1b77958ff52a879a27a5bfd0b97dfa6b}\label{interface_nakama_1_1_i_client_a1b77958ff52a879a27a5bfd0b97dfa6b}} 
+\index{Nakama.IClient@{Nakama.IClient}!AuthenticateEmailAsync@{AuthenticateEmailAsync}}
+\index{AuthenticateEmailAsync@{AuthenticateEmailAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateEmailAsync()}{AuthenticateEmailAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ Nakama.\+IClient.\+Authenticate\+Email\+Async (\begin{DoxyParamCaption}\item[{string}]{email,  }\item[{string}]{password,  }\item[{string}]{username = {\ttfamily null},  }\item[{bool}]{create = {\ttfamily true},  }\item[{Dictionary$<$ string, string $>$}]{vars = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Authenticate a user with an email and password.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em email} & The email address of the user.\\
+\hline
+{\em password} & The password for the user.\\
+\hline
+{\em username} & A username used to create the user. May be {\ttfamily null}.\\
+\hline
+{\em create} & If the user should be created when authenticated.\\
+\hline
+{\em vars} & Extra information that will be bundled in the session token.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a40bb677a0c6360f6402850720de573a6}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a94137b0b4dd44bae5fcf4d112d4cab4d}\label{interface_nakama_1_1_i_client_a94137b0b4dd44bae5fcf4d112d4cab4d}} 
+\index{Nakama.IClient@{Nakama.IClient}!AuthenticateFacebookAsync@{AuthenticateFacebookAsync}}
+\index{AuthenticateFacebookAsync@{AuthenticateFacebookAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateFacebookAsync()}{AuthenticateFacebookAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ Nakama.\+IClient.\+Authenticate\+Facebook\+Async (\begin{DoxyParamCaption}\item[{string}]{token,  }\item[{string}]{username = {\ttfamily null},  }\item[{bool}]{create = {\ttfamily true},  }\item[{bool}]{import = {\ttfamily true},  }\item[{Dictionary$<$ string, string $>$}]{vars = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Authenticate a user with a Facebook auth token.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & An OAuth access token from the Facebook SDK.\\
+\hline
+{\em username} & A username used to create the user. May be {\ttfamily null}.\\
+\hline
+{\em create} & If the user should be created when authenticated.\\
+\hline
+{\em import} & If the Facebook friends should be imported.\\
+\hline
+{\em vars} & Extra information that will be bundled in the session token.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a8965dfabd8ea716c3b119fb57b93d499}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ab1b035116f1e0a1cf22d2f5fd8ed9233}\label{interface_nakama_1_1_i_client_ab1b035116f1e0a1cf22d2f5fd8ed9233}} 
+\index{Nakama.IClient@{Nakama.IClient}!AuthenticateGameCenterAsync@{AuthenticateGameCenterAsync}}
+\index{AuthenticateGameCenterAsync@{AuthenticateGameCenterAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateGameCenterAsync()}{AuthenticateGameCenterAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ Nakama.\+IClient.\+Authenticate\+Game\+Center\+Async (\begin{DoxyParamCaption}\item[{string}]{bundle\+Id,  }\item[{string}]{player\+Id,  }\item[{string}]{public\+Key\+Url,  }\item[{string}]{salt,  }\item[{string}]{signature,  }\item[{string}]{timestamp,  }\item[{string}]{username = {\ttfamily null},  }\item[{bool}]{create = {\ttfamily true},  }\item[{Dictionary$<$ string, string $>$}]{vars = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Authenticate a user with Apple Game Center.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em bundle\+Id} & The bundle id of the Game Center application.\\
+\hline
+{\em player\+Id} & The player id of the user in Game Center.\\
+\hline
+{\em public\+Key\+Url} & The URL for the public encryption key.\\
+\hline
+{\em salt} & A random {\ttfamily NSString} used to compute the hash and keep it randomized.\\
+\hline
+{\em signature} & The verification signature data generated.\\
+\hline
+{\em timestamp} & The date and time that the signature was created.\\
+\hline
+{\em username} & A username used to create the user. May be {\ttfamily null}.\\
+\hline
+{\em create} & If the user should be created when authenticated.\\
+\hline
+{\em vars} & Extra information that will be bundled in the session token.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a275feb7d3de0a6b85741f463645fad3f}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_aa7d5ea6ff35652864256236b6a298e16}\label{interface_nakama_1_1_i_client_aa7d5ea6ff35652864256236b6a298e16}} 
+\index{Nakama.IClient@{Nakama.IClient}!AuthenticateGoogleAsync@{AuthenticateGoogleAsync}}
+\index{AuthenticateGoogleAsync@{AuthenticateGoogleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateGoogleAsync()}{AuthenticateGoogleAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ Nakama.\+IClient.\+Authenticate\+Google\+Async (\begin{DoxyParamCaption}\item[{string}]{token,  }\item[{string}]{username = {\ttfamily null},  }\item[{bool}]{create = {\ttfamily true},  }\item[{Dictionary$<$ string, string $>$}]{vars = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Authenticate a user with a Google auth token.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & An OAuth access token from the Google SDK.\\
+\hline
+{\em username} & A username used to create the user. May be {\ttfamily null}.\\
+\hline
+{\em create} & If the user should be created when authenticated.\\
+\hline
+{\em vars} & Extra information that will be bundled in the session token.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a09315e1b205b1b94074f4137e6be9f00}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a2f1dee9bd5c5761d55e5ab5a4d12690c}\label{interface_nakama_1_1_i_client_a2f1dee9bd5c5761d55e5ab5a4d12690c}} 
+\index{Nakama.IClient@{Nakama.IClient}!AuthenticateSteamAsync@{AuthenticateSteamAsync}}
+\index{AuthenticateSteamAsync@{AuthenticateSteamAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateSteamAsync()}{AuthenticateSteamAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ Nakama.\+IClient.\+Authenticate\+Steam\+Async (\begin{DoxyParamCaption}\item[{string}]{token,  }\item[{string}]{username = {\ttfamily null},  }\item[{bool}]{create = {\ttfamily true},  }\item[{bool}]{import = {\ttfamily true},  }\item[{Dictionary$<$ string, string $>$}]{vars = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Authenticate a user with a Steam auth token.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em token} & An authentication token from the Steam network.\\
+\hline
+{\em username} & A username used to create the user. May be {\ttfamily null}.\\
+\hline
+{\em create} & If the user should be created when authenticated.\\
+\hline
+{\em vars} & Extra information that will be bundled in the session token.\\
+\hline
+{\em import} & If the Steam friends should be imported.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a2e075e4cf4c522e3de378a855dc34899}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ab22184136c797808a2aebe53100804e2}\label{interface_nakama_1_1_i_client_ab22184136c797808a2aebe53100804e2}} 
+\index{Nakama.IClient@{Nakama.IClient}!BanGroupUsersAsync@{BanGroupUsersAsync}}
+\index{BanGroupUsersAsync@{BanGroupUsersAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{BanGroupUsersAsync()}{BanGroupUsersAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Ban\+Group\+Users\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{IEnumerable$<$ string $>$}]{ids,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Ban a set of users from a group.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em group\+Id} & The group to ban the users from.\\
+\hline
+{\em ids} & The ids of the users to ban.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_af3738338a0465f5bb312b8c8ea9a5cf1}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a625ec426d7062f4c118f3f014dd6e378}\label{interface_nakama_1_1_i_client_a625ec426d7062f4c118f3f014dd6e378}} 
+\index{Nakama.IClient@{Nakama.IClient}!BlockFriendsAsync@{BlockFriendsAsync}}
+\index{BlockFriendsAsync@{BlockFriendsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{BlockFriendsAsync()}{BlockFriendsAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Block\+Friends\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{IEnumerable$<$ string $>$}]{ids,  }\item[{IEnumerable$<$ string $>$}]{usernames = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Block one or more friends by id or username.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em ids} & The ids of the users to block.\\
+\hline
+{\em usernames} & The usernames of the users to block.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ac0dc24ed36ac130f370fe7e9d47a109a}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_aae0252ef30e7b6f9a1e2dc518f7478ee}\label{interface_nakama_1_1_i_client_aae0252ef30e7b6f9a1e2dc518f7478ee}} 
+\index{Nakama.IClient@{Nakama.IClient}!CreateGroupAsync@{CreateGroupAsync}}
+\index{CreateGroupAsync@{CreateGroupAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{CreateGroupAsync()}{CreateGroupAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_group}{IApi\+Group}} $>$ Nakama.\+IClient.\+Create\+Group\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{name,  }\item[{string}]{description = {\ttfamily \char`\"{}\char`\"{}},  }\item[{string}]{avatar\+Url = {\ttfamily null},  }\item[{string}]{lang\+Tag = {\ttfamily null},  }\item[{bool}]{open = {\ttfamily true},  }\item[{int}]{max\+Count = {\ttfamily 100},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Create a group.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em name} & The name for the group.\\
+\hline
+{\em description} & A description for the group.\\
+\hline
+{\em avatar\+Url} & An avatar url for the group.\\
+\hline
+{\em lang\+Tag} & A language tag in BCP-\/47 format for the group.\\
+\hline
+{\em open} & If the group should have open membership.\\
+\hline
+{\em max\+Count} & The maximum number of members allowed.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a new group object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ad74fadcf61eebd9cb089641775671798}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a6c9418726e8c74b0cefff24bccf335e1}\label{interface_nakama_1_1_i_client_a6c9418726e8c74b0cefff24bccf335e1}} 
+\index{Nakama.IClient@{Nakama.IClient}!DeleteFriendsAsync@{DeleteFriendsAsync}}
+\index{DeleteFriendsAsync@{DeleteFriendsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{DeleteFriendsAsync()}{DeleteFriendsAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Delete\+Friends\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{IEnumerable$<$ string $>$}]{ids,  }\item[{IEnumerable$<$ string $>$}]{usernames = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Delete one more or users by id or username from friends.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em ids} & The user ids to remove as friends.\\
+\hline
+{\em usernames} & The usernames to remove as friends.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a638d387931e416f96e3355dbcc9dd95d}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a90a221604c5aee514bae83bfce921005}\label{interface_nakama_1_1_i_client_a90a221604c5aee514bae83bfce921005}} 
+\index{Nakama.IClient@{Nakama.IClient}!DeleteGroupAsync@{DeleteGroupAsync}}
+\index{DeleteGroupAsync@{DeleteGroupAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{DeleteGroupAsync()}{DeleteGroupAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Delete\+Group\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Delete a group by id.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em group\+Id} & The group id to to remove.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ab2c13e106e4abaad160c025fd4b171f5}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ae50039a13b1b5d75613030d130f9d5e3}\label{interface_nakama_1_1_i_client_ae50039a13b1b5d75613030d130f9d5e3}} 
+\index{Nakama.IClient@{Nakama.IClient}!DeleteLeaderboardRecordAsync@{DeleteLeaderboardRecordAsync}}
+\index{DeleteLeaderboardRecordAsync@{DeleteLeaderboardRecordAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{DeleteLeaderboardRecordAsync()}{DeleteLeaderboardRecordAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Delete\+Leaderboard\+Record\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{leaderboard\+Id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Delete a leaderboard record.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em leaderboard\+Id} & The id of the leaderboard with the record to be deleted.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a4c3aa998092d7fd8d4a5e57eac1adc7a}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_adab62219d9b6f091995738a8746b8bcb}\label{interface_nakama_1_1_i_client_adab62219d9b6f091995738a8746b8bcb}} 
+\index{Nakama.IClient@{Nakama.IClient}!DeleteNotificationsAsync@{DeleteNotificationsAsync}}
+\index{DeleteNotificationsAsync@{DeleteNotificationsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{DeleteNotificationsAsync()}{DeleteNotificationsAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Delete\+Notifications\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{IEnumerable$<$ string $>$}]{ids,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Delete one or more notifications by id.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em ids} & The notification ids to remove.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aaca81a7fc8183e44c7f6e10071d9a456}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a359f19ae1aad413e47565b355380b63a}\label{interface_nakama_1_1_i_client_a359f19ae1aad413e47565b355380b63a}} 
+\index{Nakama.IClient@{Nakama.IClient}!DeleteStorageObjectsAsync@{DeleteStorageObjectsAsync}}
+\index{DeleteStorageObjectsAsync@{DeleteStorageObjectsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{DeleteStorageObjectsAsync()}{DeleteStorageObjectsAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Delete\+Storage\+Objects\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{\mbox{\hyperlink{class_nakama_1_1_storage_object_id}{Storage\+Object\+Id}}\mbox{[}$\,$\mbox{]}}]{ids,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Delete one or more storage objects.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em ids} & The ids of the objects to delete.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a745a2c98d488d19c2abad03aa914f97b}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a134eedfe28270dc3086b490fd16c5efb}\label{interface_nakama_1_1_i_client_a134eedfe28270dc3086b490fd16c5efb}} 
+\index{Nakama.IClient@{Nakama.IClient}!DemoteGroupUsersAsync@{DemoteGroupUsersAsync}}
+\index{DemoteGroupUsersAsync@{DemoteGroupUsersAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{DemoteGroupUsersAsync()}{DemoteGroupUsersAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Demote\+Group\+Users\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{IEnumerable$<$ string $>$}]{user\+Ids,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Demote a set of users in a group to the next role down. 
+\begin{DoxyParams}{Parameters}
+{\em group\+Id} & The group to demote users in.\\
+\hline
+{\em user\+Ids} & The users to demote.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+
+
+Members who are already at the lowest rank will be skipped.
+
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_acc21379975775bac5077abf0ef956fab}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a5a255470f06a9004673ba8fc6f8af682}\label{interface_nakama_1_1_i_client_a5a255470f06a9004673ba8fc6f8af682}} 
+\index{Nakama.IClient@{Nakama.IClient}!EventAsync@{EventAsync}}
+\index{EventAsync@{EventAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{EventAsync()}{EventAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Event\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{name,  }\item[{Dictionary$<$ string, string $>$}]{properties,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Submit an event for processing in the server\textquotesingle{}s registered runtime custom events handler.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em name} & The name of the event.\\
+\hline
+{\em properties} & The properties of the event.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a50215658d4619df72a664d635a0aefe6}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a291886d28a053ef9db0d231b1f74140e}\label{interface_nakama_1_1_i_client_a291886d28a053ef9db0d231b1f74140e}} 
+\index{Nakama.IClient@{Nakama.IClient}!GetAccountAsync@{GetAccountAsync}}
+\index{GetAccountAsync@{GetAccountAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{GetAccountAsync()}{GetAccountAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_account}{IApi\+Account}} $>$ Nakama.\+IClient.\+Get\+Account\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Fetch the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the account object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a8333b61102e6af80cdaa17b8c79d9825}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a8ad3b6d4f866d3b4d8cd54cbeaf5a01e}\label{interface_nakama_1_1_i_client_a8ad3b6d4f866d3b4d8cd54cbeaf5a01e}} 
+\index{Nakama.IClient@{Nakama.IClient}!GetSubscriptionAsync@{GetSubscriptionAsync}}
+\index{GetSubscriptionAsync@{GetSubscriptionAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{GetSubscriptionAsync()}{GetSubscriptionAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validated_subscription}{IApi\+Validated\+Subscription}} $>$ Nakama.\+IClient.\+Get\+Subscription\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{product\+Id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Get the subscription represented by the provided product id.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em product\+Id} & The product id.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the subscription.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a6632bd7f63f6c739cc587bb6a5d88f31}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a8b4075bc49ee57670e94a56557be05d2}\label{interface_nakama_1_1_i_client_a8b4075bc49ee57670e94a56557be05d2}} 
+\index{Nakama.IClient@{Nakama.IClient}!GetUsersAsync@{GetUsersAsync}}
+\index{GetUsersAsync@{GetUsersAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{GetUsersAsync()}{GetUsersAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_users}{IApi\+Users}} $>$ Nakama.\+IClient.\+Get\+Users\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{IEnumerable$<$ string $>$}]{ids,  }\item[{IEnumerable$<$ string $>$}]{usernames = {\ttfamily null},  }\item[{IEnumerable$<$ string $>$}]{facebook\+Ids = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Fetch one or more users by id, usernames, and Facebook ids.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em ids} & The IDs of the users to retrieve.\\
+\hline
+{\em usernames} & The usernames of the users to retrieve.\\
+\hline
+{\em facebook\+Ids} & The facebook IDs of the users to retrieve.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a collection of user objects.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ae8a6ed442cf4d4fe757b8af4ccf0f697}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ad63c0cfb18480592c8eff4583cc16233}\label{interface_nakama_1_1_i_client_ad63c0cfb18480592c8eff4583cc16233}} 
+\index{Nakama.IClient@{Nakama.IClient}!ImportFacebookFriendsAsync@{ImportFacebookFriendsAsync}}
+\index{ImportFacebookFriendsAsync@{ImportFacebookFriendsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ImportFacebookFriendsAsync()}{ImportFacebookFriendsAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Import\+Facebook\+Friends\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{bool?}]{reset = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Import Facebook friends and add them to the user\textquotesingle{}s account.  
+
+The server will import friends when the user authenticates with Facebook. This function can be used to be explicit with the import operation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em token} & An OAuth access token from the Facebook SDK.\\
+\hline
+{\em reset} & If the Facebook friend import for the user should be reset.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ae22e0fb5972e5a4d2b52aaa82045a271}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a8ff7dfd40f14d3161d7fc4426e078214}\label{interface_nakama_1_1_i_client_a8ff7dfd40f14d3161d7fc4426e078214}} 
+\index{Nakama.IClient@{Nakama.IClient}!ImportSteamFriendsAsync@{ImportSteamFriendsAsync}}
+\index{ImportSteamFriendsAsync@{ImportSteamFriendsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ImportSteamFriendsAsync()}{ImportSteamFriendsAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Import\+Steam\+Friends\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{bool?}]{reset = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Import Steam friends and add them to the user\textquotesingle{}s account.  
+
+The server will import friends when the user authenticates with Steam. This function can be used to be explicit with the import operation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em token} & An access token from Steam.\\
+\hline
+{\em reset} & If the Steam friend import for the user should be reset.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aff3b742f37107b47f31d4a93020239d0}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a6662dc402c9867c647ea300eae380bc0}\label{interface_nakama_1_1_i_client_a6662dc402c9867c647ea300eae380bc0}} 
+\index{Nakama.IClient@{Nakama.IClient}!JoinGroupAsync@{JoinGroupAsync}}
+\index{JoinGroupAsync@{JoinGroupAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{JoinGroupAsync()}{JoinGroupAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Join\+Group\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Join a group if it has open membership or request to join it.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em group\+Id} & The ID of the group to join.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a9e10ec43011fa4aaf3ad1d389da1ea2b}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a8520e2e99a83f3cac309f2a0354c2e65}\label{interface_nakama_1_1_i_client_a8520e2e99a83f3cac309f2a0354c2e65}} 
+\index{Nakama.IClient@{Nakama.IClient}!JoinTournamentAsync@{JoinTournamentAsync}}
+\index{JoinTournamentAsync@{JoinTournamentAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{JoinTournamentAsync()}{JoinTournamentAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Join\+Tournament\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{tournament\+Id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Join a tournament by ID.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em tournament\+Id} & The ID of the tournament to join.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a5cc312ccc276515a2643ef173e398641}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ae1643a627d5b2733349b2a3eb8811829}\label{interface_nakama_1_1_i_client_ae1643a627d5b2733349b2a3eb8811829}} 
+\index{Nakama.IClient@{Nakama.IClient}!KickGroupUsersAsync@{KickGroupUsersAsync}}
+\index{KickGroupUsersAsync@{KickGroupUsersAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{KickGroupUsersAsync()}{KickGroupUsersAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Kick\+Group\+Users\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{IEnumerable$<$ string $>$}]{ids,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Kick one or more users from the group.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em group\+Id} & The ID of the group.\\
+\hline
+{\em ids} & The IDs of the users to kick.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a8d40ee6b5c3a92ebcab8701ed7ff9505}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_abe13990afd23fbf8257ff448970e1bfa}\label{interface_nakama_1_1_i_client_abe13990afd23fbf8257ff448970e1bfa}} 
+\index{Nakama.IClient@{Nakama.IClient}!LeaveGroupAsync@{LeaveGroupAsync}}
+\index{LeaveGroupAsync@{LeaveGroupAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{LeaveGroupAsync()}{LeaveGroupAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Leave\+Group\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Leave a group by ID.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em group\+Id} & The ID of the group to leave.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aff050ee2645b7b3a239a40c6ce357c24}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_aed84d3ba843ee53c3fc62bfac3d56aef}\label{interface_nakama_1_1_i_client_aed84d3ba843ee53c3fc62bfac3d56aef}} 
+\index{Nakama.IClient@{Nakama.IClient}!LinkAppleAsync@{LinkAppleAsync}}
+\index{LinkAppleAsync@{LinkAppleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{LinkAppleAsync()}{LinkAppleAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Link\+Apple\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Link an Apple ID to the social profiles on the current user\textquotesingle{}s account.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em token} & The ID token received from Apple to validate.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a9979bf574bdb33a716ac56b51eca6758}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ab18171e22bdc5d997ff5d87a206fbc18}\label{interface_nakama_1_1_i_client_ab18171e22bdc5d997ff5d87a206fbc18}} 
+\index{Nakama.IClient@{Nakama.IClient}!LinkCustomAsync@{LinkCustomAsync}}
+\index{LinkCustomAsync@{LinkCustomAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{LinkCustomAsync()}{LinkCustomAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Link\+Custom\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Link a custom ID to the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em id} & A custom identifier usually obtained from an external authentication service.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ac4845e6a960a43d8ead44c2cb2d2fb00}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_accadcf9970bbc108cae1eaa386b2ad0c}\label{interface_nakama_1_1_i_client_accadcf9970bbc108cae1eaa386b2ad0c}} 
+\index{Nakama.IClient@{Nakama.IClient}!LinkDeviceAsync@{LinkDeviceAsync}}
+\index{LinkDeviceAsync@{LinkDeviceAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{LinkDeviceAsync()}{LinkDeviceAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Link\+Device\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Link a device ID to the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em id} & A device identifier usually obtained from a platform API.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aad4baf992848d4029adcbb4ce964bb2e}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ae6bd9267c215b0df2246862d566c6d63}\label{interface_nakama_1_1_i_client_ae6bd9267c215b0df2246862d566c6d63}} 
+\index{Nakama.IClient@{Nakama.IClient}!LinkEmailAsync@{LinkEmailAsync}}
+\index{LinkEmailAsync@{LinkEmailAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{LinkEmailAsync()}{LinkEmailAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Link\+Email\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{email,  }\item[{string}]{password,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Link an email with password to the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em email} & The email address of the user.\\
+\hline
+{\em password} & The password for the user.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aadee51567a81169984fd146111f237db}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a68926218392683fb7112bf26d7b1814c}\label{interface_nakama_1_1_i_client_a68926218392683fb7112bf26d7b1814c}} 
+\index{Nakama.IClient@{Nakama.IClient}!LinkFacebookAsync@{LinkFacebookAsync}}
+\index{LinkFacebookAsync@{LinkFacebookAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{LinkFacebookAsync()}{LinkFacebookAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Link\+Facebook\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{bool?}]{import = {\ttfamily true},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Link a Facebook profile to a user account.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em token} & An OAuth access token from the Facebook SDK.\\
+\hline
+{\em import} & If the Facebook friends should be imported.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ac81c5d3cf0fcf05f3c482ceec63c17e8}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a15277cc6c181d77784a87da9383df7e4}\label{interface_nakama_1_1_i_client_a15277cc6c181d77784a87da9383df7e4}} 
+\index{Nakama.IClient@{Nakama.IClient}!LinkGameCenterAsync@{LinkGameCenterAsync}}
+\index{LinkGameCenterAsync@{LinkGameCenterAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{LinkGameCenterAsync()}{LinkGameCenterAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Link\+Game\+Center\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{bundle\+Id,  }\item[{string}]{player\+Id,  }\item[{string}]{public\+Key\+Url,  }\item[{string}]{salt,  }\item[{string}]{signature,  }\item[{string}]{timestamp,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Link a Game Center profile to a user account.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em bundle\+Id} & The bundle ID of the Game Center application.\\
+\hline
+{\em player\+Id} & The player ID of the user in Game Center.\\
+\hline
+{\em public\+Key\+Url} & The URL for the public encryption key.\\
+\hline
+{\em salt} & A random {\ttfamily NSString} used to compute the hash and keep it randomized.\\
+\hline
+{\em signature} & The verification signature data generated.\\
+\hline
+{\em timestamp} & The date and time that the signature was created.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a655ce991784045167e7b470b421788fa}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a3fa471a46116248041a080016ad181cf}\label{interface_nakama_1_1_i_client_a3fa471a46116248041a080016ad181cf}} 
+\index{Nakama.IClient@{Nakama.IClient}!LinkGoogleAsync@{LinkGoogleAsync}}
+\index{LinkGoogleAsync@{LinkGoogleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{LinkGoogleAsync()}{LinkGoogleAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Link\+Google\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Link a Google profile to a user account.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+{\em token} & An OAuth access token from the Google SDK.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a0f4fe2298df0fa8b4ac5a14dbbfce74b}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_aaa180e86df389caf7cc42d82760aabf0}\label{interface_nakama_1_1_i_client_aaa180e86df389caf7cc42d82760aabf0}} 
+\index{Nakama.IClient@{Nakama.IClient}!LinkSteamAsync@{LinkSteamAsync}}
+\index{LinkSteamAsync@{LinkSteamAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{LinkSteamAsync()}{LinkSteamAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Link\+Steam\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{bool}]{import,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Link a Steam profile to a user account.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em token} & An authentication token from the Steam network.\\
+\hline
+{\em import} & If the Steam friends should be imported.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a53f8adbc758568e7b70653cbfc33eeec}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ac7cad85806c3824a967959455d828440}\label{interface_nakama_1_1_i_client_ac7cad85806c3824a967959455d828440}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListChannelMessagesAsync@{ListChannelMessagesAsync}}
+\index{ListChannelMessagesAsync@{ListChannelMessagesAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListChannelMessagesAsync()}{ListChannelMessagesAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_channel_message_list}{IApi\+Channel\+Message\+List}} $>$ Nakama.\+IClient.\+List\+Channel\+Messages\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{\mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}}}]{channel,  }\item[{int}]{limit = {\ttfamily 1},  }\item[{bool}]{forward = {\ttfamily true},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List messages from a chat channel.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em channel} & The chat channel object.\\
+\hline
+{\em limit} & The number of chat messages to list.\\
+\hline
+{\em forward} & Fetch messages forward from the current cursor (or the start, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration = null, Cancellation\+Token canceller = default).\\
+\hline
+{\em cursor} & A cursor for the current position in the messages history to list.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the channel message list object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a5915e1dd4090b1f58f9295361b58016b}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a0fd095e04016f75de9d589891a1518ac}\label{interface_nakama_1_1_i_client_a0fd095e04016f75de9d589891a1518ac}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListChannelMessagesAsync@{ListChannelMessagesAsync}}
+\index{ListChannelMessagesAsync@{ListChannelMessagesAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListChannelMessagesAsync()}{ListChannelMessagesAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_channel_message_list}{IApi\+Channel\+Message\+List}} $>$ Nakama.\+IClient.\+List\+Channel\+Messages\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{channel\+Id,  }\item[{int}]{limit = {\ttfamily 1},  }\item[{bool}]{forward = {\ttfamily true},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List messages from a chat channel.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em channel\+Id} & A channel identifier.\\
+\hline
+{\em limit} & The number of chat messages to list.\\
+\hline
+{\em forward} & Fetch messages forward from the current cursor (or the start, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration = null, Cancellation\+Token canceller = default).\\
+\hline
+{\em cursor} & A cursor for the current position in the messages history to list.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the channel message list object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_afda758a691879a09e10e7689a871a781}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_af4b8829ce42c75274ab62e4692b748a8}\label{interface_nakama_1_1_i_client_af4b8829ce42c75274ab62e4692b748a8}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListFriendsAsync@{ListFriendsAsync}}
+\index{ListFriendsAsync@{ListFriendsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListFriendsAsync()}{ListFriendsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_friend_list}{IApi\+Friend\+List}} $>$ Nakama.\+IClient.\+List\+Friends\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{int?}]{state = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List of friends of the current user.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em state} & Filter by friendship state.\\
+\hline
+{\em limit} & The number of friends to list.\\
+\hline
+{\em cursor} & A cursor for the current position in the friends list.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the friend objects.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a1258302f25c2441cd419460a21aa3756}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a93b462ed1236ba5839cdb811b19524bc}\label{interface_nakama_1_1_i_client_a93b462ed1236ba5839cdb811b19524bc}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListGroupsAsync@{ListGroupsAsync}}
+\index{ListGroupsAsync@{ListGroupsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListGroupsAsync()}{ListGroupsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_group_list}{IApi\+Group\+List}} $>$ Nakama.\+IClient.\+List\+Groups\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{name = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{string}]{lang\+Tag = {\ttfamily null},  }\item[{int?}]{members = {\ttfamily null},  }\item[{bool?}]{open = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List groups on the server.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em name} & The name filter to apply to the group list.\\
+\hline
+{\em limit} & The number of groups to list.\\
+\hline
+{\em cursor} & A cursor for the current position in the groups to list.\\
+\hline
+{\em lang\+Tag} & The language tag filter to apply to the group list.\\
+\hline
+{\em members} & The number of group members filter to apply to the group list.\\
+\hline
+{\em open} & The open/closed filter to apply to the group list.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to resolve group objects.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a052addd5b095f2c4d2b2d38dfc8e993f}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ac77e1bbf873d728d622b627943e64351}\label{interface_nakama_1_1_i_client_ac77e1bbf873d728d622b627943e64351}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListGroupUsersAsync@{ListGroupUsersAsync}}
+\index{ListGroupUsersAsync@{ListGroupUsersAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListGroupUsersAsync()}{ListGroupUsersAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_group_user_list}{IApi\+Group\+User\+List}} $>$ Nakama.\+IClient.\+List\+Group\+Users\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{int?}]{state = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List all users part of the group.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em group\+Id} & The ID of the group.\\
+\hline
+{\em state} & Filter by group membership state.\\
+\hline
+{\em limit} & The number of groups to list.\\
+\hline
+{\em cursor} & A cursor for the current position in the group listing.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the group user objects.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a80306a00533b136b52cd6aff74db3e90}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a5fac82246b40a4df8311f51b3d565dae}\label{interface_nakama_1_1_i_client_a5fac82246b40a4df8311f51b3d565dae}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListLeaderboardRecordsAroundOwnerAsync@{ListLeaderboardRecordsAroundOwnerAsync}}
+\index{ListLeaderboardRecordsAroundOwnerAsync@{ListLeaderboardRecordsAroundOwnerAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListLeaderboardRecordsAroundOwnerAsync()}{ListLeaderboardRecordsAroundOwnerAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_leaderboard_record_list}{IApi\+Leaderboard\+Record\+List}} $>$ Nakama.\+IClient.\+List\+Leaderboard\+Records\+Around\+Owner\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{leaderboard\+Id,  }\item[{string}]{owner\+Id,  }\item[{long?}]{expiry = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List leaderboard records that belong to a user.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session for the user.\\
+\hline
+{\em leaderboard\+Id} & The ID of the leaderboard to list.\\
+\hline
+{\em owner\+Id} & The ID of the user to list around.\\
+\hline
+{\em expiry} & Expiry in seconds (since epoch) to begin fetching records from. Optional. 0 means from current time.\\
+\hline
+{\em limit} & The limit of the listings.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the leaderboard record objects.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aa00e1eb5a776bb9a554507eba56c8272}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a90b33da885f5fee1267420a0acbc1e87}\label{interface_nakama_1_1_i_client_a90b33da885f5fee1267420a0acbc1e87}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListLeaderboardRecordsAsync@{ListLeaderboardRecordsAsync}}
+\index{ListLeaderboardRecordsAsync@{ListLeaderboardRecordsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListLeaderboardRecordsAsync()}{ListLeaderboardRecordsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_leaderboard_record_list}{IApi\+Leaderboard\+Record\+List}} $>$ Nakama.\+IClient.\+List\+Leaderboard\+Records\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{leaderboard\+Id,  }\item[{IEnumerable$<$ string $>$}]{owner\+Ids = {\ttfamily null},  }\item[{long?}]{expiry = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List records from a leaderboard.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em leaderboard\+Id} & The ID of the leaderboard to list.\\
+\hline
+{\em owner\+Ids} & Record owners to fetch with the list of records.\\
+\hline
+{\em expiry} & Expiry in seconds (since epoch) to begin fetching records from. Optional. 0 means from current time.\\
+\hline
+{\em limit} & The number of records to list.\\
+\hline
+{\em cursor} & A cursor for the current position in the leaderboard records to list.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the leaderboard record objects.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ab0157c7184c86a9e6cbaae2ae720adf1}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_af52b743a4d334b23a43fad156f0eb54c}\label{interface_nakama_1_1_i_client_af52b743a4d334b23a43fad156f0eb54c}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListMatchesAsync@{ListMatchesAsync}}
+\index{ListMatchesAsync@{ListMatchesAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListMatchesAsync()}{ListMatchesAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_match_list}{IApi\+Match\+List}} $>$ Nakama.\+IClient.\+List\+Matches\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{int}]{min,  }\item[{int}]{max,  }\item[{int}]{limit,  }\item[{bool}]{authoritative,  }\item[{string}]{label,  }\item[{string}]{query,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Fetch a list of matches active on the server.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em min} & The minimum number of match participants.\\
+\hline
+{\em max} & The maximum number of match participants.\\
+\hline
+{\em limit} & The number of matches to list.\\
+\hline
+{\em authoritative} & If authoritative matches should be included.\\
+\hline
+{\em label} & The label to filter the match list on.\\
+\hline
+{\em query} & A query for the matches to filter.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the match list object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ad169be18d357b3b57067abf62e063310}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a9443bb244b7a51c6a493900822c654f1}\label{interface_nakama_1_1_i_client_a9443bb244b7a51c6a493900822c654f1}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListNotificationsAsync@{ListNotificationsAsync}}
+\index{ListNotificationsAsync@{ListNotificationsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListNotificationsAsync()}{ListNotificationsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_notification_list}{IApi\+Notification\+List}} $>$ Nakama.\+IClient.\+List\+Notifications\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cacheable\+Cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List notifications for the user with an optional cursor.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em limit} & The number of notifications to list.\\
+\hline
+{\em cacheable\+Cursor} & A cursor for the current position in notifications to list.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to resolve notifications objects.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_acde199dc46bdceabea904a44477cd284}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_afeec7a75562cfc1c9f51d35095580046}\label{interface_nakama_1_1_i_client_afeec7a75562cfc1c9f51d35095580046}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListStorageObjectsAsync@{ListStorageObjectsAsync}}
+\index{ListStorageObjectsAsync@{ListStorageObjectsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListStorageObjectsAsync()}{ListStorageObjectsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_storage_object_list}{IApi\+Storage\+Object\+List}} $>$ Nakama.\+IClient.\+List\+Storage\+Objects\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{collection,  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List storage objects in a collection which have public read access.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em collection} & The collection to list over.\\
+\hline
+{\em limit} & The number of objects to list. Maximum 100.\\
+\hline
+{\em cursor} & A cursor to paginate over the collection. May be null.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the storage object list.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a35c013a31537eea2ff7fe2239f5623e9}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a3e2cf89415aebbfdecb0f7015b37ba37}\label{interface_nakama_1_1_i_client_a3e2cf89415aebbfdecb0f7015b37ba37}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListSubscriptionsAsync@{ListSubscriptionsAsync}}
+\index{ListSubscriptionsAsync@{ListSubscriptionsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListSubscriptionsAsync()}{ListSubscriptionsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_subscription_list}{IApi\+Subscription\+List}} $>$ Nakama.\+IClient.\+List\+Subscriptions\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{int}]{limit,  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List the user\textquotesingle{}s subscriptions.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em limit} & The number of subscriptions to list.\\
+\hline
+{\em cursor} & An optional cursor for the next page of subscriptions.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the subscription list.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a66425250e7fb827cc677da4732290329}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a0165ccd67746f2775a70387b9f5f7cfb}\label{interface_nakama_1_1_i_client_a0165ccd67746f2775a70387b9f5f7cfb}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListTournamentRecordsAroundOwnerAsync@{ListTournamentRecordsAroundOwnerAsync}}
+\index{ListTournamentRecordsAroundOwnerAsync@{ListTournamentRecordsAroundOwnerAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListTournamentRecordsAroundOwnerAsync()}{ListTournamentRecordsAroundOwnerAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_tournament_record_list}{IApi\+Tournament\+Record\+List}} $>$ Nakama.\+IClient.\+List\+Tournament\+Records\+Around\+Owner\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{tournament\+Id,  }\item[{string}]{owner\+Id,  }\item[{long?}]{expiry = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List tournament records around the owner.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em tournament\+Id} & The ID of the tournament.\\
+\hline
+{\em owner\+Id} & The ID of the owner to pivot around.\\
+\hline
+{\em expiry} & Expiry in seconds (since epoch) to begin fetching records from.\\
+\hline
+{\em limit} & The number of records to list.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the tournament record list object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ae141eceb632e705999c2d8d0243ab99d}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ac4a420dab57716222bbb8151700b1cdc}\label{interface_nakama_1_1_i_client_ac4a420dab57716222bbb8151700b1cdc}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListTournamentRecordsAsync@{ListTournamentRecordsAsync}}
+\index{ListTournamentRecordsAsync@{ListTournamentRecordsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListTournamentRecordsAsync()}{ListTournamentRecordsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_tournament_record_list}{IApi\+Tournament\+Record\+List}} $>$ Nakama.\+IClient.\+List\+Tournament\+Records\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{tournament\+Id,  }\item[{IEnumerable$<$ string $>$}]{owner\+Ids = {\ttfamily null},  }\item[{long?}]{expiry = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List records from a tournament.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em tournament\+Id} & The ID of the tournament.\\
+\hline
+{\em owner\+Ids} & The IDs of the record owners to return in the result.\\
+\hline
+{\em expiry} & Expiry in seconds (since epoch) to begin fetching records from.\\
+\hline
+{\em limit} & The number of records to list.\\
+\hline
+{\em cursor} & An optional cursor for the next page of tournament records.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the list of tournament records.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aa994ad73bfce3f829e041505fb54e119}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a43e7575784efc55785124576651ac617}\label{interface_nakama_1_1_i_client_a43e7575784efc55785124576651ac617}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListTournamentsAsync@{ListTournamentsAsync}}
+\index{ListTournamentsAsync@{ListTournamentsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListTournamentsAsync()}{ListTournamentsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_tournament_list}{IApi\+Tournament\+List}} $>$ Nakama.\+IClient.\+List\+Tournaments\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{int}]{category\+Start,  }\item[{int}]{category\+End,  }\item[{int?}]{start\+Time = {\ttfamily null},  }\item[{int?}]{end\+Time = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List current or upcoming tournaments.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em category\+Start} & The start of the category of tournaments to include.\\
+\hline
+{\em category\+End} & The end of the category of tournaments to include.\\
+\hline
+{\em start\+Time} & The start time of the tournaments. (UNIX timestamp, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration = null, Cancellation\+Token canceller = default). If null, tournaments will not be filtered by start time.\\
+\hline
+{\em end\+Time} & The end time of the tournaments. (UNIX timestamp, \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} retry\+Configuration = null, Cancellation\+Token canceller = default). If null, tournaments will not be filtered by end time.\\
+\hline
+{\em limit} & The number of tournaments to list.\\
+\hline
+{\em cursor} & An optional cursor for the next page of tournaments.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the list of tournament objects.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a4e64d250674e061e2304bdf2e4fe4342}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a20b9a6e164506988f758a00d0dd68efe}\label{interface_nakama_1_1_i_client_a20b9a6e164506988f758a00d0dd68efe}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListUserGroupsAsync@{ListUserGroupsAsync}}
+\index{ListUserGroupsAsync@{ListUserGroupsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListUserGroupsAsync()}{ListUserGroupsAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_user_group_list}{IApi\+User\+Group\+List}} $>$ Nakama.\+IClient.\+List\+User\+Groups\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{int?}]{state = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List of groups the current user is a member of.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em state} & Filter by group membership state.\\
+\hline
+{\em limit} & The number of records to list.\\
+\hline
+{\em cursor} & A cursor for the current position in the listing.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the group list object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_afb7774654804a171c8a602f3406466a1}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_aceddfd721720890ee6de3d4c67d699f6}\label{interface_nakama_1_1_i_client_aceddfd721720890ee6de3d4c67d699f6}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListUserGroupsAsync@{ListUserGroupsAsync}}
+\index{ListUserGroupsAsync@{ListUserGroupsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListUserGroupsAsync()}{ListUserGroupsAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_user_group_list}{IApi\+User\+Group\+List}} $>$ Nakama.\+IClient.\+List\+User\+Groups\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{user\+Id,  }\item[{int?}]{state = {\ttfamily null},  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List groups a user is a member of.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em user\+Id} & The ID of the user whose groups to list.\\
+\hline
+{\em state} & Filter by group membership state.\\
+\hline
+{\em limit} & The number of records to list.\\
+\hline
+{\em cursor} & A cursor for the current position in the listing.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the group list object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a6dbbdc5225f9e64e576ad171003bbda8}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_aeb5b5a9f8920ee2e287fc15e6dbae5d9}\label{interface_nakama_1_1_i_client_aeb5b5a9f8920ee2e287fc15e6dbae5d9}} 
+\index{Nakama.IClient@{Nakama.IClient}!ListUsersStorageObjectsAsync@{ListUsersStorageObjectsAsync}}
+\index{ListUsersStorageObjectsAsync@{ListUsersStorageObjectsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ListUsersStorageObjectsAsync()}{ListUsersStorageObjectsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_storage_object_list}{IApi\+Storage\+Object\+List}} $>$ Nakama.\+IClient.\+List\+Users\+Storage\+Objects\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{collection,  }\item[{string}]{user\+Id,  }\item[{int}]{limit = {\ttfamily 1},  }\item[{string}]{cursor = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List storage objects in a collection which belong to a specific user and have public read access.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em collection} & The collection to list over.\\
+\hline
+{\em user\+Id} & The user ID of the user to list objects for.\\
+\hline
+{\em limit} & The number of objects to list.\\
+\hline
+{\em cursor} & A cursor to paginate over the collection.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the storage object list.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a90c1f81c4e27cc664f16dcad793a6381}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a6f9bf7b5dc74dfab741e7aadfba89e4b}\label{interface_nakama_1_1_i_client_a6f9bf7b5dc74dfab741e7aadfba89e4b}} 
+\index{Nakama.IClient@{Nakama.IClient}!PromoteGroupUsersAsync@{PromoteGroupUsersAsync}}
+\index{PromoteGroupUsersAsync@{PromoteGroupUsersAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{PromoteGroupUsersAsync()}{PromoteGroupUsersAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Promote\+Group\+Users\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{IEnumerable$<$ string $>$}]{ids,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Promote one or more users in the group.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em group\+Id} & The ID of the group to promote users into.\\
+\hline
+{\em ids} & The IDs of the users to promote.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a703f15655bec3592a25827f78715ecda}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a1b2f0ed3a7a73e8263d98036d53817fc}\label{interface_nakama_1_1_i_client_a1b2f0ed3a7a73e8263d98036d53817fc}} 
+\index{Nakama.IClient@{Nakama.IClient}!ReadStorageObjectsAsync@{ReadStorageObjectsAsync}}
+\index{ReadStorageObjectsAsync@{ReadStorageObjectsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ReadStorageObjectsAsync()}{ReadStorageObjectsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_storage_objects}{IApi\+Storage\+Objects}} $>$ Nakama.\+IClient.\+Read\+Storage\+Objects\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{\mbox{\hyperlink{interface_nakama_1_1_i_api_read_storage_object_id}{IApi\+Read\+Storage\+Object\+Id}}\mbox{[}$\,$\mbox{]}}]{ids,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Read one or more objects from the storage engine.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em ids} & The objects to read.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the storage batch object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a2dd9eb134b2aabf3df838aa0c15cb715}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a3b15daa0defb16913157e3fed94b1aab}\label{interface_nakama_1_1_i_client_a3b15daa0defb16913157e3fed94b1aab}} 
+\index{Nakama.IClient@{Nakama.IClient}!RpcAsync@{RpcAsync}}
+\index{RpcAsync@{RpcAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{RpcAsync()}{RpcAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ Nakama.\+IClient.\+Rpc\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Execute a function on the server.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em id} & The ID of the function to execute on the server.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the RPC response.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ae7903e1c260db27a9325f542410dffb1}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a29b2534c256578fc1868d488e8f553f8}\label{interface_nakama_1_1_i_client_a29b2534c256578fc1868d488e8f553f8}} 
+\index{Nakama.IClient@{Nakama.IClient}!RpcAsync@{RpcAsync}}
+\index{RpcAsync@{RpcAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{RpcAsync()}{RpcAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ Nakama.\+IClient.\+Rpc\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{id,  }\item[{string}]{payload,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Execute a function with an input payload on the server.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em id} & The ID of the function to execute on the server.\\
+\hline
+{\em payload} & The payload to send with the function call.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the RPC response.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a662403d6079acb66a0c8acb71e87b24d}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a929523abb193fede9a6db74056d57ac4}\label{interface_nakama_1_1_i_client_a929523abb193fede9a6db74056d57ac4}} 
+\index{Nakama.IClient@{Nakama.IClient}!RpcAsync@{RpcAsync}}
+\index{RpcAsync@{RpcAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{RpcAsync()}{RpcAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ Nakama.\+IClient.\+Rpc\+Async (\begin{DoxyParamCaption}\item[{string}]{http\+Key,  }\item[{string}]{id,  }\item[{string}]{payload = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Execute a function on the server without a session.  
+
+This function is usually used with server side code. DO NOT USE client side. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em http\+Key} & The secure HTTP key used to authenticate.\\
+\hline
+{\em id} & The id of the function to execute on the server.\\
+\hline
+{\em payload} & A payload to send with the function call.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to resolve an RPC response.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ab40414406802388e487e366aa9c109a6}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ac0bf64fd0de7fe6a73a737b5ef514d93}\label{interface_nakama_1_1_i_client_ac0bf64fd0de7fe6a73a737b5ef514d93}} 
+\index{Nakama.IClient@{Nakama.IClient}!SessionLogoutAsync@{SessionLogoutAsync}}
+\index{SessionLogoutAsync@{SessionLogoutAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{SessionLogoutAsync()}{SessionLogoutAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Session\+Logout\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Log out a session which invalidates the authorization and refresh token.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session to logout.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a3cf4591ab80d069ec55b8021bb51c730}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a6c53fa09b45cde7987ca6e3dc1f877bc}\label{interface_nakama_1_1_i_client_a6c53fa09b45cde7987ca6e3dc1f877bc}} 
+\index{Nakama.IClient@{Nakama.IClient}!SessionLogoutAsync@{SessionLogoutAsync}}
+\index{SessionLogoutAsync@{SessionLogoutAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{SessionLogoutAsync()}{SessionLogoutAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Session\+Logout\+Async (\begin{DoxyParamCaption}\item[{string}]{auth\+Token,  }\item[{string}]{refresh\+Token,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Log out a session which optionally invalidates the authorization and/or refresh tokens.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em auth\+Token} & The authorization token to invalidate, may be {\ttfamily null}.\\
+\hline
+{\em refresh\+Token} & The refresh token to invalidate, may be {\ttfamily null}.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a6e965270a90777b5aab3f3b4c7ba2374}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_af75a6a3aceaddf452fb714e08b0d3b0b}\label{interface_nakama_1_1_i_client_af75a6a3aceaddf452fb714e08b0d3b0b}} 
+\index{Nakama.IClient@{Nakama.IClient}!SessionRefreshAsync@{SessionRefreshAsync}}
+\index{SessionRefreshAsync@{SessionRefreshAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{SessionRefreshAsync()}{SessionRefreshAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} $>$ Nakama.\+IClient.\+Session\+Refresh\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{Dictionary$<$ string, string $>$}]{vars = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Refresh the session unless the current refresh token has expired. If vars are specified they will replace what is currently stored inside the session token.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em vars} & Extra information which should be bundled inside the session token.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a new session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a54ddec21945530369fca30e9306efe5d}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a4ba0c6637b9685eb0474352de1797a2e}\label{interface_nakama_1_1_i_client_a4ba0c6637b9685eb0474352de1797a2e}} 
+\index{Nakama.IClient@{Nakama.IClient}!UnlinkAppleAsync@{UnlinkAppleAsync}}
+\index{UnlinkAppleAsync@{UnlinkAppleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UnlinkAppleAsync()}{UnlinkAppleAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Unlink\+Apple\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Remove the Apple ID from the social profiles on the current user\textquotesingle{}s account.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em token} & The ID token received from Apple.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a new session object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_adf62218ff4074ee7847260fb69f7a40e}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a2c4af0c1a411fff04f6f68427d9c82ae}\label{interface_nakama_1_1_i_client_a2c4af0c1a411fff04f6f68427d9c82ae}} 
+\index{Nakama.IClient@{Nakama.IClient}!UnlinkCustomAsync@{UnlinkCustomAsync}}
+\index{UnlinkCustomAsync@{UnlinkCustomAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UnlinkCustomAsync()}{UnlinkCustomAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Unlink\+Custom\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Unlink a custom ID from the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em id} & A custom identifier usually obtained from an external authentication service.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_adb85bd4e511e508ef6858b103aa31523}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a4be577065a26f40b5c8fcf501b83c7fc}\label{interface_nakama_1_1_i_client_a4be577065a26f40b5c8fcf501b83c7fc}} 
+\index{Nakama.IClient@{Nakama.IClient}!UnlinkDeviceAsync@{UnlinkDeviceAsync}}
+\index{UnlinkDeviceAsync@{UnlinkDeviceAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UnlinkDeviceAsync()}{UnlinkDeviceAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Unlink\+Device\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{id,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Unlink a device ID from the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em id} & A device identifier usually obtained from a platform API.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a04f2596af7c5ffde9353981faed6443d}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a94c94fa13db5528abe5fc6a13cb469f1}\label{interface_nakama_1_1_i_client_a94c94fa13db5528abe5fc6a13cb469f1}} 
+\index{Nakama.IClient@{Nakama.IClient}!UnlinkEmailAsync@{UnlinkEmailAsync}}
+\index{UnlinkEmailAsync@{UnlinkEmailAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UnlinkEmailAsync()}{UnlinkEmailAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Unlink\+Email\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{email,  }\item[{string}]{password,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Unlink an email with password from the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em email} & The email address of the user.\\
+\hline
+{\em password} & The password for the user.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a93428352ac3edb3e35d00afe0e108f5d}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a9209cbf097fc5d612df113dc1f7a380e}\label{interface_nakama_1_1_i_client_a9209cbf097fc5d612df113dc1f7a380e}} 
+\index{Nakama.IClient@{Nakama.IClient}!UnlinkFacebookAsync@{UnlinkFacebookAsync}}
+\index{UnlinkFacebookAsync@{UnlinkFacebookAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UnlinkFacebookAsync()}{UnlinkFacebookAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Unlink\+Facebook\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Unlink a Facebook profile from the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em token} & An OAuth access token from the Facebook SDK.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a116b79c31bc4bf94f0b037e6ecb33fc1}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a8db620f585a3b1c6b33c83ffa959759c}\label{interface_nakama_1_1_i_client_a8db620f585a3b1c6b33c83ffa959759c}} 
+\index{Nakama.IClient@{Nakama.IClient}!UnlinkGameCenterAsync@{UnlinkGameCenterAsync}}
+\index{UnlinkGameCenterAsync@{UnlinkGameCenterAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UnlinkGameCenterAsync()}{UnlinkGameCenterAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Unlink\+Game\+Center\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{bundle\+Id,  }\item[{string}]{player\+Id,  }\item[{string}]{public\+Key\+Url,  }\item[{string}]{salt,  }\item[{string}]{signature,  }\item[{string}]{timestamp,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Unlink a Game Center profile from the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em bundle\+Id} & The bundle ID of the Game Center application.\\
+\hline
+{\em player\+Id} & The player ID of the user in Game Center.\\
+\hline
+{\em public\+Key\+Url} & The URL for the public encryption key.\\
+\hline
+{\em salt} & A random {\ttfamily NSString} used to compute the hash and keep it randomized.\\
+\hline
+{\em signature} & The verification signature data generated.\\
+\hline
+{\em timestamp} & The date and time that the signature was created.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_adb1615cbce3978b43928c6dc1641fcd9}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_aec2588fcb68ad3807af840f6886f79e7}\label{interface_nakama_1_1_i_client_aec2588fcb68ad3807af840f6886f79e7}} 
+\index{Nakama.IClient@{Nakama.IClient}!UnlinkGoogleAsync@{UnlinkGoogleAsync}}
+\index{UnlinkGoogleAsync@{UnlinkGoogleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UnlinkGoogleAsync()}{UnlinkGoogleAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Unlink\+Google\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Unlink a Google profile from the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em token} & An OAuth access token from the Google SDK.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ad30a4f27ec44259a72fb7ecd55b855cc}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a0b5ce7e1a9d3707e2a098ea531a26b5d}\label{interface_nakama_1_1_i_client_a0b5ce7e1a9d3707e2a098ea531a26b5d}} 
+\index{Nakama.IClient@{Nakama.IClient}!UnlinkSteamAsync@{UnlinkSteamAsync}}
+\index{UnlinkSteamAsync@{UnlinkSteamAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UnlinkSteamAsync()}{UnlinkSteamAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Unlink\+Steam\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{token,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Unlink a Steam profile from the user account owned by the session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em token} & An authentication token from the Steam network.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aa7cf34d32c3bd2dd89224491dd03627a}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a981b2780f9f9bf2b8e2b4f423680013f}\label{interface_nakama_1_1_i_client_a981b2780f9f9bf2b8e2b4f423680013f}} 
+\index{Nakama.IClient@{Nakama.IClient}!UpdateAccountAsync@{UpdateAccountAsync}}
+\index{UpdateAccountAsync@{UpdateAccountAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UpdateAccountAsync()}{UpdateAccountAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Update\+Account\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{username,  }\item[{string}]{display\+Name = {\ttfamily null},  }\item[{string}]{avatar\+Url = {\ttfamily null},  }\item[{string}]{lang\+Tag = {\ttfamily null},  }\item[{string}]{location = {\ttfamily null},  }\item[{string}]{timezone = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Update the current user\textquotesingle{}s account on the server.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session for the user.\\
+\hline
+{\em username} & The new username for the user.\\
+\hline
+{\em display\+Name} & A new display name for the user.\\
+\hline
+{\em avatar\+Url} & A new avatar url for the user.\\
+\hline
+{\em lang\+Tag} & A new language tag in BCP-\/47 format for the user.\\
+\hline
+{\em location} & A new location for the user.\\
+\hline
+{\em timezone} & New timezone information for the user.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a493aaa96074ed53faae99041c1ff71e7}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a1ab56488f06c34d4c8e7a184ef923176}\label{interface_nakama_1_1_i_client_a1ab56488f06c34d4c8e7a184ef923176}} 
+\index{Nakama.IClient@{Nakama.IClient}!UpdateGroupAsync@{UpdateGroupAsync}}
+\index{UpdateGroupAsync@{UpdateGroupAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{UpdateGroupAsync()}{UpdateGroupAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+IClient.\+Update\+Group\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{group\+Id,  }\item[{string}]{name,  }\item[{bool}]{open,  }\item[{string}]{description = {\ttfamily null},  }\item[{string}]{avatar\+Url = {\ttfamily null},  }\item[{string}]{lang\+Tag = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Update a group.  
+
+The user must have the correct access permissions for the group. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em group\+Id} & The ID of the group to update.\\
+\hline
+{\em name} & A new name for the group.\\
+\hline
+{\em open} & If the group should have open membership.\\
+\hline
+{\em description} & A new description for the group.\\
+\hline
+{\em avatar\+Url} & A new avatar url for the group.\\
+\hline
+{\em lang\+Tag} & A new language tag in BCP-\/47 format for the group.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ae4721e57aa314b32152069e2644eb02b}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a3b4319cfed8f66406e01105fcbd46286}\label{interface_nakama_1_1_i_client_a3b4319cfed8f66406e01105fcbd46286}} 
+\index{Nakama.IClient@{Nakama.IClient}!ValidatePurchaseAppleAsync@{ValidatePurchaseAppleAsync}}
+\index{ValidatePurchaseAppleAsync@{ValidatePurchaseAppleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ValidatePurchaseAppleAsync()}{ValidatePurchaseAppleAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_purchase_response}{IApi\+Validate\+Purchase\+Response}} $>$ Nakama.\+IClient.\+Validate\+Purchase\+Apple\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{receipt,  }\item[{bool}]{persist = {\ttfamily true},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Validate a purchase receipt against the Apple App Store.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em receipt} & The purchase receipt to be validated.\\
+\hline
+{\em persist} & Whether or not to track the receipt in the \mbox{\hyperlink{namespace_nakama}{Nakama}} database.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the validated list of purchase receipts.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a03a03e289c71ee9a21c6dc03241bd846}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a58ec876cf25e2c0a096fa02dac977985}\label{interface_nakama_1_1_i_client_a58ec876cf25e2c0a096fa02dac977985}} 
+\index{Nakama.IClient@{Nakama.IClient}!ValidatePurchaseGoogleAsync@{ValidatePurchaseGoogleAsync}}
+\index{ValidatePurchaseGoogleAsync@{ValidatePurchaseGoogleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ValidatePurchaseGoogleAsync()}{ValidatePurchaseGoogleAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_purchase_response}{IApi\+Validate\+Purchase\+Response}} $>$ Nakama.\+IClient.\+Validate\+Purchase\+Google\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{receipt,  }\item[{bool}]{persist = {\ttfamily true},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Validate a purchase receipt against the Google Play Store.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em receipt} & The purchase receipt to be validated.\\
+\hline
+{\em persist} & Whether or not to track the receipt in the \mbox{\hyperlink{namespace_nakama}{Nakama}} database.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the validated list of purchase receipts.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a08e6406e21fd5fc52ee905b586210276}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a04cd45c9b6e5cc2333f7299a55a182a3}\label{interface_nakama_1_1_i_client_a04cd45c9b6e5cc2333f7299a55a182a3}} 
+\index{Nakama.IClient@{Nakama.IClient}!ValidatePurchaseHuaweiAsync@{ValidatePurchaseHuaweiAsync}}
+\index{ValidatePurchaseHuaweiAsync@{ValidatePurchaseHuaweiAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ValidatePurchaseHuaweiAsync()}{ValidatePurchaseHuaweiAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_purchase_response}{IApi\+Validate\+Purchase\+Response}} $>$ Nakama.\+IClient.\+Validate\+Purchase\+Huawei\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{receipt,  }\item[{string}]{signature,  }\item[{bool}]{persist = {\ttfamily true},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Validate a purchase receipt against the Huawei App\+Gallery.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em receipt} & The purchase receipt to be validated.\\
+\hline
+{\em signature} & The signature of the purchase receipt.\\
+\hline
+{\em persist} & Whether or not to track the receipt in the \mbox{\hyperlink{namespace_nakama}{Nakama}} database.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the validated list of purchase receipts.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a7d49b887e6d302f68917162a0567ad66}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_abc626bfa5a312f23033b1dcce16abe90}\label{interface_nakama_1_1_i_client_abc626bfa5a312f23033b1dcce16abe90}} 
+\index{Nakama.IClient@{Nakama.IClient}!ValidateSubscriptionAppleAsync@{ValidateSubscriptionAppleAsync}}
+\index{ValidateSubscriptionAppleAsync@{ValidateSubscriptionAppleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ValidateSubscriptionAppleAsync()}{ValidateSubscriptionAppleAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_subscription_response}{IApi\+Validate\+Subscription\+Response}} $>$ Nakama.\+IClient.\+Validate\+Subscription\+Apple\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{receipt,  }\item[{bool}]{persist = {\ttfamily true},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Validate an Apple subscription receipt.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em receipt} & The receipt to validate.\\
+\hline
+{\em persist} & Whether or not to persist the receipt to \mbox{\hyperlink{namespace_nakama}{Nakama}}\textquotesingle{}s database.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the subscription validation response. 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a63b6bc07335627f58236ba0c9997336f}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_abdceffcc291e56bf4de8683fb6386fe9}\label{interface_nakama_1_1_i_client_abdceffcc291e56bf4de8683fb6386fe9}} 
+\index{Nakama.IClient@{Nakama.IClient}!ValidateSubscriptionGoogleAsync@{ValidateSubscriptionGoogleAsync}}
+\index{ValidateSubscriptionGoogleAsync@{ValidateSubscriptionGoogleAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ValidateSubscriptionGoogleAsync()}{ValidateSubscriptionGoogleAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_validate_subscription_response}{IApi\+Validate\+Subscription\+Response}} $>$ Nakama.\+IClient.\+Validate\+Subscription\+Google\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{receipt,  }\item[{bool}]{persist = {\ttfamily true},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Validate a Google subscription receipt.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em receipt} & The receipt to validate.\\
+\hline
+{\em persist} & Whether or not to persist the receipt to \mbox{\hyperlink{namespace_nakama}{Nakama}}\textquotesingle{}s database.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the subscription validation response. 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a30b942db8e51709901e60c6a5d26c5bb}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a75172b3237e2c1a0dd2df2d1e0a19ec1}\label{interface_nakama_1_1_i_client_a75172b3237e2c1a0dd2df2d1e0a19ec1}} 
+\index{Nakama.IClient@{Nakama.IClient}!WriteLeaderboardRecordAsync@{WriteLeaderboardRecordAsync}}
+\index{WriteLeaderboardRecordAsync@{WriteLeaderboardRecordAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{WriteLeaderboardRecordAsync()}{WriteLeaderboardRecordAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_leaderboard_record}{IApi\+Leaderboard\+Record}} $>$ Nakama.\+IClient.\+Write\+Leaderboard\+Record\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{leaderboard\+Id,  }\item[{long}]{score,  }\item[{long}]{sub\+Score = {\ttfamily 0L},  }\item[{string}]{metadata = {\ttfamily null},  }\item[{\mbox{\hyperlink{namespace_nakama_a8e9c42a36e780e31a03f2ba94a3bb6e7}{Api\+Operator}}}]{api\+Operator = {\ttfamily ApiOperator.NO\+\_\+OVERRIDE},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Write a record to a leaderboard.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session for the user.\\
+\hline
+{\em leaderboard\+Id} & The ID of the leaderboard to write.\\
+\hline
+{\em score} & The score for the leaderboard record.\\
+\hline
+{\em sub\+Score} & The sub score for the leaderboard record.\\
+\hline
+{\em metadata} & The metadata for the leaderboard record.\\
+\hline
+{\em operator} & The operator for the record that can be used to override the one set in the leaderboard. 
+\begin{DoxyParams}{Parameters}
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the leaderboard record object written.
+\end{DoxyReturn}
+\\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a6b44990352ecbf4c847b29ac715014fb}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_adc8f34b5cacc6e61d0240d53c1383935}\label{interface_nakama_1_1_i_client_adc8f34b5cacc6e61d0240d53c1383935}} 
+\index{Nakama.IClient@{Nakama.IClient}!WriteStorageObjectsAsync@{WriteStorageObjectsAsync}}
+\index{WriteStorageObjectsAsync@{WriteStorageObjectsAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{WriteStorageObjectsAsync()}{WriteStorageObjectsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_storage_object_acks}{IApi\+Storage\+Object\+Acks}} $>$ Nakama.\+IClient.\+Write\+Storage\+Objects\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{\mbox{\hyperlink{interface_nakama_1_1_i_api_write_storage_object}{IApi\+Write\+Storage\+Object}}\mbox{[}$\,$\mbox{]}}]{objects,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Write objects to the storage engine.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em objects} & The objects to write.\\
+\hline
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the storage write acknowledgements.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_ad2d4bb27d5340afb6be824a2bc2e7815}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a0e18257ebdd85c9a0d56c501e221e90a}\label{interface_nakama_1_1_i_client_a0e18257ebdd85c9a0d56c501e221e90a}} 
+\index{Nakama.IClient@{Nakama.IClient}!WriteTournamentRecordAsync@{WriteTournamentRecordAsync}}
+\index{WriteTournamentRecordAsync@{WriteTournamentRecordAsync}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{WriteTournamentRecordAsync()}{WriteTournamentRecordAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_leaderboard_record}{IApi\+Leaderboard\+Record}} $>$ Nakama.\+IClient.\+Write\+Tournament\+Record\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{tournament\+Id,  }\item[{long}]{score,  }\item[{long}]{sub\+Score = {\ttfamily 0L},  }\item[{string}]{metadata = {\ttfamily null},  }\item[{\mbox{\hyperlink{namespace_nakama_a8e9c42a36e780e31a03f2ba94a3bb6e7}{Api\+Operator}}}]{api\+Operator = {\ttfamily ApiOperator.NO\+\_\+OVERRIDE},  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}}]{retry\+Configuration = {\ttfamily null},  }\item[{Cancellation\+Token}]{canceller = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Write a record to a tournament.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em tournament\+Id} & The ID of the tournament to write.\\
+\hline
+{\em score} & The score of the tournament record.\\
+\hline
+{\em sub\+Score} & The sub score for the tournament record.\\
+\hline
+{\em metadata} & The metadata for the tournament record.\\
+\hline
+{\em operator} & The operator for the record that can be used to override the one set in the tournament. 
+\begin{DoxyParams}{Parameters}
+{\em retry\+Configuration} & The retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}\\
+\hline
+{\em canceller} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the tournament record object written.
+\end{DoxyReturn}
+\\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_af0b988b7a04b78b7aac805dc502ff52d}{Nakama.\+Client}}.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a65ce1849bf8c639c0d11853be12f22f8}\label{interface_nakama_1_1_i_client_a65ce1849bf8c639c0d11853be12f22f8}} 
+\index{Nakama.IClient@{Nakama.IClient}!AutoRefreshSession@{AutoRefreshSession}}
+\index{AutoRefreshSession@{AutoRefreshSession}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{AutoRefreshSession}{AutoRefreshSession}}
+{\footnotesize\ttfamily bool Nakama.\+IClient.\+Auto\+Refresh\+Session\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+True if the session should be refreshed with an active refresh token.  
+
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a2abea8492c53d4579c14eb4ae5327610}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ad86bc2c00a137d35243e977086a00ffa}\label{interface_nakama_1_1_i_client_ad86bc2c00a137d35243e977086a00ffa}} 
+\index{Nakama.IClient@{Nakama.IClient}!GlobalRetryConfiguration@{GlobalRetryConfiguration}}
+\index{GlobalRetryConfiguration@{GlobalRetryConfiguration}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{GlobalRetryConfiguration}{GlobalRetryConfiguration}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}} Nakama.\+IClient.\+Global\+Retry\+Configuration\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The global retry configuration. See \mbox{\hyperlink{class_nakama_1_1_retry_configuration}{Retry\+Configuration}}.  
+
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_a4e84dc06e439ead1dcdc918350b93ed8}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a93e9759631f1a3106dc4ec47477f3eb8}\label{interface_nakama_1_1_i_client_a93e9759631f1a3106dc4ec47477f3eb8}} 
+\index{Nakama.IClient@{Nakama.IClient}!Host@{Host}}
+\index{Host@{Host}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{Host}{Host}}
+{\footnotesize\ttfamily string Nakama.\+IClient.\+Host\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The host address of the server. Defaults to \char`\"{}127.\+0.\+0.\+1\char`\"{}.  
+
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aacad034c2d21b970537423de0ba27e4f}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_ad5d7b98d99d381d0340e7d8e90a54d26}\label{interface_nakama_1_1_i_client_ad5d7b98d99d381d0340e7d8e90a54d26}} 
+\index{Nakama.IClient@{Nakama.IClient}!Port@{Port}}
+\index{Port@{Port}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{Port}{Port}}
+{\footnotesize\ttfamily int Nakama.\+IClient.\+Port\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The port number of the server. Defaults to 7350.  
+
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aa59309ff4ed7172795782cd69cb295d8}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a5ce30e2720c3b831e249bf19452eb340}\label{interface_nakama_1_1_i_client_a5ce30e2720c3b831e249bf19452eb340}} 
+\index{Nakama.IClient@{Nakama.IClient}!Scheme@{Scheme}}
+\index{Scheme@{Scheme}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{Scheme}{Scheme}}
+{\footnotesize\ttfamily string Nakama.\+IClient.\+Scheme\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The protocol scheme used to connect with the server. Must be either \char`\"{}http\char`\"{} or \char`\"{}https\char`\"{}.  
+
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_afaf274b5c7dc2b21931b7d6814f3d455}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_a6b13274c171e19e07f26ea5334f8ab23}\label{interface_nakama_1_1_i_client_a6b13274c171e19e07f26ea5334f8ab23}} 
+\index{Nakama.IClient@{Nakama.IClient}!ServerKey@{ServerKey}}
+\index{ServerKey@{ServerKey}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{ServerKey}{ServerKey}}
+{\footnotesize\ttfamily string Nakama.\+IClient.\+Server\+Key\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The key used to authenticate with the server without a session. Defaults to \char`\"{}defaultkey\char`\"{}.  
+
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_aa70b920781b70f74f0419d262043dbd1}{Nakama.\+Client}}.
+
+\mbox{\Hypertarget{interface_nakama_1_1_i_client_aadcfb5308770d73098d9ba66534074af}\label{interface_nakama_1_1_i_client_aadcfb5308770d73098d9ba66534074af}} 
+\index{Nakama.IClient@{Nakama.IClient}!Timeout@{Timeout}}
+\index{Timeout@{Timeout}!Nakama.IClient@{Nakama.IClient}}
+\doxysubsubsection{\texorpdfstring{Timeout}{Timeout}}
+{\footnotesize\ttfamily int Nakama.\+IClient.\+Timeout\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Set the timeout in seconds on requests sent to the server.  
+
+
+
+Implemented in \mbox{\hyperlink{class_nakama_1_1_client_afa11ac790793b5178c423364cc1a1cd2}{Nakama.\+Client}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IClient.\+cs\end{DoxyCompactItemize}

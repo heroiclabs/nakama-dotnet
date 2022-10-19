@@ -1,0 +1,33 @@
+\hypertarget{interface_nakama_1_1_i_stream_presence_event}{}\doxysection{Nakama.\+IStream\+Presence\+Event Interface Reference}
+\label{interface_nakama_1_1_i_stream_presence_event}\index{Nakama.IStreamPresenceEvent@{Nakama.IStreamPresenceEvent}}
+
+
+A batch of joins and leaves on the low level stream.   
+
+
+
+
+Inherited by Nakama.\+Stream\+Presence\+Event.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_stream_presence_event_ae4ac7fee586952580142c0ed6a1c3bff}\label{interface_nakama_1_1_i_stream_presence_event_ae4ac7fee586952580142c0ed6a1c3bff}} 
+IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ {\bfseries Leaves}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Presences of users who joined the stream.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_stream_presence_event_a348ece2fffc76212d47fd885fb80c7cb}\label{interface_nakama_1_1_i_stream_presence_event_a348ece2fffc76212d47fd885fb80c7cb}} 
+IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ {\bfseries Joins}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Presences of users who left the stream.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_stream_presence_event_abe21bc088dad6602243133ddedfd903c}\label{interface_nakama_1_1_i_stream_presence_event_abe21bc088dad6602243133ddedfd903c}} 
+\mbox{\hyperlink{interface_nakama_1_1_i_stream}{IStream}} {\bfseries Stream}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The identifier for the stream.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A batch of joins and leaves on the low level stream.  
+
+Streams are built on to provide abstractions for matches, chat channels, etc. In most cases you\textquotesingle{}ll never need to interact with the low level stream itself. 
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IStream\+Presence\+Event.\+cs\end{DoxyCompactItemize}

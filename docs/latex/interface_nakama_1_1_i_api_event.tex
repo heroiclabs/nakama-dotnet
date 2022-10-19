@@ -1,0 +1,34 @@
+\hypertarget{interface_nakama_1_1_i_api_event}{}\doxysection{Nakama.\+IApi\+Event Interface Reference}
+\label{interface_nakama_1_1_i_api_event}\index{Nakama.IApiEvent@{Nakama.IApiEvent}}
+
+
+Represents an event to be passed through the server to registered event handlers.   
+
+
+
+
+Inherited by Nakama.\+Api\+Event.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_event_aa6dab036da2e4cbd3ca41ff10fa0d610}\label{interface_nakama_1_1_i_api_event_aa6dab036da2e4cbd3ca41ff10fa0d610}} 
+bool {\bfseries External}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True if the event came directly from a client call, false otherwise.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_event_aba6a44997576666fab8b98ab0ed59923}\label{interface_nakama_1_1_i_api_event_aba6a44997576666fab8b98ab0ed59923}} 
+string {\bfseries Name}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em An event name, type, category, or identifier.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_event_abba047f10041db3729e3c5e9b0d7ace4}\label{interface_nakama_1_1_i_api_event_abba047f10041db3729e3c5e9b0d7ace4}} 
+IDictionary$<$ string, string $>$ {\bfseries Properties}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Arbitrary event property values.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_api_event_a781fb5a536c2ffc3cbf7470774baeadf}\label{interface_nakama_1_1_i_api_event_a781fb5a536c2ffc3cbf7470774baeadf}} 
+string {\bfseries Timestamp}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The time when the event was triggered.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an event to be passed through the server to registered event handlers.  
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/Api\+Client.\+gen.\+cs\end{DoxyCompactItemize}

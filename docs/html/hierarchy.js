@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "Satori.Event", "class_satori_1_1_event.html", null ],
     [ "EventArgs", null, [
       [ "Nakama.Ninja.WebSockets.PongEventArgs", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_pong_event_args.html", null ]
     ] ],
@@ -12,7 +13,8 @@ var hierarchy =
       [ "Nakama.Ninja.WebSockets.Exceptions.ServerListenerSocketException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_server_listener_socket_exception.html", null ],
       [ "Nakama.Ninja.WebSockets.Exceptions.WebSocketBufferOverflowException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_buffer_overflow_exception.html", null ],
       [ "Nakama.Ninja.WebSockets.Exceptions.WebSocketHandshakeFailedException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_handshake_failed_exception.html", null ],
-      [ "Nakama.Ninja.WebSockets.Exceptions.WebSocketVersionNotSupportedException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_version_not_supported_exception.html", null ]
+      [ "Nakama.Ninja.WebSockets.Exceptions.WebSocketVersionNotSupportedException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_version_not_supported_exception.html", null ],
+      [ "Satori.ApiResponseException", "class_satori_1_1_api_response_exception.html", null ]
     ] ],
     [ "Nakama.Ninja.WebSockets.HttpHelper", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper.html", null ],
     [ "Nakama.IApiAccount", "interface_nakama_1_1_i_api_account.html", null ],
@@ -26,6 +28,9 @@ var hierarchy =
     [ "Nakama.IApiAccountGameCenter", "interface_nakama_1_1_i_api_account_game_center.html", null ],
     [ "Nakama.IApiAccountGoogle", "interface_nakama_1_1_i_api_account_google.html", null ],
     [ "Nakama.IApiAccountSteam", "interface_nakama_1_1_i_api_account_steam.html", null ],
+    [ "Satori.IApiAuthenticateLogoutRequest", "interface_satori_1_1_i_api_authenticate_logout_request.html", null ],
+    [ "Satori.IApiAuthenticateRefreshRequest", "interface_satori_1_1_i_api_authenticate_refresh_request.html", null ],
+    [ "Satori.IApiAuthenticateRequest", "interface_satori_1_1_i_api_authenticate_request.html", null ],
     [ "Nakama.Console.IApiChannelMessage", "interface_nakama_1_1_console_1_1_i_api_channel_message.html", null ],
     [ "Nakama.IApiChannelMessage", "interface_nakama_1_1_i_api_channel_message.html", null ],
     [ "Nakama.IApiChannelMessageList", "interface_nakama_1_1_i_api_channel_message_list.html", null ],
@@ -35,6 +40,12 @@ var hierarchy =
     ] ],
     [ "Nakama.IApiDeleteStorageObjectsRequest", "interface_nakama_1_1_i_api_delete_storage_objects_request.html", null ],
     [ "Nakama.IApiEvent", "interface_nakama_1_1_i_api_event.html", null ],
+    [ "Satori.IApiEvent", "interface_satori_1_1_i_api_event.html", null ],
+    [ "Satori.IApiEventRequest", "interface_satori_1_1_i_api_event_request.html", null ],
+    [ "Satori.IApiExperiment", "interface_satori_1_1_i_api_experiment.html", null ],
+    [ "Satori.IApiExperimentList", "interface_satori_1_1_i_api_experiment_list.html", null ],
+    [ "Satori.IApiFlag", "interface_satori_1_1_i_api_flag.html", null ],
+    [ "Satori.IApiFlagList", "interface_satori_1_1_i_api_flag_list.html", null ],
     [ "Nakama.Console.IApiFriend", "interface_nakama_1_1_console_1_1_i_api_friend.html", null ],
     [ "Nakama.IApiFriend", "interface_nakama_1_1_i_api_friend.html", null ],
     [ "Nakama.Console.IApiFriendList", "interface_nakama_1_1_console_1_1_i_api_friend_list.html", null ],
@@ -43,21 +54,27 @@ var hierarchy =
     [ "Nakama.IApiGroup", "interface_nakama_1_1_i_api_group.html", null ],
     [ "Nakama.IApiGroupList", "interface_nakama_1_1_i_api_group_list.html", null ],
     [ "Nakama.IApiGroupUserList", "interface_nakama_1_1_i_api_group_user_list.html", null ],
+    [ "Satori.IApiIdentifyRequest", "interface_satori_1_1_i_api_identify_request.html", null ],
     [ "Nakama.Console.IApiLeaderboardRecord", "interface_nakama_1_1_console_1_1_i_api_leaderboard_record.html", null ],
     [ "Nakama.IApiLeaderboardRecord", "interface_nakama_1_1_i_api_leaderboard_record.html", null ],
     [ "Nakama.IApiLeaderboardRecordList", "interface_nakama_1_1_i_api_leaderboard_record_list.html", null ],
     [ "Nakama.IApiLinkSteamRequest", "interface_nakama_1_1_i_api_link_steam_request.html", null ],
+    [ "Nakama.IApiListSubscriptionsRequest", "interface_nakama_1_1_i_api_list_subscriptions_request.html", null ],
+    [ "Satori.IApiLiveEvent", "interface_satori_1_1_i_api_live_event.html", null ],
+    [ "Satori.IApiLiveEventList", "interface_satori_1_1_i_api_live_event_list.html", null ],
     [ "Nakama.IApiMatch", "interface_nakama_1_1_i_api_match.html", null ],
     [ "Nakama.IApiMatchList", "interface_nakama_1_1_i_api_match_list.html", null ],
     [ "Nakama.Console.IApiNotification", "interface_nakama_1_1_console_1_1_i_api_notification.html", null ],
     [ "Nakama.IApiNotification", "interface_nakama_1_1_i_api_notification.html", null ],
     [ "Nakama.IApiNotificationList", "interface_nakama_1_1_i_api_notification_list.html", null ],
+    [ "Satori.IApiProperties", "interface_satori_1_1_i_api_properties.html", null ],
     [ "Nakama.IApiReadStorageObjectId", "interface_nakama_1_1_i_api_read_storage_object_id.html", [
       [ "Nakama.StorageObjectId", "class_nakama_1_1_storage_object_id.html", null ]
     ] ],
     [ "Nakama.IApiReadStorageObjectsRequest", "interface_nakama_1_1_i_api_read_storage_objects_request.html", null ],
     [ "Nakama.IApiRpc", "interface_nakama_1_1_i_api_rpc.html", null ],
     [ "Nakama.IApiSession", "interface_nakama_1_1_i_api_session.html", null ],
+    [ "Satori.IApiSession", "interface_satori_1_1_i_api_session.html", null ],
     [ "Nakama.IApiSessionLogoutRequest", "interface_nakama_1_1_i_api_session_logout_request.html", null ],
     [ "Nakama.IApiSessionRefreshRequest", "interface_nakama_1_1_i_api_session_refresh_request.html", null ],
     [ "Nakama.Console.IApiStorageObject", "interface_nakama_1_1_console_1_1_i_api_storage_object.html", null ],
@@ -67,21 +84,27 @@ var hierarchy =
     [ "Nakama.IApiStorageObjectAcks", "interface_nakama_1_1_i_api_storage_object_acks.html", null ],
     [ "Nakama.IApiStorageObjectList", "interface_nakama_1_1_i_api_storage_object_list.html", null ],
     [ "Nakama.IApiStorageObjects", "interface_nakama_1_1_i_api_storage_objects.html", null ],
+    [ "Nakama.IApiSubscriptionList", "interface_nakama_1_1_i_api_subscription_list.html", null ],
     [ "Nakama.IApiTournament", "interface_nakama_1_1_i_api_tournament.html", null ],
     [ "Nakama.IApiTournamentList", "interface_nakama_1_1_i_api_tournament_list.html", null ],
     [ "Nakama.IApiTournamentRecordList", "interface_nakama_1_1_i_api_tournament_record_list.html", null ],
     [ "Nakama.IApiUpdateAccountRequest", "interface_nakama_1_1_i_api_update_account_request.html", null ],
     [ "Nakama.IApiUpdateGroupRequest", "interface_nakama_1_1_i_api_update_group_request.html", null ],
+    [ "Satori.IApiUpdatePropertiesRequest", "interface_satori_1_1_i_api_update_properties_request.html", null ],
     [ "Nakama.Console.IApiUser", "interface_nakama_1_1_console_1_1_i_api_user.html", null ],
     [ "Nakama.IApiUser", "interface_nakama_1_1_i_api_user.html", null ],
     [ "Nakama.Console.IApiUserGroupList", "interface_nakama_1_1_console_1_1_i_api_user_group_list.html", null ],
     [ "Nakama.IApiUserGroupList", "interface_nakama_1_1_i_api_user_group_list.html", null ],
     [ "Nakama.IApiUsers", "interface_nakama_1_1_i_api_users.html", null ],
     [ "Nakama.IApiValidatedPurchase", "interface_nakama_1_1_i_api_validated_purchase.html", null ],
+    [ "Nakama.IApiValidatedSubscription", "interface_nakama_1_1_i_api_validated_subscription.html", null ],
     [ "Nakama.IApiValidatePurchaseAppleRequest", "interface_nakama_1_1_i_api_validate_purchase_apple_request.html", null ],
     [ "Nakama.IApiValidatePurchaseGoogleRequest", "interface_nakama_1_1_i_api_validate_purchase_google_request.html", null ],
     [ "Nakama.IApiValidatePurchaseHuaweiRequest", "interface_nakama_1_1_i_api_validate_purchase_huawei_request.html", null ],
     [ "Nakama.IApiValidatePurchaseResponse", "interface_nakama_1_1_i_api_validate_purchase_response.html", null ],
+    [ "Nakama.IApiValidateSubscriptionAppleRequest", "interface_nakama_1_1_i_api_validate_subscription_apple_request.html", null ],
+    [ "Nakama.IApiValidateSubscriptionGoogleRequest", "interface_nakama_1_1_i_api_validate_subscription_google_request.html", null ],
+    [ "Nakama.IApiValidateSubscriptionResponse", "interface_nakama_1_1_i_api_validate_subscription_response.html", null ],
     [ "Nakama.IApiWriteStorageObject", "interface_nakama_1_1_i_api_write_storage_object.html", [
       [ "Nakama.WriteStorageObject", "class_nakama_1_1_write_storage_object.html", null ]
     ] ],
@@ -95,6 +118,9 @@ var hierarchy =
     [ "Nakama.IClient", "interface_nakama_1_1_i_client.html", [
       [ "Nakama.Client", "class_nakama_1_1_client.html", null ]
     ] ],
+    [ "Satori.IClient", "interface_satori_1_1_i_client.html", [
+      [ "Satori.Client", "class_satori_1_1_client.html", null ]
+    ] ],
     [ "Nakama.Console.IConfigWarning", "interface_nakama_1_1_console_1_1_i_config_warning.html", null ],
     [ "Nakama.Console.IConsoleAccountExport", "interface_nakama_1_1_console_1_1_i_console_account_export.html", null ],
     [ "Nakama.Console.IConsoleAuthenticateRequest", "interface_nakama_1_1_console_1_1_i_console_authenticate_request.html", null ],
@@ -107,19 +133,15 @@ var hierarchy =
     [ "Nakama.Console.IConsoleWalletLedger", "interface_nakama_1_1_console_1_1_i_console_wallet_ledger.html", null ],
     [ "Nakama.Console.IConsoleWalletLedgerList", "interface_nakama_1_1_console_1_1_i_console_wallet_ledger_list.html", null ],
     [ "Nakama.Console.IConsoleWriteStorageObjectRequest", "interface_nakama_1_1_console_1_1_i_console_write_storage_object_request.html", null ],
-    [ "IDisposable", null, [
-      [ "Nakama.ISocket", "interface_nakama_1_1_i_socket.html", [
-        [ "Nakama.Socket", "class_nakama_1_1_socket.html", null ]
-      ] ],
-      [ "Nakama.ISocketAdapter", "interface_nakama_1_1_i_socket_adapter.html", [
-        [ "Nakama.WebSocketAdapter", "class_nakama_1_1_web_socket_adapter.html", null ]
-      ] ]
-    ] ],
     [ "Nakama.IGroupUserListGroupUser", "interface_nakama_1_1_i_group_user_list_group_user.html", null ],
     [ "Nakama.IHttpAdapter", "interface_nakama_1_1_i_http_adapter.html", [
       [ "Nakama.HttpRequestAdapter", "class_nakama_1_1_http_request_adapter.html", null ]
     ] ],
+    [ "Satori.IHttpAdapter", "interface_satori_1_1_i_http_adapter.html", [
+      [ "Satori.HttpRequestAdapter", "class_satori_1_1_http_request_adapter.html", null ]
+    ] ],
     [ "Nakama.ILogger", "interface_nakama_1_1_i_logger.html", null ],
+    [ "Satori.ILogger", "interface_satori_1_1_i_logger.html", null ],
     [ "Nakama.IMatch", "interface_nakama_1_1_i_match.html", null ],
     [ "Nakama.IMatchmakerMatched", "interface_nakama_1_1_i_matchmaker_matched.html", null ],
     [ "Nakama.IMatchmakerTicket", "interface_nakama_1_1_i_matchmaker_ticket.html", null ],
@@ -141,10 +163,22 @@ var hierarchy =
     ] ],
     [ "Nakama.Console.IProtobufAny", "interface_nakama_1_1_console_1_1_i_protobuf_any.html", null ],
     [ "Nakama.IProtobufAny", "interface_nakama_1_1_i_protobuf_any.html", null ],
+    [ "Satori.IProtobufAny", "interface_satori_1_1_i_protobuf_any.html", null ],
     [ "Nakama.IRpcStatus", "interface_nakama_1_1_i_rpc_status.html", null ],
+    [ "Satori.IRpcStatus", "interface_satori_1_1_i_rpc_status.html", null ],
     [ "Nakama.Console.IRuntimeError", "interface_nakama_1_1_console_1_1_i_runtime_error.html", null ],
     [ "Nakama.ISession", "interface_nakama_1_1_i_session.html", [
       [ "Nakama.Session", "class_nakama_1_1_session.html", null ]
+    ] ],
+    [ "Satori.ISession", "interface_satori_1_1_i_session.html", [
+      [ "Satori.Session", "class_satori_1_1_session.html", null ]
+    ] ],
+    [ "Nakama.ISocket", "interface_nakama_1_1_i_socket.html", [
+      [ "Nakama.Socket", "class_nakama_1_1_socket.html", null ]
+    ] ],
+    [ "Nakama.ISocketAdapter", "interface_nakama_1_1_i_socket_adapter.html", [
+      [ "Nakama.WebSocketAdapter", "class_nakama_1_1_web_socket_adapter.html", null ],
+      [ "Nakama.WebSocketStdlibAdapter", "class_nakama_1_1_web_socket_stdlib_adapter.html", null ]
     ] ],
     [ "Nakama.IStatus", "interface_nakama_1_1_i_status.html", null ],
     [ "Nakama.Console.IStatusListStatus", "interface_nakama_1_1_console_1_1_i_status_list_status.html", null ],

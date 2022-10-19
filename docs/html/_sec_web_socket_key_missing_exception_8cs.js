@@ -1,0 +1,4 @@
+var _sec_web_socket_key_missing_exception_8cs =
+[
+    [ "Nakama.Ninja.WebSockets.Exceptions.SecWebSocketKeyMissingException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_sec_web_socket_key_missing_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_sec_web_socket_key_missing_exception" ]
+];

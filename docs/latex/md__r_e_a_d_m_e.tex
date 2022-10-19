@@ -1,0 +1,214 @@
+\hypertarget{md__r_e_a_d_m_e_autotoc_md84}{}\doxysection{Nakama}\label{md__r_e_a_d_m_e_autotoc_md84}
+\begin{quote}
+.NET client for \mbox{\hyperlink{namespace_nakama}{Nakama}} server written in C\#. \end{quote}
+\href{https://github.com/heroiclabs/nakama}{\texttt{ Nakama}} is an open-\/source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much \href{https://heroiclabs.com}{\texttt{ more}}.
+
+This client implements the full API and socket options with the server. It\textquotesingle{}s written in C\# with minimal dependencies to support Unity, Xamarin, Godot, XNA, and other engines and frameworks.
+
+Full documentation is online -\/ \href{https://heroiclabs.com/docs}{\texttt{ https\+://heroiclabs.\+com/docs}}\hypertarget{md__r_e_a_d_m_e_autotoc_md85}{}\doxysubsection{Getting Started}\label{md__r_e_a_d_m_e_autotoc_md85}
+You\textquotesingle{}ll need to setup the server and database before you can connect with the client. The simplest way is to use Docker but have a look at the \href{https://github.com/heroiclabs/nakama\#getting-started}{\texttt{ server documentation}} for other options.
+
+
+\begin{DoxyEnumerate}
+\item Install and run the servers. Follow these \href{https://heroiclabs.com/docs/install-docker-quickstart}{\texttt{ instructions}}.
+\item Download the client from the \href{https://github.com/heroiclabs/nakama-dotnet/releases}{\texttt{ releases page}} and import it into your project. You can also build from source.
+\item Use the connection credentials to build a client object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{// using Nakama;}}
+\DoxyCodeLine{\textcolor{keyword}{const} \textcolor{keywordtype}{string} scheme = \textcolor{stringliteral}{"{}http"{}};}
+\DoxyCodeLine{\textcolor{keyword}{const} \textcolor{keywordtype}{string} host = \textcolor{stringliteral}{"{}127.0.0.1"{}};}
+\DoxyCodeLine{\textcolor{keyword}{const} \textcolor{keywordtype}{int} port = 7350;}
+\DoxyCodeLine{\textcolor{keyword}{const} \textcolor{keywordtype}{string} serverKey = \textcolor{stringliteral}{"{}defaultkey"{}};}
+\DoxyCodeLine{var client = \textcolor{keyword}{new} Client(scheme, host, port, serverKey);}
+
+\end{DoxyCode}
+
+\end{DoxyEnumerate}\hypertarget{md__r_e_a_d_m_e_autotoc_md86}{}\doxysubsection{Usage}\label{md__r_e_a_d_m_e_autotoc_md86}
+The client object has many methods to execute various features in the server or open realtime socket connections with the server.\hypertarget{md__r_e_a_d_m_e_autotoc_md87}{}\doxysubsubsection{Authenticate}\label{md__r_e_a_d_m_e_autotoc_md87}
+There\textquotesingle{}s a variety of ways to \href{https://heroiclabs.com/docs/authentication}{\texttt{ authenticate}} with the server. Authentication can create a user if they don\textquotesingle{}t already exist with those credentials. It\textquotesingle{}s also easy to authenticate with a social profile from Google Play Games, Facebook, Game Center, etc.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var email = \textcolor{stringliteral}{"{}super@heroes.com"{}};}
+\DoxyCodeLine{var password = \textcolor{stringliteral}{"{}batsignal"{}};}
+\DoxyCodeLine{var session = await client.AuthenticateEmailAsync(email, password);}
+\DoxyCodeLine{System.Console.WriteLine(session);}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md88}{}\doxysubsubsection{Sessions}\label{md__r_e_a_d_m_e_autotoc_md88}
+When authenticated the server responds with an auth token (JWT) which contains useful properties and gets deserialized into a {\ttfamily Session} object.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{System.Console.WriteLine(session.AuthToken); \textcolor{comment}{// raw JWT token}}
+\DoxyCodeLine{System.Console.WriteLine(session.RefreshToken); \textcolor{comment}{// raw JWT token.}}
+\DoxyCodeLine{System.Console.WriteLine(session.UserId);}
+\DoxyCodeLine{System.Console.WriteLine(session.Username);}
+\DoxyCodeLine{System.Console.WriteLine(\textcolor{stringliteral}{"{}Session has expired: \{0\}"{}}, session.IsExpired);}
+\DoxyCodeLine{System.Console.WriteLine(\textcolor{stringliteral}{"{}Session expires at: \{0\}"{}}, session.ExpireTime);}
+
+\end{DoxyCode}
+
+
+It is recommended to store the auth token from the session and check at startup if it has expired. If the token has expired you must reauthenticate. The expiry time of the token can be changed as a setting in the server.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var authToken = \textcolor{stringliteral}{"{}restored from somewhere"{}};}
+\DoxyCodeLine{var refreshToken = \textcolor{stringliteral}{"{}restored from somewhere"{}};}
+\DoxyCodeLine{var session = Session.Restore(authToken, refreshToken);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{// Check whether a session is close to expiry.}}
+\DoxyCodeLine{\textcolor{keywordflow}{if} (session.HasExpired(DateTime.UtcNow.AddDays(1)))}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    \textcolor{keywordflow}{try}}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{        session = await client.SessionRefreshAsync(session);}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    \textcolor{keywordflow}{catch} (ApiResponseException e)}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{        System.Console.WriteLine(\textcolor{stringliteral}{"{}Session can no longer be refreshed. Must reauthenticate!"{}});}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+\+:warning\+: NOTE\+: The length of the lifetime of a session can be set on the server with the \char`\"{}-\/-\/session.\+token\+\_\+expiry\+\_\+sec\char`\"{} command flag argument. The lifetime of the refresh token for a session can be set on the server with the \char`\"{}-\/-\/session.\+refresh\+\_\+token\+\_\+expiry\+\_\+sec\char`\"{} command flag.\hypertarget{md__r_e_a_d_m_e_autotoc_md89}{}\doxysubsubsection{Requests}\label{md__r_e_a_d_m_e_autotoc_md89}
+The client includes lots of builtin APIs for various features of the game server. These can be accessed with the async methods. It can also call custom logic in RPC functions on the server. These can also be executed with a socket object.
+
+All requests are sent with a session object which authorizes the client.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var account = await client.GetAccountAsync(session);}
+\DoxyCodeLine{System.Console.WriteLine(account.User.Id);}
+\DoxyCodeLine{System.Console.WriteLine(account.User.Username);}
+\DoxyCodeLine{System.Console.WriteLine(account.Wallet);}
+
+\end{DoxyCode}
+
+
+Requests can be supplied with a retry configurations in cases of transient network or server errors.
+
+A single configuration can be used to control all request retry behavior\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var retryConfiguration = \textcolor{keyword}{new} RetryConfiguration(baseDelayMs: 1000, maxRetries: 5, delegate \{ System.Console.Writeline(\textcolor{stringliteral}{"{}about to retry."{}}); \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{client.GlobalRetryConfiguration = retryConfiguration;}
+\DoxyCodeLine{var account = await client.GetAccountAsync(session);}
+
+\end{DoxyCode}
+
+
+Or, the configuration can be supplied on a per-\/request basis\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var retryConfiguration = \textcolor{keyword}{new} RetryConfiguration(baseDelayMs: 1000, maxRetries: 5, delegate \{ System.Console.Writeline(\textcolor{stringliteral}{"{}about to retry."{}}); \});}
+\DoxyCodeLine{}
+\DoxyCodeLine{var account = await client.GetAccountAsync(session, retryConfiguration);}
+
+\end{DoxyCode}
+
+
+Per-\/request retry configurations override the global retry configuration.
+
+Requests also can be supplied with a cancellation token if you need to cancel them mid-\/flight\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var canceller = \textcolor{keyword}{new} CancellationTokenSource();}
+\DoxyCodeLine{var account = await client.GetAccountAsync(session, retryConfiguration: \textcolor{keyword}{null}, canceller);}
+\DoxyCodeLine{}
+\DoxyCodeLine{await Task.Delay(25);}
+\DoxyCodeLine{}
+\DoxyCodeLine{canceller.Cancel(); \textcolor{comment}{// will raise a TaskCanceledException}}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md90}{}\doxysubsubsection{Socket}\label{md__r_e_a_d_m_e_autotoc_md90}
+The client can create one or more sockets with the server. Each socket can have it\textquotesingle{}s own event listeners registered for responses received from the server.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var socket = Socket.From(client);}
+\DoxyCodeLine{socket.Connected += () =>}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    System.Console.WriteLine(\textcolor{stringliteral}{"{}Socket connected."{}});}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{socket.Closed += () =>}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    System.Console.WriteLine(\textcolor{stringliteral}{"{}Socket closed."{}});}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{socket.ReceivedError += e => System.Console.WriteLine(e);}
+\DoxyCodeLine{await socket.ConnectAsync(session);}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md91}{}\doxysubsection{Contribute}\label{md__r_e_a_d_m_e_autotoc_md91}
+The development roadmap is managed as Git\+Hub issues and pull requests are welcome. If you\textquotesingle{}re interested to improve the code please open an issue to discuss the changes or drop in and discuss it in the \href{https://forum.heroiclabs.com}{\texttt{ community forum}}.\hypertarget{md__r_e_a_d_m_e_autotoc_md92}{}\doxysubsubsection{Source Builds}\label{md__r_e_a_d_m_e_autotoc_md92}
+The codebase can be built with the \href{https://docs.microsoft.com/en-us/dotnet/core/tools}{\texttt{ Dotnet CLI}}. All dependencies are downloaded at build time with Nuget.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{dotnet build src/Nakama/Nakama.csproj}
+
+\end{DoxyCode}
+
+
+For release builds use\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{dotnet build -\/c Release /p:AssemblyVersion=2.0.0.0 Nakama/Nakama.csproj}
+\DoxyCodeLine{// For Nuget packaging}
+\DoxyCodeLine{dotnet pack -\/p:AssemblyVersion=2.0.0.0 -\/p:PackageVersion=2.0.0 -\/c Release Nakama/Nakama.csproj}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md93}{}\doxysubsubsection{Run Tests}\label{md__r_e_a_d_m_e_autotoc_md93}
+To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the \href{https://heroiclabs.com/docs/install-docker-quickstart}{\texttt{ documentation}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{docker-\/compose -\/f ./docker-\/compose-\/postgres.yml up}
+\DoxyCodeLine{dotnet test tests/Nakama.Tests/Nakama.Tests.csproj}
+
+\end{DoxyCode}
+
+
+To run a specific test, pass the fully qualified name of the method to {\ttfamily dotnet test -\/-\/filter}\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{dotnet test -\/-\/filter "{}Nakama.Tests.Api.GroupTest.ShouldPromoteAndDemoteUsers"{}}
+
+\end{DoxyCode}
+
+
+If you\textquotesingle{}d like to attach a Visual Studio debugger to a test, set {\ttfamily VSTEST\+\_\+\+HOST\+\_\+\+DEBUG} to {\ttfamily true} in your shell environment and run {\ttfamily dotnet test}. Attach the debugger to the process identified by the console.\hypertarget{md__r_e_a_d_m_e_autotoc_md94}{}\doxysubsubsection{Generate Docs}\label{md__r_e_a_d_m_e_autotoc_md94}
+nakama-\/dotnet API docs are generated with Doxygen and deployed to Git\+Hub pages.
+
+When changing the API comments, rerun Doxygen and commit the changes in {\ttfamily docs/$\ast$}.
+
+To run Doxygen\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{brew install doxygen}
+\DoxyCodeLine{cd docs/}
+\DoxyCodeLine{doxygen}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md95}{}\doxysection{Satori}\label{md__r_e_a_d_m_e_autotoc_md95}
+This repository also contains the \mbox{\hyperlink{namespace_satori}{Satori}} client for use with the \href{https://heroiclabs.com/satori/}{\texttt{ Satori Liveops Server}}.
+
+It follows the same authentication patterns as \mbox{\hyperlink{namespace_nakama}{Nakama}} but is used for managing your live game via sending analytics events, updating properties, getting feature flags and experiments, and more.
+
+In order to run tests for \mbox{\hyperlink{namespace_satori}{Satori}}, create sample data via the \mbox{\hyperlink{namespace_satori}{Satori}} console.
+
+Then run {\ttfamily dotnet test} from this directory.\hypertarget{md__r_e_a_d_m_e_autotoc_md96}{}\doxysection{Licenses}\label{md__r_e_a_d_m_e_autotoc_md96}
+This project is licensed under the \href{https://github.com/heroiclabs/nakama-dotnet/blob/master/LICENSE}{\texttt{ Apache-\/2 License}}.\hypertarget{md__r_e_a_d_m_e_autotoc_md97}{}\doxysection{Special Thanks}\label{md__r_e_a_d_m_e_autotoc_md97}
+Thanks to Alex Parker (@zanders3) for the excellent \href{https://github.com/zanders3/json}{\texttt{ json}} library and David Haig (@ninjasource) for \href{https://github.com/ninjasource/Ninja.WebSockets}{\texttt{ Ninja.\+Web\+Sockets}}. 

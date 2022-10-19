@@ -1,0 +1,43 @@
+\hypertarget{interface_nakama_1_1_i_channel}{}\doxysection{Nakama.\+IChannel Interface Reference}
+\label{interface_nakama_1_1_i_channel}\index{Nakama.IChannel@{Nakama.IChannel}}
+
+
+A chat channel on the server.   
+
+
+
+
+Inherited by Nakama.\+Channel.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_a39fb9c483de665ac5ccd75617952dea5}\label{interface_nakama_1_1_i_channel_a39fb9c483de665ac5ccd75617952dea5}} 
+string {\bfseries Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The server-\/assigned channel ID.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_a24d5000cdeddf45977f9a9c4e2c186db}\label{interface_nakama_1_1_i_channel_a24d5000cdeddf45977f9a9c4e2c186db}} 
+IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ {\bfseries Presences}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The presences visible on the chat channel.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_ad3b8547c0ca2c322236dc640e648410f}\label{interface_nakama_1_1_i_channel_ad3b8547c0ca2c322236dc640e648410f}} 
+\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} {\bfseries Self}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The presence of the current user. i.\+e. Your self.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_a0a47216873656bccbae97ada995780fc}\label{interface_nakama_1_1_i_channel_a0a47216873656bccbae97ada995780fc}} 
+string {\bfseries Room\+Name}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The name of the chat room, or an empty string if this message was not sent through a chat room.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_a7a285328ca09f9521f495bfebc6e1312}\label{interface_nakama_1_1_i_channel_a7a285328ca09f9521f495bfebc6e1312}} 
+string {\bfseries Group\+Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the group, or an empty string if this message was not sent through a group channel.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_aaec45628d3ca0dbd873657fba3ce65f8}\label{interface_nakama_1_1_i_channel_aaec45628d3ca0dbd873657fba3ce65f8}} 
+string {\bfseries User\+Id\+One}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the first DM user, or an empty string if this message was not sent through a DM chat.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_channel_a5ab925c1def55a23abf66fce013f0bf8}\label{interface_nakama_1_1_i_channel_a5ab925c1def55a23abf66fce013f0bf8}} 
+string {\bfseries User\+Id\+Two}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The ID of the second DM user, or an empty string if this message was not sent through a DM chat.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A chat channel on the server.  
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IChannel.\+cs\end{DoxyCompactItemize}

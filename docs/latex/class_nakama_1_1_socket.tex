@@ -1,0 +1,1873 @@
+\hypertarget{class_nakama_1_1_socket}{}\doxysection{Nakama.\+Socket Class Reference}
+\label{class_nakama_1_1_socket}\index{Nakama.Socket@{Nakama.Socket}}
+
+
+A socket which implements the \mbox{\hyperlink{namespace_nakama}{Nakama}} realtime API.   
+
+
+Inheritance diagram for Nakama.\+Socket\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_nakama_1_1_socket}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a957a7a72f3206eeb71b4f823b89481b2}\label{class_nakama_1_1_socket_a957a7a72f3206eeb71b4f823b89481b2}} 
+{\bfseries Socket} ()
+\begin{DoxyCompactList}\small\item\em A new socket with default options.  \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_nakama_1_1_socket_a5cd86e4fde0b78a4230ed024ef43dbe7}{Socket}} (\mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter}{ISocket\+Adapter}} adapter)
+\begin{DoxyCompactList}\small\item\em A new socket with an adapter.  \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_nakama_1_1_socket_a7a528ae9507ab34fb8a19fe5fd90fde1}{Socket}} (string scheme, string host, int port, \mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter}{ISocket\+Adapter}} adapter, int send\+Timeout\+Sec=\mbox{\hyperlink{class_nakama_1_1_socket_a533161073904d1f02ea89edef79cfee7}{Default\+Send\+Timeout}})
+\begin{DoxyCompactList}\small\item\em A new socket with server connection and adapter options.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_ae9fa18dcb3d306d29c7dc97a8e64687a}{Accept\+Party\+Member\+Async}} (string party\+Id, \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} presence)
+\begin{DoxyCompactList}\small\item\em Accept a party member\textquotesingle{}s request to join the party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & The party ID to accept the join request for.\\
+\hline
+{\em presence} & The presence to accept as a party member. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_matchmaker_ticket}{IMatchmaker\+Ticket}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_aed1cb5c5784d1fd08bf5e63ab270a848}{Add\+Matchmaker\+Async}} (string query=\char`\"{}$\ast$\char`\"{}, int min\+Count=2, int max\+Count=8, Dictionary$<$ string, string $>$ string\+Properties=null, Dictionary$<$ string, double $>$ numeric\+Properties=null, int? count\+Multiple=null)
+\begin{DoxyCompactList}\small\item\em Join the matchmaker pool and search for opponents on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em query} & The matchmaker query to search for opponents.\\
+\hline
+{\em min\+Count} & The minimum number of players to compete against in a match.\\
+\hline
+{\em max\+Count} & The maximum number of players to compete against in a match.\\
+\hline
+{\em string\+Properties} & A set of key/value properties to provide to searches.\\
+\hline
+{\em numeric\+Properties} & A set of key/value numeric properties to provide to searches.\\
+\hline
+{\em count\+Multiple} & An optional integer to force the matchmaker to match in multiples of.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a matchmaker ticket object.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_matchmaker_ticket}{IParty\+Matchmaker\+Ticket}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a5ed1f27ccf52792a55363ce3273e22de}{Add\+Matchmaker\+Party\+Async}} (string party\+Id, string query, int min\+Count, int max\+Count, Dictionary$<$ string, string $>$ string\+Properties=null, Dictionary$<$ string, double $>$ numeric\+Properties=null, int? count\+Multiple=null)
+\begin{DoxyCompactList}\small\item\em Begin matchmaking as a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+{\em query} & Filter query used to identify suitable users.\\
+\hline
+{\em min\+Count} & Minimum total user count to match together.\\
+\hline
+{\em max\+Count} & Maximum total user count to match together.\\
+\hline
+{\em string\+Properties} & String properties.\\
+\hline
+{\em numeric\+Properties} & Numeric properties.\\
+\hline
+{\em count\+Multiple} & An optional integer to force the matchmaker to match in multiples of.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a party matchmaker ticket object.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a5d033f1ff9973aa3e53a5675c91d108e}{Close\+Async}} ()
+\begin{DoxyCompactList}\small\item\em Close the socket connection to the server. 
+
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a11620a9e6706ddaf48d260d56c7cdcaa}{Connect\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}} session, bool appear\+Online=false, int connect\+Timeout\+Sec=\mbox{\hyperlink{class_nakama_1_1_socket_ae902438fa7e36bfa60a9c7c062218216}{Default\+Connect\+Timeout}}, string lang\+Tag=\char`\"{}en\char`\"{})
+\begin{DoxyCompactList}\small\item\em Connect to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em appear\+Online} & If the user who appear online to other users.\\
+\hline
+{\em connect\+Timeout} & The time allowed for the socket connection to be established.\\
+\hline
+{\em lang\+Tag} & The language tag of the user on the connected socket.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a56e29efdc1831754a70b889a08588237}{Close\+Party\+Async}} (string party\+Id)
+\begin{DoxyCompactList}\small\item\em End a party, kicking all party members and closing it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & The ID of the party.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_match}{IMatch}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a62f9170d0c155670b7fb57d7de9884a6}{Create\+Match\+Async}} (string name=null)
+\begin{DoxyCompactList}\small\item\em Create a multiplayer match on the server. 
+
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party}{IParty}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_af228c737dc62ab9bf084706413e8e9be}{Create\+Party\+Async}} (bool open, int max\+Size)
+\begin{DoxyCompactList}\small\item\em Create a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em open} & Whether or not the party will require join requests to be approved by the party leader.\\
+\hline
+{\em max\+Size} & Maximum number of party members.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_status}{IStatus}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_ad6180b6f74a9adfdbc53b1c19c63efa5}{Follow\+Users\+Async}} (IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_user}{IApi\+User}} $>$ users)
+\begin{DoxyCompactList}\small\item\em Subscribe to one or more users for their status updates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em users} & The users.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the current statuses for the users.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_status}{IStatus}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a1f567b12eb7a0d498edb3bcea9518338}{Follow\+Users\+Async}} (IEnumerable$<$ string $>$ user\+IDs, IEnumerable$<$ string $>$ usernames=null)
+\begin{DoxyCompactList}\small\item\em Subscribe to one or more users for their status updates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+IDs} & The IDs of users.\\
+\hline
+{\em usernames} & The usernames of the users.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the current statuses for the users.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_ad20754e8420f8adbf838a2c57b4f6fd4}{Join\+Chat\+Async}} (string target, \mbox{\hyperlink{namespace_nakama_addd7f097ac4c449d75e44da62657f307}{Channel\+Type}} type, bool persistence=false, bool hidden=false)
+\begin{DoxyCompactList}\small\item\em Join a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em target} & The target channel to join.\\
+\hline
+{\em type} & The type of channel to join.\\
+\hline
+{\em persistence} & If chat messages should be stored.\\
+\hline
+{\em hidden} & If the current user should be hidden on the channel.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a chat channel object.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_match}{IMatch}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a2fe4966a0ad40291bafe2d4b3fc69c80}{Join\+Match\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_matchmaker_matched}{IMatchmaker\+Matched}} matched)
+\begin{DoxyCompactList}\small\item\em Join a multiplayer match with the matchmaker matched object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em matched} & A matchmaker matched object.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a multiplayer match.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_match}{IMatch}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a6d9068f06c70a089a1bd4c25b61802cb}{Join\+Match\+Async}} (string match\+Id, IDictionary$<$ string, string $>$ metadata=null)
+\begin{DoxyCompactList}\small\item\em Join a multiplayer match by ID. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em match\+Id} & The ID of the match to attempt to join.\\
+\hline
+{\em metadata} & An optional set of key-\/value metadata pairs to be passed to the match handler.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a multiplayer match.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a57b7ff03c3588dcd4ff1f255f013d519}{Join\+Party\+Async}} (string party\+Id)
+\begin{DoxyCompactList}\small\item\em Join a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a2e174430fb895e329fab4c6bde3b93a7}{Leave\+Chat\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}} channel)
+\begin{DoxyCompactList}\small\item\em Leave a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & The chat channel to leave.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a8350140a21c191ea84617135fef4082e}{Leave\+Chat\+Async}} (string channel\+Id)
+\begin{DoxyCompactList}\small\item\em Leave a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel\+Id} & The ID of the chat channel to leave.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_abcd300eb623ef096f446bfb11b6de0dd}{Leave\+Match\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_match}{IMatch}} match)
+\begin{DoxyCompactList}\small\item\em Leave a multiplayer match on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em match} & The multiplayer match to leave.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_acc15b0880cb30f2c5afc3318c76a4db6}{Leave\+Match\+Async}} (string match\+Id)
+\begin{DoxyCompactList}\small\item\em Leave a multiplayer match on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em match\+Id} & The multiplayer match to leave.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a261e11e3f7828ec4854957c766c036cb}{Leave\+Party\+Async}} (string party\+Id)
+\begin{DoxyCompactList}\small\item\em Leave the party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_join_request}{IParty\+Join\+Request}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_ab0ae67833a8133ef069312fcdaecbe48}{List\+Party\+Join\+Requests\+Async}} (string party\+Id)
+\begin{DoxyCompactList}\small\item\em Request a list of pending join requests for a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a list of all party join requests.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_add01eba7310dbba3a01ecbefb132ade0}{Promote\+Party\+Member\+Async}} (string party\+Id, \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} party\+Member)
+\begin{DoxyCompactList}\small\item\em Promote a new party leader. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+{\em party\+Member} & The presence of an existing party member to promote as the new leader.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an announcement of a new party leader.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_aa167fc7e9cae1b65a7f0585431fc3daf}{Remove\+Chat\+Message\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}} channel, string message\+Id)
+\begin{DoxyCompactList}\small\item\em Remove a chat message from a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & The chat channel with the message to remove.\\
+\hline
+{\em message\+Id} & The ID of the chat message to remove.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an acknowledgement of the removed message.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a34eef836c0c7f1707c5ffdd9a07f248e}{Remove\+Chat\+Message\+Async}} (string channel\+Id, string message\+Id)
+\begin{DoxyCompactList}\small\item\em Remove a chat message from a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel\+Id} & The ID of the chat channel with the message to remove.\\
+\hline
+{\em message\+Id} & The ID of the chat message to remove.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an acknowledgement of the removed message.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_aa49d9456a9a1ab735f7f5f1106f56827}{Remove\+Matchmaker\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_matchmaker_ticket}{IMatchmaker\+Ticket}} ticket)
+\begin{DoxyCompactList}\small\item\em Leave the matchmaker pool with the ticket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ticket} & The ticket returned by the matchmaker on join.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a8afad86c4eedab3e40b5f7069b170f72}{Remove\+Matchmaker\+Async}} (string ticket)
+\begin{DoxyCompactList}\small\item\em Leave the matchmaker pool with the ticket contents. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ticket} & The contents of the ticket returned by the matchmaker on join.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a7047d31f96d51a71879219df0d510dd3}{Remove\+Matchmaker\+Party\+Async}} (string party\+Id, string ticket)
+\begin{DoxyCompactList}\small\item\em Cancel a party matchmaking process using a ticket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+{\em ticket} & The ticket to cancel.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a35dcc5e4b9135bffd54793b42fb9b4e1}{Remove\+Party\+Member\+Async}} (string party\+Id, \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} presence)
+\begin{DoxyCompactList}\small\item\em Kick a party member, or decline a request to join. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID to remove/reject from.\\
+\hline
+{\em presence} & The presence to remove or reject.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a01a6c34d95185413168cf645e7e8943f}{Rpc\+Async}} (string func\+Id, string payload=null)
+\begin{DoxyCompactList}\small\item\em Execute an RPC function to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func\+Id} & The ID of the function to execute.\\
+\hline
+{\em payload} & An (optional) payload to send to the server.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the RPC function response object.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a30717efa7340511c87fc7e4babe99f80}{Rpc\+Async}} (string func\+Id, Array\+Segment$<$ byte $>$ payload)
+\begin{DoxyCompactList}\small\item\em Execute an RPC function to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func\+Id} & The ID of the function to execute.\\
+\hline
+{\em payload} & An (optional) payload sent to the server from the byte buffer.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the RPC function response object.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a4b674ce28156f9bec04915fefca0286a}{Send\+Match\+State\+Async}} (string match\+Id, long op\+Code, Array\+Segment$<$ byte $>$ state, IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ presences=null)
+\begin{DoxyCompactList}\small\item\em Send input to a multiplayer match on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em match\+Id} & The ID of the match.\\
+\hline
+{\em op\+Code} & An operation code for the input.\\
+\hline
+{\em state} & The input data to send from the byte buffer.\\
+\hline
+{\em presences} & The presences in the match who should receive the input.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a3e990dd6a05b4949d2800a6c8c91b935}{Send\+Match\+State\+Async}} (string match\+Id, long op\+Code, string state, IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ presences=null)
+\begin{DoxyCompactList}\small\item\em Send input to a multiplayer match on the server. 
+
+/// 
+
+When no presences are supplied the new match state will be sent to all presences.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_af98298e1a187ca977c9dcf63c738dc2c}{Send\+Match\+State\+Async}} (string match\+Id, long op\+Code, byte\mbox{[}$\,$\mbox{]} state, IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ presences=null)
+\begin{DoxyCompactList}\small\item\em Send input to a multiplayer match on the server. 
+
+/// 
+
+When no presences are supplied the new match state will be sent to all presences.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a8b3b14eceedee8d96186d5bf234d820c}{Send\+Party\+Data\+Async}} (string party\+Id, long op\+Code, Array\+Segment$<$ byte $>$ data)
+\begin{DoxyCompactList}\small\item\em Send data to a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID to send to.\\
+\hline
+{\em op\+Code} & Op code value.\\
+\hline
+{\em data} & The input data to send from the byte buffer, if any.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_aaade8d235e868a54af041e54b216af9d}{Send\+Party\+Data\+Async}} (string party\+Id, long op\+Code, string data)
+\begin{DoxyCompactList}\small\item\em Send data to a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID to send to.\\
+\hline
+{\em op\+Code} & Op code value.\\
+\hline
+{\em data} & Data payload, if any.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a2208d5d13196fbf4f40e3131eb224d47}{Send\+Party\+Data\+Async}} (string party\+Id, long op\+Code, byte\mbox{[}$\,$\mbox{]} data)
+\begin{DoxyCompactList}\small\item\em Send data to a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID to send to.\\
+\hline
+{\em op\+Code} & Op code value.\\
+\hline
+{\em data} & Data payload, if any.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a3f20c76d13d14d9f7b3e82555815d39d}\label{class_nakama_1_1_socket_a3f20c76d13d14d9f7b3e82555815d39d}} 
+override string {\bfseries To\+String} ()
+\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a69d7b68ed48c79402440a90101981eec}{Unfollow\+Users\+Async}} (IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_user}{IApi\+User}} $>$ users)
+\begin{DoxyCompactList}\small\item\em Unfollow one or more users from their status updates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em users} & The users to unfollow.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a3834aed45938e02964a4f29adcb51986}{Unfollow\+Users\+Async}} (IEnumerable$<$ string $>$ user\+IDs)
+\begin{DoxyCompactList}\small\item\em Unfollow one or more users from their status updates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+IDs} & The IDs of the users to unfollow.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a3c3fbea58ee3a2f6e3d3885ca79ded9b}{Update\+Chat\+Message\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}} channel, string message\+Id, string content)
+\begin{DoxyCompactList}\small\item\em Update a chat message on a chat channel in the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & The chat channel with the message to update.\\
+\hline
+{\em message\+Id} & The ID of the message to update.\\
+\hline
+{\em content} & The new contents of the chat message.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an acknowledgement of the updated message.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_adcc67413fe0ddd3aa5125290680151cf}{Update\+Chat\+Message\+Async}} (string channel\+Id, string message\+Id, string content)
+\begin{DoxyCompactList}\small\item\em Update a chat message on a chat channel in the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel\+Id} & The ID of the chat channel with the message to update.\\
+\hline
+{\em message\+Id} & The ID of the message to update.\\
+\hline
+{\em content} & The new contents of the chat message.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an acknowledgement of the updated message.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{class_nakama_1_1_socket_a869d3761f21ba7a2578f005a6690f707}{Update\+Status\+Async}} (string status)
+\begin{DoxyCompactList}\small\item\em Update the status for the current user online. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em status} & The new status for the user.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a6cb398d1815a5a14d0e98dbe726a45dc}{Write\+Chat\+Message\+Async}} (\mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}} channel, string content)
+\begin{DoxyCompactList}\small\item\em Send a chat message to a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & The chat channel to send onto.\\
+\hline
+{\em content} & The contents of the message to send.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the acknowledgement of the chat message write.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ \mbox{\hyperlink{class_nakama_1_1_socket_a36c7765ff46d9f1fa8d3d9114311d772}{Write\+Chat\+Message\+Async}} (string channel\+Id, string content)
+\begin{DoxyCompactList}\small\item\em Send a chat message to a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel\+Id} & The ID of the chat channel to send onto.\\
+\hline
+{\em content} & The contents of the message to send.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the acknowledgement of the chat message write.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{interface_nakama_1_1_i_socket}{ISocket}} \mbox{\hyperlink{class_nakama_1_1_socket_a05a1bfe0921f27da4243fc6e829aa28d}{From}} (\mbox{\hyperlink{interface_nakama_1_1_i_client}{IClient}} client)
+\begin{DoxyCompactList}\small\item\em Build a socket from a client object.  \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{interface_nakama_1_1_i_socket}{ISocket}} \mbox{\hyperlink{class_nakama_1_1_socket_ac4201f5bdda381252451e4aef465b498}{From}} (\mbox{\hyperlink{interface_nakama_1_1_i_client}{IClient}} client, \mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter}{ISocket\+Adapter}} adapter)
+\begin{DoxyCompactList}\small\item\em Build a socket from a client object and socket adapter.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_ae902438fa7e36bfa60a9c7c062218216}\label{class_nakama_1_1_socket_ae902438fa7e36bfa60a9c7c062218216}} 
+const int {\bfseries Default\+Connect\+Timeout} = 30
+\begin{DoxyCompactList}\small\item\em The default timeout for when the socket connects.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a533161073904d1f02ea89edef79cfee7}\label{class_nakama_1_1_socket_a533161073904d1f02ea89edef79cfee7}} 
+const int {\bfseries Default\+Send\+Timeout} = 10
+\begin{DoxyCompactList}\small\item\em The default timeout for when the socket sends a message.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_nakama_1_1_socket_a3487edbd9dd5dfa7f5a47c485c506639}{Is\+Connected}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If the socket is connected.  \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_nakama_1_1_socket_a1319b640499d302aa32dc6d4b6373195}{Is\+Connecting}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em If the socket is connecting.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a49b31620c26b5c3bcb73395c6e43e7e7}\label{class_nakama_1_1_socket_a49b31620c26b5c3bcb73395c6e43e7e7}} 
+\mbox{\hyperlink{interface_nakama_1_1_i_logger}{ILogger}} {\bfseries Logger}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The logger to use with the socket.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Events}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a300991e0a08a180f811dd86cc81756f2}\label{class_nakama_1_1_socket_a300991e0a08a180f811dd86cc81756f2}} 
+Action {\bfseries Closed}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a96b11a256b14b2f940d74ce55c6bcfac}\label{class_nakama_1_1_socket_a96b11a256b14b2f940d74ce55c6bcfac}} 
+Action {\bfseries Connected}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a2fc741ef8ec0c967409927269fe17b2d}\label{class_nakama_1_1_socket_a2fc741ef8ec0c967409927269fe17b2d}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_channel_message}{IApi\+Channel\+Message}} $>$ {\bfseries Received\+Channel\+Message}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a7df1f68cfed0dbc80c151d9fc9146436}\label{class_nakama_1_1_socket_a7df1f68cfed0dbc80c151d9fc9146436}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_presence_event}{IChannel\+Presence\+Event}} $>$ {\bfseries Received\+Channel\+Presence}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a1d55fb80f035773813b9c20836fd7d4b}\label{class_nakama_1_1_socket_a1d55fb80f035773813b9c20836fd7d4b}} 
+Action$<$ Exception $>$ {\bfseries Received\+Error}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a58bda7f53b946b4aeea917fb410d5b53}\label{class_nakama_1_1_socket_a58bda7f53b946b4aeea917fb410d5b53}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_matchmaker_matched}{IMatchmaker\+Matched}} $>$ {\bfseries Received\+Matchmaker\+Matched}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a2126823bf94305bc690de717c204ddc8}\label{class_nakama_1_1_socket_a2126823bf94305bc690de717c204ddc8}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_match_state}{IMatch\+State}} $>$ {\bfseries Received\+Match\+State}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_aa994986e8223a436057a51123b53c138}\label{class_nakama_1_1_socket_aa994986e8223a436057a51123b53c138}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_match_presence_event}{IMatch\+Presence\+Event}} $>$ {\bfseries Received\+Match\+Presence}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_ae852000e396b907fe3427275e20a438a}\label{class_nakama_1_1_socket_ae852000e396b907fe3427275e20a438a}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_notification}{IApi\+Notification}} $>$ {\bfseries Received\+Notification}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_aafb682456f9e2f2f6786c7a604068579}\label{class_nakama_1_1_socket_aafb682456f9e2f2f6786c7a604068579}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_status_presence_event}{IStatus\+Presence\+Event}} $>$ {\bfseries Received\+Status\+Presence}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a8f87e235201537ea096e9f7644fcbb53}\label{class_nakama_1_1_socket_a8f87e235201537ea096e9f7644fcbb53}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_stream_presence_event}{IStream\+Presence\+Event}} $>$ {\bfseries Received\+Stream\+Presence}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_ab74f9b37e9a85409f5c742c1f7472df8}\label{class_nakama_1_1_socket_ab74f9b37e9a85409f5c742c1f7472df8}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_stream_state}{IStream\+State}} $>$ {\bfseries Received\+Stream\+State}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_ae0aea1347e564c5b4e05808f8b4f7c7b}\label{class_nakama_1_1_socket_ae0aea1347e564c5b4e05808f8b4f7c7b}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party}{IParty}} $>$ {\bfseries Received\+Party}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a1c7b6705495d0d792ea206c2c3ec60db}\label{class_nakama_1_1_socket_a1c7b6705495d0d792ea206c2c3ec60db}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_close}{IParty\+Close}} $>$ {\bfseries Received\+Party\+Close}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_af68d467390d65c70387cdb4a81f07b05}\label{class_nakama_1_1_socket_af68d467390d65c70387cdb4a81f07b05}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_data}{IParty\+Data}} $>$ {\bfseries Received\+Party\+Data}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a5e3f748ba1eb18860832bf62c820bcd6}\label{class_nakama_1_1_socket_a5e3f748ba1eb18860832bf62c820bcd6}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_join_request}{IParty\+Join\+Request}} $>$ {\bfseries Received\+Party\+Join\+Request}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a65997479fd70edd6a4c343d00413ca53}\label{class_nakama_1_1_socket_a65997479fd70edd6a4c343d00413ca53}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_leader}{IParty\+Leader}} $>$ {\bfseries Received\+Party\+Leader}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a7efe921c019734677c663fadd61abd10}\label{class_nakama_1_1_socket_a7efe921c019734677c663fadd61abd10}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_presence_event}{IParty\+Presence\+Event}} $>$ {\bfseries Received\+Party\+Presence}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_socket_a3d974d278adc00819b18a946f07d467e}\label{class_nakama_1_1_socket_a3d974d278adc00819b18a946f07d467e}} 
+Action$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_matchmaker_ticket}{IParty\+Matchmaker\+Ticket}} $>$ {\bfseries Received\+Party\+Matchmaker\+Ticket}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A socket which implements the \mbox{\hyperlink{namespace_nakama}{Nakama}} realtime API.  
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_socket_a5cd86e4fde0b78a4230ed024ef43dbe7}\label{class_nakama_1_1_socket_a5cd86e4fde0b78a4230ed024ef43dbe7}} 
+\index{Nakama.Socket@{Nakama.Socket}!Socket@{Socket}}
+\index{Socket@{Socket}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{Socket()}{Socket()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Nakama.\+Socket.\+Socket (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter}{ISocket\+Adapter}}}]{adapter }\end{DoxyParamCaption})}
+
+
+
+A new socket with an adapter.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em adapter} & The adapter for use with the socket.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_nakama_1_1_socket_a7a528ae9507ab34fb8a19fe5fd90fde1}\label{class_nakama_1_1_socket_a7a528ae9507ab34fb8a19fe5fd90fde1}} 
+\index{Nakama.Socket@{Nakama.Socket}!Socket@{Socket}}
+\index{Socket@{Socket}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{Socket()}{Socket()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Nakama.\+Socket.\+Socket (\begin{DoxyParamCaption}\item[{string}]{scheme,  }\item[{string}]{host,  }\item[{int}]{port,  }\item[{\mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter}{ISocket\+Adapter}}}]{adapter,  }\item[{int}]{send\+Timeout\+Sec = {\ttfamily \mbox{\hyperlink{class_nakama_1_1_socket_a533161073904d1f02ea89edef79cfee7}{Default\+Send\+Timeout}}} }\end{DoxyParamCaption})}
+
+
+
+A new socket with server connection and adapter options.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em scheme} & The protocol scheme. Must be \char`\"{}ws\char`\"{} or \char`\"{}wss\char`\"{}.\\
+\hline
+{\em host} & The host address of the server.\\
+\hline
+{\em port} & The port number of the server.\\
+\hline
+{\em adapter} & The adapter for use with the socket.\\
+\hline
+{\em send\+Timeout\+Sec} & The maximum time allowed for a message to be sent.\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_socket_ae9fa18dcb3d306d29c7dc97a8e64687a}\label{class_nakama_1_1_socket_ae9fa18dcb3d306d29c7dc97a8e64687a}} 
+\index{Nakama.Socket@{Nakama.Socket}!AcceptPartyMemberAsync@{AcceptPartyMemberAsync}}
+\index{AcceptPartyMemberAsync@{AcceptPartyMemberAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{AcceptPartyMemberAsync()}{AcceptPartyMemberAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Accept\+Party\+Member\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id,  }\item[{\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}}}]{presence }\end{DoxyParamCaption})}
+
+
+
+Accept a party member\textquotesingle{}s request to join the party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & The party ID to accept the join request for.\\
+\hline
+{\em presence} & The presence to accept as a party member. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a1bde1efda48cb1aac4d0e049dbe05e51}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_aed1cb5c5784d1fd08bf5e63ab270a848}\label{class_nakama_1_1_socket_aed1cb5c5784d1fd08bf5e63ab270a848}} 
+\index{Nakama.Socket@{Nakama.Socket}!AddMatchmakerAsync@{AddMatchmakerAsync}}
+\index{AddMatchmakerAsync@{AddMatchmakerAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{AddMatchmakerAsync()}{AddMatchmakerAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_matchmaker_ticket}{IMatchmaker\+Ticket}} $>$ Nakama.\+Socket.\+Add\+Matchmaker\+Async (\begin{DoxyParamCaption}\item[{string}]{query = {\ttfamily \char`\"{}$\ast$\char`\"{}},  }\item[{int}]{min\+Count = {\ttfamily 2},  }\item[{int}]{max\+Count = {\ttfamily 8},  }\item[{Dictionary$<$ string, string $>$}]{string\+Properties = {\ttfamily null},  }\item[{Dictionary$<$ string, double $>$}]{numeric\+Properties = {\ttfamily null},  }\item[{int?}]{count\+Multiple = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Join the matchmaker pool and search for opponents on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em query} & The matchmaker query to search for opponents.\\
+\hline
+{\em min\+Count} & The minimum number of players to compete against in a match.\\
+\hline
+{\em max\+Count} & The maximum number of players to compete against in a match.\\
+\hline
+{\em string\+Properties} & A set of key/value properties to provide to searches.\\
+\hline
+{\em numeric\+Properties} & A set of key/value numeric properties to provide to searches.\\
+\hline
+{\em count\+Multiple} & An optional integer to force the matchmaker to match in multiples of.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a matchmaker ticket object.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a162c3e3aae5243cd0d8aa39b588f6d96}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a5ed1f27ccf52792a55363ce3273e22de}\label{class_nakama_1_1_socket_a5ed1f27ccf52792a55363ce3273e22de}} 
+\index{Nakama.Socket@{Nakama.Socket}!AddMatchmakerPartyAsync@{AddMatchmakerPartyAsync}}
+\index{AddMatchmakerPartyAsync@{AddMatchmakerPartyAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{AddMatchmakerPartyAsync()}{AddMatchmakerPartyAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_matchmaker_ticket}{IParty\+Matchmaker\+Ticket}} $>$ Nakama.\+Socket.\+Add\+Matchmaker\+Party\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id,  }\item[{string}]{query,  }\item[{int}]{min\+Count,  }\item[{int}]{max\+Count,  }\item[{Dictionary$<$ string, string $>$}]{string\+Properties = {\ttfamily null},  }\item[{Dictionary$<$ string, double $>$}]{numeric\+Properties = {\ttfamily null},  }\item[{int?}]{count\+Multiple = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Begin matchmaking as a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+{\em query} & Filter query used to identify suitable users.\\
+\hline
+{\em min\+Count} & Minimum total user count to match together.\\
+\hline
+{\em max\+Count} & Maximum total user count to match together.\\
+\hline
+{\em string\+Properties} & String properties.\\
+\hline
+{\em numeric\+Properties} & Numeric properties.\\
+\hline
+{\em count\+Multiple} & An optional integer to force the matchmaker to match in multiples of.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a party matchmaker ticket object.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a4309cafc8d3b17ddfdbeb3196bad98d5}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a5d033f1ff9973aa3e53a5675c91d108e}\label{class_nakama_1_1_socket_a5d033f1ff9973aa3e53a5675c91d108e}} 
+\index{Nakama.Socket@{Nakama.Socket}!CloseAsync@{CloseAsync}}
+\index{CloseAsync@{CloseAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{CloseAsync()}{CloseAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Close\+Async (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Close the socket connection to the server. 
+
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a47d4805e5bc797be4640b9b40fd0a1ff}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a56e29efdc1831754a70b889a08588237}\label{class_nakama_1_1_socket_a56e29efdc1831754a70b889a08588237}} 
+\index{Nakama.Socket@{Nakama.Socket}!ClosePartyAsync@{ClosePartyAsync}}
+\index{ClosePartyAsync@{ClosePartyAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{ClosePartyAsync()}{ClosePartyAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Close\+Party\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id }\end{DoxyParamCaption})}
+
+
+
+End a party, kicking all party members and closing it. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & The ID of the party.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a1e0dfa45e55ac98a90bd61ba68b3739c}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a11620a9e6706ddaf48d260d56c7cdcaa}\label{class_nakama_1_1_socket_a11620a9e6706ddaf48d260d56c7cdcaa}} 
+\index{Nakama.Socket@{Nakama.Socket}!ConnectAsync@{ConnectAsync}}
+\index{ConnectAsync@{ConnectAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{ConnectAsync()}{ConnectAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Connect\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_session}{ISession}}}]{session,  }\item[{bool}]{appear\+Online = {\ttfamily false},  }\item[{int}]{connect\+Timeout\+Sec = {\ttfamily \mbox{\hyperlink{class_nakama_1_1_socket_ae902438fa7e36bfa60a9c7c062218216}{Default\+Connect\+Timeout}}},  }\item[{string}]{lang\+Tag = {\ttfamily \char`\"{}en\char`\"{}} }\end{DoxyParamCaption})}
+
+
+
+Connect to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em appear\+Online} & If the user who appear online to other users.\\
+\hline
+{\em connect\+Timeout} & The time allowed for the socket connection to be established.\\
+\hline
+{\em lang\+Tag} & The language tag of the user on the connected socket.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_afce0421b802a0610d5ba0df073c76118}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a62f9170d0c155670b7fb57d7de9884a6}\label{class_nakama_1_1_socket_a62f9170d0c155670b7fb57d7de9884a6}} 
+\index{Nakama.Socket@{Nakama.Socket}!CreateMatchAsync@{CreateMatchAsync}}
+\index{CreateMatchAsync@{CreateMatchAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{CreateMatchAsync()}{CreateMatchAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_match}{IMatch}} $>$ Nakama.\+Socket.\+Create\+Match\+Async (\begin{DoxyParamCaption}\item[{string}]{name = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Create a multiplayer match on the server. 
+
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a82169726f5414f591824413d3a38f49c}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_af228c737dc62ab9bf084706413e8e9be}\label{class_nakama_1_1_socket_af228c737dc62ab9bf084706413e8e9be}} 
+\index{Nakama.Socket@{Nakama.Socket}!CreatePartyAsync@{CreatePartyAsync}}
+\index{CreatePartyAsync@{CreatePartyAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{CreatePartyAsync()}{CreatePartyAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party}{IParty}} $>$ Nakama.\+Socket.\+Create\+Party\+Async (\begin{DoxyParamCaption}\item[{bool}]{open,  }\item[{int}]{max\+Size }\end{DoxyParamCaption})}
+
+
+
+Create a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em open} & Whether or not the party will require join requests to be approved by the party leader.\\
+\hline
+{\em max\+Size} & Maximum number of party members.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a8dc33b819637084a48f2dc72811e64c3}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_ad6180b6f74a9adfdbc53b1c19c63efa5}\label{class_nakama_1_1_socket_ad6180b6f74a9adfdbc53b1c19c63efa5}} 
+\index{Nakama.Socket@{Nakama.Socket}!FollowUsersAsync@{FollowUsersAsync}}
+\index{FollowUsersAsync@{FollowUsersAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{FollowUsersAsync()}{FollowUsersAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_status}{IStatus}} $>$ Nakama.\+Socket.\+Follow\+Users\+Async (\begin{DoxyParamCaption}\item[{IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_user}{IApi\+User}} $>$}]{users }\end{DoxyParamCaption})}
+
+
+
+Subscribe to one or more users for their status updates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em users} & The users.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the current statuses for the users.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a35fcf5e7221f3f4fb99629c7f7ffe2cf}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a1f567b12eb7a0d498edb3bcea9518338}\label{class_nakama_1_1_socket_a1f567b12eb7a0d498edb3bcea9518338}} 
+\index{Nakama.Socket@{Nakama.Socket}!FollowUsersAsync@{FollowUsersAsync}}
+\index{FollowUsersAsync@{FollowUsersAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{FollowUsersAsync()}{FollowUsersAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_status}{IStatus}} $>$ Nakama.\+Socket.\+Follow\+Users\+Async (\begin{DoxyParamCaption}\item[{IEnumerable$<$ string $>$}]{user\+IDs,  }\item[{IEnumerable$<$ string $>$}]{usernames = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Subscribe to one or more users for their status updates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+IDs} & The IDs of users.\\
+\hline
+{\em usernames} & The usernames of the users.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the current statuses for the users.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_aa1fc00a1c5e65035102d69c0da9c9bcf}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a05a1bfe0921f27da4243fc6e829aa28d}\label{class_nakama_1_1_socket_a05a1bfe0921f27da4243fc6e829aa28d}} 
+\index{Nakama.Socket@{Nakama.Socket}!From@{From}}
+\index{From@{From}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{From()}{From()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{interface_nakama_1_1_i_socket}{ISocket}} Nakama.\+Socket.\+From (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_client}{IClient}}}]{client }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Build a socket from a client object.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em client} & A client object.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new socket with the connection settings from the client.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_nakama_1_1_socket_ac4201f5bdda381252451e4aef465b498}\label{class_nakama_1_1_socket_ac4201f5bdda381252451e4aef465b498}} 
+\index{Nakama.Socket@{Nakama.Socket}!From@{From}}
+\index{From@{From}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{From()}{From()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{interface_nakama_1_1_i_socket}{ISocket}} Nakama.\+Socket.\+From (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_client}{IClient}}}]{client,  }\item[{\mbox{\hyperlink{interface_nakama_1_1_i_socket_adapter}{ISocket\+Adapter}}}]{adapter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Build a socket from a client object and socket adapter.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em client} & A client object.\\
+\hline
+{\em adapter} & The socket adapter to use with the connection.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new socket with connection settings from the client.
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_nakama_1_1_socket_ad20754e8420f8adbf838a2c57b4f6fd4}\label{class_nakama_1_1_socket_ad20754e8420f8adbf838a2c57b4f6fd4}} 
+\index{Nakama.Socket@{Nakama.Socket}!JoinChatAsync@{JoinChatAsync}}
+\index{JoinChatAsync@{JoinChatAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{JoinChatAsync()}{JoinChatAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}} $>$ Nakama.\+Socket.\+Join\+Chat\+Async (\begin{DoxyParamCaption}\item[{string}]{target,  }\item[{\mbox{\hyperlink{namespace_nakama_addd7f097ac4c449d75e44da62657f307}{Channel\+Type}}}]{type,  }\item[{bool}]{persistence = {\ttfamily false},  }\item[{bool}]{hidden = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Join a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em target} & The target channel to join.\\
+\hline
+{\em type} & The type of channel to join.\\
+\hline
+{\em persistence} & If chat messages should be stored.\\
+\hline
+{\em hidden} & If the current user should be hidden on the channel.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a chat channel object.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_ae30f0d0d5f72817bc5a477c4c105b950}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a2fe4966a0ad40291bafe2d4b3fc69c80}\label{class_nakama_1_1_socket_a2fe4966a0ad40291bafe2d4b3fc69c80}} 
+\index{Nakama.Socket@{Nakama.Socket}!JoinMatchAsync@{JoinMatchAsync}}
+\index{JoinMatchAsync@{JoinMatchAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{JoinMatchAsync()}{JoinMatchAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_match}{IMatch}} $>$ Nakama.\+Socket.\+Join\+Match\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_matchmaker_matched}{IMatchmaker\+Matched}}}]{matched }\end{DoxyParamCaption})}
+
+
+
+Join a multiplayer match with the matchmaker matched object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em matched} & A matchmaker matched object.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a multiplayer match.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a459b0786a266bd8599b9435e5f45ea34}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a6d9068f06c70a089a1bd4c25b61802cb}\label{class_nakama_1_1_socket_a6d9068f06c70a089a1bd4c25b61802cb}} 
+\index{Nakama.Socket@{Nakama.Socket}!JoinMatchAsync@{JoinMatchAsync}}
+\index{JoinMatchAsync@{JoinMatchAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{JoinMatchAsync()}{JoinMatchAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_match}{IMatch}} $>$ Nakama.\+Socket.\+Join\+Match\+Async (\begin{DoxyParamCaption}\item[{string}]{match\+Id,  }\item[{IDictionary$<$ string, string $>$}]{metadata = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Join a multiplayer match by ID. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em match\+Id} & The ID of the match to attempt to join.\\
+\hline
+{\em metadata} & An optional set of key-\/value metadata pairs to be passed to the match handler.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a multiplayer match.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_ac6fe282b44ef6bed9179fe5766de5b27}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a57b7ff03c3588dcd4ff1f255f013d519}\label{class_nakama_1_1_socket_a57b7ff03c3588dcd4ff1f255f013d519}} 
+\index{Nakama.Socket@{Nakama.Socket}!JoinPartyAsync@{JoinPartyAsync}}
+\index{JoinPartyAsync@{JoinPartyAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{JoinPartyAsync()}{JoinPartyAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Join\+Party\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id }\end{DoxyParamCaption})}
+
+
+
+Join a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a7004ef370a75ed96cee268191ef82670}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a2e174430fb895e329fab4c6bde3b93a7}\label{class_nakama_1_1_socket_a2e174430fb895e329fab4c6bde3b93a7}} 
+\index{Nakama.Socket@{Nakama.Socket}!LeaveChatAsync@{LeaveChatAsync}}
+\index{LeaveChatAsync@{LeaveChatAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{LeaveChatAsync()}{LeaveChatAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Leave\+Chat\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}}}]{channel }\end{DoxyParamCaption})}
+
+
+
+Leave a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & The chat channel to leave.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a647667ebb59e491e9462417bf96f6f41}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a8350140a21c191ea84617135fef4082e}\label{class_nakama_1_1_socket_a8350140a21c191ea84617135fef4082e}} 
+\index{Nakama.Socket@{Nakama.Socket}!LeaveChatAsync@{LeaveChatAsync}}
+\index{LeaveChatAsync@{LeaveChatAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{LeaveChatAsync()}{LeaveChatAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Leave\+Chat\+Async (\begin{DoxyParamCaption}\item[{string}]{channel\+Id }\end{DoxyParamCaption})}
+
+
+
+Leave a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel\+Id} & The ID of the chat channel to leave.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a9ec279ff4873da0b9c9a90b9cfd0eada}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_abcd300eb623ef096f446bfb11b6de0dd}\label{class_nakama_1_1_socket_abcd300eb623ef096f446bfb11b6de0dd}} 
+\index{Nakama.Socket@{Nakama.Socket}!LeaveMatchAsync@{LeaveMatchAsync}}
+\index{LeaveMatchAsync@{LeaveMatchAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{LeaveMatchAsync()}{LeaveMatchAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Leave\+Match\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_match}{IMatch}}}]{match }\end{DoxyParamCaption})}
+
+
+
+Leave a multiplayer match on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em match} & The multiplayer match to leave.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a094fbace93957878a94815d38967aaf3}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_acc15b0880cb30f2c5afc3318c76a4db6}\label{class_nakama_1_1_socket_acc15b0880cb30f2c5afc3318c76a4db6}} 
+\index{Nakama.Socket@{Nakama.Socket}!LeaveMatchAsync@{LeaveMatchAsync}}
+\index{LeaveMatchAsync@{LeaveMatchAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{LeaveMatchAsync()}{LeaveMatchAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Leave\+Match\+Async (\begin{DoxyParamCaption}\item[{string}]{match\+Id }\end{DoxyParamCaption})}
+
+
+
+Leave a multiplayer match on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em match\+Id} & The multiplayer match to leave.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_af7bc9c33420ac5c873f68d92058b1a2d}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a261e11e3f7828ec4854957c766c036cb}\label{class_nakama_1_1_socket_a261e11e3f7828ec4854957c766c036cb}} 
+\index{Nakama.Socket@{Nakama.Socket}!LeavePartyAsync@{LeavePartyAsync}}
+\index{LeavePartyAsync@{LeavePartyAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{LeavePartyAsync()}{LeavePartyAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Leave\+Party\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id }\end{DoxyParamCaption})}
+
+
+
+Leave the party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task to represent the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a9f157fc83e6dfeb5d32c82f0d71c603b}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_ab0ae67833a8133ef069312fcdaecbe48}\label{class_nakama_1_1_socket_ab0ae67833a8133ef069312fcdaecbe48}} 
+\index{Nakama.Socket@{Nakama.Socket}!ListPartyJoinRequestsAsync@{ListPartyJoinRequestsAsync}}
+\index{ListPartyJoinRequestsAsync@{ListPartyJoinRequestsAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{ListPartyJoinRequestsAsync()}{ListPartyJoinRequestsAsync()}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_party_join_request}{IParty\+Join\+Request}} $>$ Nakama.\+Socket.\+List\+Party\+Join\+Requests\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id }\end{DoxyParamCaption})}
+
+
+
+Request a list of pending join requests for a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a list of all party join requests.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a3290abc231fbc13d10a279e9df4e3ef4}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_add01eba7310dbba3a01ecbefb132ade0}\label{class_nakama_1_1_socket_add01eba7310dbba3a01ecbefb132ade0}} 
+\index{Nakama.Socket@{Nakama.Socket}!PromotePartyMemberAsync@{PromotePartyMemberAsync}}
+\index{PromotePartyMemberAsync@{PromotePartyMemberAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{PromotePartyMemberAsync()}{PromotePartyMemberAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Promote\+Party\+Member\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id,  }\item[{\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}}}]{party\+Member }\end{DoxyParamCaption})}
+
+
+
+Promote a new party leader. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+{\em party\+Member} & The presence of an existing party member to promote as the new leader.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an announcement of a new party leader.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a747dddd036256e29cdb5a0f9cbfffe1e}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_aa167fc7e9cae1b65a7f0585431fc3daf}\label{class_nakama_1_1_socket_aa167fc7e9cae1b65a7f0585431fc3daf}} 
+\index{Nakama.Socket@{Nakama.Socket}!RemoveChatMessageAsync@{RemoveChatMessageAsync}}
+\index{RemoveChatMessageAsync@{RemoveChatMessageAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{RemoveChatMessageAsync()}{RemoveChatMessageAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ Nakama.\+Socket.\+Remove\+Chat\+Message\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}}}]{channel,  }\item[{string}]{message\+Id }\end{DoxyParamCaption})}
+
+
+
+Remove a chat message from a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & The chat channel with the message to remove.\\
+\hline
+{\em message\+Id} & The ID of the chat message to remove.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an acknowledgement of the removed message.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a2e0d2258668b6a23ab8ef898a859b607}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a34eef836c0c7f1707c5ffdd9a07f248e}\label{class_nakama_1_1_socket_a34eef836c0c7f1707c5ffdd9a07f248e}} 
+\index{Nakama.Socket@{Nakama.Socket}!RemoveChatMessageAsync@{RemoveChatMessageAsync}}
+\index{RemoveChatMessageAsync@{RemoveChatMessageAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{RemoveChatMessageAsync()}{RemoveChatMessageAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ Nakama.\+Socket.\+Remove\+Chat\+Message\+Async (\begin{DoxyParamCaption}\item[{string}]{channel\+Id,  }\item[{string}]{message\+Id }\end{DoxyParamCaption})}
+
+
+
+Remove a chat message from a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel\+Id} & The ID of the chat channel with the message to remove.\\
+\hline
+{\em message\+Id} & The ID of the chat message to remove.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an acknowledgement of the removed message.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a72b9923abc413441524248fb3dbaa6d2}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_aa49d9456a9a1ab735f7f5f1106f56827}\label{class_nakama_1_1_socket_aa49d9456a9a1ab735f7f5f1106f56827}} 
+\index{Nakama.Socket@{Nakama.Socket}!RemoveMatchmakerAsync@{RemoveMatchmakerAsync}}
+\index{RemoveMatchmakerAsync@{RemoveMatchmakerAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{RemoveMatchmakerAsync()}{RemoveMatchmakerAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Remove\+Matchmaker\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_matchmaker_ticket}{IMatchmaker\+Ticket}}}]{ticket }\end{DoxyParamCaption})}
+
+
+
+Leave the matchmaker pool with the ticket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ticket} & The ticket returned by the matchmaker on join.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a1c4a81177c160384ef79eb0c4ae59b47}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a8afad86c4eedab3e40b5f7069b170f72}\label{class_nakama_1_1_socket_a8afad86c4eedab3e40b5f7069b170f72}} 
+\index{Nakama.Socket@{Nakama.Socket}!RemoveMatchmakerAsync@{RemoveMatchmakerAsync}}
+\index{RemoveMatchmakerAsync@{RemoveMatchmakerAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{RemoveMatchmakerAsync()}{RemoveMatchmakerAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Remove\+Matchmaker\+Async (\begin{DoxyParamCaption}\item[{string}]{ticket }\end{DoxyParamCaption})}
+
+
+
+Leave the matchmaker pool with the ticket contents. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ticket} & The contents of the ticket returned by the matchmaker on join.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_acda6e90c3bf82f29c849404a53583bae}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a7047d31f96d51a71879219df0d510dd3}\label{class_nakama_1_1_socket_a7047d31f96d51a71879219df0d510dd3}} 
+\index{Nakama.Socket@{Nakama.Socket}!RemoveMatchmakerPartyAsync@{RemoveMatchmakerPartyAsync}}
+\index{RemoveMatchmakerPartyAsync@{RemoveMatchmakerPartyAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{RemoveMatchmakerPartyAsync()}{RemoveMatchmakerPartyAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Remove\+Matchmaker\+Party\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id,  }\item[{string}]{ticket }\end{DoxyParamCaption})}
+
+
+
+Cancel a party matchmaking process using a ticket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID.\\
+\hline
+{\em ticket} & The ticket to cancel.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_ac07a04f376786f2d74404b755b0d2d3c}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a35dcc5e4b9135bffd54793b42fb9b4e1}\label{class_nakama_1_1_socket_a35dcc5e4b9135bffd54793b42fb9b4e1}} 
+\index{Nakama.Socket@{Nakama.Socket}!RemovePartyMemberAsync@{RemovePartyMemberAsync}}
+\index{RemovePartyMemberAsync@{RemovePartyMemberAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{RemovePartyMemberAsync()}{RemovePartyMemberAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Remove\+Party\+Member\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id,  }\item[{\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}}}]{presence }\end{DoxyParamCaption})}
+
+
+
+Kick a party member, or decline a request to join. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID to remove/reject from.\\
+\hline
+{\em presence} & The presence to remove or reject.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_aedd8b717ab06cb2e1a293cc65eaef503}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a30717efa7340511c87fc7e4babe99f80}\label{class_nakama_1_1_socket_a30717efa7340511c87fc7e4babe99f80}} 
+\index{Nakama.Socket@{Nakama.Socket}!RpcAsync@{RpcAsync}}
+\index{RpcAsync@{RpcAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{RpcAsync()}{RpcAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ Nakama.\+Socket.\+Rpc\+Async (\begin{DoxyParamCaption}\item[{string}]{func\+Id,  }\item[{Array\+Segment$<$ byte $>$}]{payload }\end{DoxyParamCaption})}
+
+
+
+Execute an RPC function to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func\+Id} & The ID of the function to execute.\\
+\hline
+{\em payload} & An (optional) payload sent to the server from the byte buffer.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the RPC function response object.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a862ba5aa777eebba3d86aa1c882e9c0a}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a01a6c34d95185413168cf645e7e8943f}\label{class_nakama_1_1_socket_a01a6c34d95185413168cf645e7e8943f}} 
+\index{Nakama.Socket@{Nakama.Socket}!RpcAsync@{RpcAsync}}
+\index{RpcAsync@{RpcAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{RpcAsync()}{RpcAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_rpc}{IApi\+Rpc}} $>$ Nakama.\+Socket.\+Rpc\+Async (\begin{DoxyParamCaption}\item[{string}]{func\+Id,  }\item[{string}]{payload = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Execute an RPC function to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func\+Id} & The ID of the function to execute.\\
+\hline
+{\em payload} & An (optional) payload to send to the server.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the RPC function response object.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a5d5e0936be90aac974a7beb908c086c6}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a4b674ce28156f9bec04915fefca0286a}\label{class_nakama_1_1_socket_a4b674ce28156f9bec04915fefca0286a}} 
+\index{Nakama.Socket@{Nakama.Socket}!SendMatchStateAsync@{SendMatchStateAsync}}
+\index{SendMatchStateAsync@{SendMatchStateAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{SendMatchStateAsync()}{SendMatchStateAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Send\+Match\+State\+Async (\begin{DoxyParamCaption}\item[{string}]{match\+Id,  }\item[{long}]{op\+Code,  }\item[{Array\+Segment$<$ byte $>$}]{state,  }\item[{IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$}]{presences = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Send input to a multiplayer match on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em match\+Id} & The ID of the match.\\
+\hline
+{\em op\+Code} & An operation code for the input.\\
+\hline
+{\em state} & The input data to send from the byte buffer.\\
+\hline
+{\em presences} & The presences in the match who should receive the input.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a035e541530d517125c5770d68765cd83}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_af98298e1a187ca977c9dcf63c738dc2c}\label{class_nakama_1_1_socket_af98298e1a187ca977c9dcf63c738dc2c}} 
+\index{Nakama.Socket@{Nakama.Socket}!SendMatchStateAsync@{SendMatchStateAsync}}
+\index{SendMatchStateAsync@{SendMatchStateAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{SendMatchStateAsync()}{SendMatchStateAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Send\+Match\+State\+Async (\begin{DoxyParamCaption}\item[{string}]{match\+Id,  }\item[{long}]{op\+Code,  }\item[{byte\mbox{[}$\,$\mbox{]}}]{state,  }\item[{IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$}]{presences = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Send input to a multiplayer match on the server. 
+
+/// 
+
+When no presences are supplied the new match state will be sent to all presences.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_ae594151407277c8c4689bfc4587cc7fb}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a3e990dd6a05b4949d2800a6c8c91b935}\label{class_nakama_1_1_socket_a3e990dd6a05b4949d2800a6c8c91b935}} 
+\index{Nakama.Socket@{Nakama.Socket}!SendMatchStateAsync@{SendMatchStateAsync}}
+\index{SendMatchStateAsync@{SendMatchStateAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{SendMatchStateAsync()}{SendMatchStateAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Send\+Match\+State\+Async (\begin{DoxyParamCaption}\item[{string}]{match\+Id,  }\item[{long}]{op\+Code,  }\item[{string}]{state,  }\item[{IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$}]{presences = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Send input to a multiplayer match on the server. 
+
+/// 
+
+When no presences are supplied the new match state will be sent to all presences.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_aea679f2d9b9623d527cf6d5b58ecd5ef}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a8b3b14eceedee8d96186d5bf234d820c}\label{class_nakama_1_1_socket_a8b3b14eceedee8d96186d5bf234d820c}} 
+\index{Nakama.Socket@{Nakama.Socket}!SendPartyDataAsync@{SendPartyDataAsync}}
+\index{SendPartyDataAsync@{SendPartyDataAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{SendPartyDataAsync()}{SendPartyDataAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Send\+Party\+Data\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id,  }\item[{long}]{op\+Code,  }\item[{Array\+Segment$<$ byte $>$}]{data }\end{DoxyParamCaption})}
+
+
+
+Send data to a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID to send to.\\
+\hline
+{\em op\+Code} & Op code value.\\
+\hline
+{\em data} & The input data to send from the byte buffer, if any.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_ae90675f58de4722900b1b1b139485120}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a2208d5d13196fbf4f40e3131eb224d47}\label{class_nakama_1_1_socket_a2208d5d13196fbf4f40e3131eb224d47}} 
+\index{Nakama.Socket@{Nakama.Socket}!SendPartyDataAsync@{SendPartyDataAsync}}
+\index{SendPartyDataAsync@{SendPartyDataAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{SendPartyDataAsync()}{SendPartyDataAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Send\+Party\+Data\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id,  }\item[{long}]{op\+Code,  }\item[{byte\mbox{[}$\,$\mbox{]}}]{data }\end{DoxyParamCaption})}
+
+
+
+Send data to a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID to send to.\\
+\hline
+{\em op\+Code} & Op code value.\\
+\hline
+{\em data} & Data payload, if any.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_af59ab771e89bb0dce237df3e316f1e63}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_aaade8d235e868a54af041e54b216af9d}\label{class_nakama_1_1_socket_aaade8d235e868a54af041e54b216af9d}} 
+\index{Nakama.Socket@{Nakama.Socket}!SendPartyDataAsync@{SendPartyDataAsync}}
+\index{SendPartyDataAsync@{SendPartyDataAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{SendPartyDataAsync()}{SendPartyDataAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Send\+Party\+Data\+Async (\begin{DoxyParamCaption}\item[{string}]{party\+Id,  }\item[{long}]{op\+Code,  }\item[{string}]{data }\end{DoxyParamCaption})}
+
+
+
+Send data to a party. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em party\+Id} & Party ID to send to.\\
+\hline
+{\em op\+Code} & Op code value.\\
+\hline
+{\em data} & Data payload, if any.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a20ec2fbcae378c8d46c6309dc87c41a9}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a69d7b68ed48c79402440a90101981eec}\label{class_nakama_1_1_socket_a69d7b68ed48c79402440a90101981eec}} 
+\index{Nakama.Socket@{Nakama.Socket}!UnfollowUsersAsync@{UnfollowUsersAsync}}
+\index{UnfollowUsersAsync@{UnfollowUsersAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{UnfollowUsersAsync()}{UnfollowUsersAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Unfollow\+Users\+Async (\begin{DoxyParamCaption}\item[{IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_api_user}{IApi\+User}} $>$}]{users }\end{DoxyParamCaption})}
+
+
+
+Unfollow one or more users from their status updates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em users} & The users to unfollow.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a89c6778b3357f5c3d305b291847cb44a}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a3834aed45938e02964a4f29adcb51986}\label{class_nakama_1_1_socket_a3834aed45938e02964a4f29adcb51986}} 
+\index{Nakama.Socket@{Nakama.Socket}!UnfollowUsersAsync@{UnfollowUsersAsync}}
+\index{UnfollowUsersAsync@{UnfollowUsersAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{UnfollowUsersAsync()}{UnfollowUsersAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Unfollow\+Users\+Async (\begin{DoxyParamCaption}\item[{IEnumerable$<$ string $>$}]{user\+IDs }\end{DoxyParamCaption})}
+
+
+
+Unfollow one or more users from their status updates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+IDs} & The IDs of the users to unfollow.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a8266f3c4803246a46e4066703ae62d37}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a3c3fbea58ee3a2f6e3d3885ca79ded9b}\label{class_nakama_1_1_socket_a3c3fbea58ee3a2f6e3d3885ca79ded9b}} 
+\index{Nakama.Socket@{Nakama.Socket}!UpdateChatMessageAsync@{UpdateChatMessageAsync}}
+\index{UpdateChatMessageAsync@{UpdateChatMessageAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{UpdateChatMessageAsync()}{UpdateChatMessageAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ Nakama.\+Socket.\+Update\+Chat\+Message\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}}}]{channel,  }\item[{string}]{message\+Id,  }\item[{string}]{content }\end{DoxyParamCaption})}
+
+
+
+Update a chat message on a chat channel in the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & The chat channel with the message to update.\\
+\hline
+{\em message\+Id} & The ID of the message to update.\\
+\hline
+{\em content} & The new contents of the chat message.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an acknowledgement of the updated message.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_aceed2d36c564cb6eb71d060a07c9c041}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_adcc67413fe0ddd3aa5125290680151cf}\label{class_nakama_1_1_socket_adcc67413fe0ddd3aa5125290680151cf}} 
+\index{Nakama.Socket@{Nakama.Socket}!UpdateChatMessageAsync@{UpdateChatMessageAsync}}
+\index{UpdateChatMessageAsync@{UpdateChatMessageAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{UpdateChatMessageAsync()}{UpdateChatMessageAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ Nakama.\+Socket.\+Update\+Chat\+Message\+Async (\begin{DoxyParamCaption}\item[{string}]{channel\+Id,  }\item[{string}]{message\+Id,  }\item[{string}]{content }\end{DoxyParamCaption})}
+
+
+
+Update a chat message on a chat channel in the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel\+Id} & The ID of the chat channel with the message to update.\\
+\hline
+{\em message\+Id} & The ID of the message to update.\\
+\hline
+{\em content} & The new contents of the chat message.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to an acknowledgement of the updated message.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_abda0b03723050cdcba1c765f501f1ce0}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a869d3761f21ba7a2578f005a6690f707}\label{class_nakama_1_1_socket_a869d3761f21ba7a2578f005a6690f707}} 
+\index{Nakama.Socket@{Nakama.Socket}!UpdateStatusAsync@{UpdateStatusAsync}}
+\index{UpdateStatusAsync@{UpdateStatusAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{UpdateStatusAsync()}{UpdateStatusAsync()}}
+{\footnotesize\ttfamily Task Nakama.\+Socket.\+Update\+Status\+Async (\begin{DoxyParamCaption}\item[{string}]{status }\end{DoxyParamCaption})}
+
+
+
+Update the status for the current user online. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em status} & The new status for the user.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_aaf666992ffd841ac9486a9433aab6614}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a6cb398d1815a5a14d0e98dbe726a45dc}\label{class_nakama_1_1_socket_a6cb398d1815a5a14d0e98dbe726a45dc}} 
+\index{Nakama.Socket@{Nakama.Socket}!WriteChatMessageAsync@{WriteChatMessageAsync}}
+\index{WriteChatMessageAsync@{WriteChatMessageAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{WriteChatMessageAsync()}{WriteChatMessageAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ Nakama.\+Socket.\+Write\+Chat\+Message\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_nakama_1_1_i_channel}{IChannel}}}]{channel,  }\item[{string}]{content }\end{DoxyParamCaption})}
+
+
+
+Send a chat message to a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & The chat channel to send onto.\\
+\hline
+{\em content} & The contents of the message to send.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the acknowledgement of the chat message write.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_aabcd26e73944cfdb51a1c3585c9348db}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a36c7765ff46d9f1fa8d3d9114311d772}\label{class_nakama_1_1_socket_a36c7765ff46d9f1fa8d3d9114311d772}} 
+\index{Nakama.Socket@{Nakama.Socket}!WriteChatMessageAsync@{WriteChatMessageAsync}}
+\index{WriteChatMessageAsync@{WriteChatMessageAsync}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{WriteChatMessageAsync()}{WriteChatMessageAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily async Task$<$ \mbox{\hyperlink{interface_nakama_1_1_i_channel_message_ack}{IChannel\+Message\+Ack}} $>$ Nakama.\+Socket.\+Write\+Chat\+Message\+Async (\begin{DoxyParamCaption}\item[{string}]{channel\+Id,  }\item[{string}]{content }\end{DoxyParamCaption})}
+
+
+
+Send a chat message to a chat channel on the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel\+Id} & The ID of the chat channel to send onto.\\
+\hline
+{\em content} & The contents of the message to send.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the acknowledgement of the chat message write.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_a7f6f7d4e31a11b3a2cf9284b86568210}{Nakama.\+ISocket}}.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_socket_a3487edbd9dd5dfa7f5a47c485c506639}\label{class_nakama_1_1_socket_a3487edbd9dd5dfa7f5a47c485c506639}} 
+\index{Nakama.Socket@{Nakama.Socket}!IsConnected@{IsConnected}}
+\index{IsConnected@{IsConnected}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{IsConnected}{IsConnected}}
+{\footnotesize\ttfamily bool Nakama.\+Socket.\+Is\+Connected\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+If the socket is connected.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_ad2e3682e09ff2df296a9e26367fa9943}{Nakama.\+ISocket}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_socket_a1319b640499d302aa32dc6d4b6373195}\label{class_nakama_1_1_socket_a1319b640499d302aa32dc6d4b6373195}} 
+\index{Nakama.Socket@{Nakama.Socket}!IsConnecting@{IsConnecting}}
+\index{IsConnecting@{IsConnecting}!Nakama.Socket@{Nakama.Socket}}
+\doxysubsubsection{\texorpdfstring{IsConnecting}{IsConnecting}}
+{\footnotesize\ttfamily bool Nakama.\+Socket.\+Is\+Connecting\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+If the socket is connecting.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_socket_adbde619842d6576575adaa0ee0947140}{Nakama.\+ISocket}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/Socket.\+cs\end{DoxyCompactItemize}

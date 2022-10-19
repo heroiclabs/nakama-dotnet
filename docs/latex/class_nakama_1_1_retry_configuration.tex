@@ -1,0 +1,103 @@
+\hypertarget{class_nakama_1_1_retry_configuration}{}\doxysection{Nakama.\+Retry\+Configuration Class Reference}
+\label{class_nakama_1_1_retry_configuration}\index{Nakama.RetryConfiguration@{Nakama.RetryConfiguration}}
+
+
+A configuration for controlling retriable requests.   
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_nakama_1_1_retry_configuration_adbf0f298d35e14e72ef1ba0937b7f272}{Retry\+Configuration}} (int base\+Delay\+Ms, int max\+Retries)
+\begin{DoxyCompactList}\small\item\em Create a new retry configuration.  \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_nakama_1_1_retry_configuration_a743f91374fba32298211ad64cfd7d57a}{Retry\+Configuration}} (int base\+Delay\+Ms, int max\+Retries, \mbox{\hyperlink{class_nakama_1_1_retry_configuration_a45bbacb24a971f1092d15bc2dac0bafe}{Retry\+Listener}} listener)
+\begin{DoxyCompactList}\small\item\em Create a new retry configuration.  \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_nakama_1_1_retry_configuration_a4444b94d9d22c6ef75c03ac92d71264f}{Retry\+Configuration}} (int base\+Delay\+Ms, int max\+Retries, \mbox{\hyperlink{class_nakama_1_1_retry_configuration_a45bbacb24a971f1092d15bc2dac0bafe}{Retry\+Listener}} listener, \mbox{\hyperlink{class_nakama_1_1_retry_configuration_a06fc034fcd8b2fe5eed976079264c0cd}{Jitter}} jitter)
+\begin{DoxyCompactList}\small\item\em Create a new retry configuration.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_retry_configuration_abb2a37c54f24e2fcd6c4ef4e2b5b3f75}\label{class_nakama_1_1_retry_configuration_abb2a37c54f24e2fcd6c4ef4e2b5b3f75}} 
+int {\bfseries Base\+Delay\+Ms}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The base delay (milliseconds) used to calculate the time before making another request attempt. This base will be raised to N, where N is the number of retry attempts.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_retry_configuration_a06fc034fcd8b2fe5eed976079264c0cd}\label{class_nakama_1_1_retry_configuration_a06fc034fcd8b2fe5eed976079264c0cd}} 
+Jitter {\bfseries Jitter}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The jitter algorithm used to apply randomness to the retry delay. Defaults to Retry\+Jitter.\+Full\+Jitter  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_retry_configuration_a3be7ea95f69217237c03c9bf50fd466e}\label{class_nakama_1_1_retry_configuration_a3be7ea95f69217237c03c9bf50fd466e}} 
+int {\bfseries Max\+Attempts}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The maximum number of attempts to make before cancelling the request task.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_retry_configuration_a45bbacb24a971f1092d15bc2dac0bafe}\label{class_nakama_1_1_retry_configuration_a45bbacb24a971f1092d15bc2dac0bafe}} 
+Retry\+Listener {\bfseries Retry\+Listener}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em A callback that is invoked before a new retry attempt is made.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A configuration for controlling retriable requests.  
+
+\mbox{\hyperlink{class_nakama_1_1_retry}{Retry}} configurations can be assigned to the \mbox{\hyperlink{interface_nakama_1_1_i_client}{IClient}} on a request-\/by-\/request basis via the see \texorpdfstring{$<$}{<}cref=\char`\"{}\+Request\+Configuration\char`\"{}/\texorpdfstring{$>$}{>} parameter.
+
+\mbox{\hyperlink{class_nakama_1_1_retry}{Retry}} configurations can also be assigned on a global basis using \mbox{\hyperlink{interface_nakama_1_1_i_client_ad86bc2c00a137d35243e977086a00ffa}{IClient.\+Global\+Retry\+Configuration}}. Configurations passed via the see \texorpdfstring{$<$}{<}cref=\char`\"{}\+Request\+Configuraiton\char`\"{}/\texorpdfstring{$>$}{>} parameter take precedence over the global configuration. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_retry_configuration_adbf0f298d35e14e72ef1ba0937b7f272}\label{class_nakama_1_1_retry_configuration_adbf0f298d35e14e72ef1ba0937b7f272}} 
+\index{Nakama.RetryConfiguration@{Nakama.RetryConfiguration}!RetryConfiguration@{RetryConfiguration}}
+\index{RetryConfiguration@{RetryConfiguration}!Nakama.RetryConfiguration@{Nakama.RetryConfiguration}}
+\doxysubsubsection{\texorpdfstring{RetryConfiguration()}{RetryConfiguration()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Nakama.\+Retry\+Configuration.\+Retry\+Configuration (\begin{DoxyParamCaption}\item[{int}]{base\+Delay\+Ms,  }\item[{int}]{max\+Retries }\end{DoxyParamCaption})}
+
+
+
+Create a new retry configuration.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em base\+Delay\+Ms} & The base delay (milliseconds) used to calculate the time before making another request attempt.\\
+\hline
+{\em max\+Retries} & The maximum number of attempts to make before cancelling the request task.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_nakama_1_1_retry_configuration_a743f91374fba32298211ad64cfd7d57a}\label{class_nakama_1_1_retry_configuration_a743f91374fba32298211ad64cfd7d57a}} 
+\index{Nakama.RetryConfiguration@{Nakama.RetryConfiguration}!RetryConfiguration@{RetryConfiguration}}
+\index{RetryConfiguration@{RetryConfiguration}!Nakama.RetryConfiguration@{Nakama.RetryConfiguration}}
+\doxysubsubsection{\texorpdfstring{RetryConfiguration()}{RetryConfiguration()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Nakama.\+Retry\+Configuration.\+Retry\+Configuration (\begin{DoxyParamCaption}\item[{int}]{base\+Delay\+Ms,  }\item[{int}]{max\+Retries,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration_a45bbacb24a971f1092d15bc2dac0bafe}{Retry\+Listener}}}]{listener }\end{DoxyParamCaption})}
+
+
+
+Create a new retry configuration.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em base\+Delay\+Ms} & The base delay (milliseconds) used to calculate the time before making another request attempt.\\
+\hline
+{\em max\+Retries} & The maximum number of attempts to make before cancelling the request task.\\
+\hline
+{\em listener} & A callback that is invoked before a new retry attempt is made.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_nakama_1_1_retry_configuration_a4444b94d9d22c6ef75c03ac92d71264f}\label{class_nakama_1_1_retry_configuration_a4444b94d9d22c6ef75c03ac92d71264f}} 
+\index{Nakama.RetryConfiguration@{Nakama.RetryConfiguration}!RetryConfiguration@{RetryConfiguration}}
+\index{RetryConfiguration@{RetryConfiguration}!Nakama.RetryConfiguration@{Nakama.RetryConfiguration}}
+\doxysubsubsection{\texorpdfstring{RetryConfiguration()}{RetryConfiguration()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Nakama.\+Retry\+Configuration.\+Retry\+Configuration (\begin{DoxyParamCaption}\item[{int}]{base\+Delay\+Ms,  }\item[{int}]{max\+Retries,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration_a45bbacb24a971f1092d15bc2dac0bafe}{Retry\+Listener}}}]{listener,  }\item[{\mbox{\hyperlink{class_nakama_1_1_retry_configuration_a06fc034fcd8b2fe5eed976079264c0cd}{Jitter}}}]{jitter }\end{DoxyParamCaption})}
+
+
+
+Create a new retry configuration.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em base\+Delay\+Ms} & The base delay (milliseconds) used to calculate the time before making another request attempt.\\
+\hline
+{\em max\+Retries} & The maximum number of attempts to make before cancelling the request task.\\
+\hline
+{\em listener} & A callback that is invoked before a new retry attempt is made.\\
+\hline
+{\em jitter} & /// The jitter algorithm used to apply randomness to the retry delay.\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/Retry\+Configuration.\+cs\end{DoxyCompactItemize}

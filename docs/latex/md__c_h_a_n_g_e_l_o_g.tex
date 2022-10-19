@@ -1,0 +1,289 @@
+All notable changes to this project will be documented in this file.
+
+The format is based on \href{http://keepachangelog.com/en/1.0.0/}{\texttt{ Keep a Changelog}} and this project adheres to \href{http://semver.org/spec/v2.0.0.html}{\texttt{ Semantic Versioning}}.\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md1}{}\doxysection{\mbox{[}\+Unreleased\mbox{]}}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md1}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md2}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md2}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md3}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md3}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md4}{}\doxysection{\mbox{[}3.\+5.\+0\mbox{]} -\/ 2022-\/09-\/06}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md4}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md5}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md5}
+
+\begin{DoxyItemize}
+\item Ability to {\ttfamily persist} Apple, Huawei, and Google purchase receipts in the \mbox{\hyperlink{namespace_nakama}{Nakama}} database. This is set to {\ttfamily true} by default in order to allow the server to detect replay attacks.
+\item Added a {\ttfamily Seen\+Before} property to {\ttfamily IApi\+Validated\+Purchase}.
+\item Added {\ttfamily List\+Subscriptions\+Async} which returns a list of the user\textquotesingle{}s subscriptions.
+\item Added {\ttfamily Validate\+Subscription\+Apple\+Async} which returns details about a user\textquotesingle{}s Apple subscription.
+\item Added {\ttfamily Validate\+Subscription\+Google\+Async} which returns details about a user\textquotesingle{}s Google subscription.
+\item Added {\ttfamily Get\+Subscription\+Async} which returns a subscription for the provided product id.
+\item Added support for {\ttfamily count\+Multiple} in {\ttfamily Add\+Matchmaker\+Async} and {\ttfamily Add\+Matchmaker\+Party\+Async}.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md6}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md6}
+
+\begin{DoxyItemize}
+\item {\ttfamily Validated\+Purchase\+Environment} has been renamed to {\ttfamily Api\+Store\+Environment}.
+\item {\ttfamily Validated\+Purchase\+Store} has been renamed to {\ttfamily Api\+Store\+Provider}.
+\item Removed obsolete client methods that accept a {\ttfamily Cancellation\+Token\+Source}. These have been replaced in favor of methods that accept a {\ttfamily Cancellation\+Token} that were added in v3.\+3.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md7}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md7}
+
+\begin{DoxyItemize}
+\item Fixed an issue with Socket Closed event taking a significant length of time or not firing at all when internet connection is lost.
+\item Fixed an issue with {\ttfamily Socket\+Closed} event taking a significant length of time or not firing at all when internet connection is lost.
+\item Fixed an issue that would occur when sending messages over the socket from multiple threads.
+\item Fixed automatic retry seeding to be random across devices.
+\item Fixed an issue when parsing unquoted numbers as strings in Tiny\+Json.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md8}{}\doxysection{\mbox{[}3.\+4.\+0\mbox{]} -\/ 2022-\/04-\/28}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md8}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md9}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md9}
+
+\begin{DoxyItemize}
+\item Allow max message size limit with socket messages to be overridden in the adapter.
+\item Relayed multiplayer matches can now be created with a custom name (i.\+e. room name).
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md10}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md10}
+
+\begin{DoxyItemize}
+\item Fix background read loop to update \textquotesingle{}Is\+Connecting\textquotesingle{} and \textquotesingle{}Is\+Connected\textquotesingle{} when close is detected.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md11}{}\doxysection{\mbox{[}3.\+3.\+0\mbox{]} -\/ 2022-\/01-\/24}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md11}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md12}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md12}
+
+\begin{DoxyItemize}
+\item Add overload methods in Client which take a Cancellation\+Token. Thanks @gamecentric.
+\item Add Web\+Socket\+Stdlib\+Adapter allows the codebase to be used in WASM and Blazor projects. Thanks @mattkanwisher.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md13}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md13}
+
+\begin{DoxyItemize}
+\item Use Dual\+Mode in Tcp\+Client to handle NAT64 overlay networks (some mobile carriers).
+\item Refactor the socket adapter design to use Tasks (previously avoided for Unity Web\+GL compat.).
+\item Socket messages which exceed the internal buffer size now generate an \char`\"{}\+Internal\+Buffer\+Overflow\+Exception\char`\"{} type.
+\item A socket connect made on an already connected socket will no longer raise an exception.
+\item Propagate up the \char`\"{}\+Web\+Socket\+Exception\char`\"{} type thrown on socket messages sent over a disconnected socket.
+\item Update bundled \char`\"{}\+Ninja.\+Web\+Sockets\char`\"{} library to commit 0b698a733f0e8711da7a5854154fe7d8a01fbd06.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md14}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md14}
+
+\begin{DoxyItemize}
+\item Expose base exception if retry handler fails.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md15}{}\doxysection{\mbox{[}3.\+2.\+0\mbox{]} -\/ 2021-\/10-\/11}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md15}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md16}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md16}
+
+\begin{DoxyItemize}
+\item Added additional group listing filters.
+\item Added ability to overwrite leaderboard/tournament ranking operators from the client.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md17}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md17}
+
+\begin{DoxyItemize}
+\item Fixed url-\/safe encoding of query params that were passed to the client as arrays of strings.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md18}{}\doxysection{\mbox{[}3.\+1.\+1\mbox{]} -\/ 2021-\/08-\/19}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md18}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md19}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md19}
+
+\begin{DoxyItemize}
+\item Removed {\ttfamily auto\+Refresh\+Session} from overloaded {\ttfamily Client} constructors. This can still be customized with the base {\ttfamily Client} constructor. This is a workaround for an internal compiler error in Unity\textquotesingle{}s Web\+GL toolchain.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md20}{}\doxysection{\mbox{[}3.\+1.\+0\mbox{]} -\/ 2021-\/08-\/11}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md20}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md21}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md21}
+
+\begin{DoxyItemize}
+\item Added ability for user to retry requests if they fail due to a transient network error.
+\item Added ability for user to cancel requests that are in-\/flight.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md22}{}\doxysection{\mbox{[}3.\+0.\+0\mbox{]} -\/ 2021-\/07-\/14}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md22}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md23}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md23}
+
+\begin{DoxyItemize}
+\item The language tag for the user can be configured with the socket on connect.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md24}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md24}
+
+\begin{DoxyItemize}
+\item An {\ttfamily IParty\+Matchmaker\+Ticket} is now received by the party leader when they add their party to the matchmaker via {\ttfamily Add\+Matchmaker\+Party\+Async}.
+\item Renamed {\ttfamily Promote\+Party\+Member} to {\ttfamily Promote\+Party\+Member\+Async}.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md25}{}\doxysection{\mbox{[}2.\+9.\+3\mbox{]} -\/ 2021-\/06-\/17}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md25}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md26}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md26}
+
+\begin{DoxyItemize}
+\item Fixed issue where refreshing a session with metadata threw an exception due to the key already existing.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md27}{}\doxysection{\mbox{[}2.\+9.\+2\mbox{]} -\/ 2021-\/05-\/21}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md27}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md28}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md28}
+
+\begin{DoxyItemize}
+\item Fixed issue where {\ttfamily IUser\+Presence} objects were not being deserialized properly by the client as part of the {\ttfamily IParty} object.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md29}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md29}
+
+\begin{DoxyItemize}
+\item Add\+Matchmaker\+Party\+Async now returns an IParty\+Matchmaker\+Ticket.
+\item Renamed Promote\+Party\+Member to Promote\+Party\+Member\+Async.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md30}{}\doxysection{\mbox{[}2.\+9.\+1\mbox{]} -\/ 2021-\/05-\/19}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md30}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md31}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md31}
+
+\begin{DoxyItemize}
+\item The {\ttfamily Socket.\+Received\+Party} event can now be subscribed to in order to listen for acceptance events from the leader of a closed party.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md32}{}\doxysection{\mbox{[}2.\+9.\+0\mbox{]} -\/ 2021-\/05-\/15}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md32}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md33}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md33}
+
+\begin{DoxyItemize}
+\item A session can be refreshed on demand with \char`\"{}\+Session\+Refresh\+Async\char`\"{} method.
+\item Session and/or refresh tokens can now be disabled with a client logout.
+\item The client now supports session auto-\/refresh using refresh tokens. This is enabled by default.
+\item New socket RPC and Match\+Send methods using Array\+Segment to allow developers to manage memory re-\/use.
+\item Add IAP validation APIs for purchase receipts with Apple App Store, Google Play Store, and Huawei App\+Gallery.
+\item Add Realtime Parties feature.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md34}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md34}
+
+\begin{DoxyItemize}
+\item Use lock object with socket operations instead of Concurrent\+Dictionary as a workaround for a Unity engine Web\+GL regression.
+\item Avoid use of extension methods as a workaround for a Unity engine Web\+GL regression.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md35}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md35}
+
+\begin{DoxyItemize}
+\item Parse HTTP responses defensively in case of bad load balancer configurations.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md36}{}\doxysection{\mbox{[}2.\+8.\+0\mbox{]} -\/ 2020-\/02-\/19}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md36}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md37}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md37}
+
+\begin{DoxyItemize}
+\item Listing tournaments can now be done without providing start or end time filters.
+\item Can now import Steam friends after authenticating or linking to a Steam account.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md38}{}\doxysection{\mbox{[}2.\+7.\+1\mbox{]} -\/ 2020-\/02-\/1}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md38}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md39}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md39}
+
+\begin{DoxyItemize}
+\item HTTP Client now properly reads off timeout value.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md40}{}\doxysection{\mbox{[}2.\+7.\+0\mbox{]} -\/ 2020-\/10-\/19}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md40}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md41}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md41}
+
+\begin{DoxyItemize}
+\item Upgrade code generator to new Swagger format. 
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md42}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md42}
+
+\begin{DoxyItemize}
+\item Properly pass server key to Apple auth calls.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md43}{}\doxysection{\mbox{[}2.\+6.\+0\mbox{]} -\/ 2020-\/09-\/21}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md43}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md44}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md44}
+
+\begin{DoxyItemize}
+\item Added Apple single sign-\/on support.
+\item Added Steam single sign-\/on support.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md45}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md45}
+
+\begin{DoxyItemize}
+\item Fixed serialization of HTTP API error messages.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md46}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md46}
+
+\begin{DoxyItemize}
+\item Silenced a noisy but benign exception related to web socket connections.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md47}{}\doxysection{\mbox{[}2.\+5.\+0\mbox{]} -\/ 2020-\/08-\/12}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md47}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md48}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md48}
+
+\begin{DoxyItemize}
+\item Add parsing support for the \mbox{\hyperlink{namespace_nakama}{Nakama}} Console API to the code generator.
+\item Add support for emitting custom events to the \mbox{\hyperlink{namespace_nakama}{Nakama}} server.
+\item Add ban and demote API to the client.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md49}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md49}
+
+\begin{DoxyItemize}
+\item Update Tiny\+Json packaged dependency to the \textquotesingle{}01c586d\textquotesingle{} commit.
+\item Remove usage of \char`\"{}\+System.\+Diagnostic.\+Tracing\char`\"{} from the codebase. This improves compatibility with Unity engine.
+\item Use a Preserve annotation to mark fields which should not be code stripped at build time. This improves compatibility with Unity engine.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md50}{}\doxysection{\mbox{[}2.\+4.\+0\mbox{]} -\/ 2020-\/05-\/04 \+:star\+:}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md50}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md51}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md51}
+
+\begin{DoxyItemize}
+\item New List\+Storage\+Objects\+Async method and marked List\+Storage\+Objects as obsolete.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md52}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md52}
+
+\begin{DoxyItemize}
+\item List\+Users\+Storage\+Objects\+Async now uses default arguments for optional inputs.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md53}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md53}
+
+\begin{DoxyItemize}
+\item Prevent Invalid\+Operation\+Exception caused when socket connect task is already completed.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md54}{}\doxysection{\mbox{[}2.\+3.\+1\mbox{]} -\/ 2019-\/09-\/21}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md54}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md55}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md55}
+
+\begin{DoxyItemize}
+\item Use workaround for IPv6 bug in Tcp\+Client with Mono runtime used with Unity engine.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md56}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md56}
+
+\begin{DoxyItemize}
+\item Add missing metadata to match join message.
+\item Add discrete channel identifier in all channel related messages.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md57}{}\doxysection{\mbox{[}2.\+3.\+0\mbox{]} -\/ 2019-\/09-\/02}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md57}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md58}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md58}
+
+\begin{DoxyItemize}
+\item Follow users by username for status updates.
+\item Decode session variables from the auth token.
+\item Paginate friends, groups, and user\textquotesingle{}s group listings.
+\item Filter friends, groups, and user\textquotesingle{}s group listings.
+\item Send session variables with authenticate requests.
+\item Socket messages now use a send timeout of 15 seconds to write to the buffer.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md59}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md59}
+
+\begin{DoxyItemize}
+\item Increase the default socket timeout to 30 seconds.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md60}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md60}
+
+\begin{DoxyItemize}
+\item Use the connect timeout value in native socket connect attempts.
+\item Link the token source across socket connect and close tasks.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md61}{}\doxysection{\mbox{[}2.\+2.\+2\mbox{]} -\/ 2019-\/07-\/02}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md61}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md62}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md62}
+
+\begin{DoxyItemize}
+\item Don\textquotesingle{}t synchronize the socket receive with the current thread context.
+\item Remove workaround for Mono runtime usage with newer TLS negotation.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md63}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md63}
+
+\begin{DoxyItemize}
+\item Resolve deadlock in socket dispose with synchronization context.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md64}{}\doxysection{\mbox{[}2.\+2.\+1\mbox{]} -\/ 2019-\/06-\/19}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md64}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md65}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md65}
+
+\begin{DoxyItemize}
+\item New comparison methods on some domain types.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md66}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md66}
+
+\begin{DoxyItemize}
+\item When an auth token is decoded into a session but is null or empty now return null.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md67}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md67}
+
+\begin{DoxyItemize}
+\item Awaited socket callback tasks are now canceled when the socket adapter is closed and cleared.
+\item Awaited socket callback tasks are now canceled when the socket adapter sends while disconnected.
+\item Restored missing helper object with storage writes.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md68}{}\doxysection{\mbox{[}2.\+2.\+0\mbox{]} -\/ 2019-\/06-\/06}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md68}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md69}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md69}
+
+\begin{DoxyItemize}
+\item Add tournaments API.
+\item Add leaderboards around owner API.
+\item Provide more overload methods to the socket object for simpler usage.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md70}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md70}
+
+\begin{DoxyItemize}
+\item Update Tiny\+Json packaged dependency to latest version.
+\item Replace Web\+Socket\+Listener with a new socket library.
+\item Flatten use of Tasks in method responses.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md71}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md71}
+
+\begin{DoxyItemize}
+\item Logger is now initialized correctly with socket debugging.
+\item Stream data state is correctly deserialized from socket messages.
+\item Fix callback ID on chat and match leave messages.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md72}{}\doxysection{\mbox{[}2.\+1.\+0\mbox{]} -\/ 2018-\/08-\/17}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md72}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md73}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md73}
+
+\begin{DoxyItemize}
+\item Detect socket message encodings.
+\item All authenticate methods can now pass in username and create options.
+\item Support gzip compress/decompress on Api\+Client methods.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md74}{}\doxysubsection{Changed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md74}
+
+\begin{DoxyItemize}
+\item Update the code generator to handle POST/\+DELETE query params.
+\item Match listings can now pass through {\ttfamily null} to indicate no filters.
+\item Api\+Client exceptions now contain HTTP status codes.
+\item Update lowlevel websocket driver due to performance issues on AOT targets like i\+OS with Unity.
+\item Disable request decompression by default due to Unity+\+Android issue.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md75}{}\doxysubsection{Fixed}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md75}
+
+\begin{DoxyItemize}
+\item Reuse the HTTP client across all methods.
+\end{DoxyItemize}\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md76}{}\doxysection{\mbox{[}2.\+0.\+0\mbox{]} -\/ 2018-\/06-\/18}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md76}
+\hypertarget{md__c_h_a_n_g_e_l_o_g_autotoc_md77}{}\doxysubsection{Added}\label{md__c_h_a_n_g_e_l_o_g_autotoc_md77}
+
+\begin{DoxyItemize}
+\item Initial public release.
+\end{DoxyItemize}
+
+This version starts at 2.\+0 to match the initial server version it supports. 

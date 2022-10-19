@@ -1,0 +1,42 @@
+\hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets.\+Web\+Socket\+Client\+Options Class Reference}
+\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options}\index{Nakama.Ninja.WebSockets.WebSocketClientOptions@{Nakama.Ninja.WebSockets.WebSocketClientOptions}}
+
+
+\mbox{\hyperlink{class_nakama_1_1_client}{Client}} Web\+Socket init options   
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a60d072f7c1b6cdf03216249e257efe6f}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a60d072f7c1b6cdf03216249e257efe6f}} 
+{\bfseries Web\+Socket\+Client\+Options} ()
+\begin{DoxyCompactList}\small\item\em Initialises a new instance of the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options}{Web\+Socket\+Client\+Options}} class  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a63b39ac48f2759d98574e53599e7c337}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a63b39ac48f2759d98574e53599e7c337}} 
+Time\+Span {\bfseries Keep\+Alive\+Interval}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em How often to send ping requests to the Server This is done to prevent proxy servers from closing your connection The default is Time\+Span.\+Zero meaning that it is disabled. Web\+Socket servers usually send ping messages so it is not normally necessary for the client to send them (hence the Time\+Span.\+Zero default) You can manually control ping pong messages using the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager}{Ping\+Pong\+Manager}} class. If you do that it is advisible to set this Keep\+Alive\+Interval to zero for the \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_factory}{Web\+Socket\+Client\+Factory}}  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a4eecc580079d1338e13b8368f686177f}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a4eecc580079d1338e13b8368f686177f}} 
+bool {\bfseries No\+Delay}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Set to true to send a message immediately with the least amount of latency (typical usage for chat) This will disable Nagle\textquotesingle{}s algorithm which can cause high tcp latency for small packets sent infrequently However, if you are streaming large packets or sending large numbers of small packets frequently it is advisable to set No\+Delay to false This way data will be bundled into larger packets for better throughput  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_acde18f33707e3a3589136457f0b17c04}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_acde18f33707e3a3589136457f0b17c04}} 
+Dictionary$<$ string, string $>$ {\bfseries Additional\+Http\+Headers}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Add any additional http headers to this dictionary  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a32c1934b7aa3d481854c7caf6509df3b}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a32c1934b7aa3d481854c7caf6509df3b}} 
+bool {\bfseries Include\+Exception\+In\+Close\+Response}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Include the full exception (with stack trace) in the close response when an exception is encountered and the Web\+Socket connection is closed The default is false  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a0f6ffb1c602783b96fa63822adf93162}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a0f6ffb1c602783b96fa63822adf93162}} 
+string {\bfseries Sec\+Web\+Socket\+Extensions}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Web\+Socket Extensions as an HTTP header value  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a7f6a8ce6c2e54c8fd2e8966fc148d669}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options_a7f6a8ce6c2e54c8fd2e8966fc148d669}} 
+string {\bfseries Sec\+Web\+Socket\+Protocol}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em A comma separated list of sub protocols in preference order (first one being the most preferred) The server will return the first supported sub protocol (or none if none are supported) Can be null  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{class_nakama_1_1_client}{Client}} Web\+Socket init options  
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Ninja.\+Web\+Sockets/Web\+Socket\+Client\+Options.\+cs\end{DoxyCompactItemize}

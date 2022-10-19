@@ -1,0 +1,37 @@
+\hypertarget{interface_satori_1_1_i_api_event}{}\doxysection{Satori.\+IApi\+Event Interface Reference}
+\label{interface_satori_1_1_i_api_event}\index{Satori.IApiEvent@{Satori.IApiEvent}}
+
+
+A single event. Usually, but not necessarily, part of a batch.   
+
+
+
+
+Inherited by Satori.\+Api\+Event.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_satori_1_1_i_api_event_a537b01b519f36d486b4655ff42fa6629}\label{interface_satori_1_1_i_api_event_a537b01b519f36d486b4655ff42fa6629}} 
+string {\bfseries Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Optional event ID assigned by the client, used to de-\/duplicate in retransmission scenarios. If not supplied the server will assign a randomly generated unique event identifier.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_satori_1_1_i_api_event_a1b47db5d48ed22f63f2ff6ab350fd0e3}\label{interface_satori_1_1_i_api_event_a1b47db5d48ed22f63f2ff6ab350fd0e3}} 
+IDictionary$<$ string, string $>$ {\bfseries Metadata}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_satori_1_1_event}{Event}} metadata, if any.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_satori_1_1_i_api_event_a4b2fa7f9c7c340f105a81ba0a03aa470}\label{interface_satori_1_1_i_api_event_a4b2fa7f9c7c340f105a81ba0a03aa470}} 
+string {\bfseries Name}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{class_satori_1_1_event}{Event}} name.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_satori_1_1_i_api_event_a7527df758659398ccff9b5b31004508d}\label{interface_satori_1_1_i_api_event_a7527df758659398ccff9b5b31004508d}} 
+string {\bfseries Timestamp}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The time when the event was triggered on the producer side.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_satori_1_1_i_api_event_af13d42f7e1c03c273dcc73a6fda9e0ac}\label{interface_satori_1_1_i_api_event_af13d42f7e1c03c273dcc73a6fda9e0ac}} 
+string {\bfseries Value}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Optional value.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A single event. Usually, but not necessarily, part of a batch.  
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Satori/Api\+Client.\+gen.\+cs\end{DoxyCompactItemize}

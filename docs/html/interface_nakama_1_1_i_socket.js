@@ -1,12 +1,12 @@
 var interface_nakama_1_1_i_socket =
 [
     [ "AcceptPartyMemberAsync", "interface_nakama_1_1_i_socket.html#a1bde1efda48cb1aac4d0e049dbe05e51", null ],
-    [ "AddMatchmakerAsync", "interface_nakama_1_1_i_socket.html#a075b179271fc3656eb6f3cfba2e4b3ec", null ],
-    [ "AddMatchmakerPartyAsync", "interface_nakama_1_1_i_socket.html#aa9f7b1549ec55ec014ef6975d0149ac5", null ],
+    [ "AddMatchmakerAsync", "interface_nakama_1_1_i_socket.html#a162c3e3aae5243cd0d8aa39b588f6d96", null ],
+    [ "AddMatchmakerPartyAsync", "interface_nakama_1_1_i_socket.html#a4309cafc8d3b17ddfdbeb3196bad98d5", null ],
     [ "CloseAsync", "interface_nakama_1_1_i_socket.html#a47d4805e5bc797be4640b9b40fd0a1ff", null ],
     [ "ClosePartyAsync", "interface_nakama_1_1_i_socket.html#a1e0dfa45e55ac98a90bd61ba68b3739c", null ],
     [ "ConnectAsync", "interface_nakama_1_1_i_socket.html#afce0421b802a0610d5ba0df073c76118", null ],
-    [ "CreateMatchAsync", "interface_nakama_1_1_i_socket.html#aa403a62a0e4d93cb1b6cce9a7778e340", null ],
+    [ "CreateMatchAsync", "interface_nakama_1_1_i_socket.html#a82169726f5414f591824413d3a38f49c", null ],
     [ "CreatePartyAsync", "interface_nakama_1_1_i_socket.html#a8dc33b819637084a48f2dc72811e64c3", null ],
     [ "FollowUsersAsync", "interface_nakama_1_1_i_socket.html#a35fcf5e7221f3f4fb99629c7f7ffe2cf", null ],
     [ "FollowUsersAsync", "interface_nakama_1_1_i_socket.html#aa1fc00a1c5e65035102d69c0da9c9bcf", null ],

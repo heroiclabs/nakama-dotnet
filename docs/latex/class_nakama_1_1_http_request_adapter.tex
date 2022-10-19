@@ -1,0 +1,149 @@
+\hypertarget{class_nakama_1_1_http_request_adapter}{}\doxysection{Nakama.\+Http\+Request\+Adapter Class Reference}
+\label{class_nakama_1_1_http_request_adapter}\index{Nakama.HttpRequestAdapter@{Nakama.HttpRequestAdapter}}
+
+
+HTTP Request adapter which uses the .NET Http\+Client to send requests.   
+
+
+Inheritance diagram for Nakama.\+Http\+Request\+Adapter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_nakama_1_1_http_request_adapter}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_nakama_1_1_http_request_adapter_abd7df73941b1255fe8ddd66e995e6a7a}\label{class_nakama_1_1_http_request_adapter_abd7df73941b1255fe8ddd66e995e6a7a}} 
+{\bfseries Http\+Request\+Adapter} (Http\+Client http\+Client)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_nakama_1_1_http_request_adapter_a7562e1777699f16911ed2d5e245eb5b7}{Send\+Async}} (string method, Uri uri, IDictionary$<$ string, string $>$ headers, byte\mbox{[}$\,$\mbox{]} body, int timeout, Cancellation\+Token? user\+Cancel\+Token)
+\begin{DoxyCompactList}\small\item\em Send a HTTP request. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em method} & HTTP method to use for this request.\\
+\hline
+{\em uri} & The fully qualified URI to use.\\
+\hline
+{\em headers} & Request headers to set.\\
+\hline
+{\em body} & Request content body to set.\\
+\hline
+{\em timeout\+Sec} & Request timeout.\\
+\hline
+{\em user\+Cancel\+Token} & A user-\/generated token that can be used to cancel the request.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the contents of the response.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{interface_nakama_1_1_i_http_adapter}{IHttp\+Adapter}} \mbox{\hyperlink{class_nakama_1_1_http_request_adapter_ac251341e77f88116e774bddd549c330e}{With\+Gzip}} (bool decompression=false, bool compression=false)
+\begin{DoxyCompactList}\small\item\em A new HTTP adapter with configuration for gzip support in the underlying HTTP client.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{interface_nakama_1_1_i_logger}{ILogger}} \mbox{\hyperlink{class_nakama_1_1_http_request_adapter_a7365d2d5c82d5d0d6b8ac64941a8e533}{Logger}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The logger to use with the adapter.  \end{DoxyCompactList}\item 
+Transient\+Exception\+Delegate \mbox{\hyperlink{class_nakama_1_1_http_request_adapter_ae3ce0f7e336c27b77b9040fe5d851bc5}{Transient\+Exception\+Delegate}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+HTTP Request adapter which uses the .NET Http\+Client to send requests.  
+
+Accept header is always set as \textquotesingle{}application/json\textquotesingle{}. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_http_request_adapter_a7562e1777699f16911ed2d5e245eb5b7}\label{class_nakama_1_1_http_request_adapter_a7562e1777699f16911ed2d5e245eb5b7}} 
+\index{Nakama.HttpRequestAdapter@{Nakama.HttpRequestAdapter}!SendAsync@{SendAsync}}
+\index{SendAsync@{SendAsync}!Nakama.HttpRequestAdapter@{Nakama.HttpRequestAdapter}}
+\doxysubsubsection{\texorpdfstring{SendAsync()}{SendAsync()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Nakama.\+Http\+Request\+Adapter.\+Send\+Async (\begin{DoxyParamCaption}\item[{string}]{method,  }\item[{Uri}]{uri,  }\item[{IDictionary$<$ string, string $>$}]{headers,  }\item[{byte\mbox{[}$\,$\mbox{]}}]{body,  }\item[{int}]{timeout,  }\item[{Cancellation\+Token?}]{user\+Cancel\+Token }\end{DoxyParamCaption})}
+
+
+
+Send a HTTP request. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em method} & HTTP method to use for this request.\\
+\hline
+{\em uri} & The fully qualified URI to use.\\
+\hline
+{\em headers} & Request headers to set.\\
+\hline
+{\em body} & Request content body to set.\\
+\hline
+{\em timeout\+Sec} & Request timeout.\\
+\hline
+{\em user\+Cancel\+Token} & A user-\/generated token that can be used to cancel the request.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the contents of the response.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_http_adapter_af4eea04aef9ed0ccf2ee990bcb294b53}{Nakama.\+IHttp\+Adapter}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_http_request_adapter_ac251341e77f88116e774bddd549c330e}\label{class_nakama_1_1_http_request_adapter_ac251341e77f88116e774bddd549c330e}} 
+\index{Nakama.HttpRequestAdapter@{Nakama.HttpRequestAdapter}!WithGzip@{WithGzip}}
+\index{WithGzip@{WithGzip}!Nakama.HttpRequestAdapter@{Nakama.HttpRequestAdapter}}
+\doxysubsubsection{\texorpdfstring{WithGzip()}{WithGzip()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{interface_nakama_1_1_i_http_adapter}{IHttp\+Adapter}} Nakama.\+Http\+Request\+Adapter.\+With\+Gzip (\begin{DoxyParamCaption}\item[{bool}]{decompression = {\ttfamily false},  }\item[{bool}]{compression = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+A new HTTP adapter with configuration for gzip support in the underlying HTTP client.  
+
+NOTE Decompression does not work with Mono AOT on Android. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em decompression} & If automatic decompression should be enabled with the HTTP adapter.\\
+\hline
+{\em compression} & If automatic compression should be enabled with the HTTP adapter.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new HTTP adapter.
+\end{DoxyReturn}
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_http_request_adapter_a7365d2d5c82d5d0d6b8ac64941a8e533}\label{class_nakama_1_1_http_request_adapter_a7365d2d5c82d5d0d6b8ac64941a8e533}} 
+\index{Nakama.HttpRequestAdapter@{Nakama.HttpRequestAdapter}!Logger@{Logger}}
+\index{Logger@{Logger}!Nakama.HttpRequestAdapter@{Nakama.HttpRequestAdapter}}
+\doxysubsubsection{\texorpdfstring{Logger}{Logger}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_nakama_1_1_i_logger}{ILogger}} Nakama.\+Http\+Request\+Adapter.\+Logger\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The logger to use with the adapter.  
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_http_adapter_ad0514214ba7fce3b8c0697d70874ff1e}{Nakama.\+IHttp\+Adapter}}.
+
+\mbox{\Hypertarget{class_nakama_1_1_http_request_adapter_ae3ce0f7e336c27b77b9040fe5d851bc5}\label{class_nakama_1_1_http_request_adapter_ae3ce0f7e336c27b77b9040fe5d851bc5}} 
+\index{Nakama.HttpRequestAdapter@{Nakama.HttpRequestAdapter}!TransientExceptionDelegate@{TransientExceptionDelegate}}
+\index{TransientExceptionDelegate@{TransientExceptionDelegate}!Nakama.HttpRequestAdapter@{Nakama.HttpRequestAdapter}}
+\doxysubsubsection{\texorpdfstring{TransientExceptionDelegate}{TransientExceptionDelegate}}
+{\footnotesize\ttfamily Transient\+Exception\+Delegate Nakama.\+Http\+Request\+Adapter.\+Transient\+Exception\+Delegate\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Implements \mbox{\hyperlink{interface_nakama_1_1_i_http_adapter}{Nakama.\+IHttp\+Adapter}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/Http\+Request\+Adapter.\+cs\end{DoxyCompactItemize}

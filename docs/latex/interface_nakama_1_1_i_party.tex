@@ -1,0 +1,40 @@
+\hypertarget{interface_nakama_1_1_i_party}{}\doxysection{Nakama.\+IParty Interface Reference}
+\label{interface_nakama_1_1_i_party}\index{Nakama.IParty@{Nakama.IParty}}
+
+
+Incoming information about a party.   
+
+
+
+
+Inherited by Nakama.\+Party.
+
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_party_a3d156d302a3f421438e0dc35425c97bf}\label{interface_nakama_1_1_i_party_a3d156d302a3f421438e0dc35425c97bf}} 
+string {\bfseries Id}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The unique party identifier.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_party_a9e8a6732f73a4d6b73a082cc08d7202e}\label{interface_nakama_1_1_i_party_a9e8a6732f73a4d6b73a082cc08d7202e}} 
+bool {\bfseries Open}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True, if the party is open to join.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_party_a0d31a7df38955d4114f7eec2e0223869}\label{interface_nakama_1_1_i_party_a0d31a7df38955d4114f7eec2e0223869}} 
+int {\bfseries Max\+Size}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The maximum number of party members.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_party_a7be0281272b44f71b4306592ff2470e2}\label{interface_nakama_1_1_i_party_a7be0281272b44f71b4306592ff2470e2}} 
+\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} {\bfseries Self}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The current user in this party. i.\+e. Yourself.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_party_a393481bb0a4026dc26adf8522e339991}\label{interface_nakama_1_1_i_party_a393481bb0a4026dc26adf8522e339991}} 
+\mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} {\bfseries Leader}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The current party leader.  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{interface_nakama_1_1_i_party_a9e44c485a4773c8b44056ec160ad1e7e}\label{interface_nakama_1_1_i_party_a9e44c485a4773c8b44056ec160ad1e7e}} 
+IEnumerable$<$ \mbox{\hyperlink{interface_nakama_1_1_i_user_presence}{IUser\+Presence}} $>$ {\bfseries Presences}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em All members currently in the party.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Incoming information about a party.  
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/IParty.\+cs\end{DoxyCompactItemize}

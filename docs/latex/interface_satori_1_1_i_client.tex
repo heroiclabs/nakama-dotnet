@@ -1,0 +1,503 @@
+\hypertarget{interface_satori_1_1_i_client}{}\doxysection{Satori.\+IClient Interface Reference}
+\label{interface_satori_1_1_i_client}\index{Satori.IClient@{Satori.IClient}}
+
+
+A client for the API in \mbox{\hyperlink{namespace_satori}{Satori}} server.   
+
+
+Inheritance diagram for Satori.\+IClient\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_satori_1_1_i_client}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_a563a7848fc6cfb9f7b5bd71a1351ab80}{Authenticate\+Async}} (string id, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Authenticate against the server.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_satori_1_1_i_client_a827092f8b15b38c4a86ca88907338908}{Authenticate\+Logout\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_satori_1_1_i_client_a517f15b484c813732bde081b5d8a1bf5}{Event\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, \mbox{\hyperlink{class_satori_1_1_event}{Event}} @event, Cancellation\+Token? cancellation\+Token=null)
+\begin{DoxyCompactList}\small\item\em Send an event for this session.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_satori_1_1_i_client_a89b11b74d66d79a2807489140af1e307}{Events\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, IEnumerable$<$ \mbox{\hyperlink{class_satori_1_1_event}{Event}} $>$ events, Cancellation\+Token? cancellation\+Token=null)
+\begin{DoxyCompactList}\small\item\em Send a batch of events for this session.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_experiment_list}{IApi\+Experiment\+List}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_a0b141b22c449ade3548442ec562679df}{Get\+Experiments\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, IEnumerable$<$ string $>$ names, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Get all experiments data.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag}{IApi\+Flag}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_a6b03ae171a637d4938c2e9cacbf9ee28}{Get\+Flag\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, string name, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Get a single flag for this identity.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag}{IApi\+Flag}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_a486e38938074ed725715c81e64166f60}{Get\+Flag\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, string name, string default\+Value, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Get a single flag for this identity.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag}{IApi\+Flag}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_ae943709079ce5f690d5478addcd50f86}{Get\+Flag\+Default\+Async}} (string api\+Key, string name, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Get a single default flag for this identity.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag}{IApi\+Flag}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_a6548048f5d846c0af46a665cc1f53193}{Get\+Flag\+Default\+Async}} (string api\+Key, string name, string default\+Value, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Get a single default flag for this identity.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag_list}{IApi\+Flag\+List}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_aeb95e0c8049682e9a55d55422229c1ea}{Get\+Flags\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, IEnumerable$<$ string $>$ names, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em List all available flags for this identity.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag_list}{IApi\+Flag\+List}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_a81548d70c2bd082078aed71a8e3f4094}{Get\+Flags\+Default\+Async}} (string api\+Key, IEnumerable$<$ string $>$ names, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em List all available default flags.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_live_event_list}{IApi\+Live\+Event\+List}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_a49fd5e2b4a7106087c18e3e0a4699240}{Get\+Live\+Events\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, IEnumerable$<$ string $>$ names=null, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em List available live events.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_aeab7bbd37f9f5650803284d5f4302b50}{Identify\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, string id, Dictionary$<$ string, string $>$ default\+Properties, Dictionary$<$ string, string $>$ custom\+Properties, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Identify a session with a new ID.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_properties}{IApi\+Properties}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_ae3b5ed8835db318bac9e9358c9ca9d62}{List\+Properties\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em List properties associated with this identity.  \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} $>$ \mbox{\hyperlink{interface_satori_1_1_i_client_a75b8b2a0675d4e42244ae66ac60e903f}{Session\+Refresh\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Refresh a user\textquotesingle{}s session using a refresh token retrieved from a previous authentication request.  \end{DoxyCompactList}\item 
+Task \mbox{\hyperlink{interface_satori_1_1_i_client_aea9d790170b8366f8632f0ff1fdfb494}{Update\+Properties\+Async}} (\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} session, Dictionary$<$ string, string $>$ default\+Properties, Dictionary$<$ string, string $>$ custom\+Properties, Cancellation\+Token? cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Update properties associated with this identity.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{interface_satori_1_1_i_client_a92cededba8674818db5107bca319ed39}{Auto\+Refresh\+Session}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em True if the session should be refreshed with an active refresh token.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A client for the API in \mbox{\hyperlink{namespace_satori}{Satori}} server.  
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a563a7848fc6cfb9f7b5bd71a1351ab80}\label{interface_satori_1_1_i_client_a563a7848fc6cfb9f7b5bd71a1351ab80}} 
+\index{Satori.IClient@{Satori.IClient}!AuthenticateAsync@{AuthenticateAsync}}
+\index{AuthenticateAsync@{AuthenticateAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateAsync()}{AuthenticateAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} $>$ Satori.\+IClient.\+Authenticate\+Async (\begin{DoxyParamCaption}\item[{string}]{id,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Authenticate against the server.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & An optional user id.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a user session.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_ab2b3b14e99032adee70760833acbac58}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a827092f8b15b38c4a86ca88907338908}\label{interface_satori_1_1_i_client_a827092f8b15b38c4a86ca88907338908}} 
+\index{Satori.IClient@{Satori.IClient}!AuthenticateLogoutAsync@{AuthenticateLogoutAsync}}
+\index{AuthenticateLogoutAsync@{AuthenticateLogoutAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{AuthenticateLogoutAsync()}{AuthenticateLogoutAsync()}}
+{\footnotesize\ttfamily Task Satori.\+IClient.\+Authenticate\+Logout\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which represents the asynchronous operation.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a19a54b27abb6adb73f1094cb69445986}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a517f15b484c813732bde081b5d8a1bf5}\label{interface_satori_1_1_i_client_a517f15b484c813732bde081b5d8a1bf5}} 
+\index{Satori.IClient@{Satori.IClient}!EventAsync@{EventAsync}}
+\index{EventAsync@{EventAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{EventAsync()}{EventAsync()}}
+{\footnotesize\ttfamily Task Satori.\+IClient.\+Event\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{\mbox{\hyperlink{class_satori_1_1_event}{Event}} @}]{event,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Send an event for this session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em event} & The event to send.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a3515d87f03d73b2923c45454b4e6c35b}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a89b11b74d66d79a2807489140af1e307}\label{interface_satori_1_1_i_client_a89b11b74d66d79a2807489140af1e307}} 
+\index{Satori.IClient@{Satori.IClient}!EventsAsync@{EventsAsync}}
+\index{EventsAsync@{EventsAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{EventsAsync()}{EventsAsync()}}
+{\footnotesize\ttfamily Task Satori.\+IClient.\+Events\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{IEnumerable$<$ \mbox{\hyperlink{class_satori_1_1_event}{Event}} $>$}]{events,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Send a batch of events for this session.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em events} & The batch of events which will be sent.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a168e519dc7621109d2726986e3928139}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a0b141b22c449ade3548442ec562679df}\label{interface_satori_1_1_i_client_a0b141b22c449ade3548442ec562679df}} 
+\index{Satori.IClient@{Satori.IClient}!GetExperimentsAsync@{GetExperimentsAsync}}
+\index{GetExperimentsAsync@{GetExperimentsAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{GetExperimentsAsync()}{GetExperimentsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_experiment_list}{IApi\+Experiment\+List}} $>$ Satori.\+IClient.\+Get\+Experiments\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{IEnumerable$<$ string $>$}]{names,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Get all experiments data.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em names} & Experiment names; if empty string all experiments are returned.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to all experiments that this identity is involved with.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_aeae7a12032aa553fbbfdc856f3886c83}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a6b03ae171a637d4938c2e9cacbf9ee28}\label{interface_satori_1_1_i_client_a6b03ae171a637d4938c2e9cacbf9ee28}} 
+\index{Satori.IClient@{Satori.IClient}!GetFlagAsync@{GetFlagAsync}}
+\index{GetFlagAsync@{GetFlagAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{GetFlagAsync()}{GetFlagAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag}{IApi\+Flag}} $>$ Satori.\+IClient.\+Get\+Flag\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{name,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Get a single flag for this identity.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em name} & The name of the flag.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a single feature flag.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a049d78069eb7828f88863e8776040615}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a486e38938074ed725715c81e64166f60}\label{interface_satori_1_1_i_client_a486e38938074ed725715c81e64166f60}} 
+\index{Satori.IClient@{Satori.IClient}!GetFlagAsync@{GetFlagAsync}}
+\index{GetFlagAsync@{GetFlagAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{GetFlagAsync()}{GetFlagAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag}{IApi\+Flag}} $>$ Satori.\+IClient.\+Get\+Flag\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{name,  }\item[{string}]{default\+Value,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Get a single flag for this identity.  
+
+Unlike {\ttfamily Get\+Flags(\+ISession,string,\+Cancellation\+Token)} this method will return the default value specified and will not raise an exception if the network is unavailable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em name} & The name of the flag.\\
+\hline
+{\em default\+Value} & The default value if the server is unreachable.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a single feature flag.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a2b05b22f9f9071f6c26614a13997c536}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_ae943709079ce5f690d5478addcd50f86}\label{interface_satori_1_1_i_client_ae943709079ce5f690d5478addcd50f86}} 
+\index{Satori.IClient@{Satori.IClient}!GetFlagDefaultAsync@{GetFlagDefaultAsync}}
+\index{GetFlagDefaultAsync@{GetFlagDefaultAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{GetFlagDefaultAsync()}{GetFlagDefaultAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag}{IApi\+Flag}} $>$ Satori.\+IClient.\+Get\+Flag\+Default\+Async (\begin{DoxyParamCaption}\item[{string}]{api\+Key,  }\item[{string}]{name,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Get a single default flag for this identity.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em api\+Key} & The API key configured on the server.\\
+\hline
+{\em name} & The name of the flag.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a single default feature flag.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a49603b64cf61100806d934110f8ea352}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a6548048f5d846c0af46a665cc1f53193}\label{interface_satori_1_1_i_client_a6548048f5d846c0af46a665cc1f53193}} 
+\index{Satori.IClient@{Satori.IClient}!GetFlagDefaultAsync@{GetFlagDefaultAsync}}
+\index{GetFlagDefaultAsync@{GetFlagDefaultAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{GetFlagDefaultAsync()}{GetFlagDefaultAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag}{IApi\+Flag}} $>$ Satori.\+IClient.\+Get\+Flag\+Default\+Async (\begin{DoxyParamCaption}\item[{string}]{api\+Key,  }\item[{string}]{name,  }\item[{string}]{default\+Value,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Get a single default flag for this identity.  
+
+Unlike {\ttfamily Get\+Flag\+Default\+Async(string,string,\+Cancellation\+Token)} this method will return the default value specified and will not raise an exception if the network is unreachable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em api\+Key} & The API key configured on the server.\\
+\hline
+{\em name} & The name of the flag.\\
+\hline
+{\em default\+Value} & The default value if the server is unreachable.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a single default feature flag.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a2a555f48f48e5c070db9c115d92a8805}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_aeb95e0c8049682e9a55d55422229c1ea}\label{interface_satori_1_1_i_client_aeb95e0c8049682e9a55d55422229c1ea}} 
+\index{Satori.IClient@{Satori.IClient}!GetFlagsAsync@{GetFlagsAsync}}
+\index{GetFlagsAsync@{GetFlagsAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{GetFlagsAsync()}{GetFlagsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag_list}{IApi\+Flag\+List}} $>$ Satori.\+IClient.\+Get\+Flags\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{IEnumerable$<$ string $>$}]{names,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List all available flags for this identity.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em names} & Flag names, if empty string all flags are returned.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to all flags available to this identity.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a477cea4ad8662115d4221e4e7b9c203c}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a81548d70c2bd082078aed71a8e3f4094}\label{interface_satori_1_1_i_client_a81548d70c2bd082078aed71a8e3f4094}} 
+\index{Satori.IClient@{Satori.IClient}!GetFlagsDefaultAsync@{GetFlagsDefaultAsync}}
+\index{GetFlagsDefaultAsync@{GetFlagsDefaultAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{GetFlagsDefaultAsync()}{GetFlagsDefaultAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_flag_list}{IApi\+Flag\+List}} $>$ Satori.\+IClient.\+Get\+Flags\+Default\+Async (\begin{DoxyParamCaption}\item[{string}]{api\+Key,  }\item[{IEnumerable$<$ string $>$}]{names,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List all available default flags.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em api\+Key} & The API key configured on the server.\\
+\hline
+{\em names} & Flag names, if empty string all flags are returned.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to all available default flags.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a84d87516c745950e3f35ea3810283f06}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a49fd5e2b4a7106087c18e3e0a4699240}\label{interface_satori_1_1_i_client_a49fd5e2b4a7106087c18e3e0a4699240}} 
+\index{Satori.IClient@{Satori.IClient}!GetLiveEventsAsync@{GetLiveEventsAsync}}
+\index{GetLiveEventsAsync@{GetLiveEventsAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{GetLiveEventsAsync()}{GetLiveEventsAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_live_event_list}{IApi\+Live\+Event\+List}} $>$ Satori.\+IClient.\+Get\+Live\+Events\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{IEnumerable$<$ string $>$}]{names = {\ttfamily null},  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List available live events.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em names} & Live event names, if null or empty, all live events are returned.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a list of live events.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a454f2b97226548687442d05a3a6465b0}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_aeab7bbd37f9f5650803284d5f4302b50}\label{interface_satori_1_1_i_client_aeab7bbd37f9f5650803284d5f4302b50}} 
+\index{Satori.IClient@{Satori.IClient}!IdentifyAsync@{IdentifyAsync}}
+\index{IdentifyAsync@{IdentifyAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{IdentifyAsync()}{IdentifyAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} $>$ Satori.\+IClient.\+Identify\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{string}]{id,  }\item[{Dictionary$<$ string, string $>$}]{default\+Properties,  }\item[{Dictionary$<$ string, string $>$}]{custom\+Properties,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Identify a session with a new ID.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em id} & Identity ID to enrich the current session and return a new session. The old session will no longer be usable. Must be between eight and 128 characters (inclusive). Must be an alphanumeric string with only underscores and hyphens allowed. \\
+\hline
+{\em default\+Properties} & The default properties.\\
+\hline
+{\em custom\+Properties} & The custom event properties.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the new session for the user.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a2bcd0f294df315ca5e46dfa7448c02f8}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_ae3b5ed8835db318bac9e9358c9ca9d62}\label{interface_satori_1_1_i_client_ae3b5ed8835db318bac9e9358c9ca9d62}} 
+\index{Satori.IClient@{Satori.IClient}!ListPropertiesAsync@{ListPropertiesAsync}}
+\index{ListPropertiesAsync@{ListPropertiesAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{ListPropertiesAsync()}{ListPropertiesAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_api_properties}{IApi\+Properties}} $>$ Satori.\+IClient.\+List\+Properties\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+List properties associated with this identity.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a list of live events.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_aef13463487b3c09d7c9a347cbe8c5cd1}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a75b8b2a0675d4e42244ae66ac60e903f}\label{interface_satori_1_1_i_client_a75b8b2a0675d4e42244ae66ac60e903f}} 
+\index{Satori.IClient@{Satori.IClient}!SessionRefreshAsync@{SessionRefreshAsync}}
+\index{SessionRefreshAsync@{SessionRefreshAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{SessionRefreshAsync()}{SessionRefreshAsync()}}
+{\footnotesize\ttfamily Task$<$ \mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}} $>$ Satori.\+IClient.\+Session\+Refresh\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Refresh a user\textquotesingle{}s session using a refresh token retrieved from a previous authentication request.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to a user session.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a05e0853fc71cc8520f38acd27951daf9}{Satori.\+Client}}.
+
+\mbox{\Hypertarget{interface_satori_1_1_i_client_aea9d790170b8366f8632f0ff1fdfb494}\label{interface_satori_1_1_i_client_aea9d790170b8366f8632f0ff1fdfb494}} 
+\index{Satori.IClient@{Satori.IClient}!UpdatePropertiesAsync@{UpdatePropertiesAsync}}
+\index{UpdatePropertiesAsync@{UpdatePropertiesAsync}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{UpdatePropertiesAsync()}{UpdatePropertiesAsync()}}
+{\footnotesize\ttfamily Task Satori.\+IClient.\+Update\+Properties\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_satori_1_1_i_session}{ISession}}}]{session,  }\item[{Dictionary$<$ string, string $>$}]{default\+Properties,  }\item[{Dictionary$<$ string, string $>$}]{custom\+Properties,  }\item[{Cancellation\+Token?}]{cancellation\+Token = {\ttfamily default} }\end{DoxyParamCaption})}
+
+
+
+Update properties associated with this identity.  
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session of the user.\\
+\hline
+{\em default\+Properties} & The default properties to update.\\
+\hline
+{\em custom\+Properties} & The custom properties to update.\\
+\hline
+{\em cancellation\+Token} & The Cancellation\+Token that can be used to cancel the request while mid-\/flight.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task object.
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a78fc439169d96ec41b3cd3631e31d43d}{Satori.\+Client}}.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{interface_satori_1_1_i_client_a92cededba8674818db5107bca319ed39}\label{interface_satori_1_1_i_client_a92cededba8674818db5107bca319ed39}} 
+\index{Satori.IClient@{Satori.IClient}!AutoRefreshSession@{AutoRefreshSession}}
+\index{AutoRefreshSession@{AutoRefreshSession}!Satori.IClient@{Satori.IClient}}
+\doxysubsubsection{\texorpdfstring{AutoRefreshSession}{AutoRefreshSession}}
+{\footnotesize\ttfamily bool Satori.\+IClient.\+Auto\+Refresh\+Session\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+True if the session should be refreshed with an active refresh token.  
+
+
+
+Implemented in \mbox{\hyperlink{class_satori_1_1_client_a1fc4e5a73077533d8671e64686528d1a}{Satori.\+Client}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Satori/IClient.\+cs\end{DoxyCompactItemize}

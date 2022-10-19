@@ -1,0 +1,33 @@
+\begin{quote}
+A util tool to generate a client from the Swagger spec of \mbox{\hyperlink{namespace_nakama}{Nakama}}\textquotesingle{}s server API. \end{quote}
+\hypertarget{md_codegen__r_e_a_d_m_e_autotoc_md78}{}\doxysection{Usage}\label{md_codegen__r_e_a_d_m_e_autotoc_md78}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{go run main.go "{}\$GOPATH/src/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger.json"{} "{}Nakama"{} > ../Nakama/ApiClient.gen.cs}
+
+\end{DoxyCode}
+\hypertarget{md_codegen__r_e_a_d_m_e_autotoc_md79}{}\doxysubsection{Nakama Console API}\label{md_codegen__r_e_a_d_m_e_autotoc_md79}
+To generate a client for the \mbox{\hyperlink{namespace_nakama}{Nakama}} Console, run the following\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{go run main.go "{}\$GOPATH/src/github.com/heroiclabs/nakama/console/console.swagger.json"{} "{}NakamaConsole"{} > ../Nakama/Console/ConsoleClient.gen.cs}
+
+\end{DoxyCode}
+\hypertarget{md_codegen__r_e_a_d_m_e_autotoc_md80}{}\doxysubsection{Satori API}\label{md_codegen__r_e_a_d_m_e_autotoc_md80}
+To generate a client for \mbox{\hyperlink{namespace_satori}{Satori}}, run the following\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{go run main.go "{}\$\{SATORI\}/api/satori.swagger.json"{} "{}Satori"{} > ../Satori/ApiClient.gen.cs}
+
+\end{DoxyCode}
+\hypertarget{md_codegen__r_e_a_d_m_e_autotoc_md81}{}\doxysubsection{Satori Console API}\label{md_codegen__r_e_a_d_m_e_autotoc_md81}
+To generate a client for the \mbox{\hyperlink{namespace_satori}{Satori}} Console, run the following\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{go run main.go "{}\$\{SATORI\}/console/console.swagger.json"{} "{}Satori"{} > ../Satori/ConsoleClient.gen.cs}
+
+\end{DoxyCode}
+\hypertarget{md_codegen__r_e_a_d_m_e_autotoc_md82}{}\doxysubsection{Rationale}\label{md_codegen__r_e_a_d_m_e_autotoc_md82}
+We want to maintain a simple lean low level client within our C\# client which has minimal dependencies so we built our own. This gives us complete control over the dependencies required and structure of the code generated.
+
+The generated code is designed to be supported within Unity engine, Xamarin, Godot engine, and other projects. It requires .NET4.\+5 framework, Tiny\+Json, and uses {\ttfamily System.\+Threading.\+Tasks}.\hypertarget{md_codegen__r_e_a_d_m_e_autotoc_md83}{}\doxysubsection{Limitations}\label{md_codegen__r_e_a_d_m_e_autotoc_md83}
+The code generator has {\bfseries{only}} been checked against the Swagger specification generated for \mbox{\hyperlink{namespace_nakama}{Nakama}} server. YMMV. 

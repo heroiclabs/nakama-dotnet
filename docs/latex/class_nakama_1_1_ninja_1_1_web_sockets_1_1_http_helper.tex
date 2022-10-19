@@ -1,0 +1,154 @@
+\hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper}{}\doxysection{Nakama.\+Ninja.\+Web\+Sockets.\+Http\+Helper Class Reference}
+\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper}\index{Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static string \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a9b5b222971fabf47b7dcf9124e4cd6e5}{Calculate\+Web\+Socket\+Key}} ()
+\begin{DoxyCompactList}\small\item\em Calculates a random Web\+Socket key that can be used to initiate a Web\+Socket handshake  \end{DoxyCompactList}\item 
+static string \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_ac7996ac7be1b518142877ae09e7a8337}{Compute\+Socket\+Accept\+String}} (string sec\+Web\+Socket\+Key)
+\begin{DoxyCompactList}\small\item\em Computes a Web\+Socket accept string from a given key  \end{DoxyCompactList}\item 
+static async Task$<$ string $>$ \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_aa5ded6a39f622623cee6b9453cdbab1c}{Read\+Http\+Header\+Async}} (System.\+IO.\+Stream stream, Cancellation\+Token token)
+\begin{DoxyCompactList}\small\item\em Reads an http header as per the HTTP spec  \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a7b6d73c58a1a86ab4aee854945708f0b}{Is\+Web\+Socket\+Upgrade\+Request}} (String header)
+\begin{DoxyCompactList}\small\item\em Decodes the header to detect is this is a web socket upgrade response  \end{DoxyCompactList}\item 
+static string \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a5d4a53f6713ee2dd4447b333389c26ab}{Get\+Path\+From\+Header}} (string http\+Header)
+\begin{DoxyCompactList}\small\item\em Gets the path from the HTTP header  \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a5b5e11646f512d03ba8c2c9b61fa2d7f}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a5b5e11646f512d03ba8c2c9b61fa2d7f}} 
+static IList$<$ string $>$ {\bfseries Get\+Sub\+Protocols} (string http\+Header)
+\item 
+static string \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a68bef1cf1eda1608db5ce1750d040d14}{Read\+Http\+Response\+Code}} (string response)
+\begin{DoxyCompactList}\small\item\em Reads the HTTP response code from the http response string  \end{DoxyCompactList}\item 
+static async Task \mbox{\hyperlink{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a6e758500694c66088449bc7ff86c6634}{Write\+Http\+Header\+Async}} (string response, System.\+IO.\+Stream stream, Cancellation\+Token token)
+\begin{DoxyCompactList}\small\item\em Writes an HTTP response string to the stream  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a9b5b222971fabf47b7dcf9124e4cd6e5}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a9b5b222971fabf47b7dcf9124e4cd6e5}} 
+\index{Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}!CalculateWebSocketKey@{CalculateWebSocketKey}}
+\index{CalculateWebSocketKey@{CalculateWebSocketKey}!Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}}
+\doxysubsubsection{\texorpdfstring{CalculateWebSocketKey()}{CalculateWebSocketKey()}}
+{\footnotesize\ttfamily static string Nakama.\+Ninja.\+Web\+Sockets.\+Http\+Helper.\+Calculate\+Web\+Socket\+Key (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Calculates a random Web\+Socket key that can be used to initiate a Web\+Socket handshake  
+
+\begin{DoxyReturn}{Returns}
+A random websocket key
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_ac7996ac7be1b518142877ae09e7a8337}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_ac7996ac7be1b518142877ae09e7a8337}} 
+\index{Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}!ComputeSocketAcceptString@{ComputeSocketAcceptString}}
+\index{ComputeSocketAcceptString@{ComputeSocketAcceptString}!Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}}
+\doxysubsubsection{\texorpdfstring{ComputeSocketAcceptString()}{ComputeSocketAcceptString()}}
+{\footnotesize\ttfamily static string Nakama.\+Ninja.\+Web\+Sockets.\+Http\+Helper.\+Compute\+Socket\+Accept\+String (\begin{DoxyParamCaption}\item[{string}]{sec\+Web\+Socket\+Key }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Computes a Web\+Socket accept string from a given key  
+
+
+\begin{DoxyParams}{Parameters}
+{\em sec\+Web\+Socket\+Key} & The web socket key to base the accept string on\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A web socket accept string
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a5d4a53f6713ee2dd4447b333389c26ab}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a5d4a53f6713ee2dd4447b333389c26ab}} 
+\index{Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}!GetPathFromHeader@{GetPathFromHeader}}
+\index{GetPathFromHeader@{GetPathFromHeader}!Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}}
+\doxysubsubsection{\texorpdfstring{GetPathFromHeader()}{GetPathFromHeader()}}
+{\footnotesize\ttfamily static string Nakama.\+Ninja.\+Web\+Sockets.\+Http\+Helper.\+Get\+Path\+From\+Header (\begin{DoxyParamCaption}\item[{string}]{http\+Header }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Gets the path from the HTTP header  
+
+
+\begin{DoxyParams}{Parameters}
+{\em http\+Header} & The HTTP header to read\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The path
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a7b6d73c58a1a86ab4aee854945708f0b}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a7b6d73c58a1a86ab4aee854945708f0b}} 
+\index{Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}!IsWebSocketUpgradeRequest@{IsWebSocketUpgradeRequest}}
+\index{IsWebSocketUpgradeRequest@{IsWebSocketUpgradeRequest}!Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}}
+\doxysubsubsection{\texorpdfstring{IsWebSocketUpgradeRequest()}{IsWebSocketUpgradeRequest()}}
+{\footnotesize\ttfamily static bool Nakama.\+Ninja.\+Web\+Sockets.\+Http\+Helper.\+Is\+Web\+Socket\+Upgrade\+Request (\begin{DoxyParamCaption}\item[{String}]{header }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Decodes the header to detect is this is a web socket upgrade response  
+
+
+\begin{DoxyParams}{Parameters}
+{\em header} & The HTTP header\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if this is an http Web\+Socket upgrade response
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_aa5ded6a39f622623cee6b9453cdbab1c}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_aa5ded6a39f622623cee6b9453cdbab1c}} 
+\index{Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}!ReadHttpHeaderAsync@{ReadHttpHeaderAsync}}
+\index{ReadHttpHeaderAsync@{ReadHttpHeaderAsync}!Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}}
+\doxysubsubsection{\texorpdfstring{ReadHttpHeaderAsync()}{ReadHttpHeaderAsync()}}
+{\footnotesize\ttfamily static async Task$<$ string $>$ Nakama.\+Ninja.\+Web\+Sockets.\+Http\+Helper.\+Read\+Http\+Header\+Async (\begin{DoxyParamCaption}\item[{System.\+IO.\+Stream}]{stream,  }\item[{Cancellation\+Token}]{token }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Reads an http header as per the HTTP spec  
+
+
+\begin{DoxyParams}{Parameters}
+{\em stream} & The stream to read UTF8 text from\\
+\hline
+{\em token} & The cancellation token\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The HTTP header
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a68bef1cf1eda1608db5ce1750d040d14}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a68bef1cf1eda1608db5ce1750d040d14}} 
+\index{Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}!ReadHttpResponseCode@{ReadHttpResponseCode}}
+\index{ReadHttpResponseCode@{ReadHttpResponseCode}!Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}}
+\doxysubsubsection{\texorpdfstring{ReadHttpResponseCode()}{ReadHttpResponseCode()}}
+{\footnotesize\ttfamily static string Nakama.\+Ninja.\+Web\+Sockets.\+Http\+Helper.\+Read\+Http\+Response\+Code (\begin{DoxyParamCaption}\item[{string}]{response }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Reads the HTTP response code from the http response string  
+
+
+\begin{DoxyParams}{Parameters}
+{\em response} & The response string\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the response code
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a6e758500694c66088449bc7ff86c6634}\label{class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper_a6e758500694c66088449bc7ff86c6634}} 
+\index{Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}!WriteHttpHeaderAsync@{WriteHttpHeaderAsync}}
+\index{WriteHttpHeaderAsync@{WriteHttpHeaderAsync}!Nakama.Ninja.WebSockets.HttpHelper@{Nakama.Ninja.WebSockets.HttpHelper}}
+\doxysubsubsection{\texorpdfstring{WriteHttpHeaderAsync()}{WriteHttpHeaderAsync()}}
+{\footnotesize\ttfamily static async Task Nakama.\+Ninja.\+Web\+Sockets.\+Http\+Helper.\+Write\+Http\+Header\+Async (\begin{DoxyParamCaption}\item[{string}]{response,  }\item[{System.\+IO.\+Stream}]{stream,  }\item[{Cancellation\+Token}]{token }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Writes an HTTP response string to the stream  
+
+
+\begin{DoxyParams}{Parameters}
+{\em response} & The response (without the new line characters)\\
+\hline
+{\em stream} & The stream to write to\\
+\hline
+{\em token} & The cancellation token\\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Nakama/\+Ninja.\+Web\+Sockets/Http\+Helper.\+cs\end{DoxyCompactItemize}

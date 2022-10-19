@@ -1,0 +1,4 @@
+var _web_socket_version_not_supported_exception_8cs =
+[
+    [ "Nakama.Ninja.WebSockets.Exceptions.WebSocketVersionNotSupportedException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_version_not_supported_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_version_not_supported_exception" ]
+];

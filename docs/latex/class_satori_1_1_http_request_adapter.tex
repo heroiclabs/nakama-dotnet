@@ -1,0 +1,153 @@
+\hypertarget{class_satori_1_1_http_request_adapter}{}\doxysection{Satori.\+Http\+Request\+Adapter Class Reference}
+\label{class_satori_1_1_http_request_adapter}\index{Satori.HttpRequestAdapter@{Satori.HttpRequestAdapter}}
+
+
+HTTP Request adapter which uses the .NET Http\+Client to send requests.   
+
+
+Inheritance diagram for Satori.\+Http\+Request\+Adapter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_satori_1_1_http_request_adapter}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_satori_1_1_http_request_adapter_aa9a3b7b022a3e716af4ca62bb7e972ef}\label{class_satori_1_1_http_request_adapter_aa9a3b7b022a3e716af4ca62bb7e972ef}} 
+{\bfseries Http\+Request\+Adapter} (Http\+Client http\+Client)
+\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_satori_1_1_http_request_adapter_a68c34ab8213a4658b431c1d28646dc9a}{Send\+Async}} (string method, Uri uri, IDictionary$<$ string, string $>$ headers, byte\mbox{[}$\,$\mbox{]} body, int timeout, Cancellation\+Token? user\+Cancel\+Token)
+\begin{DoxyCompactList}\small\item\em Send a HTTP request. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em method} & HTTP method to use for this request.\\
+\hline
+{\em uri} & The fully qualified URI to use.\\
+\hline
+{\em headers} & Request headers to set.\\
+\hline
+{\em body} & Request content body to set.\\
+\hline
+{\em timeout\+Sec} & Request timeout.\\
+\hline
+{\em user\+Cancel\+Token} & A user-\/generated token that can be used to cancel the request.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the contents of the response.
+\end{DoxyReturn}
+ \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{interface_satori_1_1_i_http_adapter}{IHttp\+Adapter}} \mbox{\hyperlink{class_satori_1_1_http_request_adapter_a625d2031f4142607a1b5a4c7054e77fd}{With\+Gzip}} (bool decompression=false, bool compression=false)
+\begin{DoxyCompactList}\small\item\em A new HTTP adapter with configuration for gzip support in the underlying HTTP client.  \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{interface_satori_1_1_i_logger}{ILogger}} \mbox{\hyperlink{class_satori_1_1_http_request_adapter_a6736d4ab9046b2b991c1a0e7260f8def}{Logger}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The logger to use with the adapter.  \end{DoxyCompactList}\item 
+Transient\+Exception\+Delegate \mbox{\hyperlink{class_satori_1_1_http_request_adapter_a546f98fc502df23332f3cfce7101d1e3}{Transient\+Exception\+Delegate}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em A delegate used to determine whether or not an error from the server is due to a temporary bad state on the server (i.\+e., is \textquotesingle{}transient\textquotesingle{}).  \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+HTTP Request adapter which uses the .NET Http\+Client to send requests.  
+
+Accept header is always set as \textquotesingle{}application/json\textquotesingle{}. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_satori_1_1_http_request_adapter_a68c34ab8213a4658b431c1d28646dc9a}\label{class_satori_1_1_http_request_adapter_a68c34ab8213a4658b431c1d28646dc9a}} 
+\index{Satori.HttpRequestAdapter@{Satori.HttpRequestAdapter}!SendAsync@{SendAsync}}
+\index{SendAsync@{SendAsync}!Satori.HttpRequestAdapter@{Satori.HttpRequestAdapter}}
+\doxysubsubsection{\texorpdfstring{SendAsync()}{SendAsync()}}
+{\footnotesize\ttfamily async Task$<$ string $>$ Satori.\+Http\+Request\+Adapter.\+Send\+Async (\begin{DoxyParamCaption}\item[{string}]{method,  }\item[{Uri}]{uri,  }\item[{IDictionary$<$ string, string $>$}]{headers,  }\item[{byte\mbox{[}$\,$\mbox{]}}]{body,  }\item[{int}]{timeout,  }\item[{Cancellation\+Token?}]{user\+Cancel\+Token }\end{DoxyParamCaption})}
+
+
+
+Send a HTTP request. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em method} & HTTP method to use for this request.\\
+\hline
+{\em uri} & The fully qualified URI to use.\\
+\hline
+{\em headers} & Request headers to set.\\
+\hline
+{\em body} & Request content body to set.\\
+\hline
+{\em timeout\+Sec} & Request timeout.\\
+\hline
+{\em user\+Cancel\+Token} & A user-\/generated token that can be used to cancel the request.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A task which resolves to the contents of the response.
+\end{DoxyReturn}
+ 
+
+
+
+Implements \mbox{\hyperlink{interface_satori_1_1_i_http_adapter_a5a8263afb745168a52c3e9a778b36344}{Satori.\+IHttp\+Adapter}}.
+
+\mbox{\Hypertarget{class_satori_1_1_http_request_adapter_a625d2031f4142607a1b5a4c7054e77fd}\label{class_satori_1_1_http_request_adapter_a625d2031f4142607a1b5a4c7054e77fd}} 
+\index{Satori.HttpRequestAdapter@{Satori.HttpRequestAdapter}!WithGzip@{WithGzip}}
+\index{WithGzip@{WithGzip}!Satori.HttpRequestAdapter@{Satori.HttpRequestAdapter}}
+\doxysubsubsection{\texorpdfstring{WithGzip()}{WithGzip()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{interface_satori_1_1_i_http_adapter}{IHttp\+Adapter}} Satori.\+Http\+Request\+Adapter.\+With\+Gzip (\begin{DoxyParamCaption}\item[{bool}]{decompression = {\ttfamily false},  }\item[{bool}]{compression = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+A new HTTP adapter with configuration for gzip support in the underlying HTTP client.  
+
+NOTE Decompression does not work with Mono AOT on Android. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em decompression} & If automatic decompression should be enabled with the HTTP adapter.\\
+\hline
+{\em compression} & If automatic compression should be enabled with the HTTP adapter.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new HTTP adapter.
+\end{DoxyReturn}
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_satori_1_1_http_request_adapter_a6736d4ab9046b2b991c1a0e7260f8def}\label{class_satori_1_1_http_request_adapter_a6736d4ab9046b2b991c1a0e7260f8def}} 
+\index{Satori.HttpRequestAdapter@{Satori.HttpRequestAdapter}!Logger@{Logger}}
+\index{Logger@{Logger}!Satori.HttpRequestAdapter@{Satori.HttpRequestAdapter}}
+\doxysubsubsection{\texorpdfstring{Logger}{Logger}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_satori_1_1_i_logger}{ILogger}} Satori.\+Http\+Request\+Adapter.\+Logger\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The logger to use with the adapter.  
+
+
+
+Implements \mbox{\hyperlink{interface_satori_1_1_i_http_adapter_a60f7f315f6269aa15eea61fa0155dc0b}{Satori.\+IHttp\+Adapter}}.
+
+\mbox{\Hypertarget{class_satori_1_1_http_request_adapter_a546f98fc502df23332f3cfce7101d1e3}\label{class_satori_1_1_http_request_adapter_a546f98fc502df23332f3cfce7101d1e3}} 
+\index{Satori.HttpRequestAdapter@{Satori.HttpRequestAdapter}!TransientExceptionDelegate@{TransientExceptionDelegate}}
+\index{TransientExceptionDelegate@{TransientExceptionDelegate}!Satori.HttpRequestAdapter@{Satori.HttpRequestAdapter}}
+\doxysubsubsection{\texorpdfstring{TransientExceptionDelegate}{TransientExceptionDelegate}}
+{\footnotesize\ttfamily Transient\+Exception\+Delegate Satori.\+Http\+Request\+Adapter.\+Transient\+Exception\+Delegate\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+A delegate used to determine whether or not an error from the server is due to a temporary bad state on the server (i.\+e., is \textquotesingle{}transient\textquotesingle{}).  
+
+
+
+Implements \mbox{\hyperlink{interface_satori_1_1_i_http_adapter_a4a1fd5b9edeccda3485b62d94f22578f}{Satori.\+IHttp\+Adapter}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Satori/Http\+Request\+Adapter.\+cs\end{DoxyCompactItemize}

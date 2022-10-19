@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gziphttpclienthandler_2ecs_0',['GZipHttpClientHandler.cs',['../_g_zip_http_client_handler_8cs.html',1,'']]]
+  ['httphelper_2ecs_0',['HttpHelper.cs',['../_http_helper_8cs.html',1,'']]]
 ];
