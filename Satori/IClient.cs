@@ -51,7 +51,7 @@ namespace Satori
         /// <param name="event">The event to send.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task object.</returns>
-        public Task EventAsync(ISession session, Event @event, CancellationToken? cancellationToken = null);
+        public Task EventAsync(ISession session, Event @event, CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// Send a batch of events for this session.
@@ -61,7 +61,7 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task object.</returns>
         public Task EventsAsync(ISession session, IEnumerable<Event> events,
-            CancellationToken? cancellationToken = null);
+            CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// Get all experiments data.

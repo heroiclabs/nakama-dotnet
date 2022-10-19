@@ -84,7 +84,7 @@ namespace Satori
         }
 
         /// <inheritdoc cref="AuthenticateAsync" />
-        public async Task<ISession> AuthenticateAsync(string id, CancellationToken? cancellationToken = null)
+        public async Task<ISession> AuthenticateAsync(string id, CancellationToken? cancellationToken = default)
         {
             var resp = await _apiClient.SatoriAuthenticateAsync(ApiKey, string.Empty,
                 new ApiAuthenticateRequest { Id = id }, cancellationToken);
@@ -98,7 +98,7 @@ namespace Satori
                 cancellationToken);
 
         /// <inheritdoc cref="EventAsync" />
-        public async Task EventAsync(ISession session, Event @event, CancellationToken? cancellationToken = null)
+        public async Task EventAsync(ISession session, Event @event, CancellationToken? cancellationToken = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -119,7 +119,7 @@ namespace Satori
 
         /// <inheritdoc cref="EventsAsync" />
         public async Task EventsAsync(ISession session, IEnumerable<Event> events,
-            CancellationToken? cancellationToken = null)
+            CancellationToken? cancellationToken = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
