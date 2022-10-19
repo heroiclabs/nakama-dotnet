@@ -1,5 +1,7 @@
 var class_nakama_1_1_web_socket_stdlib_adapter =
 [
+    [ "WebSocketStdlibAdapter", "class_nakama_1_1_web_socket_stdlib_adapter.html#a22ffb61a97bc21b86fa177a5025ebac7", null ],
+    [ "WebSocketStdlibAdapter", "class_nakama_1_1_web_socket_stdlib_adapter.html#a0d9779f96e2101f63852fe232e38c98b", null ],
     [ "CloseAsync", "class_nakama_1_1_web_socket_stdlib_adapter.html#a6daea5ed11c76e33e915880c91272d45", null ],
     [ "ConnectAsync", "class_nakama_1_1_web_socket_stdlib_adapter.html#ae94a4c3b78f1d523257950553bea085a", null ],
     [ "SendAsync", "class_nakama_1_1_web_socket_stdlib_adapter.html#a3c809f05d8a713f2e04882e40306c64f", null ],

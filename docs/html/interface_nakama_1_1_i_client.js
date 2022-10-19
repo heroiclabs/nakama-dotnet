@@ -46,6 +46,7 @@ var interface_nakama_1_1_i_client =
     [ "ListLeaderboardRecordsAsync", "interface_nakama_1_1_i_client.html#a90b33da885f5fee1267420a0acbc1e87", null ],
     [ "ListMatchesAsync", "interface_nakama_1_1_i_client.html#af52b743a4d334b23a43fad156f0eb54c", null ],
     [ "ListNotificationsAsync", "interface_nakama_1_1_i_client.html#a9443bb244b7a51c6a493900822c654f1", null ],
+    [ "ListStorageObjects", "interface_nakama_1_1_i_client.html#a0dae35b8820b90e23303cdb58336dddc", null ],
     [ "ListStorageObjectsAsync", "interface_nakama_1_1_i_client.html#afeec7a75562cfc1c9f51d35095580046", null ],
     [ "ListSubscriptionsAsync", "interface_nakama_1_1_i_client.html#a3e2cf89415aebbfdecb0f7015b37ba37", null ],
     [ "ListTournamentRecordsAroundOwnerAsync", "interface_nakama_1_1_i_client.html#a0165ccd67746f2775a70387b9f5f7cfb", null ],

@@ -5,9 +5,9 @@ var searchData=
   ['hasrefreshexpired_2',['HasRefreshExpired',['../interface_nakama_1_1_i_session.html#a8c7f2700402ab995544a4ff852ad5f35',1,'Nakama.ISession.HasRefreshExpired()'],['../class_nakama_1_1_session.html#a292f6d27e68f068d5b71a5e998f93adc',1,'Nakama.Session.HasRefreshExpired()'],['../interface_satori_1_1_i_session.html#aa690bf2fd9e3cebdc597a17ad95eb8ac',1,'Satori.ISession.HasRefreshExpired()'],['../class_satori_1_1_session.html#a4a4cc7d98de34718e385241eaa9984fe',1,'Satori.Session.HasRefreshExpired()']]],
   ['health_3',['Health',['../interface_nakama_1_1_console_1_1_i_status_list_status.html#ad81610c87e84a4dbd91549f4e1a1af37',1,'Nakama::Console::IStatusListStatus']]],
   ['host_4',['Host',['../class_nakama_1_1_client.html#aacad034c2d21b970537423de0ba27e4f',1,'Nakama.Client.Host()'],['../interface_nakama_1_1_i_client.html#a93e9759631f1a3106dc4ec47477f3eb8',1,'Nakama.IClient.Host()'],['../class_satori_1_1_client.html#a7e2d5442493469d57009038a05752561',1,'Satori.Client.Host()']]],
-  ['httperrortest_5',['HttpErrorTest',['../class_nakama_1_1_tests_1_1_api_1_1_http_error_test.html',1,'Nakama::Tests::Api']]],
-  ['httpheader_6',['HttpHeader',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context.html#a32f6e5fb1559a4194aca29eabc565b23',1,'Nakama::Ninja::WebSockets::WebSocketHttpContext']]],
-  ['httphelper_7',['HttpHelper',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper.html',1,'Nakama::Ninja::WebSockets']]],
+  ['httpheader_5',['HttpHeader',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context.html#a32f6e5fb1559a4194aca29eabc565b23',1,'Nakama::Ninja::WebSockets::WebSocketHttpContext']]],
+  ['httphelper_6',['HttpHelper',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper.html',1,'Nakama::Ninja::WebSockets']]],
+  ['httphelper_2ecs_7',['HttpHelper.cs',['../_http_helper_8cs.html',1,'']]],
   ['httpkey_8',['HttpKey',['../interface_nakama_1_1_i_api_rpc.html#a3a27a1ee6c59781f9e7dfdc101976129',1,'Nakama::IApiRpc']]],
-  ['httprequestadapter_9',['HttpRequestAdapter',['../class_nakama_1_1_http_request_adapter.html',1,'Nakama.HttpRequestAdapter'],['../class_satori_1_1_http_request_adapter.html',1,'Satori.HttpRequestAdapter']]]
+  ['httprequestadapter_9',['HttpRequestAdapter',['../class_nakama_1_1_http_request_adapter.html#abd7df73941b1255fe8ddd66e995e6a7a',1,'Nakama.HttpRequestAdapter.HttpRequestAdapter()'],['../class_satori_1_1_http_request_adapter.html#aa9a3b7b022a3e716af4ca62bb7e972ef',1,'Satori.HttpRequestAdapter.HttpRequestAdapter()'],['../class_nakama_1_1_http_request_adapter.html',1,'Nakama.HttpRequestAdapter'],['../class_satori_1_1_http_request_adapter.html',1,'Satori.HttpRequestAdapter']]]
 ];

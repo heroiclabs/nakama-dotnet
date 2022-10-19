@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.Ninja.WebSockets.BufferPool Class Reference</title>
+<title>Nakama .NET Client SDK: Nakama.Ninja.WebSockets.BufferPool Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -120,8 +120,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abb99536c0129f9ccbba8ad57e772d5fc"><td class="memItemLeft" align="right" valign="top"><a id="abb99536c0129f9ccbba8ad57e772d5fc" name="abb99536c0129f9ccbba8ad57e772d5fc"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>BufferPool</b> (int bufferSize)</td></tr>
+<tr class="memitem:af9baf99ac988522e6bbacde7669aaaa4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool.html#af9baf99ac988522e6bbacde7669aaaa4">BufferPool</a> ()</td></tr>
+<tr class="separator:af9baf99ac988522e6bbacde7669aaaa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb99536c0129f9ccbba8ad57e772d5fc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool.html#abb99536c0129f9ccbba8ad57e772d5fc">BufferPool</a> (int bufferSize)</td></tr>
 <tr class="separator:abb99536c0129f9ccbba8ad57e772d5fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3eacbad8a136b33a3c2e859c0cf6fe67"><td class="memItemLeft" align="right" valign="top">MemoryStream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool.html#a3eacbad8a136b33a3c2e859c0cf6fe67">GetBuffer</a> ()</td></tr>
 <tr class="memdesc:a3eacbad8a136b33a3c2e859c0cf6fe67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a MemoryStream built from a buffer plucked from a thread safe pool The pool grows automatically. Closing the memory stream clears the buffer and returns it to the pool   <a href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool.html#a3eacbad8a136b33a3c2e859c0cf6fe67">More...</a><br /></td></tr>
@@ -132,18 +133,72 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ae69844db9d6751407ef246703ec64574"><td class="memItemLeft" align="right" valign="top"><a id="ae69844db9d6751407ef246703ec64574" name="ae69844db9d6751407ef246703ec64574"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ReturnBuffer</b> (byte[] buffer)</td></tr>
+<tr class="memitem:ae69844db9d6751407ef246703ec64574"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool.html#ae69844db9d6751407ef246703ec64574">ReturnBuffer</a> (byte[] buffer)</td></tr>
 <tr class="separator:ae69844db9d6751407ef246703ec64574"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >This buffer pool is instance thread safe Use GetBuffer to get a MemoryStream (with a publically accessible buffer) Calling Close on this MemoryStream will clear its internal buffer and return the buffer to the pool for reuse MemoryStreams can grow larger than the DEFAULT_BUFFER_SIZE (or whatever you passed in) and the underlying buffers will be returned to the pool at their larger sizes  </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="af9baf99ac988522e6bbacde7669aaaa4" name="af9baf99ac988522e6bbacde7669aaaa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9baf99ac988522e6bbacde7669aaaa4">&#9670;&#160;</a></span>BufferPool() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Nakama.Ninja.WebSockets.BufferPool.BufferPool </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abb99536c0129f9ccbba8ad57e772d5fc" name="abb99536c0129f9ccbba8ad57e772d5fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb99536c0129f9ccbba8ad57e772d5fc">&#9670;&#160;</a></span>BufferPool() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Nakama.Ninja.WebSockets.BufferPool.BufferPool </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bufferSize</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a3eacbad8a136b33a3c2e859c0cf6fe67" name="a3eacbad8a136b33a3c2e859c0cf6fe67"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3eacbad8a136b33a3c2e859c0cf6fe67">&#9670;&#160;</a></span>GetBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">MemoryStream Nakama.Ninja.WebSockets.BufferPool.GetBuffer </td>
@@ -152,6 +207,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ReturnBuffer</b> (byt
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Gets a MemoryStream built from a buffer plucked from a thread safe pool The pool grows automatically. Closing the memory stream clears the buffer and returns it to the pool  </p>
@@ -160,8 +220,34 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>ReturnBuffer</b> (byt
 
 </div>
 </div>
+<a id="ae69844db9d6751407ef246703ec64574" name="ae69844db9d6751407ef246703ec64574"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae69844db9d6751407ef246703ec64574">&#9670;&#160;</a></span>ReturnBuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Nakama.Ninja.WebSockets.BufferPool.ReturnBuffer </td>
+          <td>(</td>
+          <td class="paramtype">byte[]&#160;</td>
+          <td class="paramname"><em>buffer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>Nakama/Ninja.WebSockets/BufferPool.cs</li>
+<li><a class="el" href="_buffer_pool_8cs.html">BufferPool.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

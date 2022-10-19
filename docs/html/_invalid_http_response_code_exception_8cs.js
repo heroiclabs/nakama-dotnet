@@ -1,0 +1,4 @@
+var _invalid_http_response_code_exception_8cs =
+[
+    [ "Nakama.Ninja.WebSockets.Exceptions.InvalidHttpResponseCodeException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_invalid_http_response_code_exception.html", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_invalid_http_response_code_exception" ]
+];

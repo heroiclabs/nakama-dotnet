@@ -1,6 +1,6 @@
 var namespace_nakama_1_1_console =
 [
-    [ "ApiResponseException", "class_nakama_1_1_console_1_1_api_response_exception.html", null ],
+    [ "ApiResponseException", "class_nakama_1_1_console_1_1_api_response_exception.html", "class_nakama_1_1_console_1_1_api_response_exception" ],
     [ "IApiAccountDevice", "interface_nakama_1_1_console_1_1_i_api_account_device.html", "interface_nakama_1_1_console_1_1_i_api_account_device" ],
     [ "IApiChannelMessage", "interface_nakama_1_1_console_1_1_i_api_channel_message.html", "interface_nakama_1_1_console_1_1_i_api_channel_message" ],
     [ "IApiFriend", "interface_nakama_1_1_console_1_1_i_api_friend.html", "interface_nakama_1_1_console_1_1_i_api_friend" ],

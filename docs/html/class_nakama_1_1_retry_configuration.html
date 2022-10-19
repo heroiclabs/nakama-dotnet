@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.RetryConfiguration Class Reference</title>
+<title>Nakama .NET Client SDK: Nakama.RetryConfiguration Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -116,21 +116,17 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:abb2a37c54f24e2fcd6c4ef4e2b5b3f75"><td class="memItemLeft" align="right" valign="top"><a id="abb2a37c54f24e2fcd6c4ef4e2b5b3f75" name="abb2a37c54f24e2fcd6c4ef4e2b5b3f75"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>BaseDelayMs</b><code> [get]</code></td></tr>
-<tr class="memdesc:abb2a37c54f24e2fcd6c4ef4e2b5b3f75"><td class="mdescLeft">&#160;</td><td class="mdescRight">The base delay (milliseconds) used to calculate the time before making another request attempt. This base will be raised to N, where N is the number of retry attempts.  <br /></td></tr>
+<tr class="memitem:abb2a37c54f24e2fcd6c4ef4e2b5b3f75"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_retry_configuration.html#abb2a37c54f24e2fcd6c4ef4e2b5b3f75">BaseDelayMs</a><code> [get]</code></td></tr>
+<tr class="memdesc:abb2a37c54f24e2fcd6c4ef4e2b5b3f75"><td class="mdescLeft">&#160;</td><td class="mdescRight">The base delay (milliseconds) used to calculate the time before making another request attempt. This base will be raised to N, where N is the number of retry attempts.   <a href="class_nakama_1_1_retry_configuration.html#abb2a37c54f24e2fcd6c4ef4e2b5b3f75">More...</a><br /></td></tr>
 <tr class="separator:abb2a37c54f24e2fcd6c4ef4e2b5b3f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06fc034fcd8b2fe5eed976079264c0cd"><td class="memItemLeft" align="right" valign="top"><a id="a06fc034fcd8b2fe5eed976079264c0cd" name="a06fc034fcd8b2fe5eed976079264c0cd"></a>
-Jitter&#160;</td><td class="memItemRight" valign="bottom"><b>Jitter</b><code> [get]</code></td></tr>
-<tr class="memdesc:a06fc034fcd8b2fe5eed976079264c0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The jitter algorithm used to apply randomness to the retry delay. Defaults to RetryJitter.FullJitter  <br /></td></tr>
+<tr class="memitem:a06fc034fcd8b2fe5eed976079264c0cd"><td class="memItemLeft" align="right" valign="top">Jitter&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_retry_configuration.html#a06fc034fcd8b2fe5eed976079264c0cd">Jitter</a><code> [get]</code></td></tr>
+<tr class="memdesc:a06fc034fcd8b2fe5eed976079264c0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The jitter algorithm used to apply randomness to the retry delay. Defaults to RetryJitter.FullJitter   <a href="class_nakama_1_1_retry_configuration.html#a06fc034fcd8b2fe5eed976079264c0cd">More...</a><br /></td></tr>
 <tr class="separator:a06fc034fcd8b2fe5eed976079264c0cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3be7ea95f69217237c03c9bf50fd466e"><td class="memItemLeft" align="right" valign="top"><a id="a3be7ea95f69217237c03c9bf50fd466e" name="a3be7ea95f69217237c03c9bf50fd466e"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>MaxAttempts</b><code> [get]</code></td></tr>
-<tr class="memdesc:a3be7ea95f69217237c03c9bf50fd466e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximum number of attempts to make before cancelling the request task.  <br /></td></tr>
+<tr class="memitem:a3be7ea95f69217237c03c9bf50fd466e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_retry_configuration.html#a3be7ea95f69217237c03c9bf50fd466e">MaxAttempts</a><code> [get]</code></td></tr>
+<tr class="memdesc:a3be7ea95f69217237c03c9bf50fd466e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximum number of attempts to make before cancelling the request task.   <a href="class_nakama_1_1_retry_configuration.html#a3be7ea95f69217237c03c9bf50fd466e">More...</a><br /></td></tr>
 <tr class="separator:a3be7ea95f69217237c03c9bf50fd466e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45bbacb24a971f1092d15bc2dac0bafe"><td class="memItemLeft" align="right" valign="top"><a id="a45bbacb24a971f1092d15bc2dac0bafe" name="a45bbacb24a971f1092d15bc2dac0bafe"></a>
-RetryListener&#160;</td><td class="memItemRight" valign="bottom"><b>RetryListener</b><code> [get]</code></td></tr>
-<tr class="memdesc:a45bbacb24a971f1092d15bc2dac0bafe"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback that is invoked before a new retry attempt is made.  <br /></td></tr>
+<tr class="memitem:a45bbacb24a971f1092d15bc2dac0bafe"><td class="memItemLeft" align="right" valign="top">RetryListener&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_retry_configuration.html#a45bbacb24a971f1092d15bc2dac0bafe">RetryListener</a><code> [get]</code></td></tr>
+<tr class="memdesc:a45bbacb24a971f1092d15bc2dac0bafe"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback that is invoked before a new retry attempt is made.   <a href="class_nakama_1_1_retry_configuration.html#a45bbacb24a971f1092d15bc2dac0bafe">More...</a><br /></td></tr>
 <tr class="separator:a45bbacb24a971f1092d15bc2dac0bafe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -143,6 +139,9 @@ RetryListener&#160;</td><td class="memItemRight" valign="bottom"><b>RetryListene
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">Nakama.RetryConfiguration.RetryConfiguration </td>
@@ -162,6 +161,11 @@ RetryListener&#160;</td><td class="memItemRight" valign="bottom"><b>RetryListene
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Create a new retry configuration.  </p>
@@ -180,6 +184,9 @@ RetryListener&#160;</td><td class="memItemRight" valign="bottom"><b>RetryListene
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">Nakama.RetryConfiguration.RetryConfiguration </td>
@@ -205,6 +212,11 @@ RetryListener&#160;</td><td class="memItemRight" valign="bottom"><b>RetryListene
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Create a new retry configuration.  </p>
@@ -224,6 +236,9 @@ RetryListener&#160;</td><td class="memItemRight" valign="bottom"><b>RetryListene
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">Nakama.RetryConfiguration.RetryConfiguration </td>
@@ -255,6 +270,11 @@ RetryListener&#160;</td><td class="memItemRight" valign="bottom"><b>RetryListene
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Create a new retry configuration.  </p>
@@ -270,8 +290,105 @@ RetryListener&#160;</td><td class="memItemRight" valign="bottom"><b>RetryListene
 
 </div>
 </div>
+<h2 class="groupheader">Property Documentation</h2>
+<a id="abb2a37c54f24e2fcd6c4ef4e2b5b3f75" name="abb2a37c54f24e2fcd6c4ef4e2b5b3f75"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb2a37c54f24e2fcd6c4ef4e2b5b3f75">&#9670;&#160;</a></span>BaseDelayMs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.RetryConfiguration.BaseDelayMs</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The base delay (milliseconds) used to calculate the time before making another request attempt. This base will be raised to N, where N is the number of retry attempts.  </p>
+
+</div>
+</div>
+<a id="a06fc034fcd8b2fe5eed976079264c0cd" name="a06fc034fcd8b2fe5eed976079264c0cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06fc034fcd8b2fe5eed976079264c0cd">&#9670;&#160;</a></span>Jitter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Jitter Nakama.RetryConfiguration.Jitter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The jitter algorithm used to apply randomness to the retry delay. Defaults to RetryJitter.FullJitter  </p>
+
+</div>
+</div>
+<a id="a3be7ea95f69217237c03c9bf50fd466e" name="a3be7ea95f69217237c03c9bf50fd466e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3be7ea95f69217237c03c9bf50fd466e">&#9670;&#160;</a></span>MaxAttempts</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.RetryConfiguration.MaxAttempts</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The maximum number of attempts to make before cancelling the request task.  </p>
+
+</div>
+</div>
+<a id="a45bbacb24a971f1092d15bc2dac0bafe" name="a45bbacb24a971f1092d15bc2dac0bafe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45bbacb24a971f1092d15bc2dac0bafe">&#9670;&#160;</a></span>RetryListener</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">RetryListener Nakama.RetryConfiguration.RetryListener</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A callback that is invoked before a new retry attempt is made.  </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>Nakama/RetryConfiguration.cs</li>
+<li><a class="el" href="_retry_configuration_8cs.html">RetryConfiguration.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

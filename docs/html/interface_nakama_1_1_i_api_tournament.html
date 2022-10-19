@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.IApiTournament Interface Reference</title>
+<title>Nakama .NET Client SDK: Nakama.IApiTournament Interface Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -105,87 +105,525 @@ $(document).ready(function(){initNavTree('interface_nakama_1_1_i_api_tournament.
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:abca204c196b0a90e4342e18f4c935630"><td class="memItemLeft" align="right" valign="top"><a id="abca204c196b0a90e4342e18f4c935630" name="abca204c196b0a90e4342e18f4c935630"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>CanEnter</b><code> [get]</code></td></tr>
-<tr class="memdesc:abca204c196b0a90e4342e18f4c935630"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the tournament is active and can enter. A computed value.  <br /></td></tr>
+<tr class="memitem:abca204c196b0a90e4342e18f4c935630"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#abca204c196b0a90e4342e18f4c935630">CanEnter</a><code> [get]</code></td></tr>
+<tr class="memdesc:abca204c196b0a90e4342e18f4c935630"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the tournament is active and can enter. A computed value.   <a href="interface_nakama_1_1_i_api_tournament.html#abca204c196b0a90e4342e18f4c935630">More...</a><br /></td></tr>
 <tr class="separator:abca204c196b0a90e4342e18f4c935630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4d095c5500d084ae1071979320f4803"><td class="memItemLeft" align="right" valign="top"><a id="ad4d095c5500d084ae1071979320f4803" name="ad4d095c5500d084ae1071979320f4803"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>Category</b><code> [get]</code></td></tr>
-<tr class="memdesc:ad4d095c5500d084ae1071979320f4803"><td class="mdescLeft">&#160;</td><td class="mdescRight">The category of the tournament. e.g. "vip" could be category 1.  <br /></td></tr>
+<tr class="memitem:ad4d095c5500d084ae1071979320f4803"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#ad4d095c5500d084ae1071979320f4803">Category</a><code> [get]</code></td></tr>
+<tr class="memdesc:ad4d095c5500d084ae1071979320f4803"><td class="mdescLeft">&#160;</td><td class="mdescRight">The category of the tournament. e.g. "vip" could be category 1.   <a href="interface_nakama_1_1_i_api_tournament.html#ad4d095c5500d084ae1071979320f4803">More...</a><br /></td></tr>
 <tr class="separator:ad4d095c5500d084ae1071979320f4803"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a327d36c0623cd95772505dbde9029671"><td class="memItemLeft" align="right" valign="top"><a id="a327d36c0623cd95772505dbde9029671" name="a327d36c0623cd95772505dbde9029671"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>CreateTime</b><code> [get]</code></td></tr>
-<tr class="memdesc:a327d36c0623cd95772505dbde9029671"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament was created.  <br /></td></tr>
+<tr class="memitem:a327d36c0623cd95772505dbde9029671"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a327d36c0623cd95772505dbde9029671">CreateTime</a><code> [get]</code></td></tr>
+<tr class="memdesc:a327d36c0623cd95772505dbde9029671"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament was created.   <a href="interface_nakama_1_1_i_api_tournament.html#a327d36c0623cd95772505dbde9029671">More...</a><br /></td></tr>
 <tr class="separator:a327d36c0623cd95772505dbde9029671"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7ee9f3fa78017bed567b84b7af1d356"><td class="memItemLeft" align="right" valign="top"><a id="aa7ee9f3fa78017bed567b84b7af1d356" name="aa7ee9f3fa78017bed567b84b7af1d356"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Description</b><code> [get]</code></td></tr>
-<tr class="memdesc:aa7ee9f3fa78017bed567b84b7af1d356"><td class="mdescLeft">&#160;</td><td class="mdescRight">The description of the tournament. May be blank.  <br /></td></tr>
+<tr class="memitem:aa7ee9f3fa78017bed567b84b7af1d356"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#aa7ee9f3fa78017bed567b84b7af1d356">Description</a><code> [get]</code></td></tr>
+<tr class="memdesc:aa7ee9f3fa78017bed567b84b7af1d356"><td class="mdescLeft">&#160;</td><td class="mdescRight">The description of the tournament. May be blank.   <a href="interface_nakama_1_1_i_api_tournament.html#aa7ee9f3fa78017bed567b84b7af1d356">More...</a><br /></td></tr>
 <tr class="separator:aa7ee9f3fa78017bed567b84b7af1d356"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8229e8ffce987b19036dd1af156f4748"><td class="memItemLeft" align="right" valign="top"><a id="a8229e8ffce987b19036dd1af156f4748" name="a8229e8ffce987b19036dd1af156f4748"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>Duration</b><code> [get]</code></td></tr>
-<tr class="memdesc:a8229e8ffce987b19036dd1af156f4748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duration of the tournament in seconds.  <br /></td></tr>
+<tr class="memitem:a8229e8ffce987b19036dd1af156f4748"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a8229e8ffce987b19036dd1af156f4748">Duration</a><code> [get]</code></td></tr>
+<tr class="memdesc:a8229e8ffce987b19036dd1af156f4748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Duration of the tournament in seconds.   <a href="interface_nakama_1_1_i_api_tournament.html#a8229e8ffce987b19036dd1af156f4748">More...</a><br /></td></tr>
 <tr class="separator:a8229e8ffce987b19036dd1af156f4748"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28f939c5594b45c2a8f517b5646f0f06"><td class="memItemLeft" align="right" valign="top"><a id="a28f939c5594b45c2a8f517b5646f0f06" name="a28f939c5594b45c2a8f517b5646f0f06"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>EndActive</b><code> [get]</code></td></tr>
-<tr class="memdesc:a28f939c5594b45c2a8f517b5646f0f06"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament stops being active until next reset. A computed value.  <br /></td></tr>
+<tr class="memitem:a28f939c5594b45c2a8f517b5646f0f06"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a28f939c5594b45c2a8f517b5646f0f06">EndActive</a><code> [get]</code></td></tr>
+<tr class="memdesc:a28f939c5594b45c2a8f517b5646f0f06"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament stops being active until next reset. A computed value.   <a href="interface_nakama_1_1_i_api_tournament.html#a28f939c5594b45c2a8f517b5646f0f06">More...</a><br /></td></tr>
 <tr class="separator:a28f939c5594b45c2a8f517b5646f0f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2fe168cd7f9b5adf8aca1074d14f6bee"><td class="memItemLeft" align="right" valign="top"><a id="a2fe168cd7f9b5adf8aca1074d14f6bee" name="a2fe168cd7f9b5adf8aca1074d14f6bee"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>EndTime</b><code> [get]</code></td></tr>
-<tr class="memdesc:a2fe168cd7f9b5adf8aca1074d14f6bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament will be stopped.  <br /></td></tr>
+<tr class="memitem:a2fe168cd7f9b5adf8aca1074d14f6bee"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a2fe168cd7f9b5adf8aca1074d14f6bee">EndTime</a><code> [get]</code></td></tr>
+<tr class="memdesc:a2fe168cd7f9b5adf8aca1074d14f6bee"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament will be stopped.   <a href="interface_nakama_1_1_i_api_tournament.html#a2fe168cd7f9b5adf8aca1074d14f6bee">More...</a><br /></td></tr>
 <tr class="separator:a2fe168cd7f9b5adf8aca1074d14f6bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a451f344a2984712b711f89e49198fa57"><td class="memItemLeft" align="right" valign="top"><a id="a451f344a2984712b711f89e49198fa57" name="a451f344a2984712b711f89e49198fa57"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Id</b><code> [get]</code></td></tr>
-<tr class="memdesc:a451f344a2984712b711f89e49198fa57"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ID of the tournament.  <br /></td></tr>
+<tr class="memitem:a451f344a2984712b711f89e49198fa57"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a451f344a2984712b711f89e49198fa57">Id</a><code> [get]</code></td></tr>
+<tr class="memdesc:a451f344a2984712b711f89e49198fa57"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ID of the tournament.   <a href="interface_nakama_1_1_i_api_tournament.html#a451f344a2984712b711f89e49198fa57">More...</a><br /></td></tr>
 <tr class="separator:a451f344a2984712b711f89e49198fa57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a437455a81843911cf56fcb6d2a8a80a7"><td class="memItemLeft" align="right" valign="top"><a id="a437455a81843911cf56fcb6d2a8a80a7" name="a437455a81843911cf56fcb6d2a8a80a7"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>MaxNumScore</b><code> [get]</code></td></tr>
-<tr class="memdesc:a437455a81843911cf56fcb6d2a8a80a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximum score updates allowed per player for the current tournament.  <br /></td></tr>
+<tr class="memitem:a437455a81843911cf56fcb6d2a8a80a7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a437455a81843911cf56fcb6d2a8a80a7">MaxNumScore</a><code> [get]</code></td></tr>
+<tr class="memdesc:a437455a81843911cf56fcb6d2a8a80a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximum score updates allowed per player for the current tournament.   <a href="interface_nakama_1_1_i_api_tournament.html#a437455a81843911cf56fcb6d2a8a80a7">More...</a><br /></td></tr>
 <tr class="separator:a437455a81843911cf56fcb6d2a8a80a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42f5ceae3569e5d4081a501f08e0b7b9"><td class="memItemLeft" align="right" valign="top"><a id="a42f5ceae3569e5d4081a501f08e0b7b9" name="a42f5ceae3569e5d4081a501f08e0b7b9"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>MaxSize</b><code> [get]</code></td></tr>
-<tr class="memdesc:a42f5ceae3569e5d4081a501f08e0b7b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximum number of players for the tournament.  <br /></td></tr>
+<tr class="memitem:a42f5ceae3569e5d4081a501f08e0b7b9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a42f5ceae3569e5d4081a501f08e0b7b9">MaxSize</a><code> [get]</code></td></tr>
+<tr class="memdesc:a42f5ceae3569e5d4081a501f08e0b7b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximum number of players for the tournament.   <a href="interface_nakama_1_1_i_api_tournament.html#a42f5ceae3569e5d4081a501f08e0b7b9">More...</a><br /></td></tr>
 <tr class="separator:a42f5ceae3569e5d4081a501f08e0b7b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47768bcf7dd97abea99e001f7c9695f7"><td class="memItemLeft" align="right" valign="top"><a id="a47768bcf7dd97abea99e001f7c9695f7" name="a47768bcf7dd97abea99e001f7c9695f7"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Metadata</b><code> [get]</code></td></tr>
-<tr class="memdesc:a47768bcf7dd97abea99e001f7c9695f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional information stored as a JSON object.  <br /></td></tr>
+<tr class="memitem:a47768bcf7dd97abea99e001f7c9695f7"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a47768bcf7dd97abea99e001f7c9695f7">Metadata</a><code> [get]</code></td></tr>
+<tr class="memdesc:a47768bcf7dd97abea99e001f7c9695f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional information stored as a JSON object.   <a href="interface_nakama_1_1_i_api_tournament.html#a47768bcf7dd97abea99e001f7c9695f7">More...</a><br /></td></tr>
 <tr class="separator:a47768bcf7dd97abea99e001f7c9695f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a95b05c4d22f3e44c458e082b28696ca1"><td class="memItemLeft" align="right" valign="top"><a id="a95b05c4d22f3e44c458e082b28696ca1" name="a95b05c4d22f3e44c458e082b28696ca1"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>NextReset</b><code> [get]</code></td></tr>
-<tr class="memdesc:a95b05c4d22f3e44c458e082b28696ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament is next playable. A computed value.  <br /></td></tr>
+<tr class="memitem:a95b05c4d22f3e44c458e082b28696ca1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a95b05c4d22f3e44c458e082b28696ca1">NextReset</a><code> [get]</code></td></tr>
+<tr class="memdesc:a95b05c4d22f3e44c458e082b28696ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament is next playable. A computed value.   <a href="interface_nakama_1_1_i_api_tournament.html#a95b05c4d22f3e44c458e082b28696ca1">More...</a><br /></td></tr>
 <tr class="separator:a95b05c4d22f3e44c458e082b28696ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac176de4d1c0e1442861bf0de5d64edef"><td class="memItemLeft" align="right" valign="top"><a id="ac176de4d1c0e1442861bf0de5d64edef" name="ac176de4d1c0e1442861bf0de5d64edef"></a>
-<a class="el" href="namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7">ApiOperator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Operator</b><code> [get]</code></td></tr>
-<tr class="memdesc:ac176de4d1c0e1442861bf0de5d64edef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operator.  <br /></td></tr>
+<tr class="memitem:ac176de4d1c0e1442861bf0de5d64edef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7">ApiOperator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#ac176de4d1c0e1442861bf0de5d64edef">Operator</a><code> [get]</code></td></tr>
+<tr class="memdesc:ac176de4d1c0e1442861bf0de5d64edef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Operator.   <a href="interface_nakama_1_1_i_api_tournament.html#ac176de4d1c0e1442861bf0de5d64edef">More...</a><br /></td></tr>
 <tr class="separator:ac176de4d1c0e1442861bf0de5d64edef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9795e55a84d977b4858193f667015fb"><td class="memItemLeft" align="right" valign="top"><a id="aa9795e55a84d977b4858193f667015fb" name="aa9795e55a84d977b4858193f667015fb"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>PrevReset</b><code> [get]</code></td></tr>
-<tr class="memdesc:aa9795e55a84d977b4858193f667015fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament was last reset. A computed value.  <br /></td></tr>
+<tr class="memitem:aa9795e55a84d977b4858193f667015fb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#aa9795e55a84d977b4858193f667015fb">PrevReset</a><code> [get]</code></td></tr>
+<tr class="memdesc:aa9795e55a84d977b4858193f667015fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament was last reset. A computed value.   <a href="interface_nakama_1_1_i_api_tournament.html#aa9795e55a84d977b4858193f667015fb">More...</a><br /></td></tr>
 <tr class="separator:aa9795e55a84d977b4858193f667015fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b6ac3469abfb67c9cbc6f8929f04bb7"><td class="memItemLeft" align="right" valign="top"><a id="a2b6ac3469abfb67c9cbc6f8929f04bb7" name="a2b6ac3469abfb67c9cbc6f8929f04bb7"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>Size</b><code> [get]</code></td></tr>
-<tr class="memdesc:a2b6ac3469abfb67c9cbc6f8929f04bb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current number of players in the tournament.  <br /></td></tr>
+<tr class="memitem:a2b6ac3469abfb67c9cbc6f8929f04bb7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a2b6ac3469abfb67c9cbc6f8929f04bb7">Size</a><code> [get]</code></td></tr>
+<tr class="memdesc:a2b6ac3469abfb67c9cbc6f8929f04bb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current number of players in the tournament.   <a href="interface_nakama_1_1_i_api_tournament.html#a2b6ac3469abfb67c9cbc6f8929f04bb7">More...</a><br /></td></tr>
 <tr class="separator:a2b6ac3469abfb67c9cbc6f8929f04bb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb01044753093c9ab2311f51f9c01cdf"><td class="memItemLeft" align="right" valign="top"><a id="acb01044753093c9ab2311f51f9c01cdf" name="acb01044753093c9ab2311f51f9c01cdf"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>SortOrder</b><code> [get]</code></td></tr>
-<tr class="memdesc:acb01044753093c9ab2311f51f9c01cdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">ASC (0) or DESC (1) sort mode of scores in the tournament.  <br /></td></tr>
+<tr class="memitem:acb01044753093c9ab2311f51f9c01cdf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#acb01044753093c9ab2311f51f9c01cdf">SortOrder</a><code> [get]</code></td></tr>
+<tr class="memdesc:acb01044753093c9ab2311f51f9c01cdf"><td class="mdescLeft">&#160;</td><td class="mdescRight">ASC (0) or DESC (1) sort mode of scores in the tournament.   <a href="interface_nakama_1_1_i_api_tournament.html#acb01044753093c9ab2311f51f9c01cdf">More...</a><br /></td></tr>
 <tr class="separator:acb01044753093c9ab2311f51f9c01cdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aceca06fc1dd464d9635399e4add87cbf"><td class="memItemLeft" align="right" valign="top"><a id="aceca06fc1dd464d9635399e4add87cbf" name="aceca06fc1dd464d9635399e4add87cbf"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>StartActive</b><code> [get]</code></td></tr>
-<tr class="memdesc:aceca06fc1dd464d9635399e4add87cbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament start being active. A computed value.  <br /></td></tr>
+<tr class="memitem:aceca06fc1dd464d9635399e4add87cbf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#aceca06fc1dd464d9635399e4add87cbf">StartActive</a><code> [get]</code></td></tr>
+<tr class="memdesc:aceca06fc1dd464d9635399e4add87cbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament start being active. A computed value.   <a href="interface_nakama_1_1_i_api_tournament.html#aceca06fc1dd464d9635399e4add87cbf">More...</a><br /></td></tr>
 <tr class="separator:aceca06fc1dd464d9635399e4add87cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02aea8c93c075cbb364bf9215916dfda"><td class="memItemLeft" align="right" valign="top"><a id="a02aea8c93c075cbb364bf9215916dfda" name="a02aea8c93c075cbb364bf9215916dfda"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>StartTime</b><code> [get]</code></td></tr>
-<tr class="memdesc:a02aea8c93c075cbb364bf9215916dfda"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament will start.  <br /></td></tr>
+<tr class="memitem:a02aea8c93c075cbb364bf9215916dfda"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a02aea8c93c075cbb364bf9215916dfda">StartTime</a><code> [get]</code></td></tr>
+<tr class="memdesc:a02aea8c93c075cbb364bf9215916dfda"><td class="mdescLeft">&#160;</td><td class="mdescRight">The UNIX time when the tournament will start.   <a href="interface_nakama_1_1_i_api_tournament.html#a02aea8c93c075cbb364bf9215916dfda">More...</a><br /></td></tr>
 <tr class="separator:a02aea8c93c075cbb364bf9215916dfda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d1cdd84f43595345239d58b5a56cd41"><td class="memItemLeft" align="right" valign="top"><a id="a0d1cdd84f43595345239d58b5a56cd41" name="a0d1cdd84f43595345239d58b5a56cd41"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Title</b><code> [get]</code></td></tr>
-<tr class="memdesc:a0d1cdd84f43595345239d58b5a56cd41"><td class="mdescLeft">&#160;</td><td class="mdescRight">The title for the tournament.  <br /></td></tr>
+<tr class="memitem:a0d1cdd84f43595345239d58b5a56cd41"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_tournament.html#a0d1cdd84f43595345239d58b5a56cd41">Title</a><code> [get]</code></td></tr>
+<tr class="memdesc:a0d1cdd84f43595345239d58b5a56cd41"><td class="mdescLeft">&#160;</td><td class="mdescRight">The title for the tournament.   <a href="interface_nakama_1_1_i_api_tournament.html#a0d1cdd84f43595345239d58b5a56cd41">More...</a><br /></td></tr>
 <tr class="separator:a0d1cdd84f43595345239d58b5a56cd41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >A tournament on the server.  </p>
-</div><hr/>The documentation for this interface was generated from the following file:<ul>
-<li>Nakama/ApiClient.gen.cs</li>
+</div><h2 class="groupheader">Property Documentation</h2>
+<a id="abca204c196b0a90e4342e18f4c935630" name="abca204c196b0a90e4342e18f4c935630"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abca204c196b0a90e4342e18f4c935630">&#9670;&#160;</a></span>CanEnter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Nakama.IApiTournament.CanEnter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if the tournament is active and can enter. A computed value.  </p>
+
+</div>
+</div>
+<a id="ad4d095c5500d084ae1071979320f4803" name="ad4d095c5500d084ae1071979320f4803"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4d095c5500d084ae1071979320f4803">&#9670;&#160;</a></span>Category</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.Category</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The category of the tournament. e.g. "vip" could be category 1.  </p>
+
+</div>
+</div>
+<a id="a327d36c0623cd95772505dbde9029671" name="a327d36c0623cd95772505dbde9029671"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a327d36c0623cd95772505dbde9029671">&#9670;&#160;</a></span>CreateTime</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IApiTournament.CreateTime</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The UNIX time when the tournament was created.  </p>
+
+</div>
+</div>
+<a id="aa7ee9f3fa78017bed567b84b7af1d356" name="aa7ee9f3fa78017bed567b84b7af1d356"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7ee9f3fa78017bed567b84b7af1d356">&#9670;&#160;</a></span>Description</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IApiTournament.Description</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The description of the tournament. May be blank.  </p>
+
+</div>
+</div>
+<a id="a8229e8ffce987b19036dd1af156f4748" name="a8229e8ffce987b19036dd1af156f4748"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8229e8ffce987b19036dd1af156f4748">&#9670;&#160;</a></span>Duration</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.Duration</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Duration of the tournament in seconds.  </p>
+
+</div>
+</div>
+<a id="a28f939c5594b45c2a8f517b5646f0f06" name="a28f939c5594b45c2a8f517b5646f0f06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28f939c5594b45c2a8f517b5646f0f06">&#9670;&#160;</a></span>EndActive</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.EndActive</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The UNIX time when the tournament stops being active until next reset. A computed value.  </p>
+
+</div>
+</div>
+<a id="a2fe168cd7f9b5adf8aca1074d14f6bee" name="a2fe168cd7f9b5adf8aca1074d14f6bee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fe168cd7f9b5adf8aca1074d14f6bee">&#9670;&#160;</a></span>EndTime</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IApiTournament.EndTime</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The UNIX time when the tournament will be stopped.  </p>
+
+</div>
+</div>
+<a id="a451f344a2984712b711f89e49198fa57" name="a451f344a2984712b711f89e49198fa57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a451f344a2984712b711f89e49198fa57">&#9670;&#160;</a></span>Id</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IApiTournament.Id</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The ID of the tournament.  </p>
+
+</div>
+</div>
+<a id="a437455a81843911cf56fcb6d2a8a80a7" name="a437455a81843911cf56fcb6d2a8a80a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a437455a81843911cf56fcb6d2a8a80a7">&#9670;&#160;</a></span>MaxNumScore</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.MaxNumScore</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The maximum score updates allowed per player for the current tournament.  </p>
+
+</div>
+</div>
+<a id="a42f5ceae3569e5d4081a501f08e0b7b9" name="a42f5ceae3569e5d4081a501f08e0b7b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42f5ceae3569e5d4081a501f08e0b7b9">&#9670;&#160;</a></span>MaxSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.MaxSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The maximum number of players for the tournament.  </p>
+
+</div>
+</div>
+<a id="a47768bcf7dd97abea99e001f7c9695f7" name="a47768bcf7dd97abea99e001f7c9695f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47768bcf7dd97abea99e001f7c9695f7">&#9670;&#160;</a></span>Metadata</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IApiTournament.Metadata</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Additional information stored as a JSON object.  </p>
+
+</div>
+</div>
+<a id="a95b05c4d22f3e44c458e082b28696ca1" name="a95b05c4d22f3e44c458e082b28696ca1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95b05c4d22f3e44c458e082b28696ca1">&#9670;&#160;</a></span>NextReset</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.NextReset</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The UNIX time when the tournament is next playable. A computed value.  </p>
+
+</div>
+</div>
+<a id="ac176de4d1c0e1442861bf0de5d64edef" name="ac176de4d1c0e1442861bf0de5d64edef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac176de4d1c0e1442861bf0de5d64edef">&#9670;&#160;</a></span>Operator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7">ApiOperator</a> Nakama.IApiTournament.Operator</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Operator.  </p>
+
+</div>
+</div>
+<a id="aa9795e55a84d977b4858193f667015fb" name="aa9795e55a84d977b4858193f667015fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9795e55a84d977b4858193f667015fb">&#9670;&#160;</a></span>PrevReset</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.PrevReset</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The UNIX time when the tournament was last reset. A computed value.  </p>
+
+</div>
+</div>
+<a id="a2b6ac3469abfb67c9cbc6f8929f04bb7" name="a2b6ac3469abfb67c9cbc6f8929f04bb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b6ac3469abfb67c9cbc6f8929f04bb7">&#9670;&#160;</a></span>Size</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.Size</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The current number of players in the tournament.  </p>
+
+</div>
+</div>
+<a id="acb01044753093c9ab2311f51f9c01cdf" name="acb01044753093c9ab2311f51f9c01cdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb01044753093c9ab2311f51f9c01cdf">&#9670;&#160;</a></span>SortOrder</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.SortOrder</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ASC (0) or DESC (1) sort mode of scores in the tournament.  </p>
+
+</div>
+</div>
+<a id="aceca06fc1dd464d9635399e4add87cbf" name="aceca06fc1dd464d9635399e4add87cbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aceca06fc1dd464d9635399e4add87cbf">&#9670;&#160;</a></span>StartActive</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IApiTournament.StartActive</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The UNIX time when the tournament start being active. A computed value.  </p>
+
+</div>
+</div>
+<a id="a02aea8c93c075cbb364bf9215916dfda" name="a02aea8c93c075cbb364bf9215916dfda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02aea8c93c075cbb364bf9215916dfda">&#9670;&#160;</a></span>StartTime</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IApiTournament.StartTime</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The UNIX time when the tournament will start.  </p>
+
+</div>
+</div>
+<a id="a0d1cdd84f43595345239d58b5a56cd41" name="a0d1cdd84f43595345239d58b5a56cd41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d1cdd84f43595345239d58b5a56cd41">&#9670;&#160;</a></span>Title</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IApiTournament.Title</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The title for the tournament.  </p>
+
+</div>
+</div>
+<hr/>The documentation for this interface was generated from the following file:<ul>
+<li><a class="el" href="_nakama_2_api_client_8gen_8cs.html">Nakama/ApiClient.gen.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.IApiAccountFacebook Interface Reference</title>
+<title>Nakama .NET Client SDK: Nakama.IApiAccountFacebook Interface Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -105,19 +105,66 @@ $(document).ready(function(){initNavTree('interface_nakama_1_1_i_api_account_fac
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:ac7964eef958b9601424636e740936283"><td class="memItemLeft" align="right" valign="top"><a id="ac7964eef958b9601424636e740936283" name="ac7964eef958b9601424636e740936283"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Token</b><code> [get]</code></td></tr>
-<tr class="memdesc:ac7964eef958b9601424636e740936283"><td class="mdescLeft">&#160;</td><td class="mdescRight">The OAuth token received from Facebook to access their profile API.  <br /></td></tr>
+<tr class="memitem:ac7964eef958b9601424636e740936283"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_account_facebook.html#ac7964eef958b9601424636e740936283">Token</a><code> [get]</code></td></tr>
+<tr class="memdesc:ac7964eef958b9601424636e740936283"><td class="mdescLeft">&#160;</td><td class="mdescRight">The OAuth token received from Facebook to access their profile API.   <a href="interface_nakama_1_1_i_api_account_facebook.html#ac7964eef958b9601424636e740936283">More...</a><br /></td></tr>
 <tr class="separator:ac7964eef958b9601424636e740936283"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f020c0b47138aef81d2bc00d42e3436"><td class="memItemLeft" align="right" valign="top"><a id="a3f020c0b47138aef81d2bc00d42e3436" name="a3f020c0b47138aef81d2bc00d42e3436"></a>
-IDictionary&lt; string, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Vars</b><code> [get]</code></td></tr>
-<tr class="memdesc:a3f020c0b47138aef81d2bc00d42e3436"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra information that will be bundled in the session token.  <br /></td></tr>
+<tr class="memitem:a3f020c0b47138aef81d2bc00d42e3436"><td class="memItemLeft" align="right" valign="top">IDictionary&lt; string, string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_api_account_facebook.html#a3f020c0b47138aef81d2bc00d42e3436">Vars</a><code> [get]</code></td></tr>
+<tr class="memdesc:a3f020c0b47138aef81d2bc00d42e3436"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra information that will be bundled in the session token.   <a href="interface_nakama_1_1_i_api_account_facebook.html#a3f020c0b47138aef81d2bc00d42e3436">More...</a><br /></td></tr>
 <tr class="separator:a3f020c0b47138aef81d2bc00d42e3436"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Send a Facebook token to the server. Used with authenticate/link/unlink.  </p>
-</div><hr/>The documentation for this interface was generated from the following file:<ul>
-<li>Nakama/ApiClient.gen.cs</li>
+</div><h2 class="groupheader">Property Documentation</h2>
+<a id="ac7964eef958b9601424636e740936283" name="ac7964eef958b9601424636e740936283"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7964eef958b9601424636e740936283">&#9670;&#160;</a></span>Token</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IApiAccountFacebook.Token</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The OAuth token received from Facebook to access their profile API.  </p>
+
+</div>
+</div>
+<a id="a3f020c0b47138aef81d2bc00d42e3436" name="a3f020c0b47138aef81d2bc00d42e3436"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f020c0b47138aef81d2bc00d42e3436">&#9670;&#160;</a></span>Vars</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">IDictionary&lt;string, string&gt; Nakama.IApiAccountFacebook.Vars</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Extra information that will be bundled in the session token.  </p>
+
+</div>
+</div>
+<hr/>The documentation for this interface was generated from the following file:<ul>
+<li><a class="el" href="_nakama_2_api_client_8gen_8cs.html">Nakama/ApiClient.gen.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

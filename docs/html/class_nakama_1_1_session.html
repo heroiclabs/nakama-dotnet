@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.Session Class Reference</title>
+<title>Nakama .NET Client SDK: Nakama.Session Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -135,8 +135,7 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>If refresh token has expired.</dd></dl>
   <a href="class_nakama_1_1_session.html#a292f6d27e68f068d5b71a5e998f93adc">More...</a><br /></td></tr>
 <tr class="separator:a292f6d27e68f068d5b71a5e998f93adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8387864684cbee2f57ed82211c12e6cd"><td class="memItemLeft" align="right" valign="top"><a id="a8387864684cbee2f57ed82211c12e6cd" name="a8387864684cbee2f57ed82211c12e6cd"></a>
-override string&#160;</td><td class="memItemRight" valign="bottom"><b>ToString</b> ()</td></tr>
+<tr class="memitem:a8387864684cbee2f57ed82211c12e6cd"><td class="memItemLeft" align="right" valign="top">override string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_session.html#a8387864684cbee2f57ed82211c12e6cd">ToString</a> ()</td></tr>
 <tr class="separator:a8387864684cbee2f57ed82211c12e6cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea82fdba74d6b20eb203b4fc2ccd19e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_session.html#aea82fdba74d6b20eb203b4fc2ccd19e6">HasExpired</a> (DateTime offset)</td></tr>
 <tr class="memdesc:aea82fdba74d6b20eb203b4fc2ccd19e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check the session has expired against the offset time.   <a href="interface_nakama_1_1_i_session.html#aea82fdba74d6b20eb203b4fc2ccd19e6">More...</a><br /></td></tr>
@@ -153,8 +152,7 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:ae2346092b17fd6cecea2e5371f748b4f"><td class="memItemLeft" align="right" valign="top"><a id="ae2346092b17fd6cecea2e5371f748b4f" name="ae2346092b17fd6cecea2e5371f748b4f"></a>
-static readonly DateTime&#160;</td><td class="memItemRight" valign="bottom"><b>Epoch</b> = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)</td></tr>
+<tr class="memitem:ae2346092b17fd6cecea2e5371f748b4f"><td class="memItemLeft" align="right" valign="top">static readonly DateTime&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_session.html#ae2346092b17fd6cecea2e5371f748b4f">Epoch</a> = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)</td></tr>
 <tr class="separator:ae2346092b17fd6cecea2e5371f748b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
@@ -234,6 +232,9 @@ Properties</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool Nakama.Session.HasExpired </td>
@@ -243,6 +244,11 @@ Properties</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Check the session has expired against the offset time. <dl class="params"><dt>Parameters</dt><dd>
@@ -263,6 +269,9 @@ Properties</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool Nakama.Session.HasRefreshExpired </td>
@@ -272,6 +281,11 @@ Properties</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Check if the refresh token has expired against the offset time. <dl class="params"><dt>Parameters</dt><dd>
@@ -316,7 +330,7 @@ Properties</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -331,6 +345,54 @@ Properties</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A session.</dd></dl>
+
+</div>
+</div>
+<a id="a8387864684cbee2f57ed82211c12e6cd" name="a8387864684cbee2f57ed82211c12e6cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8387864684cbee2f57ed82211c12e6cd">&#9670;&#160;</a></span>ToString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">override string Nakama.Session.ToString </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="ae2346092b17fd6cecea2e5371f748b4f" name="ae2346092b17fd6cecea2e5371f748b4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2346092b17fd6cecea2e5371f748b4f">&#9670;&#160;</a></span>Epoch</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">readonly DateTime Nakama.Session.Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -622,7 +684,7 @@ Properties</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>Nakama/Session.cs</li>
+<li><a class="el" href="_nakama_2_session_8cs.html">Nakama/Session.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

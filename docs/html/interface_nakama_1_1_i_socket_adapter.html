@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.ISocketAdapter Interface Reference</title>
+<title>Nakama .NET Client SDK: Nakama.ISocketAdapter Interface Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -136,21 +136,17 @@ Properties</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="events" name="events"></a>
 Events</h2></td></tr>
-<tr class="memitem:a130b25217829edc3307fb83d665eacea"><td class="memItemLeft" align="right" valign="top"><a id="a130b25217829edc3307fb83d665eacea" name="a130b25217829edc3307fb83d665eacea"></a>
-Action&#160;</td><td class="memItemRight" valign="bottom"><b>Connected</b></td></tr>
-<tr class="memdesc:a130b25217829edc3307fb83d665eacea"><td class="mdescLeft">&#160;</td><td class="mdescRight">An event dispatched when the socket is connected.  <br /></td></tr>
+<tr class="memitem:a130b25217829edc3307fb83d665eacea"><td class="memItemLeft" align="right" valign="top">Action&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_socket_adapter.html#a130b25217829edc3307fb83d665eacea">Connected</a></td></tr>
+<tr class="memdesc:a130b25217829edc3307fb83d665eacea"><td class="mdescLeft">&#160;</td><td class="mdescRight">An event dispatched when the socket is connected.   <a href="interface_nakama_1_1_i_socket_adapter.html#a130b25217829edc3307fb83d665eacea">More...</a><br /></td></tr>
 <tr class="separator:a130b25217829edc3307fb83d665eacea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a711266e5d8ab7fe8ca6feb1c70a79679"><td class="memItemLeft" align="right" valign="top"><a id="a711266e5d8ab7fe8ca6feb1c70a79679" name="a711266e5d8ab7fe8ca6feb1c70a79679"></a>
-Action&#160;</td><td class="memItemRight" valign="bottom"><b>Closed</b></td></tr>
-<tr class="memdesc:a711266e5d8ab7fe8ca6feb1c70a79679"><td class="mdescLeft">&#160;</td><td class="mdescRight">An event dispatched when the socket is disconnected.  <br /></td></tr>
+<tr class="memitem:a711266e5d8ab7fe8ca6feb1c70a79679"><td class="memItemLeft" align="right" valign="top">Action&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_socket_adapter.html#a711266e5d8ab7fe8ca6feb1c70a79679">Closed</a></td></tr>
+<tr class="memdesc:a711266e5d8ab7fe8ca6feb1c70a79679"><td class="mdescLeft">&#160;</td><td class="mdescRight">An event dispatched when the socket is disconnected.   <a href="interface_nakama_1_1_i_socket_adapter.html#a711266e5d8ab7fe8ca6feb1c70a79679">More...</a><br /></td></tr>
 <tr class="separator:a711266e5d8ab7fe8ca6feb1c70a79679"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60e05f18eda93116edb329193b7c20a6"><td class="memItemLeft" align="right" valign="top"><a id="a60e05f18eda93116edb329193b7c20a6" name="a60e05f18eda93116edb329193b7c20a6"></a>
-Action&lt; Exception &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ReceivedError</b></td></tr>
-<tr class="memdesc:a60e05f18eda93116edb329193b7c20a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">An event dispatched when the socket has an error when connected.  <br /></td></tr>
+<tr class="memitem:a60e05f18eda93116edb329193b7c20a6"><td class="memItemLeft" align="right" valign="top">Action&lt; Exception &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_socket_adapter.html#a60e05f18eda93116edb329193b7c20a6">ReceivedError</a></td></tr>
+<tr class="memdesc:a60e05f18eda93116edb329193b7c20a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">An event dispatched when the socket has an error when connected.   <a href="interface_nakama_1_1_i_socket_adapter.html#a60e05f18eda93116edb329193b7c20a6">More...</a><br /></td></tr>
 <tr class="separator:a60e05f18eda93116edb329193b7c20a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c9baa386c7cba1edc6bf1d6765fc008"><td class="memItemLeft" align="right" valign="top"><a id="a0c9baa386c7cba1edc6bf1d6765fc008" name="a0c9baa386c7cba1edc6bf1d6765fc008"></a>
-Action&lt; ArraySegment&lt; byte &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Received</b></td></tr>
-<tr class="memdesc:a0c9baa386c7cba1edc6bf1d6765fc008"><td class="mdescLeft">&#160;</td><td class="mdescRight">An event dispatched when the socket receives a message.  <br /></td></tr>
+<tr class="memitem:a0c9baa386c7cba1edc6bf1d6765fc008"><td class="memItemLeft" align="right" valign="top">Action&lt; ArraySegment&lt; byte &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_socket_adapter.html#a0c9baa386c7cba1edc6bf1d6765fc008">Received</a></td></tr>
+<tr class="memdesc:a0c9baa386c7cba1edc6bf1d6765fc008"><td class="mdescLeft">&#160;</td><td class="mdescRight">An event dispatched when the socket receives a message.   <a href="interface_nakama_1_1_i_socket_adapter.html#a0c9baa386c7cba1edc6bf1d6765fc008">More...</a><br /></td></tr>
 <tr class="separator:a0c9baa386c7cba1edc6bf1d6765fc008"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -315,8 +311,73 @@ Action&lt; ArraySegment&lt; byte &gt; &gt;&#160;</td><td class="memItemRight" va
 
 </div>
 </div>
+<h2 class="groupheader">Event Documentation</h2>
+<a id="a711266e5d8ab7fe8ca6feb1c70a79679" name="a711266e5d8ab7fe8ca6feb1c70a79679"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a711266e5d8ab7fe8ca6feb1c70a79679">&#9670;&#160;</a></span>Closed</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Action Nakama.ISocketAdapter.Closed</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>An event dispatched when the socket is disconnected.  </p>
+
+</div>
+</div>
+<a id="a130b25217829edc3307fb83d665eacea" name="a130b25217829edc3307fb83d665eacea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a130b25217829edc3307fb83d665eacea">&#9670;&#160;</a></span>Connected</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Action Nakama.ISocketAdapter.Connected</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>An event dispatched when the socket is connected.  </p>
+
+</div>
+</div>
+<a id="a0c9baa386c7cba1edc6bf1d6765fc008" name="a0c9baa386c7cba1edc6bf1d6765fc008"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c9baa386c7cba1edc6bf1d6765fc008">&#9670;&#160;</a></span>Received</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Action&lt;ArraySegment&lt;byte&gt; &gt; Nakama.ISocketAdapter.Received</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>An event dispatched when the socket receives a message.  </p>
+
+</div>
+</div>
+<a id="a60e05f18eda93116edb329193b7c20a6" name="a60e05f18eda93116edb329193b7c20a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60e05f18eda93116edb329193b7c20a6">&#9670;&#160;</a></span>ReceivedError</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Action&lt;Exception&gt; Nakama.ISocketAdapter.ReceivedError</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>An event dispatched when the socket has an error when connected.  </p>
+
+</div>
+</div>
 <hr/>The documentation for this interface was generated from the following file:<ul>
-<li>Nakama/ISocketAdapter.cs</li>
+<li><a class="el" href="_i_socket_adapter_8cs.html">ISocketAdapter.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -2,9 +2,8 @@ var namespace_nakama =
 [
     [ "Console", "namespace_nakama_1_1_console.html", "namespace_nakama_1_1_console" ],
     [ "Ninja", "namespace_nakama_1_1_ninja.html", "namespace_nakama_1_1_ninja" ],
-    [ "Tests", "namespace_nakama_1_1_tests.html", "namespace_nakama_1_1_tests" ],
     [ "TinyJson", "namespace_nakama_1_1_tiny_json.html", null ],
-    [ "ApiResponseException", "class_nakama_1_1_api_response_exception.html", null ],
+    [ "ApiResponseException", "class_nakama_1_1_api_response_exception.html", "class_nakama_1_1_api_response_exception" ],
     [ "Client", "class_nakama_1_1_client.html", "class_nakama_1_1_client" ],
     [ "HttpRequestAdapter", "class_nakama_1_1_http_request_adapter.html", "class_nakama_1_1_http_request_adapter" ],
     [ "IApiAccount", "interface_nakama_1_1_i_api_account.html", "interface_nakama_1_1_i_api_account" ],

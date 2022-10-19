@@ -1,8 +1,7 @@
 var namespace_satori =
 [
-    [ "Tests", "namespace_satori_1_1_tests.html", "namespace_satori_1_1_tests" ],
     [ "TinyJson", "namespace_satori_1_1_tiny_json.html", null ],
-    [ "ApiResponseException", "class_satori_1_1_api_response_exception.html", null ],
+    [ "ApiResponseException", "class_satori_1_1_api_response_exception.html", "class_satori_1_1_api_response_exception" ],
     [ "Client", "class_satori_1_1_client.html", "class_satori_1_1_client" ],
     [ "Event", "class_satori_1_1_event.html", "class_satori_1_1_event" ],
     [ "HttpRequestAdapter", "class_satori_1_1_http_request_adapter.html", "class_satori_1_1_http_request_adapter" ],

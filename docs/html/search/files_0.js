@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['apiclient_2egen_2ecs_0',['ApiClient.gen.cs',['../_api_client_8gen_8cs.html',1,'']]]
+  ['binaryreaderwriter_2ecs_0',['BinaryReaderWriter.cs',['../_binary_reader_writer_8cs.html',1,'']]],
+  ['bufferpool_2ecs_1',['BufferPool.cs',['../_buffer_pool_8cs.html',1,'']]]
 ];

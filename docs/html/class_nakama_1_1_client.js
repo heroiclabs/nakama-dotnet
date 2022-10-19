@@ -1,6 +1,11 @@
 var class_nakama_1_1_client =
 [
     [ "Client", "class_nakama_1_1_client.html#a5158082c303c41499cd7e31e4834cb59", null ],
+    [ "Client", "class_nakama_1_1_client.html#a86b0693fa59c2083725ed015b4bcc460", null ],
+    [ "Client", "class_nakama_1_1_client.html#a053ab2c59dedc46d1fb3f34f7b10e9d6", null ],
+    [ "Client", "class_nakama_1_1_client.html#a547987248989d14b05cc7760034fc711", null ],
+    [ "Client", "class_nakama_1_1_client.html#ab36fa5c0c9ea2a99f8afa1d8b6d26b04", null ],
+    [ "Client", "class_nakama_1_1_client.html#a869bb89ffb168e3e4134a8d7955e4830", null ],
     [ "AddFriendsAsync", "class_nakama_1_1_client.html#a0348314e04b0b80057e8383cdd5c8d50", null ],
     [ "AddGroupUsersAsync", "class_nakama_1_1_client.html#a769d19ca9593f14fc8a3f91d1950f155", null ],
     [ "AuthenticateAppleAsync", "class_nakama_1_1_client.html#ae30e21d72b2f12cdb23d03994e6dfd35", null ],
@@ -47,6 +52,7 @@ var class_nakama_1_1_client =
     [ "ListLeaderboardRecordsAsync", "class_nakama_1_1_client.html#ab0157c7184c86a9e6cbaae2ae720adf1", null ],
     [ "ListMatchesAsync", "class_nakama_1_1_client.html#ad169be18d357b3b57067abf62e063310", null ],
     [ "ListNotificationsAsync", "class_nakama_1_1_client.html#acde199dc46bdceabea904a44477cd284", null ],
+    [ "ListStorageObjects", "class_nakama_1_1_client.html#a90db3c9a4f3994fc1616bc702a2584e1", null ],
     [ "ListStorageObjectsAsync", "class_nakama_1_1_client.html#a35c013a31537eea2ff7fe2239f5623e9", null ],
     [ "ListSubscriptionsAsync", "class_nakama_1_1_client.html#a66425250e7fb827cc677da4732290329", null ],
     [ "ListTournamentRecordsAroundOwnerAsync", "class_nakama_1_1_client.html#ae141eceb632e705999c2d8d0243ab99d", null ],
@@ -63,6 +69,7 @@ var class_nakama_1_1_client =
     [ "SessionLogoutAsync", "class_nakama_1_1_client.html#a3cf4591ab80d069ec55b8021bb51c730", null ],
     [ "SessionLogoutAsync", "class_nakama_1_1_client.html#a6e965270a90777b5aab3f3b4c7ba2374", null ],
     [ "SessionRefreshAsync", "class_nakama_1_1_client.html#a54ddec21945530369fca30e9306efe5d", null ],
+    [ "ToString", "class_nakama_1_1_client.html#ae1aeb5b30fed94af008058803b5bd352", null ],
     [ "UnlinkAppleAsync", "class_nakama_1_1_client.html#adf62218ff4074ee7847260fb69f7a40e", null ],
     [ "UnlinkCustomAsync", "class_nakama_1_1_client.html#adb85bd4e511e508ef6858b103aa31523", null ],
     [ "UnlinkDeviceAsync", "class_nakama_1_1_client.html#a04f2596af7c5ffde9353981faed6443d", null ],

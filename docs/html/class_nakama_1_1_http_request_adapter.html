@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.HttpRequestAdapter Class Reference</title>
+<title>Nakama .NET Client SDK: Nakama.HttpRequestAdapter Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -114,8 +114,7 @@ Inheritance diagram for Nakama.HttpRequestAdapter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abd7df73941b1255fe8ddd66e995e6a7a"><td class="memItemLeft" align="right" valign="top"><a id="abd7df73941b1255fe8ddd66e995e6a7a" name="abd7df73941b1255fe8ddd66e995e6a7a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>HttpRequestAdapter</b> (HttpClient httpClient)</td></tr>
+<tr class="memitem:abd7df73941b1255fe8ddd66e995e6a7a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_http_request_adapter.html#abd7df73941b1255fe8ddd66e995e6a7a">HttpRequestAdapter</a> (HttpClient httpClient)</td></tr>
 <tr class="separator:abd7df73941b1255fe8ddd66e995e6a7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7562e1777699f16911ed2d5e245eb5b7"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_http_request_adapter.html#a7562e1777699f16911ed2d5e245eb5b7">SendAsync</a> (string method, Uri uri, IDictionary&lt; string, string &gt; headers, byte[] body, int timeout, CancellationToken? userCancelToken)</td></tr>
 <tr class="memdesc:a7562e1777699f16911ed2d5e245eb5b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a HTTP request. <dl class="params"><dt>Parameters</dt><dd>
@@ -150,8 +149,7 @@ Properties</h2></td></tr>
 <tr class="memitem:ae3ce0f7e336c27b77b9040fe5d851bc5"><td class="memItemLeft" align="right" valign="top">TransientExceptionDelegate&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_http_request_adapter.html#ae3ce0f7e336c27b77b9040fe5d851bc5">TransientExceptionDelegate</a><code> [get]</code></td></tr>
 <tr class="separator:ae3ce0f7e336c27b77b9040fe5d851bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_nakama_1_1_i_http_adapter"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_nakama_1_1_i_http_adapter')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_nakama_1_1_i_http_adapter.html">Nakama.IHttpAdapter</a></td></tr>
-<tr class="memitem:a276f20c0cdbc85177ace2cc336579cf8 inherit properties_interface_nakama_1_1_i_http_adapter"><td class="memItemLeft" align="right" valign="top"><a id="a276f20c0cdbc85177ace2cc336579cf8" name="a276f20c0cdbc85177ace2cc336579cf8"></a>
-TransientExceptionDelegate&#160;</td><td class="memItemRight" valign="bottom"><b>TransientExceptionDelegate</b><code> [get]</code></td></tr>
+<tr class="memitem:a276f20c0cdbc85177ace2cc336579cf8 inherit properties_interface_nakama_1_1_i_http_adapter"><td class="memItemLeft" align="right" valign="top">TransientExceptionDelegate&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_http_adapter.html#a276f20c0cdbc85177ace2cc336579cf8">TransientExceptionDelegate</a><code> [get]</code></td></tr>
 <tr class="separator:a276f20c0cdbc85177ace2cc336579cf8 inherit properties_interface_nakama_1_1_i_http_adapter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0514214ba7fce3b8c0697d70874ff1e inherit properties_interface_nakama_1_1_i_http_adapter"><td class="memItemLeft" align="right" valign="top"><a class="el" href="interface_nakama_1_1_i_logger.html">ILogger</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_http_adapter.html#ad0514214ba7fce3b8c0697d70874ff1e">Logger</a><code> [get, set]</code></td></tr>
 <tr class="memdesc:ad0514214ba7fce3b8c0697d70874ff1e inherit properties_interface_nakama_1_1_i_http_adapter"><td class="mdescLeft">&#160;</td><td class="mdescRight">The logger to use with the adapter.   <a href="interface_nakama_1_1_i_http_adapter.html#ad0514214ba7fce3b8c0697d70874ff1e">More...</a><br /></td></tr>
@@ -160,12 +158,42 @@ TransientExceptionDelegate&#160;</td><td class="memItemRight" valign="bottom"><b
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >HTTP Request adapter which uses the .NET HttpClient to send requests.  </p>
 <p >Accept header is always set as 'application/json'. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="abd7df73941b1255fe8ddd66e995e6a7a" name="abd7df73941b1255fe8ddd66e995e6a7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd7df73941b1255fe8ddd66e995e6a7a">&#9670;&#160;</a></span>HttpRequestAdapter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Nakama.HttpRequestAdapter.HttpRequestAdapter </td>
+          <td>(</td>
+          <td class="paramtype">HttpClient&#160;</td>
+          <td class="paramname"><em>httpClient</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a7562e1777699f16911ed2d5e245eb5b7" name="a7562e1777699f16911ed2d5e245eb5b7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7562e1777699f16911ed2d5e245eb5b7">&#9670;&#160;</a></span>SendAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; string &gt; Nakama.HttpRequestAdapter.SendAsync </td>
@@ -209,6 +237,11 @@ TransientExceptionDelegate&#160;</td><td class="memItemRight" valign="bottom"><b
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Send a HTTP request. <dl class="params"><dt>Parameters</dt><dd>
@@ -258,7 +291,7 @@ TransientExceptionDelegate&#160;</td><td class="memItemRight" valign="bottom"><b
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -323,12 +356,12 @@ TransientExceptionDelegate&#160;</td><td class="memItemRight" valign="bottom"><b
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="interface_nakama_1_1_i_http_adapter.html">Nakama.IHttpAdapter</a>.</p>
+<p>Implements <a class="el" href="interface_nakama_1_1_i_http_adapter.html#a276f20c0cdbc85177ace2cc336579cf8">Nakama.IHttpAdapter</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>Nakama/HttpRequestAdapter.cs</li>
+<li><a class="el" href="_nakama_2_http_request_adapter_8cs.html">Nakama/HttpRequestAdapter.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

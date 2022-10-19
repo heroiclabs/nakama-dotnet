@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['debugformat_0',['DebugFormat',['../class_nakama_1_1_tests_1_1_stdout_logger.html#ad0c8e568fb1c1fb0e4eafc56562a5f66',1,'Nakama.Tests.StdoutLogger.DebugFormat()'],['../interface_nakama_1_1_i_logger.html#a7b8a076d052336b4bc965caba104d091',1,'Nakama.ILogger.DebugFormat()'],['../interface_satori_1_1_i_logger.html#acb889cdb5e1738367ac3d0f3690fa190',1,'Satori.ILogger.DebugFormat()']]],
+  ['debugformat_0',['DebugFormat',['../interface_nakama_1_1_i_logger.html#a7b8a076d052336b4bc965caba104d091',1,'Nakama.ILogger.DebugFormat()'],['../interface_satori_1_1_i_logger.html#acb889cdb5e1738367ac3d0f3690fa190',1,'Satori.ILogger.DebugFormat()']]],
   ['deletefriendsasync_1',['DeleteFriendsAsync',['../class_nakama_1_1_client.html#a638d387931e416f96e3355dbcc9dd95d',1,'Nakama.Client.DeleteFriendsAsync()'],['../interface_nakama_1_1_i_client.html#a6c9418726e8c74b0cefff24bccf335e1',1,'Nakama.IClient.DeleteFriendsAsync()']]],
   ['deletegroupasync_2',['DeleteGroupAsync',['../class_nakama_1_1_client.html#ab2c13e106e4abaad160c025fd4b171f5',1,'Nakama.Client.DeleteGroupAsync()'],['../interface_nakama_1_1_i_client.html#a90a221604c5aee514bae83bfce921005',1,'Nakama.IClient.DeleteGroupAsync()']]],
   ['deleteleaderboardrecordasync_3',['DeleteLeaderboardRecordAsync',['../class_nakama_1_1_client.html#a4c3aa998092d7fd8d4a5e57eac1adc7a',1,'Nakama.Client.DeleteLeaderboardRecordAsync()'],['../interface_nakama_1_1_i_client.html#ae50039a13b1b5d75613030d130f9d5e3',1,'Nakama.IClient.DeleteLeaderboardRecordAsync()']]],

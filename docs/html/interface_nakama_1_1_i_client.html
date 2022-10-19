@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.IClient Interface Reference</title>
+<title>Nakama .NET Client SDK: Nakama.IClient Interface Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -260,8 +260,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9443bb244b7a51c6a493900822c654f1"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_nakama_1_1_i_api_notification_list.html">IApiNotificationList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_client.html#a9443bb244b7a51c6a493900822c654f1">ListNotificationsAsync</a> (<a class="el" href="interface_nakama_1_1_i_session.html">ISession</a> session, int limit=1, string cacheableCursor=null, <a class="el" href="class_nakama_1_1_retry_configuration.html">RetryConfiguration</a> retryConfiguration=null, CancellationToken canceller=default)</td></tr>
 <tr class="memdesc:a9443bb244b7a51c6a493900822c654f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">List notifications for the user with an optional cursor.   <a href="interface_nakama_1_1_i_client.html#a9443bb244b7a51c6a493900822c654f1">More...</a><br /></td></tr>
 <tr class="separator:a9443bb244b7a51c6a493900822c654f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0dae35b8820b90e23303cdb58336dddc"><td class="memItemLeft" align="right" valign="top"><a id="a0dae35b8820b90e23303cdb58336dddc" name="a0dae35b8820b90e23303cdb58336dddc"></a>
-Task&lt; <a class="el" href="interface_nakama_1_1_i_api_storage_object_list.html">IApiStorageObjectList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ListStorageObjects</b> (<a class="el" href="interface_nakama_1_1_i_session.html">ISession</a> session, string collection, int limit=1, string cursor=null, <a class="el" href="class_nakama_1_1_retry_configuration.html">RetryConfiguration</a> retryConfiguration=null, CancellationToken canceller=default)</td></tr>
+<tr class="memitem:a0dae35b8820b90e23303cdb58336dddc"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_nakama_1_1_i_api_storage_object_list.html">IApiStorageObjectList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_client.html#a0dae35b8820b90e23303cdb58336dddc">ListStorageObjects</a> (<a class="el" href="interface_nakama_1_1_i_session.html">ISession</a> session, string collection, int limit=1, string cursor=null, <a class="el" href="class_nakama_1_1_retry_configuration.html">RetryConfiguration</a> retryConfiguration=null, CancellationToken canceller=default)</td></tr>
 <tr class="separator:a0dae35b8820b90e23303cdb58336dddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afeec7a75562cfc1c9f51d35095580046"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_nakama_1_1_i_api_storage_object_list.html">IApiStorageObjectList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_client.html#afeec7a75562cfc1c9f51d35095580046">ListStorageObjectsAsync</a> (<a class="el" href="interface_nakama_1_1_i_session.html">ISession</a> session, string collection, int limit=1, string cursor=null, <a class="el" href="class_nakama_1_1_retry_configuration.html">RetryConfiguration</a> retryConfiguration=null, CancellationToken canceller=default)</td></tr>
 <tr class="memdesc:afeec7a75562cfc1c9f51d35095580046"><td class="mdescLeft">&#160;</td><td class="mdescRight">List storage objects in a collection which have public read access.   <a href="interface_nakama_1_1_i_client.html#afeec7a75562cfc1c9f51d35095580046">More...</a><br /></td></tr>
@@ -3417,6 +3416,60 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a0dae35b8820b90e23303cdb58336dddc" name="a0dae35b8820b90e23303cdb58336dddc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dae35b8820b90e23303cdb58336dddc">&#9670;&#160;</a></span>ListStorageObjects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Task&lt; <a class="el" href="interface_nakama_1_1_i_api_storage_object_list.html">IApiStorageObjectList</a> &gt; Nakama.IClient.ListStorageObjects </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_nakama_1_1_i_session.html">ISession</a>&#160;</td>
+          <td class="paramname"><em>session</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>collection</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>limit</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>cursor</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_nakama_1_1_retry_configuration.html">RetryConfiguration</a>&#160;</td>
+          <td class="paramname"><em>retryConfiguration</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CancellationToken&#160;</td>
+          <td class="paramname"><em>canceller</em> = <code>default</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="class_nakama_1_1_client.html#a90db3c9a4f3994fc1616bc702a2584e1">Nakama.Client</a>.</p>
+
+</div>
+</div>
 <a id="afeec7a75562cfc1c9f51d35095580046" name="afeec7a75562cfc1c9f51d35095580046"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afeec7a75562cfc1c9f51d35095580046">&#9670;&#160;</a></span>ListStorageObjectsAsync()</h2>
 
@@ -5834,7 +5887,7 @@ Properties</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this interface was generated from the following file:<ul>
-<li>Nakama/IClient.cs</li>
+<li><a class="el" href="_nakama_2_i_client_8cs.html">Nakama/IClient.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

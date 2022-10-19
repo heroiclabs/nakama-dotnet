@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.Ninja.WebSockets.WebSocketServerOptions Class Reference</title>
+<title>Nakama .NET Client SDK: Nakama.Ninja.WebSockets.WebSocketServerOptions Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -104,30 +104,127 @@ $(document).ready(function(){initNavTree('class_nakama_1_1_ninja_1_1_web_sockets
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6426bfca9608a20915f11ef0955d1984"><td class="memItemLeft" align="right" valign="top"><a id="a6426bfca9608a20915f11ef0955d1984" name="a6426bfca9608a20915f11ef0955d1984"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>WebSocketServerOptions</b> ()</td></tr>
-<tr class="memdesc:a6426bfca9608a20915f11ef0955d1984"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises a new instance of the <a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html" title="Server WebSocket init options">WebSocketServerOptions</a> class  <br /></td></tr>
+<tr class="memitem:a6426bfca9608a20915f11ef0955d1984"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html#a6426bfca9608a20915f11ef0955d1984">WebSocketServerOptions</a> ()</td></tr>
+<tr class="memdesc:a6426bfca9608a20915f11ef0955d1984"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises a new instance of the <a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html" title="Server WebSocket init options">WebSocketServerOptions</a> class   <a href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html#a6426bfca9608a20915f11ef0955d1984">More...</a><br /></td></tr>
 <tr class="separator:a6426bfca9608a20915f11ef0955d1984"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a6cb09bf00c31ac1c361a95a8daec0ddd"><td class="memItemLeft" align="right" valign="top"><a id="a6cb09bf00c31ac1c361a95a8daec0ddd" name="a6cb09bf00c31ac1c361a95a8daec0ddd"></a>
-TimeSpan&#160;</td><td class="memItemRight" valign="bottom"><b>KeepAliveInterval</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:a6cb09bf00c31ac1c361a95a8daec0ddd"><td class="mdescLeft">&#160;</td><td class="mdescRight">How often to send ping requests to the <a class="el" href="class_nakama_1_1_client.html">Client</a> The default is 60 seconds This is done to prevent proxy servers from closing your connection A timespan of zero will disable the automatic ping pong mechanism You can manually control ping pong messages using the <a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager.html" title="Ping Pong Manager used to facilitate ping pong WebSocket messages">PingPongManager</a> class. If you do that it is advisible to set this KeepAliveInterval to zero in the <a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory.html" title="Web socket server factory used to open web socket server connections">WebSocketServerFactory</a>  <br /></td></tr>
+<tr class="memitem:a6cb09bf00c31ac1c361a95a8daec0ddd"><td class="memItemLeft" align="right" valign="top">TimeSpan&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html#a6cb09bf00c31ac1c361a95a8daec0ddd">KeepAliveInterval</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a6cb09bf00c31ac1c361a95a8daec0ddd"><td class="mdescLeft">&#160;</td><td class="mdescRight">How often to send ping requests to the <a class="el" href="class_nakama_1_1_client.html">Client</a> The default is 60 seconds This is done to prevent proxy servers from closing your connection A timespan of zero will disable the automatic ping pong mechanism You can manually control ping pong messages using the <a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager.html" title="Ping Pong Manager used to facilitate ping pong WebSocket messages">PingPongManager</a> class. If you do that it is advisible to set this KeepAliveInterval to zero in the <a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory.html" title="Web socket server factory used to open web socket server connections">WebSocketServerFactory</a>   <a href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html#a6cb09bf00c31ac1c361a95a8daec0ddd">More...</a><br /></td></tr>
 <tr class="separator:a6cb09bf00c31ac1c361a95a8daec0ddd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27fc45e264a324caeb170709872fe12d"><td class="memItemLeft" align="right" valign="top"><a id="a27fc45e264a324caeb170709872fe12d" name="a27fc45e264a324caeb170709872fe12d"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>IncludeExceptionInCloseResponse</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:a27fc45e264a324caeb170709872fe12d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Include the full exception (with stack trace) in the close response when an exception is encountered and the WebSocket connection is closed The default is false  <br /></td></tr>
+<tr class="memitem:a27fc45e264a324caeb170709872fe12d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html#a27fc45e264a324caeb170709872fe12d">IncludeExceptionInCloseResponse</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a27fc45e264a324caeb170709872fe12d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Include the full exception (with stack trace) in the close response when an exception is encountered and the WebSocket connection is closed The default is false   <a href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html#a27fc45e264a324caeb170709872fe12d">More...</a><br /></td></tr>
 <tr class="separator:a27fc45e264a324caeb170709872fe12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa0e3b2185d29c0d5be60327e5ef2640"><td class="memItemLeft" align="right" valign="top"><a id="afa0e3b2185d29c0d5be60327e5ef2640" name="afa0e3b2185d29c0d5be60327e5ef2640"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>SubProtocol</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:afa0e3b2185d29c0d5be60327e5ef2640"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the sub protocol to send back to the client in the opening handshake Can be null (the most common use case) The client can specify multiple preferred protocols in the opening handshake header The server should use the first supported one or set this to null if none of the requested sub protocols are supported  <br /></td></tr>
+<tr class="memitem:afa0e3b2185d29c0d5be60327e5ef2640"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html#afa0e3b2185d29c0d5be60327e5ef2640">SubProtocol</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:afa0e3b2185d29c0d5be60327e5ef2640"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the sub protocol to send back to the client in the opening handshake Can be null (the most common use case) The client can specify multiple preferred protocols in the opening handshake header The server should use the first supported one or set this to null if none of the requested sub protocols are supported   <a href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html#afa0e3b2185d29c0d5be60327e5ef2640">More...</a><br /></td></tr>
 <tr class="separator:afa0e3b2185d29c0d5be60327e5ef2640"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Server WebSocket init options  </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
-<li>Nakama/Ninja.WebSockets/WebSocketServerOptions.cs</li>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a6426bfca9608a20915f11ef0955d1984" name="a6426bfca9608a20915f11ef0955d1984"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6426bfca9608a20915f11ef0955d1984">&#9670;&#160;</a></span>WebSocketServerOptions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Nakama.Ninja.WebSockets.WebSocketServerOptions.WebSocketServerOptions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initialises a new instance of the <a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html" title="Server WebSocket init options">WebSocketServerOptions</a> class  </p>
+
+</div>
+</div>
+<h2 class="groupheader">Property Documentation</h2>
+<a id="a27fc45e264a324caeb170709872fe12d" name="a27fc45e264a324caeb170709872fe12d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27fc45e264a324caeb170709872fe12d">&#9670;&#160;</a></span>IncludeExceptionInCloseResponse</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Nakama.Ninja.WebSockets.WebSocketServerOptions.IncludeExceptionInCloseResponse</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Include the full exception (with stack trace) in the close response when an exception is encountered and the WebSocket connection is closed The default is false  </p>
+
+</div>
+</div>
+<a id="a6cb09bf00c31ac1c361a95a8daec0ddd" name="a6cb09bf00c31ac1c361a95a8daec0ddd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cb09bf00c31ac1c361a95a8daec0ddd">&#9670;&#160;</a></span>KeepAliveInterval</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TimeSpan Nakama.Ninja.WebSockets.WebSocketServerOptions.KeepAliveInterval</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>How often to send ping requests to the <a class="el" href="class_nakama_1_1_client.html">Client</a> The default is 60 seconds This is done to prevent proxy servers from closing your connection A timespan of zero will disable the automatic ping pong mechanism You can manually control ping pong messages using the <a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager.html" title="Ping Pong Manager used to facilitate ping pong WebSocket messages">PingPongManager</a> class. If you do that it is advisible to set this KeepAliveInterval to zero in the <a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_factory.html" title="Web socket server factory used to open web socket server connections">WebSocketServerFactory</a>  </p>
+
+</div>
+</div>
+<a id="afa0e3b2185d29c0d5be60327e5ef2640" name="afa0e3b2185d29c0d5be60327e5ef2640"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa0e3b2185d29c0d5be60327e5ef2640">&#9670;&#160;</a></span>SubProtocol</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.Ninja.WebSockets.WebSocketServerOptions.SubProtocol</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Specifies the sub protocol to send back to the client in the opening handshake Can be null (the most common use case) The client can specify multiple preferred protocols in the opening handshake header The server should use the first supported one or set this to null if none of the requested sub protocols are supported  </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li><a class="el" href="_web_socket_server_options_8cs.html">WebSocketServerOptions.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

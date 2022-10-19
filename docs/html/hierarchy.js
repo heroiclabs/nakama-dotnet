@@ -1,8 +1,5 @@
 var hierarchy =
 [
-    [ "Nakama.Tests.Api.AuthenticateTest", "class_nakama_1_1_tests_1_1_api_1_1_authenticate_test.html", null ],
-    [ "Nakama.Tests.CancelTest", "class_nakama_1_1_tests_1_1_cancel_test.html", null ],
-    [ "Satori.Tests.ClientTest", "class_satori_1_1_tests_1_1_client_test.html", null ],
     [ "Satori.Event", "class_satori_1_1_event.html", null ],
     [ "EventArgs", null, [
       [ "Nakama.Ninja.WebSockets.PongEventArgs", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_pong_event_args.html", null ]
@@ -19,8 +16,6 @@ var hierarchy =
       [ "Nakama.Ninja.WebSockets.Exceptions.WebSocketVersionNotSupportedException", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_version_not_supported_exception.html", null ],
       [ "Satori.ApiResponseException", "class_satori_1_1_api_response_exception.html", null ]
     ] ],
-    [ "Nakama.Tests.Api.GroupTest", "class_nakama_1_1_tests_1_1_api_1_1_group_test.html", null ],
-    [ "Nakama.Tests.Api.HttpErrorTest", "class_nakama_1_1_tests_1_1_api_1_1_http_error_test.html", null ],
     [ "Nakama.Ninja.WebSockets.HttpHelper", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_http_helper.html", null ],
     [ "Nakama.IApiAccount", "interface_nakama_1_1_i_api_account.html", null ],
     [ "Nakama.IApiAccountApple", "interface_nakama_1_1_i_api_account_apple.html", null ],
@@ -114,16 +109,6 @@ var hierarchy =
       [ "Nakama.WriteStorageObject", "class_nakama_1_1_write_storage_object.html", null ]
     ] ],
     [ "Nakama.IApiWriteStorageObjectsRequest", "interface_nakama_1_1_i_api_write_storage_objects_request.html", null ],
-    [ "IAsyncLifetime", null, [
-      [ "Nakama.Tests.Api.LeaderboardTest", "class_nakama_1_1_tests_1_1_api_1_1_leaderboard_test.html", [
-        [ "Nakama.Tests.Api.LeaderboardAroundOwnerTest", "class_nakama_1_1_tests_1_1_api_1_1_leaderboard_around_owner_test.html", null ]
-      ] ],
-      [ "Nakama.Tests.Socket.WebSocketChannelTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_channel_test.html", null ],
-      [ "Nakama.Tests.Socket.WebSocketMatchTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_match_test.html", null ],
-      [ "Nakama.Tests.Socket.WebSocketMatchmakerTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_matchmaker_test.html", null ],
-      [ "Nakama.Tests.Socket.WebSocketNotificationTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_notification_test.html", null ],
-      [ "Nakama.Tests.Socket.WebSocketRpcTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_rpc_test.html", null ]
-    ] ],
     [ "Nakama.Ninja.WebSockets.IBufferPool", "interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_buffer_pool.html", [
       [ "Nakama.Ninja.WebSockets.BufferPool", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool.html", null ]
     ] ],
@@ -148,20 +133,14 @@ var hierarchy =
     [ "Nakama.Console.IConsoleWalletLedger", "interface_nakama_1_1_console_1_1_i_console_wallet_ledger.html", null ],
     [ "Nakama.Console.IConsoleWalletLedgerList", "interface_nakama_1_1_console_1_1_i_console_wallet_ledger_list.html", null ],
     [ "Nakama.Console.IConsoleWriteStorageObjectRequest", "interface_nakama_1_1_console_1_1_i_console_write_storage_object_request.html", null ],
-    [ "IDisposable", null, [
-      [ "Nakama.Tests.AwaitedSocketTaskTest", "class_nakama_1_1_tests_1_1_awaited_socket_task_test.html", null ]
-    ] ],
     [ "Nakama.IGroupUserListGroupUser", "interface_nakama_1_1_i_group_user_list_group_user.html", null ],
     [ "Nakama.IHttpAdapter", "interface_nakama_1_1_i_http_adapter.html", [
-      [ "Nakama.HttpRequestAdapter", "class_nakama_1_1_http_request_adapter.html", null ],
-      [ "Nakama.Tests.TransientExceptionHttpAdapter", "class_nakama_1_1_tests_1_1_transient_exception_http_adapter.html", null ]
+      [ "Nakama.HttpRequestAdapter", "class_nakama_1_1_http_request_adapter.html", null ]
     ] ],
     [ "Satori.IHttpAdapter", "interface_satori_1_1_i_http_adapter.html", [
       [ "Satori.HttpRequestAdapter", "class_satori_1_1_http_request_adapter.html", null ]
     ] ],
-    [ "Nakama.ILogger", "interface_nakama_1_1_i_logger.html", [
-      [ "Nakama.Tests.StdoutLogger", "class_nakama_1_1_tests_1_1_stdout_logger.html", null ]
-    ] ],
+    [ "Nakama.ILogger", "interface_nakama_1_1_i_logger.html", null ],
     [ "Satori.ILogger", "interface_satori_1_1_i_logger.html", null ],
     [ "Nakama.IMatch", "interface_nakama_1_1_i_match.html", null ],
     [ "Nakama.IMatchmakerMatched", "interface_nakama_1_1_i_matchmaker_matched.html", null ],
@@ -172,7 +151,6 @@ var hierarchy =
     [ "Nakama.Console.INakamaapiAccount", "interface_nakama_1_1_console_1_1_i_nakamaapi_account.html", null ],
     [ "Nakama.Console.INakamaconsoleAccount", "interface_nakama_1_1_console_1_1_i_nakamaconsole_account.html", null ],
     [ "Nakama.Console.INakamaconsoleUpdateAccountRequest", "interface_nakama_1_1_console_1_1_i_nakamaconsole_update_account_request.html", null ],
-    [ "Nakama.Tests.INestedTestObject", "interface_nakama_1_1_tests_1_1_i_nested_test_object.html", null ],
     [ "Nakama.IParty", "interface_nakama_1_1_i_party.html", null ],
     [ "Nakama.IPartyClose", "interface_nakama_1_1_i_party_close.html", null ],
     [ "Nakama.IPartyData", "interface_nakama_1_1_i_party_data.html", null ],
@@ -208,7 +186,6 @@ var hierarchy =
     [ "Nakama.IStream", "interface_nakama_1_1_i_stream.html", null ],
     [ "Nakama.IStreamPresenceEvent", "interface_nakama_1_1_i_stream_presence_event.html", null ],
     [ "Nakama.IStreamState", "interface_nakama_1_1_i_stream_state.html", null ],
-    [ "Nakama.Tests.ITestObject", "interface_nakama_1_1_tests_1_1_i_test_object.html", null ],
     [ "Nakama.Console.IUserGroupListUserGroup", "interface_nakama_1_1_console_1_1_i_user_group_list_user_group.html", null ],
     [ "Nakama.IUserGroupListUserGroup", "interface_nakama_1_1_i_user_group_list_user_group.html", null ],
     [ "Nakama.IUserPresence", "interface_nakama_1_1_i_user_presence.html", null ],
@@ -220,20 +197,12 @@ var hierarchy =
     ] ],
     [ "Nakama.IWriteLeaderboardRecordRequestLeaderboardRecordWrite", "interface_nakama_1_1_i_write_leaderboard_record_request_leaderboard_record_write.html", null ],
     [ "Nakama.IWriteTournamentRecordRequestTournamentRecordWrite", "interface_nakama_1_1_i_write_tournament_record_request_tournament_record_write.html", null ],
-    [ "Nakama.Tests.Api.LinkUnlinkTest", "class_nakama_1_1_tests_1_1_api_1_1_link_unlink_test.html", null ],
     [ "MemoryStream", null, [
       [ "Nakama.Ninja.WebSockets.BufferPool.PublicBufferMemoryStream", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html", null ]
     ] ],
     [ "Nakama.Retry", "class_nakama_1_1_retry.html", null ],
     [ "Nakama.RetryConfiguration", "class_nakama_1_1_retry_configuration.html", null ],
-    [ "Nakama.Tests.RetryTest", "class_nakama_1_1_tests_1_1_retry_test.html", null ],
-    [ "Nakama.Tests.Api.RpcTest", "class_nakama_1_1_tests_1_1_api_1_1_rpc_test.html", null ],
-    [ "Nakama.Tests.SessionTest", "class_nakama_1_1_tests_1_1_session_test.html", null ],
-    [ "Nakama.Tests.TinyJsonParserTest", "class_nakama_1_1_tests_1_1_tiny_json_parser_test.html", null ],
     [ "Nakama.Ninja.WebSockets.WebSocketClientOptions", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options.html", null ],
     [ "Nakama.Ninja.WebSockets.WebSocketHttpContext", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context.html", null ],
-    [ "Nakama.Tests.Socket.WebSocketPartyTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_party_test.html", null ],
-    [ "Nakama.Ninja.WebSockets.WebSocketServerOptions", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html", null ],
-    [ "Nakama.Tests.Socket.WebSocketTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_test.html", null ],
-    [ "Nakama.Tests.Socket.WebSocketUserStatusTest", "class_nakama_1_1_tests_1_1_socket_1_1_web_socket_user_status_test.html", null ]
+    [ "Nakama.Ninja.WebSockets.WebSocketServerOptions", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html", null ]
 ];

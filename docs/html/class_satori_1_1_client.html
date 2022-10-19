@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Satori.Client Class Reference</title>
+<title>Nakama .NET Client SDK: Satori.Client Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -114,11 +114,9 @@ Inheritance diagram for Satori.Client:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad4a1744be01088948fd4724253720a84"><td class="memItemLeft" align="right" valign="top"><a id="ad4a1744be01088948fd4724253720a84" name="ad4a1744be01088948fd4724253720a84"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Client</b> (string scheme, string host, int port, string apiKey)</td></tr>
+<tr class="memitem:ad4a1744be01088948fd4724253720a84"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#ad4a1744be01088948fd4724253720a84">Client</a> (string scheme, string host, int port, string apiKey)</td></tr>
 <tr class="separator:ad4a1744be01088948fd4724253720a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52592e348df73a0d8776b7620666607d"><td class="memItemLeft" align="right" valign="top"><a id="a52592e348df73a0d8776b7620666607d" name="a52592e348df73a0d8776b7620666607d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Client</b> (string scheme, string host, int port, string apiKey, <a class="el" href="interface_satori_1_1_i_http_adapter.html">IHttpAdapter</a> adapter, bool autoRefreshSession=true)</td></tr>
+<tr class="memitem:a52592e348df73a0d8776b7620666607d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a52592e348df73a0d8776b7620666607d">Client</a> (string scheme, string host, int port, string apiKey, <a class="el" href="interface_satori_1_1_i_http_adapter.html">IHttpAdapter</a> adapter, bool autoRefreshSession=true)</td></tr>
 <tr class="separator:a52592e348df73a0d8776b7620666607d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2b3b14e99032adee70760833acbac58"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#ab2b3b14e99032adee70760833acbac58">AuthenticateAsync</a> (string id, CancellationToken? cancellationToken=null)</td></tr>
 <tr class="memdesc:ab2b3b14e99032adee70760833acbac58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authenticate against the server. <dl class="params"><dt>Parameters</dt><dd>
@@ -344,13 +342,11 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a836edc3382ac9e74a5d460d74d1e38a0"><td class="memItemLeft" align="right" valign="top"><a id="a836edc3382ac9e74a5d460d74d1e38a0" name="a836edc3382ac9e74a5d460d74d1e38a0"></a>
-static TimeSpan&#160;</td><td class="memItemRight" valign="bottom"><b>DefaultExpiredTimeSpan</b> = TimeSpan.FromMinutes(5)</td></tr>
-<tr class="memdesc:a836edc3382ac9e74a5d460d74d1e38a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default expired timespan used to check session lifetime.  <br /></td></tr>
+<tr class="memitem:a836edc3382ac9e74a5d460d74d1e38a0"><td class="memItemLeft" align="right" valign="top">static TimeSpan&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a836edc3382ac9e74a5d460d74d1e38a0">DefaultExpiredTimeSpan</a> = TimeSpan.FromMinutes(5)</td></tr>
+<tr class="memdesc:a836edc3382ac9e74a5d460d74d1e38a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default expired timespan used to check session lifetime.   <a href="class_satori_1_1_client.html#a836edc3382ac9e74a5d460d74d1e38a0">More...</a><br /></td></tr>
 <tr class="separator:a836edc3382ac9e74a5d460d74d1e38a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b8575bc43602e11fa892861735014de"><td class="memItemLeft" align="right" valign="top"><a id="a1b8575bc43602e11fa892861735014de" name="a1b8575bc43602e11fa892861735014de"></a>
-const int&#160;</td><td class="memItemRight" valign="bottom"><b>DefaultTimeout</b> = 15</td></tr>
-<tr class="memdesc:a1b8575bc43602e11fa892861735014de"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default timeout of the server.  <br /></td></tr>
+<tr class="memitem:a1b8575bc43602e11fa892861735014de"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a1b8575bc43602e11fa892861735014de">DefaultTimeout</a> = 15</td></tr>
+<tr class="memdesc:a1b8575bc43602e11fa892861735014de"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default timeout of the server.   <a href="class_satori_1_1_client.html#a1b8575bc43602e11fa892861735014de">More...</a><br /></td></tr>
 <tr class="separator:a1b8575bc43602e11fa892861735014de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
@@ -358,25 +354,20 @@ Properties</h2></td></tr>
 <tr class="memitem:a1fc4e5a73077533d8671e64686528d1a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a1fc4e5a73077533d8671e64686528d1a">AutoRefreshSession</a><code> [get]</code></td></tr>
 <tr class="memdesc:a1fc4e5a73077533d8671e64686528d1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the session should be refreshed with an active refresh token.   <a href="class_satori_1_1_client.html#a1fc4e5a73077533d8671e64686528d1a">More...</a><br /></td></tr>
 <tr class="separator:a1fc4e5a73077533d8671e64686528d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e2d5442493469d57009038a05752561"><td class="memItemLeft" align="right" valign="top"><a id="a7e2d5442493469d57009038a05752561" name="a7e2d5442493469d57009038a05752561"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Host</b><code> [get]</code></td></tr>
-<tr class="memdesc:a7e2d5442493469d57009038a05752561"><td class="mdescLeft">&#160;</td><td class="mdescRight">The host address of the server.  <br /></td></tr>
+<tr class="memitem:a7e2d5442493469d57009038a05752561"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a7e2d5442493469d57009038a05752561">Host</a><code> [get]</code></td></tr>
+<tr class="memdesc:a7e2d5442493469d57009038a05752561"><td class="mdescLeft">&#160;</td><td class="mdescRight">The host address of the server.   <a href="class_satori_1_1_client.html#a7e2d5442493469d57009038a05752561">More...</a><br /></td></tr>
 <tr class="separator:a7e2d5442493469d57009038a05752561"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76decfd57c04250e3ac3d98cf0106d8b"><td class="memItemLeft" align="right" valign="top"><a id="a76decfd57c04250e3ac3d98cf0106d8b" name="a76decfd57c04250e3ac3d98cf0106d8b"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>Port</b><code> [get]</code></td></tr>
-<tr class="memdesc:a76decfd57c04250e3ac3d98cf0106d8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The port number of the server.  <br /></td></tr>
+<tr class="memitem:a76decfd57c04250e3ac3d98cf0106d8b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a76decfd57c04250e3ac3d98cf0106d8b">Port</a><code> [get]</code></td></tr>
+<tr class="memdesc:a76decfd57c04250e3ac3d98cf0106d8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The port number of the server.   <a href="class_satori_1_1_client.html#a76decfd57c04250e3ac3d98cf0106d8b">More...</a><br /></td></tr>
 <tr class="separator:a76decfd57c04250e3ac3d98cf0106d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a5062ffa65ca4882f75dc6da7bff858"><td class="memItemLeft" align="right" valign="top"><a id="a7a5062ffa65ca4882f75dc6da7bff858" name="a7a5062ffa65ca4882f75dc6da7bff858"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Scheme</b><code> [get]</code></td></tr>
-<tr class="memdesc:a7a5062ffa65ca4882f75dc6da7bff858"><td class="mdescLeft">&#160;</td><td class="mdescRight">The protocol scheme used to connect with the server. Must be either "http" or "https".  <br /></td></tr>
+<tr class="memitem:a7a5062ffa65ca4882f75dc6da7bff858"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a7a5062ffa65ca4882f75dc6da7bff858">Scheme</a><code> [get]</code></td></tr>
+<tr class="memdesc:a7a5062ffa65ca4882f75dc6da7bff858"><td class="mdescLeft">&#160;</td><td class="mdescRight">The protocol scheme used to connect with the server. Must be either "http" or "https".   <a href="class_satori_1_1_client.html#a7a5062ffa65ca4882f75dc6da7bff858">More...</a><br /></td></tr>
 <tr class="separator:a7a5062ffa65ca4882f75dc6da7bff858"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a3b18b2c87e5235ecc6558bae414f35"><td class="memItemLeft" align="right" valign="top"><a id="a6a3b18b2c87e5235ecc6558bae414f35" name="a6a3b18b2c87e5235ecc6558bae414f35"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>ApiKey</b><code> [get]</code></td></tr>
-<tr class="memdesc:a6a3b18b2c87e5235ecc6558bae414f35"><td class="mdescLeft">&#160;</td><td class="mdescRight">The key used to authenticate with the server without a session.  <br /></td></tr>
+<tr class="memitem:a6a3b18b2c87e5235ecc6558bae414f35"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a6a3b18b2c87e5235ecc6558bae414f35">ApiKey</a><code> [get]</code></td></tr>
+<tr class="memdesc:a6a3b18b2c87e5235ecc6558bae414f35"><td class="mdescLeft">&#160;</td><td class="mdescRight">The key used to authenticate with the server without a session.   <a href="class_satori_1_1_client.html#a6a3b18b2c87e5235ecc6558bae414f35">More...</a><br /></td></tr>
 <tr class="separator:a6a3b18b2c87e5235ecc6558bae414f35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92d087e7452bccafc3148dbab3dac12c"><td class="memItemLeft" align="right" valign="top"><a id="a92d087e7452bccafc3148dbab3dac12c" name="a92d087e7452bccafc3148dbab3dac12c"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get, set]</code></td></tr>
-<tr class="memdesc:a92d087e7452bccafc3148dbab3dac12c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the timeout in seconds on requests sent to the server.  <br /></td></tr>
+<tr class="memitem:a92d087e7452bccafc3148dbab3dac12c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a92d087e7452bccafc3148dbab3dac12c">Timeout</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:a92d087e7452bccafc3148dbab3dac12c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the timeout in seconds on requests sent to the server.   <a href="class_satori_1_1_client.html#a92d087e7452bccafc3148dbab3dac12c">More...</a><br /></td></tr>
 <tr class="separator:a92d087e7452bccafc3148dbab3dac12c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header properties_interface_satori_1_1_i_client"><td colspan="2" onclick="javascript:toggleInherit('properties_interface_satori_1_1_i_client')"><img src="closed.png" alt="-"/>&#160;Properties inherited from <a class="el" href="interface_satori_1_1_i_client.html">Satori.IClient</a></td></tr>
 <tr class="memitem:a92cededba8674818db5107bca319ed39 inherit properties_interface_satori_1_1_i_client"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a92cededba8674818db5107bca319ed39">AutoRefreshSession</a><code> [get]</code></td></tr>
@@ -384,12 +375,124 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 <tr class="separator:a92cededba8674818db5107bca319ed39 inherit properties_interface_satori_1_1_i_client"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"></div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"></div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ad4a1744be01088948fd4724253720a84" name="ad4a1744be01088948fd4724253720a84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4a1744be01088948fd4724253720a84">&#9670;&#160;</a></span>Client() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Satori.Client.Client </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>scheme</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>host</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>apiKey</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a52592e348df73a0d8776b7620666607d" name="a52592e348df73a0d8776b7620666607d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52592e348df73a0d8776b7620666607d">&#9670;&#160;</a></span>Client() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Satori.Client.Client </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>scheme</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>host</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>apiKey</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="interface_satori_1_1_i_http_adapter.html">IHttpAdapter</a>&#160;</td>
+          <td class="paramname"><em>adapter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>autoRefreshSession</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="ab2b3b14e99032adee70760833acbac58" name="ab2b3b14e99032adee70760833acbac58"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab2b3b14e99032adee70760833acbac58">&#9670;&#160;</a></span>AuthenticateAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt; Satori.Client.AuthenticateAsync </td>
@@ -409,6 +512,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Authenticate against the server. <dl class="params"><dt>Parameters</dt><dd>
@@ -470,6 +578,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task Satori.Client.EventAsync </td>
@@ -495,6 +606,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Send an event for this session. <dl class="params"><dt>Parameters</dt><dd>
@@ -517,6 +633,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task Satori.Client.EventsAsync </td>
@@ -542,6 +661,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Send a batch of events for this session. <dl class="params"><dt>Parameters</dt><dd>
@@ -564,6 +688,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_experiment_list.html">IApiExperimentList</a> &gt; Satori.Client.GetExperimentsAsync </td>
@@ -589,6 +716,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Get all experiments data. <dl class="params"><dt>Parameters</dt><dd>
@@ -611,6 +743,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt; Satori.Client.GetFlagAsync </td>
@@ -636,6 +771,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Get a single flag for this identity. <dl class="params"><dt>Parameters</dt><dd>
@@ -658,6 +798,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt; Satori.Client.GetFlagAsync </td>
@@ -689,6 +832,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Get a single flag for this identity. Unlike <code>GetFlags(ISession,string,CancellationToken)</code> this method will return the default value specified and will not raise an exception if the network is unavailable.  </p>
@@ -702,6 +850,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt; Satori.Client.GetFlagDefaultAsync </td>
@@ -727,6 +878,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Get a single default flag for this identity. <dl class="params"><dt>Parameters</dt><dd>
@@ -749,6 +905,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt; Satori.Client.GetFlagDefaultAsync </td>
@@ -780,6 +939,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Get a single default flag for this identity. Unlike <code>GetFlagDefaultAsync(string,string,CancellationToken)</code> this method will return the default value specified and will not raise an exception if the network is unreachable.  </p>
@@ -793,6 +957,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag_list.html">IApiFlagList</a> &gt; Satori.Client.GetFlagsAsync </td>
@@ -818,6 +985,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>List all available flags for this identity. <dl class="params"><dt>Parameters</dt><dd>
@@ -887,6 +1059,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_live_event_list.html">IApiLiveEventList</a> &gt; Satori.Client.GetLiveEventsAsync </td>
@@ -912,6 +1087,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>List available live events. <dl class="params"><dt>Parameters</dt><dd>
@@ -934,6 +1114,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt; Satori.Client.IdentifyAsync </td>
@@ -971,6 +1154,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Identify a session with a new ID. <dl class="params"><dt>Parameters</dt><dd>
@@ -995,6 +1183,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_properties.html">IApiProperties</a> &gt; Satori.Client.ListPropertiesAsync </td>
@@ -1014,6 +1205,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>List properties associated with this identity. <dl class="params"><dt>Parameters</dt><dd>
@@ -1035,6 +1231,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt; Satori.Client.SessionRefreshAsync </td>
@@ -1054,6 +1253,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Refresh a user's session using a refresh token retrieved from a previous authentication request. <dl class="params"><dt>Parameters</dt><dd>
@@ -1075,6 +1279,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task Satori.Client.UpdatePropertiesAsync </td>
@@ -1106,6 +1313,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Update properties associated with this identity. <dl class="params"><dt>Parameters</dt><dd>
@@ -1124,7 +1336,80 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a836edc3382ac9e74a5d460d74d1e38a0" name="a836edc3382ac9e74a5d460d74d1e38a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a836edc3382ac9e74a5d460d74d1e38a0">&#9670;&#160;</a></span>DefaultExpiredTimeSpan</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">TimeSpan Satori.Client.DefaultExpiredTimeSpan = TimeSpan.FromMinutes(5)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The default expired timespan used to check session lifetime.  </p>
+
+</div>
+</div>
+<a id="a1b8575bc43602e11fa892861735014de" name="a1b8575bc43602e11fa892861735014de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b8575bc43602e11fa892861735014de">&#9670;&#160;</a></span>DefaultTimeout</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const int Satori.Client.DefaultTimeout = 15</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The default timeout of the server.  </p>
+
+</div>
+</div>
 <h2 class="groupheader">Property Documentation</h2>
+<a id="a6a3b18b2c87e5235ecc6558bae414f35" name="a6a3b18b2c87e5235ecc6558bae414f35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a3b18b2c87e5235ecc6558bae414f35">&#9670;&#160;</a></span>ApiKey</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Satori.Client.ApiKey</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The key used to authenticate with the server without a session.  </p>
+
+</div>
+</div>
 <a id="a1fc4e5a73077533d8671e64686528d1a" name="a1fc4e5a73077533d8671e64686528d1a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1fc4e5a73077533d8671e64686528d1a">&#9670;&#160;</a></span>AutoRefreshSession</h2>
 
@@ -1151,8 +1436,104 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>Timeout</b><code> [get
 
 </div>
 </div>
+<a id="a7e2d5442493469d57009038a05752561" name="a7e2d5442493469d57009038a05752561"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e2d5442493469d57009038a05752561">&#9670;&#160;</a></span>Host</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Satori.Client.Host</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The host address of the server.  </p>
+
+</div>
+</div>
+<a id="a76decfd57c04250e3ac3d98cf0106d8b" name="a76decfd57c04250e3ac3d98cf0106d8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76decfd57c04250e3ac3d98cf0106d8b">&#9670;&#160;</a></span>Port</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Satori.Client.Port</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The port number of the server.  </p>
+
+</div>
+</div>
+<a id="a7a5062ffa65ca4882f75dc6da7bff858" name="a7a5062ffa65ca4882f75dc6da7bff858"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a5062ffa65ca4882f75dc6da7bff858">&#9670;&#160;</a></span>Scheme</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Satori.Client.Scheme</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The protocol scheme used to connect with the server. Must be either "http" or "https".  </p>
+
+</div>
+</div>
+<a id="a92d087e7452bccafc3148dbab3dac12c" name="a92d087e7452bccafc3148dbab3dac12c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92d087e7452bccafc3148dbab3dac12c">&#9670;&#160;</a></span>Timeout</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Satori.Client.Timeout</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the timeout in seconds on requests sent to the server.  </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>Satori/Client.cs</li>
+<li><a class="el" href="_satori_2_client_8cs.html">Satori/Client.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Nakama.IStream Interface Reference</title>
+<title>Nakama .NET Client SDK: Nakama.IStream Interface Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -105,27 +105,120 @@ $(document).ready(function(){initNavTree('interface_nakama_1_1_i_stream.html',''
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a29cd5eb4946ed2cfa9e97c0800d16777"><td class="memItemLeft" align="right" valign="top"><a id="a29cd5eb4946ed2cfa9e97c0800d16777" name="a29cd5eb4946ed2cfa9e97c0800d16777"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Descriptor</b><code> [get]</code></td></tr>
-<tr class="memdesc:a29cd5eb4946ed2cfa9e97c0800d16777"><td class="mdescLeft">&#160;</td><td class="mdescRight">The descriptor of the stream. Used with direct chat messages and contains a second user id.  <br /></td></tr>
+<tr class="memitem:a29cd5eb4946ed2cfa9e97c0800d16777"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_stream.html#a29cd5eb4946ed2cfa9e97c0800d16777">Descriptor</a><code> [get]</code></td></tr>
+<tr class="memdesc:a29cd5eb4946ed2cfa9e97c0800d16777"><td class="mdescLeft">&#160;</td><td class="mdescRight">The descriptor of the stream. Used with direct chat messages and contains a second user id.   <a href="interface_nakama_1_1_i_stream.html#a29cd5eb4946ed2cfa9e97c0800d16777">More...</a><br /></td></tr>
 <tr class="separator:a29cd5eb4946ed2cfa9e97c0800d16777"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a567053cfb9743496a86b53fb80a742ad"><td class="memItemLeft" align="right" valign="top"><a id="a567053cfb9743496a86b53fb80a742ad" name="a567053cfb9743496a86b53fb80a742ad"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Label</b><code> [get]</code></td></tr>
-<tr class="memdesc:a567053cfb9743496a86b53fb80a742ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies streams which have a context across users like a chat channel room.  <br /></td></tr>
+<tr class="memitem:a567053cfb9743496a86b53fb80a742ad"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_stream.html#a567053cfb9743496a86b53fb80a742ad">Label</a><code> [get]</code></td></tr>
+<tr class="memdesc:a567053cfb9743496a86b53fb80a742ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifies streams which have a context across users like a chat channel room.   <a href="interface_nakama_1_1_i_stream.html#a567053cfb9743496a86b53fb80a742ad">More...</a><br /></td></tr>
 <tr class="separator:a567053cfb9743496a86b53fb80a742ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2910dac84da42be3dee534ca49546b3d"><td class="memItemLeft" align="right" valign="top"><a id="a2910dac84da42be3dee534ca49546b3d" name="a2910dac84da42be3dee534ca49546b3d"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>Mode</b><code> [get]</code></td></tr>
-<tr class="memdesc:a2910dac84da42be3dee534ca49546b3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mode of the stream.  <br /></td></tr>
+<tr class="memitem:a2910dac84da42be3dee534ca49546b3d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_stream.html#a2910dac84da42be3dee534ca49546b3d">Mode</a><code> [get]</code></td></tr>
+<tr class="memdesc:a2910dac84da42be3dee534ca49546b3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The mode of the stream.   <a href="interface_nakama_1_1_i_stream.html#a2910dac84da42be3dee534ca49546b3d">More...</a><br /></td></tr>
 <tr class="separator:a2910dac84da42be3dee534ca49546b3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a914a568af0a74e4551835d923ae33989"><td class="memItemLeft" align="right" valign="top"><a id="a914a568af0a74e4551835d923ae33989" name="a914a568af0a74e4551835d923ae33989"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>Subject</b><code> [get]</code></td></tr>
-<tr class="memdesc:a914a568af0a74e4551835d923ae33989"><td class="mdescLeft">&#160;</td><td class="mdescRight">The subject of the stream. This is usually a user id.  <br /></td></tr>
+<tr class="memitem:a914a568af0a74e4551835d923ae33989"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_nakama_1_1_i_stream.html#a914a568af0a74e4551835d923ae33989">Subject</a><code> [get]</code></td></tr>
+<tr class="memdesc:a914a568af0a74e4551835d923ae33989"><td class="mdescLeft">&#160;</td><td class="mdescRight">The subject of the stream. This is usually a user id.   <a href="interface_nakama_1_1_i_stream.html#a914a568af0a74e4551835d923ae33989">More...</a><br /></td></tr>
 <tr class="separator:a914a568af0a74e4551835d923ae33989"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >A realtime socket stream on the server.  </p>
-</div><hr/>The documentation for this interface was generated from the following file:<ul>
-<li>Nakama/IStreamPresenceEvent.cs</li>
+</div><h2 class="groupheader">Property Documentation</h2>
+<a id="a29cd5eb4946ed2cfa9e97c0800d16777" name="a29cd5eb4946ed2cfa9e97c0800d16777"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29cd5eb4946ed2cfa9e97c0800d16777">&#9670;&#160;</a></span>Descriptor</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IStream.Descriptor</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The descriptor of the stream. Used with direct chat messages and contains a second user id.  </p>
+
+</div>
+</div>
+<a id="a567053cfb9743496a86b53fb80a742ad" name="a567053cfb9743496a86b53fb80a742ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a567053cfb9743496a86b53fb80a742ad">&#9670;&#160;</a></span>Label</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IStream.Label</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Identifies streams which have a context across users like a chat channel room.  </p>
+
+</div>
+</div>
+<a id="a2910dac84da42be3dee534ca49546b3d" name="a2910dac84da42be3dee534ca49546b3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2910dac84da42be3dee534ca49546b3d">&#9670;&#160;</a></span>Mode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Nakama.IStream.Mode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The mode of the stream.  </p>
+
+</div>
+</div>
+<a id="a914a568af0a74e4551835d923ae33989" name="a914a568af0a74e4551835d923ae33989"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a914a568af0a74e4551835d923ae33989">&#9670;&#160;</a></span>Subject</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string Nakama.IStream.Subject</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The subject of the stream. This is usually a user id.  </p>
+
+</div>
+</div>
+<hr/>The documentation for this interface was generated from the following file:<ul>
+<li><a class="el" href="_i_stream_presence_event_8cs.html">IStreamPresenceEvent.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

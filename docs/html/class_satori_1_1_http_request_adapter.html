@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Nakama .NET: Satori.HttpRequestAdapter Class Reference</title>
+<title>Nakama .NET Client SDK: Satori.HttpRequestAdapter Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET<span id="projectnumber">&#160;3.5</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -114,8 +114,7 @@ Inheritance diagram for Satori.HttpRequestAdapter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa9a3b7b022a3e716af4ca62bb7e972ef"><td class="memItemLeft" align="right" valign="top"><a id="aa9a3b7b022a3e716af4ca62bb7e972ef" name="aa9a3b7b022a3e716af4ca62bb7e972ef"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>HttpRequestAdapter</b> (HttpClient httpClient)</td></tr>
+<tr class="memitem:aa9a3b7b022a3e716af4ca62bb7e972ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_http_request_adapter.html#aa9a3b7b022a3e716af4ca62bb7e972ef">HttpRequestAdapter</a> (HttpClient httpClient)</td></tr>
 <tr class="separator:aa9a3b7b022a3e716af4ca62bb7e972ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68c34ab8213a4658b431c1d28646dc9a"><td class="memItemLeft" align="right" valign="top">async Task&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_http_request_adapter.html#a68c34ab8213a4658b431c1d28646dc9a">SendAsync</a> (string method, Uri uri, IDictionary&lt; string, string &gt; headers, byte[] body, int timeout, CancellationToken? userCancelToken)</td></tr>
 <tr class="memdesc:a68c34ab8213a4658b431c1d28646dc9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a HTTP request. <dl class="params"><dt>Parameters</dt><dd>
@@ -161,12 +160,42 @@ Properties</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >HTTP Request adapter which uses the .NET HttpClient to send requests.  </p>
 <p >Accept header is always set as 'application/json'. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aa9a3b7b022a3e716af4ca62bb7e972ef" name="aa9a3b7b022a3e716af4ca62bb7e972ef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9a3b7b022a3e716af4ca62bb7e972ef">&#9670;&#160;</a></span>HttpRequestAdapter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Satori.HttpRequestAdapter.HttpRequestAdapter </td>
+          <td>(</td>
+          <td class="paramtype">HttpClient&#160;</td>
+          <td class="paramname"><em>httpClient</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a68c34ab8213a4658b431c1d28646dc9a" name="a68c34ab8213a4658b431c1d28646dc9a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a68c34ab8213a4658b431c1d28646dc9a">&#9670;&#160;</a></span>SendAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">async Task&lt; string &gt; Satori.HttpRequestAdapter.SendAsync </td>
@@ -210,6 +239,11 @@ Properties</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Send a HTTP request. <dl class="params"><dt>Parameters</dt><dd>
@@ -259,7 +293,7 @@ Properties</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -331,7 +365,7 @@ Properties</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>Satori/HttpRequestAdapter.cs</li>
+<li><a class="el" href="_satori_2_http_request_adapter_8cs.html">Satori/HttpRequestAdapter.cs</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

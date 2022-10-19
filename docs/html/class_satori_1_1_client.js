@@ -1,5 +1,7 @@
 var class_satori_1_1_client =
 [
+    [ "Client", "class_satori_1_1_client.html#ad4a1744be01088948fd4724253720a84", null ],
+    [ "Client", "class_satori_1_1_client.html#a52592e348df73a0d8776b7620666607d", null ],
     [ "AuthenticateAsync", "class_satori_1_1_client.html#ab2b3b14e99032adee70760833acbac58", null ],
     [ "AuthenticateLogoutAsync", "class_satori_1_1_client.html#a19a54b27abb6adb73f1094cb69445986", null ],
     [ "EventAsync", "class_satori_1_1_client.html#a3515d87f03d73b2923c45454b4e6c35b", null ],

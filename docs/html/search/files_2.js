@@ -1,11 +1,6 @@
 var searchData=
 [
-  ['changelog_2emd_0',['CHANGELOG.md',['../_c_h_a_n_g_e_l_o_g_8md.html',1,'']]],
-  ['channeljoinmessage_2ecs_1',['ChannelJoinMessage.cs',['../_channel_join_message_8cs.html',1,'']]],
-  ['channelleavemessage_2ecs_2',['ChannelLeaveMessage.cs',['../_channel_leave_message_8cs.html',1,'']]],
-  ['channelremovemessage_2ecs_3',['ChannelRemoveMessage.cs',['../_channel_remove_message_8cs.html',1,'']]],
-  ['channelsendmessage_2ecs_4',['ChannelSendMessage.cs',['../_channel_send_message_8cs.html',1,'']]],
-  ['channelupdatemessage_2ecs_5',['ChannelUpdateMessage.cs',['../_channel_update_message_8cs.html',1,'']]],
-  ['client_2ecs_6',['Client.cs',['../_client_8cs.html',1,'']]],
-  ['consoleclient_2egen_2ecs_7',['ConsoleClient.gen.cs',['../_console_client_8gen_8cs.html',1,'']]]
+  ['_2enetframework_2cversion_3dv4_2e6_2eassemblyattributes_2ecs_0',['.NETFramework,Version=v4.6.AssemblyAttributes.cs',['../_debug_2net46_2_8_n_e_t_framework_00_version_0av4_86_8_assembly_attributes_8cs.html',1,'']]],
+  ['_2enetstandard_2cversion_3dv2_2e0_2eassemblyattributes_2ecs_1',['.NETStandard,Version=v2.0.AssemblyAttributes.cs',['../_debug_2netstandard2_80_2_8_n_e_t_standard_00_version_0av2_80_8_assembly_attributes_8cs.html',1,'']]],
+  ['nakama_2eassemblyinfo_2ecs_2',['Nakama.AssemblyInfo.cs',['../_debug_2net46_2_nakama_8_assembly_info_8cs.html',1,'(Global Namespace)'],['../_debug_2netstandard2_80_2_nakama_8_assembly_info_8cs.html',1,'(Global Namespace)']]]
 ];

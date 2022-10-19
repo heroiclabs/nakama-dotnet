@@ -38,6 +38,7 @@ var class_nakama_1_1_socket =
     [ "SendPartyDataAsync", "class_nakama_1_1_socket.html#a8b3b14eceedee8d96186d5bf234d820c", null ],
     [ "SendPartyDataAsync", "class_nakama_1_1_socket.html#a2208d5d13196fbf4f40e3131eb224d47", null ],
     [ "SendPartyDataAsync", "class_nakama_1_1_socket.html#aaade8d235e868a54af041e54b216af9d", null ],
+    [ "ToString", "class_nakama_1_1_socket.html#a3f20c76d13d14d9f7b3e82555815d39d", null ],
     [ "UnfollowUsersAsync", "class_nakama_1_1_socket.html#a69d7b68ed48c79402440a90101981eec", null ],
     [ "UnfollowUsersAsync", "class_nakama_1_1_socket.html#a3834aed45938e02964a4f29adcb51986", null ],
     [ "UpdateChatMessageAsync", "class_nakama_1_1_socket.html#a3c3fbea58ee3a2f6e3d3885ca79ded9b", null ],
