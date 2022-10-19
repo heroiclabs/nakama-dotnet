@@ -3,7 +3,7 @@ name: Generate Doxygen Docs
 on:
   push:
     branches:
-    - main
+    - master
 
 jobs:
   doxygen:
