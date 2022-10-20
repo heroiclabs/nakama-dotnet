@@ -1,0 +1,19 @@
+name: Generate Doxygen Docs
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  doxygen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: mattnotmitt/doxygen-action@1.9.4
+        with:
+          working-directory: './docs'
+          doxyfile-path: 'Doxyfile'
+      - uses: stefanzweifel/git-auto-commit-action@v4.15.1
+        with:
+          commit_message: Update Doxygen docs
