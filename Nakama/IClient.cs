@@ -790,7 +790,20 @@ namespace Nakama
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task to resolve an RPC response.</returns>
-        Task<IApiRpc> RpcAsync(string httpKey, string id, string payload = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+        Task<IApiRpc> RpcAsync(string httpKey, string id, string payload, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+        
+        /// <summary>
+        /// Execute a function on the server without a session.
+        /// </summary>
+        /// <remarks>
+        /// This function is usually used with server side code. DO NOT USE client side.
+        /// </remarks>
+        /// <param name="httpKey">The secure HTTP key used to authenticate.</param>
+        /// <param name="id">The id of the function to execute on the server.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task to resolve an RPC response.</returns>
+        Task<IApiRpc> RpcAsync(string httpKey, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Log out a session which invalidates the authorization and refresh token.
