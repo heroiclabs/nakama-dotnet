@@ -80,5 +80,18 @@ namespace Nakama.Tests.Api
             Assert.NotNull(rpc);
             Assert.Equal("{\"message\":\"PONG\"}", rpc.Payload);
         }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldRpcGetRoundtripWithoutSession()
+        {
+            // Http Key is used often for server to server function calls
+            const string httpkey = "defaulthttpkey";
+            const string funcid = "clientrpc.rpc";
+            const string payload = "{\"hello\": \"world\"}";
+            var rpc = await _client.RpcAsync(httpkey, funcid, payload);
+
+            Assert.NotNull(rpc);
+            Assert.Equal(payload, rpc.Payload);
+        }
     }
 }

@@ -897,8 +897,12 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="RpcAsync(string,string,string)"/>
-        public Task<IApiRpc> RpcAsync(string httpkey, string id, string payload = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
-             _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFunc2Async(null, id, payload, httpkey, canceller), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        public Task<IApiRpc> RpcAsync(string httpkey, string id, string payload, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
+             _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFuncAsync(null, id, payload, httpkey, canceller), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        
+        /// <inheritdoc cref="RpcAsync(string,string)"/>
+        public Task<IApiRpc> RpcAsync(string httpkey, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
+            _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFunc2Async(null, id, null, httpkey, canceller), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
         /// <inheritdoc cref="SessionLogoutAsync(Nakama.ISession)"/>
         public Task SessionLogoutAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) => SessionLogoutAsync(session.AuthToken, session.RefreshToken, retryConfiguration, canceller);
