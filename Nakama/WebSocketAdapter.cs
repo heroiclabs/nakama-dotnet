@@ -86,6 +86,7 @@ namespace Nakama
             if (_webSocket == null) return Task.CompletedTask;
             var t = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
             _webSocket = null;
+            Closed?.Invoke();
             IsConnecting = false;
             IsConnected = false;
             return t;
