@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
+using Nakama.TinyJson;
+
 namespace Nakama.Tests.Api
 {
     using System;
-    using System.Collections;
     using System.Threading.Tasks;
     using Xunit;
 
     // NOTE: Requires Lua modules from server repo.
+
+    public class HttpErrorMessage
+    {
+        public string? message;
+    }
 
     public class HttpErrorTest
     {
@@ -46,7 +52,8 @@ namespace Nakama.Tests.Api
             await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
             Assert.NotNull(exception.Message);
             Assert.NotEmpty(exception.Message);
-            Assert.Equal("Some error occured.", exception.Message);
+            var errorMessage = exception.Message.FromJson<HttpErrorMessage>();
+            Assert.Equal("Some error occured.", errorMessage.message);
         }
 
         [Fact(Skip = "requires go plugin")]
