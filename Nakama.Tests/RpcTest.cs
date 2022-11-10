@@ -31,7 +31,6 @@ namespace Nakama.Tests.Api
         public RpcTest()
         {
             _client = TestsUtil.FromSettingsFile();
-
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]

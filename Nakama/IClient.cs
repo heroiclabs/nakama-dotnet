@@ -592,7 +592,7 @@ namespace Nakama
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the leaderboard record objects.</returns>
         Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session, string leaderboardId,
-            string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+            string ownerId, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Fetch a list of matches active on the server.
@@ -662,7 +662,7 @@ namespace Nakama
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to the tournament record list object.</returns>
         Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session, string tournamentId,
-            string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+            string ownerId, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// List records from a tournament.

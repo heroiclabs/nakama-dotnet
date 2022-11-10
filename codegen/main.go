@@ -19,7 +19,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 	"text/template"
@@ -281,13 +280,13 @@ namespace {{.Namespace}}
         {{- if $operation.Security }}
             {{- range $idx, $security := $operation.Security}}
                 {{- range $key, $value := $security}}
-                    {{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
+                    {{- if eq $key "BasicAuth" }}
             string basicAuthUsername,
             string basicAuthPassword
                         {{- $isPreviousParam = true}}
-                     {{- else if (eq $key "BearerJwt") }}
+                    {{- else if (eq $key "BearerJwt") }}
                         {{- $isPreviousParam = true}}
-            string bearerToken,
+            string bearerToken
                     {{- end }}
                 {{- end }}
             {{- end }}
@@ -393,14 +392,14 @@ namespace {{.Namespace}}
             {{- if $operation.Security }}
                 {{- range $idx, $security := $operation.Security }}
                     {{- range $key, $value := $security }}
-                        {{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
+                        {{- if eq $key "BasicAuth" }}
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
                 var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
                 var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
                 headers.Add("Authorization", header);
             }
-            {{- else }}
+                        {{- else if (eq $key "BearerJwt") }}
             if (!string.IsNullOrEmpty(bearerToken))
             {
                 var header = string.Concat("Bearer ", bearerToken);
@@ -563,7 +562,7 @@ func main() {
 	}
 
 	inputFile := inputs[0]
-	content, err := ioutil.ReadFile(inputFile)
+	content, err := os.ReadFile(inputFile)
 	if err != nil {
 		fmt.Printf("Unable to read file: %s\n", err)
 		return
@@ -580,66 +579,14 @@ func main() {
 		namespace = inputs[1]
 	}
 
-	var schema struct {
-		Namespace string
-		Paths     map[string]map[string]struct {
-			Summary     string
-			OperationId string
-			Responses   struct {
-				Ok struct {
-					Schema struct {
-						Ref string `json:"$ref"`
-					}
-				} `json:"200"`
-			}
-			Parameters []struct {
-				Name     string
-				In       string
-				Required bool
-				Type     string   // used with primitives
-				Items    struct { // used with type "array"
-					Type string
-				}
-				Schema struct { // used with http body
-					Type string
-					Ref  string `json:"$ref"`
-				}
-				Format string // used with type "boolean"
-			}
-			Security []map[string][]struct {
-			}
-		}
-		Definitions map[string]struct {
-			Properties map[string]struct {
-				Type  string
-				Ref   string   `json:"$ref"` // used with object
-				Items struct { // used with type "array"
-					Type string
-					Ref  string `json:"$ref"`
-				}
-				AdditionalProperties struct {
-					Type   string // used with type "map"
-					Format string // used with type "map"
-					Ref    string `json:"$ref"` // used with object
-				}
-				Format      string // used with type "boolean"
-				Description string
-				Title       string // used by enums
-			}
-
-			Enum        []string
-			Description string
-			// used only by enums
-			Title string
-		}
-	}
-
-	schema.Namespace = namespace
-
+	var schema *Schema
 	if err := json.Unmarshal(content, &schema); err != nil {
 		fmt.Printf("Unable to decode input file %s : %s\n", inputFile, err)
 		return
 	}
+	schema.Namespace = namespace
+
+	generateBodyDefinitionFromSchema(schema)
 
 	fmap := template.FuncMap{
 		"snakeToCamel": snakeToCamel,
@@ -699,4 +646,103 @@ func main() {
 	writer := bufio.NewWriter(f)
 	tmpl.Execute(writer, schema)
 	writer.Flush()
+}
+
+type Schema struct {
+	Namespace string
+	Paths     map[string]map[string]struct {
+		Summary     string
+		OperationId string
+		Responses   struct {
+			Ok struct {
+				Schema struct {
+					Ref string `json:"$ref"`
+				}
+			} `json:"200"`
+		}
+		Parameters []struct {
+			Name     string
+			In       string
+			Required bool
+			Type     string   // used with primitives
+			Items    struct { // used with type "array"
+				Type string
+			}
+			Format string       // used with type "boolean"
+			Schema ObjectSchema `json:"schema"`
+		}
+		Security []map[string][]struct {
+		}
+	}
+	Definitions map[string]ObjectDefinition
+}
+
+type ObjectSchema struct {
+	Type       string
+	Ref        string `json:"$ref"`
+	Properties map[string]struct {
+		Type        string
+		Description string
+	}
+	Description string
+}
+
+type ObjectDefinition struct {
+	Properties map[string]ObjectProperty
+
+	Enum        []string
+	Description string
+	// used only by enums
+	Title string
+}
+
+type ObjectProperty struct {
+	Type                 string
+	Ref                  string `json:"$ref"` // used with object
+	Items                Items
+	AdditionalProperties AdditionalProperties
+	Format               string // used with type "boolean"
+	Description          string
+	Title                string // used by enums
+}
+
+type Items struct {
+	Type string
+	Ref  string `json:"$ref"`
+}
+
+type AdditionalProperties struct {
+	Type   string // used with type "map"
+	Format string // used with type "map"
+	Ref    string `json:"$ref"` // used with object
+}
+
+func generateBodyDefinitionFromSchema(s *Schema) {
+	// Needed because of this change: https://github.com/grpc-ecosystem/grpc-gateway/issues/1670
+	for _, def := range s.Paths {
+		if verb, ok := def["put"]; ok {
+			for idx, param := range verb.Parameters {
+				if param.In == "body" && param.Name == "body" && param.Schema.Ref == "" {
+					objectName := "Api" + strings.TrimPrefix(verb.OperationId, fmt.Sprintf("%s_", s.Namespace)) + "Request"
+					param.Schema.Ref = "#/definitions/" + objectName
+					def["put"].Parameters[idx] = param
+
+					properties := make(map[string]ObjectProperty)
+					for key, p := range param.Schema.Properties {
+						properties[key] = ObjectProperty{
+							Type:                 p.Type,
+							Items:                Items{},
+							AdditionalProperties: AdditionalProperties{},
+							Description:          p.Description,
+						}
+					}
+
+					s.Definitions[objectName] = ObjectDefinition{
+						Properties:  properties,
+						Description: param.Schema.Description,
+					}
+				}
+			}
+		}
+	}
 }

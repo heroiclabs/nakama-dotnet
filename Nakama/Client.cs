@@ -690,7 +690,7 @@ namespace Nakama
 
         /// <inheritdoc cref="ListLeaderboardRecordsAroundOwnerAsync"/>
         public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session,
-            string leaderboardId, string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string leaderboardId, string ownerId, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -699,7 +699,7 @@ namespace Nakama
             }
 
             return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId,
-                limit, expiry?.ToString(), canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+                limit, expiry?.ToString(), cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListMatchesAsync"/>
@@ -760,7 +760,7 @@ namespace Nakama
 
         /// <inheritdoc cref="ListTournamentRecordsAroundOwnerAsync"/>
         public async Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session,
-            string tournamentId, string ownerId, long? expiry = null, int limit = 1, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string tournamentId, string ownerId, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -769,7 +769,7 @@ namespace Nakama
             }
 
             return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId,
-                limit, expiry?.ToString(), canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+                limit, expiry?.ToString(), cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListTournamentRecordsAsync"/>
