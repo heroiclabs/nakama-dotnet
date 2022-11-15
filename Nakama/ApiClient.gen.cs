@@ -41,6 +41,74 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Update fields in a given group.
+    /// </summary>
+    public interface IApiUpdateGroupRequest
+    {
+
+        /// <summary>
+        /// Avatar URL.
+        /// </summary>
+        string AvatarUrl { get; }
+
+        /// <summary>
+        /// Description string.
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
+        /// Lang tag.
+        /// </summary>
+        string LangTag { get; }
+
+        /// <summary>
+        /// Name.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
+        /// </summary>
+        bool Open { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiUpdateGroupRequest : IApiUpdateGroupRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="avatar_url"), Preserve]
+        public string AvatarUrl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="lang_tag"), Preserve]
+        public string LangTag { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="open"), Preserve]
+        public bool Open { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
+            output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "LangTag: ", LangTag, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "Open: ", Open, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A single user-role pair.
     /// </summary>
     public interface IGroupUserListGroupUser
@@ -361,12 +429,12 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Token: ", Token, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -406,12 +474,12 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Id: ", Id, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -451,12 +519,12 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Id: ", Id, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -506,12 +574,12 @@ namespace Nakama
             output = string.Concat(output, "Email: ", Email, ", ");
             output = string.Concat(output, "Password: ", Password, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -551,12 +619,12 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Token: ", Token, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -596,12 +664,12 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "SignedPlayerInfo: ", SignedPlayerInfo, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -691,12 +759,12 @@ namespace Nakama
             output = string.Concat(output, "Signature: ", Signature, ", ");
             output = string.Concat(output, "TimestampSeconds: ", TimestampSeconds, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -736,12 +804,12 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Token: ", Token, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -781,12 +849,12 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Token: ", Token, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -1207,12 +1275,12 @@ namespace Nakama
             output = string.Concat(output, "External: ", External, ", ");
             output = string.Concat(output, "Name: ", Name, ", ");
 
-            var mapString = "";
+            var propertiesString = "";
             foreach (var kvp in Properties)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                propertiesString = string.Concat(propertiesString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Properties: [" + mapString + "]");
+            output = string.Concat(output, "Properties: [" + propertiesString + "]");
             output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
             return output;
         }
@@ -2032,7 +2100,7 @@ namespace Nakama
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public enum ApiOperator
     {
@@ -2041,7 +2109,7 @@ namespace Nakama
         /// </summary>
         NO_OVERRIDE = 0,
         /// <summary>
-        ///
+        /// 
         /// </summary>
         BEST = 1,
         /// <summary>
@@ -2304,12 +2372,12 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Token: ", Token, ", ");
 
-            var mapString = "";
+            var varsString = "";
             foreach (var kvp in Vars)
             {
-                mapString = string.Concat(mapString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "Vars: [" + mapString + "]");
+            output = string.Concat(output, "Vars: [" + varsString + "]");
             return output;
         }
     }
@@ -3046,84 +3114,6 @@ namespace Nakama
             output = string.Concat(output, "Location: ", Location, ", ");
             output = string.Concat(output, "Timezone: ", Timezone, ", ");
             output = string.Concat(output, "Username: ", Username, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// Update fields in a given group.
-    /// </summary>
-    public interface IApiUpdateGroupRequest
-    {
-
-        /// <summary>
-        /// Avatar URL.
-        /// </summary>
-        string AvatarUrl { get; }
-
-        /// <summary>
-        /// Description string.
-        /// </summary>
-        string Description { get; }
-
-        /// <summary>
-        /// The ID of the group to update.
-        /// </summary>
-        string GroupId { get; }
-
-        /// <summary>
-        /// Lang tag.
-        /// </summary>
-        string LangTag { get; }
-
-        /// <summary>
-        /// Name.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
-        /// </summary>
-        bool Open { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiUpdateGroupRequest : IApiUpdateGroupRequest
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="avatar_url"), Preserve]
-        public string AvatarUrl { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="description"), Preserve]
-        public string Description { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="group_id"), Preserve]
-        public string GroupId { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="lang_tag"), Preserve]
-        public string LangTag { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="name"), Preserve]
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="open"), Preserve]
-        public bool Open { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
-            output = string.Concat(output, "Description: ", Description, ", ");
-            output = string.Concat(output, "GroupId: ", GroupId, ", ");
-            output = string.Concat(output, "LangTag: ", LangTag, ", ");
-            output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "Open: ", Open, ", ");
             return output;
         }
     }
@@ -3980,20 +3970,15 @@ namespace Nakama
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IProtobufAny
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
-        string TypeUrl { get; }
-
-        /// <summary>
-        ///
-        /// </summary>
-        string Value { get; }
+        string @type { get; }
     }
 
     /// <inheritdoc />
@@ -4001,40 +3986,35 @@ namespace Nakama
     {
 
         /// <inheritdoc />
-        [DataMember(Name="type_url"), Preserve]
-        public string TypeUrl { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="value"), Preserve]
-        public string Value { get; set; }
+        [DataMember(Name="@type"), Preserve]
+        public string @type { get; set; }
 
         public override string ToString()
         {
             var output = "";
-            output = string.Concat(output, "TypeUrl: ", TypeUrl, ", ");
-            output = string.Concat(output, "Value: ", Value, ", ");
+            output = string.Concat(output, "@type: ", @type, ", ");
             return output;
         }
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Message { get; }
     }
@@ -4206,9 +4186,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -4251,9 +4234,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -4296,9 +4282,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -4341,9 +4330,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -4390,9 +4382,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -4435,9 +4430,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -4480,9 +4478,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -4525,9 +4526,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -4574,9 +4578,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -4921,9 +4928,12 @@ namespace Nakama
 
             var method = "POST";
             var headers = new Dictionary<string, string>();
-            var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-            var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-            headers.Add("Authorization", header);
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var jsonBody = body.ToJson();
@@ -6385,6 +6395,7 @@ namespace Nakama
             string ownerId,
             int? limit,
             string expiry,
+            string cursor,
             CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
@@ -6406,6 +6417,9 @@ namespace Nakama
             }
             if (expiry != null) {
                 queryParams = string.Concat(queryParams, "expiry=", Uri.EscapeDataString(expiry), "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
             var uri = new UriBuilder(_baseUri)
@@ -7096,6 +7110,7 @@ namespace Nakama
             string ownerId,
             int? limit,
             string expiry,
+            string cursor,
             CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
@@ -7117,6 +7132,9 @@ namespace Nakama
             }
             if (expiry != null) {
                 queryParams = string.Concat(queryParams, "expiry=", Uri.EscapeDataString(expiry), "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
             var uri = new UriBuilder(_baseUri)

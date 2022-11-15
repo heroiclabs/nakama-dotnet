@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+using System.Collections.Generic;
+using Nakama.TinyJson;
+
 namespace Nakama.Tests.Api
 {
     using System;
@@ -46,7 +49,8 @@ namespace Nakama.Tests.Api
             await Assert.ThrowsAsync<ApiResponseException>(() => _client.RpcAsync(session, funcid));
             Assert.NotNull(exception.Message);
             Assert.NotEmpty(exception.Message);
-            Assert.Equal("Some error occured.", exception.Message);
+            var decoded = exception.Message.FromJson<Dictionary<string, object>>();
+            Assert.Equal("Some error occured.",  decoded["message"]);
         }
 
         [Fact(Skip = "requires go plugin")]
