@@ -232,6 +232,9 @@ namespace Nakama.Tests.Api
 
             remainingMembers = await _client.ListGroupUsersAsync(session1, group.Id, state: null, limit: 100);
             Assert.Single(remainingMembers.GroupUsers);
+
+            var groupList = await _client.ListUserGroupsAsync(session2, null, 100);
+            Assert.Empty(groupList.UserGroups);
         }
     }
 }
