@@ -225,10 +225,16 @@ namespace Nakama.Tests.Api
 
             await _client.AddGroupUsersAsync(session1, group.Id, new string[]{session2.UserId, session3.UserId});
             await _client.BanGroupUsersAsync(session1, group.Id, new []{session2.UserId, session3.UserId});
-
             var remainingMembers = await _client.ListGroupUsersAsync(session1, group.Id, state: null, limit: 100);
             Assert.Single(remainingMembers.GroupUsers);
-        }
 
+            await _client.JoinGroupAsync(session2, group.Id);
+
+            remainingMembers = await _client.ListGroupUsersAsync(session1, group.Id, state: null, limit: 100);
+            Assert.Single(remainingMembers.GroupUsers);
+
+            var groupList = await _client.ListUserGroupsAsync(session2, null, 100);
+            Assert.Empty(groupList.UserGroups);
+        }
     }
 }
