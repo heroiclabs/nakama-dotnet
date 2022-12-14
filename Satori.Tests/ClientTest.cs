@@ -40,7 +40,7 @@ namespace Satori.Tests
         public async Task TestGetExperiments()
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
-            var experiments = await _testClient.GetExperimentsAsync(session);
+            var experiments = await _testClient.GetAllExperimentsAsync(session);
 
             Assert.True(experiments.Experiments.Count() == 1);
         }

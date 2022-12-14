@@ -140,9 +140,21 @@ namespace Satori
 
             await _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken);
         }
+        
+        /// <inheritdoc cref="GetExperimentsAsync" />
+        public async Task<IApiExperimentList> GetAllExperimentsAsync(ISession session, CancellationToken? cancellationToken = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, cancellationToken);
+            }
+
+            return await _apiClient.SatoriGetExperimentsAsync(session.AuthToken, null, cancellationToken);
+        }
 
         /// <inheritdoc cref="GetExperimentsAsync" />
-        public async Task<IApiExperimentList> GetExperimentsAsync(ISession session, IEnumerable<string> names = null,
+        public async Task<IApiExperimentList> GetExperimentsAsync(ISession session, IEnumerable<string> names,
             CancellationToken? cancellationToken = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&

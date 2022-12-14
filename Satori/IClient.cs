@@ -67,7 +67,15 @@ namespace Satori
         /// Get all experiments data.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="names">Experiment names; if empty string all experiments are returned.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to all experiments that this identity is involved with.</returns>
+        public Task<IApiExperimentList> GetAllExperimentsAsync(ISession session, CancellationToken? cancellationToken = default);
+        
+        /// <summary>
+        /// Get specific experiments data.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="names">Experiment names.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to all experiments that this identity is involved with.</returns>
         public Task<IApiExperimentList> GetExperimentsAsync(ISession session, IEnumerable<string> names,
