@@ -182,7 +182,7 @@ namespace Nakama
                     }
 
                     bufferReadCount = 0;
-                } while (_webSocket.State == WebSocketState.Open && !canceller.IsCancellationRequested);
+                } while (!canceller.IsCancellationRequested && _webSocket != null && _webSocket.State == WebSocketState.Open);
             }
             catch (Exception e)
             {
