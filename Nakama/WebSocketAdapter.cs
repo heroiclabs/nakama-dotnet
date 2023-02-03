@@ -59,23 +59,25 @@ namespace Nakama
         private CancellationTokenSource _cancellationSource;
         private WebSocket _webSocket;
         private Uri _uri;
+        private readonly ILogger _logger;
 
         public WebSocketAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec, int sendTimeoutSec = SendTimeoutSec,
-            int maxMessageReadSize = MaxMessageReadSize) :
+            int maxMessageReadSize = MaxMessageReadSize, ILogger logger = null) :
             this(new WebSocketClientOptions
             {
                 IncludeExceptionInCloseResponse = true,
                 KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec),
                 NoDelay = true
-            }, sendTimeoutSec, maxMessageReadSize)
+            }, sendTimeoutSec, maxMessageReadSize, logger)
         {
         }
 
-        public WebSocketAdapter(WebSocketClientOptions options, int sendTimeoutSec, int maxMessageReadSize)
+        public WebSocketAdapter(WebSocketClientOptions options, int sendTimeoutSec, int maxMessageReadSize, ILogger logger)
         {
             _maxMessageReadSize = maxMessageReadSize;
             _options = options;
             _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
+            _logger = logger;
         }
 
         /// <inheritdoc cref="ISocketAdapter.CloseAsync"/>
