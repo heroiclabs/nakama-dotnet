@@ -7,9 +7,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## [Unreleased]
 ### Added
 - Adds support for calling RPCs with a HTTP key via POST when a payload is provided.
+- Expose the `Logger` object on `IClient`.
 
 ### Fixed
 - Prevent race condition when `Close` is called while receive loop has an incomplete read buffer.
+
+### Changed
+- Removed our old Ninja.Websockets adapter in favor of the Websocket shipped in the .NET standard library.
 
 ## [3.5.0] - 2022-09-06
 ### Added
