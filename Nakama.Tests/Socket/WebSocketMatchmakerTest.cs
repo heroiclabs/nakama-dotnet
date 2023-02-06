@@ -257,9 +257,9 @@ namespace Nakama.Tests.Socket
             var query2 = "+properties.foo:bar";
             var query3 = "+properties.foo:bar";
 
-            var matchmakerTicket = await _socket.AddMatchmakerAsync(query, 2, 4, properties);
-            var matchmakerTicket2 = await socket2.AddMatchmakerAsync(query2, 2, 4, properties2);
-            var matchmakerTicket3 = await socket3.AddMatchmakerAsync(query3, 2, 4, properties3);
+            var matchmakerTicket = await _socket.AddMatchmakerAsync(query, 3, 3, properties);
+            var matchmakerTicket2 = await socket2.AddMatchmakerAsync(query2, 3, 3, properties2);
+            var matchmakerTicket3 = await socket3.AddMatchmakerAsync(query3, 3, 3, properties3);
 
             Assert.NotNull(matchmakerTicket);
             Assert.NotEmpty(matchmakerTicket.Ticket);
