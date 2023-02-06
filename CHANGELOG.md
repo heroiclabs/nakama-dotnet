@@ -6,15 +6,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Added
-- Adds support for calling RPCs with a HTTP key via POST when a payload is provided.
-- Expose the `Logger` object on `IClient`.
+- Adds the Satori .NET SDK. Satori is our liveops server for game studios. Please read more about it on the Heroic Labs website.
+- Nakama: Adds support for calling RPCs with a HTTP key via POST when a payload is provided.
+- Nakama: Expose the `Logger` object on `IClient`.
+- Nakama: Adds support for POST RPC requests when using HTTP key with a payload
 
 ### Fixed
-- Prevent race condition when `Close` is called while receive loop has an incomplete read buffer.
+- Nakama: Prevent race condition when `Close` is called while receive loop has an incomplete read buffer.
+- Nakama: Fixed an issue where 500 errors could cause parsing issues on the client.
+- Nakama: Added ability to specify `path` parameter to client urls.
 
 ### Changed
-- Removed our old Ninja.Websockets adapter in favor of the Websocket shipped in the .NET standard library.
-- Fixed an issue where our websocket would throw an exception on `CloseAsync()` in certain situations.
+- Nakama: Removed our old Ninja.Websockets adapter in favor of the Websocket shipped in the .NET standard library.
+- Nakama: Fixed an issue where our websocket would throw an exception on `CloseAsync()` in certain situations.
 
 ## [3.5.0] - 2022-09-06
 ### Added
