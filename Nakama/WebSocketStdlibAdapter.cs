@@ -72,7 +72,11 @@ namespace Nakama
         /// <inheritdoc cref="ISocketAdapter.CloseAsync"/>
         public Task CloseAsync()
         {
-            if (_webSocket == null) return Task.CompletedTask;
+            if (_webSocket == null || _webSocket.State != WebSocketState.Open)
+            {
+                return Task.CompletedTask;
+            }
+
             var t = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
             _webSocket = null;
             IsConnecting = false;
