@@ -51,6 +51,7 @@ namespace Nakama
         /// </summary>
         public bool IsConnecting { get; private set; }
 
+        private CancellationTokenSource _cancellationSource;
         private Uri _uri;
         private ClientWebSocket _webSocket;
         private readonly int _maxMessageReadSize;
@@ -72,12 +73,18 @@ namespace Nakama
         /// <inheritdoc cref="ISocketAdapter.CloseAsync"/>
         public Task CloseAsync()
         {
-            if (_webSocket == null || _webSocket.State != WebSocketState.Open)
+            if (_webSocket == null) return Task.CompletedTask;
+
+            if (_webSocket.State == WebSocketState.Open)
             {
-                return Task.CompletedTask;
+                _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+            }
+            else if (_webSocket.State == WebSocketState.Connecting)
+            {
+                // cancel mid-connect
+                _cancellationSource?.Cancel();
             }
 
-            var t = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
             _webSocket = null;
             IsConnecting = false;
             IsConnected = false;
@@ -93,6 +100,7 @@ namespace Nakama
                 return;
             }
 
+            _cancellationSource = new CancellationTokenSource();
             _uri = uri;
             _webSocket = new ClientWebSocket();
             IsConnecting = true;
@@ -100,8 +108,9 @@ namespace Nakama
             try
             {
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
-                await _webSocket.ConnectAsync(_uri, cts.Token).ConfigureAwait(false);
-                _ = ReceiveLoop(_webSocket);
+                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
+                await _webSocket.ConnectAsync(_uri, linkedCts.Token).ConfigureAwait(false);
+                _ = ReceiveLoop(_webSocket, _cancellationSource.Token);
                 Connected?.Invoke();
                 IsConnected = true;
             }
@@ -144,8 +153,10 @@ namespace Nakama
         /// <inheritdoc cref="object.ToString" />
         public override string ToString() => $"WebSocketDriver(MaxMessageSize={_maxMessageReadSize}, Uri='{_uri}')";
 
-        private async Task ReceiveLoop(WebSocket webSocket)
+        private async Task ReceiveLoop(WebSocket webSocket, CancellationToken canceller)
         {
+            canceller.ThrowIfCancellationRequested();
+
             var buffer = new byte[_maxMessageReadSize];
             var bufferReadCount = 0;
 
@@ -155,7 +166,7 @@ namespace Nakama
                 {
                     var bufferSegment =
                         new ArraySegment<byte>(buffer, bufferReadCount, _maxMessageReadSize - bufferReadCount);
-                    var result = await webSocket.ReceiveAsync(bufferSegment, CancellationToken.None).ConfigureAwait(false);
+                    var result = await webSocket.ReceiveAsync(bufferSegment, canceller).ConfigureAwait(false);
                     if (result == null)
                     {
                         break;
@@ -179,7 +190,7 @@ namespace Nakama
                     }
 
                     bufferReadCount = 0;
-                } while (_webSocket != null && _webSocket.State == WebSocketState.Open);
+                } while (!canceller.IsCancellationRequested && _webSocket != null && _webSocket.State == WebSocketState.Open);
             }
             catch (Exception e)
             {
