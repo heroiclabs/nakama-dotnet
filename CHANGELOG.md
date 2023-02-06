@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Added
-- Adds the Satori .NET SDK. Satori is our liveops server for game studios. Please read more about it on the Heroic Labs website.
+- Satori: Adds the Satori .NET SDK. Satori is our liveops server for game studios. Please read more about it on the Heroic Labs website.
 - Nakama: Adds support for calling RPCs with a HTTP key via POST when a payload is provided.
 - Nakama: Expose the `Logger` object on `IClient`.
 - Nakama: Adds support for POST RPC requests when using HTTP key with a payload
