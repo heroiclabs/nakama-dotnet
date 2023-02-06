@@ -289,12 +289,11 @@ namespace Nakama.Tests.Socket
             var memberSessions = new ISession[numMembers];
             var memberSockets = new Nakama.ISocket[numMembers];
 
-            IParty party = await leaderSocket.CreatePartyAsync(true, numMembers);
+            IParty party = await leaderSocket.CreatePartyAsync(true, numMembers + 1);
 
             var memberPartyObjects = new IParty[numMembers];
 
             int partyObjCounter = 0;
-
 
             for (int i = 0; i < numMembers; i++)
             {
