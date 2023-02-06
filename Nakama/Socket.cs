@@ -117,7 +117,7 @@ namespace Nakama
         /// <summary>
         /// A new socket with default options.
         /// </summary>
-        public Socket() : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort, new WebSocketStdlibAdapter())
+        public Socket() : this(Client.DefaultScheme, Client.DefaultHost, Client.DefaultPort, new WebSocketAdapter())
         {
         }
 
@@ -775,7 +775,7 @@ namespace Nakama
         /// </summary>
         /// <param name="client">A client object.</param>
         /// <returns>A new socket with the connection settings from the client.</returns>
-        public static ISocket From(IClient client) => From(client, new WebSocketStdlibAdapter());
+        public static ISocket From(IClient client) => From(client, new WebSocketAdapter());
 
         /// <summary>
         /// Build a socket from a client object and socket adapter.
