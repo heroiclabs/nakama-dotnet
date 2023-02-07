@@ -249,7 +249,6 @@ You can also send arbitrary events to the server:
 await client.EventAsync(session, new Event("gameLaunched", DateTime.UtcNow));
 
 ```
-
 This is only a subset of the Satori client API, so please see the documentation link listed earlier for the [full API](https://dotnet.docs.heroiclabs.com/html/namespace_satori.html).
 
 ### Maintainers
