@@ -43,11 +43,11 @@ Our current monorepo strategy is to maintain the Nakama and Satori clients in th
    ```
 
    ```shell
-   dotnet pack -p:AssemblyVersion=<package-version> -p:PackageVersion=<package-version> -c Release ./Nakama/Nakama.csproj
+   dotnet pack -p:AssemblyVersion=<package-version> -p:PackageVersion=<package-version> -c Release ./Satori/Satori.csproj
    ```
 
    ```shell
-   dotnet nuget push ./Nakama/bin/Release/NakamaClient.<package-version>.nupkg -k "somekey" -s https://api.nuget.org/v3/index.json
+   dotnet nuget push ./Satori/bin/Release/SatoriClient.<package-version>.nupkg -k "somekey" -s https://api.nuget.org/v3/index.json
    ```
 
 8. Update CHANGELOG with section for new unreleased changes.
