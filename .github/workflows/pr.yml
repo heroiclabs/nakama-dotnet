@@ -1,0 +1,37 @@
+name: Checkout and Test
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout nakama-dotnet
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+        repository: heroiclabs/nakama-dotnet
+
+    - name: Checkout nakama-client-testrunner
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+        repository: heroiclabs/nakama-client-testrunner
+
+    - name: Start docker containers for nakama-client-testrunner
+      working-directory: nakama-client-testrunner
+      run: ./docker-compose up -d
+
+    - name: Wait for the docker containers to start
+      working-directory: nakama-client-testrunner
+      run: |
+        until docker ps | grep nakama-server; do
+          echo "Waiting for the nakama-server container to start..."
+          sleep 5
+        done
+
+    - name: Run tests for nakama-dotnet
+      working-directory: nakama-dotnet
+      run: dotnet test
