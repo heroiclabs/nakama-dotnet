@@ -147,57 +147,6 @@ socket.ReceivedError += e => System.Console.WriteLine(e);
 await socket.ConnectAsync(session);
 ```
 
-## Contribute
-
-The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to improve the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
-
-### Source Builds
-
-The codebase can be built with the [Dotnet CLI](https://docs.microsoft.com/en-us/dotnet/core/tools). All dependencies are downloaded at build time with Nuget.
-
-```shell
-dotnet build Nakama/Nakama.csproj
-```
-
-For release builds use:
-
-```shell
-dotnet build -c Release /p:AssemblyVersion=2.0.0.0 Nakama/Nakama.csproj
-// For Nuget packaging
-dotnet pack -p:AssemblyVersion=2.0.0.0 -p:PackageVersion=2.0.0 -c Release Nakama/Nakama.csproj
-```
-
-### Run Tests
-
-To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the [documentation](https://heroiclabs.com/docs/install-docker-quickstart).
-
-```shell
-docker-compose -f ./docker-compose-postgres.yml up
-dotnet test Nakama.Tests/Nakama.Tests.csproj
-```
-
-To run a specific test, pass the fully qualified name of the method to `dotnet test --filter`:
-
-```shell
-dotnet test --filter "Nakama.Tests.Api.GroupTest.ShouldPromoteAndDemoteUsers"
-```
-
-If you'd like to attach a Visual Studio debugger to a test, set `VSTEST_HOST_DEBUG` to `true` in your shell environment and run `dotnet test`. Attach the debugger to the process identified by the console.
-
-### Generate Docs
-
-nakama-dotnet API docs are generated with Doxygen and deployed to GitHub pages.
-
-When changing the API comments, rerun Doxygen and commit the changes in `docs/*`.
-
-To run Doxygen:
-
-```
-brew install doxygen
-cd docs/
-doxygen
-```
-
 # Satori
 
 Satori is a liveops server for games that powers actionable analytics, A/B testing and remote configuration. Use the Satori .NET Client to coomunicate with Satori from within your .NET game.
@@ -251,11 +200,58 @@ await client.EventAsync(session, new Event("gameLaunched", DateTime.UtcNow));
 ```
 This is only a subset of the Satori client API, so please see the documentation link listed earlier for the [full API](https://dotnet.docs.heroiclabs.com/html/namespace_satori.html).
 
-### Maintainers
 
-In order to run tests for Satori, create sample data via the Satori console.
+# Contribute
 
-Then run `dotnet test` from this directory.
+The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to improve the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
+
+## Source Builds
+
+The codebase can be built with the [Dotnet CLI](https://docs.microsoft.com/en-us/dotnet/core/tools). All dependencies are downloaded at build time with Nuget.
+
+```shell
+dotnet build Nakama/Nakama.csproj
+```
+
+```shell
+dotnet build Satori/Satori.csproj
+```
+
+For release builds see [our instructions](./RELEASEINST.md):
+
+## Run Tests
+
+To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the [documentation](https://heroiclabs.com/docs/install-docker-quickstart).
+
+```shell
+docker-compose -f ./docker-compose-postgres.yml up
+dotnet test Nakama.Tests/Nakama.Tests.csproj
+```
+
+To run a specific test, pass the fully qualified name of the method to `dotnet test --filter`:
+
+```shell
+dotnet test --filter "Nakama.Tests.Api.GroupTest.ShouldPromoteAndDemoteUsers"
+```
+
+If you'd like to attach a Visual Studio debugger to a test, set `VSTEST_HOST_DEBUG` to `true` in your shell environment and run `dotnet test`. Attach the debugger to the process identified by the console.
+
+In order to pass tests for Satori, the Satori console must be populated with sample data available via a button in its GUI.
+Then you can test the SDK with `dotnet test Satori.Tests/Satori.Tests.csproj`.
+
+## Generate Docs
+
+nakama-dotnet API docs are generated with Doxygen and deployed to GitHub pages.
+
+When changing the API comments, rerun Doxygen and commit the changes in `docs/*`.
+
+To run Doxygen:
+
+```
+brew install doxygen
+cd docs/
+doxygen
+```
 
 # Licenses
 
