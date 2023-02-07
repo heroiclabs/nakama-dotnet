@@ -30,7 +30,7 @@ namespace Nakama.Tests.Socket
             _socket = Nakama.Socket.From(_client);
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS_MATCHMAKER)]
         public async Task ShouldJoinMatchmaker()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -42,7 +42,7 @@ namespace Nakama.Tests.Socket
         }
 
         // "Flakey. Needs improvement."
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS_MATCHMAKER)]
         public async Task ShouldJoinAndLeaveMatchmaker()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -54,7 +54,7 @@ namespace Nakama.Tests.Socket
             await _socket.RemoveMatchmakerAsync(matchmakerTicket);
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS_MATCHMAKER)]
         public async Task ShouldCompleteMatchmaker()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -86,8 +86,8 @@ namespace Nakama.Tests.Socket
             Assert.NotEmpty(result2.Token);
             Assert.Equal(result.Token, result2.Token);
         }
-        
-         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+
+         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS_MATCHMAKER)]
         public async Task ShouldNotMatchPartiesWithACombinedAmountOfPlayersAboveMaxCount()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -107,18 +107,18 @@ namespace Nakama.Tests.Socket
 
             var party1PresenceJoinedTcs = new TaskCompletionSource<IPartyPresenceEvent>();
             socket1.ReceivedPartyPresence += presenceEvt => party1PresenceJoinedTcs.SetResult(presenceEvt);
-            
+
             var party2PresenceJoinedTcs = new TaskCompletionSource<IPartyPresenceEvent>();
             socket3.ReceivedPartyPresence += presenceEvt => party2PresenceJoinedTcs.SetResult(presenceEvt);
-            
+
             var mmCompleter1 = new TaskCompletionSource<IMatchmakerMatched>();
             var mmCompleter2 = new TaskCompletionSource<IMatchmakerMatched>();
             socket1.ReceivedMatchmakerMatched += (state) => mmCompleter1.SetResult(state);
             socket3.ReceivedMatchmakerMatched += (state) => mmCompleter2.SetResult(state);
-            
+
             var party1 = await socket1.CreatePartyAsync(true, 2);
             var party2 = await socket3.CreatePartyAsync(true, 2);
-            
+
             await socket2.JoinPartyAsync(party1.Id);
             await socket4.JoinPartyAsync(party2.Id);
 
@@ -135,14 +135,14 @@ namespace Nakama.Tests.Socket
 
             Assert.False(mmCompleter1.Task.IsCompleted);
             Assert.False(mmCompleter2.Task.IsCompleted);
-            
+
             await socket1.CloseAsync();
             await socket2.CloseAsync();
             await socket3.CloseAsync();
             await socket4.CloseAsync();
         }
-        
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS_MATCHMAKER)]
         public async Task ShouldMatchPartiesWithPlayers()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -178,16 +178,16 @@ namespace Nakama.Tests.Socket
 
             var partyMatchResult = await mmCompleter1.Task;
             var playerMatchResult = await mmCompleter2.Task;
-            
+
             Assert.NotEmpty(partyMatchResult.Users);
             Assert.NotEmpty(playerMatchResult.Users);
-            
+
             await socket1.CloseAsync();
             await socket2.CloseAsync();
             await socket3.CloseAsync();
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS_MATCHMAKER)]
         public async Task ShouldCompleteMatchmakerAsymmetricQuery()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -226,7 +226,7 @@ namespace Nakama.Tests.Socket
             Assert.Equal(result.Token, result2.Token);
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS_MATCHMAKER)]
         public async Task ShouldCompleteMatchmakerSymmetricQueryMidSize()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -257,9 +257,9 @@ namespace Nakama.Tests.Socket
             var query2 = "+properties.foo:bar";
             var query3 = "+properties.foo:bar";
 
-            var matchmakerTicket = await _socket.AddMatchmakerAsync(query, 2, 4, properties);
-            var matchmakerTicket2 = await socket2.AddMatchmakerAsync(query2, 2, 4, properties2);
-            var matchmakerTicket3 = await socket3.AddMatchmakerAsync(query3, 2, 4, properties3);
+            var matchmakerTicket = await _socket.AddMatchmakerAsync(query, 3, 3, properties);
+            var matchmakerTicket2 = await socket2.AddMatchmakerAsync(query2, 3, 3, properties2);
+            var matchmakerTicket3 = await socket3.AddMatchmakerAsync(query3, 3, 3, properties3);
 
             Assert.NotNull(matchmakerTicket);
             Assert.NotEmpty(matchmakerTicket.Ticket);

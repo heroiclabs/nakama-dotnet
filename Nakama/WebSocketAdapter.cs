@@ -59,36 +59,45 @@ namespace Nakama
         private CancellationTokenSource _cancellationSource;
         private WebSocket _webSocket;
         private Uri _uri;
+        private readonly ILogger _logger;
 
         public WebSocketAdapter(int keepAliveIntervalSec = KeepAliveIntervalSec, int sendTimeoutSec = SendTimeoutSec,
-            int maxMessageReadSize = MaxMessageReadSize) :
+            int maxMessageReadSize = MaxMessageReadSize, ILogger logger = null) :
             this(new WebSocketClientOptions
             {
                 IncludeExceptionInCloseResponse = true,
                 KeepAliveInterval = TimeSpan.FromSeconds(keepAliveIntervalSec),
                 NoDelay = true
-            }, sendTimeoutSec, maxMessageReadSize)
+            }, sendTimeoutSec, maxMessageReadSize, logger)
         {
         }
 
-        public WebSocketAdapter(WebSocketClientOptions options, int sendTimeoutSec, int maxMessageReadSize)
+        public WebSocketAdapter(WebSocketClientOptions options, int sendTimeoutSec, int maxMessageReadSize, ILogger logger)
         {
             _maxMessageReadSize = maxMessageReadSize;
             _options = options;
             _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
+            _logger = logger;
         }
 
         /// <inheritdoc cref="ISocketAdapter.CloseAsync"/>
-        public Task CloseAsync()
+        public async Task CloseAsync()
         {
-            _cancellationSource?.Cancel();
+            if (_webSocket == null) return;
 
-            if (_webSocket == null) return Task.CompletedTask;
-            var t = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+            if (_webSocket.State == WebSocketState.Open)
+            {
+                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+            }
+            else if (_webSocket.State == WebSocketState.Connecting)
+            {
+                // cancel mid-connect
+                _cancellationSource?.Cancel();
+            }
+
             _webSocket = null;
             IsConnecting = false;
             IsConnected = false;
-            return t;
         }
 
         /// <inheritdoc cref="ISocketAdapter.ConnectAsync"/>

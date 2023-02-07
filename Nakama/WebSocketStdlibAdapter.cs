@@ -71,16 +71,23 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.CloseAsync"/>
-        public Task CloseAsync()
+        public async Task CloseAsync()
         {
-            _cancellationSource?.Cancel();
+            if (_webSocket == null) return;
 
-            if (_webSocket == null) return Task.CompletedTask;
-            var t = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+            if (_webSocket.State == WebSocketState.Open)
+            {
+                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+            }
+            else if (_webSocket.State == WebSocketState.Connecting)
+            {
+                // cancel mid-connect
+                _cancellationSource?.Cancel();
+            }
+
             _webSocket = null;
             IsConnecting = false;
             IsConnected = false;
-            return t;
         }
 
         /// <inheritdoc cref="ISocketAdapter.ConnectAsync"/>

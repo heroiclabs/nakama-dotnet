@@ -156,7 +156,7 @@ The development roadmap is managed as GitHub issues and pull requests are welcom
 The codebase can be built with the [Dotnet CLI](https://docs.microsoft.com/en-us/dotnet/core/tools). All dependencies are downloaded at build time with Nuget.
 
 ```shell
-dotnet build src/Nakama/Nakama.csproj
+dotnet build Nakama/Nakama.csproj
 ```
 
 For release builds use:
@@ -173,7 +173,7 @@ To run tests you will need to run the server and database. Most tests are writte
 
 ```shell
 docker-compose -f ./docker-compose-postgres.yml up
-dotnet test tests/Nakama.Tests/Nakama.Tests.csproj
+dotnet test Nakama.Tests/Nakama.Tests.csproj
 ```
 
 To run a specific test, pass the fully qualified name of the method to `dotnet test --filter`:

@@ -57,7 +57,7 @@ namespace Nakama.Tests.Socket
             var socket = Nakama.Socket.From(_client);
             await socket.ConnectAsync(session);
 
-            var createdParty = await socket.CreatePartyAsync(true, 1);
+            var createdParty = await socket.CreatePartyAsync(true, 2);
 
             var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var socket2 = Nakama.Socket.From(_client);
@@ -99,7 +99,7 @@ namespace Nakama.Tests.Socket
 
             var partyPresenceJoinedTcs = new TaskCompletionSource<IPartyPresenceEvent>();
             socket1.ReceivedPartyPresence += presenceEvt => partyPresenceJoinedTcs.SetResult(presenceEvt);
-            
+
             var party = await socket1.CreatePartyAsync(false, 2);
             Assert.NotNull(party);
             Assert.NotEmpty(party.Id);
@@ -178,7 +178,7 @@ namespace Nakama.Tests.Socket
             await socket1.ConnectAsync(session1);
             await socket2.ConnectAsync(session2);
 
-            var party = await socket1.CreatePartyAsync(true, 1);
+            var party = await socket1.CreatePartyAsync(true, 2);
 
             await socket2.JoinPartyAsync(party.Id);
 
@@ -249,7 +249,7 @@ namespace Nakama.Tests.Socket
             await socket2.ConnectAsync(session2);
             await socket3.ConnectAsync(session3);
 
-            var party = await socket1.CreatePartyAsync(true, 1);
+            var party = await socket1.CreatePartyAsync(true, 2);
 
             await socket2.JoinPartyAsync(party.Id);
             await Assert.ThrowsAsync<WebSocketException>(() => socket3.JoinPartyAsync(party.Id));
@@ -269,7 +269,7 @@ namespace Nakama.Tests.Socket
 
             await socket1.ConnectAsync(session1);
 
-            var party = await socket1.CreatePartyAsync(true, 1);
+            var party = await socket1.CreatePartyAsync(true, 2);
 
             Assert.Single(party.Presences);
             Assert.Equal(party.Leader.UserId, party.Presences.First().UserId);
@@ -289,12 +289,11 @@ namespace Nakama.Tests.Socket
             var memberSessions = new ISession[numMembers];
             var memberSockets = new Nakama.ISocket[numMembers];
 
-            IParty party = await leaderSocket.CreatePartyAsync(true, numMembers);
+            IParty party = await leaderSocket.CreatePartyAsync(true, numMembers + 1);
 
             var memberPartyObjects = new IParty[numMembers];
 
             int partyObjCounter = 0;
-
 
             for (int i = 0; i < numMembers; i++)
             {
@@ -348,7 +347,7 @@ namespace Nakama.Tests.Socket
             await socket2.ConnectAsync(session2);
             await socket3.ConnectAsync(session3);
 
-            var party = await socket1.CreatePartyAsync(true, 2);
+            var party = await socket1.CreatePartyAsync(true, 3);
 
             var socket2PresenceTcs = new TaskCompletionSource<IUserPresence>();
 
@@ -396,7 +395,7 @@ namespace Nakama.Tests.Socket
             await socket1.ConnectAsync(session1);
             await socket2.ConnectAsync(session2);
 
-            var party = await socket1.CreatePartyAsync(true, 1);
+            var party = await socket1.CreatePartyAsync(true, 2);
 
             await socket2.JoinPartyAsync(party.Id);
 
