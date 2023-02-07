@@ -147,11 +147,65 @@ socket.ReceivedError += e => System.Console.WriteLine(e);
 await socket.ConnectAsync(session);
 ```
 
-## Contribute
+# Satori
+
+Satori is a liveops server for games that powers actionable analytics, A/B testing and remote configuration. Use the Satori .NET Client to coomunicate with Satori from within your .NET game.
+
+Full documentation is online - https://heroiclabs.com/docs/satori/client-libraries/unity/index.html
+
+## Getting Started
+
+Create a client object that accepts the API you were given as a Satori customer.
+
+```csharp
+using Satori;
+
+const string scheme = "https";
+const string host = "127.0.0.1"; // add your host here
+const int port = 443;
+const string apiKey = "apiKey"; // add the api key that was given to you as a Satori customer.
+
+var client = new Client(scheme, host, port, apiKey);
+```
+
+Then authenticate with the server to obtain your session.
+
+
+```csharp
+// Authenticate with the Satori server.
+try
+{
+    session = await client.AuthenticateAsync(id);
+    Debug.Log("Authenticated successfully.");
+}
+catch(ApiResponseException ex)
+{
+    Debug.LogFormat("Error authenticating: {0}", ex.Message);
+}
+```
+
+Using the client you can get any experiments or feature flags, the user belongs to.
+
+```csharp
+var experiments = await client.GetExperimentsAsync(session);
+var flag = await client.GetFlagAsync(session, "FlagName");
+```
+
+You can also send arbitrary events to the server:
+
+```csharp
+
+await client.EventAsync(session, new Event("gameLaunched", DateTime.UtcNow));
+
+```
+This is only a subset of the Satori client API, so please see the documentation link listed earlier for the [full API](https://dotnet.docs.heroiclabs.com/html/namespace_satori.html).
+
+
+# Contribute
 
 The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested to improve the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
 
-### Source Builds
+## Source Builds
 
 The codebase can be built with the [Dotnet CLI](https://docs.microsoft.com/en-us/dotnet/core/tools). All dependencies are downloaded at build time with Nuget.
 
@@ -159,15 +213,13 @@ The codebase can be built with the [Dotnet CLI](https://docs.microsoft.com/en-us
 dotnet build Nakama/Nakama.csproj
 ```
 
-For release builds use:
-
 ```shell
-dotnet build -c Release /p:AssemblyVersion=2.0.0.0 Nakama/Nakama.csproj
-// For Nuget packaging
-dotnet pack -p:AssemblyVersion=2.0.0.0 -p:PackageVersion=2.0.0 -c Release Nakama/Nakama.csproj
+dotnet build Satori/Satori.csproj
 ```
 
-### Run Tests
+For release builds see [our instructions](./RELEASEINST.md):
+
+## Run Tests
 
 To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the [documentation](https://heroiclabs.com/docs/install-docker-quickstart).
 
@@ -184,7 +236,10 @@ dotnet test --filter "Nakama.Tests.Api.GroupTest.ShouldPromoteAndDemoteUsers"
 
 If you'd like to attach a Visual Studio debugger to a test, set `VSTEST_HOST_DEBUG` to `true` in your shell environment and run `dotnet test`. Attach the debugger to the process identified by the console.
 
-### Generate Docs
+In order to pass tests for Satori, the Satori console must be populated with sample data available via a button in its GUI.
+Then you can test the SDK with `dotnet test Satori.Tests/Satori.Tests.csproj`.
+
+## Generate Docs
 
 nakama-dotnet API docs are generated with Doxygen and deployed to GitHub pages.
 
@@ -197,16 +252,6 @@ brew install doxygen
 cd docs/
 doxygen
 ```
-
-# Satori
-
-This repository also contains the Satori client for use with the [Satori Liveops Server](https://heroiclabs.com/satori/).
-
-It follows the same authentication patterns as Nakama but is used for managing your live game via sending analytics events, updating properties, getting feature flags and experiments, and more.
-
-In order to run tests for Satori, create sample data via the Satori console.
-
-Then run `dotnet test` from this directory.
 
 # Licenses
 
