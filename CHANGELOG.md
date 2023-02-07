@@ -19,7 +19,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Nakama: Added ability to specify `path` parameter to client urls.
 
 ### Changed
-- Nakama: Removed our old Ninja.Websockets adapter in favor of the Websocket shipped in the .NET standard library.
 - Nakama: Fixed an issue where our websocket would throw an exception on `CloseAsync()` in certain situations.
 
 ## [3.5.0] - 2022-09-06
