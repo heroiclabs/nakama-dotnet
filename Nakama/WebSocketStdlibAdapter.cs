@@ -71,13 +71,13 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ISocketAdapter.CloseAsync"/>
-        public Task CloseAsync()
+        public async Task CloseAsync()
         {
-            if (_webSocket == null) return Task.CompletedTask;
+            if (_webSocket == null) return;
 
             if (_webSocket.State == WebSocketState.Open)
             {
-                _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
             }
             else if (_webSocket.State == WebSocketState.Connecting)
             {
@@ -88,7 +88,6 @@ namespace Nakama
             _webSocket = null;
             IsConnecting = false;
             IsConnected = false;
-            return t;
         }
 
         /// <inheritdoc cref="ISocketAdapter.ConnectAsync"/>
