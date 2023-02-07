@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.6.0]
 ### Added
 - Satori: Adds the Satori .NET SDK. Satori is our liveops server for game studios. Please read more about it on the Heroic Labs website.
 - Nakama: Adds support for calling RPCs with a HTTP key via POST when a payload is provided.
