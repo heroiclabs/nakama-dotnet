@@ -200,16 +200,9 @@ doxygen
 
 # Satori
 
-This repository also contains the Satori client for use with the [Satori Liveops Server](https://heroiclabs.com/satori/).
+Satori is a liveops server for games that powers actionable analytics, A/B testing and remote configuration. Use the Satori .NET Client to coomunicate with Satori from within your .NET game.
 
-It follows the same authentication patterns as Nakama but is used for managing your live game via sending analytics events, updating properties, getting feature flags and experiments, and more.
-
-
-# Satori
-
-Satori is a liveops server for games that powers actionable analytics, A/B testing and remote configuration. Use the Satori Unity Client to coomunicate with Satori from within your Unity game.
-
-Full documentation is online - https://heroiclabs.com/docs/satori/client-libraries/unity
+Full documentation is online - https://heroiclabs.com/docs/satori/client-libraries/unity/index.html
 
 ## Getting Started
 
