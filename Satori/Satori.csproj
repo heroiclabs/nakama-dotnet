@@ -16,7 +16,7 @@
       </Description>
       <PackageId>SatoriClient</PackageId>
       <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-      <PackageTags></PackageTags>
+      <PackageTags>gameserver;client-library;satori;liveops</PackageTags>
       <RepositoryUrl>https://github.com/heroiclabs/nakama-dotnet</RepositoryUrl>
     </PropertyGroup>
   </Project>
