@@ -22,15 +22,7 @@ jobs:
 
     - name: Start docker containers for nakama-client-testrunner
       working-directory: nakama-client-testrunner
-      run: ./docker-compose up -d
-
-    - name: Wait for the docker containers to start
-      working-directory: nakama-client-testrunner
-      run: |
-        until docker ps | grep nakama-server; do
-          echo "Waiting for the nakama-server container to start..."
-          sleep 5
-        done
+      run: ./docker-compose up -d --wait
 
     - name: Run tests for nakama-dotnet
       working-directory: nakama-dotnet
