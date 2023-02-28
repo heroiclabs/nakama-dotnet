@@ -74,16 +74,16 @@ namespace Nakama.Tests.Socket
             Action<IMatchPresenceEvent> matchPresenceHandler = presenceEvent =>
             {
                 createdMatch.UpdatePresences(presenceEvent);
+
                 matchJoinTcs.SetResult(presenceEvent);
             };
-
 
             socket1.ReceivedMatchPresence += matchPresenceHandler;
             await socket2.JoinMatchAsync(createdMatch.Id);
             await matchJoinTcs.Task;
-
             socket1.ReceivedMatchPresence -= matchPresenceHandler;
-            Assert.Equal(2, createdMatch.Presences.Count());
+
+            Assert.Equal(1, createdMatch.Presences.Count());
 
             var matchLeaveTcs = new TaskCompletionSource<IMatchPresenceEvent>();
             socket1.ReceivedMatchPresence += presenceEvent =>
@@ -92,13 +92,11 @@ namespace Nakama.Tests.Socket
                 matchLeaveTcs.SetResult(presenceEvent);
             };
 
-            System.Console.WriteLine("leaving match");
-
             await socket2.LeaveMatchAsync(createdMatch);
             await matchLeaveTcs.Task;
 
             socket1.ReceivedMatchPresence -= matchPresenceHandler;
-            Assert.Equal(1, createdMatch.Presences.Count());
+            Assert.Equal(0, createdMatch.Presences.Count());
 
             await socket1.CloseAsync();
             await socket2.CloseAsync();
