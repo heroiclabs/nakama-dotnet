@@ -19,9 +19,9 @@ namespace Nakama
     internal static class PresenceUtil
     {
         /// <summary>
-        /// Performs an in-place update of a presence list with the joins and leaves of a presence event.
+        /// Applies joins and leaves of a presence event to a copy of the provided presence list and returns the result.
         /// </summary>
-        public static void UpdatePresences(List<UserPresence> currentPresences, IEnumerable<IUserPresence> joins, IEnumerable<IUserPresence> leaves)
+        public static List<UserPresence> CopyJoinsAndLeaves(List<UserPresence> currentPresences, IEnumerable<IUserPresence> joins, IEnumerable<IUserPresence> leaves)
         {
             var newPresences = new Dictionary<string, UserPresence>();
 
@@ -30,7 +30,7 @@ namespace Nakama
                 newPresences[presence.UserId] = presence;
             }
 
-            foreach (UserPresence join in joins)
+            foreach (IUserPresence join in joins)
             {
                 if (newPresences.ContainsKey(join.UserId))
                 {
@@ -38,7 +38,7 @@ namespace Nakama
                     continue;
                 }
 
-                newPresences.Add(join.UserId, join);
+                newPresences.Add(join.UserId, IUserPresenceToUserPresence(join));
             }
 
             foreach (IUserPresence leave in leaves)
@@ -51,6 +51,20 @@ namespace Nakama
 
                 newPresences.Remove(leave.UserId);
             }
+
+            return new List<UserPresence>(newPresences.Values);
+        }
+
+        private static UserPresence IUserPresenceToUserPresence(IUserPresence userPresence)
+        {
+            return new UserPresence
+            {
+                Persistence = userPresence.Persistence,
+                SessionId = userPresence.SessionId,
+                Status = userPresence.Status,
+                Username = userPresence.Username,
+                UserId = userPresence.UserId
+            };
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Nakama
                 throw new InvalidOperationException("Tried updating presences belonging to the wrong party.");
             }
 
-            PresenceUtil.UpdatePresences(PresencesField, presenceEvent.Joins, presenceEvent.Leaves);
+            PresencesField = PresenceUtil.CopyJoinsAndLeaves(PresencesField, presenceEvent.Joins, presenceEvent.Leaves);
         }
     }
 }

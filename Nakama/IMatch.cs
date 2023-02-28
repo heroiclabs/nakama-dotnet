@@ -92,7 +92,7 @@ namespace Nakama
                 throw new InvalidOperationException("Tried updating presences belonging to the wrong match.");
             }
 
-            PresenceUtil.UpdatePresences(_presences, presenceEvent.Joins, presenceEvent.Leaves);
+            _presences = PresenceUtil.CopyJoinsAndLeaves(_presences, presenceEvent.Joins, presenceEvent.Leaves);
         }
     }
 }
