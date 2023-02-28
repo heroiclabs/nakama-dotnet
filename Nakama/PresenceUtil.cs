@@ -23,6 +23,10 @@ namespace Nakama
         /// </summary>
         public static List<UserPresence> CopyJoinsAndLeaves(List<UserPresence> currentPresences, IEnumerable<IUserPresence> joins, IEnumerable<IUserPresence> leaves)
         {
+            currentPresences = currentPresences ?? new List<UserPresence>();
+            joins = joins ?? new List<UserPresence>();
+            leaves = leaves ?? new List<UserPresence>();
+
             var newPresences = new Dictionary<string, UserPresence>();
 
             foreach (UserPresence presence in currentPresences)

@@ -32,34 +32,76 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public async Task ShouldUpdatePresencesMatch()
+        public async Task ShouldAddPresencesParty()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var socket1 = Nakama.Socket.From(_client);
             await socket1.ConnectAsync(session);
-
             var createdParty = await socket1.CreatePartyAsync(true, 2);
 
             var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var socket2 = Nakama.Socket.From(_client);
             await socket2.ConnectAsync(session2);
 
-            var partyPresenceEventTcs = new TaskCompletionSource<IPartyPresenceEvent>();
-
+            var partyJoinTcs = new TaskCompletionSource<IPartyPresenceEvent>();
             socket1.ReceivedPartyPresence += presenceEvent =>
             {
                 createdParty.UpdatePresences(presenceEvent);
-                partyPresenceEventTcs.SetResult(presenceEvent);
+                partyJoinTcs.SetResult(presenceEvent);
             };
 
-            socket2.JoinPartyAsync(createdParty.Id);
-
-            System.Console.WriteLine("waiting 2");
-            await partyPresenceEventTcs.Task;
-            System.Console.WriteLine("waiting 3");
-
+            await socket2.JoinPartyAsync(createdParty.Id);
+            await partyJoinTcs.Task;
             Assert.Equal(2, createdParty.Presences.Count());
+
             await socket1.CloseAsync();
+            await socket2.CloseAsync();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldAddAndRemovePresencesMatch()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket1 = Nakama.Socket.From(_client);
+            await socket1.ConnectAsync(session);
+            var createdMatch = await socket1.CreateMatchAsync();
+
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket2 = Nakama.Socket.From(_client);
+            await socket2.ConnectAsync(session2);
+
+            var matchJoinTcs = new TaskCompletionSource<IMatchPresenceEvent>();
+            Action<IMatchPresenceEvent> matchPresenceHandler = presenceEvent =>
+            {
+                createdMatch.UpdatePresences(presenceEvent);
+                matchJoinTcs.SetResult(presenceEvent);
+            };
+
+
+            socket1.ReceivedMatchPresence += matchPresenceHandler;
+            await socket2.JoinMatchAsync(createdMatch.Id);
+            await matchJoinTcs.Task;
+
+            socket1.ReceivedMatchPresence -= matchPresenceHandler;
+            Assert.Equal(2, createdMatch.Presences.Count());
+
+            var matchLeaveTcs = new TaskCompletionSource<IMatchPresenceEvent>();
+            socket1.ReceivedMatchPresence += presenceEvent =>
+            {
+                createdMatch.UpdatePresences(presenceEvent);
+                matchLeaveTcs.SetResult(presenceEvent);
+            };
+
+            System.Console.WriteLine("leaving match");
+
+            await socket2.LeaveMatchAsync(createdMatch);
+            await matchLeaveTcs.Task;
+
+            socket1.ReceivedMatchPresence -= matchPresenceHandler;
+            Assert.Equal(1, createdMatch.Presences.Count());
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
         }
     }
 }
