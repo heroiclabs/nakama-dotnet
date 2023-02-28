@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -53,6 +54,11 @@ namespace Nakama
         /// The current user in this match. i.e. Yourself.
         /// </summary>
         IUserPresence Self { get; }
+
+        /// <summary>
+        /// Apply the joins and leaves from a presence event to the presences tracked by the match.
+        /// </summary>
+        void UpdatePresences(IMatchPresenceEvent presenceEvent);
     }
 
     /// <inheritdoc cref="IMatch"/>
@@ -77,6 +83,16 @@ namespace Nakama
             var presences = string.Join(", ", Presences);
             return
                 $"Match(Authoritative={Authoritative}, Id='{Id}', Label='{Label}', Presences=[{presences}], Size={Size}, Self={Self})";
+        }
+
+        public void UpdatePresences(IMatchPresenceEvent presenceEvent)
+        {
+            if (presenceEvent.MatchId != Id)
+            {
+                throw new InvalidOperationException("Tried updating presences belonging to the wrong match.");
+            }
+
+            PresenceUtil.UpdatePresences(_presences, presenceEvent.Joins, presenceEvent.Leaves);
         }
     }
 }
