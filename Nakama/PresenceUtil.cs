@@ -42,7 +42,7 @@ namespace Nakama
                     continue;
                 }
 
-                newPresences.Add(join.UserId, IUserPresenceToUserPresence(join));
+                newPresences.Add(join.UserId, join as UserPresence ?? IUserPresenceToUserPresence(join));
             }
 
             foreach (IUserPresence leave in leaves)
