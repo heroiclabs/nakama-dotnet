@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Nakama: Added a `UpdatePresences` utility to `IMatch` and `IParty`. Use this method to maintain the presences in your matches and parties
+when an `IMatchPresenceEvent` or `IPartyPresenceEvent` is dispatched.
 
 ## [3.6.0]
 ### Added

@@ -50,5 +50,10 @@ namespace Nakama
         /// All members currently in the party.
         /// </summary>
         IEnumerable<IUserPresence> Presences { get; }
+
+        /// <summary>
+        /// Apply the joins and leaves from a presence event to the presences tracked by the party.
+        /// </summary>
+        void UpdatePresences(IPartyPresenceEvent presenceEvent);
     }
 }

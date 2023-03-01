@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -43,5 +44,16 @@ namespace Nakama
 
         [DataMember(Name = "presences"), Preserve]
         public List<UserPresence> PresencesField { get; set; }
+
+
+        public void UpdatePresences(IPartyPresenceEvent presenceEvent)
+        {
+            if (presenceEvent.PartyId != Id)
+            {
+                throw new InvalidOperationException("Tried updating presences belonging to the wrong party.");
+            }
+
+            PresencesField = PresenceUtil.CopyJoinsAndLeaves(PresencesField, presenceEvent.Joins, presenceEvent.Leaves);
+        }
     }
 }
