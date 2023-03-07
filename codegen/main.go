@@ -37,7 +37,7 @@ namespace {{.Namespace}}
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Nakama.TinyJson;
+    using TinyJson;
 
     /// <summary>
     /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
@@ -280,7 +280,7 @@ namespace {{.Namespace}}
         {{- if $operation.Security }}
             {{- range $idx, $security := $operation.Security}}
                 {{- range $key, $value := $security}}
-                    {{- if eq $key "BasicAuth" }}
+                    {{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
             string basicAuthUsername,
             string basicAuthPassword
                         {{- $isPreviousParam = true}}
@@ -392,7 +392,7 @@ namespace {{.Namespace}}
             {{- if $operation.Security }}
                 {{- range $idx, $security := $operation.Security }}
                     {{- range $key, $value := $security }}
-                        {{- if eq $key "BasicAuth" }}
+                        {{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth")}}
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
                 var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);

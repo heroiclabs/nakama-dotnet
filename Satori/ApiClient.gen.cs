@@ -7,12 +7,12 @@ namespace Satori
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Satori.TinyJson;
+    using TinyJson;
 
     /// <summary>
     /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
     /// </summary>
-    public class ApiResponseException : Exception
+    public sealed class ApiResponseException : Exception
     {
         public long StatusCode { get; }
 
