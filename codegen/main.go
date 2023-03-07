@@ -286,7 +286,7 @@ namespace {{.Namespace}}
                         {{- $isPreviousParam = true}}
                     {{- else if (eq $key "BearerJwt") }}
                         {{- $isPreviousParam = true}}
-            string bearerToken
+            string bearerToken,
                     {{- end }}
                 {{- end }}
             {{- end }}

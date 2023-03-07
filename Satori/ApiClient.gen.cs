@@ -1078,7 +1078,7 @@ namespace Satori
         /// List all available flags for this identity.
         /// </summary>
         public async Task<IApiFlagList> SatoriGetFlagsAsync(
-            string bearerToken
+            string bearerToken,
             string basicAuthUsername,
             string basicAuthPassword,
             IEnumerable<string> names,
