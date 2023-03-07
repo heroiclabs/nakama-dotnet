@@ -32,7 +32,7 @@ namespace Satori
         /// Authenticate against the server.
         /// </summary>
         /// <param name="id">An optional user id.</param>
-        /// <param name="defaultProperties">Optional custom properties to update with this call. If not set, properties are left as they are on the server. </summary>
+        /// <param name="defaultProperties">Optional default properties to update with this call. If not set, properties are left as they are on the server. </summary>
         /// <param name="customProperties">Optional custom properties to update with this call. If not set, properties are left as they are on the server. </summary>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// </summary>
