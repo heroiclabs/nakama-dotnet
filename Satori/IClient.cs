@@ -32,9 +32,12 @@ namespace Satori
         /// Authenticate against the server.
         /// </summary>
         /// <param name="id">An optional user id.</param>
+        /// <param name="defaultProperties">Optional custom properties to update with this call. If not set, properties are left as they are on the server. </summary>
+        /// <param name="customProperties">Optional custom properties to update with this call. If not set, properties are left as they are on the server. </summary>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// </summary>
         /// <returns>A task which resolves to a user session.</returns>
-        public Task<ISession> AuthenticateAsync(string id, CancellationToken? cancellationToken = default);
+        public Task<ISession> AuthenticateAsync(string id, Dictionary<string, string> defaultProperties = default, Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
@@ -70,7 +73,7 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to all experiments that this identity is involved with.</returns>
         public Task<IApiExperimentList> GetAllExperimentsAsync(ISession session, CancellationToken? cancellationToken = default);
-        
+
         /// <summary>
         /// Get specific experiments data.
         /// </summary>

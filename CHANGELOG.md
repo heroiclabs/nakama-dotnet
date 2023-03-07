@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 - Nakama: Added a `UpdatePresences` utility to `IMatch` and `IParty`. Use this method to maintain the presences in your matches and parties
 when an `IMatchPresenceEvent` or `IPartyPresenceEvent` is dispatched.
+- Satori: Added optional default and custom properties that can be attached to authentication requests.
 
 ## [3.6.0]
 ### Added

@@ -113,6 +113,16 @@ namespace Satori
     {
 
         /// <summary>
+        /// Optional custom properties to update with this call. If not set, properties are left as they are on the server.
+        /// </summary>
+        IDictionary<string, string> Custom { get; }
+
+        /// <summary>
+        /// Optional default properties to update with this call. If not set, properties are left as they are on the server.
+        /// </summary>
+        IDictionary<string, string> Default { get; }
+
+        /// <summary>
         /// Identity ID. Must be between eight and 128 characters (inclusive). Must be an alphanumeric string with only underscores and hyphens allowed.
         /// </summary>
         string Id { get; }
@@ -123,12 +133,36 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
+        [DataMember(Name="custom"), Preserve]
+        public Dictionary<string, string> _custom { get; set; }
+
+        /// <inheritdoc />
+        public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
+        [DataMember(Name="default"), Preserve]
+        public Dictionary<string, string> _default { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
         public override string ToString()
         {
             var output = "";
+
+            var customString = "";
+            foreach (var kvp in Custom)
+            {
+                customString = string.Concat(customString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Custom: [" + customString + "]");
+
+            var defaultString = "";
+            foreach (var kvp in Default)
+            {
+                defaultString = string.Concat(defaultString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Default: [" + defaultString + "]");
             output = string.Concat(output, "Id: ", Id, ", ");
             return output;
         }
@@ -471,7 +505,7 @@ namespace Satori
         string Name { get; }
 
         /// <summary>
-        /// Event data, always JSON.
+        /// Event value.
         /// </summary>
         string Value { get; }
     }
@@ -712,13 +746,13 @@ namespace Satori
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IProtobufAny
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string @type { get; }
     }
@@ -740,23 +774,23 @@ namespace Satori
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IRpcStatus
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Message { get; }
     }
@@ -814,6 +848,33 @@ namespace Satori
         {
 
             var urlpath = "/healthcheck";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// A readycheck which load balancers can use to check the service.
+        /// </summary>
+        public async Task SatoriReadycheckAsync(
+            string bearerToken,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/readycheck";
 
             var queryParams = "";
 
@@ -1017,7 +1078,7 @@ namespace Satori
         /// List all available flags for this identity.
         /// </summary>
         public async Task<IApiFlagList> SatoriGetFlagsAsync(
-            string bearerToken,
+            string bearerToken
             string basicAuthUsername,
             string basicAuthPassword,
             IEnumerable<string> names,

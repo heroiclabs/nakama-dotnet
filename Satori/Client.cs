@@ -84,10 +84,10 @@ namespace Satori
         }
 
         /// <inheritdoc cref="AuthenticateAsync" />
-        public async Task<ISession> AuthenticateAsync(string id, CancellationToken? cancellationToken = default)
+        public async Task<ISession> AuthenticateAsync(string id, Dictionary<string, string> defaultProperties = default, Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default)
         {
             var resp = await _apiClient.SatoriAuthenticateAsync(ApiKey, string.Empty,
-                new ApiAuthenticateRequest { Id = id }, cancellationToken);
+                new ApiAuthenticateRequest { Id = id, _default = defaultProperties, _custom = customProperties }, cancellationToken);
             return new Session(resp.Token, resp.RefreshToken);
         }
 
@@ -140,7 +140,7 @@ namespace Satori
 
             await _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken);
         }
-        
+
         /// <inheritdoc cref="GetExperimentsAsync" />
         public async Task<IApiExperimentList> GetAllExperimentsAsync(ISession session, CancellationToken? cancellationToken = default)
         {
