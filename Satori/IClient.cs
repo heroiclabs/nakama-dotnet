@@ -32,9 +32,12 @@ namespace Satori
         /// Authenticate against the server.
         /// </summary>
         /// <param name="id">An optional user id.</param>
+        /// <param name="defaultProperties">Optional default properties to update with this call. If not set, properties are left as they are on the server. </summary>
+        /// <param name="customProperties">Optional custom properties to update with this call. If not set, properties are left as they are on the server. </summary>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// </summary>
         /// <returns>A task which resolves to a user session.</returns>
-        public Task<ISession> AuthenticateAsync(string id, CancellationToken? cancellationToken = default);
+        public Task<ISession> AuthenticateAsync(string id, Dictionary<string, string> defaultProperties = default, Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default);
 
         /// <summary>
         /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
@@ -70,7 +73,7 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to all experiments that this identity is involved with.</returns>
         public Task<IApiExperimentList> GetAllExperimentsAsync(ISession session, CancellationToken? cancellationToken = default);
-        
+
         /// <summary>
         /// Get specific experiments data.
         /// </summary>
@@ -109,11 +112,10 @@ namespace Satori
         /// <summary>
         /// Get a single default flag for this identity.
         /// </summary>
-        /// <param name="apiKey">The API key configured on the server.</param>
         /// <param name="name">The name of the flag.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a single default feature flag.</returns>
-        public Task<IApiFlag> GetFlagDefaultAsync(string apiKey, string name,
+        public Task<IApiFlag> GetFlagDefaultAsync(string name,
             CancellationToken? cancellationToken = default);
 
         /// <summary>
@@ -123,12 +125,11 @@ namespace Satori
         /// Unlike <c>GetFlagDefaultAsync(string,string,CancellationToken)</c> this method will return the default
         /// value specified and will not raise an exception if the network is unreachable.
         /// </remarks>
-        /// <param name="apiKey">The API key configured on the server.</param>
         /// <param name="name">The name of the flag.</param>
         /// <param name="defaultValue">The default value if the server is unreachable.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a single default feature flag.</returns>
-        public Task<IApiFlag> GetFlagDefaultAsync(string apiKey, string name, string defaultValue,
+        public Task<IApiFlag> GetFlagDefaultAsync(string name, string defaultValue,
             CancellationToken? cancellationToken = default);
 
         /// <summary>
@@ -144,11 +145,10 @@ namespace Satori
         /// <summary>
         /// List all available default flags.
         /// </summary>
-        /// <param name="apiKey">The API key configured on the server.</param>
         /// <param name="names">Flag names, if empty string all flags are returned.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to all available default flags.</returns>
-        public Task<IApiFlagList> GetFlagsDefaultAsync(string apiKey, IEnumerable<string> names,
+        public Task<IApiFlagList> GetFlagsDefaultAsync(IEnumerable<string> names,
             CancellationToken? cancellationToken = default);
 
         /// <summary>
