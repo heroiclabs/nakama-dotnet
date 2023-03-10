@@ -202,10 +202,10 @@ namespace Satori
         }
 
         /// <inheritdoc cref="GetFlagDefaultAsync(string,string,System.Nullable{System.Threading.CancellationToken})" />
-        public async Task<IApiFlag> GetFlagDefaultAsync(string apiKey, string name,
+        public async Task<IApiFlag> GetFlagDefaultAsync(string name,
             CancellationToken? cancellationToken = default)
         {
-            var resp = await GetFlagsDefaultAsync(apiKey, new[] { name }, cancellationToken);
+            var resp = await GetFlagsDefaultAsync(new[] { name }, cancellationToken);
             foreach (var flag in resp.Flags)
             {
                 if (flag.Name.Equals(name))
@@ -218,12 +218,12 @@ namespace Satori
         }
 
         /// <inheritdoc cref="GetFlagDefaultAsync(string,string,string,System.Nullable{System.Threading.CancellationToken})" />
-        public Task<IApiFlag> GetFlagDefaultAsync(string apiKey, string name, string defaultValue,
+        public Task<IApiFlag> GetFlagDefaultAsync(string name, string defaultValue,
             CancellationToken? cancellationToken = default)
         {
             try
             {
-                return GetFlagDefaultAsync(apiKey, name, cancellationToken);
+                return GetFlagDefaultAsync(this.ApiKey, name, cancellationToken);
             }
             catch (ArgumentException)
             {
@@ -257,9 +257,9 @@ namespace Satori
         }
 
         /// <inheritdoc cref="GetFlagsDefaultAsync" />
-        public Task<IApiFlagList> GetFlagsDefaultAsync(string apiKey, IEnumerable<string> names,
+        public Task<IApiFlagList> GetFlagsDefaultAsync(IEnumerable<string> names,
             CancellationToken? cancellationToken = default) =>
-            _apiClient.SatoriGetFlagsAsync(string.Empty, apiKey, string.Empty, names, cancellationToken);
+            _apiClient.SatoriGetFlagsAsync(string.Empty, this.ApiKey, string.Empty, names, cancellationToken);
 
         /// <inheritdoc cref="IdentifyAsync" />
         public async Task<ISession> IdentifyAsync(ISession session, string id,

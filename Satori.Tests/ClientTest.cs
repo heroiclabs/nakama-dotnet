@@ -58,7 +58,7 @@ namespace Satori.Tests
         [Fact(Timeout = TimeoutMilliseconds)]
         public async Task TestGetFlagsDefault()
         {
-            var flags = await _testClient.GetFlagsDefaultAsync(ApiKey, new string[] { });
+            var flags = await _testClient.GetFlagsDefaultAsync(new string[] { });
             Assert.True(flags.Flags.Count() == 3);
         }
 
