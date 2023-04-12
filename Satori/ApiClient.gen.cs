@@ -1156,7 +1156,7 @@ namespace Satori
         /// <summary>
         /// Delete an Identity.
         /// </summary>
-        public async Task SatoriIdentifyDeleteAsync(
+        public async Task SatoriDeleteIdentityAsync(
             string bearerToken,
             string id,
             CancellationToken? cancellationToken)
