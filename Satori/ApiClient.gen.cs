@@ -1154,6 +1154,39 @@ namespace Satori
         }
 
         /// <summary>
+        /// Delete an Identity.
+        /// </summary>
+        public async Task SatoriIdentifyDeleteAsync(
+            string bearerToken,
+            string id,
+            CancellationToken? cancellationToken)
+        {
+            if (id == null)
+            {
+                throw new ArgumentException("'id' is required but was null.");
+            }
+
+            var urlpath = "/v1/identify/{id}";
+            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "DELETE";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
         /// List available live events.
         /// </summary>
         public async Task<IApiLiveEventList> SatoriGetLiveEventsAsync(
