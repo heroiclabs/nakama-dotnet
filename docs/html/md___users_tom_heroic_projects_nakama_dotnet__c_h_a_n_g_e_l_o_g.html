@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.7.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -97,8 +97,34 @@ $(document).ready(function(){initNavTree('md___users_tom_heroic_projects_nakama_
 <div class="textblock"><p >All notable changes to this project will be documented in this file.</p>
 <p >The format is based on <a href="http://keepachangelog.com/en/1.0.0/">Keep a Changelog</a> and this project adheres to <a href="http://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 <h1>[Unreleased]</h1>
+<h1>[3.7.0]</h1>
 <h2>Added</h2>
+<ul>
+<li><a class="el" href="namespace_nakama.html">Nakama</a>: Added a <code>UpdatePresences</code> utility to <code>IMatch</code> and <code>IParty</code>. Use this method to maintain the presences in your matches and parties when an <code>IMatchPresenceEvent</code> or <code>IPartyPresenceEvent</code> is dispatched.</li>
+<li><a class="el" href="namespace_satori.html">Satori</a>: Added optional default and custom properties that can be attached to authentication requests.</li>
+</ul>
+<h2>Changed</h2>
+<ul>
+<li><a class="el" href="namespace_satori.html">Satori</a>: <code>GetFlagDefault</code> and <code>GetFlagsDefault</code> now use the <code>apiKey</code> passed to the client constructor rather than accepting it as a unique parameter.</li>
+</ul>
+<h1>[3.6.0]</h1>
+<h2>Added</h2>
+<ul>
+<li><a class="el" href="namespace_satori.html">Satori</a>: Adds the <a class="el" href="namespace_satori.html">Satori</a> .NET SDK. <a class="el" href="namespace_satori.html">Satori</a> is our liveops server for game studios. Please read more about it on the Heroic Labs website.</li>
+<li><a class="el" href="namespace_nakama.html">Nakama</a>: Adds support for calling RPCs with a HTTP key via POST when a payload is provided.</li>
+<li><a class="el" href="namespace_nakama.html">Nakama</a>: Expose the <code>Logger</code> object on <code>IClient</code>.</li>
+<li><a class="el" href="namespace_nakama.html">Nakama</a>: Adds support for POST RPC requests when using HTTP key with a payload</li>
+</ul>
 <h2>Fixed</h2>
+<ul>
+<li><a class="el" href="namespace_nakama.html">Nakama</a>: Prevent race condition when <code>Close</code> is called while receive loop has an incomplete read buffer.</li>
+<li><a class="el" href="namespace_nakama.html">Nakama</a>: Fixed an issue where 500 errors could cause parsing issues on the client.</li>
+<li><a class="el" href="namespace_nakama.html">Nakama</a>: Added ability to specify <code>path</code> parameter to client urls.</li>
+</ul>
+<h2>Changed</h2>
+<ul>
+<li><a class="el" href="namespace_nakama.html">Nakama</a>: Fixed an issue where our websocket would throw an exception on <code>CloseAsync()</code> in certain situations.</li>
+</ul>
 <h1>[3.5.0] - 2022-09-06</h1>
 <h2>Added</h2>
 <ul>

@@ -56,17 +56,17 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_binary_reader_writer_8cs.html",
-"class_nakama_1_1_client.html#a8965dfabd8ea716c3b119fb57b93d499",
-"class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_handshake_failed_exception.html#aaa3d64dd95ff3b88121c7d5136f086b9",
-"class_nakama_1_1_socket.html#aa49d9456a9a1ab735f7f5f1106f56827",
-"functions_func.html",
-"interface_nakama_1_1_console_1_1_i_config_warning.html",
-"interface_nakama_1_1_i_api_account_game_center.html#abe561a33c4ca1eb201c6cb84b173194b",
-"interface_nakama_1_1_i_api_rpc.html#a04baf54b17a8939f330b9549f9297246",
-"interface_nakama_1_1_i_api_validated_purchase.html",
-"interface_nakama_1_1_i_client.html#ac77e1bbf873d728d622b627943e64351",
-"interface_nakama_1_1_i_socket.html#a47d4805e5bc797be4640b9b40fd0a1ff",
-"interface_satori_1_1_i_api_experiment.html#aee15cc75bedee0f402e89df385f6220b"
+"class_nakama_1_1_client.html#a86b0693fa59c2083725ed015b4bcc460",
+"class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_handshake_failed_exception.html",
+"class_nakama_1_1_socket.html#a96b11a256b14b2f940d74ce55c6bcfac",
+"dir_dbdb02b1c6a463d71690e5d1f101f3be.html",
+"interface_nakama_1_1_console_1_1_i_api_user.html#ac6e175fd7eb29c7ddb4161e1440091bd",
+"interface_nakama_1_1_i_api_account_facebook_instant_game.html",
+"interface_nakama_1_1_i_api_read_storage_object_id.html#a3dc390e319f5ed88de8bd95179b23cc9",
+"interface_nakama_1_1_i_api_validate_subscription_google_request.html",
+"interface_nakama_1_1_i_client.html#abc626bfa5a312f23033b1dcce16abe90",
+"interface_nakama_1_1_i_socket.html#a1e0dfa45e55ac98a90bd61ba68b3739c",
+"interface_satori_1_1_i_api_event.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

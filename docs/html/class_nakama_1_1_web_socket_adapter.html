@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.7.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -114,13 +114,13 @@ Inheritance diagram for Nakama.WebSocketAdapter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6ec693e73a378241ad1a8f5c02f36f4e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_web_socket_adapter.html#a6ec693e73a378241ad1a8f5c02f36f4e">WebSocketAdapter</a> (int keepAliveIntervalSec=KeepAliveIntervalSec, int sendTimeoutSec=SendTimeoutSec, int maxMessageReadSize=MaxMessageReadSize)</td></tr>
-<tr class="separator:a6ec693e73a378241ad1a8f5c02f36f4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef611fb9113a550341cc2f631ef0dfe5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_web_socket_adapter.html#aef611fb9113a550341cc2f631ef0dfe5">WebSocketAdapter</a> (<a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options.html">WebSocketClientOptions</a> options, int sendTimeoutSec, int maxMessageReadSize)</td></tr>
-<tr class="separator:aef611fb9113a550341cc2f631ef0dfe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af03fe39fb508d2ac716d63b0a7e2c71d"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_web_socket_adapter.html#af03fe39fb508d2ac716d63b0a7e2c71d">CloseAsync</a> ()</td></tr>
-<tr class="memdesc:af03fe39fb508d2ac716d63b0a7e2c71d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the socket with an asynchronous operation.   <a href="class_nakama_1_1_web_socket_adapter.html#af03fe39fb508d2ac716d63b0a7e2c71d">More...</a><br /></td></tr>
-<tr class="separator:af03fe39fb508d2ac716d63b0a7e2c71d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb3f830ffb2dbb9ea5d394916eb93fdc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_web_socket_adapter.html#abb3f830ffb2dbb9ea5d394916eb93fdc">WebSocketAdapter</a> (int keepAliveIntervalSec=KeepAliveIntervalSec, int sendTimeoutSec=SendTimeoutSec, int maxMessageReadSize=MaxMessageReadSize, <a class="el" href="interface_nakama_1_1_i_logger.html">ILogger</a> logger=null)</td></tr>
+<tr class="separator:abb3f830ffb2dbb9ea5d394916eb93fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1f7b96091445409691e5a5acb44040e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_web_socket_adapter.html#ae1f7b96091445409691e5a5acb44040e">WebSocketAdapter</a> (<a class="el" href="class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options.html">WebSocketClientOptions</a> options, int sendTimeoutSec, int maxMessageReadSize, <a class="el" href="interface_nakama_1_1_i_logger.html">ILogger</a> logger)</td></tr>
+<tr class="separator:ae1f7b96091445409691e5a5acb44040e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8116b06e25e735a83f9f109fc15a7e3a"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_web_socket_adapter.html#a8116b06e25e735a83f9f109fc15a7e3a">CloseAsync</a> ()</td></tr>
+<tr class="memdesc:a8116b06e25e735a83f9f109fc15a7e3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the socket with an asynchronous operation.   <a href="class_nakama_1_1_web_socket_adapter.html#a8116b06e25e735a83f9f109fc15a7e3a">More...</a><br /></td></tr>
+<tr class="separator:a8116b06e25e735a83f9f109fc15a7e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3097564c6c6ff6ff8945d0def0d4c1e0"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_nakama_1_1_web_socket_adapter.html#a3097564c6c6ff6ff8945d0def0d4c1e0">ConnectAsync</a> (Uri uri, int timeout)</td></tr>
 <tr class="memdesc:a3097564c6c6ff6ff8945d0def0d4c1e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect to the server with an asynchronous operation. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -197,8 +197,8 @@ Events</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >An adapter which uses the WebSocket protocol with <a class="el" href="namespace_nakama.html">Nakama</a> server.  </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a6ec693e73a378241ad1a8f5c02f36f4e" name="a6ec693e73a378241ad1a8f5c02f36f4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ec693e73a378241ad1a8f5c02f36f4e">&#9670;&#160;</a></span>WebSocketAdapter() <span class="overload">[1/2]</span></h2>
+<a id="abb3f830ffb2dbb9ea5d394916eb93fdc" name="abb3f830ffb2dbb9ea5d394916eb93fdc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb3f830ffb2dbb9ea5d394916eb93fdc">&#9670;&#160;</a></span>WebSocketAdapter() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,7 +222,13 @@ Events</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>maxMessageReadSize</em> = <code>MaxMessageReadSize</code>&#160;</td>
+          <td class="paramname"><em>maxMessageReadSize</em> = <code>MaxMessageReadSize</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="interface_nakama_1_1_i_logger.html">ILogger</a>&#160;</td>
+          <td class="paramname"><em>logger</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -239,8 +245,8 @@ Events</h2></td></tr>
 
 </div>
 </div>
-<a id="aef611fb9113a550341cc2f631ef0dfe5" name="aef611fb9113a550341cc2f631ef0dfe5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef611fb9113a550341cc2f631ef0dfe5">&#9670;&#160;</a></span>WebSocketAdapter() <span class="overload">[2/2]</span></h2>
+<a id="ae1f7b96091445409691e5a5acb44040e" name="ae1f7b96091445409691e5a5acb44040e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1f7b96091445409691e5a5acb44040e">&#9670;&#160;</a></span>WebSocketAdapter() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -264,7 +270,13 @@ Events</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>maxMessageReadSize</em>&#160;</td>
+          <td class="paramname"><em>maxMessageReadSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="interface_nakama_1_1_i_logger.html">ILogger</a>&#160;</td>
+          <td class="paramname"><em>logger</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -282,8 +294,8 @@ Events</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="af03fe39fb508d2ac716d63b0a7e2c71d" name="af03fe39fb508d2ac716d63b0a7e2c71d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af03fe39fb508d2ac716d63b0a7e2c71d">&#9670;&#160;</a></span>CloseAsync()</h2>
+<a id="a8116b06e25e735a83f9f109fc15a7e3a" name="a8116b06e25e735a83f9f109fc15a7e3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8116b06e25e735a83f9f109fc15a7e3a">&#9670;&#160;</a></span>CloseAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -292,7 +304,7 @@ Events</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Task Nakama.WebSocketAdapter.CloseAsync </td>
+          <td class="memname">async Task Nakama.WebSocketAdapter.CloseAsync </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
