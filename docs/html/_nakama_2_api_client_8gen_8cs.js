@@ -1,6 +1,7 @@
 var _nakama_2_api_client_8gen_8cs =
 [
     [ "Nakama.ApiResponseException", "class_nakama_1_1_api_response_exception.html", "class_nakama_1_1_api_response_exception" ],
+    [ "Nakama.IApiUpdateGroupRequest", "interface_nakama_1_1_i_api_update_group_request.html", "interface_nakama_1_1_i_api_update_group_request" ],
     [ "Nakama.IGroupUserListGroupUser", "interface_nakama_1_1_i_group_user_list_group_user.html", "interface_nakama_1_1_i_group_user_list_group_user" ],
     [ "Nakama.IUserGroupListUserGroup", "interface_nakama_1_1_i_user_group_list_user_group.html", "interface_nakama_1_1_i_user_group_list_user_group" ],
     [ "Nakama.IWriteLeaderboardRecordRequestLeaderboardRecordWrite", "interface_nakama_1_1_i_write_leaderboard_record_request_leaderboard_record_write.html", "interface_nakama_1_1_i_write_leaderboard_record_request_leaderboard_record_write" ],
@@ -50,7 +51,6 @@ var _nakama_2_api_client_8gen_8cs =
     [ "Nakama.IApiTournamentList", "interface_nakama_1_1_i_api_tournament_list.html", "interface_nakama_1_1_i_api_tournament_list" ],
     [ "Nakama.IApiTournamentRecordList", "interface_nakama_1_1_i_api_tournament_record_list.html", "interface_nakama_1_1_i_api_tournament_record_list" ],
     [ "Nakama.IApiUpdateAccountRequest", "interface_nakama_1_1_i_api_update_account_request.html", "interface_nakama_1_1_i_api_update_account_request" ],
-    [ "Nakama.IApiUpdateGroupRequest", "interface_nakama_1_1_i_api_update_group_request.html", "interface_nakama_1_1_i_api_update_group_request" ],
     [ "Nakama.IApiUser", "interface_nakama_1_1_i_api_user.html", "interface_nakama_1_1_i_api_user" ],
     [ "Nakama.IApiUserGroupList", "interface_nakama_1_1_i_api_user_group_list.html", "interface_nakama_1_1_i_api_user_group_list" ],
     [ "Nakama.IApiUsers", "interface_nakama_1_1_i_api_users.html", "interface_nakama_1_1_i_api_users" ],

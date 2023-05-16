@@ -2,7 +2,7 @@ var class_nakama_1_1_web_socket_stdlib_adapter =
 [
     [ "WebSocketStdlibAdapter", "class_nakama_1_1_web_socket_stdlib_adapter.html#a22ffb61a97bc21b86fa177a5025ebac7", null ],
     [ "WebSocketStdlibAdapter", "class_nakama_1_1_web_socket_stdlib_adapter.html#a0d9779f96e2101f63852fe232e38c98b", null ],
-    [ "CloseAsync", "class_nakama_1_1_web_socket_stdlib_adapter.html#a6daea5ed11c76e33e915880c91272d45", null ],
+    [ "CloseAsync", "class_nakama_1_1_web_socket_stdlib_adapter.html#afa4ce22a1f21cc76441a555bd3f193e8", null ],
     [ "ConnectAsync", "class_nakama_1_1_web_socket_stdlib_adapter.html#ae94a4c3b78f1d523257950553bea085a", null ],
     [ "SendAsync", "class_nakama_1_1_web_socket_stdlib_adapter.html#a3c809f05d8a713f2e04882e40306c64f", null ],
     [ "ToString", "class_nakama_1_1_web_socket_stdlib_adapter.html#a499684d8c92a1bdf65e40663d9f327d7", null ],

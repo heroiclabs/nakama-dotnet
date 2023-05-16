@@ -63,6 +63,7 @@ var dir_64302e4ed8e680c5e7832e1b7ea09baa =
     [ "PartyMemberRemove.cs", "_party_member_remove_8cs.html", null ],
     [ "PartyPresenceEvent.cs", "_party_presence_event_8cs.html", null ],
     [ "PartyPromote.cs", "_party_promote_8cs.html", null ],
+    [ "PresenceUtil.cs", "_presence_util_8cs.html", null ],
     [ "Nakama/PreserveAttribute.cs", "_nakama_2_preserve_attribute_8cs.html", null ],
     [ "Retry.cs", "_retry_8cs.html", "_retry_8cs" ],
     [ "RetryConfiguration.cs", "_retry_configuration_8cs.html", "_retry_configuration_8cs" ],

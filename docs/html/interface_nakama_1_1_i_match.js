@@ -1,5 +1,6 @@
 var interface_nakama_1_1_i_match =
 [
+    [ "UpdatePresences", "interface_nakama_1_1_i_match.html#a7f2202fa2cf096415690d99c716f3cd1", null ],
     [ "Authoritative", "interface_nakama_1_1_i_match.html#ae082ee8c9b89c975ba3a4ae8365c631b", null ],
     [ "Id", "interface_nakama_1_1_i_match.html#a70ec08c29ae2f928e191fc13c5694ccb", null ],
     [ "Label", "interface_nakama_1_1_i_match.html#ae26c0fcd9c1f2f8473125a5a64da5a91", null ],

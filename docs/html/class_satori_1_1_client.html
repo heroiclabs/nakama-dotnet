@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="nakama_logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.5.0</span>
+   <div id="projectname">Nakama .NET Client SDK<span id="projectnumber">&#160;3.7.0</span>
    </div>
    <div id="projectbrief">Nakama .NET Client SDK</div>
   </td>
@@ -118,17 +118,29 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad4a1744be01088948fd4724253720a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52592e348df73a0d8776b7620666607d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a52592e348df73a0d8776b7620666607d">Client</a> (string scheme, string host, int port, string apiKey, <a class="el" href="interface_satori_1_1_i_http_adapter.html">IHttpAdapter</a> adapter, bool autoRefreshSession=true)</td></tr>
 <tr class="separator:a52592e348df73a0d8776b7620666607d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2b3b14e99032adee70760833acbac58"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#ab2b3b14e99032adee70760833acbac58">AuthenticateAsync</a> (string id, CancellationToken? cancellationToken=null)</td></tr>
-<tr class="memdesc:ab2b3b14e99032adee70760833acbac58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authenticate against the server. <dl class="params"><dt>Parameters</dt><dd>
+<tr class="memitem:a39165aaac0facf0e3e9d0e865183e28c"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a39165aaac0facf0e3e9d0e865183e28c">AuthenticateAsync</a> (string id, Dictionary&lt; string, string &gt; defaultProperties=default, Dictionary&lt; string, string &gt; customProperties=default, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a39165aaac0facf0e3e9d0e865183e28c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authenticate against the server. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>An optional user id.</td></tr>
+    <tr><td class="paramname">defaultProperties</td><td>Optional default properties to update with this call. If not set, properties are left as they are on the server.  <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">customProperties</td><td>Optional custom properties to update with this call. If not set, properties are left as they are on the server.  <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A task which resolves to a user session.</dd></dl>
-  <a href="class_satori_1_1_client.html#ab2b3b14e99032adee70760833acbac58">More...</a><br /></td></tr>
-<tr class="separator:ab2b3b14e99032adee70760833acbac58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+  <a href="class_satori_1_1_client.html#a39165aaac0facf0e3e9d0e865183e28c">More...</a><br /></td></tr>
+<tr class="separator:a39165aaac0facf0e3e9d0e865183e28c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19a54b27abb6adb73f1094cb69445986"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a19a54b27abb6adb73f1094cb69445986">AuthenticateLogoutAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a19a54b27abb6adb73f1094cb69445986"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -140,8 +152,8 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A task which represents the asynchronous operation.</dd></dl>
   <a href="class_satori_1_1_client.html#a19a54b27abb6adb73f1094cb69445986">More...</a><br /></td></tr>
 <tr class="separator:a19a54b27abb6adb73f1094cb69445986"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3515d87f03d73b2923c45454b4e6c35b"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a3515d87f03d73b2923c45454b4e6c35b">EventAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, <a class="el" href="class_satori_1_1_event.html">Event</a> @event, CancellationToken? cancellationToken=null)</td></tr>
-<tr class="memdesc:a3515d87f03d73b2923c45454b4e6c35b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an event for this session. <dl class="params"><dt>Parameters</dt><dd>
+<tr class="memitem:abbba7e70eed4e191b001093074f1db14"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#abbba7e70eed4e191b001093074f1db14">EventAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, <a class="el" href="class_satori_1_1_event.html">Event</a> @event, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:abbba7e70eed4e191b001093074f1db14"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an event for this session. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">session</td><td>The session of the user.</td></tr>
     <tr><td class="paramname">event</td><td>The event to send.</td></tr>
@@ -150,10 +162,10 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A task object.</dd></dl>
-  <a href="class_satori_1_1_client.html#a3515d87f03d73b2923c45454b4e6c35b">More...</a><br /></td></tr>
-<tr class="separator:a3515d87f03d73b2923c45454b4e6c35b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a168e519dc7621109d2726986e3928139"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a168e519dc7621109d2726986e3928139">EventsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; <a class="el" href="class_satori_1_1_event.html">Event</a> &gt; events, CancellationToken? cancellationToken=null)</td></tr>
-<tr class="memdesc:a168e519dc7621109d2726986e3928139"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a batch of events for this session. <dl class="params"><dt>Parameters</dt><dd>
+  <a href="class_satori_1_1_client.html#abbba7e70eed4e191b001093074f1db14">More...</a><br /></td></tr>
+<tr class="separator:abbba7e70eed4e191b001093074f1db14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac02792a3ac5bc184ca646da8d9be7638"><td class="memItemLeft" align="right" valign="top">async Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#ac02792a3ac5bc184ca646da8d9be7638">EventsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; <a class="el" href="class_satori_1_1_event.html">Event</a> &gt; events, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:ac02792a3ac5bc184ca646da8d9be7638"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a batch of events for this session. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">session</td><td>The session of the user.</td></tr>
     <tr><td class="paramname">events</td><td>The batch of events which will be sent.</td></tr>
@@ -162,20 +174,31 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A task object.</dd></dl>
-  <a href="class_satori_1_1_client.html#a168e519dc7621109d2726986e3928139">More...</a><br /></td></tr>
-<tr class="separator:a168e519dc7621109d2726986e3928139"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeae7a12032aa553fbbfdc856f3886c83"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_experiment_list.html">IApiExperimentList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#aeae7a12032aa553fbbfdc856f3886c83">GetExperimentsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; string &gt; names=null, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:aeae7a12032aa553fbbfdc856f3886c83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all experiments data. <dl class="params"><dt>Parameters</dt><dd>
+  <a href="class_satori_1_1_client.html#ac02792a3ac5bc184ca646da8d9be7638">More...</a><br /></td></tr>
+<tr class="separator:ac02792a3ac5bc184ca646da8d9be7638"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e3804717f15a93d01b07e1f7fe07c6d"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_experiment_list.html">IApiExperimentList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a8e3804717f15a93d01b07e1f7fe07c6d">GetAllExperimentsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a8e3804717f15a93d01b07e1f7fe07c6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all experiments data. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">session</td><td>The session of the user.</td></tr>
-    <tr><td class="paramname">names</td><td>Experiment names; if empty string all experiments are returned.</td></tr>
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A task which resolves to all experiments that this identity is involved with.</dd></dl>
-  <a href="class_satori_1_1_client.html#aeae7a12032aa553fbbfdc856f3886c83">More...</a><br /></td></tr>
-<tr class="separator:aeae7a12032aa553fbbfdc856f3886c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+  <a href="class_satori_1_1_client.html#a8e3804717f15a93d01b07e1f7fe07c6d">More...</a><br /></td></tr>
+<tr class="separator:a8e3804717f15a93d01b07e1f7fe07c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81896330be496c79d2d07ba9ba717a1c"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_experiment_list.html">IApiExperimentList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a81896330be496c79d2d07ba9ba717a1c">GetExperimentsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; string &gt; names, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a81896330be496c79d2d07ba9ba717a1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get specific experiments data. <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">session</td><td>The session of the user.</td></tr>
+    <tr><td class="paramname">names</td><td>Experiment names.</td></tr>
+    <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A task which resolves to all experiments that this identity is involved with.</dd></dl>
+  <a href="class_satori_1_1_client.html#a81896330be496c79d2d07ba9ba717a1c">More...</a><br /></td></tr>
+<tr class="separator:a81896330be496c79d2d07ba9ba717a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a049d78069eb7828f88863e8776040615"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a049d78069eb7828f88863e8776040615">GetFlagAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, string name, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a049d78069eb7828f88863e8776040615"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single flag for this identity. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -191,21 +214,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2b05b22f9f9071f6c26614a13997c536"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a2b05b22f9f9071f6c26614a13997c536">GetFlagAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, string name, string defaultValue, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a2b05b22f9f9071f6c26614a13997c536"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single flag for this identity. Unlike <code>GetFlags(ISession,string,CancellationToken)</code> this method will return the default value specified and will not raise an exception if the network is unavailable.   <a href="class_satori_1_1_client.html#a2b05b22f9f9071f6c26614a13997c536">More...</a><br /></td></tr>
 <tr class="separator:a2b05b22f9f9071f6c26614a13997c536"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49603b64cf61100806d934110f8ea352"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a49603b64cf61100806d934110f8ea352">GetFlagDefaultAsync</a> (string apiKey, string name, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:a49603b64cf61100806d934110f8ea352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single default flag for this identity. <dl class="params"><dt>Parameters</dt><dd>
+<tr class="memitem:acc30ac79f32168e93d2377dc56af9b54"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#acc30ac79f32168e93d2377dc56af9b54">GetFlagDefaultAsync</a> (string name, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:acc30ac79f32168e93d2377dc56af9b54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single default flag for this identity. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">apiKey</td><td>The API key configured on the server.</td></tr>
     <tr><td class="paramname">name</td><td>The name of the flag.</td></tr>
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A task which resolves to a single default feature flag.</dd></dl>
-  <a href="class_satori_1_1_client.html#a49603b64cf61100806d934110f8ea352">More...</a><br /></td></tr>
-<tr class="separator:a49603b64cf61100806d934110f8ea352"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a555f48f48e5c070db9c115d92a8805"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a2a555f48f48e5c070db9c115d92a8805">GetFlagDefaultAsync</a> (string apiKey, string name, string defaultValue, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:a2a555f48f48e5c070db9c115d92a8805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single default flag for this identity. Unlike <code>GetFlagDefaultAsync(string,string,CancellationToken)</code> this method will return the default value specified and will not raise an exception if the network is unreachable.   <a href="class_satori_1_1_client.html#a2a555f48f48e5c070db9c115d92a8805">More...</a><br /></td></tr>
-<tr class="separator:a2a555f48f48e5c070db9c115d92a8805"><td class="memSeparator" colspan="2">&#160;</td></tr>
+  <a href="class_satori_1_1_client.html#acc30ac79f32168e93d2377dc56af9b54">More...</a><br /></td></tr>
+<tr class="separator:acc30ac79f32168e93d2377dc56af9b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1070241851b6656fc6cd217828d3ab4"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#ac1070241851b6656fc6cd217828d3ab4">GetFlagDefaultAsync</a> (string name, string defaultValue, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:ac1070241851b6656fc6cd217828d3ab4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single default flag for this identity. Unlike <code>GetFlagDefaultAsync(string,string,CancellationToken)</code> this method will return the default value specified and will not raise an exception if the network is unreachable.   <a href="class_satori_1_1_client.html#ac1070241851b6656fc6cd217828d3ab4">More...</a><br /></td></tr>
+<tr class="separator:ac1070241851b6656fc6cd217828d3ab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a477cea4ad8662115d4221e4e7b9c203c"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag_list.html">IApiFlagList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a477cea4ad8662115d4221e4e7b9c203c">GetFlagsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; string &gt; names, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a477cea4ad8662115d4221e4e7b9c203c"><td class="mdescLeft">&#160;</td><td class="mdescRight">List all available flags for this identity. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -218,18 +240,17 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A task which resolves to all flags available to this identity.</dd></dl>
   <a href="class_satori_1_1_client.html#a477cea4ad8662115d4221e4e7b9c203c">More...</a><br /></td></tr>
 <tr class="separator:a477cea4ad8662115d4221e4e7b9c203c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84d87516c745950e3f35ea3810283f06"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag_list.html">IApiFlagList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a84d87516c745950e3f35ea3810283f06">GetFlagsDefaultAsync</a> (string apiKey, IEnumerable&lt; string &gt; names, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:a84d87516c745950e3f35ea3810283f06"><td class="mdescLeft">&#160;</td><td class="mdescRight">List all available default flags. <dl class="params"><dt>Parameters</dt><dd>
+<tr class="memitem:a796ed83316824afffc01c52dd9273a67"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag_list.html">IApiFlagList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a796ed83316824afffc01c52dd9273a67">GetFlagsDefaultAsync</a> (IEnumerable&lt; string &gt; names, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a796ed83316824afffc01c52dd9273a67"><td class="mdescLeft">&#160;</td><td class="mdescRight">List all available default flags. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">apiKey</td><td>The API key configured on the server.</td></tr>
     <tr><td class="paramname">names</td><td>Flag names, if empty string all flags are returned.</td></tr>
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A task which resolves to all available default flags.</dd></dl>
-  <a href="class_satori_1_1_client.html#a84d87516c745950e3f35ea3810283f06">More...</a><br /></td></tr>
-<tr class="separator:a84d87516c745950e3f35ea3810283f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+  <a href="class_satori_1_1_client.html#a796ed83316824afffc01c52dd9273a67">More...</a><br /></td></tr>
+<tr class="separator:a796ed83316824afffc01c52dd9273a67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bcd0f294df315ca5e46dfa7448c02f8"><td class="memItemLeft" align="right" valign="top">async Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_satori_1_1_client.html#a2bcd0f294df315ca5e46dfa7448c02f8">IdentifyAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, string id, Dictionary&lt; string, string &gt; defaultProperties, Dictionary&lt; string, string &gt; customProperties, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a2bcd0f294df315ca5e46dfa7448c02f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identify a session with a new ID. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -291,20 +312,23 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A task object.</dd></dl>
   <a href="class_satori_1_1_client.html#a78fc439169d96ec41b3cd3631e31d43d">More...</a><br /></td></tr>
 <tr class="separator:a78fc439169d96ec41b3cd3631e31d43d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a563a7848fc6cfb9f7b5bd71a1351ab80"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a563a7848fc6cfb9f7b5bd71a1351ab80">AuthenticateAsync</a> (string id, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:a563a7848fc6cfb9f7b5bd71a1351ab80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authenticate against the server.   <a href="interface_satori_1_1_i_client.html#a563a7848fc6cfb9f7b5bd71a1351ab80">More...</a><br /></td></tr>
-<tr class="separator:a563a7848fc6cfb9f7b5bd71a1351ab80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab011eb8fa89c1c71e31a003204ad847b"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#ab011eb8fa89c1c71e31a003204ad847b">AuthenticateAsync</a> (string id, Dictionary&lt; string, string &gt; defaultProperties=default, Dictionary&lt; string, string &gt; customProperties=default, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:ab011eb8fa89c1c71e31a003204ad847b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authenticate against the server.   <a href="interface_satori_1_1_i_client.html#ab011eb8fa89c1c71e31a003204ad847b">More...</a><br /></td></tr>
+<tr class="separator:ab011eb8fa89c1c71e31a003204ad847b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a827092f8b15b38c4a86ca88907338908"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a827092f8b15b38c4a86ca88907338908">AuthenticateLogoutAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a827092f8b15b38c4a86ca88907338908"><td class="mdescLeft">&#160;</td><td class="mdescRight">Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.   <a href="interface_satori_1_1_i_client.html#a827092f8b15b38c4a86ca88907338908">More...</a><br /></td></tr>
 <tr class="separator:a827092f8b15b38c4a86ca88907338908"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a517f15b484c813732bde081b5d8a1bf5"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a517f15b484c813732bde081b5d8a1bf5">EventAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, <a class="el" href="class_satori_1_1_event.html">Event</a> @event, CancellationToken? cancellationToken=null)</td></tr>
-<tr class="memdesc:a517f15b484c813732bde081b5d8a1bf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an event for this session.   <a href="interface_satori_1_1_i_client.html#a517f15b484c813732bde081b5d8a1bf5">More...</a><br /></td></tr>
-<tr class="separator:a517f15b484c813732bde081b5d8a1bf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89b11b74d66d79a2807489140af1e307"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a89b11b74d66d79a2807489140af1e307">EventsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; <a class="el" href="class_satori_1_1_event.html">Event</a> &gt; events, CancellationToken? cancellationToken=null)</td></tr>
-<tr class="memdesc:a89b11b74d66d79a2807489140af1e307"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a batch of events for this session.   <a href="interface_satori_1_1_i_client.html#a89b11b74d66d79a2807489140af1e307">More...</a><br /></td></tr>
-<tr class="separator:a89b11b74d66d79a2807489140af1e307"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e7cef9f3202d1d9d05e36b459826fd1"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a8e7cef9f3202d1d9d05e36b459826fd1">EventAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, <a class="el" href="class_satori_1_1_event.html">Event</a> @event, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a8e7cef9f3202d1d9d05e36b459826fd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an event for this session.   <a href="interface_satori_1_1_i_client.html#a8e7cef9f3202d1d9d05e36b459826fd1">More...</a><br /></td></tr>
+<tr class="separator:a8e7cef9f3202d1d9d05e36b459826fd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03db8312fe7905204c87568ee1052862"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a03db8312fe7905204c87568ee1052862">EventsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; <a class="el" href="class_satori_1_1_event.html">Event</a> &gt; events, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a03db8312fe7905204c87568ee1052862"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a batch of events for this session.   <a href="interface_satori_1_1_i_client.html#a03db8312fe7905204c87568ee1052862">More...</a><br /></td></tr>
+<tr class="separator:a03db8312fe7905204c87568ee1052862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a542e098899291a892108e042e630c9d7"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_experiment_list.html">IApiExperimentList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a542e098899291a892108e042e630c9d7">GetAllExperimentsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a542e098899291a892108e042e630c9d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all experiments data.   <a href="interface_satori_1_1_i_client.html#a542e098899291a892108e042e630c9d7">More...</a><br /></td></tr>
+<tr class="separator:a542e098899291a892108e042e630c9d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b141b22c449ade3548442ec562679df"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_experiment_list.html">IApiExperimentList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a0b141b22c449ade3548442ec562679df">GetExperimentsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; string &gt; names, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:a0b141b22c449ade3548442ec562679df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all experiments data.   <a href="interface_satori_1_1_i_client.html#a0b141b22c449ade3548442ec562679df">More...</a><br /></td></tr>
+<tr class="memdesc:a0b141b22c449ade3548442ec562679df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get specific experiments data.   <a href="interface_satori_1_1_i_client.html#a0b141b22c449ade3548442ec562679df">More...</a><br /></td></tr>
 <tr class="separator:a0b141b22c449ade3548442ec562679df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b03ae171a637d4938c2e9cacbf9ee28"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a6b03ae171a637d4938c2e9cacbf9ee28">GetFlagAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, string name, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a6b03ae171a637d4938c2e9cacbf9ee28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single flag for this identity.   <a href="interface_satori_1_1_i_client.html#a6b03ae171a637d4938c2e9cacbf9ee28">More...</a><br /></td></tr>
@@ -312,18 +336,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a486e38938074ed725715c81e64166f60"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a486e38938074ed725715c81e64166f60">GetFlagAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, string name, string defaultValue, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a486e38938074ed725715c81e64166f60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single flag for this identity.   <a href="interface_satori_1_1_i_client.html#a486e38938074ed725715c81e64166f60">More...</a><br /></td></tr>
 <tr class="separator:a486e38938074ed725715c81e64166f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae943709079ce5f690d5478addcd50f86"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#ae943709079ce5f690d5478addcd50f86">GetFlagDefaultAsync</a> (string apiKey, string name, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:ae943709079ce5f690d5478addcd50f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single default flag for this identity.   <a href="interface_satori_1_1_i_client.html#ae943709079ce5f690d5478addcd50f86">More...</a><br /></td></tr>
-<tr class="separator:ae943709079ce5f690d5478addcd50f86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6548048f5d846c0af46a665cc1f53193"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a6548048f5d846c0af46a665cc1f53193">GetFlagDefaultAsync</a> (string apiKey, string name, string defaultValue, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:a6548048f5d846c0af46a665cc1f53193"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single default flag for this identity.   <a href="interface_satori_1_1_i_client.html#a6548048f5d846c0af46a665cc1f53193">More...</a><br /></td></tr>
-<tr class="separator:a6548048f5d846c0af46a665cc1f53193"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b57a373f66fa4ce242ee25109081db1"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a4b57a373f66fa4ce242ee25109081db1">GetFlagDefaultAsync</a> (string name, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a4b57a373f66fa4ce242ee25109081db1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single default flag for this identity.   <a href="interface_satori_1_1_i_client.html#a4b57a373f66fa4ce242ee25109081db1">More...</a><br /></td></tr>
+<tr class="separator:a4b57a373f66fa4ce242ee25109081db1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ac8ed383d158eefdc503b1307093ff5"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a2ac8ed383d158eefdc503b1307093ff5">GetFlagDefaultAsync</a> (string name, string defaultValue, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a2ac8ed383d158eefdc503b1307093ff5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a single default flag for this identity.   <a href="interface_satori_1_1_i_client.html#a2ac8ed383d158eefdc503b1307093ff5">More...</a><br /></td></tr>
+<tr class="separator:a2ac8ed383d158eefdc503b1307093ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb95e0c8049682e9a55d55422229c1ea"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag_list.html">IApiFlagList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#aeb95e0c8049682e9a55d55422229c1ea">GetFlagsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; string &gt; names, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:aeb95e0c8049682e9a55d55422229c1ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">List all available flags for this identity.   <a href="interface_satori_1_1_i_client.html#aeb95e0c8049682e9a55d55422229c1ea">More...</a><br /></td></tr>
 <tr class="separator:aeb95e0c8049682e9a55d55422229c1ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81548d70c2bd082078aed71a8e3f4094"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag_list.html">IApiFlagList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a81548d70c2bd082078aed71a8e3f4094">GetFlagsDefaultAsync</a> (string apiKey, IEnumerable&lt; string &gt; names, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:a81548d70c2bd082078aed71a8e3f4094"><td class="mdescLeft">&#160;</td><td class="mdescRight">List all available default flags.   <a href="interface_satori_1_1_i_client.html#a81548d70c2bd082078aed71a8e3f4094">More...</a><br /></td></tr>
-<tr class="separator:a81548d70c2bd082078aed71a8e3f4094"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f20dbc6ebce25f94c12575779c856b4"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag_list.html">IApiFlagList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a4f20dbc6ebce25f94c12575779c856b4">GetFlagsDefaultAsync</a> (IEnumerable&lt; string &gt; names, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a4f20dbc6ebce25f94c12575779c856b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">List all available default flags.   <a href="interface_satori_1_1_i_client.html#a4f20dbc6ebce25f94c12575779c856b4">More...</a><br /></td></tr>
+<tr class="separator:a4f20dbc6ebce25f94c12575779c856b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49fd5e2b4a7106087c18e3e0a4699240"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_api_live_event_list.html">IApiLiveEventList</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a49fd5e2b4a7106087c18e3e0a4699240">GetLiveEventsAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, IEnumerable&lt; string &gt; names=null, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a49fd5e2b4a7106087c18e3e0a4699240"><td class="mdescLeft">&#160;</td><td class="mdescRight">List available live events.   <a href="interface_satori_1_1_i_client.html#a49fd5e2b4a7106087c18e3e0a4699240">More...</a><br /></td></tr>
 <tr class="separator:a49fd5e2b4a7106087c18e3e0a4699240"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -485,8 +509,8 @@ Properties</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab2b3b14e99032adee70760833acbac58" name="ab2b3b14e99032adee70760833acbac58"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2b3b14e99032adee70760833acbac58">&#9670;&#160;</a></span>AuthenticateAsync()</h2>
+<a id="a39165aaac0facf0e3e9d0e865183e28c" name="a39165aaac0facf0e3e9d0e865183e28c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39165aaac0facf0e3e9d0e865183e28c">&#9670;&#160;</a></span>AuthenticateAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -503,8 +527,20 @@ Properties</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Dictionary&lt; string, string &gt;&#160;</td>
+          <td class="paramname"><em>defaultProperties</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Dictionary&lt; string, string &gt;&#160;</td>
+          <td class="paramname"><em>customProperties</em> = <code>default</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">CancellationToken?&#160;</td>
-          <td class="paramname"><em>cancellationToken</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>cancellationToken</em> = <code>default</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -522,14 +558,26 @@ Properties</h2></td></tr>
 <p>Authenticate against the server. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>An optional user id.</td></tr>
+    <tr><td class="paramname">defaultProperties</td><td>Optional default properties to update with this call. If not set, properties are left as they are on the server.  <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">customProperties</td><td>Optional custom properties to update with this call. If not set, properties are left as they are on the server.  <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A task which resolves to a user session.</dd></dl>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+</td></tr>
+  </table>
+  </dd>
+</dl>
  </p>
 
-<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a563a7848fc6cfb9f7b5bd71a1351ab80">Satori.IClient</a>.</p>
+<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#ab011eb8fa89c1c71e31a003204ad847b">Satori.IClient</a>.</p>
 
 </div>
 </div>
@@ -573,8 +621,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a3515d87f03d73b2923c45454b4e6c35b" name="a3515d87f03d73b2923c45454b4e6c35b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3515d87f03d73b2923c45454b4e6c35b">&#9670;&#160;</a></span>EventAsync()</h2>
+<a id="abbba7e70eed4e191b001093074f1db14" name="abbba7e70eed4e191b001093074f1db14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbba7e70eed4e191b001093074f1db14">&#9670;&#160;</a></span>EventAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -598,7 +646,7 @@ Properties</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">CancellationToken?&#160;</td>
-          <td class="paramname"><em>cancellationToken</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>cancellationToken</em> = <code>default</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -624,12 +672,12 @@ Properties</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A task object.</dd></dl>
  </p>
 
-<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a517f15b484c813732bde081b5d8a1bf5">Satori.IClient</a>.</p>
+<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a8e7cef9f3202d1d9d05e36b459826fd1">Satori.IClient</a>.</p>
 
 </div>
 </div>
-<a id="a168e519dc7621109d2726986e3928139" name="a168e519dc7621109d2726986e3928139"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a168e519dc7621109d2726986e3928139">&#9670;&#160;</a></span>EventsAsync()</h2>
+<a id="ac02792a3ac5bc184ca646da8d9be7638" name="ac02792a3ac5bc184ca646da8d9be7638"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac02792a3ac5bc184ca646da8d9be7638">&#9670;&#160;</a></span>EventsAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -653,7 +701,7 @@ Properties</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">CancellationToken?&#160;</td>
-          <td class="paramname"><em>cancellationToken</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>cancellationToken</em> = <code>default</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -679,12 +727,12 @@ Properties</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A task object.</dd></dl>
  </p>
 
-<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a89b11b74d66d79a2807489140af1e307">Satori.IClient</a>.</p>
+<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a03db8312fe7905204c87568ee1052862">Satori.IClient</a>.</p>
 
 </div>
 </div>
-<a id="aeae7a12032aa553fbbfdc856f3886c83" name="aeae7a12032aa553fbbfdc856f3886c83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeae7a12032aa553fbbfdc856f3886c83">&#9670;&#160;</a></span>GetExperimentsAsync()</h2>
+<a id="a8e3804717f15a93d01b07e1f7fe07c6d" name="a8e3804717f15a93d01b07e1f7fe07c6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e3804717f15a93d01b07e1f7fe07c6d">&#9670;&#160;</a></span>GetAllExperimentsAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -693,16 +741,10 @@ Properties</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_experiment_list.html">IApiExperimentList</a> &gt; Satori.Client.GetExperimentsAsync </td>
+          <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_experiment_list.html">IApiExperimentList</a> &gt; Satori.Client.GetAllExperimentsAsync </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="interface_satori_1_1_i_session.html">ISession</a>&#160;</td>
           <td class="paramname"><em>session</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">IEnumerable&lt; string &gt;&#160;</td>
-          <td class="paramname"><em>names</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -726,7 +768,61 @@ Properties</h2></td></tr>
 <p>Get all experiments data. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">session</td><td>The session of the user.</td></tr>
-    <tr><td class="paramname">names</td><td>Experiment names; if empty string all experiments are returned.</td></tr>
+    <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A task which resolves to all experiments that this identity is involved with.</dd></dl>
+ </p>
+
+<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a542e098899291a892108e042e630c9d7">Satori.IClient</a>.</p>
+
+</div>
+</div>
+<a id="a81896330be496c79d2d07ba9ba717a1c" name="a81896330be496c79d2d07ba9ba717a1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81896330be496c79d2d07ba9ba717a1c">&#9670;&#160;</a></span>GetExperimentsAsync()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_experiment_list.html">IApiExperimentList</a> &gt; Satori.Client.GetExperimentsAsync </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="interface_satori_1_1_i_session.html">ISession</a>&#160;</td>
+          <td class="paramname"><em>session</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">IEnumerable&lt; string &gt;&#160;</td>
+          <td class="paramname"><em>names</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CancellationToken?&#160;</td>
+          <td class="paramname"><em>cancellationToken</em> = <code>default</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get specific experiments data. <dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">session</td><td>The session of the user.</td></tr>
+    <tr><td class="paramname">names</td><td>Experiment names.</td></tr>
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
   </dd>
@@ -845,8 +941,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a49603b64cf61100806d934110f8ea352" name="a49603b64cf61100806d934110f8ea352"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a49603b64cf61100806d934110f8ea352">&#9670;&#160;</a></span>GetFlagDefaultAsync() <span class="overload">[1/2]</span></h2>
+<a id="acc30ac79f32168e93d2377dc56af9b54" name="acc30ac79f32168e93d2377dc56af9b54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc30ac79f32168e93d2377dc56af9b54">&#9670;&#160;</a></span>GetFlagDefaultAsync() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -857,12 +953,6 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">async Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt; Satori.Client.GetFlagDefaultAsync </td>
           <td>(</td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>apiKey</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">string&#160;</td>
           <td class="paramname"><em>name</em>, </td>
         </tr>
@@ -887,7 +977,6 @@ Properties</h2></td></tr>
 
 <p>Get a single default flag for this identity. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">apiKey</td><td>The API key configured on the server.</td></tr>
     <tr><td class="paramname">name</td><td>The name of the flag.</td></tr>
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
@@ -896,12 +985,12 @@ Properties</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A task which resolves to a single default feature flag.</dd></dl>
  </p>
 
-<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#ae943709079ce5f690d5478addcd50f86">Satori.IClient</a>.</p>
+<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a4b57a373f66fa4ce242ee25109081db1">Satori.IClient</a>.</p>
 
 </div>
 </div>
-<a id="a2a555f48f48e5c070db9c115d92a8805" name="a2a555f48f48e5c070db9c115d92a8805"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a555f48f48e5c070db9c115d92a8805">&#9670;&#160;</a></span>GetFlagDefaultAsync() <span class="overload">[2/2]</span></h2>
+<a id="ac1070241851b6656fc6cd217828d3ab4" name="ac1070241851b6656fc6cd217828d3ab4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac1070241851b6656fc6cd217828d3ab4">&#9670;&#160;</a></span>GetFlagDefaultAsync() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -912,12 +1001,6 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag.html">IApiFlag</a> &gt; Satori.Client.GetFlagDefaultAsync </td>
           <td>(</td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>apiKey</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">string&#160;</td>
           <td class="paramname"><em>name</em>, </td>
         </tr>
@@ -948,7 +1031,7 @@ Properties</h2></td></tr>
 
 <p>Get a single default flag for this identity. Unlike <code>GetFlagDefaultAsync(string,string,CancellationToken)</code> this method will return the default value specified and will not raise an exception if the network is unreachable.  </p>
 
-<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a6548048f5d846c0af46a665cc1f53193">Satori.IClient</a>.</p>
+<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a2ac8ed383d158eefdc503b1307093ff5">Satori.IClient</a>.</p>
 
 </div>
 </div>
@@ -1007,8 +1090,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a84d87516c745950e3f35ea3810283f06" name="a84d87516c745950e3f35ea3810283f06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84d87516c745950e3f35ea3810283f06">&#9670;&#160;</a></span>GetFlagsDefaultAsync()</h2>
+<a id="a796ed83316824afffc01c52dd9273a67" name="a796ed83316824afffc01c52dd9273a67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a796ed83316824afffc01c52dd9273a67">&#9670;&#160;</a></span>GetFlagsDefaultAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1016,12 +1099,6 @@ Properties</h2></td></tr>
         <tr>
           <td class="memname">Task&lt; <a class="el" href="interface_satori_1_1_i_api_flag_list.html">IApiFlagList</a> &gt; Satori.Client.GetFlagsDefaultAsync </td>
           <td>(</td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>apiKey</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">IEnumerable&lt; string &gt;&#160;</td>
           <td class="paramname"><em>names</em>, </td>
         </tr>
@@ -1041,7 +1118,6 @@ Properties</h2></td></tr>
 
 <p>List all available default flags. <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">apiKey</td><td>The API key configured on the server.</td></tr>
     <tr><td class="paramname">names</td><td>Flag names, if empty string all flags are returned.</td></tr>
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
@@ -1050,7 +1126,7 @@ Properties</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A task which resolves to all available default flags.</dd></dl>
  </p>
 
-<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a81548d70c2bd082078aed71a8e3f4094">Satori.IClient</a>.</p>
+<p>Implements <a class="el" href="interface_satori_1_1_i_client.html#a4f20dbc6ebce25f94c12575779c856b4">Satori.IClient</a>.</p>
 
 </div>
 </div>
