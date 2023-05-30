@@ -24,6 +24,8 @@ namespace Nakama.Tests.Api
 {
     public class LeaderboardAroundOwnerTest : LeaderboardTest
     {
+        private ISession[] _sessions = null;
+        
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task OwnerInFront()
         {
@@ -162,6 +164,35 @@ namespace Nakama.Tests.Api
             Assert.Equal("101", recordArray[1].Score);
             Assert.Equal("100", recordArray[2].Score);
         }
+        
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task TestCursorsRecordInTheMiddle()
+        {
+            var ownerIndex = 1;
+            IApiLeaderboardRecordList records = await CreateAndFetchRecords(numRecords: 3, limit: 1, ownerIndex: ownerIndex);
+            var recordArray = records.Records.ToArray();
+            
+            Assert.Equal(1, recordArray.Length);
+            Assert.Equal("101", recordArray[0].Score);
+            Assert.NotNull(records.NextCursor);
+            Assert.NotNull(records.PrevCursor);
+
+            var nextRecords = await _client.ListLeaderboardRecordsAroundOwnerAsync(_sessions[ownerIndex], _leaderboardId, _sessions[ownerIndex].UserId, null, 1, records.NextCursor);
+            recordArray = nextRecords.Records.ToArray();
+            
+            Assert.Single(recordArray);
+            Assert.Equal("100", recordArray[0].Score);
+            Assert.Null(nextRecords.NextCursor);
+            Assert.NotNull(nextRecords.PrevCursor);
+            
+            var prevRecords = await _client.ListLeaderboardRecordsAroundOwnerAsync(_sessions[ownerIndex], _leaderboardId, _sessions[ownerIndex].UserId, null, 1, records.PrevCursor);
+            recordArray = prevRecords.Records.ToArray();
+            
+            Assert.Single(recordArray);
+            Assert.Equal("102", recordArray[0].Score);
+            Assert.NotNull(prevRecords.NextCursor);
+            Assert.Null(prevRecords.PrevCursor);
+        }
 
         private async Task<IApiLeaderboardRecordList> CreateAndFetchRecords(int numRecords, int limit, int ownerIndex)
         {
@@ -173,6 +204,7 @@ namespace Nakama.Tests.Api
             }
 
             ISession[] sessions = await Task.WhenAll(authTasks.ToArray());
+            _sessions = sessions;
 
             var listTasks = new List<Task<IApiLeaderboardRecord>>();
 
