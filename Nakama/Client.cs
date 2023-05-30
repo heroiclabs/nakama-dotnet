@@ -758,6 +758,10 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ListGroupUsersAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiGroupUserList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state,
             int limit, string cursor, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
@@ -800,6 +804,10 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ListLeaderboardRecordsAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiLeaderboardRecordList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
             IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
@@ -835,6 +843,10 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ListLeaderboardRecordsAroundOwnerAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiLeaderboardRecordList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session,
             string leaderboardId, string ownerId, long? expiry = null, int limit = 1, string cursor = null,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
@@ -886,6 +898,10 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ListNotificationsAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiNotificationList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
             string cacheableCursor = null, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
@@ -904,7 +920,7 @@ namespace Nakama
             {
                 if (!session.Username.Equals(notification.SenderId) && notification is ApiNotification n)
                 {
-                    n.Subject = session.UserId;
+                    n.SenderId = session.UserId;
                 }
             }
 
@@ -952,6 +968,10 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ListTournamentRecordsAroundOwnerAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiTournamentRecordList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session,
             string tournamentId, string ownerId, long? expiry = null, int limit = 1, string cursor = null,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
@@ -987,6 +1007,10 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ListTournamentRecordsAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiTournamentRecordList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
             IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
@@ -1341,6 +1365,10 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="UpdateAccountAsync"/>
+        /// <remarks>
+        /// The current user's username will be automatically refreshed in their authorized <c>ISession</c> if the
+        /// username field is updated to become different.
+        /// </remarks>
         public async Task UpdateAccountAsync(ISession session, string username, string displayName = null,
             string avatarUrl = null, string langTag = null, string location = null, string timezone = null,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
