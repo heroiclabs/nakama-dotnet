@@ -92,13 +92,12 @@ namespace Nakama
 
         /// There is a bug in Unity's WebGL implementation that prevents the proper invocation of constructors with more
         /// than four parameters. For this reason, avoid defining constructors that do this.
-
         public Client(string serverKey) : this(serverKey, HttpRequestAdapter.WithGzip())
         {
         }
 
         public Client(string serverKey, IHttpAdapter adapter) : this(DefaultScheme,
-            DefaultHost, DefaultPort, serverKey,  adapter)
+            DefaultHost, DefaultPort, serverKey, adapter)
         {
         }
 
@@ -135,13 +134,14 @@ namespace Nakama
             ServerKey = serverKey;
             _apiClient = new ApiClient(uri, adapter, DefaultTimeout);
             Logger = NullLogger.Instance; // must set logger last.
-            
+
             _retryInvoker = new RetryInvoker(adapter.TransientExceptionDelegate);
         }
 
         /// <inheritdoc cref="AddFriendsAsync"/>
         public async Task AddFriendsAsync(ISession session, IEnumerable<string> ids,
-            IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -149,11 +149,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await _retryInvoker.InvokeWithRetry(() => _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="AddGroupUsersAsync"/>
-        public async Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -161,94 +164,122 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.AddGroupUsersAsync(session.AuthToken, groupId, ids, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="AuthenticateAppleAsync"/>
         public async Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
-            var response = await  _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateAppleAsync(ServerKey, string.Empty,
-                new ApiAccountApple {Token = token, _vars = vars}, create, username, canceller), new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateAppleAsync(ServerKey,
+                    string.Empty,
+                    new ApiAccountApple { Token = token, _vars = vars }, create, username, canceller),
+                new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateCustomAsync"/>
         public async Task<ISession> AuthenticateCustomAsync(string id, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
-            var response = await  _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateCustomAsync(ServerKey, string.Empty,
-                new ApiAccountCustom {Id = id, _vars = vars}, create, username, canceller), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateCustomAsync(ServerKey,
+                    string.Empty,
+                    new ApiAccountCustom { Id = id, _vars = vars }, create, username, canceller),
+                new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateDeviceAsync"/>
         public async Task<ISession> AuthenticateDeviceAsync(string id, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
-            var response = await  _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateDeviceAsync(ServerKey, string.Empty,
-                new ApiAccountDevice {Id = id, _vars = vars}, create, username, canceller), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateDeviceAsync(ServerKey,
+                    string.Empty,
+                    new ApiAccountDevice { Id = id, _vars = vars }, create, username, canceller),
+                new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateEmailAsync"/>
         public async Task<ISession> AuthenticateEmailAsync(string email, string password, string username = null,
-            bool create = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            bool create = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
-            var response = await  _retryInvoker.InvokeWithRetry(() =>_apiClient.AuthenticateEmailAsync(ServerKey, string.Empty,
-                new ApiAccountEmail {Email = email, Password = password, _vars = vars}, create, username, canceller), new RetryHistory(email, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateEmailAsync(ServerKey,
+                    string.Empty,
+                    new ApiAccountEmail { Email = email, Password = password, _vars = vars }, create, username,
+                    canceller),
+                new RetryHistory(email, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateFacebookAsync"/>
         public async Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
-            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
-            var response = await  _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateFacebookAsync(ServerKey, string.Empty,
-                new ApiAccountFacebook {Token = token, _vars = vars}, create, username, import, canceller), new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateFacebookAsync(ServerKey,
+                    string.Empty,
+                    new ApiAccountFacebook { Token = token, _vars = vars }, create, username, import, canceller),
+                new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateGameCenterAsync"/>
         public async Task<ISession> AuthenticateGameCenterAsync(string bundleId, string playerId, string publicKeyUrl,
             string salt, string signature, string timestamp, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
-            var response = await  _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateGameCenterAsync(ServerKey, string.Empty,
-                new ApiAccountGameCenter
-                {
-                    BundleId = bundleId,
-                    PlayerId = playerId,
-                    PublicKeyUrl = publicKeyUrl,
-                    Salt = salt,
-                    Signature = signature,
-                    TimestampSeconds = timestamp,
-                    _vars = vars
-                }, create, username, canceller), new RetryHistory(bundleId, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateGameCenterAsync(ServerKey,
+                    string.Empty,
+                    new ApiAccountGameCenter
+                    {
+                        BundleId = bundleId,
+                        PlayerId = playerId,
+                        PublicKeyUrl = publicKeyUrl,
+                        Salt = salt,
+                        Signature = signature,
+                        TimestampSeconds = timestamp,
+                        _vars = vars
+                    }, create, username, canceller),
+                new RetryHistory(bundleId, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateGoogleAsync"/>
         public async Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
-            var response = await  _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateGoogleAsync(ServerKey, string.Empty,
-                new ApiAccountGoogle {Token = token, _vars = vars}, create, username, canceller), new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateGoogleAsync(ServerKey,
+                    string.Empty,
+                    new ApiAccountGoogle { Token = token, _vars = vars }, create, username, canceller),
+                new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="AuthenticateSteamAsync"/>
         public async Task<ISession> AuthenticateSteamAsync(string token, string username = null, bool create = true,
-            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
-            var response = await  _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateSteamAsync(ServerKey, string.Empty,
-                new ApiAccountSteam {Token = token, _vars = vars}, create, username, import, canceller), new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateSteamAsync(ServerKey,
+                    string.Empty,
+                    new ApiAccountSteam { Token = token, _vars = vars }, create, username, import, canceller),
+                new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
         /// <inheritdoc cref="BanGroupUsersAsync"/>
-        public async Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task BanGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -256,12 +287,15 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.BanGroupUsersAsync(session.AuthToken, groupId, ids, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.BanGroupUsersAsync(session.AuthToken, groupId, ids, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="BlockFriendsAsync"/>
         public async Task BlockFriendsAsync(ISession session, IEnumerable<string> ids,
-            IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -269,12 +303,15 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.BlockFriendsAsync(session.AuthToken, ids, usernames, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="CreateGroupAsync"/>
         public async Task<IApiGroup> CreateGroupAsync(ISession session, string name, string description = "",
-            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -282,20 +319,22 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.CreateGroupAsync(session.AuthToken, new ApiCreateGroupRequest
-            {
-                Name = name,
-                Description = description,
-                AvatarUrl = avatarUrl,
-                LangTag = langTag,
-                Open = open,
-                MaxCount = maxCount
-            }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.CreateGroupAsync(session.AuthToken,
+                new ApiCreateGroupRequest
+                {
+                    Name = name,
+                    Description = description,
+                    AvatarUrl = avatarUrl,
+                    LangTag = langTag,
+                    Open = open,
+                    MaxCount = maxCount
+                }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="DeleteFriendsAsync"/>
         public async Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids,
-            IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -303,11 +342,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.DeleteFriendsAsync(session.AuthToken, ids, usernames, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.DeleteFriendsAsync(session.AuthToken, ids, usernames, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="DeleteGroupAsync"/>
-        public async Task DeleteGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task DeleteGroupAsync(ISession session, string groupId,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -315,11 +357,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.DeleteGroupAsync(session.AuthToken, groupId, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.DeleteGroupAsync(session.AuthToken, groupId, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="DeleteLeaderboardRecordAsync"/>
-        public async Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task DeleteLeaderboardRecordAsync(ISession session, string leaderboardId,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -327,11 +372,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.DeleteLeaderboardRecordAsync(session.AuthToken, leaderboardId, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.DeleteLeaderboardRecordAsync(session.AuthToken, leaderboardId, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="DeleteNotificationsAsync"/>
-        public async Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task DeleteNotificationsAsync(ISession session, IEnumerable<string> ids,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -339,11 +387,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.DeleteNotificationsAsync(session.AuthToken, ids, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.DeleteNotificationsAsync(session.AuthToken, ids, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="DeleteStorageObjectsAsync"/>
-        public async Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -367,12 +418,14 @@ namespace Nakama
             }
 
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.DeleteStorageObjectsAsync(session.AuthToken,
-                new ApiDeleteStorageObjectsRequest {_objectIds = objects}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.DeleteStorageObjectsAsync(session.AuthToken,
+                    new ApiDeleteStorageObjectsRequest { _objectIds = objects }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="DemoteGroupUsersAsync"/>
-        public async Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -380,11 +433,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.DemoteGroupUsersAsync(session.AuthToken, groupId, usernames, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.DemoteGroupUsersAsync(session.AuthToken, groupId, usernames, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="EventAsync"/>
-        public async Task EventAsync(ISession session, string name, Dictionary<string, string> properties, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task EventAsync(ISession session, string name, Dictionary<string, string> properties,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -392,7 +448,7 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.EventAsync(session.AuthToken, new ApiEvent
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.EventAsync(session.AuthToken, new ApiEvent
             {
                 External = true,
                 Name = name,
@@ -401,7 +457,8 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="GetAccountAsync"/>
-        public async Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiAccount> GetAccountAsync(ISession session, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -409,11 +466,13 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.GetAccountAsync(session.AuthToken, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.GetAccountAsync(session.AuthToken, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="GetSubscriptionAsync"/>
-        public async Task<IApiValidatedSubscription> GetSubscriptionAsync(ISession session, string productId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatedSubscription> GetSubscriptionAsync(ISession session, string productId,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -421,12 +480,15 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.GetSubscriptionAsync(session.AuthToken, productId, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.GetSubscriptionAsync(session.AuthToken, productId, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="GetUsersAsync"/>
         public async Task<IApiUsers> GetUsersAsync(ISession session, IEnumerable<string> ids,
-            IEnumerable<string> usernames = null, IEnumerable<string> facebookIds = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            IEnumerable<string> usernames = null, IEnumerable<string> facebookIds = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -434,11 +496,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.GetUsersAsync(session.AuthToken, ids, usernames, facebookIds, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.GetUsersAsync(session.AuthToken, ids, usernames, facebookIds, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ImportFacebookFriendsAsync"/>
-        public async Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task ImportFacebookFriendsAsync(ISession session, string token, bool? reset = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -446,12 +511,15 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.ImportFacebookFriendsAsync(session.AuthToken, new ApiAccountFacebook {Token = token},
-                reset, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.ImportFacebookFriendsAsync(session.AuthToken,
+                    new ApiAccountFacebook { Token = token },
+                    reset, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ImportSteamFriendsAsync"/>
-        public async Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task ImportSteamFriendsAsync(ISession session, string token, bool? reset = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -459,11 +527,15 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.ImportSteamFriendsAsync(session.AuthToken, new ApiAccountSteam {Token = token}, reset, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ImportSteamFriendsAsync(session.AuthToken, new ApiAccountSteam { Token = token },
+                    reset, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="JoinGroupAsync"/>
-        public async Task JoinGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task JoinGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -471,11 +543,13 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.JoinGroupAsync(session.AuthToken, groupId, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.JoinGroupAsync(session.AuthToken, groupId, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="JoinTournamentAsync"/>
-        public async Task JoinTournamentAsync(ISession session, string tournamentId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task JoinTournamentAsync(ISession session, string tournamentId,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -483,11 +557,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.JoinTournamentAsync(session.AuthToken, tournamentId, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.JoinTournamentAsync(session.AuthToken, tournamentId, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="KickGroupUsersAsync"/>
-        public async Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task KickGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -495,11 +572,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.KickGroupUsersAsync(session.AuthToken, groupId, ids, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.KickGroupUsersAsync(session.AuthToken, groupId, ids, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="LeaveGroupAsync"/>
-        public async Task LeaveGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task LeaveGroupAsync(ISession session, string groupId,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -507,11 +587,13 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.LeaveGroupAsync(session.AuthToken, groupId, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.LeaveGroupAsync(session.AuthToken, groupId, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="LinkAppleAsync"/>
-        public async Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -519,11 +601,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple { Token = token }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="LinkCustomAsync"/>
-        public async Task LinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task LinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -531,11 +616,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.LinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.LinkCustomAsync(session.AuthToken, new ApiAccountCustom { Id = id }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="LinkDeviceAsync"/>
-        public async Task LinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task LinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -543,11 +631,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.LinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.LinkDeviceAsync(session.AuthToken, new ApiAccountDevice { Id = id }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="LinkEmailAsync"/>
-        public async Task LinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task LinkEmailAsync(ISession session, string email, string password,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -555,12 +646,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.LinkEmailAsync(session.AuthToken,
-                new ApiAccountEmail {Email = email, Password = password}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.LinkEmailAsync(session.AuthToken,
+                    new ApiAccountEmail { Email = email, Password = password }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="LinkFacebookAsync"/>
-        public async Task LinkFacebookAsync(ISession session, string token, bool? import = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task LinkFacebookAsync(ISession session, string token, bool? import = true,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -568,12 +661,15 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.LinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, import, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.LinkFacebookAsync(session.AuthToken, new ApiAccountFacebook { Token = token }, import,
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="LinkGameCenterAsync"/>
         public async Task LinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestamp, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string salt, string signature, string timestamp, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -581,7 +677,7 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.LinkGameCenterAsync(session.AuthToken,
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.LinkGameCenterAsync(session.AuthToken,
                 new ApiAccountGameCenter
                 {
                     BundleId = bundleId,
@@ -594,7 +690,8 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="LinkGoogleAsync"/>
-        public async Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -602,11 +699,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.LinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.LinkGoogleAsync(session.AuthToken, new ApiAccountGoogle { Token = token }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="LinkSteamAsync"/>
-        public async Task LinkSteamAsync(ISession session, string token, bool sync, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task LinkSteamAsync(ISession session, string token, bool sync,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -614,18 +714,22 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.LinkSteamAsync(session.AuthToken,
-                new ApiLinkSteamRequest {Sync = sync, _account = new ApiAccountSteam {Token = token}}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.LinkSteamAsync(session.AuthToken,
+                    new ApiLinkSteamRequest { Sync = sync, _account = new ApiAccountSteam { Token = token } },
+                    canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
-        /// <inheritdoc cref="ListChannelMessagesAsync(Nakama.ISession,Nakama.IChannel,int,bool,string)"/>
+        /// <inheritdoc cref="ListChannelMessagesAsync(Nakama.ISession,Nakama.IChannel,int,bool,string,RetryConfiguration,CancellationToken)"/>
         public Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, IChannel channel, int limit = 1,
-            bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
-            ListChannelMessagesAsync(session, channel.Id, limit, forward, cursor);
+            bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default) =>
+            ListChannelMessagesAsync(session, channel.Id, limit, forward, cursor, retryConfiguration, canceller);
 
-        /// <inheritdoc cref="ListChannelMessagesAsync(Nakama.ISession,string,int,bool,string)"/>
+        /// <inheritdoc cref="ListChannelMessagesAsync(Nakama.ISession,string,int,bool,string,RetryConfiguration,CancellationToken)"/>
         public async Task<IApiChannelMessageList> ListChannelMessagesAsync(ISession session, string channelId,
-            int limit = 1, bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            int limit = 1, bool forward = true, string cursor = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -633,11 +737,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListChannelMessagesAsync(session.AuthToken, channelId, limit, forward, cursor,
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListFriendsAsync"/>
-        public async Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiFriendList> ListFriendsAsync(ISession session, int? state, int limit, string cursor,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -645,12 +752,19 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListFriendsAsync(session.AuthToken, limit, state, cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListFriendsAsync(session.AuthToken, limit, state, cursor, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListGroupUsersAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiGroupUserList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiGroupUserList> ListGroupUsersAsync(ISession session, string groupId, int? state,
-            int limit, string cursor, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            int limit, string cursor, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -658,12 +772,25 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListGroupUsersAsync(session.AuthToken, groupId, limit, state, cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListGroupUsersAsync(session.AuthToken, groupId, limit, state, cursor, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+
+            foreach (var groupUser in response.GroupUsers)
+            {
+                if (session.UserId.Equals(groupUser.User.Id) && groupUser.User is ApiUser u)
+                {
+                    u.Username = session.Username;
+                }
+            }
+
+            return response;
         }
 
         /// <inheritdoc cref="ListGroupsAsync"/>
         public async Task<IApiGroupList> ListGroupsAsync(ISession session, string name = null, int limit = 1,
-            string cursor = null, string langTag = null, int? members = null, bool? open = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string cursor = null, string langTag = null, int? members = null, bool? open = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -671,12 +798,19 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListGroupsAsync(session.AuthToken, name, cursor, limit, langTag, members, open, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListGroupsAsync(session.AuthToken, name, cursor, limit, langTag, members, open,
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListLeaderboardRecordsAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiLeaderboardRecordList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAsync(ISession session, string leaderboardId,
-            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -684,13 +818,38 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListLeaderboardRecordsAsync(session.AuthToken, leaderboardId, ownerIds, limit,
-                cursor, expiry?.ToString(), canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.ListLeaderboardRecordsAsync(
+                    session.AuthToken, leaderboardId, ownerIds, limit,
+                    cursor, expiry?.ToString(), canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+
+            foreach (var record in response.Records)
+            {
+                if (session.UserId.Equals(record.OwnerId) && record is ApiLeaderboardRecord r)
+                {
+                    r.Username = session.Username;
+                }
+            }
+
+            foreach (var record in response.OwnerRecords)
+            {
+                if (session.UserId.Equals(record.OwnerId) && record is ApiLeaderboardRecord r)
+                {
+                    r.Username = session.Username;
+                }
+            }
+
+            return response;
         }
 
         /// <inheritdoc cref="ListLeaderboardRecordsAroundOwnerAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiLeaderboardRecordList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(ISession session,
-            string leaderboardId, string ownerId, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string leaderboardId, string ownerId, long? expiry = null, int limit = 1, string cursor = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -698,13 +857,34 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListLeaderboardRecordsAroundOwnerAsync(session.AuthToken, leaderboardId, ownerId,
-                limit, expiry?.ToString(), cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.ListLeaderboardRecordsAroundOwnerAsync(
+                    session.AuthToken, leaderboardId, ownerId,
+                    limit, expiry?.ToString(), cursor, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+
+            foreach (var record in response.Records)
+            {
+                if (session.UserId.Equals(record.OwnerId) && record is ApiLeaderboardRecord r)
+                {
+                    r.Username = session.Username;
+                }
+            }
+
+            foreach (var record in response.OwnerRecords)
+            {
+                if (session.UserId.Equals(record.OwnerId) && record is ApiLeaderboardRecord r)
+                {
+                    r.Username = session.Username;
+                }
+            }
+
+            return response;
         }
 
         /// <inheritdoc cref="ListMatchesAsync"/>
         public async Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit,
-            bool authoritative, string label, string query, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            bool authoritative, string label, string query, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -712,12 +892,19 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListMatchesAsync(session.AuthToken, limit, authoritative, label, min, max, query, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListMatchesAsync(session.AuthToken, limit, authoritative, label, min, max, query,
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListNotificationsAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiNotificationList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiNotificationList> ListNotificationsAsync(ISession session, int limit = 1,
-            string cacheableCursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string cacheableCursor = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -725,17 +912,33 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListNotificationsAsync(session.AuthToken, limit, cacheableCursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListNotificationsAsync(session.AuthToken, limit, cacheableCursor, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+
+            foreach (var notification in response.Notifications)
+            {
+                if (!session.Username.Equals(notification.SenderId) && notification is ApiNotification n)
+                {
+                    n.SenderId = session.UserId;
+                }
+            }
+
+            return response;
         }
 
         [Obsolete("ListStorageObjects is obsolete, please use ListStorageObjectsAsync instead.", true)]
         public Task<IApiStorageObjectList> ListStorageObjects(ISession session, string collection, int limit = 1,
-            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
-            _retryInvoker.InvokeWithRetry(() => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            string cursor = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default) =>
+            _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor,
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
         /// <inheritdoc cref="ListStorageObjectsAsync"/>
         public async Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection,
-            int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -743,11 +946,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor,
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListSubscriptionsAsync"/>
-        public async Task<IApiSubscriptionList> ListSubscriptionsAsync(ISession session, int limit, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiSubscriptionList> ListSubscriptionsAsync(ISession session, int limit,
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -755,12 +961,20 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ListSubscriptionsAsync(session.AuthToken, new ApiListSubscriptionsRequest{Cursor = cursor, Limit = limit}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListSubscriptionsAsync(session.AuthToken,
+                    new ApiListSubscriptionsRequest { Cursor = cursor, Limit = limit }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListTournamentRecordsAroundOwnerAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiTournamentRecordList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiTournamentRecordList> ListTournamentRecordsAroundOwnerAsync(ISession session,
-            string tournamentId, string ownerId, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string tournamentId, string ownerId, long? expiry = null, int limit = 1, string cursor = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -768,13 +982,38 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListTournamentRecordsAroundOwnerAsync(session.AuthToken, tournamentId, ownerId,
-                limit, expiry?.ToString(), cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.ListTournamentRecordsAroundOwnerAsync(
+                    session.AuthToken, tournamentId, ownerId,
+                    limit, expiry?.ToString(), cursor, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+
+            foreach (var record in response.Records)
+            {
+                if (session.UserId.Equals(record.OwnerId) && record is ApiLeaderboardRecord r)
+                {
+                    r.Username = session.Username;
+                }
+            }
+
+            foreach (var record in response.OwnerRecords)
+            {
+                if (session.UserId.Equals(record.OwnerId) && record is ApiLeaderboardRecord r)
+                {
+                    r.Username = session.Username;
+                }
+            }
+
+            return response;
         }
 
         /// <inheritdoc cref="ListTournamentRecordsAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiTournamentRecordList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
         public async Task<IApiTournamentRecordList> ListTournamentRecordsAsync(ISession session, string tournamentId,
-            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            IEnumerable<string> ownerIds = null, long? expiry = null, int limit = 1, string cursor = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -782,13 +1021,34 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListTournamentRecordsAsync(session.AuthToken, tournamentId, ownerIds, limit, cursor,
-                expiry?.ToString(), canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.ListTournamentRecordsAsync(
+                    session.AuthToken, tournamentId, ownerIds, limit, cursor,
+                    expiry?.ToString(), canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+
+            foreach (var record in response.Records)
+            {
+                if (session.UserId.Equals(record.OwnerId) && record is ApiLeaderboardRecord r)
+                {
+                    r.Username = session.Username;
+                }
+            }
+
+            foreach (var record in response.OwnerRecords)
+            {
+                if (session.UserId.Equals(record.OwnerId) && record is ApiLeaderboardRecord r)
+                {
+                    r.Username = session.Username;
+                }
+            }
+
+            return response;
         }
 
         /// <inheritdoc cref="ListTournamentsAsync"/>
         public async Task<IApiTournamentList> ListTournamentsAsync(ISession session, int categoryStart, int categoryEnd,
-            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            int? startTime = null, int? endTime = null, int limit = 1, string cursor = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -796,15 +1056,18 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListTournamentsAsync(session.AuthToken, categoryStart, categoryEnd, startTime,
-                endTime, limit, cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ListTournamentsAsync(session.AuthToken,
+                    categoryStart, categoryEnd, startTime,
+                    endTime, limit, cursor, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
-        /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession,int?,int,string)"/>
-        public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state, int limit, string cursor, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
+        /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession,int?,int,string,RetryConfiguration,CancellationToken)"/>
+        public Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, int? state, int limit, string cursor,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
             ListUserGroupsAsync(session, session.UserId, state, limit, cursor);
 
-        /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession,string,int?,int,string)"/>
+        /// <inheritdoc cref="ListUserGroupsAsync(Nakama.ISession,string,int?,int,string,RetryConfiguration,CancellationToken)"/>
         public async Task<IApiUserGroupList> ListUserGroupsAsync(ISession session, string userId, int? state, int limit,
             string cursor, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
@@ -814,12 +1077,15 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListUserGroupsAsync(session.AuthToken, userId, limit, state, cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListUserGroupsAsync(session.AuthToken, userId, limit, state, cursor, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ListUsersStorageObjectsAsync"/>
         public async Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection,
-            string userId, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string userId, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -827,11 +1093,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ListStorageObjects2Async(session.AuthToken, collection, userId, limit, cursor, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListStorageObjects2Async(session.AuthToken, collection, userId, limit, cursor,
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="PromoteGroupUsersAsync"/>
-        public async Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task PromoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -839,12 +1108,15 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.PromoteGroupUsersAsync(session.AuthToken, groupId, ids, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.PromoteGroupUsersAsync(session.AuthToken, groupId, ids, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ReadStorageObjectsAsync"/>
         public async Task<IApiStorageObjects> ReadStorageObjectsAsync(ISession session,
-            IApiReadStorageObjectId[] ids = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            IApiReadStorageObjectId[] ids = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -865,15 +1137,16 @@ namespace Nakama
                         UserId = id.UserId
                     });
                 }
-
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ReadStorageObjectsAsync(session.AuthToken,
-                new ApiReadStorageObjectsRequest {_objectIds = objects}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ReadStorageObjectsAsync(session.AuthToken,
+                    new ApiReadStorageObjectsRequest { _objectIds = objects }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
-        /// <inheritdoc cref="RpcAsync(Nakama.ISession,string,string)"/>
-        public async Task<IApiRpc> RpcAsync(ISession session, string id, string payload, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        /// <inheritdoc cref="RpcAsync(Nakama.ISession,string,string,RetryConfiguration,CancellationToken)"/>
+        public async Task<IApiRpc> RpcAsync(ISession session, string id, string payload,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -881,11 +1154,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFuncAsync(session.AuthToken, id, payload, null, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.RpcFuncAsync(session.AuthToken, id, payload, null, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
-        /// <inheritdoc cref="RpcAsync(Nakama.ISession,string)"/>
-        public async Task<IApiRpc> RpcAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        /// <inheritdoc cref="RpcAsync(Nakama.ISession,string,RetryConfiguration,CancellationToken)"/>
+        public async Task<IApiRpc> RpcAsync(ISession session, string id, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -893,41 +1169,56 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFunc2Async(session.AuthToken, id, null, null, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.RpcFunc2Async(session.AuthToken, id, null, null, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
-        /// <inheritdoc cref="RpcAsync(string,string,string)"/>
-        public Task<IApiRpc> RpcAsync(string httpkey, string id, string payload, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
-             _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFuncAsync(null, id, payload, httpkey, canceller), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
-        
-        /// <inheritdoc cref="RpcAsync(string,string)"/>
-        public Task<IApiRpc> RpcAsync(string httpkey, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
-            _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFunc2Async(null, id, null, httpkey, canceller), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        /// <inheritdoc cref="RpcAsync(string,string,string,RetryConfiguration,CancellationToken)"/>
+        public Task<IApiRpc> RpcAsync(string httpkey, string id, string payload,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
+            _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFuncAsync(null, id, payload, httpkey, canceller),
+                new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
-        /// <inheritdoc cref="SessionLogoutAsync(Nakama.ISession)"/>
-        public Task SessionLogoutAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) => SessionLogoutAsync(session.AuthToken, session.RefreshToken, retryConfiguration, canceller);
+        /// <inheritdoc cref="RpcAsync(string,string,RetryConfiguration,CancellationToken)"/>
+        public Task<IApiRpc> RpcAsync(string httpkey, string id, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default) =>
+            _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFunc2Async(null, id, null, httpkey, canceller),
+                new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
-        /// <inheritdoc cref="SessionLogoutAsync(string,string)"/>
-        public Task SessionLogoutAsync(string authToken, string refreshToken, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
-             _retryInvoker.InvokeWithRetry(() => _apiClient.SessionLogoutAsync(authToken,
-                new ApiSessionLogoutRequest {Token = authToken, RefreshToken = refreshToken}, canceller), new RetryHistory(authToken, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        /// <inheritdoc cref="SessionLogoutAsync(Nakama.ISession,RetryConfiguration,CancellationToken)"/>
+        public Task SessionLogoutAsync(ISession session, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default) => SessionLogoutAsync(session.AuthToken, session.RefreshToken,
+            retryConfiguration, canceller);
+
+        /// <inheritdoc cref="SessionLogoutAsync(string,string,RetryConfiguration,CancellationToken)"/>
+        public Task SessionLogoutAsync(string authToken, string refreshToken,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
+            _retryInvoker.InvokeWithRetry(() => _apiClient.SessionLogoutAsync(authToken,
+                    new ApiSessionLogoutRequest { Token = authToken, RefreshToken = refreshToken }, canceller),
+                new RetryHistory(authToken, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
         /// <inheritdoc cref="SessionRefreshAsync"/>
-        public async Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             // NOTE: Warn developers to encourage them to set a suitable session and refresh token lifetime.
             if (session.Created && session.ExpireTime - session.CreateTime < 70)
             {
-                Logger.WarnFormat("Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
+                Logger.WarnFormat(
+                    "Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
             }
 
             if (session.Created && session.RefreshExpireTime - session.CreateTime < 3700)
             {
-                Logger.WarnFormat("Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
+                Logger.WarnFormat(
+                    "Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
             }
 
-            var response = await  _retryInvoker.InvokeWithRetry(() => _apiClient.SessionRefreshAsync(ServerKey, string.Empty,
-                new ApiSessionRefreshRequest {Token = session.RefreshToken, _vars = vars}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.SessionRefreshAsync(ServerKey,
+                    string.Empty,
+                    new ApiSessionRefreshRequest { Token = session.RefreshToken, _vars = vars }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
             if (session is Session updatedSession)
             {
@@ -945,7 +1236,8 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="UnlinkAppleAsync"/>
-        public async Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -953,11 +1245,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkAppleAsync(session.AuthToken, new ApiAccountApple {Token = token}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.UnlinkAppleAsync(session.AuthToken, new ApiAccountApple { Token = token }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="UnlinkCustomAsync"/>
-        public async Task UnlinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task UnlinkCustomAsync(ISession session, string id, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -965,11 +1260,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkCustomAsync(session.AuthToken, new ApiAccountCustom {Id = id}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.UnlinkCustomAsync(session.AuthToken, new ApiAccountCustom { Id = id }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="UnlinkDeviceAsync"/>
-        public async Task UnlinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task UnlinkDeviceAsync(ISession session, string id, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -977,11 +1275,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkDeviceAsync(session.AuthToken, new ApiAccountDevice {Id = id}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.UnlinkDeviceAsync(session.AuthToken, new ApiAccountDevice { Id = id }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="UnlinkEmailAsync"/>
-        public async Task UnlinkEmailAsync(ISession session, string email, string password, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task UnlinkEmailAsync(ISession session, string email, string password,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -989,12 +1290,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkEmailAsync(session.AuthToken,
-                new ApiAccountEmail {Email = email, Password = password}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkEmailAsync(session.AuthToken,
+                    new ApiAccountEmail { Email = email, Password = password }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="UnlinkFacebookAsync"/>
-        public async Task UnlinkFacebookAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task UnlinkFacebookAsync(ISession session, string token,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1002,12 +1305,15 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkFacebookAsync(session.AuthToken, new ApiAccountFacebook {Token = token}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.UnlinkFacebookAsync(session.AuthToken, new ApiAccountFacebook { Token = token },
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="UnlinkGameCenterAsync"/>
         public async Task UnlinkGameCenterAsync(ISession session, string bundleId, string playerId, string publicKeyUrl,
-            string salt, string signature, string timestamp, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string salt, string signature, string timestamp, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1015,7 +1321,7 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkGameCenterAsync(
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkGameCenterAsync(
                 session.AuthToken,
                 new ApiAccountGameCenter
                 {
@@ -1029,7 +1335,8 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="UnlinkGoogleAsync"/>
-        public async Task UnlinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task UnlinkGoogleAsync(ISession session, string token,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1037,11 +1344,14 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkGoogleAsync(session.AuthToken, new ApiAccountGoogle {Token = token}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.UnlinkGoogleAsync(session.AuthToken, new ApiAccountGoogle { Token = token },
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="UnlinkSteamAsync"/>
-        public async Task UnlinkSteamAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task UnlinkSteamAsync(ISession session, string token, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1049,10 +1359,16 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.UnlinkSteamAsync(session.AuthToken, new ApiAccountSteam {Token = token}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.UnlinkSteamAsync(session.AuthToken, new ApiAccountSteam { Token = token }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="UpdateAccountAsync"/>
+        /// <remarks>
+        /// The current user's username will be automatically refreshed in their authorized <c>ISession</c> if the
+        /// username field is updated to become different.
+        /// </remarks>
         public async Task UpdateAccountAsync(ISession session, string username, string displayName = null,
             string avatarUrl = null, string langTag = null, string location = null, string timezone = null,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
@@ -1063,7 +1379,7 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() => _apiClient.UpdateAccountAsync(
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.UpdateAccountAsync(
                 session.AuthToken, new ApiUpdateAccountRequest
                 {
                     AvatarUrl = avatarUrl,
@@ -1073,11 +1389,17 @@ namespace Nakama
                     Timezone = timezone,
                     Username = username
                 }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+
+            if (!username.Equals(session.Username))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
         }
 
         /// <inheritdoc cref="UpdateGroupAsync"/>
         public async Task UpdateGroupAsync(ISession session, string groupId, string name, bool open,
-            string description = null, string avatarUrl = null, string langTag = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            string description = null, string avatarUrl = null, string langTag = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1085,7 +1407,7 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await  _retryInvoker.InvokeWithRetry(() =>_apiClient.UpdateGroupAsync(
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.UpdateGroupAsync(
                 session.AuthToken, groupId,
                 new ApiUpdateGroupRequest
                 {
@@ -1098,7 +1420,8 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="ValidatePurchaseAppleAsync"/>
-        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt,
+            bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1106,15 +1429,17 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseAppleAsync(session.AuthToken, new ApiValidatePurchaseAppleRequest
-            {
-                Receipt = receipt,
-                Persist = persist
-            }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseAppleAsync(session.AuthToken,
+                new ApiValidatePurchaseAppleRequest
+                {
+                    Receipt = receipt,
+                    Persist = persist
+                }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ValidatePurchaseGoogleAsync"/>
-        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt,
+            bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1122,15 +1447,18 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseGoogleAsync(session.AuthToken, new ApiValidatePurchaseGoogleRequest
-            {
-                Purchase = receipt,
-                Persist = persist
-            }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseGoogleAsync(session.AuthToken,
+                new ApiValidatePurchaseGoogleRequest
+                {
+                    Purchase = receipt,
+                    Persist = persist
+                }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="ValidatePurchaseHuaweiAsync"/>
-        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt, string signature, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
+            string signature, bool persist = true, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1138,15 +1466,18 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseHuaweiAsync(session.AuthToken, new ApiValidatePurchaseHuaweiRequest
-            {
-                Purchase = receipt,
-                Signature = signature,
-                Persist = persist
-            }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseHuaweiAsync(session.AuthToken,
+                new ApiValidatePurchaseHuaweiRequest
+                {
+                    Purchase = receipt,
+                    Signature = signature,
+                    Persist = persist
+                }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
-        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(ISession session,
+            string receipt, bool persist = true, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1154,14 +1485,17 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidateSubscriptionAppleAsync(session.AuthToken, new ApiValidateSubscriptionAppleRequest
-            {
-                Receipt = receipt,
-                Persist = persist
-            }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ValidateSubscriptionAppleAsync(
+                session.AuthToken, new ApiValidateSubscriptionAppleRequest
+                {
+                    Receipt = receipt,
+                    Persist = persist
+                }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
-        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionGoogleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionGoogleAsync(ISession session,
+            string receipt, bool persist = true, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1169,16 +1503,18 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.ValidateSubscriptionGoogleAsync(session.AuthToken, new ApiValidateSubscriptionGoogleRequest
-            {
-                Receipt = receipt,
-                Persist = persist
-            }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ValidateSubscriptionGoogleAsync(
+                session.AuthToken, new ApiValidateSubscriptionGoogleRequest
+                {
+                    Receipt = receipt,
+                    Persist = persist
+                }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="WriteLeaderboardRecordAsync"/>
         public async Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(ISession session, string leaderboardId,
-            long score, long subScore = 0, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            long score, long subScore = 0, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1186,7 +1522,7 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.WriteLeaderboardRecordAsync(
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.WriteLeaderboardRecordAsync(
                 session.AuthToken, leaderboardId,
                 new WriteLeaderboardRecordRequestLeaderboardRecordWrite
                 {
@@ -1199,7 +1535,8 @@ namespace Nakama
 
         /// <inheritdoc cref="WriteStorageObjectsAsync"/>
         public async Task<IApiStorageObjectAcks> WriteStorageObjectsAsync(ISession session,
-            IApiWriteStorageObject[] objects = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            IApiWriteStorageObject[] objects = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1221,13 +1558,15 @@ namespace Nakama
                 });
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.WriteStorageObjectsAsync(session.AuthToken,
-                new ApiWriteStorageObjectsRequest {_objects = writes}, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.WriteStorageObjectsAsync(session.AuthToken,
+                    new ApiWriteStorageObjectsRequest { _objects = writes }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="WriteTournamentRecordAsync"/>
         public async Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(ISession session, string tournamentId,
-            long score, long subScore = 0, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+            long score, long subScore = 0, string metadata = null, ApiOperator apiOperator = ApiOperator.NO_OVERRIDE,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -1235,7 +1574,7 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            return await  _retryInvoker.InvokeWithRetry(() => _apiClient.WriteTournamentRecordAsync(session.AuthToken,
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.WriteTournamentRecordAsync(session.AuthToken,
                 tournamentId,
                 new WriteTournamentRecordRequestTournamentRecordWrite
                 {
