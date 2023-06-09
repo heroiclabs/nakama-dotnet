@@ -4,9 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.8.0]
+### Added
+- Nakama: Added `Authoritative` flag to tournaments returned from the server.
+- Nakama: Added `RefundTime` and `UserId` to purchases and subscriptions returned from the server.
+- Nakama: Added raw subscription provider information.
+- Nakama: Added `DeleteAccountAsync` for deleting user accounts.
+- Satori: Added `DeleteIdentityAsync` for deleting user identities.
+
 ### Changed
-- Nakama: Use `session.Username` wherever outdated state might be returned.
+- Nakama: Used `session.Username` wherever outdated state might be returned.
+
+### Fixed
+- Nakama: Fixed issue where outgoing payloads could include unnecessary JSON.
+
 
 ## [3.7.0]
 ### Added

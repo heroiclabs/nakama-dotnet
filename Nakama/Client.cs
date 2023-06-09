@@ -331,6 +331,21 @@ namespace Nakama
                 }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
+        /// <inheritdoc cref="DeleteAccountAsync"/>
+        public async Task DeleteAccountAsync(ISession session, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.DeleteAccountAsync(session.AuthToken, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
         /// <inheritdoc cref="DeleteFriendsAsync"/>
         public async Task DeleteFriendsAsync(ISession session, IEnumerable<string> ids,
             IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null,
@@ -1155,7 +1170,7 @@ namespace Nakama
             }
 
             return await _retryInvoker.InvokeWithRetry(
-                () => _apiClient.RpcFuncAsync(session.AuthToken, id, payload, null, canceller),
+                () => _apiClient.RpcFuncAsync(session.AuthToken, string.Empty, string.Empty, id, payload, null, canceller),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
@@ -1170,20 +1185,20 @@ namespace Nakama
             }
 
             return await _retryInvoker.InvokeWithRetry(
-                () => _apiClient.RpcFunc2Async(session.AuthToken, id, null, null, canceller),
+                () => _apiClient.RpcFunc2Async(session.AuthToken, string.Empty, string.Empty, id, null, null, canceller),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="RpcAsync(string,string,string,RetryConfiguration,CancellationToken)"/>
         public Task<IApiRpc> RpcAsync(string httpkey, string id, string payload,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default) =>
-            _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFuncAsync(null, id, payload, httpkey, canceller),
+            _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFuncAsync(null, string.Empty, string.Empty, id, payload, httpkey, canceller),
                 new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
         /// <inheritdoc cref="RpcAsync(string,string,RetryConfiguration,CancellationToken)"/>
         public Task<IApiRpc> RpcAsync(string httpkey, string id, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default) =>
-            _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFunc2Async(null, id, null, httpkey, canceller),
+            _retryInvoker.InvokeWithRetry(() => _apiClient.RpcFunc2Async(null, string.Empty, string.Empty, id, null, httpkey, canceller),
                 new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
         /// <inheritdoc cref="SessionLogoutAsync(Nakama.ISession,RetryConfiguration,CancellationToken)"/>
