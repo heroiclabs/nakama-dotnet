@@ -237,6 +237,15 @@ namespace Nakama
             string avatarUrl = null, string langTag = null, bool open = true, int maxCount = 100, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Delete the current user's account. Note that this will invalidate your session, requiring you to reauthenticate.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task DeleteAccountAsync(ISession session, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Delete one more or users by id or username from friends.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -796,7 +805,7 @@ namespace Nakama
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task to resolve an RPC response.</returns>
         Task<IApiRpc> RpcAsync(string httpKey, string id, string payload, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
-        
+
         /// <summary>
         /// Execute a function on the server without a session.
         /// </summary>

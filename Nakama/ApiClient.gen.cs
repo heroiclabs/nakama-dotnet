@@ -7,7 +7,7 @@ namespace Nakama
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Nakama.TinyJson;
+    using TinyJson;
 
     /// <summary>
     /// An exception generated for <c>HttpResponse</c> objects don't return a success status.
@@ -134,6 +134,7 @@ namespace Nakama
         public int State { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IApiUser User => _user;
         [DataMember(Name="user"), Preserve]
         public ApiUser _user { get; set; }
@@ -169,6 +170,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IApiGroup Group => _group;
         [DataMember(Name="group"), Preserve]
         public ApiGroup _group { get; set; }
@@ -222,6 +224,7 @@ namespace Nakama
         public string Metadata { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public ApiOperator Operator => _operator;
         [DataMember(Name="operator"), Preserve]
         public ApiOperator _operator { get; set; }
@@ -281,6 +284,7 @@ namespace Nakama
         public string Metadata { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public ApiOperator Operator => _operator;
         [DataMember(Name="operator"), Preserve]
         public ApiOperator _operator { get; set; }
@@ -355,6 +359,7 @@ namespace Nakama
         public string CustomId { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiAccountDevice> Devices => _devices ?? new List<ApiAccountDevice>(0);
         [DataMember(Name="devices"), Preserve]
         public List<ApiAccountDevice> _devices { get; set; }
@@ -368,6 +373,7 @@ namespace Nakama
         public string Email { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IApiUser User => _user;
         [DataMember(Name="user"), Preserve]
         public ApiUser _user { get; set; }
@@ -420,6 +426,7 @@ namespace Nakama
         public string Token { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -465,6 +472,7 @@ namespace Nakama
         public string Id { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -510,6 +518,7 @@ namespace Nakama
         public string Id { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -564,6 +573,7 @@ namespace Nakama
         public string Password { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -610,6 +620,7 @@ namespace Nakama
         public string Token { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -655,6 +666,7 @@ namespace Nakama
         public string SignedPlayerInfo { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -745,6 +757,7 @@ namespace Nakama
         public string TimestampSeconds { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -795,6 +808,7 @@ namespace Nakama
         public string Token { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -840,6 +854,7 @@ namespace Nakama
         public string Token { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -1043,6 +1058,7 @@ namespace Nakama
         public string CacheableCursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiChannelMessage> Messages => _messages ?? new List<ApiChannelMessage>(0);
         [DataMember(Name="messages"), Preserve]
         public List<ApiChannelMessage> _messages { get; set; }
@@ -1209,6 +1225,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiDeleteStorageObjectId> ObjectIds => _objectIds ?? new List<ApiDeleteStorageObjectId>(0);
         [DataMember(Name="object_ids"), Preserve]
         public List<ApiDeleteStorageObjectId> _objectIds { get; set; }
@@ -1261,6 +1278,7 @@ namespace Nakama
         public string Name { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Properties => _properties ?? new Dictionary<string, string>();
         [DataMember(Name="properties"), Preserve]
         public Dictionary<string, string> _properties { get; set; }
@@ -1321,6 +1339,7 @@ namespace Nakama
         public string UpdateTime { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IApiUser User => _user;
         [DataMember(Name="user"), Preserve]
         public ApiUser _user { get; set; }
@@ -1361,6 +1380,7 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiFriend> Friends => _friends ?? new List<ApiFriend>(0);
         [DataMember(Name="friends"), Preserve]
         public List<ApiFriend> _friends { get; set; }
@@ -1538,6 +1558,7 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiGroup> Groups => _groups ?? new List<ApiGroup>(0);
         [DataMember(Name="groups"), Preserve]
         public List<ApiGroup> _groups { get; set; }
@@ -1577,6 +1598,7 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IGroupUserListGroupUser> GroupUsers => _groupUsers ?? new List<GroupUserListGroupUser>(0);
         [DataMember(Name="group_users"), Preserve]
         public List<GroupUserListGroupUser> _groupUsers { get; set; }
@@ -1764,6 +1786,7 @@ namespace Nakama
         public string NextCursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiLeaderboardRecord> OwnerRecords => _ownerRecords ?? new List<ApiLeaderboardRecord>(0);
         [DataMember(Name="owner_records"), Preserve]
         public List<ApiLeaderboardRecord> _ownerRecords { get; set; }
@@ -1773,6 +1796,7 @@ namespace Nakama
         public string PrevCursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiLeaderboardRecord> Records => _records ?? new List<ApiLeaderboardRecord>(0);
         [DataMember(Name="records"), Preserve]
         public List<ApiLeaderboardRecord> _records { get; set; }
@@ -1810,6 +1834,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IApiAccountSteam Account => _account;
         [DataMember(Name="account"), Preserve]
         public ApiAccountSteam _account { get; set; }
@@ -1960,6 +1985,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiMatch> Matches => _matches ?? new List<ApiMatch>(0);
         [DataMember(Name="matches"), Preserve]
         public List<ApiMatch> _matches { get; set; }
@@ -2086,6 +2112,7 @@ namespace Nakama
         public string CacheableCursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiNotification> Notifications => _notifications ?? new List<ApiNotification>(0);
         [DataMember(Name="notifications"), Preserve]
         public List<ApiNotification> _notifications { get; set; }
@@ -2191,6 +2218,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiReadStorageObjectId> ObjectIds => _objectIds ?? new List<ApiReadStorageObjectId>(0);
         [DataMember(Name="object_ids"), Preserve]
         public List<ApiReadStorageObjectId> _objectIds { get; set; }
@@ -2363,6 +2391,7 @@ namespace Nakama
         public string Token { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
         [DataMember(Name="vars"), Preserve]
         public Dictionary<string, string> _vars { get; set; }
@@ -2565,6 +2594,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiStorageObjectAck> Acks => _acks ?? new List<ApiStorageObjectAck>(0);
         [DataMember(Name="acks"), Preserve]
         public List<ApiStorageObjectAck> _acks { get; set; }
@@ -2603,6 +2633,7 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiStorageObject> Objects => _objects ?? new List<ApiStorageObject>(0);
         [DataMember(Name="objects"), Preserve]
         public List<ApiStorageObject> _objects { get; set; }
@@ -2633,6 +2664,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiStorageObject> Objects => _objects ?? new List<ApiStorageObject>(0);
         [DataMember(Name="objects"), Preserve]
         public List<ApiStorageObject> _objects { get; set; }
@@ -2718,6 +2750,7 @@ namespace Nakama
         public string PrevCursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiValidatedSubscription> ValidatedSubscriptions => _validatedSubscriptions ?? new List<ApiValidatedSubscription>(0);
         [DataMember(Name="validated_subscriptions"), Preserve]
         public List<ApiValidatedSubscription> _validatedSubscriptions { get; set; }
@@ -2737,6 +2770,11 @@ namespace Nakama
     /// </summary>
     public interface IApiTournament
     {
+
+        /// <summary>
+        /// Whether the leaderboard was created authoritatively or not.
+        /// </summary>
+        bool Authoritative { get; }
 
         /// <summary>
         /// True if the tournament is active and can enter. A computed value.
@@ -2839,6 +2877,10 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [DataMember(Name="authoritative"), Preserve]
+        public bool Authoritative { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="can_enter"), Preserve]
         public bool CanEnter { get; set; }
 
@@ -2887,6 +2929,7 @@ namespace Nakama
         public int NextReset { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public ApiOperator Operator => _operator;
         [DataMember(Name="operator"), Preserve]
         public ApiOperator _operator { get; set; }
@@ -2918,6 +2961,7 @@ namespace Nakama
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "Authoritative: ", Authoritative, ", ");
             output = string.Concat(output, "CanEnter: ", CanEnter, ", ");
             output = string.Concat(output, "Category: ", Category, ", ");
             output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
@@ -2967,6 +3011,7 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiTournament> Tournaments => _tournaments ?? new List<ApiTournament>(0);
         [DataMember(Name="tournaments"), Preserve]
         public List<ApiTournament> _tournaments { get; set; }
@@ -3016,6 +3061,7 @@ namespace Nakama
         public string NextCursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiLeaderboardRecord> OwnerRecords => _ownerRecords ?? new List<ApiLeaderboardRecord>(0);
         [DataMember(Name="owner_records"), Preserve]
         public List<ApiLeaderboardRecord> _ownerRecords { get; set; }
@@ -3025,6 +3071,7 @@ namespace Nakama
         public string PrevCursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiLeaderboardRecord> Records => _records ?? new List<ApiLeaderboardRecord>(0);
         [DataMember(Name="records"), Preserve]
         public List<ApiLeaderboardRecord> _records { get; set; }
@@ -3342,6 +3389,7 @@ namespace Nakama
         public string Cursor { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IUserGroupListUserGroup> UserGroups => _userGroups ?? new List<UserGroupListUserGroup>(0);
         [DataMember(Name="user_groups"), Preserve]
         public List<UserGroupListUserGroup> _userGroups { get; set; }
@@ -3372,6 +3420,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiUser> Users => _users ?? new List<ApiUser>(0);
         [DataMember(Name="users"), Preserve]
         public List<ApiUser> _users { get; set; }
@@ -3525,6 +3574,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiValidatedPurchase> ValidatedPurchases => _validatedPurchases ?? new List<ApiValidatedPurchase>(0);
         [DataMember(Name="validated_purchases"), Preserve]
         public List<ApiValidatedPurchase> _validatedPurchases { get; set; }
@@ -3630,6 +3680,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IApiValidatedSubscription ValidatedSubscription => _validatedSubscription;
         [DataMember(Name="validated_subscription"), Preserve]
         public ApiValidatedSubscription _validatedSubscription { get; set; }
@@ -3649,7 +3700,7 @@ namespace Nakama
     {
 
         /// <summary>
-        /// UNIX Timestamp when the receipt validation was stored in DB.
+        /// Timestamp when the receipt validation was stored in DB.
         /// </summary>
         string CreateTime { get; }
 
@@ -3669,9 +3720,14 @@ namespace Nakama
         string ProviderResponse { get; }
 
         /// <summary>
-        /// UNIX Timestamp when the purchase was done.
+        /// Timestamp when the purchase was done.
         /// </summary>
         string PurchaseTime { get; }
+
+        /// <summary>
+        /// Timestamp when the purchase was refunded. Set to UNIX
+        /// </summary>
+        string RefundTime { get; }
 
         /// <summary>
         /// Whether the purchase had already been validated by Nakama before.
@@ -3689,9 +3745,14 @@ namespace Nakama
         string TransactionId { get; }
 
         /// <summary>
-        /// UNIX Timestamp when the receipt validation was updated in DB.
+        /// Timestamp when the receipt validation was updated in DB.
         /// </summary>
         string UpdateTime { get; }
+
+        /// <summary>
+        /// Purchase User ID.
+        /// </summary>
+        string UserId { get; }
     }
 
     /// <inheritdoc />
@@ -3703,6 +3764,7 @@ namespace Nakama
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public ApiStoreEnvironment Environment => _environment;
         [DataMember(Name="environment"), Preserve]
         public ApiStoreEnvironment _environment { get; set; }
@@ -3720,10 +3782,15 @@ namespace Nakama
         public string PurchaseTime { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="refund_time"), Preserve]
+        public string RefundTime { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="seen_before"), Preserve]
         public bool SeenBefore { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public ApiStoreProvider Store => _store;
         [DataMember(Name="store"), Preserve]
         public ApiStoreProvider _store { get; set; }
@@ -3736,6 +3803,10 @@ namespace Nakama
         [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
 
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3744,10 +3815,12 @@ namespace Nakama
             output = string.Concat(output, "ProductId: ", ProductId, ", ");
             output = string.Concat(output, "ProviderResponse: ", ProviderResponse, ", ");
             output = string.Concat(output, "PurchaseTime: ", PurchaseTime, ", ");
+            output = string.Concat(output, "RefundTime: ", RefundTime, ", ");
             output = string.Concat(output, "SeenBefore: ", SeenBefore, ", ");
             output = string.Concat(output, "Store: ", Store, ", ");
             output = string.Concat(output, "TransactionId: ", TransactionId, ", ");
             output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
+            output = string.Concat(output, "UserId: ", UserId, ", ");
             return output;
         }
     }
@@ -3789,9 +3862,24 @@ namespace Nakama
         string ProductId { get; }
 
         /// <summary>
+        /// Raw provider notification body.
+        /// </summary>
+        string ProviderNotification { get; }
+
+        /// <summary>
+        /// Raw provider validation response body.
+        /// </summary>
+        string ProviderResponse { get; }
+
+        /// <summary>
         /// UNIX Timestamp when the purchase was done.
         /// </summary>
         string PurchaseTime { get; }
+
+        /// <summary>
+        /// Subscription refund time. If this time is set, the subscription was refunded.
+        /// </summary>
+        string RefundTime { get; }
 
         /// <summary>
         /// Store identifier
@@ -3802,6 +3890,11 @@ namespace Nakama
         /// UNIX Timestamp when the receipt validation was updated in DB.
         /// </summary>
         string UpdateTime { get; }
+
+        /// <summary>
+        /// Subscription User ID.
+        /// </summary>
+        string UserId { get; }
     }
 
     /// <inheritdoc />
@@ -3817,6 +3910,7 @@ namespace Nakama
         public string CreateTime { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public ApiStoreEnvironment Environment => _environment;
         [DataMember(Name="environment"), Preserve]
         public ApiStoreEnvironment _environment { get; set; }
@@ -3834,10 +3928,23 @@ namespace Nakama
         public string ProductId { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="provider_notification"), Preserve]
+        public string ProviderNotification { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="provider_response"), Preserve]
+        public string ProviderResponse { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="purchase_time"), Preserve]
         public string PurchaseTime { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="refund_time"), Preserve]
+        public string RefundTime { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
         public ApiStoreProvider Store => _store;
         [DataMember(Name="store"), Preserve]
         public ApiStoreProvider _store { get; set; }
@@ -3845,6 +3952,10 @@ namespace Nakama
         /// <inheritdoc />
         [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
 
         public override string ToString()
         {
@@ -3855,9 +3966,13 @@ namespace Nakama
             output = string.Concat(output, "ExpiryTime: ", ExpiryTime, ", ");
             output = string.Concat(output, "OriginalTransactionId: ", OriginalTransactionId, ", ");
             output = string.Concat(output, "ProductId: ", ProductId, ", ");
+            output = string.Concat(output, "ProviderNotification: ", ProviderNotification, ", ");
+            output = string.Concat(output, "ProviderResponse: ", ProviderResponse, ", ");
             output = string.Concat(output, "PurchaseTime: ", PurchaseTime, ", ");
+            output = string.Concat(output, "RefundTime: ", RefundTime, ", ");
             output = string.Concat(output, "Store: ", Store, ", ");
             output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
+            output = string.Concat(output, "UserId: ", UserId, ", ");
             return output;
         }
     }
@@ -3957,6 +4072,7 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiWriteStorageObject> Objects => _objects ?? new List<ApiWriteStorageObject>(0);
         [DataMember(Name="objects"), Preserve]
         public List<ApiWriteStorageObject> _objects { get; set; }
@@ -4028,6 +4144,7 @@ namespace Nakama
         public int Code { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IProtobufAny> Details => _details ?? new List<ProtobufAny>(0);
         [DataMember(Name="details"), Preserve]
         public List<ProtobufAny> _details { get; set; }
@@ -4082,6 +4199,33 @@ namespace Nakama
             }.Uri;
 
             var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// Delete the current user's account.
+        /// </summary>
+        public async Task DeleteAccountAsync(
+            string bearerToken,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/account";
+
+            var queryParams = "";
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = urlpath,
+                Query = queryParams
+            }.Uri;
+
+            var method = "DELETE";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -4158,14 +4302,14 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateAppleAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountApple body,
+            ApiAccountApple account,
             bool? create,
             string username,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/authenticate/apple";
@@ -4194,7 +4338,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
@@ -4206,14 +4350,14 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateCustomAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountCustom body,
+            ApiAccountCustom account,
             bool? create,
             string username,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/authenticate/custom";
@@ -4242,7 +4386,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
@@ -4254,14 +4398,14 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateDeviceAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountDevice body,
+            ApiAccountDevice account,
             bool? create,
             string username,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/authenticate/device";
@@ -4290,7 +4434,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
@@ -4302,14 +4446,14 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateEmailAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountEmail body,
+            ApiAccountEmail account,
             bool? create,
             string username,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/authenticate/email";
@@ -4338,7 +4482,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
@@ -4350,15 +4494,15 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateFacebookAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountFacebook body,
+            ApiAccountFacebook account,
             bool? create,
             string username,
             bool? sync,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/authenticate/facebook";
@@ -4390,7 +4534,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
@@ -4402,14 +4546,14 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateFacebookInstantGameAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountFacebookInstantGame body,
+            ApiAccountFacebookInstantGame account,
             bool? create,
             string username,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/authenticate/facebookinstantgame";
@@ -4438,7 +4582,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
@@ -4450,14 +4594,14 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateGameCenterAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountGameCenter body,
+            ApiAccountGameCenter account,
             bool? create,
             string username,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/authenticate/gamecenter";
@@ -4486,7 +4630,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
@@ -4498,14 +4642,14 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateGoogleAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountGoogle body,
+            ApiAccountGoogle account,
             bool? create,
             string username,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/authenticate/google";
@@ -4534,7 +4678,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
@@ -4546,15 +4690,15 @@ namespace Nakama
         public async Task<IApiSession> AuthenticateSteamAsync(
             string basicAuthUsername,
             string basicAuthPassword,
-            ApiAccountSteam body,
+            ApiAccountSteam account,
             bool? create,
             string username,
             bool? sync,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/authenticate/steam";
@@ -4586,7 +4730,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
@@ -4733,13 +4877,13 @@ namespace Nakama
         /// </summary>
         public async Task LinkFacebookAsync(
             string bearerToken,
-            ApiAccountFacebook body,
+            ApiAccountFacebook account,
             bool? sync,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/link/facebook";
@@ -4761,7 +4905,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
@@ -5484,13 +5628,13 @@ namespace Nakama
         /// </summary>
         public async Task ImportFacebookFriendsAsync(
             string bearerToken,
-            ApiAccountFacebook body,
+            ApiAccountFacebook account,
             bool? reset,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/friend/facebook";
@@ -5512,7 +5656,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
@@ -5522,13 +5666,13 @@ namespace Nakama
         /// </summary>
         public async Task ImportSteamFriendsAsync(
             string bearerToken,
-            ApiAccountSteam body,
+            ApiAccountSteam account,
             bool? reset,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/friend/steam";
@@ -5550,7 +5694,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
@@ -6351,16 +6495,16 @@ namespace Nakama
         public async Task<IApiLeaderboardRecord> WriteLeaderboardRecordAsync(
             string bearerToken,
             string leaderboardId,
-            WriteLeaderboardRecordRequestLeaderboardRecordWrite body,
+            WriteLeaderboardRecordRequestLeaderboardRecordWrite record,
             CancellationToken? cancellationToken)
         {
             if (leaderboardId == null)
             {
                 throw new ArgumentException("'leaderboardId' is required but was null.");
             }
-            if (body == null)
+            if (record == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'record' is required but was null.");
             }
 
             var urlpath = "/v2/leaderboard/{leaderboardId}";
@@ -6380,7 +6524,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = record.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecord>();
@@ -6563,6 +6707,8 @@ namespace Nakama
         /// </summary>
         public async Task<IApiRpc> RpcFunc2Async(
             string bearerToken,
+            string basicAuthUsername,
+            string basicAuthPassword,
             string id,
             string payload,
             string httpKey,
@@ -6597,6 +6743,12 @@ namespace Nakama
                 var header = string.Concat("Bearer ", bearerToken);
                 headers.Add("Authorization", header);
             }
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
@@ -6608,8 +6760,10 @@ namespace Nakama
         /// </summary>
         public async Task<IApiRpc> RpcFuncAsync(
             string bearerToken,
+            string basicAuthUsername,
+            string basicAuthPassword,
             string id,
-            string body,
+            string payload,
             string httpKey,
             CancellationToken? cancellationToken)
         {
@@ -6617,9 +6771,9 @@ namespace Nakama
             {
                 throw new ArgumentException("'id' is required but was null.");
             }
-            if (body == null)
+            if (payload == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'payload' is required but was null.");
             }
 
             var urlpath = "/v2/rpc/{id}";
@@ -6643,9 +6797,15 @@ namespace Nakama
                 var header = string.Concat("Bearer ", bearerToken);
                 headers.Add("Authorization", header);
             }
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = payload.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiRpc>();
@@ -6992,16 +7152,16 @@ namespace Nakama
         public async Task<IApiLeaderboardRecord> WriteTournamentRecord2Async(
             string bearerToken,
             string tournamentId,
-            WriteTournamentRecordRequestTournamentRecordWrite body,
+            WriteTournamentRecordRequestTournamentRecordWrite record,
             CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
                 throw new ArgumentException("'tournamentId' is required but was null.");
             }
-            if (body == null)
+            if (record == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'record' is required but was null.");
             }
 
             var urlpath = "/v2/tournament/{tournamentId}";
@@ -7021,7 +7181,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = record.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecord>();
@@ -7033,16 +7193,16 @@ namespace Nakama
         public async Task<IApiLeaderboardRecord> WriteTournamentRecordAsync(
             string bearerToken,
             string tournamentId,
-            WriteTournamentRecordRequestTournamentRecordWrite body,
+            WriteTournamentRecordRequestTournamentRecordWrite record,
             CancellationToken? cancellationToken)
         {
             if (tournamentId == null)
             {
                 throw new ArgumentException("'tournamentId' is required but was null.");
             }
-            if (body == null)
+            if (record == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'record' is required but was null.");
             }
 
             var urlpath = "/v2/tournament/{tournamentId}";
@@ -7062,7 +7222,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = record.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecord>();
