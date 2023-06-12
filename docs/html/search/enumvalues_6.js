@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sandbox_0',['SANDBOX',['../namespace_nakama.html#ac6bc0f689ba2cf1af997a138312f948ca439d8eeff1670efd5d1eb2a4232254e8',1,'Nakama']]]
+  ['no_5foverride_0',['NO_OVERRIDE',['../namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7a9ed9fde06cff703c7420b059dd1bfca9',1,'Nakama']]]
 ];

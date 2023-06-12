@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['directmessage_0',['DirectMessage',['../namespace_nakama.html#addd7f097ac4c449d75e44da62657f307a1189cba3ed448908f0ab3b5af22dbffa',1,'Nakama']]]
+  ['best_0',['BEST',['../namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7ada034de38c791a4e574a513e7b97bec6',1,'Nakama']]]
 ];

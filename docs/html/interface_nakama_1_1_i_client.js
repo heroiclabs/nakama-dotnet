@@ -13,6 +13,7 @@ var interface_nakama_1_1_i_client =
     [ "BanGroupUsersAsync", "interface_nakama_1_1_i_client.html#ab22184136c797808a2aebe53100804e2", null ],
     [ "BlockFriendsAsync", "interface_nakama_1_1_i_client.html#a625ec426d7062f4c118f3f014dd6e378", null ],
     [ "CreateGroupAsync", "interface_nakama_1_1_i_client.html#aae0252ef30e7b6f9a1e2dc518f7478ee", null ],
+    [ "DeleteAccountAsync", "interface_nakama_1_1_i_client.html#acc6d8f02d597837cf8e891a9016be613", null ],
     [ "DeleteFriendsAsync", "interface_nakama_1_1_i_client.html#a6c9418726e8c74b0cefff24bccf335e1", null ],
     [ "DeleteGroupAsync", "interface_nakama_1_1_i_client.html#a90a221604c5aee514bae83bfce921005", null ],
     [ "DeleteLeaderboardRecordAsync", "interface_nakama_1_1_i_client.html#ae50039a13b1b5d75613030d130f9d5e3", null ],

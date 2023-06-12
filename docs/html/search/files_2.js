@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['nakama_2eassemblyinfo_2ecs_0',['Nakama.AssemblyInfo.cs',['../_debug_2net46_2_nakama_8_assembly_info_8cs.html',1,'(Global Namespace)'],['../_debug_2netstandard2_80_2_nakama_8_assembly_info_8cs.html',1,'(Global Namespace)']]]
+  ['entitytoolargeexception_2ecs_0',['EntityTooLargeException.cs',['../_entity_too_large_exception_8cs.html',1,'']]],
+  ['event_2ecs_1',['Event.cs',['../_event_8cs.html',1,'']]]
 ];

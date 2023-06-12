@@ -1,4 +1,29 @@
 var searchData=
 [
-  ['httphelper_2ecs_0',['HttpHelper.cs',['../_http_helper_8cs.html',1,'']]]
+  ['ibufferpool_2ecs_0',['IBufferPool.cs',['../_i_buffer_pool_8cs.html',1,'']]],
+  ['ichannel_2ecs_1',['IChannel.cs',['../_i_channel_8cs.html',1,'']]],
+  ['ichannelmessageack_2ecs_2',['IChannelMessageAck.cs',['../_i_channel_message_ack_8cs.html',1,'']]],
+  ['ichannelpresenceevent_2ecs_3',['IChannelPresenceEvent.cs',['../_i_channel_presence_event_8cs.html',1,'']]],
+  ['imatch_2ecs_4',['IMatch.cs',['../_i_match_8cs.html',1,'']]],
+  ['imatchmakermatched_2ecs_5',['IMatchmakerMatched.cs',['../_i_matchmaker_matched_8cs.html',1,'']]],
+  ['imatchmakerticket_2ecs_6',['IMatchmakerTicket.cs',['../_i_matchmaker_ticket_8cs.html',1,'']]],
+  ['imatchpresenceevent_2ecs_7',['IMatchPresenceEvent.cs',['../_i_match_presence_event_8cs.html',1,'']]],
+  ['imatchstate_2ecs_8',['IMatchState.cs',['../_i_match_state_8cs.html',1,'']]],
+  ['invalidhttpresponsecodeexception_2ecs_9',['InvalidHttpResponseCodeException.cs',['../_invalid_http_response_code_exception_8cs.html',1,'']]],
+  ['iparty_2ecs_10',['IParty.cs',['../_i_party_8cs.html',1,'']]],
+  ['ipartyclose_2ecs_11',['IPartyClose.cs',['../_i_party_close_8cs.html',1,'']]],
+  ['ipartydata_2ecs_12',['IPartyData.cs',['../_i_party_data_8cs.html',1,'']]],
+  ['ipartyjoinrequest_2ecs_13',['IPartyJoinRequest.cs',['../_i_party_join_request_8cs.html',1,'']]],
+  ['ipartyleader_2ecs_14',['IPartyLeader.cs',['../_i_party_leader_8cs.html',1,'']]],
+  ['ipartymatchmakerticket_2ecs_15',['IPartyMatchmakerTicket.cs',['../_i_party_matchmaker_ticket_8cs.html',1,'']]],
+  ['ipartypresenceevent_2ecs_16',['IPartyPresenceEvent.cs',['../_i_party_presence_event_8cs.html',1,'']]],
+  ['ipingpongmanager_2ecs_17',['IPingPongManager.cs',['../_i_ping_pong_manager_8cs.html',1,'']]],
+  ['isocket_2ecs_18',['ISocket.cs',['../_i_socket_8cs.html',1,'']]],
+  ['isocketadapter_2ecs_19',['ISocketAdapter.cs',['../_i_socket_adapter_8cs.html',1,'']]],
+  ['istatus_2ecs_20',['IStatus.cs',['../_i_status_8cs.html',1,'']]],
+  ['istatuspresenceevent_2ecs_21',['IStatusPresenceEvent.cs',['../_i_status_presence_event_8cs.html',1,'']]],
+  ['istreampresenceevent_2ecs_22',['IStreamPresenceEvent.cs',['../_i_stream_presence_event_8cs.html',1,'']]],
+  ['iuserpresence_2ecs_23',['IUserPresence.cs',['../_i_user_presence_8cs.html',1,'']]],
+  ['iwebsocketclientfactory_2ecs_24',['IWebSocketClientFactory.cs',['../_i_web_socket_client_factory_8cs.html',1,'']]],
+  ['iwebsocketserverfactory_2ecs_25',['IWebSocketServerFactory.cs',['../_i_web_socket_server_factory_8cs.html',1,'']]]
 ];

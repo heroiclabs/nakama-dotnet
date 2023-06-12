@@ -1,5 +1,6 @@
 var interface_nakama_1_1_i_api_tournament =
 [
+    [ "Authoritative", "interface_nakama_1_1_i_api_tournament.html#a7c912a92804dffad2da1cc975f161665", null ],
     [ "CanEnter", "interface_nakama_1_1_i_api_tournament.html#abca204c196b0a90e4342e18f4c935630", null ],
     [ "Category", "interface_nakama_1_1_i_api_tournament.html#ad4d095c5500d084ae1071979320f4803", null ],
     [ "CreateTime", "interface_nakama_1_1_i_api_tournament.html#a327d36c0623cd95772505dbde9029671", null ],

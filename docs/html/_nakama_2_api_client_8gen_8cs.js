@@ -67,7 +67,21 @@ var _nakama_2_api_client_8gen_8cs =
     [ "Nakama.IApiWriteStorageObjectsRequest", "interface_nakama_1_1_i_api_write_storage_objects_request.html", "interface_nakama_1_1_i_api_write_storage_objects_request" ],
     [ "Nakama.IProtobufAny", "interface_nakama_1_1_i_protobuf_any.html", "interface_nakama_1_1_i_protobuf_any" ],
     [ "Nakama.IRpcStatus", "interface_nakama_1_1_i_rpc_status.html", "interface_nakama_1_1_i_rpc_status" ],
-    [ "ApiOperator", "_nakama_2_api_client_8gen_8cs.html#a8e9c42a36e780e31a03f2ba94a3bb6e7", null ],
-    [ "ApiStoreEnvironment", "_nakama_2_api_client_8gen_8cs.html#a216a2d7c4acbc3a4f29a98514c483cd6", null ],
-    [ "ApiStoreProvider", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49", null ]
+    [ "ApiOperator", "_nakama_2_api_client_8gen_8cs.html#a8e9c42a36e780e31a03f2ba94a3bb6e7", [
+      [ "NO_OVERRIDE", "_nakama_2_api_client_8gen_8cs.html#a8e9c42a36e780e31a03f2ba94a3bb6e7a9ed9fde06cff703c7420b059dd1bfca9", null ],
+      [ "BEST", "_nakama_2_api_client_8gen_8cs.html#a8e9c42a36e780e31a03f2ba94a3bb6e7ada034de38c791a4e574a513e7b97bec6", null ],
+      [ "SET", "_nakama_2_api_client_8gen_8cs.html#a8e9c42a36e780e31a03f2ba94a3bb6e7a8c52684db8f49511e9b44471716bf164", null ],
+      [ "INCREMENT", "_nakama_2_api_client_8gen_8cs.html#a8e9c42a36e780e31a03f2ba94a3bb6e7a90cf1f5206b348a822cc1a453a587534", null ],
+      [ "DECREMENT", "_nakama_2_api_client_8gen_8cs.html#a8e9c42a36e780e31a03f2ba94a3bb6e7ac0ffa6e46086551bc5113d1238faf106", null ]
+    ] ],
+    [ "ApiStoreEnvironment", "_nakama_2_api_client_8gen_8cs.html#a216a2d7c4acbc3a4f29a98514c483cd6", [
+      [ "UNKNOWN", "_nakama_2_api_client_8gen_8cs.html#a216a2d7c4acbc3a4f29a98514c483cd6a696b031073e74bf2cb98e5ef201d4aa3", null ],
+      [ "SANDBOX", "_nakama_2_api_client_8gen_8cs.html#a216a2d7c4acbc3a4f29a98514c483cd6a439d8eeff1670efd5d1eb2a4232254e8", null ],
+      [ "PRODUCTION", "_nakama_2_api_client_8gen_8cs.html#a216a2d7c4acbc3a4f29a98514c483cd6a86601675138015edb458866e7d879118", null ]
+    ] ],
+    [ "ApiStoreProvider", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49", [
+      [ "APPLE_APP_STORE", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49a4142ec218b299cb29da17393e166a0bf", null ],
+      [ "GOOGLE_PLAY_STORE", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49ae8126d6db8bb0ca0c6557130eb2d4c7f", null ],
+      [ "HUAWEI_APP_GALLERY", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49a76c8d7237ca9427f64e470d61d34246c", null ]
+    ] ]
 ];
