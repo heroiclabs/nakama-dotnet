@@ -1,11 +1,24 @@
 var searchData=
 [
-  ['nakama_2eassemblyinfo_2ecs_0',['Nakama.AssemblyInfo.cs',['../_release_2net46_2_nakama_8_assembly_info_8cs.html',1,'(Global Namespace)'],['../_release_2netstandard2_80_2_nakama_8_assembly_info_8cs.html',1,'(Global Namespace)']]],
-  ['readme_2emd_1',['README.md',['../_r_e_a_d_m_e_8md.html',1,'']]],
-  ['retry_2ecs_2',['Retry.cs',['../_retry_8cs.html',1,'']]],
-  ['retryconfiguration_2ecs_3',['RetryConfiguration.cs',['../_retry_configuration_8cs.html',1,'']]],
-  ['retryhistory_2ecs_4',['RetryHistory.cs',['../_retry_history_8cs.html',1,'']]],
-  ['retryinvoker_2ecs_5',['RetryInvoker.cs',['../_retry_invoker_8cs.html',1,'']]],
-  ['retryjitter_2ecs_6',['RetryJitter.cs',['../_retry_jitter_8cs.html',1,'']]],
-  ['retrylistener_2ecs_7',['RetryListener.cs',['../_retry_listener_8cs.html',1,'']]]
+  ['apiclient_2egen_2ecs_0',['ApiClient.gen.cs',['../_satori_2_api_client_8gen_8cs.html',1,'']]],
+  ['client_2ecs_1',['Client.cs',['../_satori_2_client_8cs.html',1,'']]],
+  ['gziphttpclienthandler_2ecs_2',['GZipHttpClientHandler.cs',['../_satori_2_g_zip_http_client_handler_8cs.html',1,'']]],
+  ['httprequestadapter_2ecs_3',['HttpRequestAdapter.cs',['../_satori_2_http_request_adapter_8cs.html',1,'']]],
+  ['iclient_2ecs_4',['IClient.cs',['../_satori_2_i_client_8cs.html',1,'']]],
+  ['ihttpadapter_2ecs_5',['IHttpAdapter.cs',['../_satori_2_i_http_adapter_8cs.html',1,'']]],
+  ['ihttpadapterutil_2ecs_6',['IHttpAdapterUtil.cs',['../_satori_2_i_http_adapter_util_8cs.html',1,'']]],
+  ['ilogger_2ecs_7',['ILogger.cs',['../_satori_2_i_logger_8cs.html',1,'']]],
+  ['isession_2ecs_8',['ISession.cs',['../_satori_2_i_session_8cs.html',1,'']]],
+  ['jsonparser_2ecs_9',['JsonParser.cs',['../_satori_2_tiny_json_2_json_parser_8cs.html',1,'']]],
+  ['jsonwriter_2ecs_10',['JsonWriter.cs',['../_satori_2_tiny_json_2_json_writer_8cs.html',1,'']]],
+  ['preserveattribute_2ecs_11',['PreserveAttribute.cs',['../_satori_2_preserve_attribute_8cs.html',1,'']]],
+  ['secwebsocketkeymissingexception_2ecs_12',['SecWebSocketKeyMissingException.cs',['../_sec_web_socket_key_missing_exception_8cs.html',1,'']]],
+  ['serverlistenersocketexception_2ecs_13',['ServerListenerSocketException.cs',['../_server_listener_socket_exception_8cs.html',1,'']]],
+  ['session_2ecs_14',['Session.cs',['../_satori_2_session_8cs.html',1,'']]],
+  ['socket_2ecs_15',['Socket.cs',['../_socket_8cs.html',1,'']]],
+  ['statusfollowmessage_2ecs_16',['StatusFollowMessage.cs',['../_status_follow_message_8cs.html',1,'']]],
+  ['statusunfollowmessage_2ecs_17',['StatusUnfollowMessage.cs',['../_status_unfollow_message_8cs.html',1,'']]],
+  ['statusupdatemessage_2ecs_18',['StatusUpdateMessage.cs',['../_status_update_message_8cs.html',1,'']]],
+  ['storageobjectid_2ecs_19',['StorageObjectId.cs',['../_storage_object_id_8cs.html',1,'']]],
+  ['transientexceptiondelegate_2ecs_20',['TransientExceptionDelegate.cs',['../_satori_2_transient_exception_delegate_8cs.html',1,'']]]
 ];

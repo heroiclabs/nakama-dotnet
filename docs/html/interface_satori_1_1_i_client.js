@@ -2,6 +2,7 @@ var interface_satori_1_1_i_client =
 [
     [ "AuthenticateAsync", "interface_satori_1_1_i_client.html#ab011eb8fa89c1c71e31a003204ad847b", null ],
     [ "AuthenticateLogoutAsync", "interface_satori_1_1_i_client.html#a827092f8b15b38c4a86ca88907338908", null ],
+    [ "DeleteIdentityAsync", "interface_satori_1_1_i_client.html#a84da3c109792288953f34481de578929", null ],
     [ "EventAsync", "interface_satori_1_1_i_client.html#a8e7cef9f3202d1d9d05e36b459826fd1", null ],
     [ "EventsAsync", "interface_satori_1_1_i_client.html#a03db8312fe7905204c87568ee1052862", null ],
     [ "GetAllExperimentsAsync", "interface_satori_1_1_i_client.html#a542e098899291a892108e042e630c9d7", null ],

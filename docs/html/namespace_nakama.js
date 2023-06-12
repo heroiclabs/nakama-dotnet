@@ -108,10 +108,28 @@ var namespace_nakama =
     [ "WebSocketAdapter", "class_nakama_1_1_web_socket_adapter.html", "class_nakama_1_1_web_socket_adapter" ],
     [ "WebSocketStdlibAdapter", "class_nakama_1_1_web_socket_stdlib_adapter.html", "class_nakama_1_1_web_socket_stdlib_adapter" ],
     [ "WriteStorageObject", "class_nakama_1_1_write_storage_object.html", "class_nakama_1_1_write_storage_object" ],
-    [ "ApiOperator", "namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7", null ],
-    [ "ApiStoreEnvironment", "namespace_nakama.html#a216a2d7c4acbc3a4f29a98514c483cd6", null ],
-    [ "ApiStoreProvider", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49", null ],
-    [ "ChannelType", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307", null ],
+    [ "ApiOperator", "namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7", [
+      [ "NO_OVERRIDE", "namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7a9ed9fde06cff703c7420b059dd1bfca9", null ],
+      [ "BEST", "namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7ada034de38c791a4e574a513e7b97bec6", null ],
+      [ "SET", "namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7a8c52684db8f49511e9b44471716bf164", null ],
+      [ "INCREMENT", "namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7a90cf1f5206b348a822cc1a453a587534", null ],
+      [ "DECREMENT", "namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7ac0ffa6e46086551bc5113d1238faf106", null ]
+    ] ],
+    [ "ApiStoreEnvironment", "namespace_nakama.html#a216a2d7c4acbc3a4f29a98514c483cd6", [
+      [ "UNKNOWN", "namespace_nakama.html#a216a2d7c4acbc3a4f29a98514c483cd6a696b031073e74bf2cb98e5ef201d4aa3", null ],
+      [ "SANDBOX", "namespace_nakama.html#a216a2d7c4acbc3a4f29a98514c483cd6a439d8eeff1670efd5d1eb2a4232254e8", null ],
+      [ "PRODUCTION", "namespace_nakama.html#a216a2d7c4acbc3a4f29a98514c483cd6a86601675138015edb458866e7d879118", null ]
+    ] ],
+    [ "ApiStoreProvider", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49", [
+      [ "APPLE_APP_STORE", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49a4142ec218b299cb29da17393e166a0bf", null ],
+      [ "GOOGLE_PLAY_STORE", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49ae8126d6db8bb0ca0c6557130eb2d4c7f", null ],
+      [ "HUAWEI_APP_GALLERY", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49a76c8d7237ca9427f64e470d61d34246c", null ]
+    ] ],
+    [ "ChannelType", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307", [
+      [ "Room", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307acc3abcf4426bff80257d22999d0eda8f", null ],
+      [ "DirectMessage", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307a1189cba3ed448908f0ab3b5af22dbffa", null ],
+      [ "Group", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307a03937134cedab9078be39a77ee3a48a0", null ]
+    ] ],
     [ "Jitter", "namespace_nakama.html#a127d52a41cb18b64e939f4b06b316b59", null ],
     [ "RetryListener", "namespace_nakama.html#a54689fcf19366a415851641cb61947d4", null ],
     [ "TransientExceptionDelegate", "namespace_nakama.html#a016772f008c1c294bf609c6ece102445", null ]

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['google_5fplay_5fstore_0',['GOOGLE_PLAY_STORE',['../namespace_nakama.html#a02c7a48fe2c90b177a534bc0f3558ebbae8126d6db8bb0ca0c6557130eb2d4c7f',1,'Nakama']]],
-  ['group_1',['Group',['../namespace_nakama.html#addd7f097ac4c449d75e44da62657f307a03937134cedab9078be39a77ee3a48a0',1,'Nakama']]]
+  ['decrement_0',['DECREMENT',['../namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7ac0ffa6e46086551bc5113d1238faf106',1,'Nakama']]],
+  ['directmessage_1',['DirectMessage',['../namespace_nakama.html#addd7f097ac4c449d75e44da62657f307a1189cba3ed448908f0ab3b5af22dbffa',1,'Nakama']]]
 ];
