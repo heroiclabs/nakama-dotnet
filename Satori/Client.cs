@@ -334,5 +334,17 @@ namespace Satori
                 new ApiUpdatePropertiesRequest { _default = defaultProperties, _custom = customProperties },
                 cancellationToken);
         }
+        
+        /// <inheritdoc cref="DeleteIdentityAsync" />
+        public async Task DeleteIdentityAsync(ISession session, CancellationToken? cancellationToken = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, cancellationToken);
+            }
+
+            await _apiClient.SatoriDeleteIdentityAsync(session.AuthToken, cancellationToken);
+        }
     }
 }
