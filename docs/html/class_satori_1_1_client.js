@@ -4,7 +4,7 @@ var class_satori_1_1_client =
     [ "Client", "class_satori_1_1_client.html#a52592e348df73a0d8776b7620666607d", null ],
     [ "AuthenticateAsync", "class_satori_1_1_client.html#a39165aaac0facf0e3e9d0e865183e28c", null ],
     [ "AuthenticateLogoutAsync", "class_satori_1_1_client.html#a19a54b27abb6adb73f1094cb69445986", null ],
-    [ "DeleteIdentityAsync", "class_satori_1_1_client.html#afc2c72c9e16e317e8b44a0642339061b", null ],
+    [ "DeleteIdentityAsync", "class_satori_1_1_client.html#ac16b32499517ee2a5ab8f74723e2f1db", null ],
     [ "EventAsync", "class_satori_1_1_client.html#abbba7e70eed4e191b001093074f1db14", null ],
     [ "EventsAsync", "class_satori_1_1_client.html#ac02792a3ac5bc184ca646da8d9be7638", null ],
     [ "GetAllExperimentsAsync", "class_satori_1_1_client.html#a8e3804717f15a93d01b07e1f7fe07c6d", null ],

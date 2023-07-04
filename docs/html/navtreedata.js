@@ -26,7 +26,7 @@ var NAVTREE =
 [
   [ "Nakama .NET Client SDK", "index.html", [
     [ "Nakama .NET", "index.html", null ],
-    [ "Changelog", "md__2_users_2gp_2_documents_2_git_hub_2nakama-dotnet_2_c_h_a_n_g_e_l_o_g.html", null ],
+    [ "Changelog", "md__2_users_2flavio_2_projects_2heroiclabs_2nakama-dotnet_2_c_h_a_n_g_e_l_o_g.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -56,17 +56,17 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_binary_reader_writer_8cs.html",
-"class_nakama_1_1_client.html#a80306a00533b136b52cd6aff74db3e90",
-"class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_web_socket_buffer_overflow_exception.html#a02de4e50e60e158d84e0d4fa8417e04d",
-"class_nakama_1_1_socket.html#a8b3b14eceedee8d96186d5bf234d820c",
-"functions.html",
-"interface_nakama_1_1_console_1_1_i_api_user.html#afa69bac4d2ac21fcb18b8df53b44646f",
-"interface_nakama_1_1_i_api_account_facebook_instant_game.html#a7fcfc5ce27bd97e4d2a8e8cebc6c1802",
-"interface_nakama_1_1_i_api_read_storage_object_id.html#af6e84434171da0547ff9d04875c9df1c",
-"interface_nakama_1_1_i_api_validate_subscription_google_request.html#a1b0a2361edbd84507267d9cacf2a2602",
-"interface_nakama_1_1_i_client.html#aadcfb5308770d73098d9ba66534074af",
-"interface_nakama_1_1_i_socket.html#a094fbace93957878a94815d38967aaf3",
-"interface_satori_1_1_i_api_authenticate_refresh_request.html"
+"class_nakama_1_1_client.html#a769d19ca9593f14fc8a3f91d1950f155",
+"class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_server_listener_socket_exception.html#ad77e30ec3f871bf621276fa00ac2d8cf",
+"class_nakama_1_1_socket.html#a869d3761f21ba7a2578f005a6690f707",
+"dir_2c78f4ea1566149e6f1239d9a2bbc92d.html",
+"interface_nakama_1_1_console_1_1_i_api_user.html#a9ad3492dc8be24a6cf9a1a9756bee5cf",
+"interface_nakama_1_1_i_api_account_email.html#aff45051f1088d4f780179e03795d81f6",
+"interface_nakama_1_1_i_api_notification_list.html",
+"interface_nakama_1_1_i_api_validate_purchase_response.html",
+"interface_nakama_1_1_i_client.html#a9443bb244b7a51c6a493900822c654f1",
+"interface_nakama_1_1_i_session.html#abe374a4f8e250ffb5207740ee935e791",
+"interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_web_socket_server_factory.html#a317ffba9297f7d6ed0dc899ad1143fc6"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,5 +1,6 @@
 var dir_ba769f4416b2c074a28c6130af43e345 =
 [
+    [ "obj", "dir_0a71ed179ba9d4357fa1a0aa4e188f77.html", "dir_0a71ed179ba9d4357fa1a0aa4e188f77" ],
     [ "TinyJson", "dir_ec82c3f1a2edb4d01443ada27de98406.html", "dir_ec82c3f1a2edb4d01443ada27de98406" ],
     [ "Satori/ApiClient.gen.cs", "_satori_2_api_client_8gen_8cs.html", "_satori_2_api_client_8gen_8cs" ],
     [ "Satori/Client.cs", "_satori_2_client_8cs.html", "_satori_2_client_8cs" ],
