@@ -164,9 +164,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aea9d790170b8366f8632f0ff1fdfb494"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#aea9d790170b8366f8632f0ff1fdfb494">UpdatePropertiesAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, Dictionary&lt; string, string &gt; defaultProperties, Dictionary&lt; string, string &gt; customProperties, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:aea9d790170b8366f8632f0ff1fdfb494"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update properties associated with this identity.  <br /></td></tr>
 <tr class="separator:aea9d790170b8366f8632f0ff1fdfb494"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84da3c109792288953f34481de578929"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a84da3c109792288953f34481de578929">DeleteIdentityAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, string id, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:a84da3c109792288953f34481de578929"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete an Identity.  <br /></td></tr>
-<tr class="separator:a84da3c109792288953f34481de578929"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88b1f49bb26e0ef2561ffe39b480a43d"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a88b1f49bb26e0ef2561ffe39b480a43d">DeleteIdentityAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:a88b1f49bb26e0ef2561ffe39b480a43d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete the caller's identity and associated data.  <br /></td></tr>
+<tr class="separator:a88b1f49bb26e0ef2561ffe39b480a43d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="properties" name="properties"></a>
 Properties</h2></td></tr>
@@ -281,8 +281,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="a84da3c109792288953f34481de578929" name="a84da3c109792288953f34481de578929"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84da3c109792288953f34481de578929">&#9670;&#160;</a></span>DeleteIdentityAsync()</h2>
+<a id="a88b1f49bb26e0ef2561ffe39b480a43d" name="a88b1f49bb26e0ef2561ffe39b480a43d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88b1f49bb26e0ef2561ffe39b480a43d">&#9670;&#160;</a></span>DeleteIdentityAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -292,12 +292,6 @@ Properties</h2></td></tr>
           <td>(</td>
           <td class="paramtype"><a class="el" href="interface_satori_1_1_i_session.html">ISession</a>&#160;</td>
           <td class="paramname"><em>session</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -313,18 +307,17 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Delete an Identity. </p>
+<p>Delete the caller's identity and associated data. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">session</td><td>The session of the user.</td></tr>
-    <tr><td class="paramname">id</td><td>The identifier of the identity.</td></tr>
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A task object.</dd></dl>
 
-<p>Implemented in <a class="el" href="class_satori_1_1_client.html#afc2c72c9e16e317e8b44a0642339061b">Satori.Client</a>.</p>
+<p>Implemented in <a class="el" href="class_satori_1_1_client.html#ac16b32499517ee2a5ab8f74723e2f1db">Satori.Client</a>.</p>
 
 </div>
 </div>

@@ -1154,20 +1154,14 @@ namespace Satori
         }
 
         /// <summary>
-        /// Delete an Identity.
+        /// Delete the caller's identity and associated data.
         /// </summary>
         public async Task SatoriDeleteIdentityAsync(
             string bearerToken,
-            string id,
             CancellationToken? cancellationToken)
         {
-            if (id == null)
-            {
-                throw new ArgumentException("'id' is required but was null.");
-            }
 
-            var urlpath = "/v1/identify/{id}";
-            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+            var urlpath = "/v1/identity";
 
             var queryParams = "";
 

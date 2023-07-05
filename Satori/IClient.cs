@@ -202,14 +202,13 @@ namespace Satori
         /// <returns>A task object.</returns>
         public Task UpdatePropertiesAsync(ISession session, Dictionary<string, string> defaultProperties,
             Dictionary<string, string> customProperties, CancellationToken? cancellationToken = default);
-
+        
         /// <summary>
-        /// Delete an Identity.
+        /// Delete the caller's identity and associated data.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="id">The identifier of the identity.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task object.</returns>
-        public Task DeleteIdentityAsync(ISession session, string id, CancellationToken? cancellationToken = default);
+        public Task DeleteIdentityAsync(ISession session, CancellationToken? cancellationToken = default);
     }
 }
