@@ -322,7 +322,7 @@ namespace Satori
 
         /// <inheritdoc cref="UpdatePropertiesAsync" />
         public async Task UpdatePropertiesAsync(ISession session, Dictionary<string, string> defaultProperties,
-            Dictionary<string, string> customProperties, CancellationToken? cancellationToken = default)
+            Dictionary<string, string> customProperties, bool recompute = false, CancellationToken? cancellationToken = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -330,9 +330,12 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            await _apiClient.SatoriUpdatePropertiesAsync(session.AuthToken,
-                new ApiUpdatePropertiesRequest { _default = defaultProperties, _custom = customProperties },
-                cancellationToken);
+            ApiUpdatePropertiesRequest payload = new ApiUpdatePropertiesRequest { 
+                _default = defaultProperties, 
+                _custom = customProperties,
+                Recompute = recompute,
+            };
+            await _apiClient.SatoriUpdatePropertiesAsync(session.AuthToken, payload, cancellationToken);
         }
         
         /// <inheritdoc cref="DeleteIdentityAsync" />

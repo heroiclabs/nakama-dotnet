@@ -133,11 +133,13 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
         [DataMember(Name="custom"), Preserve]
         public Dictionary<string, string> _custom { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
         [DataMember(Name="default"), Preserve]
         public Dictionary<string, string> _default { get; set; }
@@ -209,6 +211,7 @@ namespace Satori
         public string Id { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Metadata => _metadata ?? new Dictionary<string, string>();
         [DataMember(Name="metadata"), Preserve]
         public Dictionary<string, string> _metadata { get; set; }
@@ -260,6 +263,7 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiEvent> Events => _events ?? new List<ApiEvent>(0);
         [DataMember(Name="events"), Preserve]
         public List<ApiEvent> _events { get; set; }
@@ -327,6 +331,7 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiExperiment> Experiments => _experiments ?? new List<ApiExperiment>(0);
         [DataMember(Name="experiments"), Preserve]
         public List<ApiExperiment> _experiments { get; set; }
@@ -404,6 +409,7 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiFlag> Flags => _flags ?? new List<ApiFlag>(0);
         [DataMember(Name="flags"), Preserve]
         public List<ApiFlag> _flags { get; set; }
@@ -443,11 +449,13 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
         [DataMember(Name="custom"), Preserve]
         public Dictionary<string, string> _custom { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
         [DataMember(Name="default"), Preserve]
         public Dictionary<string, string> _default { get; set; }
@@ -563,6 +571,7 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiLiveEvent> LiveEvents => _liveEvents ?? new List<ApiLiveEvent>(0);
         [DataMember(Name="live_events"), Preserve]
         public List<ApiLiveEvent> _liveEvents { get; set; }
@@ -602,16 +611,19 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Computed => _computed ?? new Dictionary<string, string>();
         [DataMember(Name="computed"), Preserve]
         public Dictionary<string, string> _computed { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
         [DataMember(Name="custom"), Preserve]
         public Dictionary<string, string> _custom { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
         [DataMember(Name="default"), Preserve]
         public Dictionary<string, string> _default { get; set; }
@@ -671,6 +683,7 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IApiProperties Properties => _properties;
         [DataMember(Name="properties"), Preserve]
         public ApiProperties _properties { get; set; }
@@ -708,6 +721,11 @@ namespace Satori
         /// Event default properties.
         /// </summary>
         IDictionary<string, string> Default { get; }
+
+        /// <summary>
+        /// Informs the server to recompute the audience membership of the identity.
+        /// </summary>
+        bool Recompute { get; }
     }
 
     /// <inheritdoc />
@@ -715,14 +733,20 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
         [DataMember(Name="custom"), Preserve]
         public Dictionary<string, string> _custom { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
         [DataMember(Name="default"), Preserve]
         public Dictionary<string, string> _default { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="recompute"), Preserve]
+        public bool Recompute { get; set; }
 
         public override string ToString()
         {
@@ -741,6 +765,7 @@ namespace Satori
                 defaultString = string.Concat(defaultString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
             output = string.Concat(output, "Default: [" + defaultString + "]");
+            output = string.Concat(output, "Recompute: ", Recompute, ", ");
             return output;
         }
     }
@@ -804,6 +829,7 @@ namespace Satori
         public int Code { get; set; }
 
         /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IProtobufAny> Details => _details ?? new List<ProtobufAny>(0);
         [DataMember(Name="details"), Preserve]
         public List<ProtobufAny> _details { get; set; }
