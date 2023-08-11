@@ -198,11 +198,12 @@ namespace Satori
         /// <param name="session">The session of the user.</param>
         /// <param name="defaultProperties">The default properties to update.</param>
         /// <param name="customProperties">The custom properties to update.</param>
+        /// <param name="recompute">Whether or not to recompute the user's audience membership immediately after property update.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task object.</returns>
         public Task UpdatePropertiesAsync(ISession session, Dictionary<string, string> defaultProperties,
-            Dictionary<string, string> customProperties, CancellationToken? cancellationToken = default);
-        
+            Dictionary<string, string> customProperties, bool recompute, CancellationToken? cancellationToken = default);
+
         /// <summary>
         /// Delete the caller's identity and associated data.
         /// </summary>

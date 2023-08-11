@@ -50,8 +50,8 @@ namespace Satori.Tests
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
             var flags = await _testClient.GetFlagsAsync(session, new string[] { });
-            Assert.True(flags.Flags.Count() == 3);
-            var namedFlags = await _testClient.GetFlagsAsync(session, new[] { "MinBuildNumber" });
+            Assert.True(flags.Flags.Count() == 4);
+            var namedFlags = await _testClient.GetFlagsAsync(session, new[] { "Min-Build-Number" });
             Assert.True(namedFlags.Flags.Count() == 1);
         }
 
@@ -59,7 +59,7 @@ namespace Satori.Tests
         public async Task TestGetFlagsDefault()
         {
             var flags = await _testClient.GetFlagsDefaultAsync(new string[] { });
-            Assert.True(flags.Flags.Count() == 3);
+            Assert.True(flags.Flags.Count() == 4);
         }
 
         [Fact(Timeout = TimeoutMilliseconds)]
