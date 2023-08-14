@@ -9,7 +9,7 @@ var searchData=
   ['canwrite_6',['CanWrite',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html#ad13235eb0b005d96a0cb80a8cc00a0fd',1,'Nakama::Ninja::WebSockets::BufferPool::PublicBufferMemoryStream']]],
   ['capacity_7',['Capacity',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html#ac0de8f527f01c8f7a94abdaedffa350b',1,'Nakama::Ninja::WebSockets::BufferPool::PublicBufferMemoryStream']]],
   ['category_8',['Category',['../interface_nakama_1_1_i_api_tournament.html#ad4d095c5500d084ae1071979320f4803',1,'Nakama::IApiTournament']]],
-  ['changelog_9',['Changelog',['../md__2_users_2flavio_2_projects_2heroiclabs_2nakama-dotnet_2_c_h_a_n_g_e_l_o_g.html',1,'']]],
+  ['changelog_9',['Changelog',['../md__2_users_2gp_2_documents_2_git_hub_2nakama-dotnet_2_c_h_a_n_g_e_l_o_g.html',1,'']]],
   ['changelog_2emd_10',['CHANGELOG.md',['../_c_h_a_n_g_e_l_o_g_8md.html',1,'']]],
   ['changeset_11',['Changeset',['../interface_nakama_1_1_console_1_1_i_console_wallet_ledger.html#a5bcd52bee2dcbe9fc00ec944b7ae2bb8',1,'Nakama::Console::IConsoleWalletLedger']]],
   ['channelid_12',['ChannelId',['../interface_nakama_1_1_i_api_channel_message.html#a1259cb0c701a188655f3afaf10cc7a96',1,'Nakama.IApiChannelMessage.ChannelId'],['../interface_nakama_1_1_console_1_1_i_api_channel_message.html#aefbb1055e9337a302a3177932c85c050',1,'Nakama.Console.IApiChannelMessage.ChannelId'],['../interface_nakama_1_1_i_channel_message_ack.html#ab36b2166bedb2f2351928c522625e98c',1,'Nakama.IChannelMessageAck.ChannelId'],['../interface_nakama_1_1_i_channel_presence_event.html#a996e95fc400397a4d2cbf1ee8da5dc29',1,'Nakama.IChannelPresenceEvent.ChannelId']]],

@@ -161,9 +161,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a75b8b2a0675d4e42244ae66ac60e903f"><td class="memItemLeft" align="right" valign="top">Task&lt; <a class="el" href="interface_satori_1_1_i_session.html">ISession</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a75b8b2a0675d4e42244ae66ac60e903f">SessionRefreshAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a75b8b2a0675d4e42244ae66ac60e903f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refresh a user's session using a refresh token retrieved from a previous authentication request.  <br /></td></tr>
 <tr class="separator:a75b8b2a0675d4e42244ae66ac60e903f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea9d790170b8366f8632f0ff1fdfb494"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#aea9d790170b8366f8632f0ff1fdfb494">UpdatePropertiesAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, Dictionary&lt; string, string &gt; defaultProperties, Dictionary&lt; string, string &gt; customProperties, CancellationToken? cancellationToken=default)</td></tr>
-<tr class="memdesc:aea9d790170b8366f8632f0ff1fdfb494"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update properties associated with this identity.  <br /></td></tr>
-<tr class="separator:aea9d790170b8366f8632f0ff1fdfb494"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab5c3a7ecb31bea3f7221e782f69a603"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#aab5c3a7ecb31bea3f7221e782f69a603">UpdatePropertiesAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, Dictionary&lt; string, string &gt; defaultProperties, Dictionary&lt; string, string &gt; customProperties, bool recompute, CancellationToken? cancellationToken=default)</td></tr>
+<tr class="memdesc:aab5c3a7ecb31bea3f7221e782f69a603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update properties associated with this identity.  <br /></td></tr>
+<tr class="separator:aab5c3a7ecb31bea3f7221e782f69a603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88b1f49bb26e0ef2561ffe39b480a43d"><td class="memItemLeft" align="right" valign="top">Task&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interface_satori_1_1_i_client.html#a88b1f49bb26e0ef2561ffe39b480a43d">DeleteIdentityAsync</a> (<a class="el" href="interface_satori_1_1_i_session.html">ISession</a> session, CancellationToken? cancellationToken=default)</td></tr>
 <tr class="memdesc:a88b1f49bb26e0ef2561ffe39b480a43d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete the caller's identity and associated data.  <br /></td></tr>
 <tr class="separator:a88b1f49bb26e0ef2561ffe39b480a43d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -967,8 +967,8 @@ Properties</h2></td></tr>
 
 </div>
 </div>
-<a id="aea9d790170b8366f8632f0ff1fdfb494" name="aea9d790170b8366f8632f0ff1fdfb494"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea9d790170b8366f8632f0ff1fdfb494">&#9670;&#160;</a></span>UpdatePropertiesAsync()</h2>
+<a id="aab5c3a7ecb31bea3f7221e782f69a603" name="aab5c3a7ecb31bea3f7221e782f69a603"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab5c3a7ecb31bea3f7221e782f69a603">&#9670;&#160;</a></span>UpdatePropertiesAsync()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -994,6 +994,12 @@ Properties</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>recompute</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">CancellationToken?&#160;</td>
           <td class="paramname"><em>cancellationToken</em> = <code>default</code>&#160;</td>
         </tr>
@@ -1011,13 +1017,14 @@ Properties</h2></td></tr>
     <tr><td class="paramname">session</td><td>The session of the user.</td></tr>
     <tr><td class="paramname">defaultProperties</td><td>The default properties to update.</td></tr>
     <tr><td class="paramname">customProperties</td><td>The custom properties to update.</td></tr>
+    <tr><td class="paramname">recompute</td><td>Whether or not to recompute the user's audience membership immediately after property update.</td></tr>
     <tr><td class="paramname">cancellationToken</td><td>The CancellationToken that can be used to cancel the request while mid-flight.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A task object.</dd></dl>
 
-<p>Implemented in <a class="el" href="class_satori_1_1_client.html#a78fc439169d96ec41b3cd3631e31d43d">Satori.Client</a>.</p>
+<p>Implemented in <a class="el" href="class_satori_1_1_client.html#a90bda828616a3bfbb568d179759d520c">Satori.Client</a>.</p>
 
 </div>
 </div>
