@@ -17,6 +17,6 @@ var interface_satori_1_1_i_client =
     [ "IdentifyAsync", "interface_satori_1_1_i_client.html#aeab7bbd37f9f5650803284d5f4302b50", null ],
     [ "ListPropertiesAsync", "interface_satori_1_1_i_client.html#ae3b5ed8835db318bac9e9358c9ca9d62", null ],
     [ "SessionRefreshAsync", "interface_satori_1_1_i_client.html#a75b8b2a0675d4e42244ae66ac60e903f", null ],
-    [ "UpdatePropertiesAsync", "interface_satori_1_1_i_client.html#aea9d790170b8366f8632f0ff1fdfb494", null ],
+    [ "UpdatePropertiesAsync", "interface_satori_1_1_i_client.html#aab5c3a7ecb31bea3f7221e782f69a603", null ],
     [ "AutoRefreshSession", "interface_satori_1_1_i_client.html#a92cededba8674818db5107bca319ed39", null ]
 ];

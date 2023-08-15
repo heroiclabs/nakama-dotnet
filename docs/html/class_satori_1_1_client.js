@@ -19,7 +19,7 @@ var class_satori_1_1_client =
     [ "IdentifyAsync", "class_satori_1_1_client.html#a2bcd0f294df315ca5e46dfa7448c02f8", null ],
     [ "ListPropertiesAsync", "class_satori_1_1_client.html#aef13463487b3c09d7c9a347cbe8c5cd1", null ],
     [ "SessionRefreshAsync", "class_satori_1_1_client.html#a05e0853fc71cc8520f38acd27951daf9", null ],
-    [ "UpdatePropertiesAsync", "class_satori_1_1_client.html#a78fc439169d96ec41b3cd3631e31d43d", null ],
+    [ "UpdatePropertiesAsync", "class_satori_1_1_client.html#a90bda828616a3bfbb568d179759d520c", null ],
     [ "ApiKey", "class_satori_1_1_client.html#a6a3b18b2c87e5235ecc6558bae414f35", null ],
     [ "AutoRefreshSession", "class_satori_1_1_client.html#a1fc4e5a73077533d8671e64686528d1a", null ],
     [ "Host", "class_satori_1_1_client.html#a7e2d5442493469d57009038a05752561", null ],
