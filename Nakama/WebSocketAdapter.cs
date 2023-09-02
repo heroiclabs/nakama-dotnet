@@ -121,8 +121,8 @@ namespace Nakama
                 _webSocket = await clientFactory.ConnectAsync(_uri, _options, linkedCts.Token).ConfigureAwait(false);
                 _ = Task.Factory.StartNew(_ => ReceiveLoop(_webSocket, _cancellationSource.Token),
                     TaskCreationOptions.LongRunning, _cancellationSource.Token);
-                Connected?.Invoke();
                 IsConnected = true;
+                Connected?.Invoke();
             }
             catch (Exception)
             {

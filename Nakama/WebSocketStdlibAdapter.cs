@@ -110,8 +110,8 @@ namespace Nakama
                 var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
                 await _webSocket.ConnectAsync(_uri, linkedCts.Token).ConfigureAwait(false);
                 _ = ReceiveLoop(_webSocket, _cancellationSource.Token);
-                Connected?.Invoke();
                 IsConnected = true;
+                Connected?.Invoke();
             }
             catch (Exception)
             {
