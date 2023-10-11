@@ -53,7 +53,7 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public async Task ShouldHaveCorrectCursors()
+        public async Task ShouldObtainDifferentCursors()
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var payload = new Dictionary<string, string> {{"user_id", session.UserId}};
