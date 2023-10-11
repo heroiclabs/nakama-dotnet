@@ -21,6 +21,8 @@ namespace Nakama.Tests.Socket
     using System.Threading.Tasks;
     using Xunit;
     using TinyJson;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
 
     public class WebSocketNotificationTest : IAsyncLifetime
     {
@@ -48,6 +50,24 @@ namespace Nakama.Tests.Socket
             var result = await completer.Task;
             Assert.NotNull(result);
             Assert.Equal(session.UserId, result.SenderId);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldObtainDifferentCursors()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var payload = new Dictionary<string, string> {{"user_id", session.UserId}};
+            var _ = await _client.RpcAsync(session, "clientrpc.send_ten_notifications", payload.ToJson());
+            IApiNotificationList notifs = await _client.ListNotificationsAsync(session, limit: 9);
+            string firstCursor = notifs.CacheableCursor;
+            Assert.Equal(9, notifs.Notifications.Count());
+            Assert.NotEmpty(firstCursor);
+
+            notifs = await _client.ListNotificationsAsync(session, limit: 10, cacheableCursor: firstCursor); // should only be one left
+
+            Assert.Single(notifs.Notifications);
+            Assert.NotEmpty(notifs.CacheableCursor);
+            Assert.NotEqual(firstCursor, notifs.CacheableCursor);
         }
 
         Task IAsyncLifetime.InitializeAsync()
