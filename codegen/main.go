@@ -389,9 +389,10 @@ namespace {{.Namespace}}
             {{- end }}
         {{- end }}
 
+            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
             var uri = new UriBuilder(_baseUri)
             {
-                Path = _baseUri.AbsolutePath + urlpath,
+                Path = uriBuilderPath,
                 Query = queryParams
             }.Uri;
 
