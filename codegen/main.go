@@ -391,7 +391,7 @@ namespace {{.Namespace}}
 
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = _baseUri.AbsolutePath + urlpath,
                 Query = queryParams
             }.Uri;
 

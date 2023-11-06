@@ -438,6 +438,19 @@ namespace Nakama
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
+        /// <inheritdoc cref="DeleteTournamentRecordAsync"/>
+        public async Task DeleteTournamentRecordAsync(ISession session, string tournamentId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.DeleteTournamentRecordAsync(session.AuthToken, tournamentId, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
         /// <inheritdoc cref="DemoteGroupUsersAsync"/>
         public async Task DemoteGroupUsersAsync(ISession session, string groupId, IEnumerable<string> usernames,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)

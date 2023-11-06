@@ -297,6 +297,16 @@ namespace Nakama
         Task DeleteStorageObjectsAsync(ISession session, StorageObjectId[] ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Delete the user's tournament record.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="ids">The id of the tournament to delete from.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task DeleteTournamentRecordAsync(ISession session, string tournamentId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Demote a set of users in a group to the next role down.
         /// <param name="groupId">The group to demote users in.</param>
         /// <param name="userIds">The users to demote.</param>

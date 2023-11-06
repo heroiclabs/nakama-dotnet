@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Changed
 - Nakama: Mark socket as connected before event handler is called.
 
+### Added
+- Nakama: Rank count is now returned with tournament record listings.
+- Nakama: Added ability to delete tournament records with `DeleteTournamentRecordAsync`.
+- Nakama: Hostnames passed to the client now preserve their hardcoded paths.
 
 ## [3.9.0]
 ### Added
