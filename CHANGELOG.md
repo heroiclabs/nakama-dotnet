@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Nakama: Rank count is now returned with tournament record listings.
 - Nakama: Added ability to delete tournament records with `DeleteTournamentRecordAsync`.
 - Nakama: Hostnames passed to the client now preserve their hardcoded paths.
+- Nakama: Create and update times are now returned with notifications.
 
 ## [3.9.0]
 ### Added
