@@ -389,10 +389,11 @@ namespace {{.Namespace}}
             {{- end }}
         {{- end }}
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 

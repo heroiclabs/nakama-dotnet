@@ -4232,10 +4232,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4260,10 +4261,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4288,10 +4290,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4322,10 +4325,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4366,10 +4370,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4415,10 +4420,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4464,10 +4470,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4513,10 +4520,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4566,10 +4574,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4615,10 +4624,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4664,10 +4674,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4713,10 +4724,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4766,10 +4778,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4806,10 +4819,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4841,10 +4855,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4876,10 +4891,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4911,10 +4927,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4950,10 +4967,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -4985,10 +5003,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5020,10 +5039,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5055,10 +5075,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5090,10 +5111,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5126,10 +5148,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5166,10 +5189,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5201,10 +5225,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5236,10 +5261,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5271,10 +5297,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5306,10 +5333,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5341,10 +5369,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5376,10 +5405,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5411,10 +5441,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5446,10 +5477,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5494,10 +5526,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5528,10 +5561,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5568,10 +5602,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5608,10 +5643,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5647,10 +5683,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5685,10 +5722,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5722,10 +5760,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "reset=", reset.ToString().ToLower(), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5761,10 +5800,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "reset=", reset.ToString().ToLower(), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5815,10 +5855,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "open=", open.ToString().ToLower(), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5849,10 +5890,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5886,10 +5928,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5925,10 +5968,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -5966,10 +6010,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6005,10 +6050,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6044,10 +6090,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6078,10 +6125,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6117,10 +6165,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6151,10 +6200,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6190,10 +6240,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "user_ids=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6236,10 +6287,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6270,10 +6322,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6306,10 +6359,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6342,10 +6396,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6378,10 +6433,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6414,10 +6470,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6450,10 +6507,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6487,10 +6545,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6522,10 +6581,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6573,10 +6633,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "expiry=", Uri.EscapeDataString(expiry), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6613,10 +6674,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6668,10 +6730,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6721,10 +6784,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "query=", Uri.EscapeDataString(query), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6755,10 +6819,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "ids=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6791,10 +6856,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cacheable_cursor=", Uri.EscapeDataString(cacheableCursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6836,10 +6902,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "http_key=", Uri.EscapeDataString(httpKey), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6891,10 +6958,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "http_key=", Uri.EscapeDataString(httpKey), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6936,10 +7004,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -6971,10 +7040,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7007,10 +7077,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7043,10 +7114,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7091,10 +7163,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7140,10 +7213,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7193,10 +7267,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7228,10 +7303,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7279,10 +7355,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "expiry=", Uri.EscapeDataString(expiry), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7319,10 +7396,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7361,10 +7439,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7398,10 +7477,11 @@ namespace Nakama
 
             var queryParams = "";
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7450,10 +7530,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7494,10 +7575,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "facebook_ids=", Uri.EscapeDataString(elem), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -7541,10 +7623,11 @@ namespace Nakama
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
 
-            string uriBuilderPath = _baseUri.AbsolutePath == "/" ? urlpath : _baseUri.AbsolutePath + urlpath;
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = uriBuilderPath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
