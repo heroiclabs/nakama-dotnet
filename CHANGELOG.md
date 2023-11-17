@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## [Unreleased]
 ### Changed
 - Nakama: Mark socket as connected before event handler is called.
+- Nakama: Limited scope of of retry logic to very specific 500-level codes from the server.
 
 ### Added
 - Nakama: Rank count is now returned with tournament record listings.
