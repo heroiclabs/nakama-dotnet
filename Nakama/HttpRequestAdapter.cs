@@ -146,7 +146,6 @@ namespace Nakama
             {
                 switch (apiException.StatusCode)
                 {
-                    case 500:
                     case 502:
                     case 503:
                     case 504:
