@@ -1465,6 +1465,24 @@ namespace Nakama
                 }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
+        /// <inheritdoc cref="ValidatePurchaseFacebookInstantAsync"/>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseFacebookInstantAsync(ISession session, string signedRequest,
+            bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseFacebookInstantAsync(session.AuthToken,
+                new ApiValidatePurchaseFacebookInstantRequest
+                {
+                    SignedRequest = signedRequest,
+                    Persist = persist
+                }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
         /// <inheritdoc cref="ValidatePurchaseGoogleAsync"/>
         public async Task<IApiValidatePurchaseResponse> ValidatePurchaseGoogleAsync(ISession session, string receipt,
             bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)

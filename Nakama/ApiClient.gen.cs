@@ -2743,6 +2743,10 @@ namespace Nakama
         ///  - HUAWEI_APP_GALLERY: Huawei App Gallery
         /// </summary>
         HUAWEI_APP_GALLERY = 2,
+        /// <summary>
+        ///  - FACEBOOK_INSTANT_STORE: Facebook Instant Store
+        /// </summary>
+        FACEBOOK_INSTANT_STORE = 3,
     }
 
     /// <summary>
@@ -3507,6 +3511,44 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Persist: ", Persist, ", ");
             output = string.Concat(output, "Receipt: ", Receipt, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Facebook Instant IAP Purchase validation request
+    /// </summary>
+    public interface IApiValidatePurchaseFacebookInstantRequest
+    {
+
+        /// <summary>
+        /// Persist the purchase
+        /// </summary>
+        bool Persist { get; }
+
+        /// <summary>
+        /// Base64 encoded Facebook Instant signedRequest receipt data payload.
+        /// </summary>
+        string SignedRequest { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatePurchaseFacebookInstantRequest : IApiValidatePurchaseFacebookInstantRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="signed_request"), Preserve]
+        public string SignedRequest { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Persist: ", Persist, ", ");
+            output = string.Concat(output, "SignedRequest: ", SignedRequest, ", ");
             return output;
         }
     }
@@ -6319,6 +6361,43 @@ namespace Nakama
             }
 
             var urlpath = "/v2/iap/purchase/apple";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiValidatePurchaseResponse>();
+        }
+
+        /// <summary>
+        /// Validate FB Instant IAP Receipt
+        /// </summary>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseFacebookInstantAsync(
+            string bearerToken,
+            ApiValidatePurchaseFacebookInstantRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/purchase/facebookinstant";
 
             var queryParams = "";
 

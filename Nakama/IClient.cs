@@ -993,6 +993,18 @@ namespace Nakama
         Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Validate a purchase receipt against Facebook Instant Games.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="signedRequest">Base64 encoded Facebook Instant receipt data payload.</param>
+        /// <param name="persist">Whether or not to track the receipt in the Nakama database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseFacebookInstantAsync(ISession session, string signedRequest,
+            bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Validate a purchase receipt against the Google Play Store.
         /// </summary>
         /// <param name="session">The session of the user.</param>

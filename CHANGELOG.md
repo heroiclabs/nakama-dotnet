@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
-## [3.10.0]
+## [3.10.0] - 2023-11-21
 ### Changed
 - Nakama: Mark socket as connected before event handler is called.
 - Nakama: Limited scope of retry logic to very specific 500-level codes from the server.
@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Nakama: Added ability to delete tournament records with `DeleteTournamentRecordAsync`.
 - Nakama: Hostnames passed to the client now preserve their hardcoded paths.
 - Nakama: Create and update times are now returned with notifications.
+- Nakama: Added Facebook Instant Games purchase validation.
 
 ## [3.9.0]
 ### Added
