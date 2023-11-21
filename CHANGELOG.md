@@ -5,15 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.10.0] - 2023-11-21
 ### Changed
 - Nakama: Mark socket as connected before event handler is called.
-- Nakama: Limited scope of of retry logic to very specific 500-level codes from the server.
+- Nakama: Limited scope of retry logic to very specific 500-level codes from the server.
 
 ### Added
 - Nakama: Rank count is now returned with tournament record listings.
 - Nakama: Added ability to delete tournament records with `DeleteTournamentRecordAsync`.
 - Nakama: Hostnames passed to the client now preserve their hardcoded paths.
 - Nakama: Create and update times are now returned with notifications.
+- Nakama: Added Facebook Instant Games purchase validation.
 
 ## [3.9.0]
 ### Added
