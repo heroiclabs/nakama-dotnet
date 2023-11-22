@@ -55,6 +55,7 @@ var _nakama_2_api_client_8gen_8cs =
     [ "Nakama.IApiUserGroupList", "interface_nakama_1_1_i_api_user_group_list.html", "interface_nakama_1_1_i_api_user_group_list" ],
     [ "Nakama.IApiUsers", "interface_nakama_1_1_i_api_users.html", "interface_nakama_1_1_i_api_users" ],
     [ "Nakama.IApiValidatePurchaseAppleRequest", "interface_nakama_1_1_i_api_validate_purchase_apple_request.html", "interface_nakama_1_1_i_api_validate_purchase_apple_request" ],
+    [ "Nakama.IApiValidatePurchaseFacebookInstantRequest", "interface_nakama_1_1_i_api_validate_purchase_facebook_instant_request.html", "interface_nakama_1_1_i_api_validate_purchase_facebook_instant_request" ],
     [ "Nakama.IApiValidatePurchaseGoogleRequest", "interface_nakama_1_1_i_api_validate_purchase_google_request.html", "interface_nakama_1_1_i_api_validate_purchase_google_request" ],
     [ "Nakama.IApiValidatePurchaseHuaweiRequest", "interface_nakama_1_1_i_api_validate_purchase_huawei_request.html", "interface_nakama_1_1_i_api_validate_purchase_huawei_request" ],
     [ "Nakama.IApiValidatePurchaseResponse", "interface_nakama_1_1_i_api_validate_purchase_response.html", "interface_nakama_1_1_i_api_validate_purchase_response" ],
@@ -82,6 +83,7 @@ var _nakama_2_api_client_8gen_8cs =
     [ "ApiStoreProvider", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49", [
       [ "APPLE_APP_STORE", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49a4142ec218b299cb29da17393e166a0bf", null ],
       [ "GOOGLE_PLAY_STORE", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49ae8126d6db8bb0ca0c6557130eb2d4c7f", null ],
-      [ "HUAWEI_APP_GALLERY", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49a76c8d7237ca9427f64e470d61d34246c", null ]
+      [ "HUAWEI_APP_GALLERY", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49a76c8d7237ca9427f64e470d61d34246c", null ],
+      [ "FACEBOOK_INSTANT_STORE", "_nakama_2_api_client_8gen_8cs.html#a80ae1f687aff9e2cdddb9e69a557cc49a2d91804ae2367e7ee28b145f3efb1b68", null ]
     ] ]
 ];

@@ -115,6 +115,7 @@ var annotated_dup =
       [ "IApiValidatedPurchase", "interface_nakama_1_1_i_api_validated_purchase.html", "interface_nakama_1_1_i_api_validated_purchase" ],
       [ "IApiValidatedSubscription", "interface_nakama_1_1_i_api_validated_subscription.html", "interface_nakama_1_1_i_api_validated_subscription" ],
       [ "IApiValidatePurchaseAppleRequest", "interface_nakama_1_1_i_api_validate_purchase_apple_request.html", "interface_nakama_1_1_i_api_validate_purchase_apple_request" ],
+      [ "IApiValidatePurchaseFacebookInstantRequest", "interface_nakama_1_1_i_api_validate_purchase_facebook_instant_request.html", "interface_nakama_1_1_i_api_validate_purchase_facebook_instant_request" ],
       [ "IApiValidatePurchaseGoogleRequest", "interface_nakama_1_1_i_api_validate_purchase_google_request.html", "interface_nakama_1_1_i_api_validate_purchase_google_request" ],
       [ "IApiValidatePurchaseHuaweiRequest", "interface_nakama_1_1_i_api_validate_purchase_huawei_request.html", "interface_nakama_1_1_i_api_validate_purchase_huawei_request" ],
       [ "IApiValidatePurchaseResponse", "interface_nakama_1_1_i_api_validate_purchase_response.html", "interface_nakama_1_1_i_api_validate_purchase_response" ],
