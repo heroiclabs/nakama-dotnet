@@ -58,6 +58,7 @@ var namespace_nakama =
     [ "IApiValidatedPurchase", "interface_nakama_1_1_i_api_validated_purchase.html", "interface_nakama_1_1_i_api_validated_purchase" ],
     [ "IApiValidatedSubscription", "interface_nakama_1_1_i_api_validated_subscription.html", "interface_nakama_1_1_i_api_validated_subscription" ],
     [ "IApiValidatePurchaseAppleRequest", "interface_nakama_1_1_i_api_validate_purchase_apple_request.html", "interface_nakama_1_1_i_api_validate_purchase_apple_request" ],
+    [ "IApiValidatePurchaseFacebookInstantRequest", "interface_nakama_1_1_i_api_validate_purchase_facebook_instant_request.html", "interface_nakama_1_1_i_api_validate_purchase_facebook_instant_request" ],
     [ "IApiValidatePurchaseGoogleRequest", "interface_nakama_1_1_i_api_validate_purchase_google_request.html", "interface_nakama_1_1_i_api_validate_purchase_google_request" ],
     [ "IApiValidatePurchaseHuaweiRequest", "interface_nakama_1_1_i_api_validate_purchase_huawei_request.html", "interface_nakama_1_1_i_api_validate_purchase_huawei_request" ],
     [ "IApiValidatePurchaseResponse", "interface_nakama_1_1_i_api_validate_purchase_response.html", "interface_nakama_1_1_i_api_validate_purchase_response" ],
@@ -123,7 +124,8 @@ var namespace_nakama =
     [ "ApiStoreProvider", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49", [
       [ "APPLE_APP_STORE", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49a4142ec218b299cb29da17393e166a0bf", null ],
       [ "GOOGLE_PLAY_STORE", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49ae8126d6db8bb0ca0c6557130eb2d4c7f", null ],
-      [ "HUAWEI_APP_GALLERY", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49a76c8d7237ca9427f64e470d61d34246c", null ]
+      [ "HUAWEI_APP_GALLERY", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49a76c8d7237ca9427f64e470d61d34246c", null ],
+      [ "FACEBOOK_INSTANT_STORE", "namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49a2d91804ae2367e7ee28b145f3efb1b68", null ]
     ] ],
     [ "ChannelType", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307", [
       [ "Room", "namespace_nakama.html#addd7f097ac4c449d75e44da62657f307acc3abcf4426bff80257d22999d0eda8f", null ],

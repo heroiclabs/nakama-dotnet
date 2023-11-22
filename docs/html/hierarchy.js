@@ -99,6 +99,7 @@ var hierarchy =
     [ "Nakama.IApiValidatedPurchase", "interface_nakama_1_1_i_api_validated_purchase.html", null ],
     [ "Nakama.IApiValidatedSubscription", "interface_nakama_1_1_i_api_validated_subscription.html", null ],
     [ "Nakama.IApiValidatePurchaseAppleRequest", "interface_nakama_1_1_i_api_validate_purchase_apple_request.html", null ],
+    [ "Nakama.IApiValidatePurchaseFacebookInstantRequest", "interface_nakama_1_1_i_api_validate_purchase_facebook_instant_request.html", null ],
     [ "Nakama.IApiValidatePurchaseGoogleRequest", "interface_nakama_1_1_i_api_validate_purchase_google_request.html", null ],
     [ "Nakama.IApiValidatePurchaseHuaweiRequest", "interface_nakama_1_1_i_api_validate_purchase_huawei_request.html", null ],
     [ "Nakama.IApiValidatePurchaseResponse", "interface_nakama_1_1_i_api_validate_purchase_response.html", null ],
