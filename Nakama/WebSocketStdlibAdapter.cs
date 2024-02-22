@@ -44,12 +44,12 @@ namespace Nakama
         /// <summary>
         /// If the WebSocket is connected.
         /// </summary>
-        public bool IsConnected { get; private set; }
+        public bool IsConnected => _webSocket != null && _webSocket.State == WebSocketState.Open;
 
         /// <summary>
         /// If the WebSocket is connecting.
         /// </summary>
-        public bool IsConnecting { get; private set; }
+        public bool IsConnecting => _webSocket != null && _webSocket.State == WebSocketState.Connecting;
 
         private CancellationTokenSource _cancellationSource;
         private Uri _uri;
@@ -86,8 +86,6 @@ namespace Nakama
             }
 
             _webSocket = null;
-            IsConnecting = false;
-            IsConnected = false;
         }
 
         /// <inheritdoc cref="ISocketAdapter.ConnectAsync"/>
@@ -102,26 +100,12 @@ namespace Nakama
             _cancellationSource = new CancellationTokenSource();
             _uri = uri;
             _webSocket = new ClientWebSocket();
-            IsConnecting = true;
 
-            try
-            {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
-                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
-                await _webSocket.ConnectAsync(_uri, linkedCts.Token).ConfigureAwait(false);
-                _ = ReceiveLoop(_webSocket, _cancellationSource.Token);
-                IsConnected = true;
-                Connected?.Invoke();
-            }
-            catch (Exception)
-            {
-                IsConnected = false;
-                throw;
-            }
-            finally
-            {
-                IsConnecting = false;
-            }
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
+            var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
+            await _webSocket.ConnectAsync(_uri, linkedCts.Token).ConfigureAwait(false);
+            _ = ReceiveLoop(_webSocket, _cancellationSource.Token);
+            Connected?.Invoke();
         }
 
         /// <inheritdoc cref="ISocketAdapter.SendAsync"/>
@@ -197,8 +181,6 @@ namespace Nakama
             }
             finally
             {
-                IsConnecting = false;
-                IsConnected = false;
                 Closed?.Invoke();
             }
         }

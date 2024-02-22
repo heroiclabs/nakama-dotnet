@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Nakama: Fixed an issue where the socket would not correctly report `IsConnected` as false in cases of lack of internet connectivity.
+
+### Changed
+- Nakama: Default socket adapter changed from `WebSocketAdapter` to `WebSocketStdLibAdapter`. This was done to utilize the native .NET Websocket library for improved stability and maintenance.
 
 ## [3.10.0] - 2023-11-21
 ### Changed

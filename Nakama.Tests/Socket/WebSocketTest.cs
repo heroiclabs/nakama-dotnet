@@ -119,17 +119,28 @@ namespace Nakama.Tests.Socket
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             await _socket.ConnectAsync(session, false, 5);
             var closeTriggered = false;
-            
+
             _socket.Closed += () =>
             {
                 _testOutputHelper.WriteLine($"Socket was closed");
                 closeTriggered = true;
             };
-            
+
             _testOutputHelper.WriteLine("---Disconnect Internet Now---");
             await Task.Delay(TimeSpan.FromSeconds(60));
             Assert.False(_socket.IsConnected);
             Assert.True(closeTriggered);
+        }
+
+        [Fact]
+        public async Task SocketCanReconnectAfterClose()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            await _socket.ConnectAsync(session, false, 5);
+            await _socket.CloseAsync();
+            await _socket.ConnectAsync(session, false, 5);
+            var match = await _socket.CreateMatchAsync($"${Guid.NewGuid()}");
+            Assert.True(match != null);
         }
     }
 }
