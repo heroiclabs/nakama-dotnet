@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+### Changed
+- Nakama: `IsConnected` and `IsConnecting` will now read directly from the underlying .NET socket status. This will allow application code to more quickly and easily detect connectivity loss arising from a lack of internet access.
+- Nakama: Default socket adapter changed from `WebSocketAdapter` to `WebSocketStdlibAdapter`. This was done to utilize the native .NET Websocket library for improved stability and maintenance.
+
 ## [3.10.0] - 2023-11-21
 ### Changed
 - Nakama: Mark socket as connected before event handler is called.
