@@ -44,12 +44,12 @@ namespace Nakama
         /// <summary>
         /// If the WebSocket is connected.
         /// </summary>
-        public bool IsConnected => _webSocket != null && _webSocket.State == WebSocketState.Open;
+        public bool IsConnected => _webSocket?.State == WebSocketState.Open;
 
         /// <summary>
         /// If the WebSocket is connecting.
         /// </summary>
-        public bool IsConnecting => _webSocket != null && _webSocket.State == WebSocketState.Connecting;
+        public bool IsConnecting => _webSocket?.State == WebSocketState.Connecting;
 
         private CancellationTokenSource _cancellationSource;
         private Uri _uri;
@@ -91,9 +91,9 @@ namespace Nakama
         /// <inheritdoc cref="ISocketAdapter.ConnectAsync"/>
         public async Task ConnectAsync(Uri uri, int timeout)
         {
-            if (_webSocket != null && _webSocket.State == WebSocketState.Open)
+            if (_webSocket?.State == WebSocketState.Open || _webSocket?.State == WebSocketState.Connecting)
             {
-                // Already connected so we can return.
+                // Already connecting or connected so we can return.
                 return;
             }
 
@@ -111,7 +111,7 @@ namespace Nakama
         /// <inheritdoc cref="ISocketAdapter.SendAsync"/>
         public Task SendAsync(ArraySegment<byte> buffer, bool reliable = true, CancellationToken canceller = default)
         {
-            if (_webSocket == null || _webSocket.State != WebSocketState.Open)
+            if (_webSocket?.State != WebSocketState.Open)
             {
                 throw new SocketException((int)SocketError.NotConnected);
             }
@@ -173,7 +173,7 @@ namespace Nakama
                     }
 
                     bufferReadCount = 0;
-                } while (!canceller.IsCancellationRequested && _webSocket != null && _webSocket.State == WebSocketState.Open);
+                } while (!canceller.IsCancellationRequested && _webSocket?.State == WebSocketState.Open);
             }
             catch (Exception e)
             {
