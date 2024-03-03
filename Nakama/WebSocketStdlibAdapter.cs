@@ -134,7 +134,8 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="object.ToString" />
-        public override string ToString() => $"WebSocketDriver(MaxMessageSize={_maxMessageReadSize}, Uri='{_uri}')";
+        public override string ToString() =>
+            $"WebSocketStdlibAdapter(MaxMessageSize={_maxMessageReadSize}, Uri='{_uri}')";
 
         private async Task ReceiveLoop(WebSocket webSocket, CancellationToken canceller)
         {

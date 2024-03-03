@@ -46,12 +46,12 @@ namespace Nakama
         /// <summary>
         /// If the WebSocket is connected.
         /// </summary>
-        public bool IsConnected { get; private set; }
+        public bool IsConnected => _webSocket?.State == WebSocketState.Open;
 
         /// <summary>
         /// If the WebSocket is connecting.
         /// </summary>
-        public bool IsConnecting { get; private set; }
+        public bool IsConnecting => _webSocket?.State == WebSocketState.Connecting;
 
         private readonly int _maxMessageReadSize;
         private readonly WebSocketClientOptions _options;
@@ -96,14 +96,12 @@ namespace Nakama
             }
 
             _webSocket = null;
-            IsConnecting = false;
-            IsConnected = false;
         }
 
         /// <inheritdoc cref="ISocketAdapter.ConnectAsync"/>
         public async Task ConnectAsync(Uri uri, int timeout)
         {
-            if (_webSocket != null && _webSocket.State == WebSocketState.Open)
+            if (_webSocket?.State == WebSocketState.Open || _webSocket?.State == WebSocketState.Connecting)
             {
                 // Already connected so we can return.
                 return;
@@ -111,35 +109,22 @@ namespace Nakama
 
             _cancellationSource = new CancellationTokenSource();
             _uri = uri;
-            IsConnecting = true;
 
             var clientFactory = new WebSocketClientFactory();
-            try
-            {
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
-                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
-                _webSocket = await clientFactory.ConnectAsync(_uri, _options, linkedCts.Token).ConfigureAwait(false);
-                _ = Task.Factory.StartNew(_ => ReceiveLoop(_webSocket, _cancellationSource.Token),
-                    TaskCreationOptions.LongRunning, _cancellationSource.Token);
-                IsConnected = true;
-                Connected?.Invoke();
-            }
-            catch (Exception)
-            {
-                IsConnected = false;
-                throw;
-            }
-            finally
-            {
-                IsConnecting = false;
-            }
+
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
+            var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cancellationSource.Token, cts.Token);
+            _webSocket = await clientFactory.ConnectAsync(_uri, _options, linkedCts.Token).ConfigureAwait(false);
+            _ = Task.Factory.StartNew(_ => ReceiveLoop(_webSocket, _cancellationSource.Token),
+                TaskCreationOptions.LongRunning, _cancellationSource.Token);
+            Connected?.Invoke();
         }
 
         /// <inheritdoc cref="ISocketAdapter.SendAsync"/>
         public Task SendAsync(ArraySegment<byte> buffer, bool reliable = true,
             CancellationToken canceller = default)
         {
-            if (_webSocket == null || _webSocket.State != WebSocketState.Open)
+            if (_webSocket?.State != WebSocketState.Open)
             {
                 throw new SocketException((int)SocketError.NotConnected);
             }
@@ -162,7 +147,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="object.ToString" />
-        public override string ToString() => $"WebSocketDriver(MaxMessageSize={_maxMessageReadSize}, Uri='{_uri}')";
+        public override string ToString() => $"WebSocketAdapter(MaxMessageSize={_maxMessageReadSize}, Uri='{_uri}')";
 
         private async Task ReceiveLoop(WebSocket webSocket, CancellationToken canceller)
         {
@@ -202,7 +187,7 @@ namespace Nakama
                     }
 
                     bufferReadCount = 0;
-                } while (!canceller.IsCancellationRequested && _webSocket != null && _webSocket.State == WebSocketState.Open);
+                } while (!canceller.IsCancellationRequested && _webSocket?.State == WebSocketState.Open);
             }
             catch (EndOfStreamException)
             {
@@ -230,8 +215,6 @@ namespace Nakama
             }
             finally
             {
-                IsConnecting = false;
-                IsConnected = false;
                 Closed?.Invoke();
             }
         }
