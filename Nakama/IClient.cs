@@ -55,11 +55,13 @@ namespace Nakama
         string ServerKey { get; }
 
         /// <summary>
-        /// Received a new session after the current one had expired.
+        /// Received a new session after the current one has expired.
         /// </summary>
         /// <remarks>
-        /// This event will only be sent if <c>AutoRefreshSession</c> is enabled.
+        /// This event will only be sent when <c>SessionRefreshAsync</c> is called which also happens automatically if
+        /// <c>AutoRefreshSession</c> is enabled.
         /// </remarks>
+        /// <see cref="SessionRefreshAsync"/>
         /// <seealso cref="AutoRefreshSession"/>
         event Action<ISession> ReceivedSessionUpdated;
 
