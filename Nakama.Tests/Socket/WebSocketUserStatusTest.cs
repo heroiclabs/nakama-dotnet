@@ -147,6 +147,29 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async void FollowUsers_AlreadyOnline_HasStatus()
+        {
+            var id1 = Guid.NewGuid().ToString();
+            var session1 = await _client.AuthenticateCustomAsync(id1);
+            var socket1 = Nakama.Socket.From(_client);
+            await socket1.ConnectAsync(session1);
+            const string status1 = "test status";
+            await socket1.UpdateStatusAsync(status1);
+
+            var id2 = Guid.NewGuid().ToString();
+            var session2 = await _client.AuthenticateCustomAsync(id2);
+            var socket2 = Nakama.Socket.From(_client);
+            await socket2.ConnectAsync(session2);
+
+            var statuses = await socket2.FollowUsersAsync(new[] {session1.UserId});
+            Assert.NotNull(statuses);
+            Assert.Contains(statuses.Presences, presence => presence.Status.Equals("test status"));
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async void FollowUsers_TwoSessions_HasTwoStatuses()
         {
             var id1 = Guid.NewGuid().ToString();
