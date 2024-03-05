@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Nakama: New `IClient` event called `ReceivedSessionUpdated` when session expires and is refreshed.
 
 ### Changed
 - Nakama: `IsConnected` and `IsConnecting` will now read directly from the underlying .NET socket status. This will allow application code to more quickly and easily detect connectivity loss arising from a lack of internet access.

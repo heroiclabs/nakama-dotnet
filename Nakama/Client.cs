@@ -77,6 +77,9 @@ namespace Nakama
         /// <inheritdoc cref="IClient.ServerKey"/>
         public string ServerKey { get; }
 
+        /// <inheritdoc cref="IClient.SessionRefreshed"/>
+        public event Action<ISession> ReceivedSessionUpdated;
+
         /// <inheritdoc cref="IClient.Timeout"/>
         public int Timeout
         {
@@ -1243,8 +1246,8 @@ namespace Nakama
                     "Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/install-configuration/#session");
             }
 
-            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.SessionRefreshAsync(ServerKey,
-                    string.Empty,
+            var response = await _retryInvoker.InvokeWithRetry(() =>
+                    _apiClient.SessionRefreshAsync(ServerKey, string.Empty,
                     new ApiSessionRefreshRequest { Token = session.RefreshToken, _vars = vars }, canceller),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
@@ -1252,16 +1255,17 @@ namespace Nakama
             {
                 // Update session object in place if we can.
                 updatedSession.Update(response.Token, response.RefreshToken);
+                ReceivedSessionUpdated?.Invoke(updatedSession);
                 return updatedSession;
             }
 
-            return new Session(response.Token, response.RefreshToken, response.Created);
+            var newSession = new Session(response.Token, response.RefreshToken, response.Created);
+            ReceivedSessionUpdated?.Invoke(newSession);
+            return newSession;
         }
 
-        public override string ToString()
-        {
-            return $"Client(Host='{Host}', Port={Port}, Scheme='{Scheme}', ServerKey='{ServerKey}', Timeout={Timeout})";
-        }
+        public override string ToString() => 
+            $"Client(Host='{Host}', Port={Port}, Scheme='{Scheme}', ServerKey='{ServerKey}', Timeout={Timeout})";
 
         /// <inheritdoc cref="UnlinkAppleAsync"/>
         public async Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null,

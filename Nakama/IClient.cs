@@ -55,6 +55,17 @@ namespace Nakama
         string ServerKey { get; }
 
         /// <summary>
+        /// Received a new session after the current one has expired.
+        /// </summary>
+        /// <remarks>
+        /// This event will only be sent when <c>SessionRefreshAsync</c> is called which also happens automatically if
+        /// <c>AutoRefreshSession</c> is enabled.
+        /// </remarks>
+        /// <see cref="SessionRefreshAsync"/>
+        /// <seealso cref="AutoRefreshSession"/>
+        event Action<ISession> ReceivedSessionUpdated;
+
+        /// <summary>
         /// Set the timeout in seconds on requests sent to the server.
         /// </summary>
         int Timeout { get; set; }
