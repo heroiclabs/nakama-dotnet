@@ -5,12 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.11.0] - 2024-03-08
 ### Added
 - Nakama: New `IClient` event called `ReceivedSessionUpdated` when session expires and is refreshed.
+- Nakama: New `Session.Update` method to allow for in-place updates to the session object.
 
 ### Changed
 - Nakama: `IsConnected` and `IsConnecting` will now read directly from the underlying .NET socket status. This will allow application code to more quickly and easily detect connectivity loss arising from a lack of internet access.
 - Nakama: Default socket adapter changed from `WebSocketAdapter` to `WebSocketStdlibAdapter`. This was done to utilize the native .NET Websocket library for improved stability and maintenance.
+
+### Fixed
+- Nakama: Trying to connect a socket that is already connecting now results in a no-op instead of an error.
 
 ## [3.10.0] - 2023-11-21
 ### Changed
