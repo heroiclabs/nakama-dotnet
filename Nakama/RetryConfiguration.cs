@@ -72,7 +72,7 @@ namespace Nakama
         /// <param name="baseDelayMs">The base delay (milliseconds) used to calculate the time before making another request attempt.</param>
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="listener">A callback that is invoked before a new retry attempt is made.</param>
-        /// <param name="jitter">/// The jitter algorithm used to apply randomness to the retry delay.</param>
+        /// <param name="jitter">The jitter algorithm used to apply randomness to the retry delay.</param>
         public RetryConfiguration(int baseDelayMs, int maxRetries, RetryListener listener, Jitter jitter)
         {
             BaseDelayMs = baseDelayMs;
