@@ -41,6 +41,44 @@ namespace Satori
     }
 
     /// <summary>
+    /// The request to update the status of a message.
+    /// </summary>
+    public interface IApiUpdateMessageRequest
+    {
+
+        /// <summary>
+        /// The time the message was consumed by the identity.
+        /// </summary>
+        string ConsumeTime { get; }
+
+        /// <summary>
+        /// The time the message was read at the client.
+        /// </summary>
+        string ReadTime { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiUpdateMessageRequest : IApiUpdateMessageRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="consume_time"), Preserve]
+        public string ConsumeTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="read_time"), Preserve]
+        public string ReadTime { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "ConsumeTime: ", ConsumeTime, ", ");
+            output = string.Concat(output, "ReadTime: ", ReadTime, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
     /// </summary>
     public interface IApiAuthenticateLogoutRequest
@@ -423,6 +461,66 @@ namespace Satori
     }
 
     /// <summary>
+    /// A response containing all the messages for an identity.
+    /// </summary>
+    public interface IApiGetMessageListResponse
+    {
+
+        /// <summary>
+        /// Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
+        /// </summary>
+        string CacheableCursor { get; }
+
+        /// <summary>
+        /// The list of messages.
+        /// </summary>
+        IEnumerable<IApiMessage> Messages { get; }
+
+        /// <summary>
+        /// The cursor to send when retrieving the next page, if any.
+        /// </summary>
+        string NextCursor { get; }
+
+        /// <summary>
+        /// The cursor to send when retrieving the previous page, if any.
+        /// </summary>
+        string PrevCursor { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiGetMessageListResponse : IApiGetMessageListResponse
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cacheable_cursor"), Preserve]
+        public string CacheableCursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiMessage> Messages => _messages ?? new List<ApiMessage>(0);
+        [DataMember(Name="messages"), Preserve]
+        public List<ApiMessage> _messages { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "CacheableCursor: ", CacheableCursor, ", ");
+            output = string.Concat(output, "Messages: [", string.Join(", ", Messages), "], ");
+            output = string.Concat(output, "NextCursor: ", NextCursor, ", ");
+            output = string.Concat(output, "PrevCursor: ", PrevCursor, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Enrich/replace the current session with a new ID.
     /// </summary>
     public interface IApiIdentifyRequest
@@ -508,6 +606,11 @@ namespace Satori
         string Description { get; }
 
         /// <summary>
+        /// The live event identifier.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
         /// Name.
         /// </summary>
         string Name { get; }
@@ -535,6 +638,10 @@ namespace Satori
         public string Description { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
@@ -548,6 +655,7 @@ namespace Satori
             output = string.Concat(output, "ActiveEndTimeSec: ", ActiveEndTimeSec, ", ");
             output = string.Concat(output, "ActiveStartTimeSec: ", ActiveStartTimeSec, ", ");
             output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
             output = string.Concat(output, "Name: ", Name, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
@@ -580,6 +688,122 @@ namespace Satori
         {
             var output = "";
             output = string.Concat(output, "LiveEvents: [", string.Join(", ", LiveEvents), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A scheduled message.
+    /// </summary>
+    public interface IApiMessage
+    {
+
+        /// <summary>
+        /// The time the message was consumed by the identity.
+        /// </summary>
+        string ConsumeTime { get; }
+
+        /// <summary>
+        /// The time the message was created.
+        /// </summary>
+        string CreateTime { get; }
+
+        /// <summary>
+        /// The message's unique identifier.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// A key-value pairs of metadata.
+        /// </summary>
+        IDictionary<string, string> Metadata { get; }
+
+        /// <summary>
+        /// The time the message was read by the client.
+        /// </summary>
+        string ReadTime { get; }
+
+        /// <summary>
+        /// The identifier of the schedule.
+        /// </summary>
+        string ScheduleId { get; }
+
+        /// <summary>
+        /// The send time for the message.
+        /// </summary>
+        string SendTime { get; }
+
+        /// <summary>
+        /// The message's text.
+        /// </summary>
+        string Text { get; }
+
+        /// <summary>
+        /// The time the message was updated.
+        /// </summary>
+        string UpdateTime { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiMessage : IApiMessage
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="consume_time"), Preserve]
+        public string ConsumeTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Metadata => _metadata ?? new Dictionary<string, string>();
+        [DataMember(Name="metadata"), Preserve]
+        public Dictionary<string, string> _metadata { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="read_time"), Preserve]
+        public string ReadTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="schedule_id"), Preserve]
+        public string ScheduleId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="send_time"), Preserve]
+        public string SendTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="text"), Preserve]
+        public string Text { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "ConsumeTime: ", ConsumeTime, ", ");
+            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
+
+            var metadataString = "";
+            foreach (var kvp in Metadata)
+            {
+                metadataString = string.Concat(metadataString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Metadata: [" + metadataString + "]");
+            output = string.Concat(output, "ReadTime: ", ReadTime, ", ");
+            output = string.Concat(output, "ScheduleId: ", ScheduleId, ", ");
+            output = string.Concat(output, "SendTime: ", SendTime, ", ");
+            output = string.Concat(output, "Text: ", Text, ", ");
+            output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
             return output;
         }
     }
@@ -877,9 +1101,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -904,9 +1130,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -937,9 +1165,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -976,9 +1206,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -1011,9 +1243,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -1050,9 +1284,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -1084,9 +1320,11 @@ namespace Satori
                 queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
             }
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -1119,9 +1357,11 @@ namespace Satori
                 queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
             }
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -1161,9 +1401,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -1191,9 +1433,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -1223,9 +1467,11 @@ namespace Satori
                 queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
             }
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -1240,6 +1486,125 @@ namespace Satori
         }
 
         /// <summary>
+        /// Get the list of messages for the identity.
+        /// </summary>
+        public async Task<IApiGetMessageListResponse> SatoriGetMessageListAsync(
+            string bearerToken,
+            int? limit,
+            bool? forward,
+            string cursor,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v1/message";
+
+            var queryParams = "";
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (forward != null) {
+                queryParams = string.Concat(queryParams, "forward=", forward.ToString().ToLower(), "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiGetMessageListResponse>();
+        }
+
+        /// <summary>
+        /// Deletes a message for an identity.
+        /// </summary>
+        public async Task SatoriDeleteMessageAsync(
+            string bearerToken,
+            string id,
+            CancellationToken? cancellationToken)
+        {
+            if (id == null)
+            {
+                throw new ArgumentException("'id' is required but was null.");
+            }
+
+            var urlpath = "/v1/message/{id}";
+            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "DELETE";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates a message for an identity.
+        /// </summary>
+        public async Task SatoriUpdateMessageAsync(
+            string bearerToken,
+            string id,
+            ApiUpdateMessageRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (id == null)
+            {
+                throw new ArgumentException("'id' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v1/message/{id}";
+            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "PUT";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
         /// List properties associated with this identity.
         /// </summary>
         public async Task<IApiProperties> SatoriListPropertiesAsync(
@@ -1251,9 +1616,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
@@ -1284,9 +1651,11 @@ namespace Satori
 
             var queryParams = "";
 
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
             var uri = new UriBuilder(_baseUri)
             {
-                Path = urlpath,
+                Path = path,
                 Query = queryParams
             }.Uri;
 
