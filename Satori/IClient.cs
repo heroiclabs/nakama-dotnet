@@ -211,5 +211,36 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task object.</returns>
         public Task DeleteIdentityAsync(ISession session, CancellationToken? cancellationToken = default);
+
+        /// <summary>
+        /// Get all the messages for an identity.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="limit">Max number of messages to return. Between 1 and 100.</param>
+        /// <param name="forward">True if listing should be older messages to newer, false if reverse.</param>
+        /// <param name="cursor">A pagination cursor, if any.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task object which resolves to a list of messages.</returns>
+        public Task<IApiGetMessageListResponse> GetMessageListAsync(ISession session, int limit = 1, bool forward = true, string cursor = null, CancellationToken? cancellationToken = default);
+
+        /// <summary>
+        /// Update the status of a message.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="id">The message's unique identifier.</param>
+        /// <param name="consumeTime">The time the message was consumed by the identity.</param>
+        /// <param name="readTime">The time the message was read at the client.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task object.</returns>
+        public Task UpdateMessageAsync(ISession session, string id, string consumeTime, string readTime, CancellationToken? cancellationToken = default);
+
+        /// <summary>
+        /// Delete a scheduled message.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="id">The identifier of the message.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task object.</returns>
+        public Task DeleteMessageAsync(ISession session, string id, CancellationToken? cancellationToken = default);
     }
 }
