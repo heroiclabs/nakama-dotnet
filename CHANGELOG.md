@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [3.12.0] - 2024-04-08
 ### Added
 - Satori: Added `IApiLiveEvent.Id` for accessing live event identifiers.
 - Satori: Added support for new Satori Messages API: `IClient.GetMessageListAsync`, `IClient.UpdateMessageAsync` and `IClient.DeleteMessageAsync`.
