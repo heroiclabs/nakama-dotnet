@@ -85,8 +85,7 @@ namespace Nakama
         internal Session(string authToken, string refreshToken, bool created)
         {
             Created = created;
-            var span = DateTime.UtcNow - Epoch;
-            CreateTime = span.Seconds;
+            CreateTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             RefreshExpireTime = 0L;
             Vars = new Dictionary<string, string>();
 

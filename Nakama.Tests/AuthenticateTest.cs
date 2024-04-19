@@ -41,6 +41,7 @@ namespace Nakama.Tests.Api
             Assert.NotNull(session.UserId);
             Assert.NotNull(session.Username);
             Assert.False(session.IsExpired);
+            Assert.Equal(DateTimeOffset.UtcNow.ToUnixTimeSeconds(), session.CreateTime);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
