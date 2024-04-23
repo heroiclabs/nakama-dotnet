@@ -413,7 +413,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact (Skip = "requires server configs --session.single_socket=true && --session.single_party=true")]
+        [Fact (Timeout = TestsUtil.TIMEOUT_MILLISECONDS, Skip = "requires server configs --session.single_socket=true && --session.single_party=true")]
         public async Task SinglePartyShouldRemoveFromOtherParties()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -424,7 +424,7 @@ namespace Nakama.Tests.Socket
 
             await socket1.ConnectAsync(session1);
             await socket2.ConnectAsync(session2);
-            
+
             var party = await socket1.CreatePartyAsync(true, 2);
 
             var socket2PresenceTcs = new TaskCompletionSource<IUserPresence>();
@@ -442,15 +442,15 @@ namespace Nakama.Tests.Socket
                     socket2LeaveTcs.SetResult(session2Leave);
                 }
             };
-            
+
             await socket2.JoinPartyAsync(party.Id);
 
             await socket2PresenceTcs.Task;
 
             await socket2.CreatePartyAsync(true, 2);
-            
+
             await socket2LeaveTcs.Task;
-            
+
             Assert.True(socket2PresenceTcs.Task.IsCompleted);
             Assert.True(socket2LeaveTcs.Task.IsCompleted);
         }
