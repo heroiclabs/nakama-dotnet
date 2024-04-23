@@ -352,7 +352,6 @@ namespace Nakama.Tests.Socket
             var socket2PresenceTcs = new TaskCompletionSource<IUserPresence>();
 
             socket1.ReceivedPartyPresence += presences => {
-
                 var session2Join = presences.Joins.FirstOrDefault(presence => presence.UserId == session2.UserId);
                 if (session2Join != null)
                 {
@@ -412,6 +411,48 @@ namespace Nakama.Tests.Socket
 
             await socket1.CloseAsync();
             await socket2.CloseAsync();
+        }
+
+        [Fact (Timeout = TestsUtil.TIMEOUT_MILLISECONDS, Skip = "requires server configs --session.single_socket=true && --session.single_party=true")]
+        public async Task SinglePartyShouldRemoveFromOtherParties()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var socket1 = Nakama.Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
+
+            await socket1.ConnectAsync(session1);
+            await socket2.ConnectAsync(session2);
+
+            var party = await socket1.CreatePartyAsync(true, 2);
+
+            var socket2PresenceTcs = new TaskCompletionSource<IUserPresence>();
+            var socket2LeaveTcs = new TaskCompletionSource<IUserPresence>();
+
+            socket1.ReceivedPartyPresence += presences => {
+                var session2Join = presences.Joins.FirstOrDefault(presence => presence.UserId == session2.UserId);
+                if (session2Join != null)
+                {
+                    socket2PresenceTcs.SetResult(session2Join);
+                }
+                var session2Leave = presences.Leaves.FirstOrDefault(presence => presence.UserId == session2.UserId);
+                if (session2Leave != null)
+                {
+                    socket2LeaveTcs.SetResult(session2Leave);
+                }
+            };
+
+            await socket2.JoinPartyAsync(party.Id);
+
+            await socket2PresenceTcs.Task;
+
+            await socket2.CreatePartyAsync(true, 2);
+
+            await socket2LeaveTcs.Task;
+
+            Assert.True(socket2PresenceTcs.Task.IsCompleted);
+            Assert.True(socket2LeaveTcs.Task.IsCompleted);
         }
     }
 }

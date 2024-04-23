@@ -57,7 +57,10 @@ namespace Nakama.Tests.Socket
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var payload = new Dictionary<string, string> {{"user_id", session.UserId}};
-            var _ = await _client.RpcAsync(session, "clientrpc.send_ten_notifications", payload.ToJson());
+            for (int i = 0; i < 10; i++)
+            {
+                var _ = await _client.RpcAsync(session, "clientrpc.send_notification", payload.ToJson());
+            }
             IApiNotificationList notifs = await _client.ListNotificationsAsync(session, limit: 9);
             string firstCursor = notifs.CacheableCursor;
             Assert.Equal(9, notifs.Notifications.Count());
