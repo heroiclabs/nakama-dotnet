@@ -1264,7 +1264,7 @@ namespace Nakama
             return newSession;
         }
 
-        public override string ToString() => 
+        public override string ToString() =>
             $"Client(Host='{Host}', Port={Port}, Scheme='{Scheme}', ServerKey='{ServerKey}', Timeout={Timeout})";
 
         /// <inheritdoc cref="UnlinkAppleAsync"/>
@@ -1422,7 +1422,7 @@ namespace Nakama
                     Username = username
                 }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
-            if (!username.Equals(session.Username))
+            if (!String.IsNullOrEmpty(username) && !username.Equals(session.Username))
             {
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
