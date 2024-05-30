@@ -947,14 +947,6 @@ namespace Nakama
                 () => _apiClient.ListNotificationsAsync(session.AuthToken, limit, cacheableCursor, canceller),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
-            foreach (var notification in response.Notifications)
-            {
-                if (!session.Username.Equals(notification.SenderId) && notification is ApiNotification n)
-                {
-                    n.SenderId = session.UserId;
-                }
-            }
-
             return response;
         }
 
