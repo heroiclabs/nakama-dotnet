@@ -81,6 +81,7 @@ namespace Nakama.Tests.Api
 
             await Task.Delay(1000);
             Assert.NotNull(session2Notif);
+            Assert.Equal(session.UserId, session2Notif!.SenderId);
 
             var friendList = await _client.ListFriendsAsync(session, 1); // has sent invitation
             Assert.Single(friendList.Friends);
@@ -88,6 +89,7 @@ namespace Nakama.Tests.Api
             await _client.AddFriendsAsync(session2, new string[]{session.UserId});
             await Task.Delay(1000);
             Assert.NotNull(session1Notif);
+            Assert.Equal(session2.UserId, session1Notif!.SenderId);
 
             friendList = await _client.ListFriendsAsync(session, 0); // friends
 
