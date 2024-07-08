@@ -15,8 +15,11 @@
  */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices.JavaScript;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -148,6 +151,45 @@ namespace Nakama.Tests.Api
 
             Assert.NotNull(result);
             Assert.True(result.Groups.Count() >= 1);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldListGroupsByNameWithCursor()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            List<string> expectedNames = new List<string>();
+            for (var i = 0; i < 10; i++)
+            {
+                var name = $"Test{i.ToString()}";
+                try
+                {
+                    await _client.CreateGroupAsync(session, name);
+                }
+                catch {}
+                expectedNames.Add(name);
+            }
+
+            var page1 = await _client.ListGroupsAsync(session, "Tes%", 5);
+            Assert.NotNull(page1);
+            Assert.NotNull(page1.Cursor);
+            Assert.Equal(5, page1.Groups.Count());
+            var idx = 0;
+            foreach (var g in page1.Groups)
+            {
+                Assert.Equal(expectedNames[idx], g.Name);
+                idx++;
+            }
+
+            var page2 = await _client.ListGroupsAsync(session, "Tes%", 5, page1.Cursor);
+
+            Assert.NotNull(page2);
+            Assert.Null(page2.Cursor);
+            Assert.Equal(5, page2.Groups.Count());
+            foreach (var g in page2.Groups)
+            {
+                Assert.Equal(expectedNames[idx], g.Name);
+                idx++;
+            }
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
