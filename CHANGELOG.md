@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 
+## [3.13.0] - 2024-07-10
+### Added
+- Satori: Added `ImageUrl` and `Title` to `IApiMessage`.
+
 ## [3.12.1] - 2024-05-30
 ### Fixed
 - Nakama: Fixed an issue where notifications from other users could appear as if they were sent by the recipient user.
