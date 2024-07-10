@@ -714,6 +714,11 @@ namespace Satori
         string Id { get; }
 
         /// <summary>
+        /// The message's image url.
+        /// </summary>
+        string ImageUrl { get; }
+
+        /// <summary>
         /// A key-value pairs of metadata.
         /// </summary>
         IDictionary<string, string> Metadata { get; }
@@ -739,6 +744,11 @@ namespace Satori
         string Text { get; }
 
         /// <summary>
+        /// The message's title.
+        /// </summary>
+        string Title { get; }
+
+        /// <summary>
         /// The time the message was updated.
         /// </summary>
         string UpdateTime { get; }
@@ -759,6 +769,10 @@ namespace Satori
         /// <inheritdoc />
         [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="image_url"), Preserve]
+        public string ImageUrl { get; set; }
 
         /// <inheritdoc />
         [IgnoreDataMember]
@@ -783,6 +797,10 @@ namespace Satori
         public string Text { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="title"), Preserve]
+        public string Title { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="update_time"), Preserve]
         public string UpdateTime { get; set; }
 
@@ -792,6 +810,7 @@ namespace Satori
             output = string.Concat(output, "ConsumeTime: ", ConsumeTime, ", ");
             output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
             output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "ImageUrl: ", ImageUrl, ", ");
 
             var metadataString = "";
             foreach (var kvp in Metadata)
@@ -803,6 +822,7 @@ namespace Satori
             output = string.Concat(output, "ScheduleId: ", ScheduleId, ", ");
             output = string.Concat(output, "SendTime: ", SendTime, ", ");
             output = string.Concat(output, "Text: ", Text, ", ");
+            output = string.Concat(output, "Title: ", Title, ", ");
             output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
             return output;
         }
