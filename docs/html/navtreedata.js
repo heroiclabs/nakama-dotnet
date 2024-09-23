@@ -26,7 +26,7 @@ var NAVTREE =
 [
   [ "Nakama .NET Client SDK", "index.html", [
     [ "Nakama .NET", "index.html", null ],
-    [ "Changelog", "md__2_users_2gp_2_git_hub_2nakama-dotnet_2_c_h_a_n_g_e_l_o_g.html", null ],
+    [ "Changelog", "md__2_users_2joao_2_projects_2heroic_2nakama-dotnet_2_c_h_a_n_g_e_l_o_g.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -57,16 +57,17 @@ var NAVTREEINDEX =
 [
 "_binary_reader_writer_8cs.html",
 "class_nakama_1_1_client.html#a7d49b887e6d302f68917162a0567ad66",
-"class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_server_listener_socket_exception.html#ad1157f9923ff7137fd226d8d61c1cdc7",
-"class_nakama_1_1_socket.html#a8350140a21c191ea84617135fef4082e",
-"dir_64302e4ed8e680c5e7832e1b7ea09baa.html",
-"interface_nakama_1_1_console_1_1_i_api_user.html#ab7bc58732b4f2fdcf86d3e59e54fccb5",
-"interface_nakama_1_1_i_api_account_facebook.html#ac7964eef958b9601424636e740936283",
-"interface_nakama_1_1_i_api_notification_list.html#ae9af8a0fbf2f772de85683e8dc6c6f72",
-"interface_nakama_1_1_i_api_validate_purchase_huawei_request.html",
-"interface_nakama_1_1_i_client.html#a90a221604c5aee514bae83bfce921005",
-"interface_nakama_1_1_i_session.html#a35d8154eb7deff8e2bf953b23561bf19",
-"interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager.html#a9e454afd70ec36b728aad46d32282941"
+"class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_server_listener_socket_exception.html#a03ed8282bad053839e32a709ea034b4e",
+"class_nakama_1_1_socket.html#a7df1f68cfed0dbc80c151d9fc9146436",
+"class_satori_1_1_session.html#ad241a4da8f93b528fff4c0f3e080165c",
+"interface_nakama_1_1_console_1_1_i_api_user.html#a8e3d99268d2c5833e12141576283305d",
+"interface_nakama_1_1_i_api_account_email.html#ad177139e341a3787f3cf09e0271066c2",
+"interface_nakama_1_1_i_api_notification.html#aade869f44d0cfd07bd51ff88c4c12eab",
+"interface_nakama_1_1_i_api_validate_purchase_facebook_instant_request.html#a658bf336bac89d6cc80fb30ca707c766",
+"interface_nakama_1_1_i_client.html#a8520e2e99a83f3cac309f2a0354c2e65",
+"interface_nakama_1_1_i_rpc_status.html#a0d06a965ab9ee4dc04346be0bc331471",
+"interface_nakama_1_1_i_write_tournament_record_request_tournament_record_write.html#ad3a1c0719749e609006577a7577729b1",
+"interface_satori_1_1_i_rpc_status.html#abfc3946bb2273c5e2e44f123ac308a96"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

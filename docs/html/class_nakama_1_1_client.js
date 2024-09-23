@@ -99,5 +99,6 @@ var class_nakama_1_1_client =
     [ "Port", "class_nakama_1_1_client.html#aa59309ff4ed7172795782cd69cb295d8", null ],
     [ "Scheme", "class_nakama_1_1_client.html#afaf274b5c7dc2b21931b7d6814f3d455", null ],
     [ "ServerKey", "class_nakama_1_1_client.html#aa70b920781b70f74f0419d262043dbd1", null ],
-    [ "Timeout", "class_nakama_1_1_client.html#afa11ac790793b5178c423364cc1a1cd2", null ]
+    [ "Timeout", "class_nakama_1_1_client.html#afa11ac790793b5178c423364cc1a1cd2", null ],
+    [ "ReceivedSessionUpdated", "class_nakama_1_1_client.html#a9dc5ecc3c4faaa26b8508a931a086217", null ]
 ];
