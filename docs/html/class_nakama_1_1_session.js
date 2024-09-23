@@ -3,6 +3,7 @@ var class_nakama_1_1_session =
     [ "HasExpired", "class_nakama_1_1_session.html#a32aa5055ec8b4629d48574c14ca52929", null ],
     [ "HasRefreshExpired", "class_nakama_1_1_session.html#a292f6d27e68f068d5b71a5e998f93adc", null ],
     [ "ToString", "class_nakama_1_1_session.html#a8387864684cbee2f57ed82211c12e6cd", null ],
+    [ "Update", "class_nakama_1_1_session.html#af8b93681b0868726ad3d77c3f59c3ace", null ],
     [ "AuthToken", "class_nakama_1_1_session.html#a6109a78f8514b76f1a0977937dcaaaaf", null ],
     [ "Created", "class_nakama_1_1_session.html#a07dd0bf598118762c5d4ac81f1f234fb", null ],
     [ "CreateTime", "class_nakama_1_1_session.html#ad29e88275b3bb763a8153944e0bb9912", null ],
