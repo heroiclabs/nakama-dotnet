@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,13 +30,23 @@ namespace Satori
         bool AutoRefreshSession { get; }
 
         /// <summary>
+        /// Received a new session after the current one has expired.
+        /// </summary>
+        /// <remarks>
+        /// This event will only be sent when <c>SessionRefreshAsync</c> is called which also happens automatically if
+        /// <c>AutoRefreshSession</c> is enabled.
+        /// </remarks>
+        /// <see cref="SessionRefreshAsync"/>
+        /// <seealso cref="AutoRefreshSession"/>
+        event Action<ISession> ReceivedSessionUpdated;
+
+        /// <summary>
         /// Authenticate against the server.
         /// </summary>
         /// <param name="id">An optional user id.</param>
-        /// <param name="defaultProperties">Optional default properties to update with this call. If not set, properties are left as they are on the server. </summary>
-        /// <param name="customProperties">Optional custom properties to update with this call. If not set, properties are left as they are on the server. </summary>
+        /// <param name="defaultProperties">Optional default properties to update with this call. If not set, properties are left as they are on the server.</param>
+        /// <param name="customProperties">Optional custom properties to update with this call. If not set, properties are left as they are on the server.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
-        /// </summary>
         /// <returns>A task which resolves to a user session.</returns>
         public Task<ISession> AuthenticateAsync(string id, Dictionary<string, string> defaultProperties = default, Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default);
 

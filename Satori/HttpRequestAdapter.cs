@@ -125,12 +125,14 @@ namespace Satori
                 handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
             }
 
+            handler.AllowAutoRedirect = true;
+
             var client =
                 new HttpClient(compression ? (HttpMessageHandler) new GZipHttpClientHandler(handler) : handler);
             return new HttpRequestAdapter(client);
         }
 
-        private bool IsTransientException(Exception e)
+        private static bool IsTransientException(Exception e)
         {
             return (e is ApiResponseException apiException && (apiException.StatusCode >= 500 || apiException.StatusCode == -1)) || e is HttpRequestException;
         }

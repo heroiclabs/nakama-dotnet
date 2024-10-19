@@ -77,7 +77,7 @@ namespace Nakama
         /// <inheritdoc cref="IClient.ServerKey"/>
         public string ServerKey { get; }
 
-        /// <inheritdoc cref="IClient.SessionRefreshed"/>
+        /// <inheritdoc cref="IClient.ReceivedSessionUpdated"/>
         public event Action<ISession> ReceivedSessionUpdated;
 
         /// <inheritdoc cref="IClient.Timeout"/>
