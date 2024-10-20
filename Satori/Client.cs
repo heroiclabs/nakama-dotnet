@@ -45,6 +45,9 @@ namespace Satori
         /// </summary>
         public string Scheme { get; }
 
+        /// <inheritdoc cref="IClient.ReceivedSessionUpdated"/>
+        public event Action<ISession> ReceivedSessionUpdated;
+
         /// <summary>
         /// The key used to authenticate with the server without a session.
         /// </summary>
@@ -84,10 +87,12 @@ namespace Satori
         }
 
         /// <inheritdoc cref="AuthenticateAsync" />
-        public async Task<ISession> AuthenticateAsync(string id, Dictionary<string, string> defaultProperties = default, Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default)
+        public async Task<ISession> AuthenticateAsync(string id, Dictionary<string, string> defaultProperties = default,
+            Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default)
         {
             var resp = await _apiClient.SatoriAuthenticateAsync(ApiKey, string.Empty,
-                new ApiAuthenticateRequest { Id = id, _default = defaultProperties, _custom = customProperties }, cancellationToken);
+                new ApiAuthenticateRequest { Id = id, _default = defaultProperties, _custom = customProperties },
+                cancellationToken);
             return new Session(resp.Token, resp.RefreshToken);
         }
 
@@ -142,10 +147,8 @@ namespace Satori
         }
 
         /// <inheritdoc cref="GetExperimentsAsync" />
-        public async Task<IApiExperimentList> GetAllExperimentsAsync(ISession session, CancellationToken? cancellationToken = default)
-        {
-            return await GetExperimentsAsync(session, null, cancellationToken);
-        }
+        public Task<IApiExperimentList> GetAllExperimentsAsync(ISession session,
+            CancellationToken? cancellationToken = default) => GetExperimentsAsync(session, null, cancellationToken);
 
         /// <inheritdoc cref="GetExperimentsAsync" />
         public async Task<IApiExperimentList> GetExperimentsAsync(ISession session, IEnumerable<string> names,
@@ -164,7 +167,7 @@ namespace Satori
         public async Task<IApiFlag> GetFlagAsync(ISession session, string name,
             CancellationToken? cancellationToken = default)
         {
-            var resp = await GetFlagsAsync(session, new []{name}, cancellationToken);
+            var resp = await GetFlagsAsync(session, new[] { name }, cancellationToken);
             foreach (var flag in resp.Flags)
             {
                 if (flag.Name.Equals(name))
@@ -201,7 +204,7 @@ namespace Satori
             }
         }
 
-        /// <inheritdoc cref="GetFlagDefaultAsync(string,string,System.Nullable{System.Threading.CancellationToken})" />
+        /// <inheritdoc cref="GetFlagDefaultAsync(string,System.Nullable{System.Threading.CancellationToken})" />
         public async Task<IApiFlag> GetFlagDefaultAsync(string name,
             CancellationToken? cancellationToken = default)
         {
@@ -217,7 +220,7 @@ namespace Satori
             throw new ArgumentException($"flag '{name}' not found.");
         }
 
-        /// <inheritdoc cref="GetFlagDefaultAsync(string,string,string,System.Nullable{System.Threading.CancellationToken})" />
+        /// <inheritdoc cref="GetFlagDefaultAsync(string,string,System.Nullable{System.Threading.CancellationToken})" />
         public Task<IApiFlag> GetFlagDefaultAsync(string name, string defaultValue,
             CancellationToken? cancellationToken = default)
         {
@@ -274,7 +277,16 @@ namespace Satori
 
             var req = new ApiIdentifyRequest { Id = id, _default = defaultProperties, _custom = customProperties };
             var resp = await _apiClient.SatoriIdentifyAsync(session.AuthToken, req, cancellationToken);
-            return new Session(resp.Token, resp.RefreshToken);
+            var session2 = new Session(resp.Token, resp.RefreshToken);
+
+            if (session is Session updatedSession)
+            {
+                // Update session object in place if we can.
+                updatedSession.Update(resp.Token, resp.RefreshToken);
+                return updatedSession;
+            }
+
+            return session2;
         }
 
         /// <inheritdoc cref="GetLiveEventsAsync" />
@@ -314,15 +326,19 @@ namespace Satori
             {
                 // Update session object in place if we can.
                 updatedSession.Update(resp.Token, resp.RefreshToken);
+                ReceivedSessionUpdated?.Invoke(updatedSession);
                 return updatedSession;
             }
 
-            return new Session(resp.Token, resp.RefreshToken);
+            var newSession = new Session(resp.Token, resp.RefreshToken);
+            ReceivedSessionUpdated?.Invoke(newSession);
+            return newSession;
         }
 
         /// <inheritdoc cref="UpdatePropertiesAsync" />
         public async Task UpdatePropertiesAsync(ISession session, Dictionary<string, string> defaultProperties,
-            Dictionary<string, string> customProperties, bool recompute = false, CancellationToken? cancellationToken = default)
+            Dictionary<string, string> customProperties, bool recompute = false,
+            CancellationToken? cancellationToken = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -330,7 +346,8 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            ApiUpdatePropertiesRequest payload = new ApiUpdatePropertiesRequest {
+            ApiUpdatePropertiesRequest payload = new ApiUpdatePropertiesRequest
+            {
                 _default = defaultProperties,
                 _custom = customProperties,
                 Recompute = recompute,
@@ -351,7 +368,8 @@ namespace Satori
         }
 
         /// <inheritdoc cref="GetMessageListAsync" />
-        public async Task<IApiGetMessageListResponse> GetMessageListAsync(ISession session, int limit = 1, bool forward = true, string cursor = null, CancellationToken? cancellationToken = default)
+        public async Task<IApiGetMessageListResponse> GetMessageListAsync(ISession session, int limit = 1,
+            bool forward = true, string cursor = null, CancellationToken? cancellationToken = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -359,11 +377,13 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            return await _apiClient.SatoriGetMessageListAsync(session.AuthToken, limit, forward, cursor, cancellationToken);
+            return await _apiClient.SatoriGetMessageListAsync(session.AuthToken, limit, forward, cursor,
+                cancellationToken);
         }
 
         /// <inheritdoc cref="UpdateMessageAsync" />
-        public async Task UpdateMessageAsync(ISession session, string id, string consumeTime, string readTime, CancellationToken? cancellationToken = default)
+        public async Task UpdateMessageAsync(ISession session, string id, string consumeTime, string readTime,
+            CancellationToken? cancellationToken = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -371,11 +391,13 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            await _apiClient.SatoriUpdateMessageAsync(session.AuthToken, id, new ApiUpdateMessageRequest{ConsumeTime = consumeTime, ReadTime = readTime}, cancellationToken);
+            await _apiClient.SatoriUpdateMessageAsync(session.AuthToken, id,
+                new ApiUpdateMessageRequest { ConsumeTime = consumeTime, ReadTime = readTime }, cancellationToken);
         }
 
         /// <inheritdoc cref="DeleteMessageAsync" />
-        public async Task DeleteMessageAsync(ISession session, string id, CancellationToken? cancellationToken = default)
+        public async Task DeleteMessageAsync(ISession session, string id,
+            CancellationToken? cancellationToken = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
