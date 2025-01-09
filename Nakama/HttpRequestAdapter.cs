@@ -41,7 +41,7 @@ namespace Nakama
         public HttpRequestAdapter(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _httpClient.Timeout = TimeSpan.FromSeconds(30); // Provide a global request timeout as a failsafe.
+            _httpClient.Timeout = TimeSpan.FromSeconds(80); // Provide a global request timeout as a failsafe.
         }
 
         /// <inheritdoc cref="IHttpAdapter"/>
@@ -131,7 +131,7 @@ namespace Nakama
             return new HttpRequestAdapter(client);
         }
 
-        private static bool IsTransientException(Exception e)
+        public static bool IsTransientException(Exception e)
         {
             if (e is ApiResponseException apiException)
             {

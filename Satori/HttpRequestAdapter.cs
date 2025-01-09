@@ -1,4 +1,4 @@
-// Copyright 2022 The Satori Authors
+// Copyright 2019 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,9 +41,7 @@ namespace Satori
         public HttpRequestAdapter(HttpClient httpClient)
         {
             _httpClient = httpClient;
-
-            // remove cap of max timeout on HttpClient from 100 seconds.
-            _httpClient.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
+            _httpClient.Timeout = TimeSpan.FromSeconds(80); // Provide a global request timeout as a failsafe.
         }
 
         /// <inheritdoc cref="IHttpAdapter"/>
@@ -56,7 +54,7 @@ namespace Satori
                 Method = new HttpMethod(method),
                 Headers =
                 {
-                    Accept = {new MediaTypeWithQualityHeaderValue("application/json")}
+                    Accept = { new MediaTypeWithQualityHeaderValue("application/json") }
                 }
             };
 
@@ -68,26 +66,28 @@ namespace Satori
             if (body != null)
             {
                 request.Content = new ByteArrayContent(body);
+                Logger?.InfoFormat(
+                    $"Send: method='{method}', uri='{uri}', body='{System.Text.Encoding.UTF8.GetString(body)}'");
             }
-
-            var timeoutTokenSource = new CancellationTokenSource();
-            CancellationToken timeoutToken = timeoutTokenSource.Token;
-            timeoutTokenSource.CancelAfter(TimeSpan.FromSeconds(timeout));
-
-            CancellationTokenSource linkedSource = null;
-
-            if (userCancelToken.HasValue)
+            else
             {
-                linkedSource = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken, userCancelToken.Value);
+                Logger?.InfoFormat($"Send: method='{method}', uri='{uri}'");
             }
 
-            Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri, body);
-
-            var response = await _httpClient.SendAsync(request, linkedSource == null ? timeoutToken : linkedSource.Token);
+            using var ctsTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
+            using var cts =
+                CancellationTokenSource.CreateLinkedTokenSource(ctsTimeout.Token,
+                    userCancelToken ?? CancellationToken.None);
+            using var response = await _httpClient.SendAsync(request, cts.Token).ConfigureAwait(false);
             var contents = await response.Content.ReadAsStringAsync();
-            response.Content?.Dispose();
-
             Logger?.InfoFormat("Received: status={0}, contents='{1}'", response.StatusCode, contents);
+
+            if ((int)response.StatusCode >= 500)
+            {
+                // TODO think of best way to map HTTP code to GRPC code since we can't rely
+                // on server to process it. Manually adding the mapping to SDK seems brittle.
+                throw new ApiResponseException((int)response.StatusCode, contents, -1);
+            }
 
             if (response.IsSuccessStatusCode)
             {
@@ -95,14 +95,13 @@ namespace Satori
             }
 
             var decoded = contents.FromJson<Dictionary<string, object>>();
-            string message = decoded.ContainsKey("message") ? decoded["message"].ToString() : string.Empty;
-            int grpcCode = decoded.ContainsKey("code") ? (int) decoded["code"] : -1;
+            var message = decoded.TryGetValue("message", out var value1) ? value1.ToString() : string.Empty;
+            var grpcCode = decoded.TryGetValue("code", out var value2) ? (int)value2 : -1;
 
-            var exception = new ApiResponseException((int) response.StatusCode, message, grpcCode);
-
-            if (decoded.ContainsKey("error"))
+            var exception = new ApiResponseException((int)response.StatusCode, message, grpcCode);
+            if (decoded.TryGetValue("error", out var value))
             {
-                HttpAdapterUtil.CopyResponseError(this, decoded["error"], exception);
+                HttpAdapterUtil.CopyResponseError(this, value, exception);
             }
 
             throw exception;
@@ -128,13 +127,29 @@ namespace Satori
             handler.AllowAutoRedirect = true;
 
             var client =
-                new HttpClient(compression ? (HttpMessageHandler) new GZipHttpClientHandler(handler) : handler);
+                new HttpClient(compression ? (HttpMessageHandler)new GZipHttpClientHandler(handler) : handler);
             return new HttpRequestAdapter(client);
         }
 
-        private static bool IsTransientException(Exception e)
+        public static bool IsTransientException(Exception e)
         {
-            return (e is ApiResponseException apiException && (apiException.StatusCode >= 500 || apiException.StatusCode == -1)) || e is HttpRequestException;
+            if (e is ApiResponseException apiException)
+            {
+                switch (apiException.StatusCode)
+                {
+                    case 500
+                        : // Internal Server Error often (but not always) indicates a transient issue in Nakama, e.g., DB connectivity.
+                    case 502
+                        : // LB returns this to client if server sends corrupt/invalid data to LB, which may be a transient issue.
+                    case 503
+                        : // LB returns this to client if LB determines or is told that server is unable to handle forwarded from LB, which may be a transient issue.
+                    case 504
+                        : // LB returns this to client if LB cannot communicate with server, which may be a temporary issue.
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }
