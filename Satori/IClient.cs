@@ -25,14 +25,39 @@ namespace Satori
     public interface IClient
     {
         /// <summary>
+        /// The key used to authenticate with the server without a session.
+        /// </summary>
+        string ApiKey { get; }
+
+        /// <summary>
         /// True if the session should be refreshed with an active refresh token.
         /// </summary>
         bool AutoRefreshSession { get; }
-        
+
         /// <summary>
         /// The global retry configuration. See <see cref="RetryConfiguration"/>.
         /// </summary>
         RetryConfiguration GlobalRetryConfiguration { get; set; }
+
+        /// <summary>
+        /// The host address of the server.
+        /// </summary>
+        string Host { get; }
+
+        /// <summary>
+        /// The port number of the server.
+        /// </summary>
+        int Port { get; }
+
+        /// <summary>
+        /// The protocol scheme used to connect with the server. Must be either "http" or "https".
+        /// </summary>
+        string Scheme { get; }
+
+        /// <summary>
+        /// Set the timeout in seconds on requests sent to the server.
+        /// </summary>
+        int Timeout { get; set; }
 
         /// <summary>
         /// Received a new session after the current one has expired.
@@ -54,7 +79,9 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task which resolves to a user session.</returns>
-        public Task<ISession> AuthenticateAsync(string id, Dictionary<string, string> defaultProperties = default, Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task<ISession> AuthenticateAsync(string id, Dictionary<string, string> defaultProperties = default,
+            Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
@@ -63,7 +90,8 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        public Task AuthenticateLogoutAsync(ISession session, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task AuthenticateLogoutAsync(ISession session, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// Send an event for this session.
@@ -73,7 +101,8 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task object.</returns>
-        public Task EventAsync(ISession session, Event @event, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task EventAsync(ISession session, Event @event, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// Send a batch of events for this session.
@@ -93,7 +122,8 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task which resolves to all experiments that this identity is involved with.</returns>
-        public Task<IApiExperimentList> GetAllExperimentsAsync(ISession session, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task<IApiExperimentList> GetAllExperimentsAsync(ISession session,
+            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// Get specific experiments data.
@@ -201,7 +231,8 @@ namespace Satori
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task which resolves to the new session for the user.</returns>
         public Task<ISession> IdentifyAsync(ISession session, string id, Dictionary<string, string> defaultProperties,
-            Dictionary<string, string> customProperties, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+            Dictionary<string, string> customProperties, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// List properties associated with this identity.
@@ -220,7 +251,8 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task which resolves to a user session.</returns>
-        public Task<ISession> SessionRefreshAsync(ISession session, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task<ISession> SessionRefreshAsync(ISession session, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// Update properties associated with this identity.
@@ -233,7 +265,8 @@ namespace Satori
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task object.</returns>
         public Task UpdatePropertiesAsync(ISession session, Dictionary<string, string> defaultProperties,
-            Dictionary<string, string> customProperties, bool recompute, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+            Dictionary<string, string> customProperties, bool recompute, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// Delete the caller's identity and associated data.
@@ -242,7 +275,8 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task object.</returns>
-        public Task DeleteIdentityAsync(ISession session, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task DeleteIdentityAsync(ISession session, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// Get all the messages for an identity.
@@ -254,7 +288,9 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task object which resolves to a list of messages.</returns>
-        public Task<IApiGetMessageListResponse> GetMessageListAsync(ISession session, int limit = 1, bool forward = true, string cursor = null, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task<IApiGetMessageListResponse> GetMessageListAsync(ISession session, int limit = 1,
+            bool forward = true, string cursor = null, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// Update the status of a message.
@@ -266,7 +302,8 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task object.</returns>
-        public Task UpdateMessageAsync(ISession session, string id, string consumeTime, string readTime, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task UpdateMessageAsync(ISession session, string id, string consumeTime, string readTime,
+            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// Delete a scheduled message.
@@ -276,6 +313,7 @@ namespace Satori
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task object.</returns>
-        public Task DeleteMessageAsync(ISession session, string id, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task DeleteMessageAsync(ISession session, string id, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
     }
 }
