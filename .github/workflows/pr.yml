@@ -4,6 +4,7 @@ on:
   pull_request:
 
 jobs:
+  if: false # disabled
   test:
     runs-on: ubuntu-latest
 

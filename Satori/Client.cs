@@ -27,9 +27,12 @@ namespace Satori
         /// </summary>
         public static TimeSpan DefaultExpiredTimeSpan = TimeSpan.FromMinutes(5);
 
+        /// <inheritdoc cref="IClient.ApiKey"/>
+        public string ApiKey { get; }
+
         /// <inheritdoc cref="IClient.AutoRefreshSession" />
         public bool AutoRefreshSession { get; }
-        
+
         /// <inheritdoc cref="IClient.GlobalRetryConfiguration"/>
         public RetryConfiguration GlobalRetryConfiguration { get; set; } = new RetryConfiguration(
             baseDelayMs: 500,
@@ -37,33 +40,24 @@ namespace Satori
             listener: null,
             maxRetries: 4);
 
-        /// <summary>
-        /// The host address of the server.
-        /// </summary>
+        /// <inheritdoc cref="IClient.Host"/>
         public string Host { get; }
 
-        /// <summary>
-        /// The port number of the server.
-        /// </summary>
+        /// <inheritdoc cref="IClient.Port"/>
         public int Port { get; }
 
-        /// <summary>
-        /// The protocol scheme used to connect with the server. Must be either "http" or "https".
-        /// </summary>
+        /// <inheritdoc cref="IClient.Scheme"/>
         public string Scheme { get; }
 
         /// <inheritdoc cref="IClient.ReceivedSessionUpdated"/>
         public event Action<ISession> ReceivedSessionUpdated;
 
-        /// <summary>
-        /// The key used to authenticate with the server without a session.
-        /// </summary>
-        public string ApiKey { get; }
-
-        /// <summary>
-        /// Set the timeout in seconds on requests sent to the server.
-        /// </summary>
-        public int Timeout { get; set; }
+        /// <inheritdoc cref="IClient.Timeout"/>
+        public int Timeout
+        {
+            get => _apiClient.Timeout;
+            set => _apiClient.Timeout = value;
+        }
 
         /// <summary>
         /// The default timeout of the server.
@@ -92,22 +86,28 @@ namespace Satori
 
         /// <inheritdoc cref="AuthenticateAsync" />
         public async Task<ISession> AuthenticateAsync(string id, Dictionary<string, string> defaultProperties = default,
-            Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
+            Dictionary<string, string> customProperties = default, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null)
         {
-            var resp = await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriAuthenticateAsync(ApiKey, string.Empty,
-                new ApiAuthenticateRequest { Id = id, _default = defaultProperties, _custom = customProperties }, cancellationToken),
+            var resp = await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriAuthenticateAsync(ApiKey,
+                    string.Empty,
+                    new ApiAuthenticateRequest { Id = id, _default = defaultProperties, _custom = customProperties },
+                    cancellationToken),
                 new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
             return new Session(resp.Token, resp.RefreshToken);
         }
 
         /// <inheritdoc cref="AuthenticateLogoutAsync" />
-        public Task AuthenticateLogoutAsync(ISession session, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null) =>
+        public Task AuthenticateLogoutAsync(ISession session, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null) =>
             _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriAuthenticateLogoutAsync(session.AuthToken,
-                new ApiAuthenticateLogoutRequest { RefreshToken = session.RefreshToken, Token = session.AuthToken },
-                cancellationToken), new RetryHistory(session.AuthToken, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+                    new ApiAuthenticateLogoutRequest { RefreshToken = session.RefreshToken, Token = session.AuthToken },
+                    cancellationToken),
+                new RetryHistory(session.AuthToken, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
 
         /// <inheritdoc cref="EventAsync" />
-        public async Task EventAsync(ISession session, Event @event, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
+        public async Task EventAsync(ISession session, Event @event, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -123,7 +123,9 @@ namespace Satori
                 }
             };
 
-            await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken), new RetryHistory(@event.Id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken),
+                new RetryHistory(@event.Id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="EventsAsync" />
@@ -147,12 +149,15 @@ namespace Satori
                 _events = apiEventList
             };
 
-            await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="GetExperimentsAsync" />
         public Task<IApiExperimentList> GetAllExperimentsAsync(ISession session,
-            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null) => GetExperimentsAsync(session, null, cancellationToken, retryConfiguration);
+            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null) =>
+            GetExperimentsAsync(session, null, cancellationToken, retryConfiguration);
 
         /// <inheritdoc cref="GetExperimentsAsync" />
         public async Task<IApiExperimentList> GetExperimentsAsync(ISession session, IEnumerable<string> names,
@@ -164,7 +169,9 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            return await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetExperimentsAsync(session.AuthToken, names, cancellationToken), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriGetExperimentsAsync(session.AuthToken, names, cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="GetFlagAsync(Satori.ISession,string,System.Nullable{System.Threading.CancellationToken})" />
@@ -184,7 +191,8 @@ namespace Satori
         }
 
         /// <inheritdoc cref="GetFlagAsync(Satori.ISession,string,string,System.Nullable{System.Threading.CancellationToken})" />
-        public Task<IApiFlag> GetFlagAsync(ISession session, string name, string defaultValue, CancellationToken? cancellationToken = default)
+        public Task<IApiFlag> GetFlagAsync(ISession session, string name, string defaultValue,
+            CancellationToken? cancellationToken = default)
         {
             try
             {
@@ -258,15 +266,19 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            return await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetFlagsAsync(session.AuthToken, string.Empty, string.Empty, names,
-                cancellationToken), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetFlagsAsync(session.AuthToken,
+                    string.Empty, string.Empty, names,
+                    cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="GetFlagsDefaultAsync" />
         public Task<IApiFlagList> GetFlagsDefaultAsync(IEnumerable<string> names,
             CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
         {
-            return _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetFlagsAsync(string.Empty, this.ApiKey, string.Empty, names, cancellationToken), new RetryHistory(string.Empty, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            return _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriGetFlagsAsync(string.Empty, this.ApiKey, string.Empty, names, cancellationToken),
+                new RetryHistory(string.Empty, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="IdentifyAsync" />
@@ -281,7 +293,9 @@ namespace Satori
             }
 
             var req = new ApiIdentifyRequest { Id = id, _default = defaultProperties, _custom = customProperties };
-            var resp = await _retryInvoker.InvokeWithRetry(() =>  _apiClient.SatoriIdentifyAsync(session.AuthToken, req, cancellationToken), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            var resp = await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriIdentifyAsync(session.AuthToken, req, cancellationToken),
+                new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
             var session2 = new Session(resp.Token, resp.RefreshToken);
 
             if (session is Session updatedSession)
@@ -304,7 +318,9 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            return await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetLiveEventsAsync(session.AuthToken, names, cancellationToken), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriGetLiveEventsAsync(session.AuthToken, names, cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="ListPropertiesAsync" />
@@ -317,15 +333,19 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            return await _retryInvoker.InvokeWithRetry(() =>  _apiClient.SatoriListPropertiesAsync(session.AuthToken, cancellationToken), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriListPropertiesAsync(session.AuthToken, cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="SessionRefreshAsync" />
         public async Task<ISession> SessionRefreshAsync(ISession session,
             CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
         {
-            var resp = await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriAuthenticateRefreshAsync(ApiKey, string.Empty,
-                new ApiAuthenticateRefreshRequest { RefreshToken = session.RefreshToken }, cancellationToken), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            var resp = await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriAuthenticateRefreshAsync(ApiKey,
+                    string.Empty,
+                    new ApiAuthenticateRefreshRequest { RefreshToken = session.RefreshToken }, cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
 
             if (session is Session updatedSession)
             {
@@ -357,11 +377,14 @@ namespace Satori
                 _custom = customProperties,
                 Recompute = recompute,
             };
-            await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriUpdatePropertiesAsync(session.AuthToken, payload, cancellationToken), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriUpdatePropertiesAsync(session.AuthToken, payload, cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="DeleteIdentityAsync" />
-        public async Task DeleteIdentityAsync(ISession session, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
+        public async Task DeleteIdentityAsync(ISession session, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -369,12 +392,15 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            await _retryInvoker.InvokeWithRetry(() =>  _apiClient.SatoriDeleteIdentityAsync(session.AuthToken, cancellationToken), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriDeleteIdentityAsync(session.AuthToken, cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="GetMessageListAsync" />
         public async Task<IApiGetMessageListResponse> GetMessageListAsync(ISession session, int limit = 1,
-            bool forward = true, string cursor = null, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
+            bool forward = true, string cursor = null, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -382,8 +408,10 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            return await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetMessageListAsync(session.AuthToken, limit, forward, cursor,
-                cancellationToken), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetMessageListAsync(session.AuthToken,
+                    limit, forward, cursor,
+                    cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="UpdateMessageAsync" />
@@ -396,8 +424,9 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            await _retryInvoker.InvokeWithRetry(() =>  _apiClient.SatoriUpdateMessageAsync(session.AuthToken, id,
-                new ApiUpdateMessageRequest { ConsumeTime = consumeTime, ReadTime = readTime }, cancellationToken), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriUpdateMessageAsync(session.AuthToken, id,
+                    new ApiUpdateMessageRequest { ConsumeTime = consumeTime, ReadTime = readTime }, cancellationToken),
+                new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="DeleteMessageAsync" />
@@ -410,7 +439,9 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            await _retryInvoker.InvokeWithRetry(() =>  _apiClient.SatoriDeleteMessageAsync(session.AuthToken, id, cancellationToken), new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriDeleteMessageAsync(session.AuthToken, id, cancellationToken),
+                new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
     }
 }
