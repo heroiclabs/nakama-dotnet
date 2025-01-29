@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.15.0] - 2025-01-28
+### Added
+- Satori: Add retry attempts to "Client" type.
+
+### Changed
+- Nakama: Improve how cancellation is handled in HTTP requests.
+- Satori: Improve how cancellation is handled in HTTP requests.
+- Satori: Timeouts set in "Client" are now propagated to the underlying "ApiClient" type.
+
+### Fixed
+- GitHub Pages documentation no longer uses Jekyll transform.
+
 ## [3.14.0] - 2024-10-20
 ### Added
 - Satori: New "IClient" event called "ReceivedSessionUpdated" when session expires and is refreshed.
