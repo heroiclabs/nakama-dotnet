@@ -1,22 +1,41 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-      <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
-      <LangVersion>8</LangVersion>
+        <TargetFrameworks>net46;netstandard2.1</TargetFrameworks>
+        <LangVersion>8</LangVersion>
+
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <AssemblyVersion>3.0.0.0</AssemblyVersion>
+        <FileVersion>3.0.0.0</FileVersion>
+        <InformationalVersion Condition="'$(GitTag)' == ''">3.0.0-dev</InformationalVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Net.Http" Version="4.3.4" />
+        <PackageReference Include="System.Net.Http" Version="4.3.4"/>
     </ItemGroup>
 
+    <Target Name="GetGitTag" BeforeTargets="BeforeBuild">
+        <Exec Command="git describe --tags" ConsoleToMsBuild="true" ContinueOnError="true">
+            <Output TaskParameter="ConsoleOutput" PropertyName="GitTag"/>
+        </Exec>
+        <Message Text="Git describe output: '$(GitTag)'" Importance="High"/>
+        <PropertyGroup>
+            <InformationalVersion Condition="'$(GitTag)' != ''">
+                $([System.String]::new('$(GitTag)').Substring(1))
+            </InformationalVersion>
+        </PropertyGroup>
+    </Target>
+
     <PropertyGroup Label="NuGet package definition" Condition=" '$(Configuration)' == 'Release' ">
-      <Authors>Satori Authors &amp; contributors</Authors>
-      <Company>Heroic Labs</Company>
-      <Description>
-      </Description>
-      <PackageId>SatoriClient</PackageId>
-      <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-      <PackageTags>gameserver;client-library;satori;liveops</PackageTags>
-      <RepositoryUrl>https://github.com/heroiclabs/nakama-dotnet</RepositoryUrl>
+        <Authors>Satori Authors &amp; contributors</Authors>
+        <Company>Heroic Labs</Company>
+        <Description>
+            Satori is a LiveOps server for games.
+
+            Run activities on the Event Calendar and optimize player experiences with Audiences, Feature Flags, and Experiments.
+        </Description>
+        <PackageId>SatoriClient</PackageId>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageTags>gameserver;client-library;satori;liveops</PackageTags>
+        <RepositoryUrl>https://github.com/heroiclabs/nakama-dotnet</RepositoryUrl>
     </PropertyGroup>
-  </Project>
+</Project>

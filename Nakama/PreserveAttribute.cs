@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-
-/// <summary>
-/// A custom attribute recognized by Unity3D. When added to a class member, it prevents
-/// the Unity linker from stripping the code it is associated with. This is used in addition
-/// to the link.xml file because the Unity Package Manager does not recognize link.xml files
-/// inside Unity packages.
-/// https://docs.unity3d.com/2018.3/Documentation/Manual/ManagedCodeStripping.html
-/// </summary>
-internal class PreserveAttribute : System.Attribute {}
+namespace Nakama
+{
+    /// <summary>
+    /// A custom attribute recognized by Unity3D. When added to a class member, it prevents
+    /// the Unity linker from stripping the code it is associated with. This is used in addition
+    /// to the link.xml file because the Unity Package Manager does not recognize link.xml files
+    /// inside Unity packages.
+    /// https://docs.unity3d.com/2018.3/Documentation/Manual/ManagedCodeStripping.html
+    /// </summary>
+    internal class PreserveAttribute : System.Attribute
+    {
+    }
+}
