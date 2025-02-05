@@ -82,7 +82,7 @@ namespace {{.Namespace}}
     {
         {{- range $idx, $enum := $definition.Enum }}
         /// <summary>
-        /// {{ (index (splitEnumDescription $definition.Description) $idx) }}
+        /// {{ (index (splitEnumDescription $definition.Description $idx) $idx) }}
         /// </summary>
         {{ $enum }} = {{ $idx }},
         {{- end }}
@@ -528,7 +528,10 @@ func pascalToCamel(input string) (camelCase string) {
 	return camelCase
 }
 
-func splitEnumDescription(description string) (output []string) {
+func splitEnumDescription(description string, enumLength int) []string {
+	if description == "" {
+		return make([]string, enumLength+1)
+	}
 	return strings.Split(description, "\n")
 }
 
