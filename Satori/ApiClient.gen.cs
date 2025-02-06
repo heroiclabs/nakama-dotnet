@@ -79,6 +79,79 @@ namespace Satori
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public interface IFlagValueChangeReason
+    {
+
+        /// <summary>
+        /// The name of the configuration that overrides the flag value.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// The type of the configuration that declared the override.
+        /// </summary>
+        FlagValueChangeReasonType Type { get; }
+
+        /// <summary>
+        /// The variant name of the configuration that overrides the flag value.
+        /// </summary>
+        string VariantName { get; }
+    }
+
+    /// <inheritdoc />
+    internal class FlagValueChangeReason : IFlagValueChangeReason
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public FlagValueChangeReasonType Type => _type;
+        [DataMember(Name="type"), Preserve]
+        public FlagValueChangeReasonType _type { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="variant_name"), Preserve]
+        public string VariantName { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "Type: ", Type, ", ");
+            output = string.Concat(output, "VariantName: ", VariantName, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum FlagValueChangeReasonType
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        UNKNOWN = 0,
+        /// <summary>
+        /// 
+        /// </summary>
+        FLAG_VARIANT = 1,
+        /// <summary>
+        /// 
+        /// </summary>
+        LIVE_EVENT = 2,
+        /// <summary>
+        /// 
+        /// </summary>
+        EXPERIMENT = 3,
+    }
+
+    /// <summary>
     /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
     /// </summary>
     public interface IApiAuthenticateLogoutRequest
@@ -164,6 +237,11 @@ namespace Satori
         /// Identity ID. Must be between eight and 128 characters (inclusive). Must be an alphanumeric string with only underscores and hyphens allowed.
         /// </summary>
         string Id { get; }
+
+        /// <summary>
+        /// Optional no_session modifies the request to only create/update an identity without creating a new session. If set to 'true' the response won't include a token and a refresh token.
+        /// </summary>
+        bool NoSession { get; }
     }
 
     /// <inheritdoc />
@@ -186,6 +264,10 @@ namespace Satori
         [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
+        /// <inheritdoc />
+        [DataMember(Name="no_session"), Preserve]
+        public bool NoSession { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -204,6 +286,7 @@ namespace Satori
             }
             output = string.Concat(output, "Default: [" + defaultString + "]");
             output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "NoSession: ", NoSession, ", ");
             return output;
         }
     }
@@ -389,6 +472,11 @@ namespace Satori
     {
 
         /// <summary>
+        /// The origin of change on the flag value returned.
+        /// </summary>
+        IFlagValueChangeReason ChangeReason { get; }
+
+        /// <summary>
         /// Whether the value for this flag has conditionally changed from the default state.
         /// </summary>
         bool ConditionChanged { get; }
@@ -409,6 +497,12 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [IgnoreDataMember]
+        public IFlagValueChangeReason ChangeReason => _changeReason;
+        [DataMember(Name="change_reason"), Preserve]
+        public FlagValueChangeReason _changeReason { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="condition_changed"), Preserve]
         public bool ConditionChanged { get; set; }
 
@@ -423,6 +517,7 @@ namespace Satori
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "ChangeReason: ", ChangeReason, ", ");
             output = string.Concat(output, "ConditionChanged: ", ConditionChanged, ", ");
             output = string.Concat(output, "Name: ", Name, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
@@ -456,6 +551,173 @@ namespace Satori
         {
             var output = "";
             output = string.Concat(output, "Flags: [", string.Join(", ", Flags), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Feature flag available to the identity.
+    /// </summary>
+    public interface IApiFlagOverride
+    {
+
+        /// <summary>
+        /// Flag name
+        /// </summary>
+        string FlagName { get; }
+
+        /// <summary>
+        /// The list of configuration that affect the value of the flag.
+        /// </summary>
+        IEnumerable<IApiFlagOverrideValue> Overrides { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiFlagOverride : IApiFlagOverride
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="flag_name"), Preserve]
+        public string FlagName { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiFlagOverrideValue> Overrides => _overrides ?? new List<ApiFlagOverrideValue>(0);
+        [DataMember(Name="overrides"), Preserve]
+        public List<ApiFlagOverrideValue> _overrides { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "FlagName: ", FlagName, ", ");
+            output = string.Concat(output, "Overrides: [", string.Join(", ", Overrides), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// All flags available to the identity and their value overrides
+    /// </summary>
+    public interface IApiFlagOverrideList
+    {
+
+        /// <summary>
+        /// All flags
+        /// </summary>
+        IEnumerable<IApiFlagOverride> Flags { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiFlagOverrideList : IApiFlagOverrideList
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiFlagOverride> Flags => _flags ?? new List<ApiFlagOverride>(0);
+        [DataMember(Name="flags"), Preserve]
+        public List<ApiFlagOverride> _flags { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Flags: [", string.Join(", ", Flags), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum ApiFlagOverrideType
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        FLAG = 0,
+        /// <summary>
+        /// 
+        /// </summary>
+        FLAG_VARIANT = 1,
+        /// <summary>
+        /// 
+        /// </summary>
+        LIVE_EVENT_FLAG = 2,
+        /// <summary>
+        /// 
+        /// </summary>
+        LIVE_EVENT_FLAG_VARIANT = 3,
+        /// <summary>
+        /// 
+        /// </summary>
+        EXPERIMENT_PHASE_VARIANT_FLAG = 4,
+    }
+
+    /// <summary>
+    /// The details of a flag value override.
+    /// </summary>
+    public interface IApiFlagOverrideValue
+    {
+
+        /// <summary>
+        /// The create time of the configuration that overrides the flag.
+        /// </summary>
+        string CreateTimeSec { get; }
+
+        /// <summary>
+        /// The name of the configuration that overrides the flag value.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// The type of the configuration that declared the override.
+        /// </summary>
+        ApiFlagOverrideType Type { get; }
+
+        /// <summary>
+        /// The value of the configuration that overrides the flag.
+        /// </summary>
+        string Value { get; }
+
+        /// <summary>
+        /// The variant name of the configuration that overrides the flag value.
+        /// </summary>
+        string VariantName { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiFlagOverrideValue : IApiFlagOverrideValue
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time_sec"), Preserve]
+        public string CreateTimeSec { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ApiFlagOverrideType Type => _type;
+        [DataMember(Name="type"), Preserve]
+        public ApiFlagOverrideType _type { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="variant_name"), Preserve]
+        public string VariantName { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "CreateTimeSec: ", CreateTimeSec, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "Type: ", Type, ", ");
+            output = string.Concat(output, "Value: ", Value, ", ");
+            output = string.Concat(output, "VariantName: ", VariantName, ", ");
             return output;
         }
     }
@@ -606,6 +868,16 @@ namespace Satori
         string Description { get; }
 
         /// <summary>
+        /// Duration in seconds.
+        /// </summary>
+        string DurationSec { get; }
+
+        /// <summary>
+        /// End time, 0 if it repeats forever.
+        /// </summary>
+        string EndTimeSec { get; }
+
+        /// <summary>
         /// The live event identifier.
         /// </summary>
         string Id { get; }
@@ -614,6 +886,16 @@ namespace Satori
         /// Name.
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// Reset CRON schedule, if configured.
+        /// </summary>
+        string ResetCron { get; }
+
+        /// <summary>
+        /// Start time.
+        /// </summary>
+        string StartTimeSec { get; }
 
         /// <summary>
         /// Event value.
@@ -638,12 +920,28 @@ namespace Satori
         public string Description { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="duration_sec"), Preserve]
+        public string DurationSec { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="end_time_sec"), Preserve]
+        public string EndTimeSec { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="id"), Preserve]
         public string Id { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="reset_cron"), Preserve]
+        public string ResetCron { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="start_time_sec"), Preserve]
+        public string StartTimeSec { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="value"), Preserve]
@@ -655,8 +953,12 @@ namespace Satori
             output = string.Concat(output, "ActiveEndTimeSec: ", ActiveEndTimeSec, ", ");
             output = string.Concat(output, "ActiveStartTimeSec: ", ActiveStartTimeSec, ", ");
             output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "DurationSec: ", DurationSec, ", ");
+            output = string.Concat(output, "EndTimeSec: ", EndTimeSec, ", ");
             output = string.Concat(output, "Id: ", Id, ", ");
             output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "ResetCron: ", ResetCron, ", ");
+            output = string.Concat(output, "StartTimeSec: ", StartTimeSec, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
         }
@@ -1402,6 +1704,52 @@ namespace Satori
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiFlagList>();
+        }
+
+        /// <summary>
+        /// List all available flags and their value overrides for this identity.
+        /// </summary>
+        public async Task<IApiFlagOverrideList> SatoriGetFlagOverridesAsync(
+            string bearerToken,
+            string basicAuthUsername,
+            string basicAuthPassword,
+            IEnumerable<string> names,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v1/flag/override";
+
+            var queryParams = "";
+            foreach (var elem in names ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
+            }
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(bearerToken))
+            {
+                var header = string.Concat("Bearer ", bearerToken);
+                headers.Add("Authorization", header);
+            }
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiFlagOverrideList>();
         }
 
         /// <summary>
