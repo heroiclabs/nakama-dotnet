@@ -66,12 +66,12 @@ namespace Nakama
             if (body != null)
             {
                 request.Content = new ByteArrayContent(body);
-                Logger?.InfoFormat(
-                    $"Send: method='{method}', uri='{uri}', body='{System.Text.Encoding.UTF8.GetString(body)}'");
+                Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri,
+                    System.Text.Encoding.UTF8.GetString(body));
             }
             else
             {
-                Logger?.InfoFormat($"Send: method='{method}', uri='{uri}'");
+                Logger?.InfoFormat("Send: method='{0}', uri='{1}'", method, uri);
             }
 
             using var ctsTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));

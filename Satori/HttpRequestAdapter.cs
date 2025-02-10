@@ -1,4 +1,4 @@
-// Copyright 2019 The Nakama Authors
+// Copyright 2022 The Satori Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,12 +66,12 @@ namespace Satori
             if (body != null)
             {
                 request.Content = new ByteArrayContent(body);
-                Logger?.InfoFormat(
-                    $"Send: method='{method}', uri='{uri}', body='{System.Text.Encoding.UTF8.GetString(body)}'");
+                Logger?.InfoFormat("Send: method='{0}', uri='{1}', body='{2}'", method, uri,
+                    System.Text.Encoding.UTF8.GetString(body));
             }
             else
             {
-                Logger?.InfoFormat($"Send: method='{method}', uri='{uri}'");
+                Logger?.InfoFormat("Send: method='{0}', uri='{1}'", method, uri);
             }
 
             using var ctsTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(timeout));
