@@ -443,5 +443,20 @@ namespace Satori
                 () => _apiClient.SatoriDeleteMessageAsync(session.AuthToken, id, cancellationToken),
                 new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
+
+        /// <inheritdoc cref="GetFlagOverridesAsync" />
+        public async Task<IApiFlagOverrideList> GetFlagOverridesAsync(ISession session, IEnumerable<string> names = null,
+            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, cancellationToken);
+            }
+
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriGetFlagOverridesAsync(session.AuthToken, string.Empty, string.Empty, names, cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+        }
     }
 }
