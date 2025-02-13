@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.16.0] - 2025-02-13
+### Added
+- Satori: Update Client type with the newest Satori API. See [release notes](https://heroiclabs.com/docs/satori/concepts/introduction/release-notes/).
+
+### Changed
+- Nakama+Satori: Embed version information based on Git describe into builds. 
+
+### Fixed
+- Nakama+Satori: Use formatted arguments with all logger lines in request adapters.
+- Satori: Use session token as jitter seed for randomized backoff with retries.
+
 ## [3.15.0] - 2025-01-28
 ### Added
 - Satori: Add retry attempts to "Client" type.
