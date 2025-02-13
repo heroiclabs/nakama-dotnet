@@ -125,7 +125,7 @@ namespace Satori
 
             await _retryInvoker.InvokeWithRetry(
                 () => _apiClient.SatoriEventAsync(session.AuthToken, request, cancellationToken),
-                new RetryHistory(@event.Id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="EventsAsync" />
@@ -426,7 +426,7 @@ namespace Satori
 
             await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriUpdateMessageAsync(session.AuthToken, id,
                     new ApiUpdateMessageRequest { ConsumeTime = consumeTime, ReadTime = readTime }, cancellationToken),
-                new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="DeleteMessageAsync" />
@@ -441,7 +441,7 @@ namespace Satori
 
             await _retryInvoker.InvokeWithRetry(
                 () => _apiClient.SatoriDeleteMessageAsync(session.AuthToken, id, cancellationToken),
-                new RetryHistory(id, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
         /// <inheritdoc cref="GetFlagOverridesAsync" />
