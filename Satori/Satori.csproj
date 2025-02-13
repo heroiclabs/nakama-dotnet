@@ -19,9 +19,7 @@
         </Exec>
         <Message Text="Git describe output: '$(GitTag)'" Importance="High"/>
         <PropertyGroup>
-            <InformationalVersion Condition="'$(GitTag)' != ''">
-                $([System.String]::new('$(GitTag)').Substring(1))
-            </InformationalVersion>
+            <InformationalVersion Condition="'$(GitTag)' != ''">$([System.String]::new('$(GitTag)').Substring(1))</InformationalVersion>
         </PropertyGroup>
     </Target>
 
