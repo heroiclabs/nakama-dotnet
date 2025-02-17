@@ -181,6 +181,9 @@ var annotated_dup =
       [ "IApiExperimentList", "interface_satori_1_1_i_api_experiment_list.html", "interface_satori_1_1_i_api_experiment_list" ],
       [ "IApiFlag", "interface_satori_1_1_i_api_flag.html", "interface_satori_1_1_i_api_flag" ],
       [ "IApiFlagList", "interface_satori_1_1_i_api_flag_list.html", "interface_satori_1_1_i_api_flag_list" ],
+      [ "IApiFlagOverride", "interface_satori_1_1_i_api_flag_override.html", "interface_satori_1_1_i_api_flag_override" ],
+      [ "IApiFlagOverrideList", "interface_satori_1_1_i_api_flag_override_list.html", "interface_satori_1_1_i_api_flag_override_list" ],
+      [ "IApiFlagOverrideValue", "interface_satori_1_1_i_api_flag_override_value.html", "interface_satori_1_1_i_api_flag_override_value" ],
       [ "IApiGetMessageListResponse", "interface_satori_1_1_i_api_get_message_list_response.html", "interface_satori_1_1_i_api_get_message_list_response" ],
       [ "IApiIdentifyRequest", "interface_satori_1_1_i_api_identify_request.html", "interface_satori_1_1_i_api_identify_request" ],
       [ "IApiLiveEvent", "interface_satori_1_1_i_api_live_event.html", "interface_satori_1_1_i_api_live_event" ],
@@ -191,11 +194,14 @@ var annotated_dup =
       [ "IApiUpdateMessageRequest", "interface_satori_1_1_i_api_update_message_request.html", "interface_satori_1_1_i_api_update_message_request" ],
       [ "IApiUpdatePropertiesRequest", "interface_satori_1_1_i_api_update_properties_request.html", "interface_satori_1_1_i_api_update_properties_request" ],
       [ "IClient", "interface_satori_1_1_i_client.html", "interface_satori_1_1_i_client" ],
+      [ "IFlagValueChangeReason", "interface_satori_1_1_i_flag_value_change_reason.html", "interface_satori_1_1_i_flag_value_change_reason" ],
       [ "IHttpAdapter", "interface_satori_1_1_i_http_adapter.html", "interface_satori_1_1_i_http_adapter" ],
       [ "ILogger", "interface_satori_1_1_i_logger.html", "interface_satori_1_1_i_logger" ],
       [ "IProtobufAny", "interface_satori_1_1_i_protobuf_any.html", "interface_satori_1_1_i_protobuf_any" ],
       [ "IRpcStatus", "interface_satori_1_1_i_rpc_status.html", "interface_satori_1_1_i_rpc_status" ],
       [ "ISession", "interface_satori_1_1_i_session.html", "interface_satori_1_1_i_session" ],
+      [ "Retry", "class_satori_1_1_retry.html", "class_satori_1_1_retry" ],
+      [ "RetryConfiguration", "class_satori_1_1_retry_configuration.html", "class_satori_1_1_retry_configuration" ],
       [ "Session", "class_satori_1_1_session.html", "class_satori_1_1_session" ]
     ] ]
 ];
