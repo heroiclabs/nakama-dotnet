@@ -25,8 +25,7 @@
 var NAVTREE =
 [
   [ "Nakama .NET Client SDK", "index.html", [
-    [ "Nakama .NET", "index.html", null ],
-    [ "Changelog", "md__2_users_2joao_2_projects_2heroic_2nakama-dotnet_2_c_h_a_n_g_e_l_o_g.html", null ],
+    [ "Changelog", "md__2_users_2novabyte_2_heroic-_labs_2_projects_2nakama-dotnet_2_c_h_a_n_g_e_l_o_g.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -56,19 +55,19 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_binary_reader_writer_8cs.html",
-"class_nakama_1_1_client.html#a7d49b887e6d302f68917162a0567ad66",
-"class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_server_listener_socket_exception.html#a03ed8282bad053839e32a709ea034b4e",
-"class_nakama_1_1_socket.html#a7df1f68cfed0dbc80c151d9fc9146436",
-"class_satori_1_1_session.html#ad241a4da8f93b528fff4c0f3e080165c",
-"interface_nakama_1_1_console_1_1_i_api_user.html#a8e3d99268d2c5833e12141576283305d",
-"interface_nakama_1_1_i_api_account_email.html#ad177139e341a3787f3cf09e0271066c2",
-"interface_nakama_1_1_i_api_notification.html#aade869f44d0cfd07bd51ff88c4c12eab",
-"interface_nakama_1_1_i_api_validate_purchase_facebook_instant_request.html#a658bf336bac89d6cc80fb30ca707c766",
-"interface_nakama_1_1_i_client.html#a8520e2e99a83f3cac309f2a0354c2e65",
-"interface_nakama_1_1_i_rpc_status.html#a0d06a965ab9ee4dc04346be0bc331471",
-"interface_nakama_1_1_i_write_tournament_record_request_tournament_record_write.html#ad3a1c0719749e609006577a7577729b1",
-"interface_satori_1_1_i_rpc_status.html#abfc3946bb2273c5e2e44f123ac308a96"
+"class_nakama_1_1_client.html#a703f15655bec3592a25827f78715ecda",
+"class_nakama_1_1_ninja_1_1_web_sockets_1_1_exceptions_1_1_sec_web_socket_key_missing_exception.html#a46726192be18f23f164859c1adb61640",
+"class_nakama_1_1_socket.html#a6d9068f06c70a089a1bd4c25b61802cb",
+"class_satori_1_1_retry.html#ad4d3be08eaffeb4b597310f273d14a27",
+"interface_nakama_1_1_console_1_1_i_api_notification.html#ab1d5e01d9064e9e34963884f39d23dbf",
+"interface_nakama_1_1_console_1_1_i_status_list_status.html#a8728a67da038b9ad65c14a343ba9ca9c",
+"interface_nakama_1_1_i_api_leaderboard_record_list.html",
+"interface_nakama_1_1_i_api_user.html#a0c91538eea10c6fa05fc5ea8271ef266",
+"interface_nakama_1_1_i_client.html#a2b6310aeccea818af3fe8b3dcae95ec3",
+"interface_nakama_1_1_i_party.html#a9e44c485a4773c8b44056ec160ad1e7e",
+"interface_nakama_1_1_i_stream.html#a914a568af0a74e4551835d923ae33989",
+"interface_satori_1_1_i_api_update_message_request.html#a3713f08d799a4e17bdd21a4bc814feb9"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['facebook_5finstant_5fstore_0',['FACEBOOK_INSTANT_STORE',['../namespace_nakama.html#a80ae1f687aff9e2cdddb9e69a557cc49a2d91804ae2367e7ee28b145f3efb1b68',1,'Nakama']]]
+  ['experiment_0',['EXPERIMENT',['../namespace_satori.html#a951af93b9ee547b7c4747566a1b5653fa8df329b49b6668b7b1ec13ba71c72864',1,'Satori']]],
+  ['experiment_5fphase_5fvariant_5fflag_1',['EXPERIMENT_PHASE_VARIANT_FLAG',['../namespace_satori.html#a5b84f4807e2f627294a0a6fee00ab50dac02c04ccf40f0a7132402f6351d2227f',1,'Satori']]]
 ];

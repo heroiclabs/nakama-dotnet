@@ -46,6 +46,9 @@ var hierarchy =
     [ "Satori.IApiExperimentList", "interface_satori_1_1_i_api_experiment_list.html", null ],
     [ "Satori.IApiFlag", "interface_satori_1_1_i_api_flag.html", null ],
     [ "Satori.IApiFlagList", "interface_satori_1_1_i_api_flag_list.html", null ],
+    [ "Satori.IApiFlagOverride", "interface_satori_1_1_i_api_flag_override.html", null ],
+    [ "Satori.IApiFlagOverrideList", "interface_satori_1_1_i_api_flag_override_list.html", null ],
+    [ "Satori.IApiFlagOverrideValue", "interface_satori_1_1_i_api_flag_override_value.html", null ],
     [ "Nakama.Console.IApiFriend", "interface_nakama_1_1_console_1_1_i_api_friend.html", null ],
     [ "Nakama.IApiFriend", "interface_nakama_1_1_i_api_friend.html", null ],
     [ "Nakama.Console.IApiFriendList", "interface_nakama_1_1_console_1_1_i_api_friend_list.html", null ],
@@ -137,6 +140,7 @@ var hierarchy =
     [ "Nakama.Console.IConsoleWalletLedger", "interface_nakama_1_1_console_1_1_i_console_wallet_ledger.html", null ],
     [ "Nakama.Console.IConsoleWalletLedgerList", "interface_nakama_1_1_console_1_1_i_console_wallet_ledger_list.html", null ],
     [ "Nakama.Console.IConsoleWriteStorageObjectRequest", "interface_nakama_1_1_console_1_1_i_console_write_storage_object_request.html", null ],
+    [ "Satori.IFlagValueChangeReason", "interface_satori_1_1_i_flag_value_change_reason.html", null ],
     [ "Nakama.IGroupUserListGroupUser", "interface_nakama_1_1_i_group_user_list_group_user.html", null ],
     [ "Nakama.IHttpAdapter", "interface_nakama_1_1_i_http_adapter.html", [
       [ "Nakama.HttpRequestAdapter", "class_nakama_1_1_http_request_adapter.html", null ]
@@ -205,7 +209,9 @@ var hierarchy =
       [ "Nakama.Ninja.WebSockets.BufferPool.PublicBufferMemoryStream", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html", null ]
     ] ],
     [ "Nakama.Retry", "class_nakama_1_1_retry.html", null ],
+    [ "Satori.Retry", "class_satori_1_1_retry.html", null ],
     [ "Nakama.RetryConfiguration", "class_nakama_1_1_retry_configuration.html", null ],
+    [ "Satori.RetryConfiguration", "class_satori_1_1_retry_configuration.html", null ],
     [ "Nakama.Ninja.WebSockets.WebSocketClientOptions", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_client_options.html", null ],
     [ "Nakama.Ninja.WebSockets.WebSocketHttpContext", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_http_context.html", null ],
     [ "Nakama.Ninja.WebSockets.WebSocketServerOptions", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_web_socket_server_options.html", null ]

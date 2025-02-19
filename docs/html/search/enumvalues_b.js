@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['unknown_0',['UNKNOWN',['../namespace_nakama.html#a216a2d7c4acbc3a4f29a98514c483cd6a696b031073e74bf2cb98e5ef201d4aa3',1,'Nakama']]]
+  ['room_0',['Room',['../namespace_nakama.html#addd7f097ac4c449d75e44da62657f307acc3abcf4426bff80257d22999d0eda8f',1,'Nakama']]]
 ];

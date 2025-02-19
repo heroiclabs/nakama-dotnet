@@ -1,7 +1,7 @@
 var searchData=
 [
   ['bangroupusersasync_0',['BanGroupUsersAsync',['../class_nakama_1_1_client.html#af3738338a0465f5bb312b8c8ea9a5cf1',1,'Nakama.Client.BanGroupUsersAsync()'],['../interface_nakama_1_1_i_client.html#ab22184136c797808a2aebe53100804e2',1,'Nakama.IClient.BanGroupUsersAsync()']]],
-  ['basedelayms_1',['BaseDelayMs',['../class_nakama_1_1_retry_configuration.html#abb2a37c54f24e2fcd6c4ef4e2b5b3f75',1,'Nakama::RetryConfiguration']]],
+  ['basedelayms_1',['BaseDelayMs',['../class_nakama_1_1_retry_configuration.html#abb2a37c54f24e2fcd6c4ef4e2b5b3f75',1,'Nakama.RetryConfiguration.BaseDelayMs'],['../class_satori_1_1_retry_configuration.html#a3fa2a5ab77e81b6b42732f8cdac7cd78',1,'Satori.RetryConfiguration.BaseDelayMs']]],
   ['beginread_2',['BeginRead',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html#a282c64e19a381ae3112c1c6dcc9edbc1',1,'Nakama::Ninja::WebSockets::BufferPool::PublicBufferMemoryStream']]],
   ['beginwrite_3',['BeginWrite',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html#a0817a70e52ee58f07dc7b2439ff4e118',1,'Nakama::Ninja::WebSockets::BufferPool::PublicBufferMemoryStream']]],
   ['best_4',['BEST',['../namespace_nakama.html#a8e9c42a36e780e31a03f2ba94a3bb6e7ada034de38c791a4e574a513e7b97bec6',1,'Nakama']]],
