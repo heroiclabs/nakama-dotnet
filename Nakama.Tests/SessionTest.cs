@@ -23,7 +23,7 @@ namespace Nakama.Tests
     public class SessionTest
     {
         private const string AuthToken =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwifQ.gzLaMQPaj5wEKoskOSALIeJLOYXEVFoPx3KY0Jm1EVU";
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwiLCJpYXQiOjE1MTY5MDczNzN9.01JtFdklpNfwHHCjItSGTbFBui3LyC3drqkrw6biy1I";
 
         private const string AuthTokenVariables =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwiLCJ2cnMiOnsiazEiOiJ2MSIsImsyIjoidjIifX0.Hs9ltsNmtrTJXi2U21jjuXcd-3DMsyv4W6u1vyDBMTo";
@@ -129,6 +129,13 @@ namespace Nakama.Tests
             Assert.Equal(1616347976, session.RefreshExpireTime);
             Assert.NotInRange(session.RefreshExpireTime, 0, 0);
             Assert.True(session.IsRefreshExpired);
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void CreateTime_IsTokenIssField()
+        {
+            var session = Session.Restore(AuthToken);
+            Assert.Equal(1516907373, session.CreateTime);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]

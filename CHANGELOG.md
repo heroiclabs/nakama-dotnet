@@ -4,17 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-<<<<<<< HEAD
 ## [3.16.0] - 2025-02-13
 ### Added
 - Satori: Update Client type with the newest Satori API. See [release notes](https://heroiclabs.com/docs/satori/concepts/introduction/release-notes/).
 
 ### Changed
-- Nakama+Satori: Embed version information based on Git describe into builds. 
+- Nakama+Satori: Embed version information based on Git describe into builds.
 
 ### Fixed
 - Nakama+Satori: Use formatted arguments with all logger lines in request adapters.
 - Satori: Use session token as jitter seed for randomized backoff with retries.
+- Nakama: `ISession.CreateTime` now accurately represents Unix time in seconds since the `ISession` object was created.
 
 ## [3.15.0] - 2025-01-28
 ### Added
@@ -43,11 +43,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixed
 - Nakama: Fixed an issue where notifications from other users could appear as if they were sent by the recipient user.
 - Nakama: Fixed a potential `NullReferenceException` that could occur when passing a `null` username to `IClient.UpdateAccountAsync`.
-=======
-## [Unreleased]
-### Fixed
-- Nakama: `ISession.CreateTime` now accurately represents Unix time in seconds since the `ISession` object was created.
->>>>>>> f11bb3f (fix ISession.CreateTime)
 
 ## [3.12.0] - 2024-04-08
 ### Added

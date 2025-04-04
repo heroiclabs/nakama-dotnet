@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Permissions;
 using Nakama.TinyJson;
 
 namespace Nakama
@@ -30,7 +31,7 @@ namespace Nakama
         public bool Created { get; }
 
         /// <inheritdoc cref="ISession.CreateTime"/>
-        public long CreateTime { get; }
+        public long CreateTime { get; private set; }
 
         /// <inheritdoc cref="ISession.ExpireTime"/>
         public long ExpireTime { get; private set; }
@@ -113,6 +114,11 @@ namespace Nakama
                 {
                     Vars[variable.Key] = variable.Value.ToString();
                 }
+            }
+
+            if (decoded.ContainsKey("iat"))
+            {
+                CreateTime = Convert.ToInt64(decoded["iat"]);
             }
 
             // Check in case clients have not updated to use refresh tokens yet.
