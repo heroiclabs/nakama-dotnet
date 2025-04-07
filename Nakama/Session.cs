@@ -30,7 +30,7 @@ namespace Nakama
         public bool Created { get; }
 
         /// <inheritdoc cref="ISession.CreateTime"/>
-        public long CreateTime { get; }
+        public long CreateTime { get; private set; }
 
         /// <inheritdoc cref="ISession.ExpireTime"/>
         public long ExpireTime { get; private set; }
@@ -85,8 +85,7 @@ namespace Nakama
         internal Session(string authToken, string refreshToken, bool created)
         {
             Created = created;
-            var span = DateTime.UtcNow - Epoch;
-            CreateTime = span.Seconds;
+            CreateTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             RefreshExpireTime = 0L;
             Vars = new Dictionary<string, string>();
 
@@ -114,6 +113,11 @@ namespace Nakama
                 {
                     Vars[variable.Key] = variable.Value.ToString();
                 }
+            }
+
+            if (decoded.ContainsKey("iat"))
+            {
+                CreateTime = Convert.ToInt64(decoded["iat"]);
             }
 
             // Check in case clients have not updated to use refresh tokens yet.

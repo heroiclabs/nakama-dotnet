@@ -9,11 +9,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Satori: Update Client type with the newest Satori API. See [release notes](https://heroiclabs.com/docs/satori/concepts/introduction/release-notes/).
 
 ### Changed
-- Nakama+Satori: Embed version information based on Git describe into builds. 
+- Nakama+Satori: Embed version information based on Git describe into builds.
 
 ### Fixed
 - Nakama+Satori: Use formatted arguments with all logger lines in request adapters.
 - Satori: Use session token as jitter seed for randomized backoff with retries.
+- Nakama: `ISession.CreateTime` now accurately represents Unix time in seconds since the `ISession` object was created.
 
 ## [3.15.0] - 2025-01-28
 ### Added
