@@ -970,7 +970,7 @@ namespace Nakama
             }
 
             return await _retryInvoker.InvokeWithRetry(
-                () => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor,
+                () => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, session.UserId ?? string.Empty, limit, cursor,
                     canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
