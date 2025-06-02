@@ -958,9 +958,17 @@ namespace Nakama
                 () => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor,
                     canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
-        /// <inheritdoc cref="ListStorageObjectsAsync"/>
+        /// <inheritdoc cref="ListStorageObjectsAsync(Nakama.ISession,string,int,string,RetryConfiguration,CancellationToken)"/>
         public async Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection,
             int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default) =>
+            await ListStorageObjectsAsync(session, collection, session.UserId ?? string.Empty, limit, cursor,
+                retryConfiguration, canceller);
+
+        // ReSharper disable once MemberCanBePrivate.Global -- overload can be called externally
+        /// <inheritdoc cref="ListStorageObjectsAsync(Nakama.ISession,string,string,int,string,RetryConfiguration,CancellationToken)"/>
+        public async Task<IApiStorageObjectList> ListStorageObjectsAsync(ISession session, string collection,
+            string userId = "", int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
@@ -970,7 +978,7 @@ namespace Nakama
             }
 
             return await _retryInvoker.InvokeWithRetry(
-                () => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, string.Empty, limit, cursor,
+                () => _apiClient.ListStorageObjectsAsync(session.AuthToken, collection, userId, limit, cursor,
                     canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
