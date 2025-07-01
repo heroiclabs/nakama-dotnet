@@ -37,6 +37,11 @@ namespace Nakama
         int MaxSize { get; }
 
         /// <summary>
+        /// Label to filter results in Party listing.
+        /// </summary>
+        string Label { get; }
+
+        /// <summary>
         /// The current user in this party. i.e. Yourself.
         /// </summary>
         IUserPresence Self { get; }

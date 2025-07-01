@@ -1,4 +1,4 @@
-// Copyright 2021 The Nakama Authors
+// Copyright 2025 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Runtime.Serialization;
+using System.Collections.Generic;
 
 namespace Nakama
 {
     /// <summary>
-    /// Create a new party.
+    /// Incoming information about a party.
     /// </summary>
-    internal class PartyCreate
+    public interface IPartyUpdate
     {
-        [DataMember(Name = "open"), Preserve]
-        public bool Open { get; set; }
+        /// <summary>
+        /// The unique party identifier.
+        /// </summary>
+        string PartyId { get; }
 
-        [DataMember(Name = "max_size"), Preserve]
-        public int MaxSize { get; set; }
+        /// <summary>
+        /// True, if the party is open to join.
+        /// </summary>
+        bool Open { get; }
 
-        [DataMember(Name = "label"), Preserve]
-        public string Label { get; set; }
-
-        public override string ToString() => $"PartyCreate(Open={Open}, MaxSize={MaxSize}, Label={Label})";
+        /// <summary>
+        /// Label to filter results in Party listing.
+        /// </summary>
+        string Label { get; }
     }
 }

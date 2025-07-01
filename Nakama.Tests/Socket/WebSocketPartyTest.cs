@@ -13,12 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using System.Threading;
+using Nakama.TinyJson;
 
 namespace Nakama.Tests.Socket
 {
@@ -46,6 +48,25 @@ namespace Nakama.Tests.Socket
             Assert.NotNull(result.Self);
             Assert.Equal(session.UserId, result.Self.UserId);
             Assert.Equal(session.Username, result.Self.Username);
+
+            await socket.CloseAsync();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldCreatePartyWithLabel()
+        {
+            var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var socket = Nakama.Socket.From(_client);
+            await socket.ConnectAsync(session);
+
+            var label = new Dictionary<string, string> { { "team", "red" } }.ToJson();
+            var result = await socket.CreatePartyAsync(false, 1, label);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Self);
+            Assert.Equal(session.UserId, result.Self.UserId);
+            Assert.Equal(session.Username, result.Self.Username);
+            Assert.Equal(label, result.Label);
 
             await socket.CloseAsync();
         }
@@ -408,6 +429,38 @@ namespace Nakama.Tests.Socket
             Assert.Equal(ticketTcs.Task.Result.Ticket, ticket.Ticket);
 
             await socket1.RemoveMatchmakerPartyAsync(party.Id, ticket.Ticket);
+
+            await socket1.CloseAsync();
+            await socket2.CloseAsync();
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public async Task ShouldUpdatePartyLabel()
+        {
+            var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+            var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
+
+            var socket1 = Nakama.Socket.From(_client);
+            var socket2 = Nakama.Socket.From(_client);
+
+            await socket1.ConnectAsync(session1);
+            await socket2.ConnectAsync(session2);
+
+            var party = await socket1.CreatePartyAsync(true, 2);
+
+            await socket2.JoinPartyAsync(party.Id);
+
+            var updateTcs = new TaskCompletionSource<IPartyUpdate>();
+
+            socket2.ReceivedPartyUpdate += (update) => updateTcs.SetResult(update);
+
+            var label = new Dictionary<string, object> { { "mode", "test"}, { "one", 1 } }.ToJson();
+            await socket1.UpdatePartyAsync(party.Id, label, party.Open);
+
+            await updateTcs.Task;
+
+            Assert.Equal(updateTcs.Task.Result.Label, label);
+            Assert.Equal(updateTcs.Task.Result.Open, party.Open);
 
             await socket1.CloseAsync();
             await socket2.CloseAsync();

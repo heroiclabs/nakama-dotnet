@@ -81,10 +81,11 @@ namespace Nakama
         /// <param name="session">The session of the user.</param>
         /// <param name="ids">The ids of the users to add or invite as friends.</param>
         /// <param name="usernames">The usernames of the users to add as friends.</param>
+        /// <param name="metadata"> Optional metadata to add to the friendship edge.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
-        Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+        Task AddFriendsAsync(ISession session, IEnumerable<string> ids, IEnumerable<string> usernames = null, string metadata = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Add one or more users to the group.
@@ -770,6 +771,20 @@ namespace Nakama
         /// <returns>A task which resolves to the storage object list.</returns>
         Task<IApiStorageObjectList> ListUsersStorageObjectsAsync(ISession session, string collection, string userId,
             int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// List advertised parties and optionally filter them by label.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="limit">The number of objects to list.</param>
+        /// <param name="open">Optionally filter by party open status.</param>
+        /// <param name="query">Optionally provide a query to filter via custom party labels.</param>
+        /// <param name="cursor">A cursor to fetch the next page of results, if any.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the party object list.</returns>
+        Task<IApiPartyList> ListPartiesAsync(ISession session, int limit, bool? open, string query = null, string cursor = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Promote one or more users in the group.

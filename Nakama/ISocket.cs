@@ -105,6 +105,11 @@ namespace Nakama
         event Action<IPartyPresenceEvent> ReceivedPartyPresence;
 
         /// <summary>
+        /// Received a party label and/or open/closed change.
+        /// </summary>
+        event Action<IPartyUpdate> ReceivedPartyUpdate;
+
+        /// <summary>
         /// Received a presence change for when a user updated their online status.
         /// </summary>
         event Action<IStatusPresenceEvent> ReceivedStatusPresence;
@@ -197,10 +202,11 @@ namespace Nakama
         /// <summary>
         /// Create a party.
         /// </summary>
-        /// <param name="open">Whether or not the party will require join requests to be approved by the party leader.</param>
+        /// <param name="open">Whether the party will require join requests to be approved by the party leader.</param>
         /// <param name="maxSize">Maximum number of party members.</param>
+        /// <param name="label">An optional label to set for party listing.</param>
         /// <returns>A task to represent the asynchronous operation.</returns>
-        Task<IParty> CreatePartyAsync(bool open, int maxSize);
+        Task<IParty> CreatePartyAsync(bool open, int maxSize, string label = null);
 
         /// <summary>
         /// Subscribe to one or more users for their status updates.
@@ -458,6 +464,15 @@ namespace Nakama
         /// <param name="content">The new contents of the chat message.</param>
         /// <returns>A task which resolves to an acknowledgement of the updated message.</returns>
         Task<IChannelMessageAck> UpdateChatMessageAsync(string channelId, string messageId, string content);
+
+        /// <summary>
+        /// Update party label and optionally whether it is open or closed.
+        /// </summary>
+        /// <param name="partyId">The Party ID.</param>
+        /// <param name="label">The new custom label to set to the party.</param>
+        /// <param name="open">Whether the party is open or closed.</param>
+        /// <returns></returns>
+        Task<IPartyUpdate> UpdatePartyAsync(string partyId, string label, bool open);
 
         /// <summary>
         /// Update the status for the current user online.

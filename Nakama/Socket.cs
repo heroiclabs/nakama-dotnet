@@ -84,6 +84,9 @@ namespace Nakama
         /// <inheritdoc cref="ReceivedPartyData"/>
         public event Action<IPartyData> ReceivedPartyData;
 
+        /// <inheritdoc cref="ReceivedPartyUpdate"/>
+        public event Action<IPartyUpdate> ReceivedPartyUpdate;
+
         /// <inheritdoc cref="ReceivedPartyJoinRequest"/>
         public event Action<IPartyJoinRequest> ReceivedPartyJoinRequest;
 
@@ -290,7 +293,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="CreatePartyAsync"/>
-        public async Task<IParty> CreatePartyAsync(bool open, int maxSize)
+        public async Task<IParty> CreatePartyAsync(bool open, int maxSize, string label = null)
         {
             int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
@@ -299,7 +302,8 @@ namespace Nakama
                 PartyCreate = new PartyCreate
                 {
                     Open = open,
-                    MaxSize = maxSize
+                    MaxSize = maxSize,
+                    Label = label
                 }
             };
 
@@ -732,6 +736,24 @@ namespace Nakama
             return response.ChannelMessageAck;
         }
 
+        public async Task<IPartyUpdate> UpdatePartyAsync(string partyId, string label, bool open)
+        {
+            int cid = Interlocked.Increment(ref _cid);
+            var envelope = new WebSocketMessageEnvelope
+            {
+                Cid = $"{cid}",
+                PartyUpdate = new PartyUpdate
+                {
+                    PartyId = partyId,
+                    Label = label,
+                    Open = open
+                }
+            };
+
+            var response = await SendAsync(envelope);
+            return response.PartyUpdate;
+        }
+
         /// <inheritdoc cref="UpdateStatusAsync"/>
         public Task UpdateStatusAsync(string status)
         {
@@ -880,6 +902,10 @@ namespace Nakama
                 else if (envelope.PartyData != null)
                 {
                     ReceivedPartyData?.Invoke(envelope.PartyData);
+                }
+                else if (envelope.PartyUpdate != null)
+                {
+                    ReceivedPartyUpdate?.Invoke(envelope.PartyUpdate);
                 }
                 else if (envelope.PartyJoinRequest != null)
                 {

@@ -26,10 +26,14 @@ namespace Nakama
         [DataMember(Name = "party_id"), Preserve]
         public string Id { get; set; }
 
-        [DataMember(Name = "open"), Preserve] public bool Open { get; set; }
+        [DataMember(Name = "open"), Preserve]
+        public bool Open { get; set; }
 
         [DataMember(Name = "max_size"), Preserve]
         public int MaxSize { get; set; }
+
+        [DataMember(Name = "label"), Preserve]
+        public string Label { get; set; }
 
         public IUserPresence Self => SelfField;
 

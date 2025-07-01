@@ -143,7 +143,8 @@ namespace Nakama
 
         /// <inheritdoc cref="AddFriendsAsync"/>
         public async Task AddFriendsAsync(ISession session, IEnumerable<string> ids,
-            IEnumerable<string> usernames = null, RetryConfiguration retryConfiguration = null,
+            IEnumerable<string> usernames = null, string metadata = null,
+            RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
@@ -153,7 +154,7 @@ namespace Nakama
             }
 
             await _retryInvoker.InvokeWithRetry(
-                () => _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames, canceller),
+                () => _apiClient.AddFriendsAsync(session.AuthToken, ids, usernames, metadata, canceller),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
@@ -948,6 +949,20 @@ namespace Nakama
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
 
             return response;
+        }
+
+        /// <inheritdoc cref="ListPartiesAsync"/>
+        public async Task<IApiPartyList> ListPartiesAsync(ISession session, int limit, bool? open, string query = null,
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)   {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ListPartiesAsync(session.AuthToken, limit, open, query, cursor,
+                    canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         [Obsolete("ListStorageObjects is obsolete, please use ListStorageObjectsAsync instead.", true)]
