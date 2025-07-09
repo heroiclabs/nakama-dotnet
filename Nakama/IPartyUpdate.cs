@@ -32,6 +32,11 @@ namespace Nakama
         bool Open { get; }
 
         /// <summary>
+        /// True, if the party is show in listing.
+        /// </summary>
+        bool Hidden { get; }
+
+        /// <summary>
         /// Label to filter results in Party listing.
         /// </summary>
         string Label { get; }

@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
@@ -293,7 +294,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="CreatePartyAsync"/>
-        public async Task<IParty> CreatePartyAsync(bool open, int maxSize, string label = null)
+        public async Task<IParty> CreatePartyAsync(bool open, bool hidden, int maxSize, string label = null)
         {
             int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
@@ -302,6 +303,7 @@ namespace Nakama
                 PartyCreate = new PartyCreate
                 {
                     Open = open,
+                    Hidden = hidden,
                     MaxSize = maxSize,
                     Label = label
                 }
@@ -736,7 +738,7 @@ namespace Nakama
             return response.ChannelMessageAck;
         }
 
-        public async Task<IPartyUpdate> UpdatePartyAsync(string partyId, string label, bool open)
+        public async Task<IPartyUpdate> UpdatePartyAsync(string partyId, bool open, bool hidden, string label)
         {
             int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
@@ -746,7 +748,8 @@ namespace Nakama
                 {
                     PartyId = partyId,
                     Label = label,
-                    Open = open
+                    Open = open,
+                    Hidden = hidden
                 }
             };
 

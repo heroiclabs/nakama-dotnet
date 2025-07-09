@@ -32,6 +32,11 @@ namespace Nakama
         bool Open { get; }
 
         /// <summary>
+        /// True, if the party is hidden from listing.
+        /// </summary>
+        bool Hidden { get; }
+
+        /// <summary>
         /// The maximum number of party members.
         /// </summary>
         int MaxSize { get; }

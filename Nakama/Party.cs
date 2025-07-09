@@ -29,6 +29,9 @@ namespace Nakama
         [DataMember(Name = "open"), Preserve]
         public bool Open { get; set; }
 
+        [DataMember(Name = "hidden"), Preserve]
+        public bool Hidden { get; set; }
+
         [DataMember(Name = "max_size"), Preserve]
         public int MaxSize { get; set; }
 

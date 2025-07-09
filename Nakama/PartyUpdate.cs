@@ -27,6 +27,9 @@ namespace Nakama
         [DataMember(Name = "open"), Preserve]
         public bool Open { get; set; }
 
+        [DataMember(Name = "hidden"), Preserve]
+        public bool Hidden { get; set; }
+
         [DataMember(Name = "label"), Preserve]
         public string Label { get; set; }
 

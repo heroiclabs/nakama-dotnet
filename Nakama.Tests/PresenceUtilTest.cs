@@ -37,7 +37,7 @@ namespace Nakama.Tests.Socket
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var socket1 = Nakama.Socket.From(_client);
             await socket1.ConnectAsync(session);
-            var createdParty = await socket1.CreatePartyAsync(true, 2);
+            var createdParty = await socket1.CreatePartyAsync(true, false, 2);
 
             var session2 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var socket2 = Nakama.Socket.From(_client);

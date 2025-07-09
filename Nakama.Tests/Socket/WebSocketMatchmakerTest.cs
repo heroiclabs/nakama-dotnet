@@ -116,8 +116,8 @@ namespace Nakama.Tests.Socket
             socket1.ReceivedMatchmakerMatched += (state) => mmCompleter1.SetResult(state);
             socket3.ReceivedMatchmakerMatched += (state) => mmCompleter2.SetResult(state);
 
-            var party1 = await socket1.CreatePartyAsync(true, 2);
-            var party2 = await socket3.CreatePartyAsync(true, 2);
+            var party1 = await socket1.CreatePartyAsync(true, false, 2);
+            var party2 = await socket3.CreatePartyAsync(true, false, 2);
 
             await socket2.JoinPartyAsync(party1.Id);
             await socket4.JoinPartyAsync(party2.Id);
@@ -159,13 +159,13 @@ namespace Nakama.Tests.Socket
 
             var partyPresenceJoinedTcs = new TaskCompletionSource<IPartyPresenceEvent>();
             socket1.ReceivedPartyPresence += presenceEvt => partyPresenceJoinedTcs.SetResult(presenceEvt);
-            
+
             var mmCompleter1 = new TaskCompletionSource<IMatchmakerMatched>();
             var mmCompleter2 = new TaskCompletionSource<IMatchmakerMatched>();
             socket1.ReceivedMatchmakerMatched += (state) => mmCompleter1.SetResult(state);
             socket3.ReceivedMatchmakerMatched += (state) => mmCompleter2.SetResult(state);
-            
-            var party1 = await socket1.CreatePartyAsync(true, 2);
+
+            var party1 = await socket1.CreatePartyAsync(true, false, 2);
             await socket2.JoinPartyAsync(party1.Id);
 
             await partyPresenceJoinedTcs.Task;
