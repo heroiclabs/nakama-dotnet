@@ -438,7 +438,7 @@ namespace Nakama.Tests.Socket
             await socket2.CloseAsync();
         }
 
-        [Fact]//(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
         public async Task ShouldUpdateParty()
         {
             var session1 = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
@@ -459,15 +459,13 @@ namespace Nakama.Tests.Socket
             socket2.ReceivedPartyUpdate += (update) => updateTcs.SetResult(update);
 
             var label = new Dictionary<string, object> { { "mode", "test"}, { "one", 1 } }.ToJson();
-            await socket1.UpdatePartyAsync(party.Id, false, true, label);
+            await socket1.UpdatePartyAsync(party.Id, false, false, label);
 
             await updateTcs.Task;
 
             Assert.Equal(updateTcs.Task.Result.Label, label);
             Assert.False(updateTcs.Task.Result.Open);
             Assert.False(updateTcs.Task.Result.Hidden);
-
-            await Task.Delay(Timeout.Infinite);
 
             await socket1.CloseAsync();
             await socket2.CloseAsync();

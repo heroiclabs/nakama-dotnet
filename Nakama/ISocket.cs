@@ -474,7 +474,7 @@ namespace Nakama
         /// <param name="hidden">Whether the party should be hidden from client listing.</param>
         /// <param name="label">The new custom label to set to the party.</param>
         /// <returns></returns>
-        Task<IPartyUpdate> UpdatePartyAsync(string partyId, bool open, bool hidden, string label);
+        Task<IPartyUpdate> UpdatePartyAsync(string partyId, bool open, bool hidden, string label = "");
 
         /// <summary>
         /// Update the status for the current user online.
