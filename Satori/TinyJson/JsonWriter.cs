@@ -1,4 +1,4 @@
-﻿// The MIT License (MIT)
+// The MIT License (MIT)
 //
 // Copyright (c) 2018 Alex Parker
 //
@@ -122,7 +122,7 @@ namespace Satori.TinyJson
                 }
                 stringBuilder.Append(']');
             }
-            else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            else if (item is IDictionary dict)
             {
                 var keyType = type.GetGenericArguments()[0];
 
@@ -134,7 +134,6 @@ namespace Satori.TinyJson
                 }
 
                 stringBuilder.Append('{');
-                var dict = item as IDictionary;
                 var isFirst = true;
                 foreach (var key in dict.Keys)
                 {
