@@ -4,9 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.17.0] - 2025-07-16
+### Added
+- Nakama: New Realtime Parties search feature which allows open parties to be discovered by users.
+
+### Changed
+- Nakama+Satori: TinyJson will now encode any "IDictionary<,>" type.
+
+### Fixed
+- Nakama: "ListStorageObjectsAsync" can use a user ID as input to fetch public storage objects for that user. Thanks @chrisanicolaou.
+- Nakama+Satori: Fix how issue at time is decoded from Session token.
+
 ## [3.16.0] - 2025-02-13
 ### Added
-- Satori: Update Client type with the newest Satori API. See [release notes](https://heroiclabs.com/docs/satori/concepts/introduction/release-notes/).
+- Satori: Update the Client type with the newest Satori API. See [release notes](https://heroiclabs.com/docs/satori/concepts/introduction/release-notes/).
 
 ### Changed
 - Nakama+Satori: Embed version information based on Git describe into builds.
@@ -14,7 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixed
 - Nakama+Satori: Use formatted arguments with all logger lines in request adapters.
 - Satori: Use session token as jitter seed for randomized backoff with retries.
-- Nakama: `ISession.CreateTime` now accurately represents Unix time in seconds since the `ISession` object was created.
+- Nakama: "ISession.CreateTime" now accurately represents Unix time in seconds since the "ISession" object was created.
 
 ## [3.15.0] - 2025-01-28
 ### Added
@@ -37,26 +48,26 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [3.13.0] - 2024-07-10
 ### Added
-- Satori: Added `ImageUrl` and `Title` to `IApiMessage`.
+- Satori: Added "ImageUrl" and "Title" to "IApiMessage".
 
 ## [3.12.1] - 2024-05-30
 ### Fixed
 - Nakama: Fixed an issue where notifications from other users could appear as if they were sent by the recipient user.
-- Nakama: Fixed a potential `NullReferenceException` that could occur when passing a `null` username to `IClient.UpdateAccountAsync`.
+- Nakama: Fixed a potential "NullReferenceException" that could occur when passing a "null" username to "IClient.UpdateAccountAsync".
 
 ## [3.12.0] - 2024-04-08
 ### Added
-- Satori: Added `IApiLiveEvent.Id` for accessing live event identifiers.
-- Satori: Added support for new Satori Messages API: `IClient.GetMessageListAsync`, `IClient.UpdateMessageAsync` and `IClient.DeleteMessageAsync`.
+- Satori: Added "IApiLiveEvent.Id" for accessing live event identifiers.
+- Satori: Added support for new Satori Messages API: "IClient.GetMessageListAsync", "IClient.UpdateMessageAsync" and "IClient.DeleteMessageAsync".
 
 ## [3.11.0] - 2024-03-08
 ### Added
-- Nakama: New `IClient` event called `ReceivedSessionUpdated` when session expires and is refreshed.
-- Nakama: New `Session.Update` method to allow for in-place updates to the session object.
+- Nakama: New "IClient" event called "ReceivedSessionUpdated" when session expires and is refreshed.
+- Nakama: New "Session.Update" method to allow for in-place updates to the session object.
 
 ### Changed
-- Nakama: `IsConnected` and `IsConnecting` will now read directly from the underlying .NET socket status. This will allow application code to more quickly and easily detect connectivity loss arising from a lack of internet access.
-- Nakama: Default socket adapter changed from `WebSocketAdapter` to `WebSocketStdlibAdapter`. This was done to utilize the native .NET Websocket library for improved stability and maintenance.
+- Nakama: "IsConnected" and "IsConnecting" will now read directly from the underlying .NET socket status. This will allow application code to more quickly and easily detect connectivity loss arising from a lack of internet access.
+- Nakama: Default socket adapter changed from "WebSocketAdapter" to "WebSocketStdlibAdapter". This was done to utilize the native .NET Websocket library for improved stability and maintenance.
 
 ### Fixed
 - Nakama: Trying to connect a socket that is already connecting now results in a no-op instead of an error.
@@ -68,31 +79,31 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Added
 - Nakama: Rank count is now returned with tournament record listings.
-- Nakama: Added ability to delete tournament records with `DeleteTournamentRecordAsync`.
+- Nakama: Added ability to delete tournament records with "DeleteTournamentRecordAsync".
 - Nakama: Hostnames passed to the client now preserve their hardcoded paths.
 - Nakama: Create and update times are now returned with notifications.
 - Nakama: Added Facebook Instant Games purchase validation.
 
 ## [3.9.0]
 ### Added
-- Satori: Added `recompute` option to `UpdatePropertiesAsync` which allows audiences to be recalculated on property update.
+- Satori: Added "recompute" option to "UpdatePropertiesAsync" which allows audiences to be recalculated on property update.
 
 ### Changed
 - Satori: Decreased size of JSON payloads.
 
 ### Fixed
-- Satori: `DeleteIdentityAsync` no longer accepts an explicit ID.
+- Satori: "DeleteIdentityAsync" no longer accepts an explicit ID.
 
 ## [3.8.0]
 ### Added
-- Nakama: Added `Authoritative` flag to tournaments returned from the server.
-- Nakama: Added `RefundTime` and `UserId` to purchases and subscriptions returned from the server.
+- Nakama: Added "Authoritative" flag to tournaments returned from the server.
+- Nakama: Added "RefundTime" and "UserId" to purchases and subscriptions returned from the server.
 - Nakama: Added raw subscription provider information.
-- Nakama: Added `DeleteAccountAsync` for deleting user accounts.
-- Satori: Added `DeleteIdentityAsync` for deleting user identities.
+- Nakama: Added "DeleteAccountAsync" for deleting user accounts.
+- Satori: Added "DeleteIdentityAsync" for deleting user identities.
 
 ### Changed
-- Nakama: Used `session.Username` wherever outdated state might be returned.
+- Nakama: Used "session.Username" wherever outdated state might be returned.
 
 ### Fixed
 - Nakama: Fixed issue where outgoing payloads could include unnecessary JSON.
@@ -100,46 +111,46 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [3.7.0]
 ### Added
-- Nakama: Added a `UpdatePresences` utility to `IMatch` and `IParty`. Use this method to maintain the presences in your matches and parties
-when an `IMatchPresenceEvent` or `IPartyPresenceEvent` is dispatched.
+- Nakama: Added a "UpdatePresences" utility to "IMatch" and "IParty". Use this method to maintain the presences in your matches and parties
+when an "IMatchPresenceEvent" or "IPartyPresenceEvent" is dispatched.
 - Satori: Added optional default and custom properties that can be attached to authentication requests.
 
 ### Changed
-- Satori: `GetFlagDefault` and `GetFlagsDefault` now use the `apiKey` passed to the client constructor rather than accepting it as a unique parameter.
+- Satori: "GetFlagDefault" and "GetFlagsDefault" now use the "apiKey" passed to the client constructor rather than accepting it as a unique parameter.
 
 ## [3.6.0]
 ### Added
 - Satori: Adds the Satori .NET SDK. Satori is our liveops server for game studios. Please read more about it on the Heroic Labs website.
 - Nakama: Adds support for calling RPCs with a HTTP key via POST when a payload is provided.
-- Nakama: Expose the `Logger` object on `IClient`.
+- Nakama: Expose the "Logger" object on "IClient".
 - Nakama: Adds support for POST RPC requests when using HTTP key with a payload
 
 ### Fixed
-- Nakama: Prevent race condition when `Close` is called while receive loop has an incomplete read buffer.
+- Nakama: Prevent race condition when "Close" is called while receive loop has an incomplete read buffer.
 - Nakama: Fixed an issue where 500 errors could cause parsing issues on the client.
-- Nakama: Added ability to specify `path` parameter to client urls.
+- Nakama: Added ability to specify "path" parameter to client urls.
 
 ### Changed
-- Nakama: Fixed an issue where our websocket would throw an exception on `CloseAsync()` in certain situations.
+- Nakama: Fixed an issue where our websocket would throw an exception on "CloseAsync()" in certain situations.
 
 ## [3.5.0] - 2022-09-06
 ### Added
-- Ability to `persist` Apple, Huawei, and Google purchase receipts in the Nakama database. This is set to `true` by default in order to allow the server to detect replay attacks.
-- Added a `SeenBefore` property to `IApiValidatedPurchase`.
-- Added `ListSubscriptionsAsync` which returns a list of the user's subscriptions.
-- Added `ValidateSubscriptionAppleAsync` which returns details about a user's Apple subscription.
-- Added `ValidateSubscriptionGoogleAsync` which returns details about a user's Google subscription.
-- Added `GetSubscriptionAsync` which returns a subscription for the provided product id.
-- Added support for `countMultiple` in `AddMatchmakerAsync` and `AddMatchmakerPartyAsync`.
+- Ability to "persist" Apple, Huawei, and Google purchase receipts in the Nakama database. This is set to "true" by default in order to allow the server to detect replay attacks.
+- Added a "SeenBefore" property to "IApiValidatedPurchase".
+- Added "ListSubscriptionsAsync" which returns a list of the user's subscriptions.
+- Added "ValidateSubscriptionAppleAsync" which returns details about a user's Apple subscription.
+- Added "ValidateSubscriptionGoogleAsync" which returns details about a user's Google subscription.
+- Added "GetSubscriptionAsync" which returns a subscription for the provided product id.
+- Added support for "countMultiple" in "AddMatchmakerAsync" and "AddMatchmakerPartyAsync".
 
 ### Changed
-- `ValidatedPurchaseEnvironment` has been renamed to `ApiStoreEnvironment`.
-- `ValidatedPurchaseStore` has been renamed to `ApiStoreProvider`.
-- Removed obsolete client methods that accept a `CancellationTokenSource`. These have been replaced in favor of methods that accept a `CancellationToken` that were added in v3.3.
+- "ValidatedPurchaseEnvironment" has been renamed to "ApiStoreEnvironment".
+- "ValidatedPurchaseStore" has been renamed to "ApiStoreProvider".
+- Removed obsolete client methods that accept a "CancellationTokenSource". These have been replaced in favor of methods that accept a "CancellationToken" that were added in v3.3.
 
 ### Fixed
 - Fixed an issue with Socket Closed event taking a significant length of time or not firing at all when internet connection is lost.
-- Fixed an issue with `SocketClosed` event taking a significant length of time or not firing at all when internet connection is lost.
+- Fixed an issue with "SocketClosed" event taking a significant length of time or not firing at all when internet connection is lost.
 - Fixed an issue that would occur when sending messages over the socket from multiple threads.
 - Fixed automatic retry seeding to be random across devices.
 - Fixed an issue when parsing unquoted numbers as strings in TinyJson.
@@ -178,7 +189,7 @@ when an `IMatchPresenceEvent` or `IPartyPresenceEvent` is dispatched.
 
 ## [3.1.1] - 2021-08-19
 ### Changed
-- Removed `autoRefreshSession` from overloaded `Client` constructors. This can still be customized with the base `Client` constructor. This is a workaround for an internal compiler error in Unity's WebGL toolchain.
+- Removed "autoRefreshSession" from overloaded "Client" constructors. This can still be customized with the base "Client" constructor. This is a workaround for an internal compiler error in Unity's WebGL toolchain.
 
 ## [3.1.0] - 2021-08-11
 ### Added
@@ -190,8 +201,8 @@ when an `IMatchPresenceEvent` or `IPartyPresenceEvent` is dispatched.
 - The language tag for the user can be configured with the socket on connect.
 
 ### Changed
-- An `IPartyMatchmakerTicket` is now received by the party leader when they add their party to the matchmaker via `AddMatchmakerPartyAsync`.
-- Renamed `PromotePartyMember` to `PromotePartyMemberAsync`.
+- An "IPartyMatchmakerTicket" is now received by the party leader when they add their party to the matchmaker via "AddMatchmakerPartyAsync".
+- Renamed "PromotePartyMember" to "PromotePartyMemberAsync".
 
 ## [2.9.3] - 2021-06-17
 ### Fixed
@@ -199,7 +210,7 @@ when an `IMatchPresenceEvent` or `IPartyPresenceEvent` is dispatched.
 
 ## [2.9.2] - 2021-05-21
 ### Fixed
-- Fixed issue where `IUserPresence` objects were not being deserialized properly by the client as part of the `IParty` object.
+- Fixed issue where "IUserPresence" objects were not being deserialized properly by the client as part of the "IParty" object.
 
 ### Changed
 - AddMatchmakerPartyAsync now returns an IPartyMatchmakerTicket.
@@ -207,7 +218,7 @@ when an `IMatchPresenceEvent` or `IPartyPresenceEvent` is dispatched.
 
 ## [2.9.1] - 2021-05-19
 ### Added
-- The `Socket.ReceivedParty` event can now be subscribed to in order to listen for acceptance events from the leader of a closed party.
+- The "Socket.ReceivedParty" event can now be subscribed to in order to listen for acceptance events from the leader of a closed party.
 
 ## [2.9.0] - 2021-05-15
 ### Added
@@ -340,7 +351,7 @@ when an `IMatchPresenceEvent` or `IPartyPresenceEvent` is dispatched.
 
 ### Changed
 - Update the code generator to handle POST/DELETE query params.
-- Match listings can now pass through `null` to indicate no filters.
+- Match listings can now pass through "null" to indicate no filters.
 - ApiClient exceptions now contain HTTP status codes.
 - Update lowlevel websocket driver due to performance issues on AOT targets like iOS with Unity.
 - Disable request decompression by default due to Unity+Android issue.
