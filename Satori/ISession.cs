@@ -27,6 +27,11 @@ namespace Satori
         string AuthToken { get; }
 
         /// <summary>
+        /// The UNIX timestamp when this session was created.
+        /// </summary>
+        long CreateTime { get; }
+
+        /// <summary>
         /// The UNIX timestamp when this session will expire.
         /// </summary>
         long ExpireTime { get; }
