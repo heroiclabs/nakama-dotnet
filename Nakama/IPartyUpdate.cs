@@ -1,4 +1,4 @@
-// Copyright 2021 The Nakama Authors
+// Copyright 2025 The Nakama Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ namespace Nakama
     /// <summary>
     /// Incoming information about a party.
     /// </summary>
-    public interface IParty
+    public interface IPartyUpdate
     {
         /// <summary>
         /// The unique party identifier.
         /// </summary>
-        string Id { get; }
+        string PartyId { get; }
 
         /// <summary>
         /// True, if the party is open to join.
@@ -32,38 +32,13 @@ namespace Nakama
         bool Open { get; }
 
         /// <summary>
-        /// True, if the party is hidden from listing.
+        /// True, if the party is show in listing.
         /// </summary>
         bool Hidden { get; }
-
-        /// <summary>
-        /// The maximum number of party members.
-        /// </summary>
-        int MaxSize { get; }
 
         /// <summary>
         /// Label to filter results in Party listing.
         /// </summary>
         string Label { get; }
-
-        /// <summary>
-        /// The current user in this party. i.e. Yourself.
-        /// </summary>
-        IUserPresence Self { get; }
-
-        /// <summary>
-        /// The current party leader.
-        /// </summary>
-        IUserPresence Leader { get; }
-
-        /// <summary>
-        /// All members currently in the party.
-        /// </summary>
-        IEnumerable<IUserPresence> Presences { get; }
-
-        /// <summary>
-        /// Apply the joins and leaves from a presence event to the presences tracked by the party.
-        /// </summary>
-        void UpdatePresences(IPartyPresenceEvent presenceEvent);
     }
 }

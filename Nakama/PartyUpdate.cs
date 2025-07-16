@@ -19,20 +19,20 @@ namespace Nakama
     /// <summary>
     /// Create a new party.
     /// </summary>
-    internal class PartyCreate
+    internal class PartyUpdate : IPartyUpdate
     {
+        [DataMember(Name = "party_id"), Preserve]
+        public string PartyId { get; set; }
+
         [DataMember(Name = "open"), Preserve]
         public bool Open { get; set; }
 
         [DataMember(Name = "hidden"), Preserve]
         public bool Hidden { get; set; }
 
-        [DataMember(Name = "max_size"), Preserve]
-        public int MaxSize { get; set; }
-
         [DataMember(Name = "label"), Preserve]
         public string Label { get; set; }
 
-        public override string ToString() => $"PartyCreate(Open={Open}, MaxSize={MaxSize}, Label={Label})";
+        public override string ToString() => $"PartyUpdate(PartyId={PartyId}, Open={Open}, Label={Label})";
     }
 }

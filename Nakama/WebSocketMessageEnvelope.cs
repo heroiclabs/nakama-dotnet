@@ -122,6 +122,9 @@ namespace Nakama
         [DataMember(Name="party_create"), Preserve]
         public PartyCreate PartyCreate { get; set; }
 
+        [DataMember(Name="party_update"), Preserve]
+        public PartyUpdate PartyUpdate { get; set; }
+
         [DataMember(Name="party_join"), Preserve]
         public PartyJoin PartyJoin { get; set; }
 

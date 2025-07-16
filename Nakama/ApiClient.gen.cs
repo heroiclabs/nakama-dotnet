@@ -109,6 +109,46 @@ namespace Nakama
     }
 
     /// <summary>
+    /// A friend of a friend.
+    /// </summary>
+    public interface IFriendsOfFriendsListFriendOfFriend
+    {
+
+        /// <summary>
+        /// The user who referred its friend.
+        /// </summary>
+        string Referrer { get; }
+
+        /// <summary>
+        /// User.
+        /// </summary>
+        IApiUser User { get; }
+    }
+
+    /// <inheritdoc />
+    internal class FriendsOfFriendsListFriendOfFriend : IFriendsOfFriendsListFriendOfFriend
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="referrer"), Preserve]
+        public string Referrer { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IApiUser User => _user;
+        [DataMember(Name="user"), Preserve]
+        public ApiUser _user { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Referrer: ", Referrer, ", ");
+            output = string.Concat(output, "User: ", User, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A single user-role pair.
     /// </summary>
     public interface IGroupUserListGroupUser
@@ -1311,6 +1351,11 @@ namespace Nakama
     {
 
         /// <summary>
+        /// Metadata.
+        /// </summary>
+        string Metadata { get; }
+
+        /// <summary>
         /// The friend status.  one of "Friend.State".
         /// </summary>
         int State { get; }
@@ -1331,6 +1376,10 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="state"), Preserve]
         public int State { get; set; }
 
@@ -1347,6 +1396,7 @@ namespace Nakama
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "Metadata: ", Metadata, ", ");
             output = string.Concat(output, "State: ", State, ", ");
             output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
             output = string.Concat(output, "User: ", User, ", ");
@@ -1390,6 +1440,46 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "Cursor: ", Cursor, ", ");
             output = string.Concat(output, "Friends: [", string.Join(", ", Friends), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A List of friends of friends
+    /// </summary>
+    public interface IApiFriendsOfFriendsList
+    {
+
+        /// <summary>
+        /// Cursor for the next page of results, if any.
+        /// </summary>
+        string Cursor { get; }
+
+        /// <summary>
+        /// User friends of friends.
+        /// </summary>
+        IEnumerable<IFriendsOfFriendsListFriendOfFriend> FriendsOfFriends { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiFriendsOfFriendsList : IApiFriendsOfFriendsList
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IFriendsOfFriendsListFriendOfFriend> FriendsOfFriends => _friendsOfFriends ?? new List<FriendsOfFriendsListFriendOfFriend>(0);
+        [DataMember(Name="friends_of_friends"), Preserve]
+        public List<FriendsOfFriendsListFriendOfFriend> _friendsOfFriends { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Cursor: ", Cursor, ", ");
+            output = string.Concat(output, "FriendsOfFriends: [", string.Join(", ", FriendsOfFriends), "], ");
             return output;
         }
     }
@@ -2009,6 +2099,94 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Matchmaker ticket completion stats
+    /// </summary>
+    public interface IApiMatchmakerCompletionStats
+    {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string CompleteTime { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string CreateTime { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiMatchmakerCompletionStats : IApiMatchmakerCompletionStats
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="complete_time"), Preserve]
+        public string CompleteTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "CompleteTime: ", CompleteTime, ", ");
+            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Matchmaker stats
+    /// </summary>
+    public interface IApiMatchmakerStats
+    {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IEnumerable<IApiMatchmakerCompletionStats> Completions { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string OldestTicketCreateTime { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        int TicketCount { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiMatchmakerStats : IApiMatchmakerStats
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiMatchmakerCompletionStats> Completions => _completions ?? new List<ApiMatchmakerCompletionStats>(0);
+        [DataMember(Name="completions"), Preserve]
+        public List<ApiMatchmakerCompletionStats> _completions { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="oldest_ticket_create_time"), Preserve]
+        public string OldestTicketCreateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="ticket_count"), Preserve]
+        public int TicketCount { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Completions: [", string.Join(", ", Completions), "], ");
+            output = string.Concat(output, "OldestTicketCreateTime: ", OldestTicketCreateTime, ", ");
+            output = string.Concat(output, "TicketCount: ", TicketCount, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A notification in the server.
     /// </summary>
     public interface IApiNotification
@@ -2161,6 +2339,104 @@ namespace Nakama
         ///  - SET: Override the leaderboard operator with SET.
         /// </summary>
         DECREMENT = 4,
+    }
+
+    /// <summary>
+    /// Incoming information about a party.
+    /// </summary>
+    public interface IApiParty
+    {
+
+        /// <summary>
+        /// The party label, if any.
+        /// </summary>
+        string Label { get; }
+
+        /// <summary>
+        /// Maximum number of party members.
+        /// </summary>
+        int MaxSize { get; }
+
+        /// <summary>
+        /// Open flag.
+        /// </summary>
+        bool Open { get; }
+
+        /// <summary>
+        /// Unique party identifier.
+        /// </summary>
+        string PartyId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiParty : IApiParty
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="label"), Preserve]
+        public string Label { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="max_size"), Preserve]
+        public int MaxSize { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="open"), Preserve]
+        public bool Open { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="party_id"), Preserve]
+        public string PartyId { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Label: ", Label, ", ");
+            output = string.Concat(output, "MaxSize: ", MaxSize, ", ");
+            output = string.Concat(output, "Open: ", Open, ", ");
+            output = string.Concat(output, "PartyId: ", PartyId, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A list of realtime matches.
+    /// </summary>
+    public interface IApiPartyList
+    {
+
+        /// <summary>
+        /// A cursor to send when retrieving the next page, if any.
+        /// </summary>
+        string Cursor { get; }
+
+        /// <summary>
+        /// A number of parties corresponding to a list operation.
+        /// </summary>
+        IEnumerable<IApiParty> Parties { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiPartyList : IApiPartyList
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiParty> Parties => _parties ?? new List<ApiParty>(0);
+        [DataMember(Name="parties"), Preserve]
+        public List<ApiParty> _parties { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Cursor: ", Cursor, ", ");
+            output = string.Concat(output, "Parties: [", string.Join(", ", Parties), "], ");
+            return output;
+        }
     }
 
     /// <summary>
@@ -5710,6 +5986,7 @@ namespace Nakama
             string bearerToken,
             IEnumerable<string> ids,
             IEnumerable<string> usernames,
+            string metadata,
             CancellationToken? cancellationToken)
         {
 
@@ -5723,6 +6000,9 @@ namespace Nakama
             foreach (var elem in usernames ?? new string[0])
             {
                 queryParams = string.Concat(queryParams, "usernames=", Uri.EscapeDataString(elem), "&");
+            }
+            if (metadata != null) {
+                queryParams = string.Concat(queryParams, "metadata=", Uri.EscapeDataString(metadata), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -5819,6 +6099,44 @@ namespace Nakama
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// List friends of friends for the current user.
+        /// </summary>
+        public async Task<IApiFriendsOfFriendsList> ListFriendsOfFriendsAsync(
+            string bearerToken,
+            int? limit,
+            string cursor,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/friend/friends";
+
+            var queryParams = "";
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiFriendsOfFriendsList>();
         }
 
         /// <summary>
@@ -6774,7 +7092,7 @@ namespace Nakama
         }
 
         /// <summary>
-        /// List leaderboard records that belong to a user.
+        /// List leaderboard records around the target ownerId.
         /// </summary>
         public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundOwnerAsync(
             string bearerToken,
@@ -6828,7 +7146,7 @@ namespace Nakama
         }
 
         /// <summary>
-        /// Fetch list of running matches.
+        /// List running matches and optionally filter by matching criteria.
         /// </summary>
         public async Task<IApiMatchList> ListMatchesAsync(
             string bearerToken,
@@ -6879,6 +7197,36 @@ namespace Nakama
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiMatchList>();
+        }
+
+        /// <summary>
+        /// Get matchmaker stats.
+        /// </summary>
+        public async Task<IApiMatchmakerStats> GetMatchmakerStatsAsync(
+            string bearerToken,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/matchmaker/stats";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiMatchmakerStats>();
         }
 
         /// <summary>
@@ -6951,6 +7299,52 @@ namespace Nakama
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiNotificationList>();
+        }
+
+        /// <summary>
+        /// List parties and optionally filter by matching criteria.
+        /// </summary>
+        public async Task<IApiPartyList> ListPartiesAsync(
+            string bearerToken,
+            int? limit,
+            bool? open,
+            string query,
+            string cursor,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/party";
+
+            var queryParams = "";
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (open != null) {
+                queryParams = string.Concat(queryParams, "open=", open.ToString().ToLower(), "&");
+            }
+            if (query != null) {
+                queryParams = string.Concat(queryParams, "query=", Uri.EscapeDataString(query), "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiPartyList>();
         }
 
         /// <summary>
