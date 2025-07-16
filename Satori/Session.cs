@@ -26,6 +26,9 @@ namespace Satori
         /// <inheritdoc cref="ISession.AuthToken"/>
         public string AuthToken { get; private set; }
 
+        /// <inheritdoc cref="ISession.CreateTime"/>
+        public long CreateTime { get; private set; }
+
         /// <inheritdoc cref="ISession.ExpireTime"/>
         public long ExpireTime { get; private set; }
 
@@ -84,6 +87,11 @@ namespace Satori
             var decoded = json.FromJson<Dictionary<string, object>>();
             ExpireTime = Convert.ToInt64(decoded["exp"]);
             IdentityId = decoded["iid"].ToString();
+
+            if (decoded.TryGetValue("iat", out var value))
+            {
+                CreateTime = Convert.ToInt64(value);
+            }
 
             // Check in case clients have not updated to use refresh tokens yet.
             if (!string.IsNullOrEmpty(refreshToken))
