@@ -1,6 +1,6 @@
 var interface_nakama_1_1_i_client =
 [
-    [ "AddFriendsAsync", "interface_nakama_1_1_i_client.html#ac21ff4d771b8ce9c77ee2755cea4ca07", null ],
+    [ "AddFriendsAsync", "interface_nakama_1_1_i_client.html#aae3144e0e3d8ea9a2c6d5df25b647e23", null ],
     [ "AddGroupUsersAsync", "interface_nakama_1_1_i_client.html#abec54a30d216a009e04cb7df410e15f3", null ],
     [ "AuthenticateAppleAsync", "interface_nakama_1_1_i_client.html#af56a59b69e6416645041852198bbc220", null ],
     [ "AuthenticateCustomAsync", "interface_nakama_1_1_i_client.html#a1081470b3d1dc65a43e57e158118dde0", null ],
@@ -48,6 +48,7 @@ var interface_nakama_1_1_i_client =
     [ "ListLeaderboardRecordsAsync", "interface_nakama_1_1_i_client.html#a90b33da885f5fee1267420a0acbc1e87", null ],
     [ "ListMatchesAsync", "interface_nakama_1_1_i_client.html#af52b743a4d334b23a43fad156f0eb54c", null ],
     [ "ListNotificationsAsync", "interface_nakama_1_1_i_client.html#a9443bb244b7a51c6a493900822c654f1", null ],
+    [ "ListPartiesAsync", "interface_nakama_1_1_i_client.html#a34a46495479d8a2c38ebcfe0dfe77f8b", null ],
     [ "ListStorageObjects", "interface_nakama_1_1_i_client.html#a0dae35b8820b90e23303cdb58336dddc", null ],
     [ "ListStorageObjectsAsync", "interface_nakama_1_1_i_client.html#afeec7a75562cfc1c9f51d35095580046", null ],
     [ "ListSubscriptionsAsync", "interface_nakama_1_1_i_client.html#a3e2cf89415aebbfdecb0f7015b37ba37", null ],

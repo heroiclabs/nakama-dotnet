@@ -17,13 +17,14 @@ var searchData=
   ['ipartyleader_2ecs_14',['IPartyLeader.cs',['../_i_party_leader_8cs.html',1,'']]],
   ['ipartymatchmakerticket_2ecs_15',['IPartyMatchmakerTicket.cs',['../_i_party_matchmaker_ticket_8cs.html',1,'']]],
   ['ipartypresenceevent_2ecs_16',['IPartyPresenceEvent.cs',['../_i_party_presence_event_8cs.html',1,'']]],
-  ['ipingpongmanager_2ecs_17',['IPingPongManager.cs',['../_i_ping_pong_manager_8cs.html',1,'']]],
-  ['isocket_2ecs_18',['ISocket.cs',['../_i_socket_8cs.html',1,'']]],
-  ['isocketadapter_2ecs_19',['ISocketAdapter.cs',['../_i_socket_adapter_8cs.html',1,'']]],
-  ['istatus_2ecs_20',['IStatus.cs',['../_i_status_8cs.html',1,'']]],
-  ['istatuspresenceevent_2ecs_21',['IStatusPresenceEvent.cs',['../_i_status_presence_event_8cs.html',1,'']]],
-  ['istreampresenceevent_2ecs_22',['IStreamPresenceEvent.cs',['../_i_stream_presence_event_8cs.html',1,'']]],
-  ['iuserpresence_2ecs_23',['IUserPresence.cs',['../_i_user_presence_8cs.html',1,'']]],
-  ['iwebsocketclientfactory_2ecs_24',['IWebSocketClientFactory.cs',['../_i_web_socket_client_factory_8cs.html',1,'']]],
-  ['iwebsocketserverfactory_2ecs_25',['IWebSocketServerFactory.cs',['../_i_web_socket_server_factory_8cs.html',1,'']]]
+  ['ipartyupdate_2ecs_17',['IPartyUpdate.cs',['../_i_party_update_8cs.html',1,'']]],
+  ['ipingpongmanager_2ecs_18',['IPingPongManager.cs',['../_i_ping_pong_manager_8cs.html',1,'']]],
+  ['isocket_2ecs_19',['ISocket.cs',['../_i_socket_8cs.html',1,'']]],
+  ['isocketadapter_2ecs_20',['ISocketAdapter.cs',['../_i_socket_adapter_8cs.html',1,'']]],
+  ['istatus_2ecs_21',['IStatus.cs',['../_i_status_8cs.html',1,'']]],
+  ['istatuspresenceevent_2ecs_22',['IStatusPresenceEvent.cs',['../_i_status_presence_event_8cs.html',1,'']]],
+  ['istreampresenceevent_2ecs_23',['IStreamPresenceEvent.cs',['../_i_stream_presence_event_8cs.html',1,'']]],
+  ['iuserpresence_2ecs_24',['IUserPresence.cs',['../_i_user_presence_8cs.html',1,'']]],
+  ['iwebsocketclientfactory_2ecs_25',['IWebSocketClientFactory.cs',['../_i_web_socket_client_factory_8cs.html',1,'']]],
+  ['iwebsocketserverfactory_2ecs_26',['IWebSocketServerFactory.cs',['../_i_web_socket_server_factory_8cs.html',1,'']]]
 ];

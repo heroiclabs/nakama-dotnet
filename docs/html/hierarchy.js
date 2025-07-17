@@ -53,6 +53,7 @@ var hierarchy =
     [ "Nakama.IApiFriend", "interface_nakama_1_1_i_api_friend.html", null ],
     [ "Nakama.Console.IApiFriendList", "interface_nakama_1_1_console_1_1_i_api_friend_list.html", null ],
     [ "Nakama.IApiFriendList", "interface_nakama_1_1_i_api_friend_list.html", null ],
+    [ "Nakama.IApiFriendsOfFriendsList", "interface_nakama_1_1_i_api_friends_of_friends_list.html", null ],
     [ "Satori.IApiGetMessageListResponse", "interface_satori_1_1_i_api_get_message_list_response.html", null ],
     [ "Nakama.Console.IApiGroup", "interface_nakama_1_1_console_1_1_i_api_group.html", null ],
     [ "Nakama.IApiGroup", "interface_nakama_1_1_i_api_group.html", null ],
@@ -68,10 +69,14 @@ var hierarchy =
     [ "Satori.IApiLiveEventList", "interface_satori_1_1_i_api_live_event_list.html", null ],
     [ "Nakama.IApiMatch", "interface_nakama_1_1_i_api_match.html", null ],
     [ "Nakama.IApiMatchList", "interface_nakama_1_1_i_api_match_list.html", null ],
+    [ "Nakama.IApiMatchmakerCompletionStats", "interface_nakama_1_1_i_api_matchmaker_completion_stats.html", null ],
+    [ "Nakama.IApiMatchmakerStats", "interface_nakama_1_1_i_api_matchmaker_stats.html", null ],
     [ "Satori.IApiMessage", "interface_satori_1_1_i_api_message.html", null ],
     [ "Nakama.Console.IApiNotification", "interface_nakama_1_1_console_1_1_i_api_notification.html", null ],
     [ "Nakama.IApiNotification", "interface_nakama_1_1_i_api_notification.html", null ],
     [ "Nakama.IApiNotificationList", "interface_nakama_1_1_i_api_notification_list.html", null ],
+    [ "Nakama.IApiParty", "interface_nakama_1_1_i_api_party.html", null ],
+    [ "Nakama.IApiPartyList", "interface_nakama_1_1_i_api_party_list.html", null ],
     [ "Satori.IApiProperties", "interface_satori_1_1_i_api_properties.html", null ],
     [ "Nakama.IApiReadStorageObjectId", "interface_nakama_1_1_i_api_read_storage_object_id.html", [
       [ "Nakama.StorageObjectId", "class_nakama_1_1_storage_object_id.html", null ]
@@ -141,6 +146,7 @@ var hierarchy =
     [ "Nakama.Console.IConsoleWalletLedgerList", "interface_nakama_1_1_console_1_1_i_console_wallet_ledger_list.html", null ],
     [ "Nakama.Console.IConsoleWriteStorageObjectRequest", "interface_nakama_1_1_console_1_1_i_console_write_storage_object_request.html", null ],
     [ "Satori.IFlagValueChangeReason", "interface_satori_1_1_i_flag_value_change_reason.html", null ],
+    [ "Nakama.IFriendsOfFriendsListFriendOfFriend", "interface_nakama_1_1_i_friends_of_friends_list_friend_of_friend.html", null ],
     [ "Nakama.IGroupUserListGroupUser", "interface_nakama_1_1_i_group_user_list_group_user.html", null ],
     [ "Nakama.IHttpAdapter", "interface_nakama_1_1_i_http_adapter.html", [
       [ "Nakama.HttpRequestAdapter", "class_nakama_1_1_http_request_adapter.html", null ]
@@ -166,6 +172,7 @@ var hierarchy =
     [ "Nakama.IPartyLeader", "interface_nakama_1_1_i_party_leader.html", null ],
     [ "Nakama.IPartyMatchmakerTicket", "interface_nakama_1_1_i_party_matchmaker_ticket.html", null ],
     [ "Nakama.IPartyPresenceEvent", "interface_nakama_1_1_i_party_presence_event.html", null ],
+    [ "Nakama.IPartyUpdate", "interface_nakama_1_1_i_party_update.html", null ],
     [ "Nakama.Ninja.WebSockets.IPingPongManager", "interface_nakama_1_1_ninja_1_1_web_sockets_1_1_i_ping_pong_manager.html", [
       [ "Nakama.Ninja.WebSockets.PingPongManager", "class_nakama_1_1_ninja_1_1_web_sockets_1_1_ping_pong_manager.html", null ]
     ] ],

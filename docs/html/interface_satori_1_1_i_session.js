@@ -3,6 +3,7 @@ var interface_satori_1_1_i_session =
     [ "HasExpired", "interface_satori_1_1_i_session.html#aabe1a8aae689ca7d1eaca3537ffa55f5", null ],
     [ "HasRefreshExpired", "interface_satori_1_1_i_session.html#aa690bf2fd9e3cebdc597a17ad95eb8ac", null ],
     [ "AuthToken", "interface_satori_1_1_i_session.html#a3a090ee3fe0d7a6f01d45f185ec8f3ba", null ],
+    [ "CreateTime", "interface_satori_1_1_i_session.html#a8229314b63c48a1f7a6494390575099a", null ],
     [ "ExpireTime", "interface_satori_1_1_i_session.html#a2ac53e0aab134b3df05bd46f29d5e34f", null ],
     [ "IdentityId", "interface_satori_1_1_i_session.html#ad2cf0bf88e2f23a3f3fdff64502a799e", null ],
     [ "IsExpired", "interface_satori_1_1_i_session.html#a8fe379446411cfdff5e11cabc83eed9d", null ],
