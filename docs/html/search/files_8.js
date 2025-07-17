@@ -17,7 +17,8 @@ var searchData=
   ['partymemberremove_2ecs_14',['PartyMemberRemove.cs',['../_party_member_remove_8cs.html',1,'']]],
   ['partypresenceevent_2ecs_15',['PartyPresenceEvent.cs',['../_party_presence_event_8cs.html',1,'']]],
   ['partypromote_2ecs_16',['PartyPromote.cs',['../_party_promote_8cs.html',1,'']]],
-  ['pingpongmanager_2ecs_17',['PingPongManager.cs',['../_ping_pong_manager_8cs.html',1,'']]],
-  ['pongeventargs_2ecs_18',['PongEventArgs.cs',['../_pong_event_args_8cs.html',1,'']]],
-  ['presenceutil_2ecs_19',['PresenceUtil.cs',['../_presence_util_8cs.html',1,'']]]
+  ['partyupdate_2ecs_17',['PartyUpdate.cs',['../_party_update_8cs.html',1,'']]],
+  ['pingpongmanager_2ecs_18',['PingPongManager.cs',['../_ping_pong_manager_8cs.html',1,'']]],
+  ['pongeventargs_2ecs_19',['PongEventArgs.cs',['../_pong_event_args_8cs.html',1,'']]],
+  ['presenceutil_2ecs_20',['PresenceUtil.cs',['../_presence_util_8cs.html',1,'']]]
 ];

@@ -1,5 +1,17 @@
 var NAVTREEINDEX5 =
 {
+"interface_nakama_1_1_console_1_1_i_api_notification.html":[2,0,0,0,7],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a1ef19605de607fbdb6596e44fc9cdf53":[1,0,0,0,7,1],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a1ef19605de607fbdb6596e44fc9cdf53":[2,0,0,0,7,1],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a312d42df4ef08dc9b62821167f534d8f":[1,0,0,0,7,0],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a312d42df4ef08dc9b62821167f534d8f":[2,0,0,0,7,0],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a3cb86317ceb89d5b5093b64e7b11217b":[1,0,0,0,7,6],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a3cb86317ceb89d5b5093b64e7b11217b":[2,0,0,0,7,6],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a486a79e0dc9fe285041284ace0c2e491":[1,0,0,0,7,4],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a486a79e0dc9fe285041284ace0c2e491":[2,0,0,0,7,4],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a9022630f97359e1438e8a795e5131492":[1,0,0,0,7,5],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#a9022630f97359e1438e8a795e5131492":[2,0,0,0,7,5],
+"interface_nakama_1_1_console_1_1_i_api_notification.html#ab1d5e01d9064e9e34963884f39d23dbf":[1,0,0,0,7,2],
 "interface_nakama_1_1_console_1_1_i_api_notification.html#ab1d5e01d9064e9e34963884f39d23dbf":[2,0,0,0,7,2],
 "interface_nakama_1_1_console_1_1_i_api_notification.html#ad05b14a384173eaf88e87733f277b0a0":[1,0,0,0,7,3],
 "interface_nakama_1_1_console_1_1_i_api_notification.html#ad05b14a384173eaf88e87733f277b0a0":[2,0,0,0,7,3],
@@ -237,17 +249,5 @@ var NAVTREEINDEX5 =
 "interface_nakama_1_1_console_1_1_i_runtime_error.html#a9f5226041b29e4390df9a5e81e589a08":[2,0,0,0,28,2],
 "interface_nakama_1_1_console_1_1_i_runtime_error.html#ac0a9d42676b9d2d98cc7e23bde758941":[1,0,0,0,28,0],
 "interface_nakama_1_1_console_1_1_i_runtime_error.html#ac0a9d42676b9d2d98cc7e23bde758941":[2,0,0,0,28,0],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html":[1,0,0,0,29],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html":[2,0,0,0,29],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a17724f6e13a79a8139d1523efd9c4add":[1,0,0,0,29,3],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a17724f6e13a79a8139d1523efd9c4add":[2,0,0,0,29,3],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a56b2405d856da581a487bd73b8c07d11":[1,0,0,0,29,1],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a56b2405d856da581a487bd73b8c07d11":[2,0,0,0,29,1],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a5c9d6f670b3b47e9ea7a20a8fcc6406b":[1,0,0,0,29,6],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a5c9d6f670b3b47e9ea7a20a8fcc6406b":[2,0,0,0,29,6],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a69f5f7c4dccd9b6a6f39097f6ccb8fcd":[1,0,0,0,29,2],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a69f5f7c4dccd9b6a6f39097f6ccb8fcd":[2,0,0,0,29,2],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a6ac7c70a733c82c5cd232ee16e0e4f2d":[1,0,0,0,29,7],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a6ac7c70a733c82c5cd232ee16e0e4f2d":[2,0,0,0,29,7],
-"interface_nakama_1_1_console_1_1_i_status_list_status.html#a8728a67da038b9ad65c14a343ba9ca9c":[1,0,0,0,29,8]
+"interface_nakama_1_1_console_1_1_i_status_list_status.html":[1,0,0,0,29]
 };

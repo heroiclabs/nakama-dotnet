@@ -10,5 +10,5 @@ var searchData=
   ['copytoasync_7',['CopyToAsync',['../class_nakama_1_1_ninja_1_1_web_sockets_1_1_buffer_pool_1_1_public_buffer_memory_stream.html#ad9c1a68bbd0be9674b1836a387e1fb99',1,'Nakama::Ninja::WebSockets::BufferPool::PublicBufferMemoryStream']]],
   ['creategroupasync_8',['CreateGroupAsync',['../class_nakama_1_1_client.html#ad74fadcf61eebd9cb089641775671798',1,'Nakama.Client.CreateGroupAsync()'],['../interface_nakama_1_1_i_client.html#aae0252ef30e7b6f9a1e2dc518f7478ee',1,'Nakama.IClient.CreateGroupAsync()']]],
   ['creatematchasync_9',['CreateMatchAsync',['../interface_nakama_1_1_i_socket.html#a82169726f5414f591824413d3a38f49c',1,'Nakama.ISocket.CreateMatchAsync()'],['../class_nakama_1_1_socket.html#a62f9170d0c155670b7fb57d7de9884a6',1,'Nakama.Socket.CreateMatchAsync()']]],
-  ['createpartyasync_10',['CreatePartyAsync',['../interface_nakama_1_1_i_socket.html#a8dc33b819637084a48f2dc72811e64c3',1,'Nakama.ISocket.CreatePartyAsync()'],['../class_nakama_1_1_socket.html#af228c737dc62ab9bf084706413e8e9be',1,'Nakama.Socket.CreatePartyAsync()']]]
+  ['createpartyasync_10',['CreatePartyAsync',['../interface_nakama_1_1_i_socket.html#ad69ab381962fee86f0a583fac8acd5ce',1,'Nakama.ISocket.CreatePartyAsync()'],['../class_nakama_1_1_socket.html#a1374f5d0081d33b17a6bda84978f069d',1,'Nakama.Socket.CreatePartyAsync()']]]
 ];
