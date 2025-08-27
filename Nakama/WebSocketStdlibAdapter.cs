@@ -33,7 +33,7 @@ namespace Nakama
         public event Action Connected;
 
         /// <inheritdoc cref="ISocketAdapter.Closed"/>
-        public event Action Closed;
+        public event Action<string> Closed;
 
         /// <inheritdoc cref="ISocketAdapter.ReceivedError"/>
         public event Action<Exception> ReceivedError;
@@ -143,7 +143,7 @@ namespace Nakama
 
             var buffer = new byte[_maxMessageReadSize];
             var bufferReadCount = 0;
-
+            var closeReason = "";
             try
             {
                 do
@@ -158,6 +158,8 @@ namespace Nakama
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
+                        closeReason = result.CloseStatusDescription;
+                        await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
                         break;
                     }
 
@@ -182,7 +184,7 @@ namespace Nakama
             }
             finally
             {
-                Closed?.Invoke();
+                Closed?.Invoke(closeReason);
             }
         }
     }

@@ -31,7 +31,7 @@ namespace Nakama
         /// <summary>
         /// An event dispatched when the socket is disconnected.
         /// </summary>
-        event Action Closed;
+        event Action<string> Closed;
 
         /// <summary>
         /// An event dispatched when the socket has an error when connected.

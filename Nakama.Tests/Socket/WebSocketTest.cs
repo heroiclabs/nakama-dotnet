@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -32,7 +33,7 @@ namespace Nakama.Tests.Socket
         {
             _testOutputHelper = testOutputHelper;
             _client = TestsUtil.FromSettingsFile();
-            _socket = Nakama.Socket.From(_client);
+            _socket = Nakama.Socket.From(_client, new WebSocketStdlibAdapter());
             var logger = new StdoutLogger();
             _socket.ReceivedError += e => logger.ErrorFormat(e.Message);
         }
@@ -63,7 +64,7 @@ namespace Nakama.Tests.Socket
         {
             var session = await _client.AuthenticateCustomAsync($"{Guid.NewGuid()}");
             var completer = new TaskCompletionSource<bool>();
-            _socket.Closed += () => completer.SetResult(true);
+            _socket.Closed += (_) => completer.SetResult(true);
 
             await _socket.ConnectAsync(session);
             await _socket.CloseAsync();
@@ -120,7 +121,7 @@ namespace Nakama.Tests.Socket
             await _socket.ConnectAsync(session, false, 5);
             var closeTriggered = false;
 
-            _socket.Closed += () =>
+            _socket.Closed += (_) =>
             {
                 _testOutputHelper.WriteLine($"Socket was closed");
                 closeTriggered = true;
