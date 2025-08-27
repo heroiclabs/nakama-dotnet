@@ -171,7 +171,7 @@ namespace Nakama
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        closeReason = result.CloseStatusDescription;
+                        closeReason = result.CloseStatusDescription ?? "";
                         await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
                         break;
                     }
