@@ -26,7 +26,7 @@ namespace Nakama
         /// <summary>
         /// Received when a socket is closed.
         /// </summary>
-        event Action Closed;
+        event Action<string> Closed;
 
         /// <summary>
         /// Received when a socket is connected.

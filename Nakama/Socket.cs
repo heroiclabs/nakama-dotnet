@@ -41,7 +41,7 @@ namespace Nakama
         public const int DefaultSendTimeout = 10;
 
         /// <inheritdoc cref="Closed"/>
-        public event Action Closed;
+        public event Action<string> Closed;
 
         /// <inheritdoc cref="Connected"/>
         public event Action Connected;
@@ -151,7 +151,7 @@ namespace Nakama
             _sendTimeoutSec = TimeSpan.FromSeconds(sendTimeoutSec);
 
             _adapter.Connected += () => Connected?.Invoke();
-            _adapter.Closed += () =>
+            _adapter.Closed += (reason) =>
             {
                 lock (_responsesLock)
                 {
@@ -163,7 +163,7 @@ namespace Nakama
                     _responses.Clear();
                 }
 
-                Closed?.Invoke();
+                Closed?.Invoke(reason);
             };
             _adapter.ReceivedError += e =>
             {
