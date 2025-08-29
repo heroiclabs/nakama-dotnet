@@ -78,7 +78,7 @@ namespace Satori
         /// </summary>
         /// <param name="authToken">The authorization token to update into the session.</param>
         /// <param name="refreshToken">The refresh token to update into the session.</param>
-        internal void Update(string authToken, string refreshToken)
+        public void Update(string authToken, string refreshToken)
         {
             AuthToken = authToken;
             RefreshToken = refreshToken;
