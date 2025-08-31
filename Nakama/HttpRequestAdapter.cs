@@ -51,16 +51,13 @@ namespace Nakama
             var request = new HttpRequestMessage
             {
                 RequestUri = uri,
-                Method = new HttpMethod(method),
-                Headers =
-                {
-                    Accept = { new MediaTypeWithQualityHeaderValue("application/json") }
-                }
+                Method = new HttpMethod(method)
             };
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             foreach (var kv in headers)
             {
-                request.Headers.Add(kv.Key, kv.Value);
+                request.Headers.TryAddWithoutValidation(kv.Key, kv.Value);
             }
 
             if (body != null)
@@ -78,33 +75,42 @@ namespace Nakama
             using var cts =
                 CancellationTokenSource.CreateLinkedTokenSource(ctsTimeout.Token,
                     userCancelToken ?? CancellationToken.None);
-            using var response = await _httpClient.SendAsync(request, cts.Token).ConfigureAwait(false);
-            var contents = await response.Content.ReadAsStringAsync();
-            Logger?.InfoFormat("Received: status={0}, contents='{1}'", response.StatusCode, contents);
 
-            if ((int)response.StatusCode >= 500)
+            try
             {
-                // TODO think of best way to map HTTP code to GRPC code since we can't rely
-                // on server to process it. Manually adding the mapping to SDK seems brittle.
-                throw new ApiResponseException((int)response.StatusCode, contents, -1);
-            }
+                using var response = await _httpClient.SendAsync(request, cts.Token).ConfigureAwait(false);
+                var contents = await response.Content.ReadAsStringAsync();
+                Logger?.InfoFormat("Received: status={0}, contents='{1}'", response.StatusCode, contents);
 
-            if (response.IsSuccessStatusCode)
+                if ((int)response.StatusCode >= 500)
+                {
+                    // TODO think of best way to map HTTP code to GRPC code since we can't rely
+                    // on server to process it. Manually adding the mapping to SDK seems brittle.
+                    throw new ApiResponseException((int)response.StatusCode, contents, -1);
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return contents;
+                }
+
+                var decoded = contents.FromJson<Dictionary<string, object>>();
+                var message = decoded.TryGetValue("message", out var value1) ? value1.ToString() : string.Empty;
+                var grpcCode = decoded.TryGetValue("code", out var value2) ? (int)value2 : -1;
+
+                var exception = new ApiResponseException((int)response.StatusCode, message, grpcCode);
+                if (decoded.TryGetValue("error", out var value))
+                {
+                    IHttpAdapterUtil.CopyResponseError(this, value, exception);
+                }
+
+                throw exception;
+            }
+            catch (TaskCanceledException e) when (ctsTimeout.IsCancellationRequested)
             {
-                return contents;
+                Logger?.ErrorFormat("Request timed out: method='{0}', uri='{1}'", method, uri);
+                throw new TimeoutException($"The request timed out after {timeout} seconds.", e);
             }
-
-            var decoded = contents.FromJson<Dictionary<string, object>>();
-            var message = decoded.TryGetValue("message", out var value1) ? value1.ToString() : string.Empty;
-            var grpcCode = decoded.TryGetValue("code", out var value2) ? (int)value2 : -1;
-
-            var exception = new ApiResponseException((int)response.StatusCode, message, grpcCode);
-            if (decoded.TryGetValue("error", out var value))
-            {
-                IHttpAdapterUtil.CopyResponseError(this, value, exception);
-            }
-
-            throw exception;
         }
 
         /// <summary>
