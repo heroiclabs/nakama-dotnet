@@ -41,44 +41,6 @@ namespace Satori
     }
 
     /// <summary>
-    /// The request to update the status of a message.
-    /// </summary>
-    public interface IApiUpdateMessageRequest
-    {
-
-        /// <summary>
-        /// The time the message was consumed by the identity.
-        /// </summary>
-        string ConsumeTime { get; }
-
-        /// <summary>
-        /// The time the message was read at the client.
-        /// </summary>
-        string ReadTime { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiUpdateMessageRequest : IApiUpdateMessageRequest
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="consume_time"), Preserve]
-        public string ConsumeTime { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="read_time"), Preserve]
-        public string ReadTime { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "ConsumeTime: ", ConsumeTime, ", ");
-            output = string.Concat(output, "ReadTime: ", ReadTime, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     public interface IFlagValueChangeReason
@@ -149,6 +111,44 @@ namespace Satori
         /// 
         /// </summary>
         EXPERIMENT = 3,
+    }
+
+    /// <summary>
+    /// The request to update the status of a message.
+    /// </summary>
+    public interface ISatoriUpdateMessageBody
+    {
+
+        /// <summary>
+        /// The time the message was consumed by the identity.
+        /// </summary>
+        string ConsumeTime { get; }
+
+        /// <summary>
+        /// The time the message was read at the client.
+        /// </summary>
+        string ReadTime { get; }
+    }
+
+    /// <inheritdoc />
+    internal class SatoriUpdateMessageBody : ISatoriUpdateMessageBody
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="consume_time"), Preserve]
+        public string ConsumeTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="read_time"), Preserve]
+        public string ReadTime { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "ConsumeTime: ", ConsumeTime, ", ");
+            output = string.Concat(output, "ReadTime: ", ReadTime, ", ");
+            return output;
+        }
     }
 
     /// <summary>
@@ -292,82 +292,6 @@ namespace Satori
     }
 
     /// <summary>
-    /// A single event. Usually, but not necessarily, part of a batch.
-    /// </summary>
-    public interface IApiEvent
-    {
-
-        /// <summary>
-        /// Optional event ID assigned by the client, used to de-duplicate in retransmission scenarios. If not supplied the server will assign a randomly generated unique event identifier.
-        /// </summary>
-        string Id { get; }
-
-        /// <summary>
-        /// Event metadata, if any.
-        /// </summary>
-        IDictionary<string, string> Metadata { get; }
-
-        /// <summary>
-        /// Event name.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// The time when the event was triggered on the producer side.
-        /// </summary>
-        string Timestamp { get; }
-
-        /// <summary>
-        /// Optional value.
-        /// </summary>
-        string Value { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiEvent : IApiEvent
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="id"), Preserve]
-        public string Id { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Metadata => _metadata ?? new Dictionary<string, string>();
-        [DataMember(Name="metadata"), Preserve]
-        public Dictionary<string, string> _metadata { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="name"), Preserve]
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="timestamp"), Preserve]
-        public string Timestamp { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="value"), Preserve]
-        public string Value { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "Id: ", Id, ", ");
-
-            var metadataString = "";
-            foreach (var kvp in Metadata)
-            {
-                metadataString = string.Concat(metadataString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Metadata: [" + metadataString + "]");
-            output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
-            output = string.Concat(output, "Value: ", Value, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
     /// Publish an event to the server
     /// </summary>
     public interface IApiEventRequest
@@ -376,7 +300,7 @@ namespace Satori
         /// <summary>
         /// Some number of events produced by a client.
         /// </summary>
-        IEnumerable<IApiEvent> Events { get; }
+        IEnumerable<ISatoriapiEvent> Events { get; }
     }
 
     /// <inheritdoc />
@@ -385,9 +309,9 @@ namespace Satori
 
         /// <inheritdoc />
         [IgnoreDataMember]
-        public IEnumerable<IApiEvent> Events => _events ?? new List<ApiEvent>(0);
+        public IEnumerable<ISatoriapiEvent> Events => _events ?? new List<SatoriapiEvent>(0);
         [DataMember(Name="events"), Preserve]
-        public List<ApiEvent> _events { get; set; }
+        public List<SatoriapiEvent> _events { get; set; }
 
         public override string ToString()
         {
@@ -402,6 +326,11 @@ namespace Satori
     /// </summary>
     public interface IApiExperiment
     {
+
+        /// <summary>
+        /// The labels associated with this experiment.
+        /// </summary>
+        List<string> Labels { get; }
 
         /// <summary>
         /// Experiment name
@@ -419,6 +348,10 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [DataMember(Name="labels"), Preserve]
+        public List<string> Labels { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
@@ -429,6 +362,7 @@ namespace Satori
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "Labels: [", string.Join(", ", Labels), "], ");
             output = string.Concat(output, "Name: ", Name, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
@@ -482,6 +416,11 @@ namespace Satori
         bool ConditionChanged { get; }
 
         /// <summary>
+        /// The labels associated with this flag.
+        /// </summary>
+        List<string> Labels { get; }
+
+        /// <summary>
         /// Flag name
         /// </summary>
         string Name { get; }
@@ -507,6 +446,10 @@ namespace Satori
         public bool ConditionChanged { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="labels"), Preserve]
+        public List<string> Labels { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
@@ -519,6 +462,7 @@ namespace Satori
             var output = "";
             output = string.Concat(output, "ChangeReason: ", ChangeReason, ", ");
             output = string.Concat(output, "ConditionChanged: ", ConditionChanged, ", ");
+            output = string.Concat(output, "Labels: [", string.Join(", ", Labels), "], ");
             output = string.Concat(output, "Name: ", Name, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
@@ -567,6 +511,11 @@ namespace Satori
         string FlagName { get; }
 
         /// <summary>
+        /// The labels associated with this flag.
+        /// </summary>
+        List<string> Labels { get; }
+
+        /// <summary>
         /// The list of configuration that affect the value of the flag.
         /// </summary>
         IEnumerable<IApiFlagOverrideValue> Overrides { get; }
@@ -581,6 +530,10 @@ namespace Satori
         public string FlagName { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="labels"), Preserve]
+        public List<string> Labels { get; set; }
+
+        /// <inheritdoc />
         [IgnoreDataMember]
         public IEnumerable<IApiFlagOverrideValue> Overrides => _overrides ?? new List<ApiFlagOverrideValue>(0);
         [DataMember(Name="overrides"), Preserve]
@@ -590,6 +543,7 @@ namespace Satori
         {
             var output = "";
             output = string.Concat(output, "FlagName: ", FlagName, ", ");
+            output = string.Concat(output, "Labels: [", string.Join(", ", Labels), "], ");
             output = string.Concat(output, "Overrides: [", string.Join(", ", Overrides), "], ");
             return output;
         }
@@ -883,6 +837,11 @@ namespace Satori
         string Id { get; }
 
         /// <summary>
+        /// The labels associated with this live event.
+        /// </summary>
+        List<string> Labels { get; }
+
+        /// <summary>
         /// Name.
         /// </summary>
         string Name { get; }
@@ -896,6 +855,11 @@ namespace Satori
         /// Start time.
         /// </summary>
         string StartTimeSec { get; }
+
+        /// <summary>
+        /// The status of this live event run.
+        /// </summary>
+        ApiLiveEventStatus Status { get; }
 
         /// <summary>
         /// Event value.
@@ -932,6 +896,10 @@ namespace Satori
         public string Id { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="labels"), Preserve]
+        public List<string> Labels { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
@@ -942,6 +910,12 @@ namespace Satori
         /// <inheritdoc />
         [DataMember(Name="start_time_sec"), Preserve]
         public string StartTimeSec { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ApiLiveEventStatus Status => _status;
+        [DataMember(Name="status"), Preserve]
+        public ApiLiveEventStatus _status { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="value"), Preserve]
@@ -956,9 +930,11 @@ namespace Satori
             output = string.Concat(output, "DurationSec: ", DurationSec, ", ");
             output = string.Concat(output, "EndTimeSec: ", EndTimeSec, ", ");
             output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "Labels: [", string.Join(", ", Labels), "], ");
             output = string.Concat(output, "Name: ", Name, ", ");
             output = string.Concat(output, "ResetCron: ", ResetCron, ", ");
             output = string.Concat(output, "StartTimeSec: ", StartTimeSec, ", ");
+            output = string.Concat(output, "Status: ", Status, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
         }
@@ -969,6 +945,11 @@ namespace Satori
     /// </summary>
     public interface IApiLiveEventList
     {
+
+        /// <summary>
+        /// Live events that require explicit join.
+        /// </summary>
+        IEnumerable<IApiLiveEvent> ExplicitJoinLiveEvents { get; }
 
         /// <summary>
         /// Live events.
@@ -982,6 +963,12 @@ namespace Satori
 
         /// <inheritdoc />
         [IgnoreDataMember]
+        public IEnumerable<IApiLiveEvent> ExplicitJoinLiveEvents => _explicitJoinLiveEvents ?? new List<ApiLiveEvent>(0);
+        [DataMember(Name="explicit_join_live_events"), Preserve]
+        public List<ApiLiveEvent> _explicitJoinLiveEvents { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiLiveEvent> LiveEvents => _liveEvents ?? new List<ApiLiveEvent>(0);
         [DataMember(Name="live_events"), Preserve]
         public List<ApiLiveEvent> _liveEvents { get; set; }
@@ -989,1053 +976,20 @@ namespace Satori
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "ExplicitJoinLiveEvents: [", string.Join(", ", ExplicitJoinLiveEvents), "], ");
             output = string.Concat(output, "LiveEvents: [", string.Join(", ", LiveEvents), "], ");
             return output;
         }
     }
 
     /// <summary>
-    /// A scheduled message.
-    /// </summary>
-    public interface IApiMessage
-    {
-
-        /// <summary>
-        /// The time the message was consumed by the identity.
-        /// </summary>
-        string ConsumeTime { get; }
-
-        /// <summary>
-        /// The time the message was created.
-        /// </summary>
-        string CreateTime { get; }
-
-        /// <summary>
-        /// The message's unique identifier.
-        /// </summary>
-        string Id { get; }
-
-        /// <summary>
-        /// The message's image url.
-        /// </summary>
-        string ImageUrl { get; }
-
-        /// <summary>
-        /// A key-value pairs of metadata.
-        /// </summary>
-        IDictionary<string, string> Metadata { get; }
-
-        /// <summary>
-        /// The time the message was read by the client.
-        /// </summary>
-        string ReadTime { get; }
-
-        /// <summary>
-        /// The identifier of the schedule.
-        /// </summary>
-        string ScheduleId { get; }
-
-        /// <summary>
-        /// The send time for the message.
-        /// </summary>
-        string SendTime { get; }
-
-        /// <summary>
-        /// The message's text.
-        /// </summary>
-        string Text { get; }
-
-        /// <summary>
-        /// The message's title.
-        /// </summary>
-        string Title { get; }
-
-        /// <summary>
-        /// The time the message was updated.
-        /// </summary>
-        string UpdateTime { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiMessage : IApiMessage
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="consume_time"), Preserve]
-        public string ConsumeTime { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="create_time"), Preserve]
-        public string CreateTime { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="id"), Preserve]
-        public string Id { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="image_url"), Preserve]
-        public string ImageUrl { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Metadata => _metadata ?? new Dictionary<string, string>();
-        [DataMember(Name="metadata"), Preserve]
-        public Dictionary<string, string> _metadata { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="read_time"), Preserve]
-        public string ReadTime { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="schedule_id"), Preserve]
-        public string ScheduleId { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="send_time"), Preserve]
-        public string SendTime { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="text"), Preserve]
-        public string Text { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="title"), Preserve]
-        public string Title { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="update_time"), Preserve]
-        public string UpdateTime { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "ConsumeTime: ", ConsumeTime, ", ");
-            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
-            output = string.Concat(output, "Id: ", Id, ", ");
-            output = string.Concat(output, "ImageUrl: ", ImageUrl, ", ");
-
-            var metadataString = "";
-            foreach (var kvp in Metadata)
-            {
-                metadataString = string.Concat(metadataString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Metadata: [" + metadataString + "]");
-            output = string.Concat(output, "ReadTime: ", ReadTime, ", ");
-            output = string.Concat(output, "ScheduleId: ", ScheduleId, ", ");
-            output = string.Concat(output, "SendTime: ", SendTime, ", ");
-            output = string.Concat(output, "Text: ", Text, ", ");
-            output = string.Concat(output, "Title: ", Title, ", ");
-            output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// Properties associated with an identity.
-    /// </summary>
-    public interface IApiProperties
-    {
-
-        /// <summary>
-        /// Event computed properties.
-        /// </summary>
-        IDictionary<string, string> Computed { get; }
-
-        /// <summary>
-        /// Event custom properties.
-        /// </summary>
-        IDictionary<string, string> Custom { get; }
-
-        /// <summary>
-        /// Event default properties.
-        /// </summary>
-        IDictionary<string, string> Default { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiProperties : IApiProperties
-    {
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Computed => _computed ?? new Dictionary<string, string>();
-        [DataMember(Name="computed"), Preserve]
-        public Dictionary<string, string> _computed { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
-        [DataMember(Name="custom"), Preserve]
-        public Dictionary<string, string> _custom { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
-        [DataMember(Name="default"), Preserve]
-        public Dictionary<string, string> _default { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-
-            var computedString = "";
-            foreach (var kvp in Computed)
-            {
-                computedString = string.Concat(computedString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Computed: [" + computedString + "]");
-
-            var customString = "";
-            foreach (var kvp in Custom)
-            {
-                customString = string.Concat(customString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Custom: [" + customString + "]");
-
-            var defaultString = "";
-            foreach (var kvp in Default)
-            {
-                defaultString = string.Concat(defaultString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Default: [" + defaultString + "]");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// A session.
-    /// </summary>
-    public interface IApiSession
-    {
-
-        /// <summary>
-        /// Properties associated with this identity.
-        /// </summary>
-        IApiProperties Properties { get; }
-
-        /// <summary>
-        /// Refresh token.
-        /// </summary>
-        string RefreshToken { get; }
-
-        /// <summary>
-        /// Token credential.
-        /// </summary>
-        string Token { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiSession : IApiSession
-    {
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IApiProperties Properties => _properties;
-        [DataMember(Name="properties"), Preserve]
-        public ApiProperties _properties { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="refresh_token"), Preserve]
-        public string RefreshToken { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="token"), Preserve]
-        public string Token { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "Properties: ", Properties, ", ");
-            output = string.Concat(output, "RefreshToken: ", RefreshToken, ", ");
-            output = string.Concat(output, "Token: ", Token, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// Update Properties associated with this identity.
-    /// </summary>
-    public interface IApiUpdatePropertiesRequest
-    {
-
-        /// <summary>
-        /// Event custom properties.
-        /// </summary>
-        IDictionary<string, string> Custom { get; }
-
-        /// <summary>
-        /// Event default properties.
-        /// </summary>
-        IDictionary<string, string> Default { get; }
-
-        /// <summary>
-        /// Informs the server to recompute the audience membership of the identity.
-        /// </summary>
-        bool Recompute { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiUpdatePropertiesRequest : IApiUpdatePropertiesRequest
-    {
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Custom => _custom ?? new Dictionary<string, string>();
-        [DataMember(Name="custom"), Preserve]
-        public Dictionary<string, string> _custom { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Default => _default ?? new Dictionary<string, string>();
-        [DataMember(Name="default"), Preserve]
-        public Dictionary<string, string> _default { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="recompute"), Preserve]
-        public bool Recompute { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-
-            var customString = "";
-            foreach (var kvp in Custom)
-            {
-                customString = string.Concat(customString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Custom: [" + customString + "]");
-
-            var defaultString = "";
-            foreach (var kvp in Default)
-            {
-                defaultString = string.Concat(defaultString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Default: [" + defaultString + "]");
-            output = string.Concat(output, "Recompute: ", Recompute, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
     /// 
     /// </summary>
-    public interface IProtobufAny
+    public enum ApiLiveEventStatus
     {
-
+        /// <summary>
+        /// The status variants of a live event.
+        /// </summary>
+        UNKNOWN = 0,
         /// <summary>
         /// 
-        /// </summary>
-        string @type { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ProtobufAny : IProtobufAny
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="@type"), Preserve]
-        public string @type { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "@type: ", @type, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public interface IRpcStatus
-    {
-
-        /// <summary>
-        /// 
-        /// </summary>
-        int Code { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        IEnumerable<IProtobufAny> Details { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        string Message { get; }
-    }
-
-    /// <inheritdoc />
-    internal class RpcStatus : IRpcStatus
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="code"), Preserve]
-        public int Code { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IEnumerable<IProtobufAny> Details => _details ?? new List<ProtobufAny>(0);
-        [DataMember(Name="details"), Preserve]
-        public List<ProtobufAny> _details { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="message"), Preserve]
-        public string Message { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "Code: ", Code, ", ");
-            output = string.Concat(output, "Details: [", string.Join(", ", Details), "], ");
-            output = string.Concat(output, "Message: ", Message, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// The low level client for the Satori API.
-    /// </summary>
-    internal class ApiClient
-    {
-        public readonly IHttpAdapter HttpAdapter;
-        public int Timeout { get; set; }
-
-        private readonly Uri _baseUri;
-
-        public ApiClient(Uri baseUri, IHttpAdapter httpAdapter, int timeout = 10)
-        {
-            _baseUri = baseUri;
-            HttpAdapter = httpAdapter;
-            Timeout = timeout;
-        }
-
-        /// <summary>
-        /// A healthcheck which load balancers can use to check the service.
-        /// </summary>
-        public async Task SatoriHealthcheckAsync(
-            string bearerToken,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/healthcheck";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "GET";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// A readycheck which load balancers can use to check the service.
-        /// </summary>
-        public async Task SatoriReadycheckAsync(
-            string bearerToken,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/readycheck";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "GET";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// Authenticate against the server.
-        /// </summary>
-        public async Task<IApiSession> SatoriAuthenticateAsync(
-            string basicAuthUsername,
-            string basicAuthPassword,
-            ApiAuthenticateRequest body,
-            CancellationToken? cancellationToken)
-        {
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
-            }
-
-            var urlpath = "/v1/authenticate";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "POST";
-            var headers = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(basicAuthUsername))
-            {
-                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-                headers.Add("Authorization", header);
-            }
-
-            byte[] content = null;
-            var jsonBody = body.ToJson();
-            content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            return contents.FromJson<ApiSession>();
-        }
-
-        /// <summary>
-        /// Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user.
-        /// </summary>
-        public async Task SatoriAuthenticateLogoutAsync(
-            string bearerToken,
-            ApiAuthenticateLogoutRequest body,
-            CancellationToken? cancellationToken)
-        {
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
-            }
-
-            var urlpath = "/v1/authenticate/logout";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "POST";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            var jsonBody = body.ToJson();
-            content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// Refresh a user's session using a refresh token retrieved from a previous authentication request.
-        /// </summary>
-        public async Task<IApiSession> SatoriAuthenticateRefreshAsync(
-            string basicAuthUsername,
-            string basicAuthPassword,
-            ApiAuthenticateRefreshRequest body,
-            CancellationToken? cancellationToken)
-        {
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
-            }
-
-            var urlpath = "/v1/authenticate/refresh";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "POST";
-            var headers = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(basicAuthUsername))
-            {
-                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-                headers.Add("Authorization", header);
-            }
-
-            byte[] content = null;
-            var jsonBody = body.ToJson();
-            content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            return contents.FromJson<ApiSession>();
-        }
-
-        /// <summary>
-        /// Publish an event for this session.
-        /// </summary>
-        public async Task SatoriEventAsync(
-            string bearerToken,
-            ApiEventRequest body,
-            CancellationToken? cancellationToken)
-        {
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
-            }
-
-            var urlpath = "/v1/event";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "POST";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            var jsonBody = body.ToJson();
-            content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// Get or list all available experiments for this identity.
-        /// </summary>
-        public async Task<IApiExperimentList> SatoriGetExperimentsAsync(
-            string bearerToken,
-            IEnumerable<string> names,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/v1/experiment";
-
-            var queryParams = "";
-            foreach (var elem in names ?? new string[0])
-            {
-                queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
-            }
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "GET";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            return contents.FromJson<ApiExperimentList>();
-        }
-
-        /// <summary>
-        /// List all available flags for this identity.
-        /// </summary>
-        public async Task<IApiFlagList> SatoriGetFlagsAsync(
-            string bearerToken,
-            string basicAuthUsername,
-            string basicAuthPassword,
-            IEnumerable<string> names,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/v1/flag";
-
-            var queryParams = "";
-            foreach (var elem in names ?? new string[0])
-            {
-                queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
-            }
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "GET";
-            var headers = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(bearerToken))
-            {
-                var header = string.Concat("Bearer ", bearerToken);
-                headers.Add("Authorization", header);
-            }
-            if (!string.IsNullOrEmpty(basicAuthUsername))
-            {
-                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-                headers.Add("Authorization", header);
-            }
-
-            byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            return contents.FromJson<ApiFlagList>();
-        }
-
-        /// <summary>
-        /// List all available flags and their value overrides for this identity.
-        /// </summary>
-        public async Task<IApiFlagOverrideList> SatoriGetFlagOverridesAsync(
-            string bearerToken,
-            string basicAuthUsername,
-            string basicAuthPassword,
-            IEnumerable<string> names,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/v1/flag/override";
-
-            var queryParams = "";
-            foreach (var elem in names ?? new string[0])
-            {
-                queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
-            }
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "GET";
-            var headers = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(bearerToken))
-            {
-                var header = string.Concat("Bearer ", bearerToken);
-                headers.Add("Authorization", header);
-            }
-            if (!string.IsNullOrEmpty(basicAuthUsername))
-            {
-                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
-                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
-                headers.Add("Authorization", header);
-            }
-
-            byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            return contents.FromJson<ApiFlagOverrideList>();
-        }
-
-        /// <summary>
-        /// Enrich/replace the current session with new identifier.
-        /// </summary>
-        public async Task<IApiSession> SatoriIdentifyAsync(
-            string bearerToken,
-            ApiIdentifyRequest body,
-            CancellationToken? cancellationToken)
-        {
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
-            }
-
-            var urlpath = "/v1/identify";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "PUT";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            var jsonBody = body.ToJson();
-            content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            return contents.FromJson<ApiSession>();
-        }
-
-        /// <summary>
-        /// Delete the caller's identity and associated data.
-        /// </summary>
-        public async Task SatoriDeleteIdentityAsync(
-            string bearerToken,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/v1/identity";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "DELETE";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// List available live events.
-        /// </summary>
-        public async Task<IApiLiveEventList> SatoriGetLiveEventsAsync(
-            string bearerToken,
-            IEnumerable<string> names,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/v1/live-event";
-
-            var queryParams = "";
-            foreach (var elem in names ?? new string[0])
-            {
-                queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
-            }
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "GET";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            return contents.FromJson<ApiLiveEventList>();
-        }
-
-        /// <summary>
-        /// Get the list of messages for the identity.
-        /// </summary>
-        public async Task<IApiGetMessageListResponse> SatoriGetMessageListAsync(
-            string bearerToken,
-            int? limit,
-            bool? forward,
-            string cursor,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/v1/message";
-
-            var queryParams = "";
-            if (limit != null) {
-                queryParams = string.Concat(queryParams, "limit=", limit, "&");
-            }
-            if (forward != null) {
-                queryParams = string.Concat(queryParams, "forward=", forward.ToString().ToLower(), "&");
-            }
-            if (cursor != null) {
-                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
-            }
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "GET";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            return contents.FromJson<ApiGetMessageListResponse>();
-        }
-
-        /// <summary>
-        /// Deletes a message for an identity.
-        /// </summary>
-        public async Task SatoriDeleteMessageAsync(
-            string bearerToken,
-            string id,
-            CancellationToken? cancellationToken)
-        {
-            if (id == null)
-            {
-                throw new ArgumentException("'id' is required but was null.");
-            }
-
-            var urlpath = "/v1/message/{id}";
-            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "DELETE";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// Updates a message for an identity.
-        /// </summary>
-        public async Task SatoriUpdateMessageAsync(
-            string bearerToken,
-            string id,
-            ApiUpdateMessageRequest body,
-            CancellationToken? cancellationToken)
-        {
-            if (id == null)
-            {
-                throw new ArgumentException("'id' is required but was null.");
-            }
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
-            }
-
-            var urlpath = "/v1/message/{id}";
-            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "PUT";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            var jsonBody = body.ToJson();
-            content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-
-        /// <summary>
-        /// List properties associated with this identity.
-        /// </summary>
-        public async Task<IApiProperties> SatoriListPropertiesAsync(
-            string bearerToken,
-            CancellationToken? cancellationToken)
-        {
-
-            var urlpath = "/v1/properties";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "GET";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-            return contents.FromJson<ApiProperties>();
-        }
-
-        /// <summary>
-        /// Update identity properties.
-        /// </summary>
-        public async Task SatoriUpdatePropertiesAsync(
-            string bearerToken,
-            ApiUpdatePropertiesRequest body,
-            CancellationToken? cancellationToken)
-        {
-            if (body == null)
-            {
-                throw new ArgumentException("'body' is required but was null.");
-            }
-
-            var urlpath = "/v1/properties";
-
-            var queryParams = "";
-
-            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
-
-            var uri = new UriBuilder(_baseUri)
-            {
-                Path = path,
-                Query = queryParams
-            }.Uri;
-
-            var method = "PUT";
-            var headers = new Dictionary<string, string>();
-            var header = string.Concat("Bearer ", bearerToken);
-            headers.Add("Authorization", header);
-
-            byte[] content = null;
-            var jsonBody = body.ToJson();
-            content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
-        }
-    }
-}
