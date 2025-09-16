@@ -528,11 +528,15 @@ func pascalToCamel(input string) (camelCase string) {
 	return camelCase
 }
 
-func splitEnumDescription(description string, enumLength int) []string {
+func splitEnumDescription(description string, idx int) []string {
 	if description == "" {
-		return make([]string, enumLength+1)
+		return make([]string, idx+1)
 	}
-	return strings.Split(description, "\n")
+	tokens := strings.Split(description, "\n")
+	if len(tokens)-1 < idx {
+		return make([]string, idx+1)
+	}
+	return tokens
 }
 
 func stripNewlines(input string) string {
@@ -638,6 +642,7 @@ func main() {
 		"splitEnumDescription": splitEnumDescription,
 		"stripOperationPrefix": stripOperationPrefix,
 		"descriptionOrTitle":   descriptionOrTitle,
+		"stripString":          strings.Replace(),
 	}
 
 	tmpl, err := template.New(inputFile).Funcs(fmap).Parse(codeTemplate)
@@ -646,7 +651,9 @@ func main() {
 	}
 
 	if len(*output) < 1 {
-		tmpl.Execute(os.Stdout, schema)
+		if err := tmpl.Execute(os.Stdout, schema); err != nil {
+			panic(err)
+		}
 		return
 	}
 
