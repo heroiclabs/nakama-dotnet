@@ -67,9 +67,9 @@ namespace Satori
             Id = id;
         }
 
-        internal ApiEvent ToApiEvent()
+        internal SatoriapiEvent ToApiEvent()
         {
-            return new ApiEvent
+            return new SatoriapiEvent
             {
                 Name = this.Name,
                 // Protobuf requires a DateTime string formatted as per RFC 3339

@@ -642,7 +642,6 @@ func main() {
 		"splitEnumDescription": splitEnumDescription,
 		"stripOperationPrefix": stripOperationPrefix,
 		"descriptionOrTitle":   descriptionOrTitle,
-		"stripString":          strings.Replace(),
 	}
 
 	tmpl, err := template.New(inputFile).Funcs(fmap).Parse(codeTemplate)

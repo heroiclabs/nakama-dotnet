@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -179,7 +180,6 @@ namespace Satori
         public async Task<IApiFlag> GetFlagAsync(ISession session, string name,
             CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
         {
-            // TODO: check if one should pass one or multiple labels.
             var resp = await GetFlagsAsync(session, new[] { name }, null, cancellationToken, retryConfiguration);
             foreach (var flag in resp.Flags)
             {
@@ -222,15 +222,11 @@ namespace Satori
             CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
         {
             var resp = await GetFlagsDefaultAsync(new[] { name }, null, cancellationToken, retryConfiguration);
-            foreach (var flag in resp.Flags)
+            if (!resp.Flags.Any())
             {
-                if (flag.Name.Equals(name))
-                {
-                    return flag;
-                }
+                throw new ArgumentException($"flag '{name}' not found.");
             }
-
-            throw new ArgumentException($"flag '{name}' not found.");
+            return resp.Flags.First();
         }
 
         /// <inheritdoc cref="GetFlagDefaultAsync(string,string,System.Nullable{System.Threading.CancellationToken})" />
