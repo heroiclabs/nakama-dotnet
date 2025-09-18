@@ -41,6 +41,44 @@ namespace Satori
     }
 
     /// <summary>
+    /// The request to update the status of a message.
+    /// </summary>
+    public interface IApiUpdateMessageRequest
+    {
+
+        /// <summary>
+        /// The time the message was consumed by the identity.
+        /// </summary>
+        string ConsumeTime { get; }
+
+        /// <summary>
+        /// The time the message was read at the client.
+        /// </summary>
+        string ReadTime { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiUpdateMessageRequest : IApiUpdateMessageRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="consume_time"), Preserve]
+        public string ConsumeTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="read_time"), Preserve]
+        public string ReadTime { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "ConsumeTime: ", ConsumeTime, ", ");
+            output = string.Concat(output, "ReadTime: ", ReadTime, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     public interface IFlagValueChangeReason
@@ -111,44 +149,6 @@ namespace Satori
         /// 
         /// </summary>
         EXPERIMENT = 3,
-    }
-
-    /// <summary>
-    /// The request to update the status of a message.
-    /// </summary>
-    public interface ISatoriUpdateMessageBody
-    {
-
-        /// <summary>
-        /// The time the message was consumed by the identity.
-        /// </summary>
-        string ConsumeTime { get; }
-
-        /// <summary>
-        /// The time the message was read at the client.
-        /// </summary>
-        string ReadTime { get; }
-    }
-
-    /// <inheritdoc />
-    internal class SatoriUpdateMessageBody : ISatoriUpdateMessageBody
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="consume_time"), Preserve]
-        public string ConsumeTime { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="read_time"), Preserve]
-        public string ReadTime { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "ConsumeTime: ", ConsumeTime, ", ");
-            output = string.Concat(output, "ReadTime: ", ReadTime, ", ");
-            return output;
-        }
     }
 
     /// <summary>
@@ -292,6 +292,122 @@ namespace Satori
     }
 
     /// <summary>
+    /// A single event. Usually, but not necessarily, part of a batch.
+    /// </summary>
+    public interface IApiEvent
+    {
+
+        /// <summary>
+        /// Optional event ID assigned by the client, used to de-duplicate in retransmission scenarios. If not supplied the server will assign a randomly generated unique event identifier.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// The identity id associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        string IdentityId { get; }
+
+        /// <summary>
+        /// Event metadata, if any.
+        /// </summary>
+        IDictionary<string, string> Metadata { get; }
+
+        /// <summary>
+        /// Event name.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// The session expires at associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        string SessionExpiresAt { get; }
+
+        /// <summary>
+        /// The session id associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        string SessionId { get; }
+
+        /// <summary>
+        /// The session issued at associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        string SessionIssuedAt { get; }
+
+        /// <summary>
+        /// The time when the event was triggered on the producer side.
+        /// </summary>
+        string Timestamp { get; }
+
+        /// <summary>
+        /// Optional value.
+        /// </summary>
+        string Value { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiEvent : IApiEvent
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="identity_id"), Preserve]
+        public string IdentityId { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Metadata => _metadata ?? new Dictionary<string, string>();
+        [DataMember(Name="metadata"), Preserve]
+        public Dictionary<string, string> _metadata { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="session_expires_at"), Preserve]
+        public string SessionExpiresAt { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="session_id"), Preserve]
+        public string SessionId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="session_issued_at"), Preserve]
+        public string SessionIssuedAt { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="timestamp"), Preserve]
+        public string Timestamp { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "IdentityId: ", IdentityId, ", ");
+
+            var metadataString = "";
+            foreach (var kvp in Metadata)
+            {
+                metadataString = string.Concat(metadataString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Metadata: [" + metadataString + "]");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "SessionExpiresAt: ", SessionExpiresAt, ", ");
+            output = string.Concat(output, "SessionId: ", SessionId, ", ");
+            output = string.Concat(output, "SessionIssuedAt: ", SessionIssuedAt, ", ");
+            output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
+            output = string.Concat(output, "Value: ", Value, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Publish an event to the server
     /// </summary>
     public interface IApiEventRequest
@@ -300,7 +416,7 @@ namespace Satori
         /// <summary>
         /// Some number of events produced by a client.
         /// </summary>
-        IEnumerable<ISatoriapiEvent> Events { get; }
+        IEnumerable<IApiEvent> Events { get; }
     }
 
     /// <inheritdoc />
@@ -309,9 +425,9 @@ namespace Satori
 
         /// <inheritdoc />
         [IgnoreDataMember]
-        public IEnumerable<ISatoriapiEvent> Events => _events ?? new List<SatoriapiEvent>(0);
+        public IEnumerable<IApiEvent> Events => _events ?? new List<ApiEvent>(0);
         [DataMember(Name="events"), Preserve]
-        public List<SatoriapiEvent> _events { get; set; }
+        public List<ApiEvent> _events { get; set; }
 
         public override string ToString()
         {
@@ -1406,122 +1522,6 @@ namespace Satori
     }
 
     /// <summary>
-    /// A single event. Usually, but not necessarily, part of a batch.
-    /// </summary>
-    public interface ISatoriapiEvent
-    {
-
-        /// <summary>
-        /// Optional event ID assigned by the client, used to de-duplicate in retransmission scenarios. If not supplied the server will assign a randomly generated unique event identifier.
-        /// </summary>
-        string Id { get; }
-
-        /// <summary>
-        /// The identity id associated with the event. Ignored if the event is published as part of a session.
-        /// </summary>
-        string IdentityId { get; }
-
-        /// <summary>
-        /// Event metadata, if any.
-        /// </summary>
-        IDictionary<string, string> Metadata { get; }
-
-        /// <summary>
-        /// Event name.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// The session expires at associated with the event. Ignored if the event is published as part of a session.
-        /// </summary>
-        string SessionExpiresAt { get; }
-
-        /// <summary>
-        /// The session id associated with the event. Ignored if the event is published as part of a session.
-        /// </summary>
-        string SessionId { get; }
-
-        /// <summary>
-        /// The session issued at associated with the event. Ignored if the event is published as part of a session.
-        /// </summary>
-        string SessionIssuedAt { get; }
-
-        /// <summary>
-        /// The time when the event was triggered on the producer side.
-        /// </summary>
-        string Timestamp { get; }
-
-        /// <summary>
-        /// Optional value.
-        /// </summary>
-        string Value { get; }
-    }
-
-    /// <inheritdoc />
-    internal class SatoriapiEvent : ISatoriapiEvent
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="id"), Preserve]
-        public string Id { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="identity_id"), Preserve]
-        public string IdentityId { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Metadata => _metadata ?? new Dictionary<string, string>();
-        [DataMember(Name="metadata"), Preserve]
-        public Dictionary<string, string> _metadata { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="name"), Preserve]
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="session_expires_at"), Preserve]
-        public string SessionExpiresAt { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="session_id"), Preserve]
-        public string SessionId { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="session_issued_at"), Preserve]
-        public string SessionIssuedAt { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="timestamp"), Preserve]
-        public string Timestamp { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="value"), Preserve]
-        public string Value { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "Id: ", Id, ", ");
-            output = string.Concat(output, "IdentityId: ", IdentityId, ", ");
-
-            var metadataString = "";
-            foreach (var kvp in Metadata)
-            {
-                metadataString = string.Concat(metadataString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Metadata: [" + metadataString + "]");
-            output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "SessionExpiresAt: ", SessionExpiresAt, ", ");
-            output = string.Concat(output, "SessionId: ", SessionId, ", ");
-            output = string.Concat(output, "SessionIssuedAt: ", SessionIssuedAt, ", ");
-            output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
-            output = string.Concat(output, "Value: ", Value, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
     /// The low level client for the Satori API.
     /// </summary>
     internal class ApiClient
@@ -2134,7 +2134,7 @@ namespace Satori
         public async Task SatoriUpdateMessageAsync(
             string bearerToken,
             string id,
-            SatoriUpdateMessageBody body,
+            ApiUpdateMessageRequest body,
             CancellationToken? cancellationToken)
         {
             if (id == null)

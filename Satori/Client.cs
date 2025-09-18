@@ -118,7 +118,7 @@ namespace Satori
 
             var request = new ApiEventRequest
             {
-                _events = new List<SatoriapiEvent>
+                _events = new List<ApiEvent>
                 {
                     @event.ToApiEvent()
                 }
@@ -139,7 +139,7 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            var apiEventList = new List<SatoriapiEvent>();
+            var apiEventList = new List<ApiEvent>();
             foreach (var evt in events)
             {
                 apiEventList.Add(evt.ToApiEvent());
@@ -434,7 +434,7 @@ namespace Satori
             }
 
             await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriUpdateMessageAsync(session.AuthToken, id,
-                    new SatoriUpdateMessageBody { ConsumeTime = consumeTime, ReadTime = readTime }, cancellationToken),
+                    new ApiUpdateMessageRequest() { ConsumeTime = consumeTime, ReadTime = readTime }, cancellationToken),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
