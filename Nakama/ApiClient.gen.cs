@@ -41,6 +41,74 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Update fields in a given group.
+    /// </summary>
+    public interface IApiUpdateGroupRequest
+    {
+
+        /// <summary>
+        /// Avatar URL.
+        /// </summary>
+        string AvatarUrl { get; }
+
+        /// <summary>
+        /// Description string.
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
+        /// Lang tag.
+        /// </summary>
+        string LangTag { get; }
+
+        /// <summary>
+        /// Name.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
+        /// </summary>
+        bool Open { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiUpdateGroupRequest : IApiUpdateGroupRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="avatar_url"), Preserve]
+        public string AvatarUrl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="lang_tag"), Preserve]
+        public string LangTag { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="open"), Preserve]
+        public bool Open { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
+            output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "LangTag: ", LangTag, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "Open: ", Open, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A friend of a friend.
     /// </summary>
     public interface IFriendsOfFriendsListFriendOfFriend
@@ -116,74 +184,6 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "State: ", State, ", ");
             output = string.Concat(output, "User: ", User, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// Update fields in a given group.
-    /// </summary>
-    public interface INakamaUpdateGroupBody
-    {
-
-        /// <summary>
-        /// Avatar URL.
-        /// </summary>
-        string AvatarUrl { get; }
-
-        /// <summary>
-        /// Description string.
-        /// </summary>
-        string Description { get; }
-
-        /// <summary>
-        /// Lang tag.
-        /// </summary>
-        string LangTag { get; }
-
-        /// <summary>
-        /// Name.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
-        /// </summary>
-        bool Open { get; }
-    }
-
-    /// <inheritdoc />
-    internal class NakamaUpdateGroupBody : INakamaUpdateGroupBody
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="avatar_url"), Preserve]
-        public string AvatarUrl { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="description"), Preserve]
-        public string Description { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="lang_tag"), Preserve]
-        public string LangTag { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="name"), Preserve]
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="open"), Preserve]
-        public bool Open { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
-            output = string.Concat(output, "Description: ", Description, ", ");
-            output = string.Concat(output, "LangTag: ", LangTag, ", ");
-            output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "Open: ", Open, ", ");
             return output;
         }
     }
@@ -1274,6 +1274,72 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "ObjectIds: [", string.Join(", ", ObjectIds), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Represents an event to be passed through the server to registered event handlers.
+    /// </summary>
+    public interface IApiEvent
+    {
+
+        /// <summary>
+        /// True if the event came directly from a client call, false otherwise.
+        /// </summary>
+        bool External { get; }
+
+        /// <summary>
+        /// An event name, type, category, or identifier.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Arbitrary event property values.
+        /// </summary>
+        IDictionary<string, string> Properties { get; }
+
+        /// <summary>
+        /// The time when the event was triggered.
+        /// </summary>
+        string Timestamp { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiEvent : IApiEvent
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="external"), Preserve]
+        public bool External { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Properties => _properties ?? new Dictionary<string, string>();
+        [DataMember(Name="properties"), Preserve]
+        public Dictionary<string, string> _properties { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="timestamp"), Preserve]
+        public string Timestamp { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "External: ", External, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+
+            var propertiesString = "";
+            foreach (var kvp in Properties)
+            {
+                propertiesString = string.Concat(propertiesString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Properties: [" + propertiesString + "]");
+            output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
             return output;
         }
     }
@@ -4398,72 +4464,6 @@ namespace Nakama
     }
 
     /// <summary>
-    /// Represents an event to be passed through the server to registered event handlers.
-    /// </summary>
-    public interface INakamaapiEvent
-    {
-
-        /// <summary>
-        /// True if the event came directly from a client call, false otherwise.
-        /// </summary>
-        bool External { get; }
-
-        /// <summary>
-        /// An event name, type, category, or identifier.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Arbitrary event property values.
-        /// </summary>
-        IDictionary<string, string> Properties { get; }
-
-        /// <summary>
-        /// The time when the event was triggered.
-        /// </summary>
-        string Timestamp { get; }
-    }
-
-    /// <inheritdoc />
-    internal class NakamaapiEvent : INakamaapiEvent
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="external"), Preserve]
-        public bool External { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="name"), Preserve]
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Properties => _properties ?? new Dictionary<string, string>();
-        [DataMember(Name="properties"), Preserve]
-        public Dictionary<string, string> _properties { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="timestamp"), Preserve]
-        public string Timestamp { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "External: ", External, ", ");
-            output = string.Concat(output, "Name: ", Name, ", ");
-
-            var propertiesString = "";
-            foreach (var kvp in Properties)
-            {
-                propertiesString = string.Concat(propertiesString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Properties: [" + propertiesString + "]");
-            output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
     /// 
     /// </summary>
     public interface IProtobufAny
@@ -5887,7 +5887,7 @@ namespace Nakama
         /// </summary>
         public async Task EventAsync(
             string bearerToken,
-            NakamaapiEvent body,
+            ApiEvent body,
             CancellationToken? cancellationToken)
         {
             if (body == null)
@@ -6331,7 +6331,7 @@ namespace Nakama
         public async Task UpdateGroupAsync(
             string bearerToken,
             string groupId,
-            NakamaUpdateGroupBody body,
+            ApiUpdateGroupRequest body,
             CancellationToken? cancellationToken)
         {
             if (groupId == null)
