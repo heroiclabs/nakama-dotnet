@@ -2348,6 +2348,11 @@ namespace Nakama
     {
 
         /// <summary>
+        /// Hidden flag.
+        /// </summary>
+        bool Hidden { get; }
+
+        /// <summary>
         /// The party label, if any.
         /// </summary>
         string Label { get; }
@@ -2373,6 +2378,10 @@ namespace Nakama
     {
 
         /// <inheritdoc />
+        [DataMember(Name="hidden"), Preserve]
+        public bool Hidden { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="label"), Preserve]
         public string Label { get; set; }
 
@@ -2391,6 +2400,7 @@ namespace Nakama
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "Hidden: ", Hidden, ", ");
             output = string.Concat(output, "Label: ", Label, ", ");
             output = string.Concat(output, "MaxSize: ", MaxSize, ", ");
             output = string.Concat(output, "Open: ", Open, ", ");
@@ -3127,6 +3137,11 @@ namespace Nakama
         string Id { get; }
 
         /// <summary>
+        /// Whether the user must join the tournament before being able to submit scores.
+        /// </summary>
+        bool JoinRequired { get; }
+
+        /// <summary>
         /// The maximum score updates allowed per player for the current tournament.
         /// </summary>
         int MaxNumScore { get; }
@@ -3223,6 +3238,10 @@ namespace Nakama
         public string Id { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="join_required"), Preserve]
+        public bool JoinRequired { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="max_num_score"), Preserve]
         public int MaxNumScore { get; set; }
 
@@ -3280,6 +3299,7 @@ namespace Nakama
             output = string.Concat(output, "EndActive: ", EndActive, ", ");
             output = string.Concat(output, "EndTime: ", EndTime, ", ");
             output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "JoinRequired: ", JoinRequired, ", ");
             output = string.Concat(output, "MaxNumScore: ", MaxNumScore, ", ");
             output = string.Concat(output, "MaxSize: ", MaxSize, ", ");
             output = string.Concat(output, "Metadata: ", Metadata, ", ");

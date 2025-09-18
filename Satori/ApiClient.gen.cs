@@ -303,6 +303,11 @@ namespace Satori
         string Id { get; }
 
         /// <summary>
+        /// The identity id associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        string IdentityId { get; }
+
+        /// <summary>
         /// Event metadata, if any.
         /// </summary>
         IDictionary<string, string> Metadata { get; }
@@ -311,6 +316,21 @@ namespace Satori
         /// Event name.
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// The session expires at associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        string SessionExpiresAt { get; }
+
+        /// <summary>
+        /// The session id associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        string SessionId { get; }
+
+        /// <summary>
+        /// The session issued at associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        string SessionIssuedAt { get; }
 
         /// <summary>
         /// The time when the event was triggered on the producer side.
@@ -332,6 +352,10 @@ namespace Satori
         public string Id { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="identity_id"), Preserve]
+        public string IdentityId { get; set; }
+
+        /// <inheritdoc />
         [IgnoreDataMember]
         public IDictionary<string, string> Metadata => _metadata ?? new Dictionary<string, string>();
         [DataMember(Name="metadata"), Preserve]
@@ -340,6 +364,18 @@ namespace Satori
         /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="session_expires_at"), Preserve]
+        public string SessionExpiresAt { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="session_id"), Preserve]
+        public string SessionId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="session_issued_at"), Preserve]
+        public string SessionIssuedAt { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="timestamp"), Preserve]
@@ -353,6 +389,7 @@ namespace Satori
         {
             var output = "";
             output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "IdentityId: ", IdentityId, ", ");
 
             var metadataString = "";
             foreach (var kvp in Metadata)
@@ -361,6 +398,9 @@ namespace Satori
             }
             output = string.Concat(output, "Metadata: [" + metadataString + "]");
             output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "SessionExpiresAt: ", SessionExpiresAt, ", ");
+            output = string.Concat(output, "SessionId: ", SessionId, ", ");
+            output = string.Concat(output, "SessionIssuedAt: ", SessionIssuedAt, ", ");
             output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
@@ -404,6 +444,11 @@ namespace Satori
     {
 
         /// <summary>
+        /// The labels associated with this experiment.
+        /// </summary>
+        List<string> Labels { get; }
+
+        /// <summary>
         /// Experiment name
         /// </summary>
         string Name { get; }
@@ -419,6 +464,10 @@ namespace Satori
     {
 
         /// <inheritdoc />
+        [DataMember(Name="labels"), Preserve]
+        public List<string> Labels { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
@@ -429,6 +478,7 @@ namespace Satori
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "Labels: [", string.Join(", ", Labels), "], ");
             output = string.Concat(output, "Name: ", Name, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
@@ -482,6 +532,11 @@ namespace Satori
         bool ConditionChanged { get; }
 
         /// <summary>
+        /// The labels associated with this flag.
+        /// </summary>
+        List<string> Labels { get; }
+
+        /// <summary>
         /// Flag name
         /// </summary>
         string Name { get; }
@@ -507,6 +562,10 @@ namespace Satori
         public bool ConditionChanged { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="labels"), Preserve]
+        public List<string> Labels { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
@@ -519,6 +578,7 @@ namespace Satori
             var output = "";
             output = string.Concat(output, "ChangeReason: ", ChangeReason, ", ");
             output = string.Concat(output, "ConditionChanged: ", ConditionChanged, ", ");
+            output = string.Concat(output, "Labels: [", string.Join(", ", Labels), "], ");
             output = string.Concat(output, "Name: ", Name, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
@@ -567,6 +627,11 @@ namespace Satori
         string FlagName { get; }
 
         /// <summary>
+        /// The labels associated with this flag.
+        /// </summary>
+        List<string> Labels { get; }
+
+        /// <summary>
         /// The list of configuration that affect the value of the flag.
         /// </summary>
         IEnumerable<IApiFlagOverrideValue> Overrides { get; }
@@ -581,6 +646,10 @@ namespace Satori
         public string FlagName { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="labels"), Preserve]
+        public List<string> Labels { get; set; }
+
+        /// <inheritdoc />
         [IgnoreDataMember]
         public IEnumerable<IApiFlagOverrideValue> Overrides => _overrides ?? new List<ApiFlagOverrideValue>(0);
         [DataMember(Name="overrides"), Preserve]
@@ -590,6 +659,7 @@ namespace Satori
         {
             var output = "";
             output = string.Concat(output, "FlagName: ", FlagName, ", ");
+            output = string.Concat(output, "Labels: [", string.Join(", ", Labels), "], ");
             output = string.Concat(output, "Overrides: [", string.Join(", ", Overrides), "], ");
             return output;
         }
@@ -883,6 +953,11 @@ namespace Satori
         string Id { get; }
 
         /// <summary>
+        /// The labels associated with this live event.
+        /// </summary>
+        List<string> Labels { get; }
+
+        /// <summary>
         /// Name.
         /// </summary>
         string Name { get; }
@@ -896,6 +971,11 @@ namespace Satori
         /// Start time.
         /// </summary>
         string StartTimeSec { get; }
+
+        /// <summary>
+        /// The status of this live event run.
+        /// </summary>
+        ApiLiveEventStatus Status { get; }
 
         /// <summary>
         /// Event value.
@@ -932,6 +1012,10 @@ namespace Satori
         public string Id { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="labels"), Preserve]
+        public List<string> Labels { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="name"), Preserve]
         public string Name { get; set; }
 
@@ -942,6 +1026,12 @@ namespace Satori
         /// <inheritdoc />
         [DataMember(Name="start_time_sec"), Preserve]
         public string StartTimeSec { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ApiLiveEventStatus Status => _status;
+        [DataMember(Name="status"), Preserve]
+        public ApiLiveEventStatus _status { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="value"), Preserve]
@@ -956,9 +1046,11 @@ namespace Satori
             output = string.Concat(output, "DurationSec: ", DurationSec, ", ");
             output = string.Concat(output, "EndTimeSec: ", EndTimeSec, ", ");
             output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "Labels: [", string.Join(", ", Labels), "], ");
             output = string.Concat(output, "Name: ", Name, ", ");
             output = string.Concat(output, "ResetCron: ", ResetCron, ", ");
             output = string.Concat(output, "StartTimeSec: ", StartTimeSec, ", ");
+            output = string.Concat(output, "Status: ", Status, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
         }
@@ -969,6 +1061,11 @@ namespace Satori
     /// </summary>
     public interface IApiLiveEventList
     {
+
+        /// <summary>
+        /// Live events that require explicit join.
+        /// </summary>
+        IEnumerable<IApiLiveEvent> ExplicitJoinLiveEvents { get; }
 
         /// <summary>
         /// Live events.
@@ -982,6 +1079,12 @@ namespace Satori
 
         /// <inheritdoc />
         [IgnoreDataMember]
+        public IEnumerable<IApiLiveEvent> ExplicitJoinLiveEvents => _explicitJoinLiveEvents ?? new List<ApiLiveEvent>(0);
+        [DataMember(Name="explicit_join_live_events"), Preserve]
+        public List<ApiLiveEvent> _explicitJoinLiveEvents { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IApiLiveEvent> LiveEvents => _liveEvents ?? new List<ApiLiveEvent>(0);
         [DataMember(Name="live_events"), Preserve]
         public List<ApiLiveEvent> _liveEvents { get; set; }
@@ -989,9 +1092,33 @@ namespace Satori
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "ExplicitJoinLiveEvents: [", string.Join(", ", ExplicitJoinLiveEvents), "], ");
             output = string.Concat(output, "LiveEvents: [", string.Join(", ", LiveEvents), "], ");
             return output;
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum ApiLiveEventStatus
+    {
+        /// <summary>
+        /// The status variants of a live event.
+        /// </summary>
+        UNKNOWN = 0,
+        /// <summary>
+        /// 
+        /// </summary>
+        ACTIVE = 1,
+        /// <summary>
+        /// 
+        /// </summary>
+        UPCOMING = 2,
+        /// <summary>
+        /// 
+        /// </summary>
+        TERMINATED = 3,
     }
 
     /// <summary>
@@ -1319,35 +1446,7 @@ namespace Satori
     /// <summary>
     /// 
     /// </summary>
-    public interface IProtobufAny
-    {
-
-        /// <summary>
-        /// 
-        /// </summary>
-        string @type { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ProtobufAny : IProtobufAny
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="@type"), Preserve]
-        public string @type { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "@type: ", @type, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public interface IRpcStatus
+    public interface IGooglerpcStatus
     {
 
         /// <summary>
@@ -1367,7 +1466,7 @@ namespace Satori
     }
 
     /// <inheritdoc />
-    internal class RpcStatus : IRpcStatus
+    internal class GooglerpcStatus : IGooglerpcStatus
     {
 
         /// <inheritdoc />
@@ -1390,6 +1489,34 @@ namespace Satori
             output = string.Concat(output, "Code: ", Code, ", ");
             output = string.Concat(output, "Details: [", string.Join(", ", Details), "], ");
             output = string.Concat(output, "Message: ", Message, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IProtobufAny
+    {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        string @type { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ProtobufAny : IProtobufAny
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="@type"), Preserve]
+        public string @type { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "@type: ", @type, ", ");
             return output;
         }
     }
@@ -1631,6 +1758,7 @@ namespace Satori
         public async Task<IApiExperimentList> SatoriGetExperimentsAsync(
             string bearerToken,
             IEnumerable<string> names,
+            IEnumerable<string> labels,
             CancellationToken? cancellationToken)
         {
 
@@ -1640,6 +1768,10 @@ namespace Satori
             foreach (var elem in names ?? new string[0])
             {
                 queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
+            }
+            foreach (var elem in labels ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "labels=", Uri.EscapeDataString(elem), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -1668,6 +1800,7 @@ namespace Satori
             string basicAuthUsername,
             string basicAuthPassword,
             IEnumerable<string> names,
+            IEnumerable<string> labels,
             CancellationToken? cancellationToken)
         {
 
@@ -1677,6 +1810,10 @@ namespace Satori
             foreach (var elem in names ?? new string[0])
             {
                 queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
+            }
+            foreach (var elem in labels ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "labels=", Uri.EscapeDataString(elem), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -1714,6 +1851,7 @@ namespace Satori
             string basicAuthUsername,
             string basicAuthPassword,
             IEnumerable<string> names,
+            IEnumerable<string> labels,
             CancellationToken? cancellationToken)
         {
 
@@ -1723,6 +1861,10 @@ namespace Satori
             foreach (var elem in names ?? new string[0])
             {
                 queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
+            }
+            foreach (var elem in labels ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "labels=", Uri.EscapeDataString(elem), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -1824,6 +1966,11 @@ namespace Satori
         public async Task<IApiLiveEventList> SatoriGetLiveEventsAsync(
             string bearerToken,
             IEnumerable<string> names,
+            IEnumerable<string> labels,
+            int? pastRunCount,
+            int? futureRunCount,
+            string startTimeSec,
+            string endTimeSec,
             CancellationToken? cancellationToken)
         {
 
@@ -1833,6 +1980,22 @@ namespace Satori
             foreach (var elem in names ?? new string[0])
             {
                 queryParams = string.Concat(queryParams, "names=", Uri.EscapeDataString(elem), "&");
+            }
+            foreach (var elem in labels ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "labels=", Uri.EscapeDataString(elem), "&");
+            }
+            if (pastRunCount != null) {
+                queryParams = string.Concat(queryParams, "past_run_count=", pastRunCount, "&");
+            }
+            if (futureRunCount != null) {
+                queryParams = string.Concat(queryParams, "future_run_count=", futureRunCount, "&");
+            }
+            if (startTimeSec != null) {
+                queryParams = string.Concat(queryParams, "start_time_sec=", Uri.EscapeDataString(startTimeSec), "&");
+            }
+            if (endTimeSec != null) {
+                queryParams = string.Concat(queryParams, "end_time_sec=", Uri.EscapeDataString(endTimeSec), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -1851,6 +2014,41 @@ namespace Satori
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLiveEventList>();
+        }
+
+        /// <summary>
+        /// Join an 'explicit join' live event.
+        /// </summary>
+        public async Task SatoriJoinLiveEventAsync(
+            string bearerToken,
+            string id,
+            CancellationToken? cancellationToken)
+        {
+            if (id == null)
+            {
+                throw new ArgumentException("'id' is required but was null.");
+            }
+
+            var urlpath = "/v1/live-event/{id}/participation";
+            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -2028,6 +2226,42 @@ namespace Satori
             }.Uri;
 
             var method = "PUT";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// Publish server events for multiple distinct identities.
+        /// </summary>
+        public async Task SatoriServerEventAsync(
+            string bearerToken,
+            ApiEventRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v1/server-event";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var method = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);

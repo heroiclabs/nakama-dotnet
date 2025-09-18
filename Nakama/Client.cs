@@ -480,7 +480,7 @@ namespace Nakama
                 await SessionRefreshAsync(session, null, retryConfiguration, canceller);
             }
 
-            await _retryInvoker.InvokeWithRetry(() => _apiClient.EventAsync(session.AuthToken, new ApiEvent
+            await _retryInvoker.InvokeWithRetry(() => _apiClient.EventAsync(session.AuthToken, new NakamaapiEvent()
             {
                 External = true,
                 Name = name,
@@ -1456,7 +1456,7 @@ namespace Nakama
 
             await _retryInvoker.InvokeWithRetry(() => _apiClient.UpdateGroupAsync(
                 session.AuthToken, groupId,
-                new ApiUpdateGroupRequest
+                new NakamaUpdateGroupBody
                 {
                     Name = name,
                     Open = open,
