@@ -5,7 +5,7 @@ OUT := "../"
 
 setup:
 	@echo "Installing dependencies..."
-	@go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@30552a56c2c4caa0ae7cb769abe50b1f0cf0ac75
+	@go install tool
 
 nakama: setup
 	@echo "Building Nakama..."
