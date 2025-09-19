@@ -6,7 +6,7 @@ codegen
 ## Usage
 
 ```shell
-make nakama SWAGGER_FILE="$GOPATH/src/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger.json"
+make all NAKAMA_DIR="${NAKAMA_DIR} SATORI_DIR="${SATORI_DIR}
 ```
 
 ### Nakama API
@@ -21,7 +21,7 @@ make nakama NAKAMA_DIR="${NAKAMA_DIR}"
 To generate a client for the Nakama Console, run the following:
 
 ```shell
-make nakama-console SWAGGER_FILE="$GOPATH/src/github.com/heroiclabs/nakama/console/console.swagger.json"
+make nakama-console NAKAMA_DIR="${NAKAMA_DIR}
 ```
 
 ### Satori API

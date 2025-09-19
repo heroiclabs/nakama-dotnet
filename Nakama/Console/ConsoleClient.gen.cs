@@ -1419,7 +1419,7 @@ namespace Nakama.Console
         string Config { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string ServerVersion { get; }
 
@@ -2137,28 +2137,28 @@ namespace Nakama.Console
     }
 
     /// <summary>
-    ///
+    /// 
     /// </summary>
     public interface IRuntimeError
     {
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         int Code { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         IEnumerable<IProtobufAny> Details { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Error { get; }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         string Message { get; }
     }

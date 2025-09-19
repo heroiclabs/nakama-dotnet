@@ -1,11 +1,13 @@
 # Targets
-.PHONY: setup nakama nakama-console satori satori-console
+.PHONY: all setup nakama nakama-console satori satori-console
 
 OUT := "../"
 
 setup:
 	@echo "Installing dependencies..."
 	@go install tool
+
+all: nakama nakama-console satori satori-console
 
 nakama: setup
 	@echo "Building Nakama..."
@@ -16,7 +18,10 @@ nakama: setup
 
 nakama-console: setup
 	@echo "Building Nakama Console..."
-	@go run main.go "${SWAGGER_FILE}" "NakamaConsole" > "${OUT}/Nakama/Console/ConsoleClient.gen.cs"
+	@mkdir -p "${OUT}/Nakama/Console"
+	@NAKAMA_DIR=${NAKAMA_DIR} NAKAMA_PROTO_FILE=console/console.proto go generate ./build/swagger_nakama_console.go
+	@go run main.go "./build/console/console.swagger.json" "NakamaConsole" > "${OUT}/Nakama/Console/ConsoleClient.gen.cs"
+	@rm -r ./build/console
 
 satori: setup
 	@echo "Building Satori..."
@@ -28,6 +33,6 @@ satori: setup
 satori-console: setup
 	@echo "Building Satori Console..."
 	@mkdir -p "${OUT}/Satori/Console"
-	@SATORI_DIR=${SATORI_DIR} SATORI_PROTO_FILE=console/console.proto go generate ./...
+	@SATORI_DIR=${SATORI_DIR} SATORI_PROTO_FILE=console/console.proto go generate ./build/swagger_satori.go
 	@go run main.go "./build/console/console.swagger.json" "Satori" > "${OUT}/Satori/Console/ConsoleClient.gen.cs"
 	@rm -r ./build/console
