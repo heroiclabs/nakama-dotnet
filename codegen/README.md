@@ -9,6 +9,13 @@ codegen
 make nakama SWAGGER_FILE="$GOPATH/src/github.com/heroiclabs/nakama/apigrpc/apigrpc.swagger.json"
 ```
 
+### Nakama API
+
+To generate a client for Nakama, run the following:
+```shell
+make nakama NAKAMA_DIR="${NAKAMA_DIR}"
+```
+
 ### Nakama Console API
 
 To generate a client for the Nakama Console, run the following:
