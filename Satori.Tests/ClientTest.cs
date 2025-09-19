@@ -21,7 +21,7 @@ namespace Satori.Tests
 {
     public class ClientTest
     {
-        private const string ApiKey = "bb4b2da1-71ba-429e-b5f3-36556abbf4c9";
+        private const string ApiKey = "55050223-cffb-4d92-b9fe-8a6219e0f87b";
         public const int TimeoutMilliseconds = 5000;
 
         private readonly Client _testClient =
@@ -33,7 +33,7 @@ namespace Satori.Tests
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
             await _testClient.AuthenticateLogoutAsync(session);
             await Assert.ThrowsAsync<ApiResponseException>(() =>
-                _testClient.GetExperimentsAsync(session, Array.Empty<string>()));
+                _testClient.GetExperimentsAsync(session, Array.Empty<string>(), null));
         }
 
         [Fact(Timeout = TimeoutMilliseconds)]
@@ -50,7 +50,8 @@ namespace Satori.Tests
         {
             var session = await _testClient.AuthenticateAsync($"{Guid.NewGuid()}");
             var flags = await _testClient.GetFlagsAsync(session, new string[] { });
-            Assert.True(flags.Flags.Count() == 4);
+            var excludeHiroFlags = flags.Flags.Where(flag => !flag.Name.StartsWith("Hiro"));
+            Assert.True(excludeHiroFlags.Count() == 4);
             var namedFlags = await _testClient.GetFlagsAsync(session, new[] { "Min-Build-Number" });
             Assert.True(namedFlags.Flags.Count() == 1);
         }
@@ -59,7 +60,9 @@ namespace Satori.Tests
         public async Task TestGetFlagsDefault()
         {
             var flags = await _testClient.GetFlagsDefaultAsync(new string[] { });
-            Assert.True(flags.Flags.Count() == 4);
+
+            var excludeHiroFlags = flags.Flags.Where(flag => !flag.Name.StartsWith("Hiro"));
+            Assert.True(excludeHiroFlags.Count() == 4);
         }
 
         [Fact(Timeout = TimeoutMilliseconds)]

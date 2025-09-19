@@ -50,6 +50,26 @@ namespace Satori
         public string Id { get; }
 
         /// <summary>
+        /// Optional identity id associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        public string IdentityId { get; }
+
+        /// <summary>
+        /// Optional session id associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        public string SessionId { get;  }
+
+        /// <summary>
+        /// Optional Unix epoch session issued at associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        public string SessionIssuedAt { get; }
+
+        /// <summary>
+        /// Optional Unix epoch session expires at associated with the event. Ignored if the event is published as part of a session.
+        /// </summary>
+        public string SessionExpiresAt { get; }
+
+        /// <summary>
         /// The event constructor.
         /// </summary>
         /// <param name="name">The <see cref="Event.Name"/></param>
@@ -57,26 +77,39 @@ namespace Satori
         /// <param name="value">The <see cref="Event.Value"/></param>
         /// <param name="metadata">The <see cref="Event.Metadata"/></param>
         /// <param name="id">The <see cref="Event.Id"/></param>
+        /// <param name="identityId"> <see cref="Event.IdentityId"/></param>
+        /// <param name="sessionId"> <see cref="Event.SessionId"/></param>
+        /// <param name="sessionIssuedAt"> <see cref="Event.SessionIssuedAt"/></param>
+        /// <param name="sessionExpiresAt"> <see cref="Event.SessionExpiresAt"/></param>
         public Event(string name, DateTime timestamp, string value = null, Dictionary<string, string> metadata = null,
-            string id = null)
+            string id = null, string sessionId = null, string identityId = null,
+            string sessionIssuedAt = null, string sessionExpiresAt = null)
         {
             Name = name;
             Timestamp = timestamp;
             Value = value;
             Metadata = metadata;
             Id = id;
+            SessionId = sessionId;
+            IdentityId = identityId;
+            SessionIssuedAt = sessionIssuedAt;
+            SessionExpiresAt = sessionExpiresAt;
         }
 
         internal ApiEvent ToApiEvent()
         {
-            return new ApiEvent
+            return new ApiEvent()
             {
+                Id = this.Id,
                 Name = this.Name,
                 // Protobuf requires a DateTime string formatted as per RFC 3339
                 Timestamp = XmlConvert.ToString(this.Timestamp, XmlDateTimeSerializationMode.Utc),
                 Value = this.Value,
                 _metadata = this.Metadata,
-                Id = this.Id
+                IdentityId = this.IdentityId,
+                SessionId = this.SessionId,
+                SessionIssuedAt = this.SessionIssuedAt,
+                SessionExpiresAt = this.SessionExpiresAt,
             };
         }
     }

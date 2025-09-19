@@ -129,22 +129,12 @@ namespace Satori
         /// Get specific experiments data.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="names">Experiment names.</param>
+        /// <param name="names">Experiment names; if empty string, all experiments are returned based on the remaining filters.</param>
+        /// <param name="labels">Label names that must be defined for each Experiment; if empty string, all experiments are returned based on the remaining filters.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task which resolves to all experiments that this identity is involved with.</returns>
-        public Task<IApiExperimentList> GetExperimentsAsync(ISession session, IEnumerable<string> names,
-            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
-
-        /// <summary>
-        /// Get a single flag for this identity.
-        /// </summary>
-        /// <param name="session">The session of the user.</param>
-        /// <param name="name">The name of the flag.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
-        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
-        /// <returns>A task which resolves to a single feature flag.</returns>
-        public Task<IApiFlag> GetFlagAsync(ISession session, string name,
+        public Task<IApiExperimentList> GetExperimentsAsync(ISession session, IEnumerable<string> names, IEnumerable<string> labels,
             CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
 
         /// <summary>
@@ -190,21 +180,24 @@ namespace Satori
         /// List all available flags for this identity.
         /// </summary>
         /// <param name="session">The session of the user.</param>
-        /// <param name="names"> Flag names, if empty string all flags are returned.</param>
+        /// <param name="names">Flag names, if empty string all flags are returned.</param>
+        /// <param name="labels">Label names that must be defined for each Flag; if empty string, all flags are returned based on the remaining filters.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task which resolves to all flags available to this identity.</returns>
         public Task<IApiFlagList> GetFlagsAsync(ISession session, IEnumerable<string> names,
-            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+            IEnumerable<string> labels, CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null);
 
         /// <summary>
         /// List all available default flags.
         /// </summary>
         /// <param name="names">Flag names, if empty string all flags are returned.</param>
+        /// <param name="labels">Label names that must be defined for each Flag; if empty string, all flags are returned based on the remaining filters.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task which resolves to all available default flags.</returns>
-        public Task<IApiFlagList> GetFlagsDefaultAsync(IEnumerable<string> names,
+        public Task<IApiFlagList> GetFlagsDefaultAsync(IEnumerable<string> names, IEnumerable<string> labels,
             CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
 
         /// <summary>
@@ -212,11 +205,25 @@ namespace Satori
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="names">Live event names, if null or empty, all live events are returned.</param>
+        /// <param name="labels">Label names that must be defined for each Live Event; if empty string, all live events are returned based on the remaining filters.</param>
+        /// <param name="pastRunCount">The maximum number of past event runs to return for each live event.</param>
+        /// <param name="futureRunCount">The maximum number of future event runs to return for each live event.</param>
+        /// <param name="startTimeSec">Start time of the time window filter to apply.</param>
+        /// <param name="endTimeSec">End time of the time window filter to apply.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task which resolves to a list of live events.</returns>
-        public Task<IApiLiveEventList> GetLiveEventsAsync(ISession session, IEnumerable<string> names = null,
-            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+        public Task<IApiLiveEventList> GetLiveEventsAsync(
+            ISession session,
+            IEnumerable<string> names = null,
+            IEnumerable<string> labels = null,
+            int? pastRunCount = null,
+            int? futureRunCount = null,
+            string startTimeSec = null,
+            string endTimeSec = null,
+            CancellationToken? cancellationToken = default,
+            RetryConfiguration retryConfiguration = null
+        );
 
         /// <summary>
         /// Identify a session with a new ID.
@@ -315,7 +322,7 @@ namespace Satori
         /// <returns>A task object.</returns>
         public Task DeleteMessageAsync(ISession session, string id, CancellationToken? cancellationToken = default,
             RetryConfiguration retryConfiguration = null);
-        
+
         /// <summary>
         /// Get all available flags and their value overrides for this identity.
         /// </summary>
