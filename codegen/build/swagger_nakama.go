@@ -1,6 +1,3 @@
-//go:build tools
-// +build tools
-
 // Copyright 2025 Heroic Labs.
 // All rights reserved.
 //
@@ -12,11 +9,7 @@
 // of this material is strictly forbidden unless prior written permission is
 // obtained from Heroic Labs.
 
-package build
+package api
 
-import (
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2"
-	_ "google.golang.org/grpc/cmd/protoc-gen-go-grpc"
-	_ "google.golang.org/protobuf/cmd/protoc-gen-go"
-)
+//build:ignore
+//go:generate protoc -I $NAKAMA_DIR -I $NAKAMA_DIR/vendor -I $NAKAMA_DIR/build/grpc-gateway-v2.3.0/third_party/googleapis -I $NAKAMA_DIR/vendor/github.com/grpc-ecosystem/grpc-gateway/v2 --openapiv2_out=. --openapiv2_opt=logtostderr=true $NAKAMA_PROTO_FILE
