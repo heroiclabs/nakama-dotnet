@@ -28,7 +28,7 @@ namespace Satori.Tests
 
         public ClientIdentifyTest(ITestOutputHelper helper)
         {
-            _client = new Client("http", "127.0.0.1", 7450, "db97a14b-74dc-4809-9967-276799a535c4");
+            _client = new Client("http", "127.0.0.1", 7450, "55050223-cffb-4d92-b9fe-8a6219e0f87b");
             _outputHelper = helper;
         }
 
