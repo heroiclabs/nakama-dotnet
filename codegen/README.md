@@ -3,12 +3,6 @@ codegen
 
 > A util tool to generate a client from the Swagger spec of Nakama's server API.
 
-## Usage
-
-```shell
-make all NAKAMA_DIR="${NAKAMA_DIR} SATORI_DIR="${SATORI_DIR}
-```
-
 ### Nakama API
 
 To generate a client for Nakama, run the following:
@@ -21,7 +15,7 @@ make nakama NAKAMA_DIR="${NAKAMA_DIR}"
 To generate a client for the Nakama Console, run the following:
 
 ```shell
-make nakama-console NAKAMA_DIR="${NAKAMA_DIR}
+make nakama-console NAKAMA_DIR="${NAKAMA_DIR}"
 ```
 
 ### Satori API
