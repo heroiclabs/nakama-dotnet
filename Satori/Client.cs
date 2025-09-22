@@ -332,6 +332,21 @@ namespace Satori
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
+        /// <inheritdoc cref="JoinLiveEventAsync" />
+        public async Task JoinLiveEventAsync(ISession session, string id = null,
+            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, cancellationToken);
+            }
+
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.SatoriJoinLiveEventAsync(session.AuthToken, id, cancellationToken),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
+        }
+
         /// <inheritdoc cref="ListPropertiesAsync" />
         public async Task<IApiProperties> ListPropertiesAsync(ISession session,
             CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
