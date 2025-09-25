@@ -44,6 +44,17 @@ namespace Satori
         /// <inheritdoc cref="IClient.Host"/>
         public string Host { get; }
 
+        /// <inheritdoc cref="IClient.Logger"/>
+        public ILogger Logger
+        {
+            get => _logger;
+            set
+            {
+                _apiClient.HttpAdapter.Logger = value;
+                _logger = value;
+            }
+        }
+
         /// <inheritdoc cref="IClient.Port"/>
         public int Port { get; }
 
@@ -65,8 +76,9 @@ namespace Satori
         /// </summary>
         public const int DefaultTimeout = 15;
 
-        private readonly RetryInvoker _retryInvoker;
         private readonly ApiClient _apiClient;
+        private ILogger _logger;
+        private readonly RetryInvoker _retryInvoker;
 
         public Client(string scheme, string host, int port, string apiKey) : this(scheme, host, port, apiKey,
             HttpRequestAdapter.WithGzip())
@@ -83,6 +95,7 @@ namespace Satori
             AutoRefreshSession = autoRefreshSession;
             _apiClient = new ApiClient(new UriBuilder(scheme, host, port).Uri, adapter, DefaultTimeout);
             _retryInvoker = new RetryInvoker(adapter.TransientExceptionDelegate);
+            Logger = NullLogger.Instance; // must set logger last.
         }
 
         /// <inheritdoc cref="AuthenticateAsync" />

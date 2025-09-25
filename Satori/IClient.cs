@@ -45,6 +45,11 @@ namespace Satori
         string Host { get; }
 
         /// <summary>
+        /// The logger to use with the client.
+        /// </summary>
+        ILogger Logger { get; set; }
+
+        /// <summary>
         /// The port number of the server.
         /// </summary>
         int Port { get; }
