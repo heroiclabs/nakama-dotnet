@@ -6,8 +6,9 @@ codegen
 ### Nakama API
 
 To generate a client for Nakama, run the following:
+
 ```shell
-make nakama NAKAMA_DIR="${NAKAMA_DIR}"
+task -v generate-nakama
 ```
 
 ### Nakama Console API
@@ -15,21 +16,23 @@ make nakama NAKAMA_DIR="${NAKAMA_DIR}"
 To generate a client for the Nakama Console, run the following:
 
 ```shell
-make nakama-console NAKAMA_DIR="${NAKAMA_DIR}"
+task -v generate-nakamaconsole
 ```
 
 ### Satori API
 
 To generate a client for Satori, run the following:
+
 ```shell
-make satori SATORI_DIR="${SATORI_DIR}"
+task -v generate-satori
 ```
 
 ### Satori Console API
 
 To generate a client for the Satori Console, run the following:
+
 ```shell
-make satori-console SATORI_DIR="${SATORI_DIR}"
+task -v generate-satoriconsole
 ```
 
 ### Rationale
