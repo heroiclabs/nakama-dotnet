@@ -43,4 +43,4 @@ The generated code is designed to be supported within Unity engine, Xamarin, God
 
 ### Limitations
 
-The code generator has __only__ been checked against the Swagger specification generated for Nakama server. YMMV.
+The code generator has __only__ been checked against the Swagger specification generated for Nakama and Satori servers. YMMV.

@@ -1,4 +1,5 @@
 Nakama.sln.DotSettings
+.env
 .task/
 
 # Created by https://www.gitignore.io/api/cake,linux,macos,csharp,windows,monodevelop,intellij+all,visualstudio,visualstudiocode
