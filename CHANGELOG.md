@@ -4,11 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.19.0] - 2025-09-29
+### Added
+- Satori: Enable logger to be passed into the "HttpRequestAdapter."
+- Satori: Update client with latest "JoinLiveEventAsync" feature.
+
+### Changed
+- Use [Task](https://taskfile.dev/) as the task runner for codegen, build, and publish commands.
+- Pin the Protobuf plugins used to generate the Swagger spec used by the codegen tool.
+
 ## [3.18.0] - 2025-09-01
 ### Changed
-- Nakama: If server sends a close frame control message, gracefully respond with close output from socket.
+- Nakama: If the server sends a close frame control message, gracefully respond with close output from the socket.
 - Satori: Make "Update" method public in Satori "Session" type.
-- Nakama+Satori: Expose "TimeoutException" when CTS timeout occurs within "HttpRequestAdapter".
+- Nakama+Satori: Expose "TimeoutException" when CTS timeout occurs within "HttpRequestAdapter."
 
 ## [3.17.0] - 2025-07-16
 ### Added
