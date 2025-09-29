@@ -210,7 +210,7 @@ namespace {{.Namespace}}
     public IDictionary<string, bool> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, bool>();
     [DataMember(Name="{{ $attrDataName }}"), Preserve]
     public Dictionary<string, bool> _{{ $propname | snakeToCamel }} { get; set; }
-	  {{- else if eq $property.AdditionalProperties.Type "string"}}
+      {{- else if eq $property.AdditionalProperties.Type "string"}}
     [IgnoreDataMember]
     public IDictionary<string, string> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, string>();
     [DataMember(Name="{{ $attrDataName }}"), Preserve]
