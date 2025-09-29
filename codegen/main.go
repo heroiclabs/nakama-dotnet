@@ -216,7 +216,6 @@ namespace {{.Namespace}}
     [DataMember(Name="{{ $attrDataName }}"), Preserve]
     public Dictionary<string, string> _{{ $propname | snakeToCamel }} { get; set; }
       {{- else}}
->{{ $property.AdditionalProperties.Type }}<<
     [IgnoreDataMember]
     public IDictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}>();
     [DataMember(Name="{{ $attrDataName }}"), Preserve]
