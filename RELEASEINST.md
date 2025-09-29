@@ -19,20 +19,22 @@ Our current monorepo strategy is to maintain the Nakama and Satori clients in th
    ```
 
 4. Build Nakama
+
    ```shell
    dotnet build -c Release ./Nakama/Nakama.csproj
    ```
+
 5. Build Satori
 
    ```shell
    dotnet build -c Release ./Satori/Satori.csproj
    ```
 
-5. Create a release on GitHub: https://github.com/heroiclabs/nakama-dotnet/releases/new
+6. Create a release on GitHub: https://github.com/heroiclabs/nakama-dotnet/releases/new
 
-6. Copy the CHANGELOG section to the release notes. Upload the release DLLs to be part of the GitHub release. Publish it.
+7. Copy the CHANGELOG section to the release notes. Upload the release DLLs to be part of the GitHub release. Publish it.
 
-7. Package and push the releases to Nuget. Don't put a `v` prefix before the version number.
+8. Package and push the releases to Nuget. Don't put a `v` prefix before the version number.
 
    ```shell
    dotnet pack -p:AssemblyVersion=<package-version> -p:PackageVersion=<package-version> -c Release ./Nakama/Nakama.csproj
@@ -50,7 +52,7 @@ Our current monorepo strategy is to maintain the Nakama and Satori clients in th
    dotnet nuget push ./Satori/bin/Release/SatoriClient.<package-version>.nupkg -k "somekey" -s https://api.nuget.org/v3/index.json
    ```
 
-8. Update CHANGELOG with section for new unreleased changes.
+9. Update CHANGELOG with section for new unreleased changes.
 
    ```shell
    git add CHANGELOG.md

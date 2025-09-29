@@ -1,0 +1,194 @@
+version: '3'
+
+dotenv: [ '.env' ]
+
+vars:
+    NAKAMA_REPO_URL: 'https://github.com/heroiclabs/nakama.git'
+    SATORI_REPO_URL: 'https://github.com/heroiclabs/satori.git'
+    SEMVER: '{{.SEMVER | default "v3.19.0-pre"}}'
+
+tasks:
+    build-debug:
+        cmds:
+            -   task: build-debug-nakama
+            -   task: build-debug-satori
+        desc: 'Build all artifacts in debug mode.'
+
+    build-debug-nakama:
+        cmds:
+            - dotnet build ./Nakama/Nakama.csproj
+        desc: 'Build the Nakama client in debug mode.'
+        generates:
+            - 'Nakama/bin/Release/net46'
+            - 'Nakama/bin/Release/netstandard2.0'
+            - 'Nakama/bin/Release/netstandard2.1'
+        sources:
+            - 'Nakama/**/*.cs'
+
+    build-debug-satori:
+        cmds:
+            - dotnet build ./Satori/Satori.csproj
+        desc: 'Build the Satori client in debug mode.'
+        generates:
+            - 'Satori/bin/Release/net46'
+            - 'Satori/bin/Release/netstandard2.0'
+            - 'Satori/bin/Release/netstandard2.1'
+        sources:
+            - 'Satori/**/*.cs'
+
+    build-release:
+        cmds:
+            -   task: build-release-nakama
+            -   task: build-release-satori
+        desc: 'Build all artifacts in release mode.'
+
+    build-release-nakama:
+        cmds:
+            - dotnet build -c Release ./Nakama/Nakama.csproj
+        desc: 'Build the Nakama client in release mode.'
+        generates:
+            - 'Nakama/bin/Release/net46'
+            - 'Nakama/bin/Release/netstandard2.0'
+            - 'Nakama/bin/Release/netstandard2.1'
+        sources:
+            - 'Nakama/**/*.cs'
+
+    build-release-satori:
+        cmds:
+            - dotnet build -c Release ./Satori/Satori.csproj
+        desc: 'Build the Satori client in release mode.'
+        generates:
+            - 'Satori/bin/Release/net46'
+            - 'Satori/bin/Release/netstandard2.0'
+            - 'Satori/bin/Release/netstandard2.1'
+        sources:
+            - 'Satori/**/*.cs'
+
+    codedocs:
+        aliases: [ doxygen ]
+        cmds:
+            - doxygen
+        desc: 'Generate code documentation for both clients.'
+        dir: 'docs'
+
+    generate:
+        aliases: [ codegen ]
+        cmds:
+            -   task: generate-nakama
+            -   task: generate-nakamaconsole
+            -   task: generate-satori
+            -   task: generate-satoriconsole
+        desc: 'Generate all low-level code for the SDK.'
+
+    generate-nakama:
+        cmds:
+            - go install tool
+            - git clone --depth 1 "{{.NAKAMA_REPO_URL}}" "{{.TMP_DIR}}"
+            -   defer: rm -rf "{{.TMP_DIR}}"
+            - |
+                protoc -I {{.TMP_DIR}} -I {{.TMP_DIR}}/vendor \
+                    -I {{.TMP_DIR}}/build/grpc-gateway-v2.3.0/third_party/googleapis \
+                    -I {{.TMP_DIR}}/vendor/github.com/grpc-ecosystem/grpc-gateway/v2 \
+                    --openapiv2_out={{.TMP_DIR}} --openapiv2_opt=logtostderr=true {{.TMP_DIR}}/apigrpc/apigrpc.proto
+            - go run main.go '{{.TMP_DIR}}/apigrpc/apigrpc.swagger.json' 'Nakama' > ../Nakama/ApiClient.gen.cs
+        desc: 'Generate low-level ApiClient for Nakama client.'
+        dir: 'codegen'
+        generates:
+            - '../Nakama/ApiClient.gen.cs'
+        sources:
+            - 'main.go'
+        vars:
+            TMP_DIR:
+                sh: mktemp -d
+
+    generate-nakamaconsole:
+        cmds:
+            - go install tool
+            - git clone --depth 1 "{{.NAKAMA_REPO_URL}}" "{{.TMP_DIR}}"
+            -   defer: rm -rf "{{.TMP_DIR}}"
+            - |
+                protoc -I {{.TMP_DIR}} -I {{.TMP_DIR}}/vendor \
+                    -I {{.TMP_DIR}}/vendor/github.com/heroiclabs/nakama-common \
+                    -I {{.TMP_DIR}}/build/grpc-gateway-v2.3.0/third_party/googleapis \
+                    -I {{.TMP_DIR}}/vendor/github.com/grpc-ecosystem/grpc-gateway/v2 --openapiv2_out={{.TMP_DIR}} \
+                    --openapiv2_opt=json_names_for_fields=false,logtostderr=true {{.TMP_DIR}}/console/console.proto
+            - go run main.go '{{.TMP_DIR}}/console/console.swagger.json' 'Nakama.Console' > ../Nakama/Console/ConsoleClient.gen.cs
+        desc: 'Generate low-level ConsoleClient for Nakama client.'
+        dir: 'codegen'
+        generates:
+            - '../Nakama/Console/ConsoleClient.gen.cs'
+        sources:
+            - 'main.go'
+        vars:
+            TMP_DIR:
+                sh: mktemp -d
+
+    generate-satori:
+        cmds:
+            - go install tool
+            - git clone --depth 1 "{{.SATORI_REPO_URL}}" "{{.TMP_DIR}}"
+            -   defer: rm -rf "{{.TMP_DIR}}"
+            - |
+                protoc -I {{.TMP_DIR}} -I {{.TMP_DIR}}/vendor \
+                    -I {{.TMP_DIR}}/build/grpc-gateway-v2.3.0/third_party/googleapis \
+                    -I {{.TMP_DIR}}/vendor/github.com/grpc-ecosystem/grpc-gateway/v2 \
+                    --openapiv2_out={{.TMP_DIR}} --openapiv2_opt=logtostderr=true {{.TMP_DIR}}/api/satori.proto
+            - go run main.go '{{.TMP_DIR}}/api/satori.swagger.json' 'Satori' > ../Satori/ApiClient.gen.cs
+        desc: 'Generate low-level ApiClient for Satori client.'
+        dir: 'codegen'
+        generates:
+            - '../Satori/ApiClient.gen.cs'
+        sources:
+            - 'main.go'
+        vars:
+            TMP_DIR:
+                sh: mktemp -d
+
+    generate-satoriconsole:
+        cmds:
+            - go install tool
+            - git clone --depth 1 "{{.SATORI_REPO_URL}}" "{{.TMP_DIR}}"
+            -   defer: rm -rf "{{.TMP_DIR}}"
+            - |
+                protoc -I {{.TMP_DIR}} -I {{.TMP_DIR}}/vendor \
+                    -I {{.TMP_DIR}}/build/grpc-gateway-v2.3.0/third_party/googleapis \
+                    -I {{.TMP_DIR}}/vendor/github.com/grpc-ecosystem/grpc-gateway/v2 \
+                    --openapiv2_out={{.TMP_DIR}} --openapiv2_opt=logtostderr=true {{.TMP_DIR}}/console/console.proto
+            - go run main.go '{{.TMP_DIR}}/console/console.swagger.json' 'Satori.Console' > ../Satori/Console/ConsoleClient.gen.cs
+        desc: 'Generate low-level ConsoleClient for Satori client.'
+        dir: 'codegen'
+        generates:
+            - '../Satori/Console/ConsoleClient.gen.cs'
+        sources:
+            - 'main.go'
+        vars:
+            TMP_DIR:
+                sh: mktemp -d
+
+    publish-release:
+        cmds:
+            -   task: publish-release-nakama
+            -   task: publish-release-satori
+        desc: 'Build and publish all artifacts in release mode.'
+
+    publish-release-nakama:
+        cmds:
+            -   task: build-release-nakama
+            - dotnet pack -p:AssemblyVersion={{.SEMVER}} -p:PackageVersion={{.SEMVER}} -c Release ./Nakama/Nakama.csproj
+            - |
+                dotnet nuget push ./Nakama/bin/Release/NakamaClient.{{.SEMVER}}.nupkg \
+                    --api-key {{.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        desc: 'Build and publish the Nakama client in release mode.'
+        vars:
+            SEMVER: '{{.SEMVER | default "3.19.0"}}'
+
+    publish-release-satori:
+        cmds:
+            -   task: build-release-satori
+            - dotnet pack -p:AssemblyVersion={{.SEMVER}} -p:PackageVersion={{.SEMVER}} -c Release ./Satori/Satori.csproj
+            - |
+                dotnet nuget push ./Satori/bin/Release/SatoriClient.{{.SEMVER}}.nupkg \
+                    --api-key {{.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        desc: 'Build and publish the Satori client in release mode.'
+        vars:
+            SEMVER: '{{.SEMVER | default "3.19.0"}}'

@@ -3,11 +3,13 @@ Nakama .NET
 
 # Nakama
 
-> .NET client for Nakama server written in C#.
+> .NET client for Nakama and Satori servers written in C#.
 
 [Nakama](https://github.com/heroiclabs/nakama) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
 
-This client implements the full API and socket options with the server. It's written in C# with minimal dependencies to support Unity, Xamarin, Godot, XNA, and other engines and frameworks.
+[Satori](https://heroiclabs.com/satori/) is a LiveOps server that combines Event Capture, Segmentation, A/B Tests, Feature Flags, Events Calendar, and more together to provide Live Services gameplay.
+
+These clients implement the full API and socket options for their servers. All written in C# with minimal dependencies to support Unity, Xamarin, Godot, XNA, and other engines and frameworks.
 
 Full documentation is online - https://heroiclabs.com/docs
 
@@ -239,18 +241,12 @@ If you'd like to attach a Visual Studio debugger to a test, set `VSTEST_HOST_DEB
 In order to pass tests for Satori, the Satori console must be populated with sample data available via a button in its GUI.
 Then you can test the SDK with `dotnet test Satori.Tests/Satori.Tests.csproj`.
 
-## Generate Docs
+## Generate Codedocs
 
-nakama-dotnet API docs are generated with Doxygen and deployed to GitHub pages.
-
-When changing the API comments, rerun Doxygen and commit the changes in `docs/*`.
-
-To run Doxygen:
+The code documentation is generated with Doxygen and deployed to GitHub pages. You will need to install and add Doxygen tool to your system path (on macOS you can use `brew install doxygen`).
 
 ```
-brew install doxygen
-cd docs/
-doxygen
+task -v codedocs
 ```
 
 # Licenses
