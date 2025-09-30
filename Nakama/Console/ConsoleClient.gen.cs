@@ -56,17 +56,19 @@ namespace Nakama.Console
         /// </summary>
         bool JoinRequest { get; }
     }
-/// <inheritdoc />
-  internal class ApiConsole_AddGroupUsersRequest : IApiConsole_AddGroupUsersRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="ids"), Preserve]
-    public string Ids { get; set; }
+    internal class ApiConsole_AddGroupUsersRequest : IApiConsole_AddGroupUsersRequest
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="join_request"), Preserve]
-    public bool JoinRequest { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="ids"), Preserve]
+        public string Ids { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="join_request"), Preserve]
+        public bool JoinRequest { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -97,34 +99,36 @@ namespace Nakama.Console
         /// </summary>
         string UserId { get; }
     }
-/// <inheritdoc />
-  internal class ApiConsole_CallApiEndpointRequest : IApiConsole_CallApiEndpointRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="body"), Preserve]
-    public string Body { get; set; }
+    internal class ApiConsole_CallApiEndpointRequest : IApiConsole_CallApiEndpointRequest
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IDictionary<string, string> SessionVars => _sessionVars ?? new Dictionary<string, string>();
-    [DataMember(Name="session_vars"), Preserve]
-    public Dictionary<string, string> _sessionVars { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="body"), Preserve]
+        public string Body { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> SessionVars => _sessionVars ?? new Dictionary<string, string>();
+        [DataMember(Name="session_vars"), Preserve]
+        public Dictionary<string, string> _sessionVars { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
         public override string ToString()
         {
             var output = "";
             output = string.Concat(output, "Body: ", Body, ", ");
 
-            var sessionVarsString = "";
+            var session_varsString = "";
             foreach (var kvp in SessionVars)
             {
-                sessionVarsString = string.Concat(sessionVarsString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                session_varsString = string.Concat(session_varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "SessionVars: [" + sessionVarsString + "]");
+            output = string.Concat(output, "SessionVars: [" + session_varsString + "]");
             output = string.Concat(output, "UserId: ", UserId, ", ");
             return output;
         }
@@ -151,34 +155,36 @@ namespace Nakama.Console
         /// </summary>
         string UserId { get; }
     }
-/// <inheritdoc />
-  internal class ApiConsole_CallRpcEndpointRequest : IApiConsole_CallRpcEndpointRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="body"), Preserve]
-    public string Body { get; set; }
+    internal class ApiConsole_CallRpcEndpointRequest : IApiConsole_CallRpcEndpointRequest
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IDictionary<string, string> SessionVars => _sessionVars ?? new Dictionary<string, string>();
-    [DataMember(Name="session_vars"), Preserve]
-    public Dictionary<string, string> _sessionVars { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="body"), Preserve]
+        public string Body { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> SessionVars => _sessionVars ?? new Dictionary<string, string>();
+        [DataMember(Name="session_vars"), Preserve]
+        public Dictionary<string, string> _sessionVars { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
         public override string ToString()
         {
             var output = "";
             output = string.Concat(output, "Body: ", Body, ", ");
 
-            var sessionVarsString = "";
+            var session_varsString = "";
             foreach (var kvp in SessionVars)
             {
-                sessionVarsString = string.Concat(sessionVarsString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                session_varsString = string.Concat(session_varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "SessionVars: [" + sessionVarsString + "]");
+            output = string.Concat(output, "SessionVars: [" + session_varsString + "]");
             output = string.Concat(output, "UserId: ", UserId, ", ");
             return output;
         }
@@ -195,13 +201,15 @@ namespace Nakama.Console
         /// </summary>
         bool Required { get; }
     }
-/// <inheritdoc />
-  internal class ApiConsole_RequireUserMfaRequest : IApiConsole_RequireUserMfaRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="required"), Preserve]
-    public bool Required { get; set; }
+    internal class ApiConsole_RequireUserMfaRequest : IApiConsole_RequireUserMfaRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="required"), Preserve]
+        public bool Required { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -221,13 +229,15 @@ namespace Nakama.Console
         /// </summary>
         string DeviceId { get; }
     }
-/// <inheritdoc />
-  internal class ApiConsole_UnlinkDeviceRequest : IApiConsole_UnlinkDeviceRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="device_id"), Preserve]
-    public string DeviceId { get; set; }
+    internal class ApiConsole_UnlinkDeviceRequest : IApiConsole_UnlinkDeviceRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="device_id"), Preserve]
+        public string DeviceId { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -302,71 +312,73 @@ namespace Nakama.Console
         /// </summary>
         string Wallet { get; }
     }
-/// <inheritdoc />
-  internal class ApiConsole_UpdateAccountRequest : IApiConsole_UpdateAccountRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="avatar_url"), Preserve]
-    public string AvatarUrl { get; set; }
+    internal class ApiConsole_UpdateAccountRequest : IApiConsole_UpdateAccountRequest
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="custom_id"), Preserve]
-    public string CustomId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="avatar_url"), Preserve]
+        public string AvatarUrl { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IDictionary<string, string> DeviceIds => _deviceIds ?? new Dictionary<string, string>();
-    [DataMember(Name="device_ids"), Preserve]
-    public Dictionary<string, string> _deviceIds { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="custom_id"), Preserve]
+        public string CustomId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="display_name"), Preserve]
-    public string DisplayName { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> DeviceIds => _deviceIds ?? new Dictionary<string, string>();
+        [DataMember(Name="device_ids"), Preserve]
+        public Dictionary<string, string> _deviceIds { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="email"), Preserve]
-    public string Email { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="display_name"), Preserve]
+        public string DisplayName { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="lang_tag"), Preserve]
-    public string LangTag { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="email"), Preserve]
+        public string Email { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="location"), Preserve]
-    public string Location { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="lang_tag"), Preserve]
+        public string LangTag { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="metadata"), Preserve]
-    public string Metadata { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="location"), Preserve]
+        public string Location { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="password"), Preserve]
-    public string Password { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="timezone"), Preserve]
-    public string Timezone { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="password"), Preserve]
+        public string Password { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="username"), Preserve]
-    public string Username { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="timezone"), Preserve]
+        public string Timezone { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="wallet"), Preserve]
-    public string Wallet { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="wallet"), Preserve]
+        public string Wallet { get; set; }
+
         public override string ToString()
         {
             var output = "";
             output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
             output = string.Concat(output, "CustomId: ", CustomId, ", ");
 
-            var deviceIdsString = "";
+            var device_idsString = "";
             foreach (var kvp in DeviceIds)
             {
-                deviceIdsString = string.Concat(deviceIdsString, "{" + kvp.Key + "=" + kvp.Value + "}");
+                device_idsString = string.Concat(device_idsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
-            output = string.Concat(output, "DeviceIds: [" + deviceIdsString + "]");
+            output = string.Concat(output, "DeviceIds: [" + device_idsString + "]");
             output = string.Concat(output, "DisplayName: ", DisplayName, ", ");
             output = string.Concat(output, "Email: ", Email, ", ");
             output = string.Concat(output, "LangTag: ", LangTag, ", ");
@@ -421,37 +433,39 @@ namespace Nakama.Console
         /// </summary>
         bool Open { get; }
     }
-/// <inheritdoc />
-  internal class ApiConsole_UpdateGroupRequest : IApiConsole_UpdateGroupRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="avatar_url"), Preserve]
-    public string AvatarUrl { get; set; }
+    internal class ApiConsole_UpdateGroupRequest : IApiConsole_UpdateGroupRequest
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="description"), Preserve]
-    public string Description { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="avatar_url"), Preserve]
+        public string AvatarUrl { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="lang_tag"), Preserve]
-    public string LangTag { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="max_count"), Preserve]
-    public int MaxCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="lang_tag"), Preserve]
+        public string LangTag { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="metadata"), Preserve]
-    public string Metadata { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="max_count"), Preserve]
+        public int MaxCount { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="name"), Preserve]
-    public string Name { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="open"), Preserve]
-    public bool Open { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="open"), Preserve]
+        public bool Open { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -477,13 +491,15 @@ namespace Nakama.Console
         /// </summary>
         string Value { get; }
     }
-/// <inheritdoc />
-  internal class ApiConsole_UpdateSettingRequest : IApiConsole_UpdateSettingRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="value"), Preserve]
-    public string Value { get; set; }
+    internal class ApiConsole_UpdateSettingRequest : IApiConsole_UpdateSettingRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -518,25 +534,27 @@ namespace Nakama.Console
         /// </summary>
         string Version { get; }
     }
-/// <inheritdoc />
-  internal class ApiConsole_WriteStorageObjectRequest : IApiConsole_WriteStorageObjectRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="permission_read"), Preserve]
-    public int PermissionRead { get; set; }
+    internal class ApiConsole_WriteStorageObjectRequest : IApiConsole_WriteStorageObjectRequest
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="permission_write"), Preserve]
-    public int PermissionWrite { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="permission_read"), Preserve]
+        public int PermissionRead { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="value"), Preserve]
-    public string Value { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="permission_write"), Preserve]
+        public int PermissionWrite { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="version"), Preserve]
-    public string Version { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="version"), Preserve]
+        public string Version { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -564,17 +582,19 @@ namespace Nakama.Console
         /// </summary>
         string Message { get; }
     }
-/// <inheritdoc />
-  internal class ConfigWarning : IConfigWarning
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="field"), Preserve]
-    public string Field { get; set; }
+    internal class ConfigWarning : IConfigWarning
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="message"), Preserve]
-    public string Message { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="field"), Preserve]
+        public string Field { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="message"), Preserve]
+        public string Message { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -600,19 +620,21 @@ namespace Nakama.Console
         /// </summary>
         INakamaapiUser User { get; }
     }
-/// <inheritdoc />
-  internal class GroupUserListGroupUser : IGroupUserListGroupUser
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="state"), Preserve]
-    public int State { get; set; }
+    internal class GroupUserListGroupUser : IGroupUserListGroupUser
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public INakamaapiUser User => _user;
-    [DataMember(Name="user"), Preserve]
-    public NakamaapiUser _user { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="state"), Preserve]
+        public int State { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public INakamaapiUser User => _user;
+        [DataMember(Name="user"), Preserve]
+        public NakamaapiUser _user { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -638,17 +660,19 @@ namespace Nakama.Console
         /// </summary>
         string Path { get; }
     }
-/// <inheritdoc />
-  internal class RuntimeInfoModuleInfo : IRuntimeInfoModuleInfo
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="mod_time"), Preserve]
-    public string ModTime { get; set; }
+    internal class RuntimeInfoModuleInfo : IRuntimeInfoModuleInfo
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="path"), Preserve]
-    public string Path { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="mod_time"), Preserve]
+        public string ModTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="path"), Preserve]
+        public string Path { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -674,19 +698,21 @@ namespace Nakama.Console
         /// </summary>
         int State { get; }
     }
-/// <inheritdoc />
-  internal class UserGroupListUserGroup : IUserGroupListUserGroup
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IApiGroup Group => _group;
-    [DataMember(Name="group"), Preserve]
-    public ApiGroup _group { get; set; }
+    internal class UserGroupListUserGroup : IUserGroupListUserGroup
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="state"), Preserve]
-    public int State { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IApiGroup Group => _group;
+        [DataMember(Name="group"), Preserve]
+        public ApiGroup _group { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="state"), Preserve]
+        public int State { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -712,19 +738,21 @@ namespace Nakama.Console
         /// </summary>
         IDictionary<string, string> Vars { get; }
     }
-/// <inheritdoc />
-  internal class ApiAccountDevice : IApiAccountDevice
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="id"), Preserve]
-    public string Id { get; set; }
+    internal class ApiAccountDevice : IApiAccountDevice
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
-    [DataMember(Name="vars"), Preserve]
-    public Dictionary<string, string> _vars { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
+        [DataMember(Name="vars"), Preserve]
+        public Dictionary<string, string> _vars { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -811,61 +839,63 @@ namespace Nakama.Console
         /// </summary>
         string Username { get; }
     }
-/// <inheritdoc />
-  internal class ApiChannelMessage : IApiChannelMessage
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="channel_id"), Preserve]
-    public string ChannelId { get; set; }
+    internal class ApiChannelMessage : IApiChannelMessage
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="code"), Preserve]
-    public int Code { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="channel_id"), Preserve]
+        public string ChannelId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="content"), Preserve]
-    public string Content { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="code"), Preserve]
+        public int Code { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="content"), Preserve]
+        public string Content { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="group_id"), Preserve]
-    public string GroupId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="message_id"), Preserve]
-    public string MessageId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="group_id"), Preserve]
+        public string GroupId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="persistent"), Preserve]
-    public bool Persistent { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="message_id"), Preserve]
+        public string MessageId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="room_name"), Preserve]
-    public string RoomName { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="persistent"), Preserve]
+        public bool Persistent { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="sender_id"), Preserve]
-    public string SenderId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="room_name"), Preserve]
+        public string RoomName { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="sender_id"), Preserve]
+        public string SenderId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id_one"), Preserve]
-    public string UserIdOne { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id_two"), Preserve]
-    public string UserIdTwo { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="user_id_one"), Preserve]
+        public string UserIdOne { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="username"), Preserve]
-    public string Username { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="user_id_two"), Preserve]
+        public string UserIdTwo { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -912,27 +942,29 @@ namespace Nakama.Console
         /// </summary>
         string PrevCursor { get; }
     }
-/// <inheritdoc />
-  internal class ApiChannelMessageList : IApiChannelMessageList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="cacheable_cursor"), Preserve]
-    public string CacheableCursor { get; set; }
+    internal class ApiChannelMessageList : IApiChannelMessageList
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiChannelMessage> Messages => _messages ?? new List<ApiChannelMessage>(0);
-    [DataMember(Name="messages"), Preserve]
-    public List<ApiChannelMessage> _messages { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="cacheable_cursor"), Preserve]
+        public string CacheableCursor { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="next_cursor"), Preserve]
-    public string NextCursor { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiChannelMessage> Messages => _messages ?? new List<ApiChannelMessage>(0);
+        [DataMember(Name="messages"), Preserve]
+        public List<ApiChannelMessage> _messages { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="prev_cursor"), Preserve]
-    public string PrevCursor { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -970,27 +1002,29 @@ namespace Nakama.Console
         /// </summary>
         INakamaapiUser User { get; }
     }
-/// <inheritdoc />
-  internal class ApiFriend : IApiFriend
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="metadata"), Preserve]
-    public string Metadata { get; set; }
+    internal class ApiFriend : IApiFriend
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="state"), Preserve]
-    public int State { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="state"), Preserve]
+        public int State { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public INakamaapiUser User => _user;
-    [DataMember(Name="user"), Preserve]
-    public NakamaapiUser _user { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public INakamaapiUser User => _user;
+        [DataMember(Name="user"), Preserve]
+        public NakamaapiUser _user { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1018,19 +1052,21 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IApiFriend> Friends { get; }
     }
-/// <inheritdoc />
-  internal class ApiFriendList : IApiFriendList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="cursor"), Preserve]
-    public string Cursor { get; set; }
+    internal class ApiFriendList : IApiFriendList
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiFriend> Friends => _friends ?? new List<ApiFriend>(0);
-    [DataMember(Name="friends"), Preserve]
-    public List<ApiFriend> _friends { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiFriend> Friends => _friends ?? new List<ApiFriend>(0);
+        [DataMember(Name="friends"), Preserve]
+        public List<ApiFriend> _friends { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1106,57 +1142,59 @@ namespace Nakama.Console
         /// </summary>
         string UpdateTime { get; }
     }
-/// <inheritdoc />
-  internal class ApiGroup : IApiGroup
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="avatar_url"), Preserve]
-    public string AvatarUrl { get; set; }
+    internal class ApiGroup : IApiGroup
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="avatar_url"), Preserve]
+        public string AvatarUrl { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="creator_id"), Preserve]
-    public string CreatorId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="description"), Preserve]
-    public string Description { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="creator_id"), Preserve]
+        public string CreatorId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="edge_count"), Preserve]
-    public int EdgeCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="id"), Preserve]
-    public string Id { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="edge_count"), Preserve]
+        public int EdgeCount { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="lang_tag"), Preserve]
-    public string LangTag { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="max_count"), Preserve]
-    public int MaxCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="lang_tag"), Preserve]
+        public string LangTag { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="metadata"), Preserve]
-    public string Metadata { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="max_count"), Preserve]
+        public int MaxCount { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="name"), Preserve]
-    public string Name { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="open"), Preserve]
-    public bool Open { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="open"), Preserve]
+        public bool Open { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1192,19 +1230,21 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IGroupUserListGroupUser> GroupUsers { get; }
     }
-/// <inheritdoc />
-  internal class ApiGroupUserList : IApiGroupUserList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="cursor"), Preserve]
-    public string Cursor { get; set; }
+    internal class ApiGroupUserList : IApiGroupUserList
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IGroupUserListGroupUser> GroupUsers => _groupUsers ?? new List<GroupUserListGroupUser>(0);
-    [DataMember(Name="group_users"), Preserve]
-    public List<GroupUserListGroupUser> _groupUsers { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IGroupUserListGroupUser> GroupUsers => _groupUsers ?? new List<GroupUserListGroupUser>(0);
+        [DataMember(Name="group_users"), Preserve]
+        public List<GroupUserListGroupUser> _groupUsers { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1280,57 +1320,59 @@ namespace Nakama.Console
         /// </summary>
         string Username { get; }
     }
-/// <inheritdoc />
-  internal class ApiLeaderboardRecord : IApiLeaderboardRecord
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+    internal class ApiLeaderboardRecord : IApiLeaderboardRecord
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="expiry_time"), Preserve]
-    public string ExpiryTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="leaderboard_id"), Preserve]
-    public string LeaderboardId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="expiry_time"), Preserve]
+        public string ExpiryTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="max_num_score"), Preserve]
-    public int MaxNumScore { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="leaderboard_id"), Preserve]
+        public string LeaderboardId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="metadata"), Preserve]
-    public string Metadata { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="max_num_score"), Preserve]
+        public int MaxNumScore { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="num_score"), Preserve]
-    public int NumScore { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="owner_id"), Preserve]
-    public string OwnerId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="num_score"), Preserve]
+        public int NumScore { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="rank"), Preserve]
-    public string Rank { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="owner_id"), Preserve]
+        public string OwnerId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="score"), Preserve]
-    public string Score { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="rank"), Preserve]
+        public string Rank { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="subscore"), Preserve]
-    public string Subscore { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="score"), Preserve]
+        public string Score { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="subscore"), Preserve]
+        public string Subscore { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="username"), Preserve]
-    public string Username { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1381,33 +1423,35 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IApiLeaderboardRecord> Records { get; }
     }
-/// <inheritdoc />
-  internal class ApiLeaderboardRecordList : IApiLeaderboardRecordList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="next_cursor"), Preserve]
-    public string NextCursor { get; set; }
+    internal class ApiLeaderboardRecordList : IApiLeaderboardRecordList
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiLeaderboardRecord> OwnerRecords => _ownerRecords ?? new List<ApiLeaderboardRecord>(0);
-    [DataMember(Name="owner_records"), Preserve]
-    public List<ApiLeaderboardRecord> _ownerRecords { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="prev_cursor"), Preserve]
-    public string PrevCursor { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiLeaderboardRecord> OwnerRecords => _ownerRecords ?? new List<ApiLeaderboardRecord>(0);
+        [DataMember(Name="owner_records"), Preserve]
+        public List<ApiLeaderboardRecord> _ownerRecords { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="rank_count"), Preserve]
-    public string RankCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiLeaderboardRecord> Records => _records ?? new List<ApiLeaderboardRecord>(0);
-    [DataMember(Name="records"), Preserve]
-    public List<ApiLeaderboardRecord> _records { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="rank_count"), Preserve]
+        public string RankCount { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiLeaderboardRecord> Records => _records ?? new List<ApiLeaderboardRecord>(0);
+        [DataMember(Name="records"), Preserve]
+        public List<ApiLeaderboardRecord> _records { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1441,23 +1485,25 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IApiValidatedPurchase> ValidatedPurchases { get; }
     }
-/// <inheritdoc />
-  internal class ApiPurchaseList : IApiPurchaseList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="cursor"), Preserve]
-    public string Cursor { get; set; }
+    internal class ApiPurchaseList : IApiPurchaseList
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="prev_cursor"), Preserve]
-    public string PrevCursor { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiValidatedPurchase> ValidatedPurchases => _validatedPurchases ?? new List<ApiValidatedPurchase>(0);
-    [DataMember(Name="validated_purchases"), Preserve]
-    public List<ApiValidatedPurchase> _validatedPurchases { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiValidatedPurchase> ValidatedPurchases => _validatedPurchases ?? new List<ApiValidatedPurchase>(0);
+        [DataMember(Name="validated_purchases"), Preserve]
+        public List<ApiValidatedPurchase> _validatedPurchases { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1519,45 +1565,47 @@ namespace Nakama.Console
         /// </summary>
         string Version { get; }
     }
-/// <inheritdoc />
-  internal class ApiStorageObject : IApiStorageObject
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="collection"), Preserve]
-    public string Collection { get; set; }
+    internal class ApiStorageObject : IApiStorageObject
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="collection"), Preserve]
+        public string Collection { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="key"), Preserve]
-    public string Key { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="permission_read"), Preserve]
-    public int PermissionRead { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="key"), Preserve]
+        public string Key { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="permission_write"), Preserve]
-    public int PermissionWrite { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="permission_read"), Preserve]
+        public int PermissionRead { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="permission_write"), Preserve]
+        public int PermissionWrite { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="value"), Preserve]
-    public string Value { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="version"), Preserve]
-    public string Version { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="version"), Preserve]
+        public string Version { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1610,33 +1658,35 @@ namespace Nakama.Console
         /// </summary>
         string Version { get; }
     }
-/// <inheritdoc />
-  internal class ApiStorageObjectAck : IApiStorageObjectAck
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="collection"), Preserve]
-    public string Collection { get; set; }
+    internal class ApiStorageObjectAck : IApiStorageObjectAck
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="collection"), Preserve]
+        public string Collection { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="key"), Preserve]
-    public string Key { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="key"), Preserve]
+        public string Key { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="version"), Preserve]
-    public string Version { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="version"), Preserve]
+        public string Version { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1713,23 +1763,25 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IApiValidatedSubscription> ValidatedSubscriptions { get; }
     }
-/// <inheritdoc />
-  internal class ApiSubscriptionList : IApiSubscriptionList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="cursor"), Preserve]
-    public string Cursor { get; set; }
+    internal class ApiSubscriptionList : IApiSubscriptionList
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="prev_cursor"), Preserve]
-    public string PrevCursor { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiValidatedSubscription> ValidatedSubscriptions => _validatedSubscriptions ?? new List<ApiValidatedSubscription>(0);
-    [DataMember(Name="validated_subscriptions"), Preserve]
-    public List<ApiValidatedSubscription> _validatedSubscriptions { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiValidatedSubscription> ValidatedSubscriptions => _validatedSubscriptions ?? new List<ApiValidatedSubscription>(0);
+        [DataMember(Name="validated_subscriptions"), Preserve]
+        public List<ApiValidatedSubscription> _validatedSubscriptions { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1756,19 +1808,21 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IUserGroupListUserGroup> UserGroups { get; }
     }
-/// <inheritdoc />
-  internal class ApiUserGroupList : IApiUserGroupList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="cursor"), Preserve]
-    public string Cursor { get; set; }
+    internal class ApiUserGroupList : IApiUserGroupList
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IUserGroupListUserGroup> UserGroups => _userGroups ?? new List<UserGroupListUserGroup>(0);
-    [DataMember(Name="user_groups"), Preserve]
-    public List<UserGroupListUserGroup> _userGroups { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IUserGroupListUserGroup> UserGroups => _userGroups ?? new List<UserGroupListUserGroup>(0);
+        [DataMember(Name="user_groups"), Preserve]
+        public List<UserGroupListUserGroup> _userGroups { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1839,57 +1893,59 @@ namespace Nakama.Console
         /// </summary>
         string UserId { get; }
     }
-/// <inheritdoc />
-  internal class ApiValidatedPurchase : IApiValidatedPurchase
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+    internal class ApiValidatedPurchase : IApiValidatedPurchase
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public ApiStoreEnvironment Environment => _environment;
-    [DataMember(Name="environment"), Preserve]
-    public ApiStoreEnvironment _environment { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="product_id"), Preserve]
-    public string ProductId { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ApiStoreEnvironment Environment => _environment;
+        [DataMember(Name="environment"), Preserve]
+        public ApiStoreEnvironment _environment { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="provider_response"), Preserve]
-    public string ProviderResponse { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="product_id"), Preserve]
+        public string ProductId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="purchase_time"), Preserve]
-    public string PurchaseTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="provider_response"), Preserve]
+        public string ProviderResponse { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="refund_time"), Preserve]
-    public string RefundTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="purchase_time"), Preserve]
+        public string PurchaseTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="seen_before"), Preserve]
-    public bool SeenBefore { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="refund_time"), Preserve]
+        public string RefundTime { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public ApiStoreProvider Store => _store;
-    [DataMember(Name="store"), Preserve]
-    public ApiStoreProvider _store { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="seen_before"), Preserve]
+        public bool SeenBefore { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="transaction_id"), Preserve]
-    public string TransactionId { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ApiStoreProvider Store => _store;
+        [DataMember(Name="store"), Preserve]
+        public ApiStoreProvider _store { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="transaction_id"), Preserve]
+        public string TransactionId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -1979,65 +2035,67 @@ namespace Nakama.Console
         /// </summary>
         string UserId { get; }
     }
-/// <inheritdoc />
-  internal class ApiValidatedSubscription : IApiValidatedSubscription
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="active"), Preserve]
-    public bool Active { get; set; }
+    internal class ApiValidatedSubscription : IApiValidatedSubscription
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="active"), Preserve]
+        public bool Active { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public ApiStoreEnvironment Environment => _environment;
-    [DataMember(Name="environment"), Preserve]
-    public ApiStoreEnvironment _environment { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="expiry_time"), Preserve]
-    public string ExpiryTime { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ApiStoreEnvironment Environment => _environment;
+        [DataMember(Name="environment"), Preserve]
+        public ApiStoreEnvironment _environment { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="original_transaction_id"), Preserve]
-    public string OriginalTransactionId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="expiry_time"), Preserve]
+        public string ExpiryTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="product_id"), Preserve]
-    public string ProductId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="original_transaction_id"), Preserve]
+        public string OriginalTransactionId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="provider_notification"), Preserve]
-    public string ProviderNotification { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="product_id"), Preserve]
+        public string ProductId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="provider_response"), Preserve]
-    public string ProviderResponse { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="provider_notification"), Preserve]
+        public string ProviderNotification { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="purchase_time"), Preserve]
-    public string PurchaseTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="provider_response"), Preserve]
+        public string ProviderResponse { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="refund_time"), Preserve]
-    public string RefundTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="purchase_time"), Preserve]
+        public string PurchaseTime { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public ApiStoreProvider Store => _store;
-    [DataMember(Name="store"), Preserve]
-    public ApiStoreProvider _store { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="refund_time"), Preserve]
+        public string RefundTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ApiStoreProvider Store => _store;
+        [DataMember(Name="store"), Preserve]
+        public ApiStoreProvider _store { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2104,57 +2162,59 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IConsoleWalletLedger> WalletLedgers { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleAccountExport : IConsoleAccountExport
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public INakamaapiAccount Account => _account;
-    [DataMember(Name="account"), Preserve]
-    public NakamaapiAccount _account { get; set; }
+    internal class ConsoleAccountExport : IConsoleAccountExport
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiFriend> Friends => _friends ?? new List<ApiFriend>(0);
-    [DataMember(Name="friends"), Preserve]
-    public List<ApiFriend> _friends { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public INakamaapiAccount Account => _account;
+        [DataMember(Name="account"), Preserve]
+        public NakamaapiAccount _account { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiGroup> Groups => _groups ?? new List<ApiGroup>(0);
-    [DataMember(Name="groups"), Preserve]
-    public List<ApiGroup> _groups { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiFriend> Friends => _friends ?? new List<ApiFriend>(0);
+        [DataMember(Name="friends"), Preserve]
+        public List<ApiFriend> _friends { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiLeaderboardRecord> LeaderboardRecords => _leaderboardRecords ?? new List<ApiLeaderboardRecord>(0);
-    [DataMember(Name="leaderboard_records"), Preserve]
-    public List<ApiLeaderboardRecord> _leaderboardRecords { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiGroup> Groups => _groups ?? new List<ApiGroup>(0);
+        [DataMember(Name="groups"), Preserve]
+        public List<ApiGroup> _groups { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiChannelMessage> Messages => _messages ?? new List<ApiChannelMessage>(0);
-    [DataMember(Name="messages"), Preserve]
-    public List<ApiChannelMessage> _messages { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiLeaderboardRecord> LeaderboardRecords => _leaderboardRecords ?? new List<ApiLeaderboardRecord>(0);
+        [DataMember(Name="leaderboard_records"), Preserve]
+        public List<ApiLeaderboardRecord> _leaderboardRecords { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<INakamaapiNotification> Notifications => _notifications ?? new List<NakamaapiNotification>(0);
-    [DataMember(Name="notifications"), Preserve]
-    public List<NakamaapiNotification> _notifications { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiChannelMessage> Messages => _messages ?? new List<ApiChannelMessage>(0);
+        [DataMember(Name="messages"), Preserve]
+        public List<ApiChannelMessage> _messages { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiStorageObject> Objects => _objects ?? new List<ApiStorageObject>(0);
-    [DataMember(Name="objects"), Preserve]
-    public List<ApiStorageObject> _objects { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<INakamaapiNotification> Notifications => _notifications ?? new List<NakamaapiNotification>(0);
+        [DataMember(Name="notifications"), Preserve]
+        public List<NakamaapiNotification> _notifications { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConsoleWalletLedger> WalletLedgers => _walletLedgers ?? new List<ConsoleWalletLedger>(0);
-    [DataMember(Name="wallet_ledgers"), Preserve]
-    public List<ConsoleWalletLedger> _walletLedgers { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiStorageObject> Objects => _objects ?? new List<ApiStorageObject>(0);
+        [DataMember(Name="objects"), Preserve]
+        public List<ApiStorageObject> _objects { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleWalletLedger> WalletLedgers => _walletLedgers ?? new List<ConsoleWalletLedger>(0);
+        [DataMember(Name="wallet_ledgers"), Preserve]
+        public List<ConsoleWalletLedger> _walletLedgers { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2191,23 +2251,25 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<INakamaapiUser> Users { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleAccountList : IConsoleAccountList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="next_cursor"), Preserve]
-    public string NextCursor { get; set; }
+    internal class ConsoleAccountList : IConsoleAccountList
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="total_count"), Preserve]
-    public int TotalCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<INakamaapiUser> Users => _users ?? new List<NakamaapiUser>(0);
-    [DataMember(Name="users"), Preserve]
-    public List<NakamaapiUser> _users { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="total_count"), Preserve]
+        public int TotalCount { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<INakamaapiUser> Users => _users ?? new List<NakamaapiUser>(0);
+        [DataMember(Name="users"), Preserve]
+        public List<NakamaapiUser> _users { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2254,35 +2316,37 @@ namespace Nakama.Console
         /// </summary>
         string Username { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleAddUserRequest : IConsoleAddUserRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="email"), Preserve]
-    public string Email { get; set; }
+    internal class ConsoleAddUserRequest : IConsoleAddUserRequest
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="mfa_required"), Preserve]
-    public bool MfaRequired { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="email"), Preserve]
+        public string Email { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="newsletter_subscription"), Preserve]
-    public bool NewsletterSubscription { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="mfa_required"), Preserve]
+        public bool MfaRequired { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="password"), Preserve]
-    public string Password { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="newsletter_subscription"), Preserve]
+        public bool NewsletterSubscription { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public ConsoleUserRole Role => _role;
-    [DataMember(Name="role"), Preserve]
-    public ConsoleUserRole _role { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="password"), Preserve]
+        public string Password { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="username"), Preserve]
-    public string Username { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ConsoleUserRole Role => _role;
+        [DataMember(Name="role"), Preserve]
+        public ConsoleUserRole _role { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2312,17 +2376,19 @@ namespace Nakama.Console
         /// </summary>
         string Method { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleApiEndpointDescriptor : IConsoleApiEndpointDescriptor
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="body_template"), Preserve]
-    public string BodyTemplate { get; set; }
+    internal class ConsoleApiEndpointDescriptor : IConsoleApiEndpointDescriptor
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="method"), Preserve]
-    public string Method { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="body_template"), Preserve]
+        public string BodyTemplate { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="method"), Preserve]
+        public string Method { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2348,21 +2414,23 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IConsoleApiEndpointDescriptor> RpcEndpoints { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleApiEndpointList : IConsoleApiEndpointList
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConsoleApiEndpointDescriptor> Endpoints => _endpoints ?? new List<ConsoleApiEndpointDescriptor>(0);
-    [DataMember(Name="endpoints"), Preserve]
-    public List<ConsoleApiEndpointDescriptor> _endpoints { get; set; }
+    internal class ConsoleApiEndpointList : IConsoleApiEndpointList
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConsoleApiEndpointDescriptor> RpcEndpoints => _rpcEndpoints ?? new List<ConsoleApiEndpointDescriptor>(0);
-    [DataMember(Name="rpc_endpoints"), Preserve]
-    public List<ConsoleApiEndpointDescriptor> _rpcEndpoints { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleApiEndpointDescriptor> Endpoints => _endpoints ?? new List<ConsoleApiEndpointDescriptor>(0);
+        [DataMember(Name="endpoints"), Preserve]
+        public List<ConsoleApiEndpointDescriptor> _endpoints { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleApiEndpointDescriptor> RpcEndpoints => _rpcEndpoints ?? new List<ConsoleApiEndpointDescriptor>(0);
+        [DataMember(Name="rpc_endpoints"), Preserve]
+        public List<ConsoleApiEndpointDescriptor> _rpcEndpoints { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2383,13 +2451,15 @@ namespace Nakama.Console
         /// </summary>
         string Token { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleAuthenticateLogoutRequest : IConsoleAuthenticateLogoutRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="token"), Preserve]
-    public string Token { get; set; }
+    internal class ConsoleAuthenticateLogoutRequest : IConsoleAuthenticateLogoutRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="token"), Preserve]
+        public string Token { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2414,17 +2484,19 @@ namespace Nakama.Console
         /// </summary>
         string Mfa { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleAuthenticateMFASetupRequest : IConsoleAuthenticateMFASetupRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="code"), Preserve]
-    public string Code { get; set; }
+    internal class ConsoleAuthenticateMFASetupRequest : IConsoleAuthenticateMFASetupRequest
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="mfa"), Preserve]
-    public string Mfa { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="code"), Preserve]
+        public string Code { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="mfa"), Preserve]
+        public string Mfa { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2445,13 +2517,15 @@ namespace Nakama.Console
         /// </summary>
         List<string> RecoveryCodes { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleAuthenticateMFASetupResponse : IConsoleAuthenticateMFASetupResponse
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="recovery_codes"), Preserve]
-    public List<string> RecoveryCodes { get; set; }
+    internal class ConsoleAuthenticateMFASetupResponse : IConsoleAuthenticateMFASetupResponse
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="recovery_codes"), Preserve]
+        public List<string> RecoveryCodes { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2481,21 +2555,23 @@ namespace Nakama.Console
         /// </summary>
         string Username { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleAuthenticateRequest : IConsoleAuthenticateRequest
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="mfa"), Preserve]
-    public string Mfa { get; set; }
+    internal class ConsoleAuthenticateRequest : IConsoleAuthenticateRequest
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="password"), Preserve]
-    public string Password { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="mfa"), Preserve]
+        public string Mfa { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="username"), Preserve]
-    public string Username { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="password"), Preserve]
+        public string Password { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2522,17 +2598,19 @@ namespace Nakama.Console
         /// </summary>
         string ErrorMessage { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleCallApiEndpointResponse : IConsoleCallApiEndpointResponse
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="body"), Preserve]
-    public string Body { get; set; }
+    internal class ConsoleCallApiEndpointResponse : IConsoleCallApiEndpointResponse
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="error_message"), Preserve]
-    public string ErrorMessage { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="body"), Preserve]
+        public string Body { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="error_message"), Preserve]
+        public string ErrorMessage { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2563,23 +2641,25 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IConfigWarning> Warnings { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleConfig : IConsoleConfig
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="config"), Preserve]
-    public string Config { get; set; }
+    internal class ConsoleConfig : IConsoleConfig
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="server_version"), Preserve]
-    public string ServerVersion { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="config"), Preserve]
+        public string Config { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConfigWarning> Warnings => _warnings ?? new List<ConfigWarning>(0);
-    [DataMember(Name="warnings"), Preserve]
-    public List<ConfigWarning> _warnings { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="server_version"), Preserve]
+        public string ServerVersion { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConfigWarning> Warnings => _warnings ?? new List<ConfigWarning>(0);
+        [DataMember(Name="warnings"), Preserve]
+        public List<ConfigWarning> _warnings { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2606,17 +2686,19 @@ namespace Nakama.Console
         /// </summary>
         string Token { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleConsoleSession : IConsoleConsoleSession
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="mfa_code"), Preserve]
-    public string MfaCode { get; set; }
+    internal class ConsoleConsoleSession : IConsoleConsoleSession
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="token"), Preserve]
-    public string Token { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="mfa_code"), Preserve]
+        public string MfaCode { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="token"), Preserve]
+        public string Token { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2637,13 +2719,15 @@ namespace Nakama.Console
         /// </summary>
         string Total { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleDeleteChannelMessagesResponse : IConsoleDeleteChannelMessagesResponse
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="total"), Preserve]
-    public string Total { get; set; }
+    internal class ConsoleDeleteChannelMessagesResponse : IConsoleDeleteChannelMessagesResponse
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="total"), Preserve]
+        public string Total { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2668,21 +2752,23 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IGroupUserListGroupUser> Members { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleGroupExport : IConsoleGroupExport
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IApiGroup Group => _group;
-    [DataMember(Name="group"), Preserve]
-    public ApiGroup _group { get; set; }
+    internal class ConsoleGroupExport : IConsoleGroupExport
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IGroupUserListGroupUser> Members => _members ?? new List<GroupUserListGroupUser>(0);
-    [DataMember(Name="members"), Preserve]
-    public List<GroupUserListGroupUser> _members { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IApiGroup Group => _group;
+        [DataMember(Name="group"), Preserve]
+        public ApiGroup _group { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IGroupUserListGroupUser> Members => _members ?? new List<GroupUserListGroupUser>(0);
+        [DataMember(Name="members"), Preserve]
+        public List<GroupUserListGroupUser> _members { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2731,19 +2817,21 @@ namespace Nakama.Console
         /// </summary>
         string Node { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleMatchListMatch : IConsoleMatchListMatch
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public INakamaapiMatch ApiMatch => _apiMatch;
-    [DataMember(Name="api_match"), Preserve]
-    public NakamaapiMatch _apiMatch { get; set; }
+    internal class ConsoleMatchListMatch : IConsoleMatchListMatch
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="node"), Preserve]
-    public string Node { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public INakamaapiMatch ApiMatch => _apiMatch;
+        [DataMember(Name="api_match"), Preserve]
+        public NakamaapiMatch _apiMatch { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="node"), Preserve]
+        public string Node { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2774,23 +2862,25 @@ namespace Nakama.Console
         /// </summary>
         string Tick { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleMatchState : IConsoleMatchState
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IRealtimeUserPresence> Presences => _presences ?? new List<RealtimeUserPresence>(0);
-    [DataMember(Name="presences"), Preserve]
-    public List<RealtimeUserPresence> _presences { get; set; }
+    internal class ConsoleMatchState : IConsoleMatchState
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="state"), Preserve]
-    public string State { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IRealtimeUserPresence> Presences => _presences ?? new List<RealtimeUserPresence>(0);
+        [DataMember(Name="presences"), Preserve]
+        public List<RealtimeUserPresence> _presences { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="tick"), Preserve]
-    public string Tick { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="state"), Preserve]
+        public string State { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="tick"), Preserve]
+        public string Tick { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2837,39 +2927,41 @@ namespace Nakama.Console
         /// </summary>
         List<string> LuaRpcFunctions { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleRuntimeInfo : IConsoleRuntimeInfo
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IRuntimeInfoModuleInfo> GoModules => _goModules ?? new List<RuntimeInfoModuleInfo>(0);
-    [DataMember(Name="go_modules"), Preserve]
-    public List<RuntimeInfoModuleInfo> _goModules { get; set; }
+    internal class ConsoleRuntimeInfo : IConsoleRuntimeInfo
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="go_rpc_functions"), Preserve]
-    public List<string> GoRpcFunctions { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IRuntimeInfoModuleInfo> GoModules => _goModules ?? new List<RuntimeInfoModuleInfo>(0);
+        [DataMember(Name="go_modules"), Preserve]
+        public List<RuntimeInfoModuleInfo> _goModules { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IRuntimeInfoModuleInfo> JsModules => _jsModules ?? new List<RuntimeInfoModuleInfo>(0);
-    [DataMember(Name="js_modules"), Preserve]
-    public List<RuntimeInfoModuleInfo> _jsModules { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="go_rpc_functions"), Preserve]
+        public List<string> GoRpcFunctions { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="js_rpc_functions"), Preserve]
-    public List<string> JsRpcFunctions { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IRuntimeInfoModuleInfo> JsModules => _jsModules ?? new List<RuntimeInfoModuleInfo>(0);
+        [DataMember(Name="js_modules"), Preserve]
+        public List<RuntimeInfoModuleInfo> _jsModules { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IRuntimeInfoModuleInfo> LuaModules => _luaModules ?? new List<RuntimeInfoModuleInfo>(0);
-    [DataMember(Name="lua_modules"), Preserve]
-    public List<RuntimeInfoModuleInfo> _luaModules { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="js_rpc_functions"), Preserve]
+        public List<string> JsRpcFunctions { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="lua_rpc_functions"), Preserve]
-    public List<string> LuaRpcFunctions { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IRuntimeInfoModuleInfo> LuaModules => _luaModules ?? new List<RuntimeInfoModuleInfo>(0);
+        [DataMember(Name="lua_modules"), Preserve]
+        public List<RuntimeInfoModuleInfo> _luaModules { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="lua_rpc_functions"), Preserve]
+        public List<string> LuaRpcFunctions { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2904,21 +2996,23 @@ namespace Nakama.Console
         /// </summary>
         string Value { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleSetting : IConsoleSetting
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="name"), Preserve]
-    public string Name { get; set; }
+    internal class ConsoleSetting : IConsoleSetting
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time_sec"), Preserve]
-    public string UpdateTimeSec { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="value"), Preserve]
-    public string Value { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time_sec"), Preserve]
+        public string UpdateTimeSec { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2940,15 +3034,17 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IConsoleSetting> Settings { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleSettingList : IConsoleSettingList
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConsoleSetting> Settings => _settings ?? new List<ConsoleSetting>(0);
-    [DataMember(Name="settings"), Preserve]
-    public List<ConsoleSetting> _settings { get; set; }
+    internal class ConsoleSettingList : IConsoleSettingList
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleSetting> Settings => _settings ?? new List<ConsoleSetting>(0);
+        [DataMember(Name="settings"), Preserve]
+        public List<ConsoleSetting> _settings { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -2996,19 +3092,21 @@ namespace Nakama.Console
         /// </summary>
         string Timestamp { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleStatusList : IConsoleStatusList
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConsoleStatusListStatus> Nodes => _nodes ?? new List<ConsoleStatusListStatus>(0);
-    [DataMember(Name="nodes"), Preserve]
-    public List<ConsoleStatusListStatus> _nodes { get; set; }
+    internal class ConsoleStatusList : IConsoleStatusList
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="timestamp"), Preserve]
-    public string Timestamp { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleStatusListStatus> Nodes => _nodes ?? new List<ConsoleStatusListStatus>(0);
+        [DataMember(Name="nodes"), Preserve]
+        public List<ConsoleStatusListStatus> _nodes { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="timestamp"), Preserve]
+        public string Timestamp { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3074,51 +3172,53 @@ namespace Nakama.Console
         /// </summary>
         int SessionCount { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleStatusListStatus : IConsoleStatusListStatus
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="avg_input_kbs"), Preserve]
-    public double AvgInputKbs { get; set; }
+    internal class ConsoleStatusListStatus : IConsoleStatusListStatus
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="avg_latency_ms"), Preserve]
-    public double AvgLatencyMs { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="avg_input_kbs"), Preserve]
+        public double AvgInputKbs { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="avg_output_kbs"), Preserve]
-    public double AvgOutputKbs { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="avg_latency_ms"), Preserve]
+        public double AvgLatencyMs { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="avg_rate_sec"), Preserve]
-    public double AvgRateSec { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="avg_output_kbs"), Preserve]
+        public double AvgOutputKbs { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="goroutine_count"), Preserve]
-    public int GoroutineCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="avg_rate_sec"), Preserve]
+        public double AvgRateSec { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public ConsoleStatusHealth Health => _health;
-    [DataMember(Name="health"), Preserve]
-    public ConsoleStatusHealth _health { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="goroutine_count"), Preserve]
+        public int GoroutineCount { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="match_count"), Preserve]
-    public int MatchCount { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ConsoleStatusHealth Health => _health;
+        [DataMember(Name="health"), Preserve]
+        public ConsoleStatusHealth _health { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="name"), Preserve]
-    public string Name { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="match_count"), Preserve]
+        public int MatchCount { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="presence_count"), Preserve]
-    public int PresenceCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="session_count"), Preserve]
-    public int SessionCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="presence_count"), Preserve]
+        public int PresenceCount { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="session_count"), Preserve]
+        public int SessionCount { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3147,13 +3247,15 @@ namespace Nakama.Console
         /// </summary>
         List<string> Collections { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleStorageCollectionsList : IConsoleStorageCollectionsList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="collections"), Preserve]
-    public List<string> Collections { get; set; }
+    internal class ConsoleStorageCollectionsList : IConsoleStorageCollectionsList
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="collections"), Preserve]
+        public List<string> Collections { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3183,23 +3285,25 @@ namespace Nakama.Console
         /// </summary>
         int TotalCount { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleStorageList : IConsoleStorageList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="next_cursor"), Preserve]
-    public string NextCursor { get; set; }
+    internal class ConsoleStorageList : IConsoleStorageList
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConsoleStorageListObject> Objects => _objects ?? new List<ConsoleStorageListObject>(0);
-    [DataMember(Name="objects"), Preserve]
-    public List<ConsoleStorageListObject> _objects { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="total_count"), Preserve]
-    public int TotalCount { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleStorageListObject> Objects => _objects ?? new List<ConsoleStorageListObject>(0);
+        [DataMember(Name="objects"), Preserve]
+        public List<ConsoleStorageListObject> _objects { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="total_count"), Preserve]
+        public int TotalCount { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3256,41 +3360,43 @@ namespace Nakama.Console
         /// </summary>
         string Version { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleStorageListObject : IConsoleStorageListObject
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="collection"), Preserve]
-    public string Collection { get; set; }
+    internal class ConsoleStorageListObject : IConsoleStorageListObject
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="collection"), Preserve]
+        public string Collection { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="key"), Preserve]
-    public string Key { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="permission_read"), Preserve]
-    public int PermissionRead { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="key"), Preserve]
+        public string Key { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="permission_write"), Preserve]
-    public int PermissionWrite { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="permission_read"), Preserve]
+        public int PermissionRead { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="permission_write"), Preserve]
+        public int PermissionWrite { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="version"), Preserve]
-    public string Version { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="version"), Preserve]
+        public string Version { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3317,15 +3423,17 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IConsoleUserListUser> Users { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleUserList : IConsoleUserList
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConsoleUserListUser> Users => _users ?? new List<ConsoleUserListUser>(0);
-    [DataMember(Name="users"), Preserve]
-    public List<ConsoleUserListUser> _users { get; set; }
+    internal class ConsoleUserList : IConsoleUserList
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleUserListUser> Users => _users ?? new List<ConsoleUserListUser>(0);
+        [DataMember(Name="users"), Preserve]
+        public List<ConsoleUserListUser> _users { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3365,31 +3473,33 @@ namespace Nakama.Console
         /// </summary>
         string Username { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleUserListUser : IConsoleUserListUser
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="email"), Preserve]
-    public string Email { get; set; }
+    internal class ConsoleUserListUser : IConsoleUserListUser
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="mfa_enabled"), Preserve]
-    public bool MfaEnabled { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="email"), Preserve]
+        public string Email { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="mfa_required"), Preserve]
-    public bool MfaRequired { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="mfa_enabled"), Preserve]
+        public bool MfaEnabled { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public ConsoleUserRole Role => _role;
-    [DataMember(Name="role"), Preserve]
-    public ConsoleUserRole _role { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="mfa_required"), Preserve]
+        public bool MfaRequired { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="username"), Preserve]
-    public string Username { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ConsoleUserRole Role => _role;
+        [DataMember(Name="role"), Preserve]
+        public ConsoleUserRole _role { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3468,33 +3578,35 @@ namespace Nakama.Console
         /// </summary>
         string UserId { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleWalletLedger : IConsoleWalletLedger
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="changeset"), Preserve]
-    public string Changeset { get; set; }
+    internal class ConsoleWalletLedger : IConsoleWalletLedger
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="changeset"), Preserve]
+        public string Changeset { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="id"), Preserve]
-    public string Id { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="metadata"), Preserve]
-    public string Metadata { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3529,23 +3641,25 @@ namespace Nakama.Console
         /// </summary>
         string PrevCursor { get; }
     }
-/// <inheritdoc />
-  internal class ConsoleWalletLedgerList : IConsoleWalletLedgerList
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConsoleWalletLedger> Items => _items ?? new List<ConsoleWalletLedger>(0);
-    [DataMember(Name="items"), Preserve]
-    public List<ConsoleWalletLedger> _items { get; set; }
+    internal class ConsoleWalletLedgerList : IConsoleWalletLedgerList
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="next_cursor"), Preserve]
-    public string NextCursor { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleWalletLedger> Items => _items ?? new List<ConsoleWalletLedger>(0);
+        [DataMember(Name="items"), Preserve]
+        public List<ConsoleWalletLedger> _items { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="prev_cursor"), Preserve]
-    public string PrevCursor { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3577,23 +3691,25 @@ namespace Nakama.Console
         /// </summary>
         string Message { get; }
     }
-/// <inheritdoc />
-  internal class GooglerpcStatus : IGooglerpcStatus
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="code"), Preserve]
-    public int Code { get; set; }
+    internal class GooglerpcStatus : IGooglerpcStatus
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IProtobufAny> Details => _details ?? new List<ProtobufAny>(0);
-    [DataMember(Name="details"), Preserve]
-    public List<ProtobufAny> _details { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="code"), Preserve]
+        public int Code { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="message"), Preserve]
-    public string Message { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IProtobufAny> Details => _details ?? new List<ProtobufAny>(0);
+        [DataMember(Name="details"), Preserve]
+        public List<ProtobufAny> _details { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="message"), Preserve]
+        public string Message { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3645,41 +3761,43 @@ namespace Nakama.Console
         /// </summary>
         string Wallet { get; }
     }
-/// <inheritdoc />
-  internal class NakamaapiAccount : INakamaapiAccount
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="custom_id"), Preserve]
-    public string CustomId { get; set; }
+    internal class NakamaapiAccount : INakamaapiAccount
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiAccountDevice> Devices => _devices ?? new List<ApiAccountDevice>(0);
-    [DataMember(Name="devices"), Preserve]
-    public List<ApiAccountDevice> _devices { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="custom_id"), Preserve]
+        public string CustomId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="disable_time"), Preserve]
-    public string DisableTime { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiAccountDevice> Devices => _devices ?? new List<ApiAccountDevice>(0);
+        [DataMember(Name="devices"), Preserve]
+        public List<ApiAccountDevice> _devices { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="email"), Preserve]
-    public string Email { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="disable_time"), Preserve]
+        public string DisableTime { get; set; }
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public INakamaapiUser User => _user;
-    [DataMember(Name="user"), Preserve]
-    public NakamaapiUser _user { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="email"), Preserve]
+        public string Email { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="verify_time"), Preserve]
-    public string VerifyTime { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public INakamaapiUser User => _user;
+        [DataMember(Name="user"), Preserve]
+        public NakamaapiUser _user { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="wallet"), Preserve]
-    public string Wallet { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="verify_time"), Preserve]
+        public string VerifyTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="wallet"), Preserve]
+        public string Wallet { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3730,33 +3848,35 @@ namespace Nakama.Console
         /// </summary>
         int TickRate { get; }
     }
-/// <inheritdoc />
-  internal class NakamaapiMatch : INakamaapiMatch
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="authoritative"), Preserve]
-    public bool Authoritative { get; set; }
+    internal class NakamaapiMatch : INakamaapiMatch
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="handler_name"), Preserve]
-    public string HandlerName { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="authoritative"), Preserve]
+        public bool Authoritative { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="label"), Preserve]
-    public string Label { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="handler_name"), Preserve]
+        public string HandlerName { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="match_id"), Preserve]
-    public string MatchId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="label"), Preserve]
+        public string Label { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="size"), Preserve]
-    public int Size { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="match_id"), Preserve]
+        public string MatchId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="tick_rate"), Preserve]
-    public int TickRate { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="size"), Preserve]
+        public int Size { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="tick_rate"), Preserve]
+        public int TickRate { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3811,37 +3931,39 @@ namespace Nakama.Console
         /// </summary>
         string Subject { get; }
     }
-/// <inheritdoc />
-  internal class NakamaapiNotification : INakamaapiNotification
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="code"), Preserve]
-    public int Code { get; set; }
+    internal class NakamaapiNotification : INakamaapiNotification
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="content"), Preserve]
-    public string Content { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="code"), Preserve]
+        public int Code { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="content"), Preserve]
+        public string Content { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="id"), Preserve]
-    public string Id { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="persistent"), Preserve]
-    public bool Persistent { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="sender_id"), Preserve]
-    public string SenderId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="persistent"), Preserve]
+        public bool Persistent { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="subject"), Preserve]
-    public string Subject { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="sender_id"), Preserve]
+        public string SenderId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="subject"), Preserve]
+        public string Subject { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -3952,81 +4074,83 @@ namespace Nakama.Console
         /// </summary>
         string Username { get; }
     }
-/// <inheritdoc />
-  internal class NakamaapiUser : INakamaapiUser
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="apple_id"), Preserve]
-    public string AppleId { get; set; }
+    internal class NakamaapiUser : INakamaapiUser
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="avatar_url"), Preserve]
-    public string AvatarUrl { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="apple_id"), Preserve]
+        public string AppleId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="avatar_url"), Preserve]
+        public string AvatarUrl { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="display_name"), Preserve]
-    public string DisplayName { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="edge_count"), Preserve]
-    public int EdgeCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="display_name"), Preserve]
+        public string DisplayName { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="facebook_id"), Preserve]
-    public string FacebookId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="edge_count"), Preserve]
+        public int EdgeCount { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="facebook_instant_game_id"), Preserve]
-    public string FacebookInstantGameId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="facebook_id"), Preserve]
+        public string FacebookId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="gamecenter_id"), Preserve]
-    public string GamecenterId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="facebook_instant_game_id"), Preserve]
+        public string FacebookInstantGameId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="google_id"), Preserve]
-    public string GoogleId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="gamecenter_id"), Preserve]
+        public string GamecenterId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="id"), Preserve]
-    public string Id { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="google_id"), Preserve]
+        public string GoogleId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="lang_tag"), Preserve]
-    public string LangTag { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="location"), Preserve]
-    public string Location { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="lang_tag"), Preserve]
+        public string LangTag { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="metadata"), Preserve]
-    public string Metadata { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="location"), Preserve]
+        public string Location { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="online"), Preserve]
-    public bool Online { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="steam_id"), Preserve]
-    public string SteamId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="online"), Preserve]
+        public bool Online { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="timezone"), Preserve]
-    public string Timezone { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="steam_id"), Preserve]
+        public string SteamId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="update_time"), Preserve]
-    public string UpdateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="timezone"), Preserve]
+        public string Timezone { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="username"), Preserve]
-    public string Username { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4068,19 +4192,21 @@ namespace Nakama.Console
         /// </summary>
         string DisableTime { get; }
     }
-/// <inheritdoc />
-  internal class NakamaconsoleAccount : INakamaconsoleAccount
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public INakamaapiAccount Account => _account;
-    [DataMember(Name="account"), Preserve]
-    public NakamaapiAccount _account { get; set; }
+    internal class NakamaconsoleAccount : INakamaconsoleAccount
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="disable_time"), Preserve]
-    public string DisableTime { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public INakamaapiAccount Account => _account;
+        [DataMember(Name="account"), Preserve]
+        public NakamaapiAccount _account { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="disable_time"), Preserve]
+        public string DisableTime { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4111,23 +4237,25 @@ namespace Nakama.Console
         /// </summary>
         int TotalCount { get; }
     }
-/// <inheritdoc />
-  internal class NakamaconsoleGroupList : INakamaconsoleGroupList
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IApiGroup> Groups => _groups ?? new List<ApiGroup>(0);
-    [DataMember(Name="groups"), Preserve]
-    public List<ApiGroup> _groups { get; set; }
+    internal class NakamaconsoleGroupList : INakamaconsoleGroupList
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="next_cursor"), Preserve]
-    public string NextCursor { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiGroup> Groups => _groups ?? new List<ApiGroup>(0);
+        [DataMember(Name="groups"), Preserve]
+        public List<ApiGroup> _groups { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="total_count"), Preserve]
-    public int TotalCount { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="total_count"), Preserve]
+        public int TotalCount { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4254,97 +4382,99 @@ namespace Nakama.Console
         /// </summary>
         bool Tournament { get; }
     }
-/// <inheritdoc />
-  internal class NakamaconsoleLeaderboard : INakamaconsoleLeaderboard
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="authoritative"), Preserve]
-    public bool Authoritative { get; set; }
+    internal class NakamaconsoleLeaderboard : INakamaconsoleLeaderboard
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="category"), Preserve]
-    public int Category { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="authoritative"), Preserve]
+        public bool Authoritative { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="category"), Preserve]
+        public int Category { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="description"), Preserve]
-    public string Description { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="duration"), Preserve]
-    public int Duration { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="end_active"), Preserve]
-    public int EndActive { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="duration"), Preserve]
+        public int Duration { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="end_time"), Preserve]
-    public string EndTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="end_active"), Preserve]
+        public int EndActive { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="id"), Preserve]
-    public string Id { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="end_time"), Preserve]
+        public string EndTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="join_required"), Preserve]
-    public bool JoinRequired { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="max_num_score"), Preserve]
-    public int MaxNumScore { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="join_required"), Preserve]
+        public bool JoinRequired { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="max_size"), Preserve]
-    public int MaxSize { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="max_num_score"), Preserve]
+        public int MaxNumScore { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="metadata"), Preserve]
-    public string Metadata { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="max_size"), Preserve]
+        public int MaxSize { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="next_reset"), Preserve]
-    public int NextReset { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="operator"), Preserve]
-    public int Operator { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="next_reset"), Preserve]
+        public int NextReset { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="prev_reset"), Preserve]
-    public int PrevReset { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="operator"), Preserve]
+        public int Operator { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="reset_schedule"), Preserve]
-    public string ResetSchedule { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="prev_reset"), Preserve]
+        public int PrevReset { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="size"), Preserve]
-    public int Size { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="reset_schedule"), Preserve]
+        public string ResetSchedule { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="sort_order"), Preserve]
-    public int SortOrder { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="size"), Preserve]
+        public int Size { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="start_active"), Preserve]
-    public int StartActive { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="sort_order"), Preserve]
+        public int SortOrder { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="start_time"), Preserve]
-    public string StartTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="start_active"), Preserve]
+        public int StartActive { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="title"), Preserve]
-    public string Title { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="start_time"), Preserve]
+        public string StartTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="tournament"), Preserve]
-    public bool Tournament { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="title"), Preserve]
+        public string Title { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="tournament"), Preserve]
+        public bool Tournament { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4395,23 +4525,25 @@ namespace Nakama.Console
         /// </summary>
         int Total { get; }
     }
-/// <inheritdoc />
-  internal class NakamaconsoleLeaderboardList : INakamaconsoleLeaderboardList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="cursor"), Preserve]
-    public string Cursor { get; set; }
+    internal class NakamaconsoleLeaderboardList : INakamaconsoleLeaderboardList
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<INakamaconsoleLeaderboard> Leaderboards => _leaderboards ?? new List<NakamaconsoleLeaderboard>(0);
-    [DataMember(Name="leaderboards"), Preserve]
-    public List<NakamaconsoleLeaderboard> _leaderboards { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="total"), Preserve]
-    public int Total { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<INakamaconsoleLeaderboard> Leaderboards => _leaderboards ?? new List<NakamaconsoleLeaderboard>(0);
+        [DataMember(Name="leaderboards"), Preserve]
+        public List<NakamaconsoleLeaderboard> _leaderboards { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="total"), Preserve]
+        public int Total { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4433,15 +4565,17 @@ namespace Nakama.Console
         /// </summary>
         IEnumerable<IConsoleMatchListMatch> Matches { get; }
     }
-/// <inheritdoc />
-  internal class NakamaconsoleMatchList : INakamaconsoleMatchList
-  {
 
     /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<IConsoleMatchListMatch> Matches => _matches ?? new List<ConsoleMatchListMatch>(0);
-    [DataMember(Name="matches"), Preserve]
-    public List<ConsoleMatchListMatch> _matches { get; set; }
+    internal class NakamaconsoleMatchList : INakamaconsoleMatchList
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleMatchListMatch> Matches => _matches ?? new List<ConsoleMatchListMatch>(0);
+        [DataMember(Name="matches"), Preserve]
+        public List<ConsoleMatchListMatch> _matches { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4496,41 +4630,43 @@ namespace Nakama.Console
         /// </summary>
         string UserId { get; }
     }
-/// <inheritdoc />
-  internal class NakamaconsoleNotification : INakamaconsoleNotification
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="code"), Preserve]
-    public int Code { get; set; }
+    internal class NakamaconsoleNotification : INakamaconsoleNotification
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="content"), Preserve]
-    public string Content { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="code"), Preserve]
+        public int Code { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="create_time"), Preserve]
-    public string CreateTime { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="content"), Preserve]
+        public string Content { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="id"), Preserve]
-    public string Id { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="persistent"), Preserve]
-    public bool Persistent { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="sender_id"), Preserve]
-    public string SenderId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="persistent"), Preserve]
+        public bool Persistent { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="subject"), Preserve]
-    public string Subject { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="sender_id"), Preserve]
+        public string SenderId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="subject"), Preserve]
+        public string Subject { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4567,23 +4703,25 @@ namespace Nakama.Console
         /// </summary>
         string PrevCursor { get; }
     }
-/// <inheritdoc />
-  internal class NakamaconsoleNotificationList : INakamaconsoleNotificationList
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="next_cursor"), Preserve]
-    public string NextCursor { get; set; }
+    internal class NakamaconsoleNotificationList : INakamaconsoleNotificationList
+    {
 
-    /// <inheritdoc />
-    [IgnoreDataMember]
-    public IEnumerable<INakamaconsoleNotification> Notifications => _notifications ?? new List<NakamaconsoleNotification>(0);
-    [DataMember(Name="notifications"), Preserve]
-    public List<NakamaconsoleNotification> _notifications { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="prev_cursor"), Preserve]
-    public string PrevCursor { get; set; }
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<INakamaconsoleNotification> Notifications => _notifications ?? new List<NakamaconsoleNotification>(0);
+        [DataMember(Name="notifications"), Preserve]
+        public List<NakamaconsoleNotification> _notifications { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4605,13 +4743,15 @@ namespace Nakama.Console
         /// </summary>
         string @type { get; }
     }
-/// <inheritdoc />
-  internal class ProtobufAny : IProtobufAny
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="@type"), Preserve]
-    public string @type { get; set; }
+    internal class ProtobufAny : IProtobufAny
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="@type"), Preserve]
+        public string @type { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4651,29 +4791,31 @@ namespace Nakama.Console
         /// </summary>
         string Username { get; }
     }
-/// <inheritdoc />
-  internal class RealtimeUserPresence : IRealtimeUserPresence
-  {
 
     /// <inheritdoc />
-    [DataMember(Name="persistence"), Preserve]
-    public bool Persistence { get; set; }
+    internal class RealtimeUserPresence : IRealtimeUserPresence
+    {
 
-    /// <inheritdoc />
-    [DataMember(Name="session_id"), Preserve]
-    public string SessionId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="persistence"), Preserve]
+        public bool Persistence { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="status"), Preserve]
-    public string Status { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="session_id"), Preserve]
+        public string SessionId { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="user_id"), Preserve]
-    public string UserId { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="status"), Preserve]
+        public string Status { get; set; }
 
-    /// <inheritdoc />
-    [DataMember(Name="username"), Preserve]
-    public string Username { get; set; }
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
         public override string ToString()
         {
             var output = "";
@@ -4789,8 +4931,8 @@ namespace Nakama.Console
                 throw new ArgumentException("'accountId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/account/{accountId}/wallet";
-            urlpath = urlpath.Replace("{accountId}", Uri.EscapeDataString(accountId));
+            var urlpath = "/v2/console/account/{account_id}/wallet";
+            urlpath = urlpath.Replace("{account_id}", Uri.EscapeDataString(accountId));
 
             var queryParams = "";
             if (limit != null) {
@@ -4824,7 +4966,7 @@ namespace Nakama.Console
         public async Task ConsoleDeleteAccountAsync(
             string bearerToken,
             string id,
-            bool? recordDeletion,
+            bool? record_deletion,
             CancellationToken? cancellationToken)
         {
             if (id == null)
@@ -4836,8 +4978,8 @@ namespace Nakama.Console
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
 
             var queryParams = "";
-            if (recordDeletion != null) {
-                queryParams = string.Concat(queryParams, "record_deletion=", recordDeletion.ToString().ToLower(), "&");
+            if (record_deletion != null) {
+                queryParams = string.Concat(queryParams, "record_deletion=", record_deletion.ToString().ToLower(), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -5060,9 +5202,9 @@ namespace Nakama.Console
                 throw new ArgumentException("'friendId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/account/{id}/friend/{friendId}";
+            var urlpath = "/v2/console/account/{id}/friend/{friend_id}";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
-            urlpath = urlpath.Replace("{friendId}", Uri.EscapeDataString(friendId));
+            urlpath = urlpath.Replace("{friend_id}", Uri.EscapeDataString(friendId));
 
             var queryParams = "";
 
@@ -5137,9 +5279,9 @@ namespace Nakama.Console
                 throw new ArgumentException("'groupId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/account/{id}/group/{groupId}";
+            var urlpath = "/v2/console/account/{id}/group/{group_id}";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
-            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
+            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
 
@@ -5535,9 +5677,9 @@ namespace Nakama.Console
                 throw new ArgumentException("'walletId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/account/{id}/wallet/{walletId}";
+            var urlpath = "/v2/console/account/{id}/wallet/{wallet_id}";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
-            urlpath = urlpath.Replace("{walletId}", Uri.EscapeDataString(walletId));
+            urlpath = urlpath.Replace("{wallet_id}", Uri.EscapeDataString(walletId));
 
             var queryParams = "";
 
@@ -5950,8 +6092,8 @@ namespace Nakama.Console
                 throw new ArgumentException("'id' is required but was null.");
             }
 
-            var urlpath = "/v2/console/group/{groupId}/account/{id}/demote";
-            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/console/group/{group_id}/account/{id}/demote";
+            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
 
             var queryParams = "";
@@ -5991,8 +6133,8 @@ namespace Nakama.Console
                 throw new ArgumentException("'id' is required but was null.");
             }
 
-            var urlpath = "/v2/console/group/{groupId}/account/{id}/promote";
-            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/console/group/{group_id}/account/{id}/promote";
+            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
 
             var queryParams = "";
@@ -6032,8 +6174,8 @@ namespace Nakama.Console
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/console/group/{groupId}/add";
-            urlpath = urlpath.Replace("{groupId}", Uri.EscapeDataString(groupId));
+            var urlpath = "/v2/console/group/{group_id}/add";
+            urlpath = urlpath.Replace("{group_id}", Uri.EscapeDataString(groupId));
 
             var queryParams = "";
 
@@ -6254,8 +6396,8 @@ namespace Nakama.Console
                 throw new ArgumentException("'transactionId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/iap/purchase/{transactionId}";
-            urlpath = urlpath.Replace("{transactionId}", Uri.EscapeDataString(transactionId));
+            var urlpath = "/v2/console/iap/purchase/{transaction_id}";
+            urlpath = urlpath.Replace("{transaction_id}", Uri.EscapeDataString(transactionId));
 
             var queryParams = "";
 
@@ -6290,8 +6432,8 @@ namespace Nakama.Console
                 throw new ArgumentException("'originalTransactionId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/iap/subscription/{originalTransactionId}";
-            urlpath = urlpath.Replace("{originalTransactionId}", Uri.EscapeDataString(originalTransactionId));
+            var urlpath = "/v2/console/iap/subscription/{original_transaction_id}";
+            urlpath = urlpath.Replace("{original_transaction_id}", Uri.EscapeDataString(originalTransactionId));
 
             var queryParams = "";
 
@@ -6436,9 +6578,9 @@ namespace Nakama.Console
                 throw new ArgumentException("'ownerId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/leaderboard/{id}/owner/{ownerId}";
+            var urlpath = "/v2/console/leaderboard/{id}/owner/{owner_id}";
             urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
-            urlpath = urlpath.Replace("{ownerId}", Uri.EscapeDataString(ownerId));
+            urlpath = urlpath.Replace("{owner_id}", Uri.EscapeDataString(ownerId));
 
             var queryParams = "";
 
@@ -6476,8 +6618,8 @@ namespace Nakama.Console
                 throw new ArgumentException("'leaderboardId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/leaderboard/{leaderboardId}/records";
-            urlpath = urlpath.Replace("{leaderboardId}", Uri.EscapeDataString(leaderboardId));
+            var urlpath = "/v2/console/leaderboard/{leaderboard_id}/records";
+            urlpath = urlpath.Replace("{leaderboard_id}", Uri.EscapeDataString(leaderboardId));
 
             var queryParams = "";
             foreach (var elem in ownerIds ?? new string[0])
@@ -6520,8 +6662,8 @@ namespace Nakama.Console
             int? limit,
             bool? authoritative,
             string label,
-            int? minSize,
-            int? maxSize,
+            int? min_size,
+            int? max_size,
             string matchId,
             string query,
             string node,
@@ -6540,11 +6682,11 @@ namespace Nakama.Console
             if (label != null) {
                 queryParams = string.Concat(queryParams, "label=", Uri.EscapeDataString(label), "&");
             }
-            if (minSize != null) {
-                queryParams = string.Concat(queryParams, "min_size=", minSize, "&");
+            if (min_size != null) {
+                queryParams = string.Concat(queryParams, "min_size=", min_size, "&");
             }
-            if (maxSize != null) {
-                queryParams = string.Concat(queryParams, "max_size=", maxSize, "&");
+            if (max_size != null) {
+                queryParams = string.Concat(queryParams, "max_size=", max_size, "&");
             }
             if (matchId != null) {
                 queryParams = string.Concat(queryParams, "match_id=", Uri.EscapeDataString(matchId), "&");
@@ -7107,10 +7249,10 @@ namespace Nakama.Console
                 throw new ArgumentException("'userId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/storage/{collection}/{key}/{userId}";
+            var urlpath = "/v2/console/storage/{collection}/{key}/{user_id}";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
             urlpath = urlpath.Replace("{key}", Uri.EscapeDataString(key));
-            urlpath = urlpath.Replace("{userId}", Uri.EscapeDataString(userId));
+            urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
 
             var queryParams = "";
             if (version != null) {
@@ -7157,10 +7299,10 @@ namespace Nakama.Console
                 throw new ArgumentException("'userId' is required but was null.");
             }
 
-            var urlpath = "/v2/console/storage/{collection}/{key}/{userId}";
+            var urlpath = "/v2/console/storage/{collection}/{key}/{user_id}";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
             urlpath = urlpath.Replace("{key}", Uri.EscapeDataString(key));
-            urlpath = urlpath.Replace("{userId}", Uri.EscapeDataString(userId));
+            urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
 
             var queryParams = "";
 
@@ -7210,10 +7352,10 @@ namespace Nakama.Console
                 throw new ArgumentException("'body' is required but was null.");
             }
 
-            var urlpath = "/v2/console/storage/{collection}/{key}/{userId}";
+            var urlpath = "/v2/console/storage/{collection}/{key}/{user_id}";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
             urlpath = urlpath.Replace("{key}", Uri.EscapeDataString(key));
-            urlpath = urlpath.Replace("{userId}", Uri.EscapeDataString(userId));
+            urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
 
             var queryParams = "";
 
@@ -7265,10 +7407,10 @@ namespace Nakama.Console
                 throw new ArgumentException("'version' is required but was null.");
             }
 
-            var urlpath = "/v2/console/storage/{collection}/{key}/{userId}/{version}";
+            var urlpath = "/v2/console/storage/{collection}/{key}/{user_id}/{version}";
             urlpath = urlpath.Replace("{collection}", Uri.EscapeDataString(collection));
             urlpath = urlpath.Replace("{key}", Uri.EscapeDataString(key));
-            urlpath = urlpath.Replace("{userId}", Uri.EscapeDataString(userId));
+            urlpath = urlpath.Replace("{user_id}", Uri.EscapeDataString(userId));
             urlpath = urlpath.Replace("{version}", Uri.EscapeDataString(version));
 
             var queryParams = "";

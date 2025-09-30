@@ -143,96 +143,92 @@ namespace {{.Namespace}}
         {{- end }}
         {{- end }}
     }
-/// <inheritdoc />
-  internal class {{ $classname }} : I{{ $classname }}
-  {
-    {{- range $propname, $property := $definition.Properties }}
-    {{- $fieldname := $propname | snakeToPascal }}
-    {{- $attrDataName := $propname | camelToSnake }}
 
     /// <inheritdoc />
-    {{- if eq $property.Type "integer" }}
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public int {{ $fieldname }} { get; set; }
-    {{- else if eq $property.Type "number" }}
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public double {{ $fieldname }} { get; set; }
-    {{- else if eq $property.Type "boolean" }}
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public bool {{ $fieldname }} { get; set; }
-    {{- else if eq $property.Type "string" }}
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public string {{ $fieldname }} { get; set; }
-    {{- else if eq $property.Type "array" }}
-      {{- if eq $property.Items.Type "string" }}
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public List<string> {{ $fieldname }} { get; set; }
-      {{- else if eq $property.Items.Type "integer" }}
-    [DataMember(Name="{{ $propname }}"), Preserve]
-    public List<int> {{ $fieldname }} { get; set; }
-      {{- else if eq $property.Items.Type "number" }}
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public List<double> {{ $fieldname }} { get; set; }
-      {{- else if eq $property.Items.Type "boolean" }}
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public List<bool> {{ $fieldname }} { get; set; }
-      {{- else}}
-    [IgnoreDataMember]
-    public IEnumerable<I{{ $property.Items.Ref | cleanRef }}> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new List<{{ $property.Items.Ref | cleanRef }}>(0);
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public List<{{ $property.Items.Ref | cleanRef }}> _{{ $propname | snakeToCamel }} { get; set; }
-      {{- end }}
-    {{- else if eq $property.Type "object"}}
-      {{- if eq $property.AdditionalProperties.Type "string"}}
-        {{- if eq $property.AdditionalProperties.Format "int64" }}
-    [IgnoreDataMember]
-    public IDictionary<string, int> {{ $fieldname }} => ApiClient.DeserializeIntProperties(_{{ $propname | snakeToCamel }}) ?? new Dictionary<string, int>();
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public Dictionary<string, string> _{{ $propname | snakeToCamel }} { get; set; }
+    internal class {{ $classname }} : I{{ $classname }}
+    {
+        {{- range $propname, $property := $definition.Properties }}
+        {{- $fieldname := $propname | snakeToPascal }}
+        {{- $attrDataName := $propname | camelToSnake }}
+
+        /// <inheritdoc />
+        {{- if eq $property.Type "integer" }}
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public int {{ $fieldname }} { get; set; }
+        {{- else if eq $property.Type "number" }}
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public double {{ $fieldname }} { get; set; }
+        {{- else if eq $property.Type "boolean" }}
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public bool {{ $fieldname }} { get; set; }
+        {{- else if eq $property.Type "string" }}
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public string {{ $fieldname }} { get; set; }
+        {{- else if eq $property.Type "array" }}
+            {{- if eq $property.Items.Type "string" }}
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public List<string> {{ $fieldname }} { get; set; }
+            {{- else if eq $property.Items.Type "integer" }}
+        [DataMember(Name="{{ $propname }}"), Preserve]
+        public List<int> {{ $fieldname }} { get; set; }
+            {{- else if eq $property.Items.Type "number" }}
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public List<double> {{ $fieldname }} { get; set; }
+            {{- else if eq $property.Items.Type "boolean" }}
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public List<bool> {{ $fieldname }} { get; set; }
+            {{- else}}
+        [IgnoreDataMember]
+        public IEnumerable<I{{ $property.Items.Ref | cleanRef }}> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new List<{{ $property.Items.Ref | cleanRef }}>(0);
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public List<{{ $property.Items.Ref | cleanRef }}> _{{ $propname | snakeToCamel }} { get; set; }
+            {{- end }}
+        {{- else if eq $property.Type "object"}}
+            {{- if eq $property.AdditionalProperties.Type "string"}}
+                {{- if eq $property.AdditionalProperties.Format "int64" }}
+        [IgnoreDataMember]
+        public IDictionary<string, int> {{ $fieldname }} => ApiClient.DeserializeIntProperties(_{{ $propname | snakeToCamel }}) ?? new Dictionary<string, int>();
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public Dictionary<string, string> _{{ $propname | snakeToCamel }} { get; set; }
+                {{- else }}
+        [IgnoreDataMember]
+        public IDictionary<string, string> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, string>();
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public Dictionary<string, string> _{{ $propname | snakeToCamel }} { get; set; }
+                 {{- end }}
+            {{- else if eq $property.AdditionalProperties.Type "integer"}}
+        [IgnoreDataMember]
+        public IDictionary<string, int> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, int>();
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+           {{- else if eq $property.AdditionalProperties.Type "number"}}
+        [IgnoreDataMember]
+        public IDictionary<string, double> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, double>();
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public Dictionary<string, int> _{{ $propname | snakeToCamel }} { get; set; }
+            {{- else if eq $property.AdditionalProperties.Type "boolean"}}
+        [IgnoreDataMember]
+        public IDictionary<string, bool> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, bool>();
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public Dictionary<string, bool> _{{ $propname | snakeToCamel }} { get; set; }
+            {{- else}}
+        [IgnoreDataMember]
+        public IDictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}> {{ $fieldname }}  => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}>();
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public Dictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}> _{{ $propname | snakeToCamel }} { get; set; }
+            {{- end}}
+        {{- else if isRefToEnum (cleanRef $property.Ref) }}
+        [IgnoreDataMember]
+        public {{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | snakeToCamel }};
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public {{ $property.Ref | cleanRef }} _{{ $propname | snakeToCamel }} { get; set; }
         {{- else }}
-    [IgnoreDataMember]
-    public IDictionary<string, string> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, string>();
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public Dictionary<string, string> _{{ $propname | snakeToCamel }} { get; set; }
+        [IgnoreDataMember]
+        public I{{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | snakeToCamel }};
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public {{ $property.Ref | cleanRef }} _{{ $propname | snakeToCamel }} { get; set; }
         {{- end }}
-      {{- else if eq $property.AdditionalProperties.Type "integer"}}
-    [IgnoreDataMember]
-    public IDictionary<string, int> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, int>();
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public Dictionary<string, int> _{{ $propname | snakeToCamel }} { get; set; }
-      {{- else if eq $property.AdditionalProperties.Type "number"}}
-    [IgnoreDataMember]
-    public IDictionary<string, double> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, double>();
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public Dictionary<string, double> _{{ $propname | snakeToCamel }} { get; set; }
-      {{- else if eq $property.AdditionalProperties.Type "boolean"}}
-    [IgnoreDataMember]
-    public IDictionary<string, bool> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, bool>();
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public Dictionary<string, bool> _{{ $propname | snakeToCamel }} { get; set; }
-      {{- else if eq $property.AdditionalProperties.Type "string"}}
-    [IgnoreDataMember]
-    public IDictionary<string, string> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, string>();
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public Dictionary<string, string> _{{ $propname | snakeToCamel }} { get; set; }
-      {{- else}}
-    [IgnoreDataMember]
-    public IDictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}>();
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public Dictionary<string, {{ $property.AdditionalProperties.Ref | cleanRef }}> _hi{{ $propname | snakeToCamel }} { get; set; }
-      {{- end}}
-    {{- else if isRefToEnum (cleanRef $property.Ref) }}
-    [IgnoreDataMember]
-    public {{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | snakeToCamel }};
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public {{ $property.Ref | cleanRef }} _{{ $propname | snakeToCamel }} { get; set; }
-    {{- else }}
-    [IgnoreDataMember]
-    public I{{ $property.Ref | cleanRef }} {{ $fieldname }} => _{{ $propname | snakeToCamel }};
-    [DataMember(Name="{{ $attrDataName }}"), Preserve]
-    public {{ $property.Ref | cleanRef }} _{{ $propname | snakeToCamel }} { get; set; }
-    {{- end }}
-    {{- end }}
+        {{- end }}
+
         public override string ToString()
         {
             var output = "";
@@ -307,17 +303,15 @@ namespace {{.Namespace}}
            {{- $isPreviousParam = true}}
             string bearerToken
         {{- end }}
-
         {{- range $parameter := $operation.Parameters }}
-
         {{- if eq $isPreviousParam true}},{{- end}}
         {{- if eq $parameter.In "path" }}
-            {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
+            {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name | snakeToCamel}}
         {{- else if eq $parameter.In "body" }}
             {{- if eq $parameter.Schema.Type "string" }}
-            string{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
+            string{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name | snakeToCamel}}
             {{- else }}
-            {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
+            {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name | snakeToCamel}}
             {{- end }}
         {{- else if eq $parameter.Type "array"}}
             IEnumerable<{{ $parameter.Items.Type }}> {{ $parameter.Name | snakeToCamel }}
@@ -336,9 +330,9 @@ namespace {{.Namespace}}
         {{- else if eq $parameter.Type "boolean" }}
             bool? {{ $parameter.Name }}
         {{- else if eq $parameter.Type "string" }}
-            string {{ $parameter.Name }}
+            string {{ $parameter.Name | snakeToCamel}}
         {{- else }}
-            {{ $parameter.Type }} {{ $parameter.Name }}
+            {{ $parameter.Type }} {{ $parameter.Name | snakeToCamel}}
         {{- end }}
         {{- $isPreviousParam = true}}
     {{- end }},
@@ -358,7 +352,7 @@ namespace {{.Namespace}}
             {{- range $parameter := $operation.Parameters }}
             {{- $camelToSnake := $parameter.Name | camelToSnake }}
             {{- if eq $parameter.In "path" }}
-            urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $parameter.Name }}));
+            urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $parameter.Name | snakeToCamel }}));
             {{- end }}
         {{- end }}
 
@@ -371,8 +365,8 @@ namespace {{.Namespace}}
                 queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", {{ $parameter.Name }}, "&");
             }
                 {{- else if eq $parameter.Type "string" }}
-            if ({{ $parameter.Name }} != null) {
-                queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", Uri.EscapeDataString({{ $parameter.Name }}), "&");
+            if ({{ $parameter.Name | snakeToCamel }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", Uri.EscapeDataString({{ $parameter.Name | snakeToCamel }}), "&");
             }
                 {{- else if eq $parameter.Type "boolean" }}
             if ({{ $parameter.Name }} != null) {
