@@ -347,6 +347,6 @@ namespace Satori
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task object which resolves to a list all available flags and their value overrides for this identity.</returns>
         public Task<IApiFlagOverrideList> GetFlagOverridesAsync(ISession session, IEnumerable<string> names = null,
-            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+            IEnumerable<string> labels = null, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
     }
 }
