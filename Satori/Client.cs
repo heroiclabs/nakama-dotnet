@@ -211,7 +211,7 @@ namespace Satori
         {
             try
             {
-                return GetFlagAsync(session, name, defaultValue, cancellationToken);
+                return GetFlagAsync(session, name, cancellationToken);
             }
             catch (ArgumentException)
             {
@@ -248,7 +248,7 @@ namespace Satori
         {
             try
             {
-                return GetFlagDefaultAsync(name, defaultValue, cancellationToken);
+                return GetFlagDefaultAsync(name, cancellationToken);
             }
             catch (ArgumentException)
             {
