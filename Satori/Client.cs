@@ -211,7 +211,7 @@ namespace Satori
         {
             try
             {
-                return GetFlagAsync(session, name, defaultValue, cancellationToken);
+                return GetFlagAsync(session, name, cancellationToken);
             }
             catch (ArgumentException)
             {
@@ -248,7 +248,7 @@ namespace Satori
         {
             try
             {
-                return GetFlagDefaultAsync(name, defaultValue, cancellationToken);
+                return GetFlagDefaultAsync(name, cancellationToken);
             }
             catch (ArgumentException)
             {
@@ -483,7 +483,7 @@ namespace Satori
 
         /// <inheritdoc cref="GetFlagOverridesAsync" />
         public async Task<IApiFlagOverrideList> GetFlagOverridesAsync(ISession session, IEnumerable<string> names = null,
-            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
+            IEnumerable<string> labels = null, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
@@ -492,8 +492,8 @@ namespace Satori
             }
 
             return await _retryInvoker.InvokeWithRetry(
-                () => _apiClient.SatoriGetFlagOverridesAsync(session.AuthToken, string.Empty, string.Empty, names, null, cancellationToken),
+                () => _apiClient.SatoriGetFlagOverridesAsync(session.AuthToken, string.Empty, string.Empty, names, labels, cancellationToken),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
-    }
+  }
 }

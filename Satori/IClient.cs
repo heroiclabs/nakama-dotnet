@@ -343,10 +343,11 @@ namespace Satori
         /// </summary>
         /// <param name="session">The session of the user.</param>
         /// <param name="names">Live event names, if null or empty, all live events are returned.</param>
+        /// <param name="labels">Live event labels, if null or empty, all live events are returned.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task object which resolves to a list all available flags and their value overrides for this identity.</returns>
         public Task<IApiFlagOverrideList> GetFlagOverridesAsync(ISession session, IEnumerable<string> names = null,
-            CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
+            IEnumerable<string> labels = null, CancellationToken? cancellationToken = default, RetryConfiguration retryConfiguration = null);
     }
 }
