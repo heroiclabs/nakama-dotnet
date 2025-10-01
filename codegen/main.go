@@ -76,7 +76,7 @@ namespace {{.Namespace}}
     {{- if isRefToEnum $defname }}
 
     /// <summary>
-    /// {{ $definition.Title }}
+    /// {{ $definition.Title | commentify }}
     /// </summary>
     public enum {{ $classname }}
     {
@@ -303,17 +303,15 @@ namespace {{.Namespace}}
            {{- $isPreviousParam = true}}
             string bearerToken
         {{- end }}
-
         {{- range $parameter := $operation.Parameters }}
-
         {{- if eq $isPreviousParam true}},{{- end}}
         {{- if eq $parameter.In "path" }}
-            {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
+            {{ $parameter.Type }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name | snakeToCamel}}
         {{- else if eq $parameter.In "body" }}
             {{- if eq $parameter.Schema.Type "string" }}
-            string{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
+            string{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name | snakeToCamel}}
             {{- else }}
-            {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name }}
+            {{ $parameter.Schema.Ref | cleanRef }}{{- if not $parameter.Required }}?{{- end }} {{ $parameter.Name | snakeToCamel}}
             {{- end }}
         {{- else if eq $parameter.Type "array"}}
             IEnumerable<{{ $parameter.Items.Type }}> {{ $parameter.Name | snakeToCamel }}
@@ -332,9 +330,9 @@ namespace {{.Namespace}}
         {{- else if eq $parameter.Type "boolean" }}
             bool? {{ $parameter.Name }}
         {{- else if eq $parameter.Type "string" }}
-            string {{ $parameter.Name }}
+            string {{ $parameter.Name | snakeToCamel}}
         {{- else }}
-            {{ $parameter.Type }} {{ $parameter.Name }}
+            {{ $parameter.Type }} {{ $parameter.Name | snakeToCamel}}
         {{- end }}
         {{- $isPreviousParam = true}}
     {{- end }},
@@ -354,7 +352,7 @@ namespace {{.Namespace}}
             {{- range $parameter := $operation.Parameters }}
             {{- $camelToSnake := $parameter.Name | camelToSnake }}
             {{- if eq $parameter.In "path" }}
-            urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $parameter.Name }}));
+            urlpath = urlpath.Replace("{{- print "{" $parameter.Name "}"}}", Uri.EscapeDataString({{- $parameter.Name | snakeToCamel }}));
             {{- end }}
         {{- end }}
 
@@ -367,8 +365,8 @@ namespace {{.Namespace}}
                 queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", {{ $parameter.Name }}, "&");
             }
                 {{- else if eq $parameter.Type "string" }}
-            if ({{ $parameter.Name }} != null) {
-                queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", Uri.EscapeDataString({{ $parameter.Name }}), "&");
+            if ({{ $parameter.Name | snakeToCamel }} != null) {
+                queryParams = string.Concat(queryParams, "{{- $camelToSnake }}=", Uri.EscapeDataString({{ $parameter.Name | snakeToCamel }}), "&");
             }
                 {{- else if eq $parameter.Type "boolean" }}
             if ({{ $parameter.Name }} != null) {
@@ -397,7 +395,7 @@ namespace {{.Namespace}}
                 Query = queryParams
             }.Uri;
 
-            var method = "{{- $method | uppercase }}";
+            var httpMethod = "{{- $method | uppercase }}";
             var headers = new Dictionary<string, string>();
 
             {{- if $operation.Security }}
@@ -433,10 +431,10 @@ namespace {{.Namespace}}
             {{- end }}
 
             {{- if $operation.Responses.Ok.Schema.Ref }}
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<{{ $operation.Responses.Ok.Schema.Ref | cleanRef }}>();
             {{- else }}
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             {{- end }}
         }
         {{- end }}
@@ -555,6 +553,10 @@ func descriptionOrTitle(description string, title string) string {
 	return title
 }
 
+func commentify(input string) string {
+	return strings.Replace(input, "\n", "\n    /// ", -1)
+}
+
 // camelToPascal converts a string from camel case to Pascal case.
 func camelToPascal(camelCase string) (pascalCase string) {
 
@@ -642,6 +644,7 @@ func main() {
 		"splitEnumDescription": splitEnumDescription,
 		"stripOperationPrefix": stripOperationPrefix,
 		"descriptionOrTitle":   descriptionOrTitle,
+		"commentify":           commentify,
 	}
 
 	tmpl, err := template.New(inputFile).Funcs(fmap).Parse(codeTemplate)
@@ -684,7 +687,7 @@ type Schema struct {
 			Name     string
 			In       string
 			Required bool
-			Type     string   // used with primitives
+			Type     string // used with primitives
 			Items    struct { // used with type "array"
 				Type string
 			}
@@ -739,27 +742,43 @@ type AdditionalProperties struct {
 
 func generateBodyDefinitionFromSchema(s *Schema) {
 	// Needed because of this change: https://github.com/grpc-ecosystem/grpc-gateway/issues/1670
-	for _, def := range s.Paths {
-		if verb, ok := def["put"]; ok {
-			for idx, param := range verb.Parameters {
-				if param.In == "body" && param.Name == "body" && param.Schema.Ref == "" {
-					objectName := "Api" + strings.TrimPrefix(verb.OperationId, fmt.Sprintf("%s_", s.Namespace)) + "Request"
-					param.Schema.Ref = "#/definitions/" + objectName
-					def["put"].Parameters[idx] = param
+	for _, path := range s.Paths {
+		// Iterate through each HTTP method (e.g., "get", "post", "put") for the current path
+		for verb, operation := range path {
+			// Check if the HTTP method is one that can contain a body
+			if verb == "post" || verb == "put" {
+				// Iterate through the parameters of the operation
+				for idx, param := range operation.Parameters {
+					// Check if the parameter is a body parameter with an inline schema
+					if param.In == "body" && param.Name == "body" && param.Schema.Ref == "" {
+						// Construct a unique name for the new definition
+						objectName := "Api" + strings.TrimPrefix(operation.OperationId, fmt.Sprintf("%s_", s.Namespace)) + "Request"
 
-					properties := make(map[string]ObjectProperty)
-					for key, p := range param.Schema.Properties {
-						properties[key] = ObjectProperty{
-							Type:                 p.Type,
-							Items:                Items{},
-							AdditionalProperties: AdditionalProperties{},
-							Description:          p.Description,
+						// Update the parameter's schema reference to the new definition
+						param.Schema.Ref = "#/definitions/" + objectName
+
+						// Update the parameter in the original operation object
+						operation.Parameters[idx] = param
+
+						// Create the new definition
+						properties := make(map[string]ObjectProperty)
+
+						for key, p := range param.Schema.Properties {
+							properties[key] = ObjectProperty{
+								Type:  p.Type,
+								Items: Items{},
+								AdditionalProperties: AdditionalProperties{
+									Type: "string",
+								},
+								Description: p.Description,
+							}
 						}
-					}
 
-					s.Definitions[objectName] = ObjectDefinition{
-						Properties:  properties,
-						Description: param.Schema.Description,
+						// Add the new definition to the schema's definitions map
+						s.Definitions[objectName] = ObjectDefinition{
+							Properties:  properties,
+							Description: param.Schema.Description,
+						}
 					}
 				}
 			}
