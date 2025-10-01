@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.20.0] - 2025-10-01
+### Added
+- Nakama: New "ConsoleClient" functions to make HTTP requests to the Nakama Console.
+
+### Fixed
+- Satori: Avoid recursive calls to GetFlags overload functions.
+
 ## [3.19.0] - 2025-09-29
 ### Added
 - Satori: Enable logger to be passed into the "HttpRequestAdapter."
