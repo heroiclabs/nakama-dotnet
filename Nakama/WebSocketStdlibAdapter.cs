@@ -158,8 +158,21 @@ namespace Nakama
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        closeReason = result.CloseStatusDescription ?? "";
-                        await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                        if (webSocket.State == WebSocketState.CloseReceived)
+                        {
+                            try
+                            {
+                                closeReason = result.CloseStatusDescription ?? "";
+                                await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "",
+                                    CancellationToken.None);
+                            }
+                            catch (Exception)
+                            {
+                                // Suppress any exceptions from CloseOutputAsync as we're already closing the socket anyway.
+                                // In the Mono runtime, the Close message can be received after the socket has been disposed,
+                                // causing this exception to be thrown. We can safely ignore this as the socket is already closed.
+                            }
+                        }
                         break;
                     }
 
