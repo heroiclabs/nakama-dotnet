@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading;
@@ -158,8 +159,25 @@ namespace Nakama
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        closeReason = result.CloseStatusDescription ?? "";
-                        await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                        if (webSocket.State == WebSocketState.CloseReceived)
+                        {
+                            try
+                            {
+                                closeReason = result.CloseStatusDescription ?? "";
+                                await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "",
+                                    CancellationToken.None);
+                            }
+                            catch (Exception e) when (e is ObjectDisposedException ||
+                                                      e is InvalidOperationException ||
+                                                      e is IOException ||
+                                                      (e is WebSocketException wsEx &&
+                                                       wsEx.WebSocketErrorCode == WebSocketError.ConnectionClosedPrematurely))
+                            {
+                                // Ignore these exceptions from CloseOutputAsync as we're already closing the socket
+                                // anyway. In the MonoRuntime, the Close message can be received after the socket has
+                                // been disposed, causing these exceptions to be thrown.
+                            }
+                        }
                         break;
                     }
 
