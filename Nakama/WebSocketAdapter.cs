@@ -179,11 +179,11 @@ namespace Nakama
                                 await webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "",
                                     CancellationToken.None);
                             }
-                            catch (Exception)
+                            catch (Exception e) when (e is ObjectDisposedException || e is InvalidOperationException)
                             {
-                                // Suppress any exceptions from CloseOutputAsync as we're already closing the socket anyway.
-                                // In the Mono runtime, the Close message can be received after the socket has been disposed,
-                                // causing this exception to be thrown. We can safely ignore this as the socket is already closed.
+                                // Ignore these exceptions from CloseOutputAsync as we're already closing the socket
+                                // anyway. In the MonoRuntime, the Close message can be received after the socket has
+                                // been disposed, causing these exceptions to be thrown.
                             }
                         }
                         break;
