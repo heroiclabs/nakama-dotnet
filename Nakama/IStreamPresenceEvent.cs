@@ -107,6 +107,7 @@ namespace Nakama
     }
 
     /// <inheritdoc cref="IStreamState"/>
+    [Preserve]
     internal class StreamState : IStreamState
     {
         public IUserPresence Sender => SenderField;

@@ -21,10 +21,10 @@ namespace Nakama
     /// </summary>
     internal class PartyPromote
     {
-        [DataMember(Name = "party_id")]
+        [DataMember(Name = "party_id"), Preserve]
         public string PartyId { get; set; }
 
-        [DataMember(Name = "presence")]
+        [DataMember(Name = "presence"), Preserve]
         public UserPresence Presence { get; set; }
 
         public override string ToString() => $"PartyPromote(PartyId='{PartyId}', Presence={Presence})";
