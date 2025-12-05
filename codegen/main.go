@@ -294,12 +294,14 @@ namespace {{.Namespace}}
             string basicAuthPassword
                         {{- $isPreviousParam = true}}
                     {{- else if (eq $key "BearerJwt") }}
+           {{- if eq $isPreviousParam true}},{{- end}}
                         {{- $isPreviousParam = true}}
-            string bearerToken,
+            string bearerToken
                     {{- end }}
                 {{- end }}
             {{- end }}
         {{- else }}
+           {{- if eq $isPreviousParam true}},{{- end}}
            {{- $isPreviousParam = true}}
             string bearerToken
         {{- end }}

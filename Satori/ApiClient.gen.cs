@@ -454,6 +454,16 @@ namespace Satori
         string Name { get; }
 
         /// <summary>
+        /// Experiment Phase name
+        /// </summary>
+        string PhaseName { get; }
+
+        /// <summary>
+        /// Experiment Phase Variant name
+        /// </summary>
+        string PhaseVariantName { get; }
+
+        /// <summary>
         /// Value associated with this Experiment.
         /// </summary>
         string Value { get; }
@@ -472,6 +482,14 @@ namespace Satori
         public string Name { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="phase_name"), Preserve]
+        public string PhaseName { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="phase_variant_name"), Preserve]
+        public string PhaseVariantName { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="value"), Preserve]
         public string Value { get; set; }
 
@@ -480,6 +498,8 @@ namespace Satori
             var output = "";
             output = string.Concat(output, "Labels: [", string.Join(", ", Labels), "], ");
             output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "PhaseName: ", PhaseName, ", ");
+            output = string.Concat(output, "PhaseVariantName: ", PhaseVariantName, ", ");
             output = string.Concat(output, "Value: ", Value, ", ");
             return output;
         }
@@ -1558,13 +1578,13 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -1587,13 +1607,13 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -1622,7 +1642,7 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -1634,7 +1654,7 @@ namespace Satori
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -1663,7 +1683,7 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -1671,7 +1691,7 @@ namespace Satori
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -1700,7 +1720,7 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -1712,7 +1732,7 @@ namespace Satori
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -1741,7 +1761,7 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -1749,7 +1769,7 @@ namespace Satori
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -1782,13 +1802,13 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiExperimentList>();
         }
 
@@ -1796,9 +1816,9 @@ namespace Satori
         /// List all available flags for this identity.
         /// </summary>
         public async Task<IApiFlagList> SatoriGetFlagsAsync(
-            string bearerToken,
             string basicAuthUsername,
             string basicAuthPassword,
+            string bearerToken,
             IEnumerable<string> names,
             IEnumerable<string> labels,
             CancellationToken? cancellationToken)
@@ -1824,22 +1844,22 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(bearerToken))
-            {
-                var header = string.Concat("Bearer ", bearerToken);
-                headers.Add("Authorization", header);
-            }
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
                 var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
                 var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
                 headers.Add("Authorization", header);
             }
+            if (!string.IsNullOrEmpty(bearerToken))
+            {
+                var header = string.Concat("Bearer ", bearerToken);
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiFlagList>();
         }
 
@@ -1847,9 +1867,9 @@ namespace Satori
         /// List all available flags and their value overrides for this identity.
         /// </summary>
         public async Task<IApiFlagOverrideList> SatoriGetFlagOverridesAsync(
-            string bearerToken,
             string basicAuthUsername,
             string basicAuthPassword,
+            string bearerToken,
             IEnumerable<string> names,
             IEnumerable<string> labels,
             CancellationToken? cancellationToken)
@@ -1875,22 +1895,22 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
-            if (!string.IsNullOrEmpty(bearerToken))
-            {
-                var header = string.Concat("Bearer ", bearerToken);
-                headers.Add("Authorization", header);
-            }
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
                 var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
                 var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
                 headers.Add("Authorization", header);
             }
+            if (!string.IsNullOrEmpty(bearerToken))
+            {
+                var header = string.Concat("Bearer ", bearerToken);
+                headers.Add("Authorization", header);
+            }
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiFlagOverrideList>();
         }
 
@@ -1919,7 +1939,7 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "PUT";
+            var httpMethod = "PUT";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -1927,7 +1947,7 @@ namespace Satori
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -1951,13 +1971,13 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "DELETE";
+            var httpMethod = "DELETE";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -2006,13 +2026,13 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLiveEventList>();
         }
 
@@ -2042,13 +2062,13 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -2059,6 +2079,7 @@ namespace Satori
             int? limit,
             bool? forward,
             string cursor,
+            IEnumerable<string> messageIds,
             CancellationToken? cancellationToken)
         {
 
@@ -2074,6 +2095,10 @@ namespace Satori
             if (cursor != null) {
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
             }
+            foreach (var elem in messageIds ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "message_ids=", Uri.EscapeDataString(elem), "&");
+            }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
 
@@ -2083,13 +2108,13 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiGetMessageListResponse>();
         }
 
@@ -2119,13 +2144,13 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "DELETE";
+            var httpMethod = "DELETE";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -2159,7 +2184,7 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "PUT";
+            var httpMethod = "PUT";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -2167,7 +2192,7 @@ namespace Satori
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -2190,13 +2215,13 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiProperties>();
         }
 
@@ -2225,7 +2250,7 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "PUT";
+            var httpMethod = "PUT";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -2233,7 +2258,7 @@ namespace Satori
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -2261,7 +2286,7 @@ namespace Satori
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -2269,7 +2294,7 @@ namespace Satori
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
     }
 }
