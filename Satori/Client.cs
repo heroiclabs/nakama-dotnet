@@ -436,7 +436,7 @@ namespace Satori
 
         /// <inheritdoc cref="GetMessageListAsync" />
         public async Task<IApiGetMessageListResponse> GetMessageListAsync(ISession session, int limit = 1,
-            bool forward = true, string cursor = null, CancellationToken? cancellationToken = default,
+            bool forward = true, string cursor = null, IEnumerable<string> messageIds = null, CancellationToken? cancellationToken = default,
             RetryConfiguration retryConfiguration = null)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
@@ -446,7 +446,7 @@ namespace Satori
             }
 
             return await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetMessageListAsync(session.AuthToken,
-                    limit, forward, cursor,
+                    limit, forward, cursor, messageIds,
                     cancellationToken),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }

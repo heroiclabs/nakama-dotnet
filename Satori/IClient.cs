@@ -311,7 +311,7 @@ namespace Satori
         /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
         /// <returns>A task object which resolves to a list of messages.</returns>
         public Task<IApiGetMessageListResponse> GetMessageListAsync(ISession session, int limit = 1,
-            bool forward = true, string cursor = null, CancellationToken? cancellationToken = default,
+            bool forward = true, string cursor = null, IEnumerable<string> messageIds = null, CancellationToken? cancellationToken = default,
             RetryConfiguration retryConfiguration = null);
 
         /// <summary>
