@@ -1817,8 +1817,8 @@ namespace Satori
         /// </summary>
         public async Task<IApiFlagList> SatoriGetFlagsAsync(
             string basicAuthUsername,
-            string basicAuthPassword
-            string bearerToken,,
+            string basicAuthPassword,
+            string bearerToken,
             IEnumerable<string> names,
             IEnumerable<string> labels,
             CancellationToken? cancellationToken)
@@ -1868,8 +1868,8 @@ namespace Satori
         /// </summary>
         public async Task<IApiFlagOverrideList> SatoriGetFlagOverridesAsync(
             string basicAuthUsername,
-            string basicAuthPassword
-            string bearerToken,,
+            string basicAuthPassword,
+            string bearerToken,
             IEnumerable<string> names,
             IEnumerable<string> labels,
             CancellationToken? cancellationToken)
