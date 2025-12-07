@@ -7,10 +7,15 @@
         <AssemblyVersion>3.0.0.0</AssemblyVersion>
         <FileVersion>3.0.0.0</FileVersion>
         <InformationalVersion Condition="'$(GitTag)' == ''">3.0.0-dev</InformationalVersion>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="System.Net.Http" Version="4.3.4"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../README.md" Pack="true" PackagePath="README.md"/>
     </ItemGroup>
 
     <Target Name="GetGitTag" BeforeTargets="BeforeBuild">
