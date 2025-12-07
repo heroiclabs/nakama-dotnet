@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.21.0] - 2025-12-07
+### Added
+- Satori: Add phase name and phase variant info to Experiment return types.
+- Satori: Add message IDs as optional filter input when Messages are listed.
+
+### Changed
+- Nakama: Suppress WebSocket exception race condition on graceful socket closure with Unity/Mono runtime.
+- Nakama+Satori: Update various Nuget dependencies used in Test profile.
+
+### Fixed
+- Nakama: Work around issue in Unity IL2CPP with broader use of Preserve annotation on stream types.
+
 ## [3.20.0] - 2025-10-01
 ### Added
 - Nakama: New "ConsoleClient" functions to make HTTP requests to the Nakama Console.
