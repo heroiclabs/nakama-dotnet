@@ -239,6 +239,7 @@ namespace Satori
             {
                 throw new ArgumentException($"flag '{name}' not found.");
             }
+
             return resp.Flags.First();
         }
 
@@ -278,8 +279,8 @@ namespace Satori
                 await SessionRefreshAsync(session, cancellationToken);
             }
 
-            return await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetFlagsAsync(session.AuthToken,
-                    string.Empty, string.Empty, names, labels,
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.SatoriGetFlagsAsync(string.Empty,
+                    string.Empty, session.AuthToken, names, labels,
                     cancellationToken),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
@@ -290,7 +291,7 @@ namespace Satori
             RetryConfiguration retryConfiguration = null)
         {
             return _retryInvoker.InvokeWithRetry(
-                () => _apiClient.SatoriGetFlagsAsync(string.Empty, this.ApiKey, string.Empty, names, labels, cancellationToken),
+                () => _apiClient.SatoriGetFlagsAsync(this.ApiKey, string.Empty, string.Empty, names, labels, cancellationToken),
                 new RetryHistory(string.Empty, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
 
@@ -495,5 +496,5 @@ namespace Satori
                 () => _apiClient.SatoriGetFlagOverridesAsync(session.AuthToken, string.Empty, string.Empty, names, labels, cancellationToken),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
-  }
+    }
 }
