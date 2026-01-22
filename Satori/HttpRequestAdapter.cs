@@ -80,10 +80,10 @@ namespace Satori
             {
                 using var response = await _httpClient.SendAsync(request, cts.Token).ConfigureAwait(false);
                 var contents = await response.Content.ReadAsStringAsync();
-                Logger?.InfoFormat("Received: status={0}, contents='{1}'", response.StatusCode, contents);
 
                 if ((int)response.StatusCode >= 500)
                 {
+                    Logger?.ErrorFormat("Received: status={0}, contents='{1}'", response.StatusCode, contents);
                     // TODO think of best way to map HTTP code to GRPC code since we can't rely
                     // on server to process it. Manually adding the mapping to SDK seems brittle.
                     throw new ApiResponseException((int)response.StatusCode, contents, -1);
@@ -91,8 +91,11 @@ namespace Satori
 
                 if (response.IsSuccessStatusCode)
                 {
+                    Logger?.InfoFormat("Received: status={0}, contents='{1}'", response.StatusCode, contents);
                     return contents;
                 }
+
+                Logger?.ErrorFormat("Received: status={0}, contents='{1}'", response.StatusCode, contents);
 
                 var decoded = contents.FromJson<Dictionary<string, object>>();
                 var message = decoded.TryGetValue("message", out var value1) ? value1.ToString() : string.Empty;
@@ -110,6 +113,12 @@ namespace Satori
             {
                 Logger?.ErrorFormat("Request timed out: method='{0}', uri='{1}'", method, uri);
                 throw new TimeoutException($"The request timed out after {timeout} seconds.", e);
+            }
+            catch (Exception exception) when (!(exception is ApiResponseException))
+            {
+                Logger?.ErrorFormat("Request failed: method='{0}', uri='{1}', exception='{2}'", method, uri,
+                    exception);
+                throw;
             }
         }
 
