@@ -51,7 +51,7 @@ namespace Nakama
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace Nakama
                 }
                 else
                 {
-                    throw e;
+                    throw;
                 }
             }
         }
