@@ -493,7 +493,7 @@ namespace Satori
             }
 
             return await _retryInvoker.InvokeWithRetry(
-                () => _apiClient.SatoriGetFlagOverridesAsync(session.AuthToken, string.Empty, string.Empty, names, labels, cancellationToken),
+                () => _apiClient.SatoriGetFlagOverridesAsync(string.Empty, string.Empty, session.AuthToken, names, labels, cancellationToken),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, cancellationToken));
         }
     }
