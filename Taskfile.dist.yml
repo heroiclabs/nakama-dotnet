@@ -84,10 +84,13 @@ tasks:
         cmds:
             - go install tool
             - git clone --depth 1 "{{.NAKAMA_REPO_URL}}" "{{.TMP_DIR}}"
+            - git clone "https://fuchsia.googlesource.com/third_party/googleapis" "{{.TMP_DIR}}/googleapis"
             -   defer: rm -rf "{{.TMP_DIR}}"
             - |
-                protoc -I {{.TMP_DIR}} -I {{.TMP_DIR}}/vendor \
-                    -I {{.TMP_DIR}}/build/grpc-gateway-v2.3.0/third_party/googleapis \
+                protoc \
+                    -I {{.TMP_DIR}}/apigrpc \
+                    -I {{.TMP_DIR}}/vendor/github.com/heroiclabs/nakama-common \
+                    -I {{.TMP_DIR}}/googleapis \
                     -I {{.TMP_DIR}}/vendor/github.com/grpc-ecosystem/grpc-gateway/v2 \
                     --openapiv2_out={{.TMP_DIR}} --openapiv2_opt=logtostderr=true {{.TMP_DIR}}/apigrpc/apigrpc.proto
             - go run main.go '{{.TMP_DIR}}/apigrpc/apigrpc.swagger.json' 'Nakama' > ../Nakama/ApiClient.gen.cs
@@ -105,13 +108,17 @@ tasks:
         cmds:
             - go install tool
             - git clone --depth 1 "{{.NAKAMA_REPO_URL}}" "{{.TMP_DIR}}"
+            - git clone "https://fuchsia.googlesource.com/third_party/googleapis" "{{.TMP_DIR}}/googleapis"
             -   defer: rm -rf "{{.TMP_DIR}}"
             - |
-                protoc -I {{.TMP_DIR}} -I {{.TMP_DIR}}/vendor \
+                protoc \
+                    -I {{.TMP_DIR}} \
+                    -I {{.TMP_DIR}}/vendor \
                     -I {{.TMP_DIR}}/vendor/github.com/heroiclabs/nakama-common \
+                    -I {{.TMP_DIR}}/googleapis \
                     -I {{.TMP_DIR}}/build/grpc-gateway-v2.3.0/third_party/googleapis \
-                    -I {{.TMP_DIR}}/vendor/github.com/grpc-ecosystem/grpc-gateway/v2 --openapiv2_out={{.TMP_DIR}} \
-                    --openapiv2_opt=json_names_for_fields=false,logtostderr=true {{.TMP_DIR}}/console/console.proto
+                    -I {{.TMP_DIR}}/vendor/github.com/grpc-ecosystem/grpc-gateway/v2 \
+                    --openapiv2_out={{.TMP_DIR}} --openapiv2_opt=json_names_for_fields=false,logtostderr=true {{.TMP_DIR}}/console/console.proto
             - go run main.go '{{.TMP_DIR}}/console/console.swagger.json' 'Nakama.Console' > ../Nakama/Console/ConsoleClient.gen.cs
         desc: 'Generate low-level ConsoleClient for Nakama client.'
         dir: 'codegen'
