@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.21.2] - 2026-02-13
+### Changed
+- Nakama+Satori: Improve how HTTP requests are logged in the request adapter.
+
+### Fixed
+- Satori: Fix argument order to client "GetFlagOverrides" function.
+- Nakama+Satori: Fix proto dependency resolver within build task.
+
 ## [3.21.1] - 2025-12-21
 ### Fixed
 - Embed README into Nuget package distribution with correct file path.
