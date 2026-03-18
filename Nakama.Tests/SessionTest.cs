@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Nakama.Tests
@@ -32,8 +33,9 @@ namespace Nakama.Tests
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1NTVjNDQwMC0yZGIxLTRkYmEtOTgwMC1jZjBmYzljMTVjMTAiLCJ1c24iOiJ1YWVuWGxFRnlhIiwiZXhwIjoxNjE2MzQ3OTc2fQ.l6bKhmcEbGHKV8YQVDKF8ysmWgOqcz3tCDSRn0eIKPw";
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void GetVariables_VariablesField_Empty()
+        public async Task GetVariables_VariablesField_Empty()
         {
+            await Task.CompletedTask;
             var session = Session.Restore(AuthToken);
             Assert.NotNull(session.AuthToken);
             Assert.Equal(AuthToken, session.AuthToken);
@@ -42,8 +44,9 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void GetVariables_VariablesField_Values()
+        public async Task GetVariables_VariablesField_Values()
         {
+            await Task.CompletedTask;
             var session = Session.Restore(AuthTokenVariables);
             Assert.NotNull(session.AuthToken);
             Assert.NotNull(session.Username);
@@ -90,8 +93,9 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void GetUsername_UsernameField_NotNull()
+        public async Task GetUsername_UsernameField_NotNull()
         {
+            await Task.CompletedTask;
             var session = Session.Restore(AuthToken);
             Assert.NotNull(session.AuthToken);
             Assert.Equal(AuthToken, session.AuthToken);
@@ -100,8 +104,9 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void GetUserId_UserIdField_NotNull()
+        public async Task GetUserId_UserIdField_NotNull()
         {
+            await Task.CompletedTask;
             var session = Session.Restore(AuthToken);
             Assert.NotNull(session.AuthToken);
             Assert.Equal(AuthToken, session.AuthToken);
@@ -110,8 +115,9 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void IsExpired_ExpiredField_True()
+        public async Task IsExpired_ExpiredField_True()
         {
+            await Task.CompletedTask;
             var session = Session.Restore(AuthToken);
             Assert.NotNull(session.AuthToken);
             Assert.Equal(AuthToken, session.AuthToken);
@@ -121,8 +127,9 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void IsRefreshExpired_RefreshExpiredField_True()
+        public async Task IsRefreshExpired_RefreshExpiredField_True()
         {
+            await Task.CompletedTask;
             var session = Session.Restore(AuthToken, RefreshToken);
             Assert.NotNull(session);
             Assert.Equal(RefreshToken, session.RefreshToken);
@@ -132,8 +139,9 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void CreateTime_IsTokenIssField()
+        public async Task CreateTime_IsTokenIssField()
         {
+            await Task.CompletedTask;
             var session = Session.Restore(AuthToken);
             Assert.Equal(1516907373, session.CreateTime);
         }
@@ -169,15 +177,17 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void Restore_AuthTokenEmptyString_Null()
+        public async Task Restore_AuthTokenEmptyString_Null()
         {
+            await Task.CompletedTask;
             var session = Session.Restore("");
             Assert.Null(session);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void Restore_RefreshTokenNull_Valid()
+        public async Task Restore_RefreshTokenNull_Valid()
         {
+            await Task.CompletedTask;
             var session = Session.Restore(AuthToken, null);
             Assert.NotNull(session);
             Assert.Null(session.RefreshToken);
