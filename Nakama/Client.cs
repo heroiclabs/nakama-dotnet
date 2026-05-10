@@ -913,6 +913,37 @@ namespace Nakama
             return response;
         }
 
+        /// <inheritdoc cref="IClient.ListLeaderboardRecordsAroundFriendAsync"/>
+        /// <remarks>
+        /// The returned <c>IApiLeaderboardRecordList</c> is automatically updated to reflect username changes for the
+        /// current user.
+        /// </remarks>
+        public async Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundFriendAsync(ISession session, string leaderboardId,
+            string friendId, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.ListLeaderboardRecordsAroundOwnerAsync(
+                    session.AuthToken, leaderboardId, friendId,
+                    limit, expiry?.ToString(), cursor, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            
+            foreach (var record in response.Records)
+            {
+                if (session.UserId.Equals(record.OwnerId) && record is ApiLeaderboardRecord r)
+                {
+                    r.Username = session.Username;
+                }
+            }
+
+            return response;
+        }
+
+
         /// <inheritdoc cref="ListMatchesAsync"/>
         public async Task<IApiMatchList> ListMatchesAsync(ISession session, int min, int max, int limit,
             bool authoritative, string label, string query, RetryConfiguration retryConfiguration = null,
@@ -953,7 +984,8 @@ namespace Nakama
 
         /// <inheritdoc cref="ListPartiesAsync"/>
         public async Task<IApiPartyList> ListPartiesAsync(ISession session, int limit, bool? open, string query = null,
-            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)   {
+            string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
                 session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
             {
