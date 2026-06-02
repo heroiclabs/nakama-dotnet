@@ -47,6 +47,9 @@ namespace Satori
         /// <inheritdoc cref="ISession.IdentityId"/>
         public string IdentityId { get; private set; }
 
+        /// <inheritdoc cref="ISession.SessionId"/>
+        public string SessionId { get; private set; }
+
         /// <inheritdoc cref="ISession.HasExpired"/>
         public bool HasExpired(DateTime offset)
         {
@@ -87,6 +90,7 @@ namespace Satori
             var decoded = json.FromJson<Dictionary<string, object>>();
             ExpireTime = Convert.ToInt64(decoded["exp"]);
             IdentityId = decoded["iid"].ToString();
+            SessionId = decoded.TryGetValue("sid", out var sid) ? sid.ToString() : string.Empty;
 
             if (decoded.TryGetValue("iat", out var value))
             {
