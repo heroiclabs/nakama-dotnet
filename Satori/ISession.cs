@@ -62,6 +62,11 @@ namespace Satori
         string IdentityId { get; }
 
         /// <summary>
+        /// The ID of the session that analytics events are associated with.
+        /// </summary>
+        string SessionId { get; }
+
+        /// <summary>
         /// Check the session has expired against the offset time.
         /// </summary>
         /// <param name="offset">The datetime to compare against this session.</param>
