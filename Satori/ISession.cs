@@ -62,7 +62,7 @@ namespace Satori
         string IdentityId { get; }
 
         /// <summary>
-        /// The ID of the session which analytics events are associated.
+        /// The ID of the session that analytics events are associated with.
         /// </summary>
         string SessionId { get; }
 

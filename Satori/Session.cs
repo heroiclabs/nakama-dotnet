@@ -90,7 +90,7 @@ namespace Satori
             var decoded = json.FromJson<Dictionary<string, object>>();
             ExpireTime = Convert.ToInt64(decoded["exp"]);
             IdentityId = decoded["iid"].ToString();
-            SessionId = decoded.TryGetValue("sid", out var sid) ? sid.ToString() : string.Empty;
+            SessionId = decoded.TryGetValue("sid", out var sid) && sid != null ? sid.ToString() : string.Empty;
 
             if (decoded.TryGetValue("iat", out var value))
             {

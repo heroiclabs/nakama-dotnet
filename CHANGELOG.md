@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## [Unreleased]
 ### Added
-- Unpack the "sid" field from the auth token.
+- Satori: Add "ISession.SessionId", unpacked from the "sid" field in the auth token.
 
 ## [3.21.2] - 2026-02-13
 ### Changed
