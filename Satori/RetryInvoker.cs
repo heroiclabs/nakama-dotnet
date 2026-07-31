@@ -91,13 +91,14 @@ namespace Satori
                 throw new TaskCanceledException("Exceeded max retry attempts.", e);
             }
 
-            int totalDelay = history.Retries.Sum(r => r.JitterBackoff);
-            if (totalDelay >= history.Configuration.MaxTotalTimeoutMs)
+            Retry newRetry = CreateNewRetry(history);
+
+            long previousDelay = history.Retries.Sum(r => (long)r.JitterBackoff);
+            if (previousDelay + newRetry.JitterBackoff >= history.Configuration.MaxTotalTimeoutMs)
             {
                 throw new TaskCanceledException("Exceeded max total timeout.", e);
             }
 
-            Retry newRetry = CreateNewRetry(history);
             history.Retries.Add(newRetry);
             history.Configuration.RetryListener?.Invoke(history.Retries.Count, newRetry);
 
