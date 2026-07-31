@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Nakama
@@ -88,6 +89,12 @@ namespace Nakama
             if (history.Retries.Count >= history.Configuration.MaxAttempts)
             {
                 throw new TaskCanceledException("Exceeded max retry attempts.", e);
+            }
+
+            int totalDelay = history.Retries.Sum(r => r.JitterBackoff);
+            if (totalDelay >= history.Configuration.MaxTotalTimeoutMs)
+            {
+                throw new TaskCanceledException("Exceeded max total timeout.", e);
             }
 
             Retry newRetry = CreateNewRetry(history);
