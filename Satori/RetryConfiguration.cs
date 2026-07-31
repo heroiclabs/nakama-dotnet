@@ -45,6 +45,11 @@ namespace Satori
         public int MaxAttempts { get; }
 
         /// <summary>
+        /// The maximum number of milliseconds across all retries before cancelling the request task.
+        /// </summary>
+        public int MaxTotalTimeoutMs { get; }
+
+        /// <summary>
         /// A callback that is invoked before a new retry attempt is made.
         /// </summary>
         public RetryListener RetryListener { get; }
@@ -55,7 +60,7 @@ namespace Satori
         /// <param name="baseDelayMs">The base delay (milliseconds) used to calculate the time before making another request attempt.</param>
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         public RetryConfiguration(int baseDelayMs, int maxRetries) :
-            this(baseDelayMs, maxRetries, null, RetryJitter.FullJitter) {}
+            this(baseDelayMs, maxRetries, null, RetryJitter.FullJitter, maxTotalTimeoutMs: 1500) {}
 
         /// <summary>
         /// Create a new retry configuration.
@@ -64,7 +69,7 @@ namespace Satori
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="listener">A callback that is invoked before a new retry attempt is made.</param>
         public RetryConfiguration(int baseDelayMs, int maxRetries, RetryListener listener) :
-            this(baseDelayMs, maxRetries, listener, RetryJitter.FullJitter) {}
+            this(baseDelayMs, maxRetries, listener, RetryJitter.FullJitter, maxTotalTimeoutMs: 1500) {}
 
         /// <summary>
         /// Create a new retry configuration.
@@ -73,12 +78,30 @@ namespace Satori
         /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
         /// <param name="listener">A callback that is invoked before a new retry attempt is made.</param>
         /// <param name="jitter">The jitter algorithm used to apply randomness to the retry delay.</param>
-        public RetryConfiguration(int baseDelayMs, int maxRetries, RetryListener listener, Jitter jitter)
+        public RetryConfiguration(int baseDelayMs, int maxRetries, RetryListener listener, Jitter jitter) :
+            this(baseDelayMs, maxRetries, listener, jitter, maxTotalTimeoutMs: 1500)
         {
             BaseDelayMs = baseDelayMs;
             RetryListener = listener;
             MaxAttempts = maxRetries;
             Jitter = jitter;
+        }
+
+        /// <summary>
+        /// Create a new retry configuration.
+        /// </summary>
+        /// <param name="baseDelayMs">The base delay (milliseconds) used to calculate the time before making another request attempt.</param>
+        /// <param name="maxRetries">The maximum number of attempts to make before cancelling the request task.</param>
+        /// <param name="listener">A callback that is invoked before a new retry attempt is made.</param>
+        /// <param name="jitter">The jitter algorithm used to apply randomness to the retry delay.</param>
+        /// <param name="maxTotalTimeoutMs">The maximum number of milliseconds across all retries before cancelling the request task.</param>
+        public RetryConfiguration(int baseDelayMs, int maxRetries, RetryListener listener, Jitter jitter, int maxTotalTimeoutMs)
+        {
+            BaseDelayMs = baseDelayMs;
+            RetryListener = listener;
+            MaxAttempts = maxRetries;
+            Jitter = jitter;
+            MaxTotalTimeoutMs = maxTotalTimeoutMs;
         }
     }
 }
