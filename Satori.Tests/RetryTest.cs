@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,6 +57,31 @@ namespace Satori.Tests
 
             // Call count should be ~5 despite 10 max retries
             callCount.Should().BeLessThan(6);
+        }
+
+        [Fact]
+        public async Task RetryInvoker_ShouldNotScheduleBackoff_ThatExceedsTotalTimeout()
+        {
+            var maxTotalTimeout = 250;
+            var config = new RetryConfiguration(
+                baseDelayMs: 100,
+                maxRetries: 10,
+                listener: (_, _) => { },
+                jitter: (retries, delay, random) => delay,
+                maxTotalTimeoutMs: maxTotalTimeout
+            );
+
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => true);
+
+            Func<Task<bool>> failingRequest = () => throw new HttpRequestException("Simulated network error");
+
+            await Assert.ThrowsAsync<TaskCanceledException>(() =>
+                invoker.InvokeWithRetry(failingRequest, history)
+            );
+
+            history.Retries.Sum(r => r.JitterBackoff).Should().BeLessOrEqualTo(maxTotalTimeout);
+            history.Retries.Count.Should().Be(1);
         }
 
         [Fact]
