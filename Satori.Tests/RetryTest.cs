@@ -66,7 +66,7 @@ namespace Satori.Tests
             var config = new RetryConfiguration(
                 baseDelayMs: 100,
                 maxRetries: 10,
-                listener: (_, _) => { },
+                listener: (_, __) => { },
                 jitter: (retries, delay, random) => delay,
                 maxTotalTimeoutMs: maxTotalTimeout
             );
@@ -80,7 +80,7 @@ namespace Satori.Tests
                 invoker.InvokeWithRetry(failingRequest, history)
             );
 
-            history.Retries.Sum(r => r.JitterBackoff).Should().BeLessOrEqualTo(maxTotalTimeout);
+            history.Retries.Sum(r => r.JitterBackoff).Should().BeLessThanOrEqualTo(maxTotalTimeout);
             history.Retries.Count.Should().Be(1);
         }
 

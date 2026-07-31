@@ -356,7 +356,7 @@ namespace Nakama.Tests
                 invoker.InvokeWithRetry(failingRequest, history)
             );
 
-            history.Retries.Sum(r => r.JitterBackoff).Should().BeLessOrEqualTo(maxTotalTimeout);
+            history.Retries.Sum(r => r.JitterBackoff).Should().BeLessThanOrEqualTo(maxTotalTimeout);
             history.Retries.Count.Should().Be(1);
         }
 
