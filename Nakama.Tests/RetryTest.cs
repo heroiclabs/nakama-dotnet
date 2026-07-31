@@ -19,13 +19,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using System;
+using System.Net.Http;
+using System.Threading;
+using FluentAssertions;
 
 namespace Nakama.Tests
 {
     public class RetryTest
     {
         [Fact]
-        public async void TransientHttpAdapter_ServerDefault_CreatesSession()
+        public async Task TransientHttpAdapter_ServerDefault_CreatesSession()
         {
             var adapterSchedule = new TransientAdapterResponseType[1] { TransientAdapterResponseType.ServerOk };
 
@@ -36,7 +39,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_OneRetries_RetriesExactlyOnce()
+        public async Task RetryConfiguration_OneRetries_RetriesExactlyOnce()
         {
             var adapterSchedule = new TransientAdapterResponseType[2]
                 { TransientAdapterResponseType.TransientError, TransientAdapterResponseType.ServerOk };
@@ -58,7 +61,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_FiveRetries_RetriesExactlyFiveTimes()
+        public async Task RetryConfiguration_FiveRetries_RetriesExactlyFiveTimes()
         {
             var adapterSchedule = new TransientAdapterResponseType[6]
             {
@@ -88,7 +91,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_PastMaxRetries_ThrowsTaskCancelledException()
+        public async Task RetryConfiguration_PastMaxRetries_ThrowsTaskCancelledException()
         {
             var adapterSchedule = new TransientAdapterResponseType[4]
             {
@@ -115,7 +118,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_ZeroRetries_RetriesZeroTimes()
+        public async Task RetryConfiguration_ZeroRetries_RetriesZeroTimes()
         {
             var adapterSchedule = new TransientAdapterResponseType[1] { TransientAdapterResponseType.TransientError };
 
@@ -136,7 +139,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_OverrideSet_OverridesGlobal()
+        public async Task RetryConfiguration_OverrideSet_OverridesGlobal()
         {
             var adapterSchedule = new TransientAdapterResponseType[4]
             {
@@ -164,7 +167,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_Delay_ExpectedExponentialTimes()
+        public async Task RetryConfiguration_Delay_ExpectedExponentialTimes()
         {
             var adapterSchedule = new TransientAdapterResponseType[4]
             {
@@ -196,7 +199,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_Delay_ExpectedDelays()
+        public async Task RetryConfiguration_Delay_ExpectedDelays()
         {
             var adapterSchedule = new TransientAdapterResponseType[3]
             {
@@ -234,7 +237,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_NullConfiguration_DoesNotThrowNullRef()
+        public async Task RetryConfiguration_NullConfiguration_DoesNotThrowNullRef()
         {
             var adapterSchedule = new TransientAdapterResponseType[3]
             {
@@ -252,7 +255,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_NoRetries_ThrowsBaseApiResponseException()
+        public async Task RetryConfiguration_NoRetries_ThrowsBaseApiResponseException()
         {
             var adapterSchedule = new TransientAdapterResponseType[3]
             {
@@ -282,7 +285,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_NonTransientError_Throws()
+        public async Task RetryConfiguration_NonTransientError_Throws()
         {
             var adapterSchedule = new TransientAdapterResponseType[1]
             {
