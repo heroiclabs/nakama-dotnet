@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <PackageReference Include="System.Net.Http" Version="4.3.4"/>
+        <InternalsVisibleTo Include="Satori.Tests" />
     </ItemGroup>
 
     <ItemGroup>

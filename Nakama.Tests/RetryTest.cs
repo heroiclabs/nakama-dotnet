@@ -19,13 +19,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using System;
+using System.Net.Http;
+using System.Threading;
+using FluentAssertions;
 
 namespace Nakama.Tests
 {
     public class RetryTest
     {
         [Fact]
-        public async void TransientHttpAdapter_ServerDefault_CreatesSession()
+        public async Task TransientHttpAdapter_ServerDefault_CreatesSession()
         {
             var adapterSchedule = new TransientAdapterResponseType[1] { TransientAdapterResponseType.ServerOk };
 
@@ -36,7 +39,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_OneRetries_RetriesExactlyOnce()
+        public async Task RetryConfiguration_OneRetries_RetriesExactlyOnce()
         {
             var adapterSchedule = new TransientAdapterResponseType[2]
                 { TransientAdapterResponseType.TransientError, TransientAdapterResponseType.ServerOk };
@@ -58,7 +61,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_FiveRetries_RetriesExactlyFiveTimes()
+        public async Task RetryConfiguration_FiveRetries_RetriesExactlyFiveTimes()
         {
             var adapterSchedule = new TransientAdapterResponseType[6]
             {
@@ -88,7 +91,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_PastMaxRetries_ThrowsTaskCancelledException()
+        public async Task RetryConfiguration_PastMaxRetries_ThrowsTaskCancelledException()
         {
             var adapterSchedule = new TransientAdapterResponseType[4]
             {
@@ -115,7 +118,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_ZeroRetries_RetriesZeroTimes()
+        public async Task RetryConfiguration_ZeroRetries_RetriesZeroTimes()
         {
             var adapterSchedule = new TransientAdapterResponseType[1] { TransientAdapterResponseType.TransientError };
 
@@ -136,7 +139,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_OverrideSet_OverridesGlobal()
+        public async Task RetryConfiguration_OverrideSet_OverridesGlobal()
         {
             var adapterSchedule = new TransientAdapterResponseType[4]
             {
@@ -164,7 +167,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_Delay_ExpectedExponentialTimes()
+        public async Task RetryConfiguration_Delay_ExpectedExponentialTimes()
         {
             var adapterSchedule = new TransientAdapterResponseType[4]
             {
@@ -196,7 +199,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_Delay_ExpectedDelays()
+        public async Task RetryConfiguration_Delay_ExpectedDelays()
         {
             var adapterSchedule = new TransientAdapterResponseType[3]
             {
@@ -234,7 +237,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_NullConfiguration_DoesNotThrowNullRef()
+        public async Task RetryConfiguration_NullConfiguration_DoesNotThrowNullRef()
         {
             var adapterSchedule = new TransientAdapterResponseType[3]
             {
@@ -252,7 +255,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_NoRetries_ThrowsBaseApiResponseException()
+        public async Task RetryConfiguration_NoRetries_ThrowsBaseApiResponseException()
         {
             var adapterSchedule = new TransientAdapterResponseType[3]
             {
@@ -282,7 +285,7 @@ namespace Nakama.Tests
         }
 
         [Fact]
-        public async void RetryConfiguration_NonTransientError_Throws()
+        public async Task RetryConfiguration_NonTransientError_Throws()
         {
             var adapterSchedule = new TransientAdapterResponseType[1]
             {
@@ -298,5 +301,104 @@ namespace Nakama.Tests
                 await Assert.ThrowsAsync<ApiResponseException>(async () =>
                     await client.AuthenticateCustomAsync("test_id"));
         }
+        
+        [Fact]
+        public async Task RetryInvoker_ShouldStopRetrying_WhenTotalTimeoutExceeded()
+        {
+            // Arrange
+            var maxRetries = 10;
+            var maxTotalTimeout = 250; // Ultimately must respect this
+            var config = new RetryConfiguration(
+                baseDelayMs: 100,
+                maxRetries: maxRetries,
+                listener: (_, _) => { },
+                jitter: RetryJitter.FullJitter,
+                maxTotalTimeoutMs: maxTotalTimeout
+            );
+
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => true); // Always retry
+
+            int callCount = 0;
+            Func<Task<bool>> failingRequest = () =>
+            {
+                ++callCount;
+                throw new HttpRequestException("Simulated network error");
+            };
+
+            // The invoker should stop executing retries once cumulative time hits/exceeds 250ms
+            await Assert.ThrowsAsync<TaskCanceledException>(() => 
+                invoker.InvokeWithRetry(failingRequest, history)
+            );
+
+            // Call count should be ~5 despite 10 max retries
+            callCount.Should().BeLessThan(6);
+        }
+
+        [Fact]
+        public async Task RetryInvoker_ShouldNotScheduleBackoff_ThatExceedsTotalTimeout()
+        {
+            var maxTotalTimeout = 250;
+            var config = new RetryConfiguration(
+                baseDelayMs: 100,
+                maxRetries: 10,
+                listener: (_, _) => { },
+                jitter: (retries, delay, random) => delay,
+                maxTotalTimeoutMs: maxTotalTimeout
+            );
+
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => true);
+
+            Func<Task<bool>> failingRequest = () => throw new HttpRequestException("Simulated network error");
+
+            await Assert.ThrowsAsync<TaskCanceledException>(() =>
+                invoker.InvokeWithRetry(failingRequest, history)
+            );
+
+            history.Retries.Sum(r => r.JitterBackoff).Should().BeLessThanOrEqualTo(maxTotalTimeout);
+            history.Retries.Count.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task RetryInvoker_Succeeds_WhenRequestRecoversBeforeTimeout()
+        {
+            // Arrange
+            var baseDelayMs = 10;
+            var maxRetries = 5;
+            var config = new RetryConfiguration(
+                baseDelayMs: baseDelayMs,
+                maxRetries: maxRetries,
+                listener: (_, _) => { },
+                jitter: RetryJitter.FullJitter,
+                maxTotalTimeoutMs: 1000
+            );
+
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => ex is HttpRequestException);
+
+            int attemptCount = 0;
+            string expectedResult = "Success!";
+
+            // Fail twice with transient exception, then succeed on the 3rd try
+            Func<Task<string>> recoveringRequest = () =>
+            {
+                ++attemptCount;
+                if (attemptCount < 3)
+                {
+                    throw new HttpRequestException("Temporary network error");
+                }
+
+                return Task.FromResult(expectedResult);
+            };
+
+            // Act
+            string result = await invoker.InvokeWithRetry(recoveringRequest, history);
+
+            // Assert
+            result.Should().Be(expectedResult);
+            attemptCount.Should().Be(3);
+            history.Retries.Count.Should().Be(2); // Recorded 2 failed attempts before success
+        } 
     }
 }

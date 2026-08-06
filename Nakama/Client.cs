@@ -50,7 +50,8 @@ namespace Nakama
             baseDelayMs: 500,
             jitter: RetryJitter.FullJitter,
             listener: null,
-            maxRetries: 4);
+            maxRetries: 4,
+            maxTotalTimeoutMs: 1500);
 
         /// <inheritdoc cref="IClient.Host"/>
         public string Host { get; }
