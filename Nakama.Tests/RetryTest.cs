@@ -399,6 +399,92 @@ namespace Nakama.Tests
             result.Should().Be(expectedResult);
             attemptCount.Should().Be(3);
             history.Retries.Count.Should().Be(2); // Recorded 2 failed attempts before success
-        } 
+        }
+
+        [Fact]
+        public async Task RetryInvoker_GenericOverload_DoesNotRepeatRequestAfterSuccess()
+        {
+            var config = new RetryConfiguration(
+                baseDelayMs: 10,
+                maxRetries: 5,
+                listener: (_, _) => { },
+                jitter: RetryJitter.FullJitter,
+                maxTotalTimeoutMs: 10_000
+            );
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => true);
+
+            var callCount = 0;
+            
+            Func<Task<string>> request = () =>
+            {
+                ++callCount;
+                return Task.FromResult("Success!");
+            };
+            var invokeTask = invoker.InvokeWithRetry(request, history);
+            var completed = await Task.WhenAny(invokeTask, Task.Delay(5000));
+
+            completed.Should().Be(invokeTask, "invoker should return immediately after success");
+            callCount.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task RetryInvoker_VoidOverload_DoesNotRepeatRequestAfterSuccess()
+        {
+            var config = new RetryConfiguration(
+                baseDelayMs: 10,
+                maxRetries: 5,
+                listener: (_, _) => { },
+                jitter: RetryJitter.FullJitter,
+                maxTotalTimeoutMs: 10_000
+            );
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => true);
+
+            int callCount = 0;
+            Func<Task> request = () =>
+            {
+                callCount++;
+                return Task.CompletedTask;
+            };
+
+            var invokeTask = invoker.InvokeWithRetry(request, history);
+            var completed = await Task.WhenAny(invokeTask, Task.Delay(5000));
+
+            completed.Should().Be(invokeTask, "invoker should return immediately after success");
+            callCount.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task RetryInvoker_VoidOverload_Succeeds_WhenRequestRecoversBeforeTimeout()
+        {
+            var config = new RetryConfiguration(
+                baseDelayMs: 10,
+                maxRetries: 5,
+                listener: (_, _) => { },
+                jitter: RetryJitter.FullJitter,
+                maxTotalTimeoutMs: 10_000
+            );
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => ex is HttpRequestException);
+
+            int callCount = 0;
+            Func<Task> request = () =>
+            {
+                callCount++;
+                if (callCount < 3)
+                {
+                    throw new HttpRequestException("Network Error");
+                }
+                return Task.CompletedTask;
+            };
+
+            var invokeTask = invoker.InvokeWithRetry(request, history);
+            var completed = await Task.WhenAny(invokeTask, Task.Delay(5000));
+
+            completed.Should().Be(invokeTask, "invoker should complete after recovery, not loop");
+            callCount.Should().Be(3);
+            history.Retries.Count.Should().Be(2);
+        }
     }
 }
