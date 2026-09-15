@@ -39,40 +39,39 @@ namespace Nakama
 
         public async Task<T> InvokeWithRetry<T>(Func<Task<T>> request, RetryHistory history)
         {
-            try
+            while (true)
             {
-                return await request();
-            }
-            catch (Exception e)
-            {
-                if (history.Configuration != null && _del(e))
+                try
                 {
-                    await Backoff(history, e);
-                    return await InvokeWithRetry<T>(request, history);
+                    return await request();
                 }
-                else
+                catch (Exception e)
                 {
-                    throw;
+                    if (history.Configuration == null || !_del(e))
+                    {
+                        throw;
+                    }
+                    await Backoff(history, e);
                 }
             }
         }
 
         public async Task InvokeWithRetry(Func<Task> request, RetryHistory history)
         {
-            try
+            while (true)
             {
-                await request();
-            }
-            catch (Exception e)
-            {
-                if (history.Configuration != null && _del(e))
+                try
                 {
-                    await Backoff(history, e);
-                    await InvokeWithRetry(request, history);
+                    await request();
+                    return;
                 }
-                else
+                catch (Exception e)
                 {
-                    throw;
+                    if (history.Configuration == null || !_del(e))
+                    {
+                        throw;
+                    }
+                    await Backoff(history, e);
                 }
             }
         }
