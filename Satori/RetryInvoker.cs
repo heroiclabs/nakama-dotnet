@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Satori
@@ -87,14 +86,15 @@ namespace Satori
         {
             if (history.Retries.Count >= history.Configuration.MaxAttempts)
             {
+                history.Configuration.RetriesExhausted?.Invoke(history.Retries.Count, e);
                 throw new TaskCanceledException("Exceeded max retry attempts.", e);
             }
 
             Retry newRetry = CreateNewRetry(history);
 
-            long previousDelay = history.Retries.Sum(r => (long)r.JitterBackoff);
-            if (previousDelay + newRetry.JitterBackoff >= history.Configuration.MaxTotalTimeoutMs)
+            if (history.Clock.ElapsedMilliseconds + newRetry.JitterBackoff >= history.Configuration.MaxTotalTimeoutMs)
             {
+                history.Configuration.RetriesExhausted?.Invoke(history.Retries.Count, e);
                 throw new TaskCanceledException("Exceeded max total timeout.", e);
             }
 

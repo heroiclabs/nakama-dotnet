@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 
 namespace Satori
@@ -26,6 +27,7 @@ namespace Satori
         public List<Retry> Retries { get; }
         public CancellationToken? UserCancelToken { get; }
         public Random Random { get; }
+        public Stopwatch Clock { get; }
 
         public RetryHistory(ISession session, RetryConfiguration configuration, CancellationToken? userCancelToken) : this(session.AuthToken, configuration, userCancelToken)
         {
@@ -37,6 +39,7 @@ namespace Satori
             Retries = new List<Retry>();
             UserCancelToken = userCancelToken;
             Random = new Random(jitterHashKey.GetHashCode());
+            Clock = Stopwatch.StartNew();
         }
     }
 }

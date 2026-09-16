@@ -40,7 +40,7 @@ namespace Satori
             jitter: RetryJitter.FullJitter,
             listener: null,
             maxRetries: 4,
-            maxTotalTimeoutMs: 10_000);
+            maxTotalTimeoutMs: 60_000);
 
         /// <inheritdoc cref="IClient.Host"/>
         public string Host { get; }
