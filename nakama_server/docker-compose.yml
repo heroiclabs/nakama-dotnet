@@ -1,0 +1,52 @@
+services:
+  postgres:
+    container_name: anitra-postgres
+    environment:
+      - POSTGRES_DB=nakama
+      - POSTGRES_PASSWORD=localdb
+    image: postgres:18-alpine
+    expose:
+      - "8080"
+      - "5432"
+    ports:
+      - "5432:5432"
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "nakama"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  nakama:
+    build: .
+    container_name: anitra-nakama
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint:
+      - "/bin/sh"
+      - "-ecx"
+      - >
+        /nakama/nakama migrate up --database.address postgres:localdb@postgres:5432/nakama &&
+        exec /nakama/nakama --database.address postgres:localdb@postgres:5432/nakama
+    expose:
+      - "7349"
+      - "7350"
+      - "7351"
+    healthcheck:
+      test: ["CMD", "/nakama/nakama", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    links:
+      - "postgres:db"
+    ports:
+      - "7349:7349"
+      - "7350:7350"
+      - "7351:7351"
+    restart: unless-stopped
+
+volumes:
+  data:

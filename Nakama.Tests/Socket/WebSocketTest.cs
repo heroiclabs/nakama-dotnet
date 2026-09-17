@@ -37,8 +37,9 @@ namespace Nakama.Tests.Socket
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void ShouldCreateSocket()
+        public async Task ShouldCreateSocket()
         {
+            await Task.CompletedTask;
             var client = TestsUtil.FromSettingsFile();
             var socket = Nakama.Socket.From(client);
             Assert.NotNull(socket);
