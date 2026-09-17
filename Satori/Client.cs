@@ -75,7 +75,7 @@ namespace Satori
         /// <summary>
         /// The default timeout of the server.
         /// </summary>
-        public const int DefaultTimeout = 15;
+        public const int DefaultTimeout = 10;
 
         private readonly ApiClient _apiClient;
         private ILogger _logger;

@@ -92,7 +92,7 @@ namespace Nakama
         private ILogger _logger;
         private readonly RetryInvoker _retryInvoker;
 
-        private const int DefaultTimeout = 15;
+        private const int DefaultTimeout = 10;
 
         /// There is a bug in Unity's WebGL implementation that prevents the proper invocation of constructors with more
         /// than four parameters. For this reason, avoid defining constructors that do this.

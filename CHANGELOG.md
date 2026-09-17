@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Nakama+Satori: New "RetryConfiguration.MaxTotalTimeoutMs" which caps a request at 60 seconds of wall clock time by default, measured from the first attempt and including the time spent inside each request.
 - Nakama+Satori: New "RetriesExhausted" callback on "RetryConfiguration", invoked when a request has stopped retrying and is about to fail.
 
+### Changed
+- Nakama+Satori: The default request timeout is now 10 seconds, down from 15. Use "IClient.Timeout" to raise it for calls which need longer.
+
 ### Fixed
 - Nakama+Satori: Reduce the stack trace depth on requests which are retried.
 
