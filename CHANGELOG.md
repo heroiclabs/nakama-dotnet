@@ -4,14 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.22.0] - 2026-09-17
 ### Added
 - Satori: Add "ISession.SessionId", unpacked from the "sid" field in the auth token.
-- Nakama+Satori: New "RetryConfiguration.MaxTotalTimeoutMs" which caps a request at 60 seconds of wall clock time by default, measured from the first attempt and including the time spent inside each request.
-- Nakama+Satori: New "RetriesExhausted" callback on "RetryConfiguration", invoked when a request has stopped retrying and is about to fail.
+- Nakama+Satori: New "RetryConfiguration.MaxTotalTimeoutMs" which caps a request total wallclock time.
+- Nakama+Satori: New "RetriesExhausted" callback on "RetryConfiguration", invoked when a request has stopped retrying and will fail.
 
 ### Changed
-- Nakama+Satori: The default request timeout is now 10 seconds, down from 15. Use "IClient.Timeout" to raise it for calls which need longer.
+- Nakama+Satori: The default request timeout is now 10 seconds. Use "IClient.Timeout" to set the value.
 
 ### Fixed
 - Nakama+Satori: Reduce the stack trace depth on requests which are retried.
