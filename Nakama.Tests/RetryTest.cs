@@ -486,5 +486,151 @@ namespace Nakama.Tests
             callCount.Should().Be(3);
             history.Retries.Count.Should().Be(2);
         }
+
+        [Fact]
+        public async Task RetryInvoker_TotalTimeout_CountsRequestDuration()
+        {
+            // No backoff at all, so the only thing that can consume the budget is the request itself.
+            // Each attempt burns 100ms, so the 250ms budget is exceeded once the third attempt completes.
+            var config = new RetryConfiguration(
+                baseDelayMs: 0,
+                maxRetries: 10,
+                listener: null,
+                jitter: (retries, delay, random) => 0,
+                maxTotalTimeoutMs: 250
+            );
+
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => ex is HttpRequestException);
+
+            var callCount = 0;
+            Func<Task<bool>> slowFailingRequest = async () =>
+            {
+                ++callCount;
+                await Task.Delay(100);
+                throw new HttpRequestException("Simulated network error");
+            };
+
+            await Assert.ThrowsAsync<TaskCanceledException>(() =>
+                invoker.InvokeWithRetry(slowFailingRequest, history)
+            );
+
+            callCount.Should().Be(3);
+        }
+
+        [Fact]
+        public async Task RetryInvoker_FiresRetriesExhausted_WhenMaxAttemptsReached()
+        {
+            var lastNumRetry = -1;
+            var exhaustedCount = 0;
+            var retriesAttempted = -1;
+            Exception cause = null;
+
+            var config = new RetryConfiguration(
+                baseDelayMs: 10,
+                maxRetries: 3,
+                listener: (numRetry, _) => lastNumRetry = numRetry,
+                jitter: RetryJitter.FullJitter,
+                maxTotalTimeoutMs: 10_000,
+                retriesExhausted: (attempted, e) => { ++exhaustedCount; retriesAttempted = attempted; cause = e; }
+            );
+
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => ex is HttpRequestException);
+
+            var thrown = new HttpRequestException("Simulated network error");
+            Func<Task<bool>> failingRequest = () => throw thrown;
+
+            await Assert.ThrowsAsync<TaskCanceledException>(() =>
+                invoker.InvokeWithRetry(failingRequest, history)
+            );
+
+            exhaustedCount.Should().Be(1);
+            retriesAttempted.Should().Be(3);
+            lastNumRetry.Should().Be(3, "exhaustion reports the same count the retry listener last saw");
+            cause.Should().BeSameAs(thrown);
+        }
+
+        [Fact]
+        public async Task RetryInvoker_FiresRetriesExhausted_WhenTotalTimeoutExceeded()
+        {
+            var exhaustedCount = 0;
+            var retriesAttempted = -1;
+
+            // Identity jitter: backoffs are 100ms then 200ms, so the second one cannot fit the 250ms budget.
+            var config = new RetryConfiguration(
+                baseDelayMs: 100,
+                maxRetries: 10,
+                listener: null,
+                jitter: (retries, delay, random) => delay,
+                maxTotalTimeoutMs: 250,
+                retriesExhausted: (attempted, cause) => { ++exhaustedCount; retriesAttempted = attempted; }
+            );
+
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => ex is HttpRequestException);
+
+            Func<Task<bool>> failingRequest = () => throw new HttpRequestException("Simulated network error");
+
+            await Assert.ThrowsAsync<TaskCanceledException>(() =>
+                invoker.InvokeWithRetry(failingRequest, history)
+            );
+
+            exhaustedCount.Should().Be(1, "giving up on the time budget is still giving up");
+            retriesAttempted.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task RetryInvoker_DoesNotFireRetriesExhausted_OnNonTransientException()
+        {
+            var exhaustedCount = 0;
+
+            var config = new RetryConfiguration(
+                baseDelayMs: 10,
+                maxRetries: 3,
+                listener: null,
+                jitter: RetryJitter.FullJitter,
+                maxTotalTimeoutMs: 10_000,
+                retriesExhausted: (attempted, cause) => ++exhaustedCount
+            );
+
+            var history = new RetryHistory("", config, CancellationToken.None);
+            var invoker = new RetryInvoker(ex => ex is HttpRequestException);
+
+            Func<Task<bool>> failingRequest = () => throw new ApiResponseException(401, "unauthorized", -1);
+
+            await Assert.ThrowsAsync<ApiResponseException>(() =>
+                invoker.InvokeWithRetry(failingRequest, history)
+            );
+
+            exhaustedCount.Should().Be(0, "a server that answers 401 is evidence of connectivity, not a lack of it");
+        }
+
+        [Fact]
+        public async Task RetryInvoker_DoesNotFireRetriesExhausted_OnUserCancellation()
+        {
+            var exhaustedCount = 0;
+            var canceller = new CancellationTokenSource();
+
+            var config = new RetryConfiguration(
+                baseDelayMs: 1000,
+                maxRetries: 10,
+                listener: (numRetry, retry) => canceller.Cancel(),
+                jitter: (retries, delay, random) => delay,
+                maxTotalTimeoutMs: 60_000,
+                retriesExhausted: (attempted, cause) => ++exhaustedCount
+            );
+
+            var history = new RetryHistory("", config, canceller.Token);
+            var invoker = new RetryInvoker(ex => ex is HttpRequestException);
+
+            Func<Task<bool>> failingRequest = () => throw new HttpRequestException("Simulated network error");
+
+            await Assert.ThrowsAsync<TaskCanceledException>(() =>
+                invoker.InvokeWithRetry(failingRequest, history)
+            );
+
+            exhaustedCount.Should().Be(0, "the caller cancelled, the network did not necessarily fail");
+        }
     }
 }

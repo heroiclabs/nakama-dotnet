@@ -40,7 +40,7 @@ namespace Satori
             jitter: RetryJitter.FullJitter,
             listener: null,
             maxRetries: 4,
-            maxTotalTimeoutMs: 10_000);
+            maxTotalTimeoutMs: 60_000);
 
         /// <inheritdoc cref="IClient.Host"/>
         public string Host { get; }
@@ -75,7 +75,7 @@ namespace Satori
         /// <summary>
         /// The default timeout of the server.
         /// </summary>
-        public const int DefaultTimeout = 15;
+        public const int DefaultTimeout = 10;
 
         private readonly ApiClient _apiClient;
         private ILogger _logger;

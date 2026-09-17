@@ -51,7 +51,7 @@ namespace Nakama
             jitter: RetryJitter.FullJitter,
             listener: null,
             maxRetries: 4,
-            maxTotalTimeoutMs: 10_000);
+            maxTotalTimeoutMs: 60_000);
 
         /// <inheritdoc cref="IClient.Host"/>
         public string Host { get; }
@@ -92,7 +92,7 @@ namespace Nakama
         private ILogger _logger;
         private readonly RetryInvoker _retryInvoker;
 
-        private const int DefaultTimeout = 15;
+        private const int DefaultTimeout = 10;
 
         /// There is a bug in Unity's WebGL implementation that prevents the proper invocation of constructors with more
         /// than four parameters. For this reason, avoid defining constructors that do this.
