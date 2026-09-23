@@ -619,6 +619,7 @@ namespace Nakama
         public Task SendMatchStateAsync(string matchId, long opCode, ArraySegment<byte> state,
             IEnumerable<IUserPresence> presences = null)
         {
+            // NB: No CID for match_data_send
             var envelope = new WebSocketMessageEnvelope
             {
                 MatchStateSend = new MatchSendMessage
@@ -641,6 +642,7 @@ namespace Nakama
         public Task SendMatchStateAsync(string matchId, long opCode, byte[] state,
             IEnumerable<IUserPresence> presences = null)
         {
+            // NB: No CID for match_data_send
             var envelope = new WebSocketMessageEnvelope
             {
                 MatchStateSend = new MatchSendMessage
@@ -657,8 +659,10 @@ namespace Nakama
         /// <inheritdoc cref="SendPartyDataAsync(string,long,ArraySegment{byte})"/>
         public Task SendPartyDataAsync(string partyId, long opCode, ArraySegment<byte> data)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
+                Cid = $"{cid}",
                 PartyDataSend = new PartyDataSend
                 {
                     PartyId = partyId,
@@ -676,8 +680,10 @@ namespace Nakama
         /// <inheritdoc cref="SendPartyDataAsync(string,long,byte[])"/>
         public Task SendPartyDataAsync(string partyId, long opCode, byte[] data)
         {
+            int cid = Interlocked.Increment(ref _cid);
             var envelope = new WebSocketMessageEnvelope
             {
+                Cid = $"{cid}",
                 PartyDataSend = new PartyDataSend
                 {
                     PartyId = partyId,
