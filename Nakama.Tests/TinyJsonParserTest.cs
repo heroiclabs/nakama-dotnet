@@ -24,17 +24,23 @@ namespace Nakama.Tests
 {
     public class TinyJsonParserTest
     {
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact]
         public void FromJson_JsonInput_Parsed()
         {
-            const string json = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}]}";
+            string json = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}], ""enum_val"": 1}";
             ITestObject result = json.FromJson<TestObject>();
 
             Assert.Equal("val1", result.SomeVal);
             Assert.Equal("val2", result.Nested.First().AnotherVal);
+            Assert.Equal(TestEnum.FieldTwo, result.EnumVal);
+            
+            json = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}], ""enum_val"": ""FieldTwo""}";
+            result = json.FromJson<TestObject>();
+
+            Assert.Equal(TestEnum.FieldTwo, result.EnumVal);
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact]
         public void FromJson_JsonInput_NumberToString()
         {
             const string json = @"{""key"":12345}";
@@ -43,7 +49,16 @@ namespace Nakama.Tests
             Assert.Equal("12345", obj["key"]);
         }
         
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact]
+        public void FromJson_JsonInput_LongNumberToString()
+        {
+            const string json = @"{""key"": 9223372036854775807}";
+            var obj = json.FromJson<Dictionary<string, long>>();
+            
+            Assert.Equal(9223372036854775807L, obj["key"]);
+        }
+        
+        [Fact]
         public void FromJson_JsonInput_SingleDigitNumberToString()
         {
             const string json = @"{""key"":1}";
@@ -52,7 +67,7 @@ namespace Nakama.Tests
             Assert.Equal("1", obj["key"]);
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact]
         public void FromJson_JsonInput_StringToString()
         {
             const string json = @"{""key"":""12345""}";
@@ -61,7 +76,7 @@ namespace Nakama.Tests
             Assert.Equal("12345", obj["key"]);
         }
         
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact]
         public void ToJson_LongToUnquotedJson()
         {
             var obj = new Dictionary<string, long>();
@@ -71,7 +86,7 @@ namespace Nakama.Tests
             Assert.Equal("{\"key\":1234567891234}", json);
         }
 
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact]
         public void FromJson_JsonInput_ParsedTwice()
         {
             const string json1 = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}]}";
@@ -82,7 +97,7 @@ namespace Nakama.Tests
             Assert.Equal(result1.SomeVal, result2.SomeVal);
         }
         
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact]
         public void FromJson_JsonInput_ParseSingleQuotesAsString()
         {
             const string json = @"{""key"":'foo'}";
@@ -91,7 +106,7 @@ namespace Nakama.Tests
             Assert.Equal("foo", obj["key"]);
         }
         
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact]
         public void FromJson_JsonInput_ParseSingleQuotesAsStringInArray()
         {
             const string json = @"{""key"":['foo', 'bar']}";
@@ -100,7 +115,7 @@ namespace Nakama.Tests
             Assert.Equal(new [] { "foo", "bar" }, obj["key"]);
         }
         
-        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        [Fact]
         public void FromJson_JsonInput_ParseBool()
         {
             const string json = @"{""key"":true}";
@@ -110,11 +125,20 @@ namespace Nakama.Tests
         }
     }
 
-    public interface ITestObject
+    internal enum TestEnum
+    {
+        FieldOne,
+        FieldTwo,
+        FieldThree,
+    }
+
+    internal interface ITestObject
     {
         string SomeVal { get; }
 
         IEnumerable<INestedTestObject> Nested { get; }
+
+        TestEnum EnumVal { get; }
     }
 
     internal class TestObject : ITestObject
@@ -126,6 +150,9 @@ namespace Nakama.Tests
         [DataMember(Name="nested")]
         // ReSharper disable once InconsistentNaming
         public List<NestedTestObject> _nested { get; set; }
+        
+        [DataMember(Name = "enum_val")]
+        public TestEnum EnumVal { get; set; }
     }
 
     public interface INestedTestObject
