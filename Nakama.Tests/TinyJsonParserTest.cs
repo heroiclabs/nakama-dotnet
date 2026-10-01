@@ -85,6 +85,16 @@ namespace Nakama.Tests
             
             Assert.Equal("{\"key\":1234567891234}", json);
         }
+        
+        [Fact]
+        public void ToJson_EnumToJson()
+        {
+            var obj = new Dictionary<string, TestEnum>();
+            obj["key"] = TestEnum.FieldThree;
+            var json = obj.ToJson();
+            
+            Assert.Equal("{\"key\":\"FieldThree\"}", json);
+        }
 
         [Fact]
         public void FromJson_JsonInput_ParsedTwice()
