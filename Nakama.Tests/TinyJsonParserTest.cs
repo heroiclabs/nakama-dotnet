@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Nakama.TinyJson;
 using Xunit;
 
@@ -25,8 +26,9 @@ namespace Nakama.Tests
     public class TinyJsonParserTest
     {
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void FromJson_JsonInput_Parsed()
+        public async Task FromJson_JsonInput_Parsed()
         {
+            await Task.CompletedTask;
             const string json = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}]}";
             ITestObject result = json.FromJson<TestObject>();
 
@@ -35,45 +37,50 @@ namespace Nakama.Tests
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void FromJson_JsonInput_NumberToString()
+        public async Task FromJson_JsonInput_NumberToString()
         {
+            await Task.CompletedTask;
             const string json = @"{""key"":12345}";
             var obj = json.FromJson<Dictionary<string, string>>();
-            
+
             Assert.Equal("12345", obj["key"]);
         }
         
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void FromJson_JsonInput_SingleDigitNumberToString()
+        public async Task FromJson_JsonInput_SingleDigitNumberToString()
         {
+            await Task.CompletedTask;
             const string json = @"{""key"":1}";
             var obj = json.FromJson<Dictionary<string, string>>();
-            
+
             Assert.Equal("1", obj["key"]);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void FromJson_JsonInput_StringToString()
+        public async Task FromJson_JsonInput_StringToString()
         {
+            await Task.CompletedTask;
             const string json = @"{""key"":""12345""}";
             var obj = json.FromJson<Dictionary<string, string>>();
-            
+
             Assert.Equal("12345", obj["key"]);
         }
         
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void ToJson_LongToUnquotedJson()
+        public async Task ToJson_LongToUnquotedJson()
         {
+            await Task.CompletedTask;
             var obj = new Dictionary<string, long>();
             obj["key"] = 1234567891234;
             var json = obj.ToJson();
-            
+
             Assert.Equal("{\"key\":1234567891234}", json);
         }
 
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void FromJson_JsonInput_ParsedTwice()
+        public async Task FromJson_JsonInput_ParsedTwice()
         {
+            await Task.CompletedTask;
             const string json1 = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}]}";
             ITestObject result1 = json1.FromJson<TestObject>();
             const string json2 = @"{""some_val"": ""val1"", ""nested"": [{""another_val"": ""val2""}]}";
@@ -83,29 +90,32 @@ namespace Nakama.Tests
         }
         
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void FromJson_JsonInput_ParseSingleQuotesAsString()
+        public async Task FromJson_JsonInput_ParseSingleQuotesAsString()
         {
+            await Task.CompletedTask;
             const string json = @"{""key"":'foo'}";
             var obj = json.FromJson<Dictionary<string, string>>();
-            
+
             Assert.Equal("foo", obj["key"]);
         }
         
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void FromJson_JsonInput_ParseSingleQuotesAsStringInArray()
+        public async Task FromJson_JsonInput_ParseSingleQuotesAsStringInArray()
         {
+            await Task.CompletedTask;
             const string json = @"{""key"":['foo', 'bar']}";
             var obj = json.FromJson<Dictionary<string, string[]>>();
-            
+
             Assert.Equal(new [] { "foo", "bar" }, obj["key"]);
         }
         
         [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
-        public void FromJson_JsonInput_ParseBool()
+        public async Task FromJson_JsonInput_ParseBool()
         {
+            await Task.CompletedTask;
             const string json = @"{""key"":true}";
             var obj = json.FromJson<Dictionary<string, bool>>();
-            
+
             Assert.Equal(true, obj["key"]);
         }
     }

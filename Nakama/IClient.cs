@@ -631,6 +631,21 @@ namespace Nakama
             string ownerId, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// List leaderboard records centered around a friend of the user.
+        /// </summary>
+        /// <param name="session">The session for the user.</param>
+        /// <param name="leaderboardId">The ID of the leaderboard to list.</param>
+        /// <param name="friendId">The ID of the friend to list around.</param>
+        /// <param name="expiry">Expiry in seconds (since epoch) to begin fetching records from. Optional. 0 means from current time.</param>
+        /// <param name="limit">The limit of the listings.</param>
+        /// <param name="cursor">An optional cursor for the next page of records.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the leaderboard record objects.</returns>
+        Task<IApiLeaderboardRecordList> ListLeaderboardRecordsAroundFriendAsync(ISession session, string leaderboardId,
+            string friendId, long? expiry = null, int limit = 1, string cursor = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Fetch a list of matches active on the server.
         /// </summary>
         /// <param name="session">The session of the user.</param>
