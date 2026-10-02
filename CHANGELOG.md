@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.22.1] - 2026-10-02
+### Fixed
+- Nakama: Set CID field when "PartyDataSend" socket messages are sent.
+
 ## [3.22.0] - 2026-09-17
 ### Added
 - Satori: Add "ISession.SessionId", unpacked from the "sid" field in the auth token.
