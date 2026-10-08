@@ -41,6 +41,44 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// Add a new note for the user.
+    /// </summary>
+    public interface IApiConsole_AddAccountNoteRequest
+    {
+
+        /// <summary>
+        /// Identifier of the note. Empty to update existing note.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// The content of the note.
+        /// </summary>
+        string Note { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiConsole_AddAccountNoteRequest : IApiConsole_AddAccountNoteRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="note"), Preserve]
+        public string Note { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "Note: ", Note, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Add/join users to a group.
     /// </summary>
     public interface IApiConsole_AddGroupUsersRequest
@@ -191,6 +229,96 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// Request to import user account data.
+    /// </summary>
+    public interface IApiConsole_ImportAccountRequest
+    {
+
+        /// <summary>
+        /// The export data snapshot to import.
+        /// </summary>no definition found: 
+        I Data { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiConsole_ImportAccountRequest : IApiConsole_ImportAccountRequest
+    {
+
+        /// <inheritdoc />no definition found: 
+        [IgnoreDataMember]
+        public I Data => _data;
+        [DataMember(Name="data"), Preserve]
+        public  _data { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Data: ", Data, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IApiConsole_QueryStorageIndexRequest
+    {
+
+        /// <summary>
+        /// Optional cursor to retrieve next page of records.
+        /// </summary>
+        string Cursor { get; }
+
+        /// <summary>
+        /// Max number of results per page.
+        /// </summary>
+        int Limit { get; }
+
+        /// <summary>
+        /// Optional sorting for the results.
+        /// </summary>
+        IEnumerable<I> Order { get; }
+
+        /// <summary>
+        /// Index query.
+        /// </summary>
+        string Query { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiConsole_QueryStorageIndexRequest : IApiConsole_QueryStorageIndexRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="limit"), Preserve]
+        public int Limit { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<I> Order => _order ?? new List<>(0);
+        [DataMember(Name="order"), Preserve]
+        public List<> _order { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="query"), Preserve]
+        public string Query { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Cursor: ", Cursor, ", ");
+            output = string.Concat(output, "Limit: ", Limit, ", ");
+            output = string.Concat(output, "Order: [", string.Join(", ", Order), "], ");
+            output = string.Concat(output, "Query: ", Query, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Make a user's mfa required or not.
     /// </summary>
     public interface IApiConsole_RequireUserMfaRequest
@@ -242,6 +370,34 @@ namespace Nakama.Console
         {
             var output = "";
             output = string.Concat(output, "DeviceId: ", DeviceId, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Unlink an authentication provider identity from a user account.
+    /// </summary>
+    public interface IApiConsole_UnlinkRequest
+    {
+
+        /// <summary>
+        /// Name of the provider to unlink.
+        /// </summary>
+        string Provider { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiConsole_UnlinkRequest : IApiConsole_UnlinkRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="provider"), Preserve]
+        public string Provider { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Provider: ", Provider, ", ");
             return output;
         }
     }
@@ -393,6 +549,62 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public interface IApiConsole_UpdateAclTemplateRequest
+    {
+
+        /// <summary>
+        /// The ACL template permissions.
+        /// </summary>
+        IDictionary<string, string> Acl { get; }
+
+        /// <summary>
+        /// The ACL template description.
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
+        /// The name of the ACL template.
+        /// </summary>
+        string Name { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiConsole_UpdateAclTemplateRequest : IApiConsole_UpdateAclTemplateRequest
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Acl => _acl ?? new Dictionary<string, string>();
+        [DataMember(Name="acl"), Preserve]
+        public Dictionary<string, string> _acl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var aclString = "";
+            foreach (var kvp in Acl)
+            {
+                aclString = string.Concat(aclString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Acl: [" + aclString + "]");
+            output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Update group information.
     /// </summary>
     public interface IApiConsole_UpdateGroupRequest
@@ -509,6 +721,42 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// Request to update an existing user.
+    /// </summary>
+    public interface IApiConsole_UpdateUserRequest
+    {
+
+        /// <summary>
+        /// ACL.
+        /// </summary>
+        IDictionary<string, string> Acl { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiConsole_UpdateUserRequest : IApiConsole_UpdateUserRequest
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Acl => _acl ?? new Dictionary<string, string>();
+        [DataMember(Name="acl"), Preserve]
+        public Dictionary<string, string> _acl { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var aclString = "";
+            foreach (var kvp in Acl)
+            {
+                aclString = string.Concat(aclString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Acl: [" + aclString + "]");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Write a new storage object or update an existing one.
     /// </summary>
     public interface IApiConsole_WriteStorageObjectRequest
@@ -567,6 +815,118 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public interface IAuditLogListAuditLog
+    {
+
+        /// <summary>
+        /// The action that was performed.
+        /// </summary>
+        ConsoleAuditLogAction Action { get; }
+
+        /// <summary>
+        /// The console user email that performed the action.
+        /// </summary>
+        string Email { get; }
+
+        /// <summary>
+        /// Id of the entry.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// Log message.
+        /// </summary>
+        string Message { get; }
+
+        /// <summary>
+        /// Additional details about the action.
+        /// </summary>
+        string Metadata { get; }
+
+        /// <summary>
+        /// The resource the action was performed on.
+        /// </summary>
+        ConsoleAclResources Resource { get; }
+
+        /// <summary>
+        /// The time the action occurred.
+        /// </summary>
+        string Timestamp { get; }
+
+        /// <summary>
+        /// The console user id that performed the action.
+        /// </summary>
+        string UserId { get; }
+
+        /// <summary>
+        /// The console user username that performed the action.
+        /// </summary>
+        string Username { get; }
+    }
+
+    /// <inheritdoc />
+    internal class AuditLogListAuditLog : IAuditLogListAuditLog
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ConsoleAuditLogAction Action => _action;
+        [DataMember(Name="action"), Preserve]
+        public ConsoleAuditLogAction _action { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="email"), Preserve]
+        public string Email { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="message"), Preserve]
+        public string Message { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="metadata"), Preserve]
+        public string Metadata { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ConsoleAclResources Resource => _resource;
+        [DataMember(Name="resource"), Preserve]
+        public ConsoleAclResources _resource { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="timestamp"), Preserve]
+        public string Timestamp { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Action: ", Action, ", ");
+            output = string.Concat(output, "Email: ", Email, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "Message: ", Message, ", ");
+            output = string.Concat(output, "Metadata: ", Metadata, ", ");
+            output = string.Concat(output, "Resource: ", Resource, ", ");
+            output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
+            output = string.Concat(output, "UserId: ", UserId, ", ");
+            output = string.Concat(output, "Username: ", Username, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A warning for a configuration field.
     /// </summary>
     public interface IConfigWarning
@@ -600,6 +960,136 @@ namespace Nakama.Console
             var output = "";
             output = string.Concat(output, "Field: ", Field, ", ");
             output = string.Concat(output, "Message: ", Message, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// The outcome of using a specific integration.
+    /// </summary>
+    public interface IDeliveryResultIntegrationResult
+    {
+
+        /// <summary>
+        /// The channel type used for the message delivery.
+        /// </summary>
+        ConsoleMessageChannelType ChannelType { get; }
+
+        /// <summary>
+        /// An error message, if the delivery failed.
+        /// </summary>
+        string ErrorMessage { get; }
+
+        /// <summary>
+        /// The integration type used for the message delivery.
+        /// </summary>
+        ConsoleMessageIntegrationType IntegrationType { get; }
+
+        /// <summary>
+        /// Whether the message was successfully delivered using this integration.
+        /// </summary>
+        bool Success { get; }
+    }
+
+    /// <inheritdoc />
+    internal class DeliveryResultIntegrationResult : IDeliveryResultIntegrationResult
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ConsoleMessageChannelType ChannelType => _channelType;
+        [DataMember(Name="channel_type"), Preserve]
+        public ConsoleMessageChannelType _channelType { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="error_message"), Preserve]
+        public string ErrorMessage { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ConsoleMessageIntegrationType IntegrationType => _integrationType;
+        [DataMember(Name="integration_type"), Preserve]
+        public ConsoleMessageIntegrationType _integrationType { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="success"), Preserve]
+        public bool Success { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "ChannelType: ", ChannelType, ", ");
+            output = string.Concat(output, "ErrorMessage: ", ErrorMessage, ", ");
+            output = string.Concat(output, "IntegrationType: ", IntegrationType, ", ");
+            output = string.Concat(output, "Success: ", Success, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Hiro available systems.
+    /// </summary>
+    public interface IExtensionsHiroSystems
+    {
+
+        /// <summary>
+        /// Is Economy system registered.
+        /// </summary>
+        bool EconomySystem { get; }
+
+        /// <summary>
+        /// Is Energy system registered.
+        /// </summary>
+        bool EnergySystem { get; }
+
+        /// <summary>
+        /// Is Inventory system registered.
+        /// </summary>
+        bool InventorySystem { get; }
+
+        /// <summary>
+        /// Is Progression system registered.
+        /// </summary>
+        bool ProgressionSystem { get; }
+
+        /// <summary>
+        /// Is Stats system registered.
+        /// </summary>
+        bool StatsSystem { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ExtensionsHiroSystems : IExtensionsHiroSystems
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="economy_system"), Preserve]
+        public bool EconomySystem { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="energy_system"), Preserve]
+        public bool EnergySystem { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="inventory_system"), Preserve]
+        public bool InventorySystem { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="progression_system"), Preserve]
+        public bool ProgressionSystem { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="stats_system"), Preserve]
+        public bool StatsSystem { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "EconomySystem: ", EconomySystem, ", ");
+            output = string.Concat(output, "EnergySystem: ", EnergySystem, ", ");
+            output = string.Concat(output, "InventorySystem: ", InventorySystem, ", ");
+            output = string.Concat(output, "ProgressionSystem: ", ProgressionSystem, ", ");
+            output = string.Concat(output, "StatsSystem: ", StatsSystem, ", ");
             return output;
         }
     }
@@ -645,6 +1135,124 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// The MultiTextValueFilterOption specifies the operation to apply to multi-value text fields. Only a single operation can be used at one time.
+    /// </summary>
+    public interface IListRequestMultiTextValueFilterOption
+    {
+
+        /// <summary>
+        /// Filter by elements matching all parameters.
+        /// </summary>
+        List<string> And { get; }
+
+        /// <summary>
+        /// Filter by elements matching one of the parameters.
+        /// </summary>
+        List<string> Or { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ListRequestMultiTextValueFilterOption : IListRequestMultiTextValueFilterOption
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="and"), Preserve]
+        public List<string> And { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="or"), Preserve]
+        public List<string> Or { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "And: [", string.Join(", ", And), "], ");
+            output = string.Concat(output, "Or: [", string.Join(", ", Or), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IListRequestPaginationOptions
+    {
+
+        /// <summary>
+        /// Cursor to the next page.
+        /// </summary>
+        string Cursor { get; }
+
+        /// <summary>
+        /// Limit of results to return.
+        /// </summary>
+        int Limit { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ListRequestPaginationOptions : IListRequestPaginationOptions
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="limit"), Preserve]
+        public int Limit { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Cursor: ", Cursor, ", ");
+            output = string.Concat(output, "Limit: ", Limit, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IListRequestSearchOptions
+    {
+
+        /// <summary>
+        /// Filter by Label name.
+        /// </summary>
+        IListRequestMultiTextValueFilterOption LabelName { get; }
+
+        /// <summary>
+        /// Filter by Name.
+        /// </summary>
+        ITemplateSingleTextValueFilterOption Name { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ListRequestSearchOptions : IListRequestSearchOptions
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IListRequestMultiTextValueFilterOption LabelName => _labelName;
+        [DataMember(Name="label_name"), Preserve]
+        public ListRequestMultiTextValueFilterOption _labelName { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ITemplateSingleTextValueFilterOption Name => _name;
+        [DataMember(Name="name"), Preserve]
+        public TemplateSingleTextValueFilterOption _name { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "LabelName: ", LabelName, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Module information
     /// </summary>
     public interface IRuntimeInfoModuleInfo
@@ -678,6 +1286,280 @@ namespace Nakama.Console
             var output = "";
             output = string.Concat(output, "ModTime: ", ModTime, ", ");
             output = string.Concat(output, "Path: ", Path, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface ISendDirectMessageRequestMessageChannels
+    {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IEnumerable<IConsoleMessageChannelType> Channels { get; }
+    }
+
+    /// <inheritdoc />
+    internal class SendDirectMessageRequestMessageChannels : ISendDirectMessageRequestMessageChannels
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleMessageChannelType> Channels => _channels ?? new List<ConsoleMessageChannelType>(0);
+        [DataMember(Name="channels"), Preserve]
+        public List<ConsoleMessageChannelType> _channels { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Channels: [", string.Join(", ", Channels), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// An template override.
+    /// </summary>
+    public interface ISendDirectMessageRequestTemplateOverride
+    {
+
+        /// <summary>
+        /// The image_url for the message.
+        /// </summary>
+        string ImageUrl { get; }
+
+        /// <summary>
+        /// The json_metadata for the message
+        /// </summary>
+        string JsonMetadata { get; }
+
+        /// <summary>
+        /// The title to generate the message's title.
+        /// </summary>
+        string Title { get; }
+
+        /// <summary>
+        /// The template value to generate the message's content.
+        /// </summary>
+        string Value { get; }
+
+        /// <summary>
+        /// Language-specific template overrides. The key is the language code.
+        /// </summary>
+        IDictionary<string, ISendDirectMessageRequestTemplateOverride> Variants { get; }
+    }
+
+    /// <inheritdoc />
+    internal class SendDirectMessageRequestTemplateOverride : ISendDirectMessageRequestTemplateOverride
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="image_url"), Preserve]
+        public string ImageUrl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="json_metadata"), Preserve]
+        public string JsonMetadata { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="title"), Preserve]
+        public string Title { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, ISendDirectMessageRequestTemplateOverride> Variants  => _variants ?? new Dictionary<string, ISendDirectMessageRequestTemplateOverride>();
+        [DataMember(Name="variants"), Preserve]
+        public Dictionary<string, ISendDirectMessageRequestTemplateOverride> _variants { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "ImageUrl: ", ImageUrl, ", ");
+            output = string.Concat(output, "JsonMetadata: ", JsonMetadata, ", ");
+            output = string.Concat(output, "Title: ", Title, ", ");
+            output = string.Concat(output, "Value: ", Value, ", ");
+
+            var variantsString = "";
+            foreach (var kvp in Variants)
+            {
+                variantsString = string.Concat(variantsString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Variants: [" + variantsString + "]");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Details of each delivery attempt.
+    /// </summary>
+    public interface ISendDirectMessageResponseDeliveryResult
+    {
+
+        /// <summary>
+        /// Results for each valid integration used in the delivery.
+        /// </summary>
+        IEnumerable<IDeliveryResultIntegrationResult> IntegrationResults { get; }
+
+        /// <summary>
+        /// The identity ID of the recipient.
+        /// </summary>
+        string RecipientId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class SendDirectMessageResponseDeliveryResult : ISendDirectMessageResponseDeliveryResult
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IDeliveryResultIntegrationResult> IntegrationResults => _integrationResults ?? new List<DeliveryResultIntegrationResult>(0);
+        [DataMember(Name="integration_results"), Preserve]
+        public List<DeliveryResultIntegrationResult> _integrationResults { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="recipient_id"), Preserve]
+        public string RecipientId { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "IntegrationResults: [", string.Join(", ", IntegrationResults), "], ");
+            output = string.Concat(output, "RecipientId: ", RecipientId, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A list of templates.
+    /// </summary>
+    public interface ITemplateListResponse
+    {
+
+        /// <summary>
+        /// The pagination options, if there are more pages.
+        /// </summary>
+        ITemplatePageOptions PageOptions { get; }
+
+        /// <summary>
+        /// A list of templates.
+        /// </summary>
+        IEnumerable<IConsoleTemplateView> Templates { get; }
+    }
+
+    /// <inheritdoc />
+    internal class TemplateListResponse : ITemplateListResponse
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ITemplatePageOptions PageOptions => _pageOptions;
+        [DataMember(Name="page_options"), Preserve]
+        public TemplatePageOptions _pageOptions { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleTemplateView> Templates => _templates ?? new List<ConsoleTemplateView>(0);
+        [DataMember(Name="templates"), Preserve]
+        public List<ConsoleTemplateView> _templates { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "PageOptions: ", PageOptions, ", ");
+            output = string.Concat(output, "Templates: [", string.Join(", ", Templates), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface ITemplatePageOptions
+    {
+
+        /// <summary>
+        /// Cursor, if there are next pages.
+        /// </summary>
+        string NextCursor { get; }
+
+        /// <summary>
+        /// Cursor, if there are prev pages.
+        /// </summary>
+        string PrevCursor { get; }
+    }
+
+    /// <inheritdoc />
+    internal class TemplatePageOptions : ITemplatePageOptions
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "NextCursor: ", NextCursor, ", ");
+            output = string.Concat(output, "PrevCursor: ", PrevCursor, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// The SingleTextValueFilterOption specifies the operation to apply to single value text fields. Only a single operation can be used at one time.
+    /// </summary>
+    public interface ITemplateSingleTextValueFilterOption
+    {
+
+        /// <summary>
+        /// Filter by elements matching exactly the value.
+        /// </summary>
+        string Exact { get; }
+
+        /// <summary>
+        /// Filter by elements matching the pattern.
+        /// </summary>
+        string Like { get; }
+
+        /// <summary>
+        /// Filter by elements matching one of the parameters.
+        /// </summary>
+        List<string> Or { get; }
+    }
+
+    /// <inheritdoc />
+    internal class TemplateSingleTextValueFilterOption : ITemplateSingleTextValueFilterOption
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="exact"), Preserve]
+        public string Exact { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="like"), Preserve]
+        public string Like { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="or"), Preserve]
+        public List<string> Or { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Exact: ", Exact, ", ");
+            output = string.Concat(output, "Like: ", Like, ", ");
+            output = string.Concat(output, "Or: [", string.Join(", ", Or), "], ");
             return output;
         }
     }
@@ -764,6 +1646,44 @@ namespace Nakama.Console
                 varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
             output = string.Concat(output, "Vars: [" + varsString + "]");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A provider identity linked to a user's account.
+    /// </summary>
+    public interface IApiAccountProviderIdentity
+    {
+
+        /// <summary>
+        /// The name the provider was registered under during runtime initialization.
+        /// </summary>
+        string Provider { get; }
+
+        /// <summary>
+        /// The user's ID with that provider.
+        /// </summary>
+        string ProviderUserId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiAccountProviderIdentity : IApiAccountProviderIdentity
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="provider"), Preserve]
+        public string Provider { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="provider_user_id"), Preserve]
+        public string ProviderUserId { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Provider: ", Provider, ", ");
+            output = string.Concat(output, "ProviderUserId: ", ProviderUserId, ", ");
             return output;
         }
     }
@@ -1740,6 +2660,10 @@ namespace Nakama.Console
         ///  - FACEBOOK_INSTANT_STORE: Facebook Instant Store
         /// </summary>
         FACEBOOK_INSTANT_STORE = 3,
+        /// <summary>
+        ///  - SAMSUNG_GALAXY_STORE: Samsung Galaxy Store
+        /// </summary>
+        SAMSUNG_GALAXY_STORE = 4,
     }
 
     /// <summary>
@@ -2231,6 +3155,46 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// Request to import user account data.
+    /// </summary>
+    public interface IConsoleAccountImport
+    {
+
+        /// <summary>
+        /// The export data snapshot to import.
+        /// </summary>
+        IConsoleAccountExport Data { get; }
+
+        /// <summary>
+        /// The user ID to overwrite data for, or blank if the account should be freshly created.
+        /// </summary>
+        string Id { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleAccountImport : IConsoleAccountImport
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IConsoleAccountExport Data => _data;
+        [DataMember(Name="data"), Preserve]
+        public ConsoleAccountExport _data { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Data: ", Data, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A list of users.
     /// </summary>
     public interface IConsoleAccountList
@@ -2281,10 +3245,422 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// A user note.
+    /// </summary>
+    public interface IConsoleAccountNote
+    {
+
+        /// <summary>
+        /// Console user identifier that created this note.
+        /// </summary>
+        string CreateId { get; }
+
+        /// <summary>
+        /// Timestamp of note creation.
+        /// </summary>
+        string CreateTime { get; }
+
+        /// <summary>
+        /// Console username that created this note.
+        /// </summary>
+        string CreateUsername { get; }
+
+        /// <summary>
+        /// Identifier of the note.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// The content of the note.
+        /// </summary>
+        string Note { get; }
+
+        /// <summary>
+        /// Console user identifier that last updated this note.
+        /// </summary>
+        string UpdateId { get; }
+
+        /// <summary>
+        /// Timestamp of note update.
+        /// </summary>
+        string UpdateTime { get; }
+
+        /// <summary>
+        /// Console username that last updated this note.
+        /// </summary>
+        string UpdateUsername { get; }
+
+        /// <summary>
+        /// Owner of this note.
+        /// </summary>
+        string UserId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleAccountNote : IConsoleAccountNote
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="create_id"), Preserve]
+        public string CreateId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="create_username"), Preserve]
+        public string CreateUsername { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="note"), Preserve]
+        public string Note { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_id"), Preserve]
+        public string UpdateId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_username"), Preserve]
+        public string UpdateUsername { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_id"), Preserve]
+        public string UserId { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "CreateId: ", CreateId, ", ");
+            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
+            output = string.Concat(output, "CreateUsername: ", CreateUsername, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "Note: ", Note, ", ");
+            output = string.Concat(output, "UpdateId: ", UpdateId, ", ");
+            output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
+            output = string.Concat(output, "UpdateUsername: ", UpdateUsername, ", ");
+            output = string.Concat(output, "UserId: ", UserId, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum ConsoleAclResources
+    {
+        /// <summary>
+        /// ATTENTION: Do not modify the order of this enum.
+        /// </summary>
+        ACCOUNT = 0,
+        /// <summary>
+        /// New resources should always be appended.
+        /// </summary>
+        ACCOUNT_WALLET = 1,
+        /// <summary>
+        /// 
+        /// </summary>
+        ACCOUNT_EXPORT = 2,
+        /// <summary>
+        /// 
+        /// </summary>
+        ACCOUNT_FRIENDS = 3,
+        /// <summary>
+        /// 
+        /// </summary>
+        ACCOUNT_GROUPS = 4,
+        /// <summary>
+        /// 
+        /// </summary>
+        ACCOUNT_NOTES = 5,
+        /// <summary>
+        /// 
+        /// </summary>
+        ACL_TEMPLATE = 6,
+        /// <summary>
+        /// 
+        /// </summary>
+        ALL_ACCOUNTS = 7,
+        /// <summary>
+        /// 
+        /// </summary>
+        ALL_DATA = 8,
+        /// <summary>
+        /// 
+        /// </summary>
+        ALL_STORAGE = 9,
+        /// <summary>
+        /// 
+        /// </summary>
+        API_EXPLORER = 10,
+        /// <summary>
+        /// 
+        /// </summary>
+        AUDIT_LOG = 11,
+        /// <summary>
+        /// 
+        /// </summary>
+        CONFIGURATION = 12,
+        /// <summary>
+        /// 
+        /// </summary>
+        CHANNEL_MESSAGE = 13,
+        /// <summary>
+        /// 
+        /// </summary>
+        USER = 14,
+        /// <summary>
+        /// 
+        /// </summary>
+        GROUP = 15,
+        /// <summary>
+        /// 
+        /// </summary>
+        IN_APP_PURCHASE = 16,
+        /// <summary>
+        /// 
+        /// </summary>
+        LEADERBOARD = 17,
+        /// <summary>
+        /// 
+        /// </summary>
+        LEADERBOARD_RECORD = 18,
+        /// <summary>
+        /// 
+        /// </summary>
+        MATCH = 19,
+        /// <summary>
+        /// 
+        /// </summary>
+        NOTIFICATION = 20,
+        /// <summary>
+        /// 
+        /// </summary>
+        SATORI_MESSAGE = 21,
+        /// <summary>
+        /// 
+        /// </summary>
+        SETTINGS = 22,
+        /// <summary>
+        /// 
+        /// </summary>
+        STORAGE_DATA = 23,
+        /// <summary>
+        /// 
+        /// </summary>
+        STORAGE_DATA_IMPORT = 24,
+        /// <summary>
+        /// 
+        /// </summary>
+        HIRO_INVENTORY = 25,
+        /// <summary>
+        /// 
+        /// </summary>
+        HIRO_PROGRESSION = 26,
+        /// <summary>
+        /// 
+        /// </summary>
+        HIRO_ECONOMY = 27,
+        /// <summary>
+        /// 
+        /// </summary>
+        HIRO_STATS = 28,
+        /// <summary>
+        /// 
+        /// </summary>
+        HIRO_ENERGY = 29,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IConsoleAclTemplate
+    {
+
+        /// <summary>
+        /// The ACL template permissions.
+        /// </summary>
+        IDictionary<string, IConsolePermissions> Acl { get; }
+
+        /// <summary>
+        /// The template Create time.
+        /// </summary>
+        string CreateTime { get; }
+
+        /// <summary>
+        /// The ACL template description.
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
+        /// The identifier of the ACL template.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// The name of the ACL template.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// The template Update time.
+        /// </summary>
+        string UpdateTime { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleAclTemplate : IConsoleAclTemplate
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, IConsolePermissions> Acl  => _acl ?? new Dictionary<string, IConsolePermissions>();
+        [DataMember(Name="acl"), Preserve]
+        public Dictionary<string, IConsolePermissions> _acl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var aclString = "";
+            foreach (var kvp in Acl)
+            {
+                aclString = string.Concat(aclString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Acl: [" + aclString + "]");
+            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
+            output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IConsoleAclTemplateList
+    {
+
+        /// <summary>
+        /// A list of ACL templates.
+        /// </summary>
+        IEnumerable<IConsoleAclTemplate> Templates { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleAclTemplateList : IConsoleAclTemplateList
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleAclTemplate> Templates => _templates ?? new List<ConsoleAclTemplate>(0);
+        [DataMember(Name="templates"), Preserve]
+        public List<ConsoleAclTemplate> _templates { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Templates: [", string.Join(", ", Templates), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Add a new ACL template.
+    /// </summary>
+    public interface IConsoleAddAclTemplateRequest
+    {
+
+        /// <summary>
+        /// The ACL template permissions.
+        /// </summary>
+        IDictionary<string, IConsolePermissions> Acl { get; }
+
+        /// <summary>
+        /// The ACL template description.
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
+        /// The name of the ACL template.
+        /// </summary>
+        string Name { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleAddAclTemplateRequest : IConsoleAddAclTemplateRequest
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, IConsolePermissions> Acl  => _acl ?? new Dictionary<string, IConsolePermissions>();
+        [DataMember(Name="acl"), Preserve]
+        public Dictionary<string, IConsolePermissions> _acl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var aclString = "";
+            foreach (var kvp in Acl)
+            {
+                aclString = string.Concat(aclString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Acl: [" + aclString + "]");
+            output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Add a new console user
     /// </summary>
     public interface IConsoleAddUserRequest
     {
+
+        /// <summary>
+        /// ACL.
+        /// </summary>
+        IDictionary<string, IConsolePermissions> Acl { get; }
 
         /// <summary>
         /// Email address of the user.
@@ -2302,16 +3678,6 @@ namespace Nakama.Console
         bool NewsletterSubscription { get; }
 
         /// <summary>
-        /// The password of the user.
-        /// </summary>
-        string Password { get; }
-
-        /// <summary>
-        /// Role of this user;
-        /// </summary>
-        ConsoleUserRole Role { get; }
-
-        /// <summary>
         /// The username of the user.
         /// </summary>
         string Username { get; }
@@ -2320,6 +3686,12 @@ namespace Nakama.Console
     /// <inheritdoc />
     internal class ConsoleAddUserRequest : IConsoleAddUserRequest
     {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, IConsolePermissions> Acl  => _acl ?? new Dictionary<string, IConsolePermissions>();
+        [DataMember(Name="acl"), Preserve]
+        public Dictionary<string, IConsolePermissions> _acl { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="email"), Preserve]
@@ -2334,28 +3706,63 @@ namespace Nakama.Console
         public bool NewsletterSubscription { get; set; }
 
         /// <inheritdoc />
-        [DataMember(Name="password"), Preserve]
-        public string Password { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public ConsoleUserRole Role => _role;
-        [DataMember(Name="role"), Preserve]
-        public ConsoleUserRole _role { get; set; }
-
-        /// <inheritdoc />
         [DataMember(Name="username"), Preserve]
         public string Username { get; set; }
 
         public override string ToString()
         {
             var output = "";
+
+            var aclString = "";
+            foreach (var kvp in Acl)
+            {
+                aclString = string.Concat(aclString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Acl: [" + aclString + "]");
             output = string.Concat(output, "Email: ", Email, ", ");
             output = string.Concat(output, "MfaRequired: ", MfaRequired, ", ");
             output = string.Concat(output, "NewsletterSubscription: ", NewsletterSubscription, ", ");
-            output = string.Concat(output, "Password: ", Password, ", ");
-            output = string.Concat(output, "Role: ", Role, ", ");
             output = string.Concat(output, "Username: ", Username, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Response to create/invite a new user.
+    /// </summary>
+    public interface IConsoleAddUserResponse
+    {
+
+        /// <summary>
+        /// A one-time token required to update the user for the first time
+        /// </summary>
+        string Token { get; }
+
+        /// <summary>
+        /// The user recently created.
+        /// </summary>
+        INakamaconsoleUser User { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleAddUserResponse : IConsoleAddUserResponse
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="token"), Preserve]
+        public string Token { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public INakamaconsoleUser User => _user;
+        [DataMember(Name="user"), Preserve]
+        public NakamaconsoleUser _user { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Token: ", Token, ", ");
+            output = string.Concat(output, "User: ", User, ", ");
             return output;
         }
     }
@@ -2436,6 +3843,119 @@ namespace Nakama.Console
             var output = "";
             output = string.Concat(output, "Endpoints: [", string.Join(", ", Endpoints), "], ");
             output = string.Concat(output, "RpcEndpoints: [", string.Join(", ", RpcEndpoints), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum ConsoleAuditLogAction
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        UNKNOWN = 0,
+        /// <summary>
+        /// 
+        /// </summary>
+        CREATE = 1,
+        /// <summary>
+        /// 
+        /// </summary>
+        UPDATE = 2,
+        /// <summary>
+        /// 
+        /// </summary>
+        DELETE = 3,
+        /// <summary>
+        /// 
+        /// </summary>
+        INVOKE = 4,
+        /// <summary>
+        /// 
+        /// </summary>
+        IMPORT = 5,
+        /// <summary>
+        /// 
+        /// </summary>
+        EXPORT = 6,
+    }
+
+    /// <summary>
+    /// Audit log entries.
+    /// </summary>
+    public interface IConsoleAuditLogList
+    {
+
+        /// <summary>
+        /// A list of audit log entries.
+        /// </summary>
+        IEnumerable<IAuditLogListAuditLog> Entries { get; }
+
+        /// <summary>
+        /// Cursor to fetch next page of results.
+        /// </summary>
+        string NextCursor { get; }
+
+        /// <summary>
+        /// Cursor to fetch prev page of results.
+        /// </summary>
+        string PrevCursor { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleAuditLogList : IConsoleAuditLogList
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IAuditLogListAuditLog> Entries => _entries ?? new List<AuditLogListAuditLog>(0);
+        [DataMember(Name="entries"), Preserve]
+        public List<AuditLogListAuditLog> _entries { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="prev_cursor"), Preserve]
+        public string PrevCursor { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Entries: [", string.Join(", ", Entries), "], ");
+            output = string.Concat(output, "NextCursor: ", NextCursor, ", ");
+            output = string.Concat(output, "PrevCursor: ", PrevCursor, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// List of users that can be filtered in the audit logs.
+    /// </summary>
+    public interface IConsoleAuditLogUsersList
+    {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        List<string> Usernames { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleAuditLogUsersList : IConsoleAuditLogUsersList
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="usernames"), Preserve]
+        public List<string> Usernames { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Usernames: [", string.Join(", ", Usernames), "], ");
             return output;
         }
     }
@@ -2535,49 +4055,39 @@ namespace Nakama.Console
     }
 
     /// <summary>
-    /// Authenticate a console user with username and password.
+    /// Request to change a password.
     /// </summary>
-    public interface IConsoleAuthenticateRequest
+    public interface IConsoleAuthenticatePasswordChangeRequest
     {
 
         /// <summary>
-        /// Multi-factor authentication code.
+        /// Code.
         /// </summary>
-        string Mfa { get; }
+        string Code { get; }
 
         /// <summary>
-        /// The password of the user.
+        /// New password.
         /// </summary>
         string Password { get; }
-
-        /// <summary>
-        /// The username of the user.
-        /// </summary>
-        string Username { get; }
     }
 
     /// <inheritdoc />
-    internal class ConsoleAuthenticateRequest : IConsoleAuthenticateRequest
+    internal class ConsoleAuthenticatePasswordChangeRequest : IConsoleAuthenticatePasswordChangeRequest
     {
 
         /// <inheritdoc />
-        [DataMember(Name="mfa"), Preserve]
-        public string Mfa { get; set; }
+        [DataMember(Name="code"), Preserve]
+        public string Code { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="password"), Preserve]
         public string Password { get; set; }
 
-        /// <inheritdoc />
-        [DataMember(Name="username"), Preserve]
-        public string Username { get; set; }
-
         public override string ToString()
         {
             var output = "";
-            output = string.Concat(output, "Mfa: ", Mfa, ", ");
+            output = string.Concat(output, "Code: ", Code, ", ");
             output = string.Concat(output, "Password: ", Password, ", ");
-            output = string.Concat(output, "Username: ", Username, ", ");
             return output;
         }
     }
@@ -2616,6 +4126,54 @@ namespace Nakama.Console
             var output = "";
             output = string.Concat(output, "Body: ", Body, ", ");
             output = string.Concat(output, "ErrorMessage: ", ErrorMessage, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A summary of a Category.
+    /// </summary>
+    public interface IConsoleCategoryView
+    {
+
+        /// <summary>
+        /// Color hex for the label.
+        /// </summary>
+        string Color { get; }
+
+        /// <summary>
+        /// Identifier.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// Name.
+        /// </summary>
+        string Name { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleCategoryView : IConsoleCategoryView
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="color"), Preserve]
+        public string Color { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Color: ", Color, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
             return output;
         }
     }
@@ -2737,6 +4295,56 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// Which Console extensions are registered and available.
+    /// </summary>
+    public interface IConsoleExtensions
+    {
+
+        /// <summary>
+        /// Is Hiro registered.
+        /// </summary>
+        bool Hiro { get; }
+
+        /// <summary>
+        /// Hiro registered systems, if hiro is available.
+        /// </summary>
+        IExtensionsHiroSystems HiroSystems { get; }
+
+        /// <summary>
+        /// Is Satori registered.
+        /// </summary>
+        bool Satori { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleExtensions : IConsoleExtensions
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="hiro"), Preserve]
+        public bool Hiro { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IExtensionsHiroSystems HiroSystems => _hiroSystems;
+        [DataMember(Name="hiro_systems"), Preserve]
+        public ExtensionsHiroSystems _hiroSystems { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="satori"), Preserve]
+        public bool Satori { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Hiro: ", Hiro, ", ");
+            output = string.Concat(output, "HiroSystems: ", HiroSystems, ", ");
+            output = string.Concat(output, "Satori: ", Satori, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// An export of all information stored for a group.
     /// </summary>
     public interface IConsoleGroupExport
@@ -2774,6 +4382,46 @@ namespace Nakama.Console
             var output = "";
             output = string.Concat(output, "Group: ", Group, ", ");
             output = string.Concat(output, "Members: [", string.Join(", ", Members), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Response to list user notes.
+    /// </summary>
+    public interface IConsoleListAccountNotesResponse
+    {
+
+        /// <summary>
+        /// Cursor for retrieving the next page, if any.
+        /// </summary>
+        string Cursor { get; }
+
+        /// <summary>
+        /// The list of notes.
+        /// </summary>
+        IEnumerable<IConsoleAccountNote> Notes { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleListAccountNotesResponse : IConsoleListAccountNotesResponse
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="cursor"), Preserve]
+        public string Cursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleAccountNote> Notes => _notes ?? new List<ConsoleAccountNote>(0);
+        [DataMember(Name="notes"), Preserve]
+        public List<ConsoleAccountNote> _notes { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Cursor: ", Cursor, ", ");
+            output = string.Concat(output, "Notes: [", string.Join(", ", Notes), "], ");
             return output;
         }
     }
@@ -2892,10 +4540,141 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    public enum ConsoleMessageChannelType
+    {
+        /// <summary>
+        /// Message channel types.
+        /// </summary>
+        DEFAULT = 0,
+        /// <summary>
+        /// 
+        /// </summary>
+        PUSH = 1,
+        /// <summary>
+        ///  - PUSH: Push notification.
+        /// </summary>
+        EMAIL = 2,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum ConsoleMessageIntegrationType
+    {
+        /// <summary>
+        /// Message integration's names.
+        /// </summary>
+        UNKNOWN_MESSAGE_TYPE = 0,
+        /// <summary>
+        /// 
+        /// </summary>
+        FCM = 1,
+        /// <summary>
+        ///  - FCM: The variant for Google's Firebase Cloud Messaging.
+        /// </summary>
+        APNS = 2,
+        /// <summary>
+        ///  - APNS: The variant for Apple's Message system.
+        /// </summary>
+        FACEBOOK_NOTIFICATION = 3,
+        /// <summary>
+        ///  - FACEBOOK_NOTIFICATION: The variant for Facebook App-to-User Notifications.
+        /// </summary>
+        ONESIGNAL_NOTIFICATION = 4,
+        /// <summary>
+        ///  - ONESIGNAL_NOTIFICATION: The variant for OneSignal Notifications.
+        /// </summary>
+        WEBHOOK_NOTIFICATION = 5,
+    }
+
+    /// <summary>
+    /// The possible actions that can done over a resource.
+    /// </summary>
+    public interface IConsolePermissions
+    {
+
+        /// <summary>
+        /// Delete a resource.
+        /// </summary>
+        bool Delete { get; }
+
+        /// <summary>
+        /// Read a resource.
+        /// </summary>
+        bool Read { get; }
+
+        /// <summary>
+        /// Create and/or modify a resource.
+        /// </summary>
+        bool Write { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsolePermissions : IConsolePermissions
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="delete"), Preserve]
+        public bool Delete { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="read"), Preserve]
+        public bool Read { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="write"), Preserve]
+        public bool Write { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Delete: ", Delete, ", ");
+            output = string.Concat(output, "Read: ", Read, ", ");
+            output = string.Concat(output, "Write: ", Write, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Request to reset a user's credentials, password or MFA.
+    /// </summary>
+    public interface IConsoleResetUserResponse
+    {
+
+        /// <summary>
+        /// An one-time code to be used when re-configuring the password.
+        /// </summary>
+        string Code { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleResetUserResponse : IConsoleResetUserResponse
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="code"), Preserve]
+        public string Code { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Code: ", Code, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Runtime information
     /// </summary>
     public interface IConsoleRuntimeInfo
     {
+
+        /// <summary>
+        /// Go registered authentication providers
+        /// </summary>
+        List<string> GoAuthenticateProviders { get; }
 
         /// <summary>
         /// Go loaded modules
@@ -2908,6 +4687,11 @@ namespace Nakama.Console
         List<string> GoRpcFunctions { get; }
 
         /// <summary>
+        /// JavaScript registered authentication providers
+        /// </summary>
+        List<string> JsAuthenticateProviders { get; }
+
+        /// <summary>
         /// JavaScript loaded modules
         /// </summary>
         IEnumerable<IRuntimeInfoModuleInfo> JsModules { get; }
@@ -2916,6 +4700,11 @@ namespace Nakama.Console
         /// JavaScript registered RPC functions
         /// </summary>
         List<string> JsRpcFunctions { get; }
+
+        /// <summary>
+        /// Lua registered authentication providers
+        /// </summary>
+        List<string> LuaAuthenticateProviders { get; }
 
         /// <summary>
         /// Lua loaded modules
@@ -2933,6 +4722,10 @@ namespace Nakama.Console
     {
 
         /// <inheritdoc />
+        [DataMember(Name="go_authenticate_providers"), Preserve]
+        public List<string> GoAuthenticateProviders { get; set; }
+
+        /// <inheritdoc />
         [IgnoreDataMember]
         public IEnumerable<IRuntimeInfoModuleInfo> GoModules => _goModules ?? new List<RuntimeInfoModuleInfo>(0);
         [DataMember(Name="go_modules"), Preserve]
@@ -2943,6 +4736,10 @@ namespace Nakama.Console
         public List<string> GoRpcFunctions { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="js_authenticate_providers"), Preserve]
+        public List<string> JsAuthenticateProviders { get; set; }
+
+        /// <inheritdoc />
         [IgnoreDataMember]
         public IEnumerable<IRuntimeInfoModuleInfo> JsModules => _jsModules ?? new List<RuntimeInfoModuleInfo>(0);
         [DataMember(Name="js_modules"), Preserve]
@@ -2951,6 +4748,10 @@ namespace Nakama.Console
         /// <inheritdoc />
         [DataMember(Name="js_rpc_functions"), Preserve]
         public List<string> JsRpcFunctions { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="lua_authenticate_providers"), Preserve]
+        public List<string> LuaAuthenticateProviders { get; set; }
 
         /// <inheritdoc />
         [IgnoreDataMember]
@@ -2965,12 +4766,221 @@ namespace Nakama.Console
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "GoAuthenticateProviders: [", string.Join(", ", GoAuthenticateProviders), "], ");
             output = string.Concat(output, "GoModules: [", string.Join(", ", GoModules), "], ");
             output = string.Concat(output, "GoRpcFunctions: [", string.Join(", ", GoRpcFunctions), "], ");
+            output = string.Concat(output, "JsAuthenticateProviders: [", string.Join(", ", JsAuthenticateProviders), "], ");
             output = string.Concat(output, "JsModules: [", string.Join(", ", JsModules), "], ");
             output = string.Concat(output, "JsRpcFunctions: [", string.Join(", ", JsRpcFunctions), "], ");
+            output = string.Concat(output, "LuaAuthenticateProviders: [", string.Join(", ", LuaAuthenticateProviders), "], ");
             output = string.Concat(output, "LuaModules: [", string.Join(", ", LuaModules), "], ");
             output = string.Concat(output, "LuaRpcFunctions: [", string.Join(", ", LuaRpcFunctions), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// The request to send direct messages.
+    /// </summary>
+    public interface IConsoleSendDirectMessageRequest
+    {
+
+        /// <summary>
+        /// If applicable, channels to send this message through, per integration.
+        /// </summary>
+        IDictionary<string, ISendDirectMessageRequestMessageChannels> Channels { get; }
+
+        /// <summary>
+        /// A list of recipient identity IDs.
+        /// </summary>
+        List<string> IdentityIds { get; }
+
+        /// <summary>
+        /// A list of integrations to use for sending the message.
+        /// </summary>
+        IEnumerable<IConsoleMessageIntegrationType> Integrations { get; }
+
+        /// <summary>
+        /// Whether the message should be stored in the recipient's inbox.
+        /// </summary>
+        bool Persist { get; }
+
+        /// <summary>
+        /// The identifier of the template used to render the message content.
+        /// </summary>
+        string TemplateId { get; }
+
+        /// <summary>
+        /// A template for the message. If this value is provided then the 'template_id' will be ignored.
+        /// </summary>
+        ISendDirectMessageRequestTemplateOverride TemplateOverride { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleSendDirectMessageRequest : IConsoleSendDirectMessageRequest
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, ISendDirectMessageRequestMessageChannels> Channels  => _channels ?? new Dictionary<string, ISendDirectMessageRequestMessageChannels>();
+        [DataMember(Name="channels"), Preserve]
+        public Dictionary<string, ISendDirectMessageRequestMessageChannels> _channels { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="identity_ids"), Preserve]
+        public List<string> IdentityIds { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleMessageIntegrationType> Integrations => _integrations ?? new List<ConsoleMessageIntegrationType>(0);
+        [DataMember(Name="integrations"), Preserve]
+        public List<ConsoleMessageIntegrationType> _integrations { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="template_id"), Preserve]
+        public string TemplateId { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public ISendDirectMessageRequestTemplateOverride TemplateOverride => _templateOverride;
+        [DataMember(Name="template_override"), Preserve]
+        public SendDirectMessageRequestTemplateOverride _templateOverride { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var channelsString = "";
+            foreach (var kvp in Channels)
+            {
+                channelsString = string.Concat(channelsString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Channels: [" + channelsString + "]");
+            output = string.Concat(output, "IdentityIds: [", string.Join(", ", IdentityIds), "], ");
+            output = string.Concat(output, "Integrations: [", string.Join(", ", Integrations), "], ");
+            output = string.Concat(output, "Persist: ", Persist, ", ");
+            output = string.Concat(output, "TemplateId: ", TemplateId, ", ");
+            output = string.Concat(output, "TemplateOverride: ", TemplateOverride, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// The response for the SendDirectMessageRequest.
+    /// </summary>
+    public interface IConsoleSendDirectMessageResponse
+    {
+
+        /// <summary>
+        /// Results for each attempted message delivery.
+        /// </summary>
+        IEnumerable<ISendDirectMessageResponseDeliveryResult> DeliveryResults { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleSendDirectMessageResponse : IConsoleSendDirectMessageResponse
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<ISendDirectMessageResponseDeliveryResult> DeliveryResults => _deliveryResults ?? new List<SendDirectMessageResponseDeliveryResult>(0);
+        [DataMember(Name="delivery_results"), Preserve]
+        public List<SendDirectMessageResponseDeliveryResult> _deliveryResults { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "DeliveryResults: [", string.Join(", ", DeliveryResults), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Request to send a notification.
+    /// </summary>
+    public interface IConsoleSendNotificationRequest
+    {
+
+        /// <summary>
+        /// Code.
+        /// </summary>
+        int Code { get; }
+
+        /// <summary>
+        /// Arbitrary content.
+        /// </summary>
+        IDictionary<string, I> Content { get; }
+
+        /// <summary>
+        /// Persistent flag.
+        /// </summary>
+        bool Persistent { get; }
+
+        /// <summary>
+        /// Sender identifier.
+        /// </summary>
+        string SenderId { get; }
+
+        /// <summary>
+        /// Subject for the notification.
+        /// </summary>
+        string Subject { get; }
+
+        /// <summary>
+        /// One or more users to send the notification to, or empty to send to all users.
+        /// </summary>
+        List<string> UserIds { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleSendNotificationRequest : IConsoleSendNotificationRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="code"), Preserve]
+        public int Code { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, I> Content  => _content ?? new Dictionary<string, I>();
+        [DataMember(Name="content"), Preserve]
+        public Dictionary<string, I> _content { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="persistent"), Preserve]
+        public bool Persistent { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="sender_id"), Preserve]
+        public string SenderId { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="subject"), Preserve]
+        public string Subject { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="user_ids"), Preserve]
+        public List<string> UserIds { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Code: ", Code, ", ");
+
+            var contentString = "";
+            foreach (var kvp in Content)
+            {
+                contentString = string.Concat(contentString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Content: [" + contentString + "]");
+            output = string.Concat(output, "Persistent: ", Persistent, ", ");
+            output = string.Concat(output, "SenderId: ", SenderId, ", ");
+            output = string.Concat(output, "Subject: ", Subject, ", ");
+            output = string.Concat(output, "UserIds: [", string.Join(", ", UserIds), "], ");
             return output;
         }
     }
@@ -3030,6 +5040,11 @@ namespace Nakama.Console
     {
 
         /// <summary>
+        /// This field is only used to allow the swagger generator to output the enum values.
+        /// </summary>
+        IEnumerable<IConsoleAclResources> AclResources { get; }
+
+        /// <summary>
         /// A list of settings.
         /// </summary>
         IEnumerable<IConsoleSetting> Settings { get; }
@@ -3041,6 +5056,12 @@ namespace Nakama.Console
 
         /// <inheritdoc />
         [IgnoreDataMember]
+        public IEnumerable<IConsoleAclResources> AclResources => _aclResources ?? new List<ConsoleAclResources>(0);
+        [DataMember(Name="acl_resources"), Preserve]
+        public List<ConsoleAclResources> _aclResources { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
         public IEnumerable<IConsoleSetting> Settings => _settings ?? new List<ConsoleSetting>(0);
         [DataMember(Name="settings"), Preserve]
         public List<ConsoleSetting> _settings { get; set; }
@@ -3048,6 +5069,7 @@ namespace Nakama.Console
         public override string ToString()
         {
             var output = "";
+            output = string.Concat(output, "AclResources: [", string.Join(", ", AclResources), "], ");
             output = string.Concat(output, "Settings: [", string.Join(", ", Settings), "], ");
             return output;
         }
@@ -3143,6 +5165,11 @@ namespace Nakama.Console
         double AvgRateSec { get; }
 
         /// <summary>
+        /// Time when the node was created and started up.
+        /// </summary>
+        string CreateTime { get; }
+
+        /// <summary>
         /// Current number of running goroutines.
         /// </summary>
         int GoroutineCount { get; }
@@ -3161,6 +5188,11 @@ namespace Nakama.Console
         /// Node name.
         /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// Current number of active parties.
+        /// </summary>
+        int PartyCount { get; }
 
         /// <summary>
         /// Currently registered live presences.
@@ -3194,6 +5226,10 @@ namespace Nakama.Console
         public double AvgRateSec { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="goroutine_count"), Preserve]
         public int GoroutineCount { get; set; }
 
@@ -3212,6 +5248,10 @@ namespace Nakama.Console
         public string Name { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="party_count"), Preserve]
+        public int PartyCount { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="presence_count"), Preserve]
         public int PresenceCount { get; set; }
 
@@ -3226,10 +5266,12 @@ namespace Nakama.Console
             output = string.Concat(output, "AvgLatencyMs: ", AvgLatencyMs, ", ");
             output = string.Concat(output, "AvgOutputKbs: ", AvgOutputKbs, ", ");
             output = string.Concat(output, "AvgRateSec: ", AvgRateSec, ", ");
+            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
             output = string.Concat(output, "GoroutineCount: ", GoroutineCount, ", ");
             output = string.Concat(output, "Health: ", Health, ", ");
             output = string.Concat(output, "MatchCount: ", MatchCount, ", ");
             output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "PartyCount: ", PartyCount, ", ");
             output = string.Concat(output, "PresenceCount: ", PresenceCount, ", ");
             output = string.Concat(output, "SessionCount: ", SessionCount, ", ");
             return output;
@@ -3260,6 +5302,164 @@ namespace Nakama.Console
         {
             var output = "";
             output = string.Concat(output, "Collections: [", string.Join(", ", Collections), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IConsoleStorageIndex
+    {
+
+        /// <summary>
+        /// Collection name.
+        /// </summary>
+        string Collection { get; }
+
+        /// <summary>
+        /// Indexed fields.
+        /// </summary>
+        List<string> Fields { get; }
+
+        /// <summary>
+        /// Index name.
+        /// </summary>
+        string Index { get; }
+
+        /// <summary>
+        /// Whether the index fetches values exclusively from the index (returning only indexed fields) only or goes to db.
+        /// </summary>
+        bool IndexOnly { get; }
+
+        /// <summary>
+        /// Index key.
+        /// </summary>
+        string Key { get; }
+
+        /// <summary>
+        /// Maximum cap of index entries.
+        /// </summary>
+        string MaxEntries { get; }
+
+        /// <summary>
+        /// Sortable fields.
+        /// </summary>
+        List<string> SortableFields { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleStorageIndex : IConsoleStorageIndex
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="collection"), Preserve]
+        public string Collection { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="fields"), Preserve]
+        public List<string> Fields { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="index"), Preserve]
+        public string Index { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="index_only"), Preserve]
+        public bool IndexOnly { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="key"), Preserve]
+        public string Key { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="max_entries"), Preserve]
+        public string MaxEntries { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="sortable_fields"), Preserve]
+        public List<string> SortableFields { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Collection: ", Collection, ", ");
+            output = string.Concat(output, "Fields: [", string.Join(", ", Fields), "], ");
+            output = string.Concat(output, "Index: ", Index, ", ");
+            output = string.Concat(output, "IndexOnly: ", IndexOnly, ", ");
+            output = string.Concat(output, "Key: ", Key, ", ");
+            output = string.Concat(output, "MaxEntries: ", MaxEntries, ", ");
+            output = string.Concat(output, "SortableFields: [", string.Join(", ", SortableFields), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IConsoleStorageIndexList
+    {
+
+        /// <summary>
+        /// Cursor to fetch next page of results, if any.
+        /// </summary>
+        string NextCursor { get; }
+
+        /// <summary>
+        /// A list of storage objects.
+        /// </summary>
+        IEnumerable<IApiStorageObject> Objects { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleStorageIndexList : IConsoleStorageIndexList
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="next_cursor"), Preserve]
+        public string NextCursor { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiStorageObject> Objects => _objects ?? new List<ApiStorageObject>(0);
+        [DataMember(Name="objects"), Preserve]
+        public List<ApiStorageObject> _objects { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "NextCursor: ", NextCursor, ", ");
+            output = string.Concat(output, "Objects: [", string.Join(", ", Objects), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// List of storage indices.
+    /// </summary>
+    public interface IConsoleStorageIndexesList
+    {
+
+        /// <summary>
+        /// List of storage indexes matching list/filter operation.
+        /// </summary>
+        IEnumerable<IConsoleStorageIndex> Indexes { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleStorageIndexesList : IConsoleStorageIndexesList
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleStorageIndex> Indexes => _indexes ?? new List<ConsoleStorageIndex>(0);
+        [DataMember(Name="indexes"), Preserve]
+        public List<ConsoleStorageIndex> _indexes { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Indexes: [", string.Join(", ", Indexes), "], ");
             return output;
         }
     }
@@ -3413,6 +5613,126 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// A template view.
+    /// </summary>
+    public interface IConsoleTemplateView
+    {
+
+        /// <summary>
+        /// Category label identifiers.
+        /// </summary>
+        IEnumerable<IConsoleCategoryView> Categories { get; }
+
+        /// <summary>
+        /// Create time.
+        /// </summary>
+        string CreateTimeSec { get; }
+
+        /// <summary>
+        /// The identifier.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// The image_url for the message.
+        /// </summary>
+        string ImageUrl { get; }
+
+        /// <summary>
+        /// The json_metadata for the message
+        /// </summary>
+        string JsonMetadata { get; }
+
+        /// <summary>
+        /// The display name.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// The title to generate the message's title.
+        /// </summary>
+        string Title { get; }
+
+        /// <summary>
+        /// Update time.
+        /// </summary>
+        string UpdateTimeSec { get; }
+
+        /// <summary>
+        /// The template value to generate the message's content.
+        /// </summary>
+        string Value { get; }
+
+        /// <summary>
+        /// The value_type for the message's content
+        /// </summary>
+        string ValueType { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ConsoleTemplateView : IConsoleTemplateView
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IConsoleCategoryView> Categories => _categories ?? new List<ConsoleCategoryView>(0);
+        [DataMember(Name="categories"), Preserve]
+        public List<ConsoleCategoryView> _categories { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time_sec"), Preserve]
+        public string CreateTimeSec { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="image_url"), Preserve]
+        public string ImageUrl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="json_metadata"), Preserve]
+        public string JsonMetadata { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="title"), Preserve]
+        public string Title { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_time_sec"), Preserve]
+        public string UpdateTimeSec { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="value"), Preserve]
+        public string Value { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="value_type"), Preserve]
+        public string ValueType { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Categories: [", string.Join(", ", Categories), "], ");
+            output = string.Concat(output, "CreateTimeSec: ", CreateTimeSec, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "ImageUrl: ", ImageUrl, ", ");
+            output = string.Concat(output, "JsonMetadata: ", JsonMetadata, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "Title: ", Title, ", ");
+            output = string.Concat(output, "UpdateTimeSec: ", UpdateTimeSec, ", ");
+            output = string.Concat(output, "Value: ", Value, ", ");
+            output = string.Concat(output, "ValueType: ", ValueType, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A list of console users.
     /// </summary>
     public interface IConsoleUserList
@@ -3421,7 +5741,7 @@ namespace Nakama.Console
         /// <summary>
         /// A list of users.
         /// </summary>
-        IEnumerable<IConsoleUserListUser> Users { get; }
+        IEnumerable<INakamaconsoleUser> Users { get; }
     }
 
     /// <inheritdoc />
@@ -3430,9 +5750,9 @@ namespace Nakama.Console
 
         /// <inheritdoc />
         [IgnoreDataMember]
-        public IEnumerable<IConsoleUserListUser> Users => _users ?? new List<ConsoleUserListUser>(0);
+        public IEnumerable<INakamaconsoleUser> Users => _users ?? new List<NakamaconsoleUser>(0);
         [DataMember(Name="users"), Preserve]
-        public List<ConsoleUserListUser> _users { get; set; }
+        public List<NakamaconsoleUser> _users { get; set; }
 
         public override string ToString()
         {
@@ -3440,106 +5760,6 @@ namespace Nakama.Console
             output = string.Concat(output, "Users: [", string.Join(", ", Users), "], ");
             return output;
         }
-    }
-
-    /// <summary>
-    /// A console user
-    /// </summary>
-    public interface IConsoleUserListUser
-    {
-
-        /// <summary>
-        /// Email of the user
-        /// </summary>
-        string Email { get; }
-
-        /// <summary>
-        /// Whether the user has MFA enabled.
-        /// </summary>
-        bool MfaEnabled { get; }
-
-        /// <summary>
-        /// Whether the user is required to setup MFA.
-        /// </summary>
-        bool MfaRequired { get; }
-
-        /// <summary>
-        /// Role of the user;
-        /// </summary>
-        ConsoleUserRole Role { get; }
-
-        /// <summary>
-        /// Username of the user
-        /// </summary>
-        string Username { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ConsoleUserListUser : IConsoleUserListUser
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="email"), Preserve]
-        public string Email { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="mfa_enabled"), Preserve]
-        public bool MfaEnabled { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="mfa_required"), Preserve]
-        public bool MfaRequired { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public ConsoleUserRole Role => _role;
-        [DataMember(Name="role"), Preserve]
-        public ConsoleUserRole _role { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="username"), Preserve]
-        public string Username { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "Email: ", Email, ", ");
-            output = string.Concat(output, "MfaEnabled: ", MfaEnabled, ", ");
-            output = string.Concat(output, "MfaRequired: ", MfaRequired, ", ");
-            output = string.Concat(output, "Role: ", Role, ", ");
-            output = string.Concat(output, "Username: ", Username, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// - USER_ROLE_ADMIN: All access
-    ///  - USER_ROLE_DEVELOPER: Best for developers, also enables APIs and API explorer
-    ///  - USER_ROLE_MAINTAINER: Best for users who regularly update player information.
-    ///  - USER_ROLE_READONLY: Read-only role for those only need to view data
-    /// </summary>
-    public enum ConsoleUserRole
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        USER_ROLE_UNKNOWN = 0,
-        /// <summary>
-        /// 
-        /// </summary>
-        USER_ROLE_ADMIN = 1,
-        /// <summary>
-        /// 
-        /// </summary>
-        USER_ROLE_DEVELOPER = 2,
-        /// <summary>
-        /// 
-        /// </summary>
-        USER_ROLE_MAINTAINER = 3,
-        /// <summary>
-        /// 
-        /// </summary>
-        USER_ROLE_READONLY = 4,
     }
 
     /// <summary>
@@ -3747,6 +5967,11 @@ namespace Nakama.Console
         string Email { get; }
 
         /// <summary>
+        /// The authentication provider identities linked to the user's account.
+        /// </summary>
+        IEnumerable<IApiAccountProviderIdentity> Providers { get; }
+
+        /// <summary>
         /// The user object.
         /// </summary>
         INakamaapiUser User { get; }
@@ -3786,6 +6011,12 @@ namespace Nakama.Console
 
         /// <inheritdoc />
         [IgnoreDataMember]
+        public IEnumerable<IApiAccountProviderIdentity> Providers => _providers ?? new List<ApiAccountProviderIdentity>(0);
+        [DataMember(Name="providers"), Preserve]
+        public List<ApiAccountProviderIdentity> _providers { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
         public INakamaapiUser User => _user;
         [DataMember(Name="user"), Preserve]
         public NakamaapiUser _user { get; set; }
@@ -3805,6 +6036,7 @@ namespace Nakama.Console
             output = string.Concat(output, "Devices: [", string.Join(", ", Devices), "], ");
             output = string.Concat(output, "DisableTime: ", DisableTime, ", ");
             output = string.Concat(output, "Email: ", Email, ", ");
+            output = string.Concat(output, "Providers: [", string.Join(", ", Providers), "], ");
             output = string.Concat(output, "User: ", User, ", ");
             output = string.Concat(output, "VerifyTime: ", VerifyTime, ", ");
             output = string.Concat(output, "Wallet: ", Wallet, ", ");
@@ -4212,6 +6444,54 @@ namespace Nakama.Console
             var output = "";
             output = string.Concat(output, "Account: ", Account, ", ");
             output = string.Concat(output, "DisableTime: ", DisableTime, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Authenticate a console user with username and password.
+    /// </summary>
+    public interface INakamaconsoleAuthenticateRequest
+    {
+
+        /// <summary>
+        /// Multi-factor authentication code.
+        /// </summary>
+        string Mfa { get; }
+
+        /// <summary>
+        /// The password of the user.
+        /// </summary>
+        string Password { get; }
+
+        /// <summary>
+        /// The username of the user.
+        /// </summary>
+        string Username { get; }
+    }
+
+    /// <inheritdoc />
+    internal class NakamaconsoleAuthenticateRequest : INakamaconsoleAuthenticateRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="mfa"), Preserve]
+        public string Mfa { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="password"), Preserve]
+        public string Password { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Mfa: ", Mfa, ", ");
+            output = string.Concat(output, "Password: ", Password, ", ");
+            output = string.Concat(output, "Username: ", Username, ", ");
             return output;
         }
     }
@@ -4733,6 +7013,112 @@ namespace Nakama.Console
     }
 
     /// <summary>
+    /// A console user
+    /// </summary>
+    public interface INakamaconsoleUser
+    {
+
+        /// <summary>
+        /// ACL.
+        /// </summary>
+        IDictionary<string, IConsolePermissions> Acl { get; }
+
+        /// <summary>
+        /// User's create time
+        /// </summary>
+        string CreateTime { get; }
+
+        /// <summary>
+        /// Email of the user
+        /// </summary>
+        string Email { get; }
+
+        /// <summary>
+        /// User identifier.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// Whether the user has MFA enabled.
+        /// </summary>
+        bool MfaEnabled { get; }
+
+        /// <summary>
+        /// Whether the user is required to setup MFA.
+        /// </summary>
+        bool MfaRequired { get; }
+
+        /// <summary>
+        /// User's update time
+        /// </summary>
+        string UpdateTime { get; }
+
+        /// <summary>
+        /// Username of the user
+        /// </summary>
+        string Username { get; }
+    }
+
+    /// <inheritdoc />
+    internal class NakamaconsoleUser : INakamaconsoleUser
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, IConsolePermissions> Acl  => _acl ?? new Dictionary<string, IConsolePermissions>();
+        [DataMember(Name="acl"), Preserve]
+        public Dictionary<string, IConsolePermissions> _acl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="create_time"), Preserve]
+        public string CreateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="email"), Preserve]
+        public string Email { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="id"), Preserve]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="mfa_enabled"), Preserve]
+        public bool MfaEnabled { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="mfa_required"), Preserve]
+        public bool MfaRequired { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="update_time"), Preserve]
+        public string UpdateTime { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="username"), Preserve]
+        public string Username { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var aclString = "";
+            foreach (var kvp in Acl)
+            {
+                aclString = string.Concat(aclString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Acl: [" + aclString + "]");
+            output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
+            output = string.Concat(output, "Email: ", Email, ", ");
+            output = string.Concat(output, "Id: ", Id, ", ");
+            output = string.Concat(output, "MfaEnabled: ", MfaEnabled, ", ");
+            output = string.Concat(output, "MfaRequired: ", MfaRequired, ", ");
+            output = string.Concat(output, "UpdateTime: ", UpdateTime, ", ");
+            output = string.Concat(output, "Username: ", Username, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     public interface IProtobufAny
@@ -4758,6 +7144,17 @@ namespace Nakama.Console
             output = string.Concat(output, "@type: ", @type, ", ");
             return output;
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum ProtobufNullValue
+    {
+        /// <summary>
+        /// Represents a JSON `null`.
+        /// </summary>
+        NULL_VALUE = 0,
     }
 
     /// <summary>
@@ -4917,6 +7314,171 @@ namespace Nakama.Console
         }
 
         /// <summary>
+        /// Import given account export data, creating a new account that fully matches the data.
+        /// </summary>
+        public async Task<INakamaconsoleAccount> ConsoleImportAccountFullAsync(
+            string bearerToken,
+            ConsoleAccountImport body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/account";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<NakamaconsoleAccount>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<IConsoleListAccountNotesResponse> ConsoleListAccountNotesAsync(
+            string bearerToken,
+            string accountId,
+            int? limit,
+            string cursor,
+            CancellationToken? cancellationToken)
+        {
+            if (accountId == null)
+            {
+                throw new ArgumentException("'accountId' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/account/{account_id}/note";
+            urlpath = urlpath.Replace("{account_id}", Uri.EscapeDataString(accountId));
+
+            var queryParams = "";
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleListAccountNotesResponse>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<IConsoleAccountNote> ConsoleAddAccountNoteAsync(
+            string bearerToken,
+            string accountId,
+            ApiConsole_AddAccountNoteRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (accountId == null)
+            {
+                throw new ArgumentException("'accountId' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/account/{account_id}/note";
+            urlpath = urlpath.Replace("{account_id}", Uri.EscapeDataString(accountId));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleAccountNote>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task ConsoleDeleteAccountNoteAsync(
+            string bearerToken,
+            string accountId,
+            string noteId,
+            CancellationToken? cancellationToken)
+        {
+            if (accountId == null)
+            {
+                throw new ArgumentException("'accountId' is required but was null.");
+            }
+            if (noteId == null)
+            {
+                throw new ArgumentException("'noteId' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/account/{account_id}/note/{note_id}";
+            urlpath = urlpath.Replace("{account_id}", Uri.EscapeDataString(accountId));
+            urlpath = urlpath.Replace("{note_id}", Uri.EscapeDataString(noteId));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "DELETE";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
         /// Get a list of the user's wallet transactions.
         /// </summary>
         public async Task<IConsoleWalletLedgerList> ConsoleGetWalletLedgerAsync(
@@ -4924,6 +7486,8 @@ namespace Nakama.Console
             string accountId,
             int? limit,
             string cursor,
+            string after,
+            string before,
             CancellationToken? cancellationToken)
         {
             if (accountId == null)
@@ -4940,6 +7504,12 @@ namespace Nakama.Console
             }
             if (cursor != null) {
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+            if (after != null) {
+                queryParams = string.Concat(queryParams, "after=", Uri.EscapeDataString(after), "&");
+            }
+            if (before != null) {
+                queryParams = string.Concat(queryParams, "before=", Uri.EscapeDataString(before), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -5303,6 +7873,48 @@ namespace Nakama.Console
         }
 
         /// <summary>
+        /// Import given account export data, overwriting the user account's current state.
+        /// </summary>
+        public async Task ConsoleImportAccountAsync(
+            string bearerToken,
+            string id,
+            ApiConsole_ImportAccountRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (id == null)
+            {
+                throw new ArgumentException("'id' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/account/{id}/import";
+            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "PUT";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
         /// Unban a user.
         /// </summary>
         public async Task ConsoleUnbanAccountAsync(
@@ -5334,6 +7946,48 @@ namespace Nakama.Console
             headers.Add("Authorization", header);
 
             byte[] content = null;
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// Unlink an authentication provider identity from a user account.
+        /// </summary>
+        public async Task ConsoleUnlinkAsync(
+            string bearerToken,
+            string id,
+            ApiConsole_UnlinkRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (id == null)
+            {
+                throw new ArgumentException("'id' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/account/{id}/unlink";
+            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
@@ -5701,6 +8355,151 @@ namespace Nakama.Console
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public async Task<IConsoleAclTemplateList> ConsoleListAclTemplatesAsync(
+            string bearerToken,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/console/acl/template";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleAclTemplateList>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<IConsoleAclTemplate> ConsoleAddAclTemplateAsync(
+            string bearerToken,
+            ConsoleAddAclTemplateRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/acl/template";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleAclTemplate>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task ConsoleDeleteAclTemplateAsync(
+            string bearerToken,
+            string id,
+            CancellationToken? cancellationToken)
+        {
+            if (id == null)
+            {
+                throw new ArgumentException("'id' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/acl/template/{id}";
+            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "DELETE";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<IConsoleAclTemplate> ConsoleUpdateAclTemplateAsync(
+            string bearerToken,
+            string id,
+            ApiConsole_UpdateAclTemplateRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (id == null)
+            {
+                throw new ArgumentException("'id' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/acl/template/{id}";
+            urlpath = urlpath.Replace("{id}", Uri.EscapeDataString(id));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "PUT";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleAclTemplate>();
+        }
+
+        /// <summary>
         /// Deletes all data
         /// </summary>
         public async Task ConsoleDeleteAllDataAsync(
@@ -5846,10 +8645,98 @@ namespace Nakama.Console
         }
 
         /// <summary>
+        /// List audit log entries with the selected filter
+        /// </summary>
+        public async Task<IConsoleAuditLogList> ConsoleListAuditLogsAsync(
+            string bearerToken,
+            int? limit,
+            string username,
+            int? resource,
+            string action,
+            string after,
+            string before,
+            string cursor,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/console/audit/log";
+
+            var queryParams = "";
+            if (limit != null) {
+                queryParams = string.Concat(queryParams, "limit=", limit, "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
+            if (resource != null) {
+                queryParams = string.Concat(queryParams, "resource=", resource, "&");
+            }
+            if (action != null) {
+                queryParams = string.Concat(queryParams, "action=", Uri.EscapeDataString(action), "&");
+            }
+            if (after != null) {
+                queryParams = string.Concat(queryParams, "after=", Uri.EscapeDataString(after), "&");
+            }
+            if (before != null) {
+                queryParams = string.Concat(queryParams, "before=", Uri.EscapeDataString(before), "&");
+            }
+            if (cursor != null) {
+                queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleAuditLogList>();
+        }
+
+        /// <summary>
+        /// List console usernames that can be used to filter the audit logs
+        /// </summary>
+        public async Task<IConsoleAuditLogUsersList> ConsoleListAuditLogsUsersAsync(
+            string bearerToken,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/console/audit/log/users";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleAuditLogUsersList>();
+        }
+
+        /// <summary>
         /// Authenticate a console user with username and password.
         /// </summary>
         public async Task<IConsoleConsoleSession> ConsoleAuthenticateAsync(
-            ConsoleAuthenticateRequest body,
+            NakamaconsoleAuthenticateRequest body,
             CancellationToken? cancellationToken)
         {
             if (body == null)
@@ -5953,6 +8840,42 @@ namespace Nakama.Console
         }
 
         /// <summary>
+        /// Change an account's password using a code, usually delivered over email.
+        /// </summary>
+        public async Task ConsoleAuthenticatePasswordChangeAsync(
+            string bearerToken,
+            ConsoleAuthenticatePasswordChangeRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/authenticate/password_change";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
         /// List channel messages with the selected filter
         /// </summary>
         public async Task<IApiChannelMessageList> ConsoleListChannelMessagesAsync(
@@ -6034,6 +8957,36 @@ namespace Nakama.Console
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ConsoleConfig>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<IConsoleExtensions> ConsoleRegisteredExtensionsAsync(
+            string bearerToken,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/console/extensions";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleExtensions>();
         }
 
         /// <summary>
@@ -6834,6 +9787,42 @@ namespace Nakama.Console
         }
 
         /// <summary>
+        /// Send a notification.
+        /// </summary>
+        public async Task ConsoleSendNotificationAsync(
+            string bearerToken,
+            ConsoleSendNotificationRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/notification";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
         /// Delete notification
         /// </summary>
         public async Task ConsoleDeleteNotificationAsync(
@@ -6912,6 +9901,9 @@ namespace Nakama.Console
             string userId,
             int? limit,
             string cursor,
+            string after,
+            string before,
+            string filter,
             CancellationToken? cancellationToken)
         {
 
@@ -6926,6 +9918,15 @@ namespace Nakama.Console
             }
             if (cursor != null) {
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+            if (after != null) {
+                queryParams = string.Concat(queryParams, "after=", Uri.EscapeDataString(after), "&");
+            }
+            if (before != null) {
+                queryParams = string.Concat(queryParams, "before=", Uri.EscapeDataString(before), "&");
+            }
+            if (filter != null) {
+                queryParams = string.Concat(queryParams, "filter=", Uri.EscapeDataString(filter), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -6974,6 +9975,104 @@ namespace Nakama.Console
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ConsoleRuntimeInfo>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<IConsoleSendDirectMessageResponse> ConsoleSatoriSendDirectMessageAsync(
+            string bearerToken,
+            ConsoleSendDirectMessageRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/satori/direct-message";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleSendDirectMessageResponse>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<ITemplateListResponse> ConsoleSatoriListTemplatesAsync(
+            string bearerToken,
+            IEnumerable<string> search.name.or,
+            string search.name.exact,
+            string search.name.like,
+            IEnumerable<string> search.labelName.or,
+            IEnumerable<string> search.labelName.and,
+            int? pagination.limit,
+            string pagination.cursor,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/console/satori/template";
+
+            var queryParams = "";
+            foreach (var elem in search.name.or ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "search.name.or=", Uri.EscapeDataString(elem), "&");
+            }
+            if (search.name.exact != null) {
+                queryParams = string.Concat(queryParams, "search.name.exact=", Uri.EscapeDataString(search.name.exact), "&");
+            }
+            if (search.name.like != null) {
+                queryParams = string.Concat(queryParams, "search.name.like=", Uri.EscapeDataString(search.name.like), "&");
+            }
+            foreach (var elem in search.labelName.or ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "search.label_name.or=", Uri.EscapeDataString(elem), "&");
+            }
+            foreach (var elem in search.labelName.and ?? new string[0])
+            {
+                queryParams = string.Concat(queryParams, "search.label_name.and=", Uri.EscapeDataString(elem), "&");
+            }
+            if (pagination.limit != null) {
+                queryParams = string.Concat(queryParams, "pagination.limit=", pagination.limit, "&");
+            }
+            if (pagination.cursor != null) {
+                queryParams = string.Concat(queryParams, "pagination.cursor=", Uri.EscapeDataString(pagination.cursor), "&");
+            }
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<TemplateListResponse>();
         }
 
         /// <summary>
@@ -7226,6 +10325,79 @@ namespace Nakama.Console
         }
 
         /// <summary>
+        /// Query a registered storage index.
+        /// </summary>
+        public async Task<IConsoleStorageIndexList> ConsoleQueryStorageIndexAsync(
+            string bearerToken,
+            string name,
+            ApiConsole_QueryStorageIndexRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (name == null)
+            {
+                throw new ArgumentException("'name' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/storage/index/{name}/query";
+            urlpath = urlpath.Replace("{name}", Uri.EscapeDataString(name));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleStorageIndexList>();
+        }
+
+        /// <summary>
+        /// List storage indexes.
+        /// </summary>
+        public async Task<IConsoleStorageIndexesList> ConsoleListStorageIndexesAsync(
+            string bearerToken,
+            CancellationToken? cancellationToken)
+        {
+
+            var urlpath = "/v2/console/storage/indexes";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleStorageIndexesList>();
+        }
+
+        /// <summary>
         /// Delete a storage object.
         /// </summary>
         public async Task ConsoleDeleteStorageObjectAsync(
@@ -7440,6 +10612,9 @@ namespace Nakama.Console
             string userId,
             int? limit,
             string cursor,
+            string after,
+            string before,
+            string filter,
             CancellationToken? cancellationToken)
         {
 
@@ -7454,6 +10629,15 @@ namespace Nakama.Console
             }
             if (cursor != null) {
                 queryParams = string.Concat(queryParams, "cursor=", Uri.EscapeDataString(cursor), "&");
+            }
+            if (after != null) {
+                queryParams = string.Concat(queryParams, "after=", Uri.EscapeDataString(after), "&");
+            }
+            if (before != null) {
+                queryParams = string.Concat(queryParams, "before=", Uri.EscapeDataString(before), "&");
+            }
+            if (filter != null) {
+                queryParams = string.Concat(queryParams, "filter=", Uri.EscapeDataString(filter), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -7540,7 +10724,7 @@ namespace Nakama.Console
         /// <summary>
         /// Add a new console user.
         /// </summary>
-        public async Task ConsoleAddUserAsync(
+        public async Task<IConsoleAddUserResponse> ConsoleAddUserAsync(
             string bearerToken,
             ConsoleAddUserRequest body,
             CancellationToken? cancellationToken)
@@ -7570,7 +10754,87 @@ namespace Nakama.Console
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleAddUserResponse>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<INakamaconsoleUser> ConsoleGetUserAsync(
+            string bearerToken,
+            string username,
+            CancellationToken? cancellationToken)
+        {
+            if (username == null)
+            {
+                throw new ArgumentException("'username' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/user/{username}";
+            urlpath = urlpath.Replace("{username}", Uri.EscapeDataString(username));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "GET";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<NakamaconsoleUser>();
+        }
+
+        /// <summary>
+        /// Update a console user.
+        /// </summary>
+        public async Task<INakamaconsoleUser> ConsoleUpdateUserAsync(
+            string bearerToken,
+            string username,
+            ApiConsole_UpdateUserRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (username == null)
+            {
+                throw new ArgumentException("'username' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/user/{username}";
+            urlpath = urlpath.Replace("{username}", Uri.EscapeDataString(username));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "PUT";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<NakamaconsoleUser>();
         }
 
         /// <summary>
@@ -7648,6 +10912,42 @@ namespace Nakama.Console
 
             byte[] content = null;
             await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// Reset a user's password.
+        /// </summary>
+        public async Task<IConsoleResetUserResponse> ConsoleResetUserPasswordAsync(
+            string bearerToken,
+            string username,
+            CancellationToken? cancellationToken)
+        {
+            if (username == null)
+            {
+                throw new ArgumentException("'username' is required but was null.");
+            }
+
+            var urlpath = "/v2/console/user/{username}/reset/password";
+            urlpath = urlpath.Replace("{username}", Uri.EscapeDataString(username));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ConsoleResetUserResponse>();
         }
     }
 }

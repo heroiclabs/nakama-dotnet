@@ -41,74 +41,6 @@ namespace Nakama
     }
 
     /// <summary>
-    /// Update fields in a given group.
-    /// </summary>
-    public interface IApiUpdateGroupRequest
-    {
-
-        /// <summary>
-        /// Avatar URL.
-        /// </summary>
-        string AvatarUrl { get; }
-
-        /// <summary>
-        /// Description string.
-        /// </summary>
-        string Description { get; }
-
-        /// <summary>
-        /// Lang tag.
-        /// </summary>
-        string LangTag { get; }
-
-        /// <summary>
-        /// Name.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
-        /// </summary>
-        bool Open { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiUpdateGroupRequest : IApiUpdateGroupRequest
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="avatar_url"), Preserve]
-        public string AvatarUrl { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="description"), Preserve]
-        public string Description { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="lang_tag"), Preserve]
-        public string LangTag { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="name"), Preserve]
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="open"), Preserve]
-        public bool Open { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
-            output = string.Concat(output, "Description: ", Description, ", ");
-            output = string.Concat(output, "LangTag: ", LangTag, ", ");
-            output = string.Concat(output, "Name: ", Name, ", ");
-            output = string.Concat(output, "Open: ", Open, ", ");
-            return output;
-        }
-    }
-
-    /// <summary>
     /// A friend of a friend.
     /// </summary>
     public interface IFriendsOfFriendsListFriendOfFriend
@@ -184,6 +116,74 @@ namespace Nakama
             var output = "";
             output = string.Concat(output, "State: ", State, ", ");
             output = string.Concat(output, "User: ", User, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Update fields in a given group.
+    /// </summary>
+    public interface INakamaUpdateGroupBody
+    {
+
+        /// <summary>
+        /// Avatar URL.
+        /// </summary>
+        string AvatarUrl { get; }
+
+        /// <summary>
+        /// Description string.
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
+        /// Lang tag.
+        /// </summary>
+        string LangTag { get; }
+
+        /// <summary>
+        /// Name.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
+        /// </summary>
+        bool Open { get; }
+    }
+
+    /// <inheritdoc />
+    internal class NakamaUpdateGroupBody : INakamaUpdateGroupBody
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="avatar_url"), Preserve]
+        public string AvatarUrl { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="description"), Preserve]
+        public string Description { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="lang_tag"), Preserve]
+        public string LangTag { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="open"), Preserve]
+        public bool Open { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "AvatarUrl: ", AvatarUrl, ", ");
+            output = string.Concat(output, "Description: ", Description, ", ");
+            output = string.Concat(output, "LangTag: ", LangTag, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+            output = string.Concat(output, "Open: ", Open, ", ");
             return output;
         }
     }
@@ -375,6 +375,11 @@ namespace Nakama
         string Email { get; }
 
         /// <summary>
+        /// The authentication provider identities linked to the user's account.
+        /// </summary>
+        IEnumerable<IApiAccountProviderIdentity> Providers { get; }
+
+        /// <summary>
         /// The user object.
         /// </summary>
         IApiUser User { get; }
@@ -414,6 +419,12 @@ namespace Nakama
 
         /// <inheritdoc />
         [IgnoreDataMember]
+        public IEnumerable<IApiAccountProviderIdentity> Providers => _providers ?? new List<ApiAccountProviderIdentity>(0);
+        [DataMember(Name="providers"), Preserve]
+        public List<ApiAccountProviderIdentity> _providers { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
         public IApiUser User => _user;
         [DataMember(Name="user"), Preserve]
         public ApiUser _user { get; set; }
@@ -433,6 +444,7 @@ namespace Nakama
             output = string.Concat(output, "Devices: [", string.Join(", ", Devices), "], ");
             output = string.Concat(output, "DisableTime: ", DisableTime, ", ");
             output = string.Concat(output, "Email: ", Email, ", ");
+            output = string.Concat(output, "Providers: [", string.Join(", ", Providers), "], ");
             output = string.Concat(output, "User: ", User, ", ");
             output = string.Concat(output, "VerifyTime: ", VerifyTime, ", ");
             output = string.Concat(output, "Wallet: ", Wallet, ", ");
@@ -869,6 +881,108 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Send credentials for a runtime-registered authentication provider. Used with authenticate/link/unlink.
+    /// </summary>
+    public interface IApiAccountProvider
+    {
+
+        /// <summary>
+        /// Arbitrary JSON passed through to the registered provider function.
+        /// </summary>
+        IDictionary<string, string> Payload { get; }
+
+        /// <summary>
+        /// The name the provider was registered under during runtime initialization.
+        /// </summary>
+        string Provider { get; }
+
+        /// <summary>
+        /// Extra information that will be bundled in the session token.
+        /// </summary>
+        IDictionary<string, string> Vars { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiAccountProvider : IApiAccountProvider
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Payload => _payload ?? new Dictionary<string, string>();
+        [DataMember(Name="payload"), Preserve]
+        public Dictionary<string, string> _payload { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="provider"), Preserve]
+        public string Provider { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
+        [DataMember(Name="vars"), Preserve]
+        public Dictionary<string, string> _vars { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var payloadString = "";
+            foreach (var kvp in Payload)
+            {
+                payloadString = string.Concat(payloadString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Payload: [" + payloadString + "]");
+            output = string.Concat(output, "Provider: ", Provider, ", ");
+
+            var varsString = "";
+            foreach (var kvp in Vars)
+            {
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Vars: [" + varsString + "]");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A provider identity linked to a user's account.
+    /// </summary>
+    public interface IApiAccountProviderIdentity
+    {
+
+        /// <summary>
+        /// The name the provider was registered under during runtime initialization.
+        /// </summary>
+        string Provider { get; }
+
+        /// <summary>
+        /// The user's ID with that provider.
+        /// </summary>
+        string ProviderUserId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiAccountProviderIdentity : IApiAccountProviderIdentity
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="provider"), Preserve]
+        public string Provider { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="provider_user_id"), Preserve]
+        public string ProviderUserId { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Provider: ", Provider, ", ");
+            output = string.Concat(output, "ProviderUserId: ", ProviderUserId, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Send a Steam token to the server. Used with authenticate/link/unlink.
     /// </summary>
     public interface IApiAccountSteam
@@ -1274,72 +1388,6 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "ObjectIds: [", string.Join(", ", ObjectIds), "], ");
-            return output;
-        }
-    }
-
-    /// <summary>
-    /// Represents an event to be passed through the server to registered event handlers.
-    /// </summary>
-    public interface IApiEvent
-    {
-
-        /// <summary>
-        /// True if the event came directly from a client call, false otherwise.
-        /// </summary>
-        bool External { get; }
-
-        /// <summary>
-        /// An event name, type, category, or identifier.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
-        /// Arbitrary event property values.
-        /// </summary>
-        IDictionary<string, string> Properties { get; }
-
-        /// <summary>
-        /// The time when the event was triggered.
-        /// </summary>
-        string Timestamp { get; }
-    }
-
-    /// <inheritdoc />
-    internal class ApiEvent : IApiEvent
-    {
-
-        /// <inheritdoc />
-        [DataMember(Name="external"), Preserve]
-        public bool External { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="name"), Preserve]
-        public string Name { get; set; }
-
-        /// <inheritdoc />
-        [IgnoreDataMember]
-        public IDictionary<string, string> Properties => _properties ?? new Dictionary<string, string>();
-        [DataMember(Name="properties"), Preserve]
-        public Dictionary<string, string> _properties { get; set; }
-
-        /// <inheritdoc />
-        [DataMember(Name="timestamp"), Preserve]
-        public string Timestamp { get; set; }
-
-        public override string ToString()
-        {
-            var output = "";
-            output = string.Concat(output, "External: ", External, ", ");
-            output = string.Concat(output, "Name: ", Name, ", ");
-
-            var propertiesString = "";
-            foreach (var kvp in Properties)
-            {
-                propertiesString = string.Concat(propertiesString, "{" + kvp.Key + "=" + kvp.Value + "}");
-            }
-            output = string.Concat(output, "Properties: [" + propertiesString + "]");
-            output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
             return output;
         }
     }
@@ -3033,6 +3081,10 @@ namespace Nakama
         ///  - FACEBOOK_INSTANT_STORE: Facebook Instant Store
         /// </summary>
         FACEBOOK_INSTANT_STORE = 3,
+        /// <summary>
+        ///  - SAMSUNG_GALAXY_STORE: Samsung Galaxy Store
+        /// </summary>
+        SAMSUNG_GALAXY_STORE = 4,
     }
 
     /// <summary>
@@ -3966,6 +4018,44 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Samsung IAP Purchase validation request.
+    /// </summary>
+    public interface IApiValidatePurchaseSamsungRequest
+    {
+
+        /// <summary>
+        /// Persist the purchase so that seenBefore can be computed to protect against replay attacks.
+        /// </summary>
+        bool Persist { get; }
+
+        /// <summary>
+        /// The purchase ID returned by the Samsung IAP SDK PurchaseVo.
+        /// </summary>
+        string PurchaseId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatePurchaseSamsungRequest : IApiValidatePurchaseSamsungRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="purchase_id"), Preserve]
+        public string PurchaseId { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Persist: ", Persist, ", ");
+            output = string.Concat(output, "PurchaseId: ", PurchaseId, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Apple Subscription validation request
     /// </summary>
     public interface IApiValidateSubscriptionAppleRequest
@@ -4464,6 +4554,72 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Represents an event to be passed through the server to registered event handlers.
+    /// </summary>
+    public interface INakamaApiEvent
+    {
+
+        /// <summary>
+        /// True if the event came directly from a client call, false otherwise.
+        /// </summary>
+        bool External { get; }
+
+        /// <summary>
+        /// An event name, type, category, or identifier.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Arbitrary event property values.
+        /// </summary>
+        IDictionary<string, string> Properties { get; }
+
+        /// <summary>
+        /// The time when the event was triggered.
+        /// </summary>
+        string Timestamp { get; }
+    }
+
+    /// <inheritdoc />
+    internal class NakamaApiEvent : INakamaApiEvent
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="external"), Preserve]
+        public bool External { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="name"), Preserve]
+        public string Name { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Properties => _properties ?? new Dictionary<string, string>();
+        [DataMember(Name="properties"), Preserve]
+        public Dictionary<string, string> _properties { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="timestamp"), Preserve]
+        public string Timestamp { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "External: ", External, ", ");
+            output = string.Concat(output, "Name: ", Name, ", ");
+
+            var propertiesString = "";
+            foreach (var kvp in Properties)
+            {
+                propertiesString = string.Concat(propertiesString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Properties: [" + propertiesString + "]");
+            output = string.Concat(output, "Timestamp: ", Timestamp, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// 
     /// </summary>
     public interface IProtobufAny
@@ -4578,13 +4734,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4607,13 +4763,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "DELETE";
+            var httpMethod = "DELETE";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -4636,13 +4792,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiAccount>();
         }
 
@@ -4671,7 +4827,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "PUT";
+            var httpMethod = "PUT";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -4679,7 +4835,57 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// Authenticate a user with a runtime-registered provider against the server.
+        /// </summary>
+        public async Task<IApiSession> AuthenticateAsync(
+            string basicAuthUsername,
+            string basicAuthPassword,
+            ApiAccountProvider account,
+            bool? create,
+            string username,
+            CancellationToken? cancellationToken)
+        {
+            if (account == null)
+            {
+                throw new ArgumentException("'account' is required but was null.");
+            }
+
+            var urlpath = "/v2/account/authenticate";
+
+            var queryParams = "";
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
+
+            byte[] content = null;
+            var jsonBody = account.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -4716,7 +4922,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -4728,7 +4934,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4766,7 +4972,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -4778,7 +4984,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4816,7 +5022,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -4828,7 +5034,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4866,7 +5072,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -4878,7 +5084,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4920,7 +5126,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -4932,7 +5138,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -4970,7 +5176,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -4982,7 +5188,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -5020,7 +5226,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -5032,7 +5238,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -5070,7 +5276,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -5082,7 +5288,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
         }
 
@@ -5124,7 +5330,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -5136,8 +5342,44 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
+        }
+
+        /// <summary>
+        /// Add an authentication provider identity to the current user's account.
+        /// </summary>
+        public async Task LinkAsync(
+            string bearerToken,
+            ApiAccountProvider body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/account/link";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5165,7 +5407,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5173,7 +5415,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5201,7 +5443,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5209,7 +5451,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5237,7 +5479,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5245,7 +5487,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5273,7 +5515,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5281,7 +5523,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5313,7 +5555,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5321,7 +5563,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5349,7 +5591,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5357,7 +5599,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5385,7 +5627,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5393,7 +5635,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5421,7 +5663,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5429,7 +5671,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5457,7 +5699,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5465,7 +5707,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5494,7 +5736,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(basicAuthUsername))
             {
@@ -5506,8 +5748,44 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
+        }
+
+        /// <summary>
+        /// Remove an authentication provider identity from the current user's account.
+        /// </summary>
+        public async Task UnlinkAsync(
+            string bearerToken,
+            ApiAccountProvider body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/account/unlink";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5535,7 +5813,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5543,7 +5821,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5571,7 +5849,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5579,7 +5857,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5607,7 +5885,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5615,7 +5893,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5643,7 +5921,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5651,7 +5929,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5679,7 +5957,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5687,7 +5965,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5715,7 +5993,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5723,7 +6001,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5751,7 +6029,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5759,7 +6037,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5787,7 +6065,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5795,7 +6073,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5823,7 +6101,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5831,7 +6109,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5872,13 +6150,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiChannelMessageList>();
         }
 
@@ -5887,7 +6165,7 @@ namespace Nakama
         /// </summary>
         public async Task EventAsync(
             string bearerToken,
-            ApiEvent body,
+            NakamaApiEvent body,
             CancellationToken? cancellationToken)
         {
             if (body == null)
@@ -5907,7 +6185,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -5915,7 +6193,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5948,13 +6226,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "DELETE";
+            var httpMethod = "DELETE";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -5989,13 +6267,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiFriendList>();
         }
 
@@ -6033,13 +6311,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6072,13 +6350,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6110,7 +6388,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6118,7 +6396,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6149,13 +6427,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiFriendsOfFriendsList>();
         }
 
@@ -6188,7 +6466,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6196,7 +6474,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6243,13 +6521,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiGroupList>();
         }
 
@@ -6278,7 +6556,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6286,7 +6564,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiGroup>();
         }
 
@@ -6316,13 +6594,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "DELETE";
+            var httpMethod = "DELETE";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6331,7 +6609,7 @@ namespace Nakama
         public async Task UpdateGroupAsync(
             string bearerToken,
             string groupId,
-            ApiUpdateGroupRequest body,
+            NakamaUpdateGroupBody body,
             CancellationToken? cancellationToken)
         {
             if (groupId == null)
@@ -6356,7 +6634,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "PUT";
+            var httpMethod = "PUT";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6364,7 +6642,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6398,13 +6676,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6438,13 +6716,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6478,13 +6756,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6513,13 +6791,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6553,13 +6831,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6588,13 +6866,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6628,13 +6906,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -6675,13 +6953,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiGroupUserList>();
         }
 
@@ -6710,7 +6988,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6718,7 +6996,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatePurchaseResponse>();
         }
 
@@ -6747,7 +7025,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6755,7 +7033,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatePurchaseResponse>();
         }
 
@@ -6784,7 +7062,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6792,7 +7070,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatePurchaseResponse>();
         }
 
@@ -6821,7 +7099,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6829,7 +7107,44 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiValidatePurchaseResponse>();
+        }
+
+        /// <summary>
+        /// Validate Samsung Galaxy Store IAP Receipt
+        /// </summary>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseSamsungAsync(
+            string bearerToken,
+            ApiValidatePurchaseSamsungRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/purchase/samsung";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatePurchaseResponse>();
         }
 
@@ -6858,7 +7173,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6866,7 +7181,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSubscriptionList>();
         }
 
@@ -6895,7 +7210,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6903,7 +7218,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidateSubscriptionResponse>();
         }
 
@@ -6932,7 +7247,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -6940,7 +7255,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidateSubscriptionResponse>();
         }
 
@@ -6970,13 +7285,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatedSubscription>();
         }
 
@@ -7006,13 +7321,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "DELETE";
+            var httpMethod = "DELETE";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -7058,13 +7373,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecordList>();
         }
 
@@ -7099,7 +7414,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -7107,7 +7422,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = record.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecord>();
         }
 
@@ -7155,13 +7470,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecordList>();
         }
 
@@ -7209,13 +7524,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiMatchList>();
         }
 
@@ -7239,13 +7554,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiMatchmakerStats>();
         }
 
@@ -7274,13 +7589,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "DELETE";
+            var httpMethod = "DELETE";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -7311,13 +7626,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiNotificationList>();
         }
 
@@ -7357,13 +7672,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiPartyList>();
         }
 
@@ -7371,7 +7686,7 @@ namespace Nakama
         /// Execute a Lua function on the server.
         /// </summary>
         public async Task<IApiRpc> RpcFunc2Async(
-            string bearerToken,
+            string bearerToken
             string basicAuthUsername,
             string basicAuthPassword,
             string id,
@@ -7403,7 +7718,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(bearerToken))
             {
@@ -7418,7 +7733,7 @@ namespace Nakama
             }
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiRpc>();
         }
 
@@ -7426,7 +7741,7 @@ namespace Nakama
         /// Execute a Lua function on the server.
         /// </summary>
         public async Task<IApiRpc> RpcFuncAsync(
-            string bearerToken,
+            string bearerToken
             string basicAuthUsername,
             string basicAuthPassword,
             string id,
@@ -7459,7 +7774,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             if (!string.IsNullOrEmpty(bearerToken))
             {
@@ -7476,7 +7791,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = payload.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiRpc>();
         }
 
@@ -7505,7 +7820,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -7513,7 +7828,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -7541,7 +7856,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -7549,7 +7864,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiStorageObjects>();
         }
 
@@ -7578,7 +7893,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "PUT";
+            var httpMethod = "PUT";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -7586,7 +7901,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiStorageObjectAcks>();
         }
 
@@ -7615,7 +7930,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "PUT";
+            var httpMethod = "PUT";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -7623,7 +7938,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -7664,13 +7979,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiStorageObjectList>();
         }
 
@@ -7714,13 +8029,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiStorageObjectList>();
         }
 
@@ -7768,13 +8083,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiTournamentList>();
         }
 
@@ -7804,13 +8119,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "DELETE";
+            var httpMethod = "DELETE";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -7856,13 +8171,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiTournamentRecordList>();
         }
 
@@ -7897,7 +8212,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -7905,7 +8220,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = record.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecord>();
         }
 
@@ -7940,7 +8255,7 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "PUT";
+            var httpMethod = "PUT";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
@@ -7948,7 +8263,7 @@ namespace Nakama
             byte[] content = null;
             var jsonBody = record.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiLeaderboardRecord>();
         }
 
@@ -7978,13 +8293,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "POST";
+            var httpMethod = "POST";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
@@ -8031,13 +8346,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiTournamentRecordList>();
         }
 
@@ -8076,13 +8391,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiUsers>();
         }
 
@@ -8124,13 +8439,13 @@ namespace Nakama
                 Query = queryParams
             }.Uri;
 
-            var method = "GET";
+            var httpMethod = "GET";
             var headers = new Dictionary<string, string>();
             var header = string.Concat("Bearer ", bearerToken);
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var contents = await HttpAdapter.SendAsync(method, uri, headers, content, Timeout, cancellationToken);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiUserGroupList>();
         }
     }
