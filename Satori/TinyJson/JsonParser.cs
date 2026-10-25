@@ -50,6 +50,9 @@ namespace Satori.TinyJson
     // - Parsing of abstract classes or interfaces is NOT supported and will throw an exception.
     public static class JsonParser
     {
+        // Guards against stack overflow from deeply nested input (parsing recurses once per level).
+        private const int MaxParseDepth = 512;
+
         [ThreadStatic] private static Stack<List<string>> _splitArrayPool;
         [ThreadStatic] private static StringBuilder _stringBuilder;
         [ThreadStatic] private static Dictionary<Type, Dictionary<string, FieldInfo>> _fieldInfoCache;
@@ -96,7 +99,7 @@ namespace Satori.TinyJson
             }
 
             //Parse the thing!
-            return (T) ParseValue(typeof(T), _stringBuilder.ToString());
+            return (T) ParseValue(typeof(T), _stringBuilder.ToString(), 0);
         }
 
         private static int AppendUntilStringEnd(bool appendEscapeCharacter, int startIdx, string json)
@@ -167,8 +170,15 @@ namespace Satori.TinyJson
             return splitArray;
         }
 
-        private static object ParseValue(Type type, string json)
+        private static void CheckDepth(int depth)
         {
+            if (depth > MaxParseDepth)
+                throw new FormatException($"JSON nesting exceeds the maximum depth of {MaxParseDepth}.");
+        }
+
+        private static object ParseValue(Type type, string json, int depth)
+        {
+            CheckDepth(depth);
             if (type == typeof(string))
             {
                 // Return the raw value if it is unquoted (e.g. a number)
@@ -256,7 +266,7 @@ namespace Satori.TinyJson
                 var elems = Split(json);
                 var newArray = Array.CreateInstance(arrayType, elems.Count);
                 for (var i = 0; i < elems.Count; i++)
-                    newArray.SetValue(ParseValue(arrayType, elems[i]), i);
+                    newArray.SetValue(ParseValue(arrayType, elems[i], depth + 1), i);
                 _splitArrayPool.Push(elems);
                 return newArray;
             }
@@ -270,7 +280,7 @@ namespace Satori.TinyJson
                 var elems = Split(json);
                 var list = (IList) type.GetConstructor(new Type[] {typeof(int)}).Invoke(new object[] {elems.Count});
                 foreach (var t in elems)
-                    list.Add(ParseValue(listType, t));
+                    list.Add(ParseValue(listType, t, depth + 1));
 
                 _splitArrayPool.Push(elems);
                 return list;
@@ -303,7 +313,7 @@ namespace Satori.TinyJson
                     if (elems[i].Length <= 2)
                         continue;
                     var keyValue = elems[i].Substring(1, elems[i].Length - 2);
-                    var val = ParseValue(valueType, elems[i + 1]);
+                    var val = ParseValue(valueType, elems[i + 1], depth + 1);
                     dictionary.Add(keyValue, val);
                 }
 
@@ -312,19 +322,20 @@ namespace Satori.TinyJson
 
             if (type == typeof(object))
             {
-                return ParseAnonymousValue(json);
+                return ParseAnonymousValue(json, depth + 1);
             }
 
             if (json[0] == '{' && json[json.Length - 1] == '}')
             {
-                return ParseObject(type, json);
+                return ParseObject(type, json, depth + 1);
             }
 
             return null;
         }
 
-        private static object ParseAnonymousValue(string json)
+        private static object ParseAnonymousValue(string json, int depth)
         {
+            CheckDepth(depth);
             if (json.Length == 0)
                 return null;
             if (json[0] == '{' && json[json.Length - 1] == '}')
@@ -334,7 +345,7 @@ namespace Satori.TinyJson
                     return null;
                 var dict = new Dictionary<string, object>(elems.Count / 2);
                 for (var i = 0; i < elems.Count; i += 2)
-                    dict.Add(elems[i].Substring(1, elems[i].Length - 2), ParseAnonymousValue(elems[i + 1]));
+                    dict.Add(elems[i].Substring(1, elems[i].Length - 2), ParseAnonymousValue(elems[i + 1], depth + 1));
                 return dict;
             }
 
@@ -343,7 +354,7 @@ namespace Satori.TinyJson
                 var items = Split(json);
                 var finalList = new List<object>(items.Count);
                 foreach (var t in items)
-                    finalList.Add(ParseAnonymousValue(t));
+                    finalList.Add(ParseAnonymousValue(t, depth + 1));
 
                 return finalList;
             }
@@ -404,7 +415,7 @@ namespace Satori.TinyJson
             return nameToMember;
         }
 
-        private static object ParseObject(Type type, string json)
+        private static object ParseObject(Type type, string json, int depth)
         {
             var instance = FormatterServices.GetUninitializedObject(type);
 
@@ -439,9 +450,9 @@ namespace Satori.TinyJson
                 FieldInfo fieldInfo;
                 PropertyInfo propertyInfo;
                 if (nameToField.TryGetValue(key, out fieldInfo))
-                    fieldInfo.SetValue(instance, ParseValue(fieldInfo.FieldType, value));
+                    fieldInfo.SetValue(instance, ParseValue(fieldInfo.FieldType, value, depth + 1));
                 else if (nameToProperty.TryGetValue(key, out propertyInfo))
-                    propertyInfo.SetValue(instance, ParseValue(propertyInfo.PropertyType, value), null);
+                    propertyInfo.SetValue(instance, ParseValue(propertyInfo.PropertyType, value, depth + 1), null);
             }
 
             return instance;

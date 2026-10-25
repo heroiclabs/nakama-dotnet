@@ -150,6 +150,32 @@ namespace Nakama.Tests
             var nested = Assert.IsType<Dictionary<string, object>>(parsed["outer"]);
             Assert.Equal(new[] { "in\"ner" }, nested.Keys.ToArray());
         }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_DeeplyNestedArrays_Throws()
+        {
+            var json = new string('[', 10_000) + new string(']', 10_000);
+
+            Assert.Throws<System.FormatException>(() => json.FromJson<object>());
+            Assert.Throws<System.FormatException>(() => json.FromJson<List<List<object>>>());
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_DeeplyNestedObjects_Throws()
+        {
+            var json = string.Concat(Enumerable.Repeat("{\"a\":", 10_000)) + "1" + new string('}', 10_000);
+
+            Assert.Throws<System.FormatException>(() => json.FromJson<object>());
+        }
+
+        [Fact(Timeout = TestsUtil.TIMEOUT_MILLISECONDS)]
+        public void FromJson_ModerateNesting_Parsed()
+        {
+            const int depth = 100;
+            var json = new string('[', depth) + new string(']', depth);
+
+            Assert.IsType<List<object>>(json.FromJson<object>());
+        }
     }
 
     public interface ITestObject
