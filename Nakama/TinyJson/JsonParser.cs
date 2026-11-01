@@ -48,6 +48,7 @@ namespace Nakama.TinyJson
     // - No JIT Emit support to parse structures quickly
     // - Limited to parsing <2GB JSON files (due to int.MaxValue)
     // - Parsing of abstract classes or interfaces is NOT supported and will throw an exception.
+    // - Nesting deeper than MaxParseDepth (512 levels) throws a FormatException.
     public static class JsonParser
     {
         // Guards against stack overflow from deeply nested input (parsing recurses once per level).

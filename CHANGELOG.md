@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Nakama: "importEmail" parameter on the Apple, Facebook and Google authenticate and link methods.
 
 ### Fixed
-- Nakama, Satori: TinyJson now throws a `FormatException` when JSON nesting exceeds 512 levels instead of overflowing the stack.
+- Nakama+Satori: TinyJson now throws a "FormatException" when JSON nesting exceeds 512 levels instead of overflowing the stack.
 
 ## [3.22.1] - 2026-10-02
 ### Fixed
