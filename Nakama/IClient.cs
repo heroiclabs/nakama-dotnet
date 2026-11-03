@@ -1053,6 +1053,18 @@ namespace Nakama
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
         Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
             string signature, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+        /// <summary>
+        /// Validate a Samsung Galaxy Store purchase with the Nakama server.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="purchaseId">The Samsung Galaxy Store purchase id to be validated.</param>
+        /// <param name="persist">Whether or not to track the purchase in the Nakama database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseSamsungAsync(ISession session, string purchaseId,
+            bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
 
         /// <summary>
         /// Validate an Apple subscription receipt.

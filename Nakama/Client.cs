@@ -1541,6 +1541,25 @@ namespace Nakama
                 }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
+        /// <inheritdoc cref="ValidatePurchaseSamsungAsync"/>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseSamsungAsync(ISession session,
+            string purchaseId, bool persist = true, RetryConfiguration retryConfiguration = null,
+            CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseSamsungAsync(session.AuthToken,
+                new ApiValidatePurchaseSamsungRequest
+                {
+                    PurchaseId = purchaseId,
+                    Persist = persist
+                }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
         public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(ISession session,
             string receipt, bool persist = true, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
