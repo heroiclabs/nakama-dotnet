@@ -183,7 +183,7 @@ namespace Nakama
                     string.Empty,
                     new ApiAccountProvider { Provider = provider, _payload = payload, _vars = vars }, create, username,
                     canceller),
-                new RetryHistory(provider, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+                new RetryHistory(Guid.NewGuid().ToString("N"), retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
 
