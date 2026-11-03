@@ -4,7 +4,11 @@ dotenv: [ '.env' ]
 
 vars:
     NAKAMA_REPO_URL: 'https://github.com/heroiclabs/nakama.git'
+    NAKAMA_REF: '{{.NAKAMA_REF | default "master"}}'
     SATORI_REPO_URL: 'https://github.com/heroiclabs/satori.git'
+    SATORI_REF: '{{.SATORI_REF | default "master"}}'
+    GOOGLEAPIS_REPO_URL: 'https://fuchsia.googlesource.com/third_party/googleapis'
+    GOOGLEAPIS_REF: '{{.GOOGLEAPIS_REF | default "main"}}'
     SEMVER: '{{.SEMVER | default "v3.19.0-pre"}}'
 
 tasks:
@@ -83,8 +87,8 @@ tasks:
     generate-nakama:
         cmds:
             - go install tool
-            - git clone --depth 1 "{{.NAKAMA_REPO_URL}}" "{{.TMP_DIR}}"
-            - git clone "https://fuchsia.googlesource.com/third_party/googleapis" "{{.TMP_DIR}}/googleapis"
+            - git clone --depth 1 --branch "{{.NAKAMA_REF}}" "{{.NAKAMA_REPO_URL}}" "{{.TMP_DIR}}"
+            - git clone --depth 1 --branch "{{.GOOGLEAPIS_REF}}" "{{.GOOGLEAPIS_REPO_URL}}" "{{.TMP_DIR}}/googleapis"
             -   defer: rm -rf "{{.TMP_DIR}}"
             - |
                 protoc \
@@ -107,8 +111,8 @@ tasks:
     generate-nakamaconsole:
         cmds:
             - go install tool
-            - git clone --depth 1 "{{.NAKAMA_REPO_URL}}" "{{.TMP_DIR}}"
-            - git clone "https://fuchsia.googlesource.com/third_party/googleapis" "{{.TMP_DIR}}/googleapis"
+            - git clone --depth 1 --branch "{{.NAKAMA_REF}}" "{{.NAKAMA_REPO_URL}}" "{{.TMP_DIR}}"
+            - git clone --depth 1 --branch "{{.GOOGLEAPIS_REF}}" "{{.GOOGLEAPIS_REPO_URL}}" "{{.TMP_DIR}}/googleapis"
             -   defer: rm -rf "{{.TMP_DIR}}"
             - |
                 protoc \
@@ -133,7 +137,7 @@ tasks:
     generate-satori:
         cmds:
             - go install tool
-            - git clone --depth 1 "{{.SATORI_REPO_URL}}" "{{.TMP_DIR}}"
+            - git clone --depth 1 --branch "{{.SATORI_REF}}" "{{.SATORI_REPO_URL}}" "{{.TMP_DIR}}"
             -   defer: rm -rf "{{.TMP_DIR}}"
             - |
                 protoc -I {{.TMP_DIR}} -I {{.TMP_DIR}}/vendor \
@@ -154,7 +158,7 @@ tasks:
     generate-satoriconsole:
         cmds:
             - go install tool
-            - git clone --depth 1 "{{.SATORI_REPO_URL}}" "{{.TMP_DIR}}"
+            - git clone --depth 1 --branch "{{.SATORI_REF}}" "{{.SATORI_REPO_URL}}" "{{.TMP_DIR}}"
             -   defer: rm -rf "{{.TMP_DIR}}"
             - |
                 protoc -I {{.TMP_DIR}} -I {{.TMP_DIR}}/vendor \
