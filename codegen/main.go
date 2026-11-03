@@ -290,9 +290,10 @@ namespace {{.Namespace}}
             {{- range $idx, $security := $operation.Security}}
                 {{- range $key, $value := $security}}
                     {{- if or (eq $key "BasicAuth") (eq $key "HttpKeyAuth") }}
+            {{- if eq $isPreviousParam true}},{{- end}}
+                        {{- $isPreviousParam = true}}
             string basicAuthUsername,
             string basicAuthPassword
-                        {{- $isPreviousParam = true}}
                     {{- else if (eq $key "BearerJwt") }}
            {{- if eq $isPreviousParam true}},{{- end}}
                         {{- $isPreviousParam = true}}

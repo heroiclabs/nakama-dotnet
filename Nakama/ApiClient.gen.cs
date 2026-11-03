@@ -7450,7 +7450,7 @@ namespace Nakama
         /// Execute a Lua function on the server.
         /// </summary>
         public async Task<IApiRpc> RpcFunc2Async(
-            string bearerToken
+            string bearerToken,
             string basicAuthUsername,
             string basicAuthPassword,
             string id,
@@ -7505,7 +7505,7 @@ namespace Nakama
         /// Execute a Lua function on the server.
         /// </summary>
         public async Task<IApiRpc> RpcFuncAsync(
-            string bearerToken
+            string bearerToken,
             string basicAuthUsername,
             string basicAuthPassword,
             string id,
