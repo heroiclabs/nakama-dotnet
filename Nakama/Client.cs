@@ -174,6 +174,19 @@ namespace Nakama
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
+        /// <inheritdoc cref="AuthenticateAsync"/>
+        public async Task<ISession> AuthenticateAsync(string provider, Dictionary<string, object> payload = null,
+            string username = null, bool create = true, Dictionary<string, string> vars = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateAsync(ServerKey,
+                    string.Empty,
+                    new ApiAccountProvider { Provider = provider, _payload = payload, _vars = vars }, create, username,
+                    canceller),
+                new RetryHistory(provider, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+            return new Session(response.Token, response.RefreshToken, response.Created);
+        }
+
         /// <inheritdoc cref="AuthenticateAppleAsync"/>
         public async Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
             Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
@@ -621,6 +634,22 @@ namespace Nakama
             }
 
             await _retryInvoker.InvokeWithRetry(() => _apiClient.LeaveGroupAsync(session.AuthToken, groupId, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
+        /// <inheritdoc cref="LinkAsync"/>
+        public async Task LinkAsync(ISession session, string provider, Dictionary<string, object> payload = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.LinkAsync(session.AuthToken,
+                    new ApiAccountProvider { Provider = provider, _payload = payload }, canceller),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
@@ -1282,6 +1311,22 @@ namespace Nakama
 
         public override string ToString() =>
             $"Client(Host='{Host}', Port={Port}, Scheme='{Scheme}', ServerKey='{ServerKey}', Timeout={Timeout})";
+
+        /// <inheritdoc cref="UnlinkAsync"/>
+        public async Task UnlinkAsync(ISession session, string provider, Dictionary<string, object> payload = null,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.UnlinkAsync(session.AuthToken,
+                    new ApiAccountProvider { Provider = provider, _payload = payload }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
 
         /// <inheritdoc cref="UnlinkAppleAsync"/>
         public async Task UnlinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null,

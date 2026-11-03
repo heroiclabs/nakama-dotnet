@@ -99,6 +99,20 @@ namespace Nakama
         Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Authenticate a user with a provider registered by the server runtime.
+        /// </summary>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <param name="vars">Extra information that will be bundled in the session token.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to a session object.</returns>
+        Task<ISession> AuthenticateAsync(string provider, Dictionary<string, object> payload = null, string username = null, bool create = true,
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Authenticate a user with an Apple ID against the server.
         /// </summary>
         /// <param name="username">A username used to create the user.</param>
@@ -442,6 +456,17 @@ namespace Nakama
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task LeaveGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Add an authentication provider identity to the current user's account.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task LinkAsync(ISession session, string provider, Dictionary<string, object> payload = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link an Apple ID to the social profiles on the current user's account.
@@ -884,6 +909,17 @@ namespace Nakama
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which resolves to a new session object.</returns>
         Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Remove an authentication provider identity from the current user's account.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task UnlinkAsync(ISession session, string provider, Dictionary<string, object> payload = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Remove the Apple ID from the social profiles on the current user's account.
