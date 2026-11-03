@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 - Nakama: "ValidatePurchaseSamsungAsync" for Samsung Galaxy Store purchase validation.
 - Nakama: "AuthenticateAsync", "LinkAsync" and "UnlinkAsync" for authentication providers registered by the server runtime.
+- Nakama: "ValidatePurchaseAsync" and "ValidateSubscriptionAsync" for IAP providers registered by the server runtime.
 
 ## [3.22.1] - 2026-10-02
 ### Fixed

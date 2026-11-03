@@ -1514,6 +1514,22 @@ namespace Nakama
                 }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
+        /// <inheritdoc cref="ValidatePurchaseAsync"/>
+        public async Task<IApiValidateIAPPurchaseResponse> ValidatePurchaseAsync(ISession session, string provider,
+            Dictionary<string, object> payload = null, bool persist = true,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            return await _retryInvoker.InvokeWithRetry(() => _apiClient.ValidatePurchaseAsync(session.AuthToken, provider,
+                new ApiValidatePurchaseRequest { _payload = payload, Persist = persist }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
         /// <inheritdoc cref="ValidatePurchaseAppleAsync"/>
         public async Task<IApiValidatePurchaseResponse> ValidatePurchaseAppleAsync(ISession session, string receipt,
             bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
@@ -1605,6 +1621,23 @@ namespace Nakama
                     PurchaseId = purchaseId,
                     Persist = persist
                 }, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+        }
+
+        /// <inheritdoc cref="ValidateSubscriptionAsync"/>
+        public async Task<IApiValidateIAPSubscriptionResponse> ValidateSubscriptionAsync(ISession session,
+            string provider, Dictionary<string, object> payload = null, bool persist = true,
+            RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
+                session.HasExpired(DateTime.UtcNow.Add(DefaultExpiredTimeSpan)))
+            {
+                await SessionRefreshAsync(session, null, retryConfiguration, canceller);
+            }
+
+            return await _retryInvoker.InvokeWithRetry(
+                () => _apiClient.ValidateSubscriptionAsync(session.AuthToken, provider,
+                    new ApiValidateSubscriptionRequest { _payload = payload, Persist = persist }, canceller),
+                new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         public async Task<IApiValidateSubscriptionResponse> ValidateSubscriptionAppleAsync(ISession session,

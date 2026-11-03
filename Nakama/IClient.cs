@@ -1044,6 +1044,18 @@ namespace Nakama
             string avatarUrl = null, string langTag = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Validate a purchase with a provider registered by the server runtime.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="persist">Whether or not to track the purchase in the Nakama database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the validated list of purchases.</returns>
+        Task<IApiValidateIAPPurchaseResponse> ValidatePurchaseAsync(ISession session, string provider, Dictionary<string, object> payload = null, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Validate a purchase receipt against the Apple App Store.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -1101,6 +1113,18 @@ namespace Nakama
         Task<IApiValidatePurchaseResponse> ValidatePurchaseSamsungAsync(ISession session, string purchaseId,
             bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
+
+        /// <summary>
+        /// Validate a subscription with a provider registered by the server runtime.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="persist">Whether or not to persist the subscription to Nakama's database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the subscription validation response.</returns>
+        Task<IApiValidateIAPSubscriptionResponse> ValidateSubscriptionAsync(ISession session, string provider, Dictionary<string, object> payload = null, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Validate an Apple subscription receipt.
