@@ -109,6 +109,98 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Validate a purchase with a runtime-registered IAP provider.
+    /// </summary>
+    public interface IApiValidatePurchaseRequest
+    {
+
+        /// <summary>
+        /// Opaque JSON passed through to the registered provider.
+        /// </summary>
+        IDictionary<string, string> Payload { get; }
+
+        /// <summary>
+        /// Persist the purchase so that seenBefore can be computed to protect against replay attacks.
+        /// </summary>
+        bool Persist { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatePurchaseRequest : IApiValidatePurchaseRequest
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Payload => _payload ?? new Dictionary<string, string>();
+        [DataMember(Name="payload"), Preserve]
+        public Dictionary<string, string> _payload { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var payloadString = "";
+            foreach (var kvp in Payload)
+            {
+                payloadString = string.Concat(payloadString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Payload: [" + payloadString + "]");
+            output = string.Concat(output, "Persist: ", Persist, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Validate a subscription with a runtime-registered IAP provider.
+    /// </summary>
+    public interface IApiValidateSubscriptionRequest
+    {
+
+        /// <summary>
+        /// Opaque JSON passed through to the registered provider.
+        /// </summary>
+        IDictionary<string, string> Payload { get; }
+
+        /// <summary>
+        /// Persist the subscription.
+        /// </summary>
+        bool Persist { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidateSubscriptionRequest : IApiValidateSubscriptionRequest
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Payload => _payload ?? new Dictionary<string, string>();
+        [DataMember(Name="payload"), Preserve]
+        public Dictionary<string, string> _payload { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var payloadString = "";
+            foreach (var kvp in Payload)
+            {
+                payloadString = string.Concat(payloadString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Payload: [" + payloadString + "]");
+            output = string.Concat(output, "Persist: ", Persist, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// A friend of a friend.
     /// </summary>
     public interface IFriendsOfFriendsListFriendOfFriend
@@ -3892,6 +3984,66 @@ namespace Nakama
     }
 
     /// <summary>
+    /// Purchases validated by a runtime-registered IAP provider.
+    /// </summary>
+    public interface IApiValidateIAPPurchaseResponse
+    {
+
+        /// <summary>
+        /// Validated purchases.
+        /// </summary>
+        IEnumerable<IApiValidatedPurchase> Purchase { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidateIAPPurchaseResponse : IApiValidateIAPPurchaseResponse
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IEnumerable<IApiValidatedPurchase> Purchase => _purchase ?? new List<ApiValidatedPurchase>(0);
+        [DataMember(Name="purchase"), Preserve]
+        public List<ApiValidatedPurchase> _purchase { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Purchase: [", string.Join(", ", Purchase), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Subscription validated by a runtime-registered IAP provider.
+    /// </summary>
+    public interface IApiValidateIAPSubscriptionResponse
+    {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IApiValidatedSubscription Subscription { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidateIAPSubscriptionResponse : IApiValidateIAPSubscriptionResponse
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IApiValidatedSubscription Subscription => _subscription;
+        [DataMember(Name="subscription"), Preserve]
+        public ApiValidatedSubscription _subscription { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Subscription: ", Subscription, ", ");
+            return output;
+        }
+    }
+
+    /// <summary>
     /// Apple IAP Purchases validation request
     /// </summary>
     public interface IApiValidatePurchaseAppleRequest
@@ -4249,6 +4401,11 @@ namespace Nakama
         string ProductId { get; }
 
         /// <summary>
+        /// Name of the IAP provider that validated the purchase, empty for a built-in store. For IAP providers, store holds the provider's code.
+        /// </summary>
+        string Provider { get; }
+
+        /// <summary>
         /// Raw provider validation response.
         /// </summary>
         string ProviderResponse { get; }
@@ -4308,6 +4465,10 @@ namespace Nakama
         public string ProductId { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="provider"), Preserve]
+        public string Provider { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="provider_response"), Preserve]
         public string ProviderResponse { get; set; }
 
@@ -4347,6 +4508,7 @@ namespace Nakama
             output = string.Concat(output, "CreateTime: ", CreateTime, ", ");
             output = string.Concat(output, "Environment: ", Environment, ", ");
             output = string.Concat(output, "ProductId: ", ProductId, ", ");
+            output = string.Concat(output, "Provider: ", Provider, ", ");
             output = string.Concat(output, "ProviderResponse: ", ProviderResponse, ", ");
             output = string.Concat(output, "PurchaseTime: ", PurchaseTime, ", ");
             output = string.Concat(output, "RefundTime: ", RefundTime, ", ");
@@ -4394,6 +4556,11 @@ namespace Nakama
         /// Purchase Product ID.
         /// </summary>
         string ProductId { get; }
+
+        /// <summary>
+        /// Name of the IAP provider that validated the subscription, empty for a built-in store. For IAP providers, store holds the provider's code.
+        /// </summary>
+        string Provider { get; }
 
         /// <summary>
         /// Raw provider notification body.
@@ -4462,6 +4629,10 @@ namespace Nakama
         public string ProductId { get; set; }
 
         /// <inheritdoc />
+        [DataMember(Name="provider"), Preserve]
+        public string Provider { get; set; }
+
+        /// <inheritdoc />
         [DataMember(Name="provider_notification"), Preserve]
         public string ProviderNotification { get; set; }
 
@@ -4500,6 +4671,7 @@ namespace Nakama
             output = string.Concat(output, "ExpiryTime: ", ExpiryTime, ", ");
             output = string.Concat(output, "OriginalTransactionId: ", OriginalTransactionId, ", ");
             output = string.Concat(output, "ProductId: ", ProductId, ", ");
+            output = string.Concat(output, "Provider: ", Provider, ", ");
             output = string.Concat(output, "ProviderNotification: ", ProviderNotification, ", ");
             output = string.Concat(output, "ProviderResponse: ", ProviderResponse, ", ");
             output = string.Concat(output, "PurchaseTime: ", PurchaseTime, ", ");
@@ -4908,6 +5080,7 @@ namespace Nakama
             ApiAccountApple account,
             bool? create,
             string username,
+            bool? importEmail,
             CancellationToken? cancellationToken)
         {
             if (account == null)
@@ -4923,6 +5096,9 @@ namespace Nakama
             }
             if (username != null) {
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
+            if (importEmail != null) {
+                queryParams = string.Concat(queryParams, "import_email=", importEmail.ToString().ToLower(), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -5109,6 +5285,7 @@ namespace Nakama
             bool? create,
             string username,
             bool? sync,
+            bool? importEmail,
             CancellationToken? cancellationToken)
         {
             if (account == null)
@@ -5127,6 +5304,9 @@ namespace Nakama
             }
             if (sync != null) {
                 queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
+            }
+            if (importEmail != null) {
+                queryParams = string.Concat(queryParams, "import_email=", importEmail.ToString().ToLower(), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -5262,6 +5442,7 @@ namespace Nakama
             ApiAccountGoogle account,
             bool? create,
             string username,
+            bool? importEmail,
             CancellationToken? cancellationToken)
         {
             if (account == null)
@@ -5277,6 +5458,9 @@ namespace Nakama
             }
             if (username != null) {
                 queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
+            if (importEmail != null) {
+                queryParams = string.Concat(queryParams, "import_email=", importEmail.ToString().ToLower(), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -5398,17 +5582,21 @@ namespace Nakama
         /// </summary>
         public async Task LinkAppleAsync(
             string bearerToken,
-            ApiAccountApple body,
+            ApiAccountApple account,
+            bool? importEmail,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/link/apple";
 
             var queryParams = "";
+            if (importEmail != null) {
+                queryParams = string.Concat(queryParams, "import_email=", importEmail.ToString().ToLower(), "&");
+            }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
 
@@ -5424,7 +5612,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
@@ -5544,6 +5732,7 @@ namespace Nakama
             string bearerToken,
             ApiAccountFacebook account,
             bool? sync,
+            bool? importEmail,
             CancellationToken? cancellationToken)
         {
             if (account == null)
@@ -5556,6 +5745,9 @@ namespace Nakama
             var queryParams = "";
             if (sync != null) {
                 queryParams = string.Concat(queryParams, "sync=", sync.ToString().ToLower(), "&");
+            }
+            if (importEmail != null) {
+                queryParams = string.Concat(queryParams, "import_email=", importEmail.ToString().ToLower(), "&");
             }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
@@ -5654,17 +5846,21 @@ namespace Nakama
         /// </summary>
         public async Task LinkGoogleAsync(
             string bearerToken,
-            ApiAccountGoogle body,
+            ApiAccountGoogle account,
+            bool? importEmail,
             CancellationToken? cancellationToken)
         {
-            if (body == null)
+            if (account == null)
             {
-                throw new ArgumentException("'body' is required but was null.");
+                throw new ArgumentException("'account' is required but was null.");
             }
 
             var urlpath = "/v2/account/link/google";
 
             var queryParams = "";
+            if (importEmail != null) {
+                queryParams = string.Concat(queryParams, "import_email=", importEmail.ToString().ToLower(), "&");
+            }
 
             string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
 
@@ -5680,7 +5876,7 @@ namespace Nakama
             headers.Add("Authorization", header);
 
             byte[] content = null;
-            var jsonBody = body.ToJson();
+            var jsonBody = account.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
@@ -7160,6 +7356,49 @@ namespace Nakama
         }
 
         /// <summary>
+        /// Validate a purchase with a registered IAP provider
+        /// </summary>
+        public async Task<IApiValidateIAPPurchaseResponse> ValidatePurchaseAsync(
+            string bearerToken,
+            string provider,
+            ApiValidatePurchaseRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (provider == null)
+            {
+                throw new ArgumentException("'provider' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/purchase/{provider}";
+            urlpath = urlpath.Replace("{provider}", Uri.EscapeDataString(provider));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiValidateIAPPurchaseResponse>();
+        }
+
+        /// <summary>
         /// List user's subscriptions.
         /// </summary>
         public async Task<IApiSubscriptionList> ListSubscriptionsAsync(
@@ -7304,6 +7543,49 @@ namespace Nakama
             byte[] content = null;
             var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiValidatedSubscription>();
+        }
+
+        /// <summary>
+        /// Validate a subscription with a registered IAP provider
+        /// </summary>
+        public async Task<IApiValidateIAPSubscriptionResponse> ValidateSubscriptionAsync(
+            string bearerToken,
+            string provider,
+            ApiValidateSubscriptionRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (provider == null)
+            {
+                throw new ArgumentException("'provider' is required but was null.");
+            }
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/subscription/{provider}";
+            urlpath = urlpath.Replace("{provider}", Uri.EscapeDataString(provider));
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiValidateIAPSubscriptionResponse>();
         }
 
         /// <summary>
