@@ -3033,6 +3033,10 @@ namespace Nakama
         ///  - FACEBOOK_INSTANT_STORE: Facebook Instant Store
         /// </summary>
         FACEBOOK_INSTANT_STORE = 3,
+        /// <summary>
+        ///  - SAMSUNG_GALAXY_STORE: Samsung Galaxy Store
+        /// </summary>
+        SAMSUNG_GALAXY_STORE = 4,
     }
 
     /// <summary>
@@ -3961,6 +3965,44 @@ namespace Nakama
         {
             var output = "";
             output = string.Concat(output, "ValidatedPurchases: [", string.Join(", ", ValidatedPurchases), "], ");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Samsung IAP Purchase validation request.
+    /// </summary>
+    public interface IApiValidatePurchaseSamsungRequest
+    {
+
+        /// <summary>
+        /// Persist the purchase so that seenBefore can be computed to protect against replay attacks.
+        /// </summary>
+        bool Persist { get; }
+
+        /// <summary>
+        /// The purchase ID returned by the Samsung IAP SDK PurchaseVo.
+        /// </summary>
+        string PurchaseId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiValidatePurchaseSamsungRequest : IApiValidatePurchaseSamsungRequest
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="persist"), Preserve]
+        public bool Persist { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="purchase_id"), Preserve]
+        public string PurchaseId { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Persist: ", Persist, ", ");
+            output = string.Concat(output, "PurchaseId: ", PurchaseId, ", ");
             return output;
         }
     }
@@ -6834,6 +6876,43 @@ namespace Nakama
         }
 
         /// <summary>
+        /// Validate Samsung Galaxy Store IAP Receipt
+        /// </summary>
+        public async Task<IApiValidatePurchaseResponse> ValidatePurchaseSamsungAsync(
+            string bearerToken,
+            ApiValidatePurchaseSamsungRequest body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/iap/purchase/samsung";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiValidatePurchaseResponse>();
+        }
+
+        /// <summary>
         /// List user's subscriptions.
         /// </summary>
         public async Task<IApiSubscriptionList> ListSubscriptionsAsync(
@@ -7371,7 +7450,7 @@ namespace Nakama
         /// Execute a Lua function on the server.
         /// </summary>
         public async Task<IApiRpc> RpcFunc2Async(
-            string bearerToken,
+            string bearerToken
             string basicAuthUsername,
             string basicAuthPassword,
             string id,
@@ -7426,7 +7505,7 @@ namespace Nakama
         /// Execute a Lua function on the server.
         /// </summary>
         public async Task<IApiRpc> RpcFuncAsync(
-            string bearerToken,
+            string bearerToken
             string basicAuthUsername,
             string basicAuthPassword,
             string id,
