@@ -133,6 +133,8 @@ namespace {{.Namespace}}
         IDictionary<string, double> {{$fieldname}} { get; }
             {{- else if eq $property.AdditionalProperties.Type "boolean"}}
         IDictionary<string, bool> {{$fieldname}} { get; }
+            {{- else if eq $property.AdditionalProperties.Type "object"}}
+        IDictionary<string, object> {{$fieldname}} { get; }
             {{- else }}
         IDictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}> {{$fieldname}} { get; }
             {{- end}}
@@ -210,6 +212,11 @@ namespace {{.Namespace}}
         public IDictionary<string, bool> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, bool>();
         [DataMember(Name="{{ $attrDataName }}"), Preserve]
         public Dictionary<string, bool> _{{ $propname | snakeToCamel }} { get; set; }
+            {{- else if eq $property.AdditionalProperties.Type "object"}}
+        [IgnoreDataMember]
+        public IDictionary<string, object> {{ $fieldname }} => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, object>();
+        [DataMember(Name="{{ $attrDataName }}"), Preserve]
+        public Dictionary<string, object> _{{ $propname | snakeToCamel }} { get; set; }
             {{- else}}
         [IgnoreDataMember]
         public IDictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}> {{ $fieldname }}  => _{{ $propname | snakeToCamel }} ?? new Dictionary<string, I{{$property.AdditionalProperties.Ref | cleanRef}}>();
@@ -610,6 +617,7 @@ func main() {
 	schema.Namespace = namespace
 
 	generateBodyDefinitionFromSchema(schema)
+	normalizeStructProperties(schema)
 
 	fmap := template.FuncMap{
 		"snakeToCamel": snakeToCamel,
@@ -690,7 +698,7 @@ type Schema struct {
 			Name     string
 			In       string
 			Required bool
-			Type     string // used with primitives
+			Type     string   // used with primitives
 			Items    struct { // used with type "array"
 				Type string
 			}
@@ -707,7 +715,10 @@ type ObjectSchema struct {
 	Type       string
 	Ref        string `json:"$ref"`
 	Properties map[string]struct {
-		Type        string
+		Type                 string
+		AdditionalProperties struct {
+			Type string
+		} `json:"additionalProperties"`
 		Description string
 	}
 	Description string
@@ -767,13 +778,18 @@ func generateBodyDefinitionFromSchema(s *Schema) {
 						properties := make(map[string]ObjectProperty)
 
 						for key, p := range param.Schema.Properties {
+							// An inline schema loses its "additionalProperties", so a Struct field has to be
+							// recognised by being an object with neither a reference nor a value type.
+							additional := AdditionalProperties{Type: "string"}
+							if p.Type == "object" && p.AdditionalProperties.Type == "" {
+								additional = AdditionalProperties{Type: "object"}
+							}
+
 							properties[key] = ObjectProperty{
-								Type:  p.Type,
-								Items: Items{},
-								AdditionalProperties: AdditionalProperties{
-									Type: "string",
-								},
-								Description: p.Description,
+								Type:                 p.Type,
+								Items:                Items{},
+								AdditionalProperties: additional,
+								Description:          p.Description,
 							}
 						}
 
@@ -786,5 +802,23 @@ func generateBodyDefinitionFromSchema(s *Schema) {
 				}
 			}
 		}
+	}
+}
+
+func normalizeStructProperties(s *Schema) {
+	// A google.protobuf.Struct field is emitted as a bare "type":"object" with neither a "$ref"
+	// nor "additionalProperties", which the template would render as a map to an untyped value.
+	// Render it as a map of objects, so numbers, booleans, lists and nested objects reach the
+	// provider the way the server's Struct.AsMap reads them. A map of messages carries a
+	// "additionalProperties" "$ref" of its own and must keep its declared value type.
+	for name, definition := range s.Definitions {
+		for key, property := range definition.Properties {
+			if property.Type != "object" || property.Ref != "" || property.AdditionalProperties != (AdditionalProperties{}) {
+				continue
+			}
+			property.AdditionalProperties = AdditionalProperties{Type: "object"}
+			definition.Properties[key] = property
+		}
+		s.Definitions[name] = definition
 	}
 }

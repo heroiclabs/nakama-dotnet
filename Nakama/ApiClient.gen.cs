@@ -117,7 +117,7 @@ namespace Nakama
         /// <summary>
         /// Opaque JSON passed through to the registered provider.
         /// </summary>
-        IDictionary<string, string> Payload { get; }
+        IDictionary<string, object> Payload { get; }
 
         /// <summary>
         /// Persist the purchase so that seenBefore can be computed to protect against replay attacks.
@@ -131,9 +131,9 @@ namespace Nakama
 
         /// <inheritdoc />
         [IgnoreDataMember]
-        public IDictionary<string, string> Payload => _payload ?? new Dictionary<string, string>();
+        public IDictionary<string, object> Payload => _payload ?? new Dictionary<string, object>();
         [DataMember(Name="payload"), Preserve]
-        public Dictionary<string, string> _payload { get; set; }
+        public Dictionary<string, object> _payload { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="persist"), Preserve]
@@ -163,7 +163,7 @@ namespace Nakama
         /// <summary>
         /// Opaque JSON passed through to the registered provider.
         /// </summary>
-        IDictionary<string, string> Payload { get; }
+        IDictionary<string, object> Payload { get; }
 
         /// <summary>
         /// Persist the subscription.
@@ -177,9 +177,9 @@ namespace Nakama
 
         /// <inheritdoc />
         [IgnoreDataMember]
-        public IDictionary<string, string> Payload => _payload ?? new Dictionary<string, string>();
+        public IDictionary<string, object> Payload => _payload ?? new Dictionary<string, object>();
         [DataMember(Name="payload"), Preserve]
-        public Dictionary<string, string> _payload { get; set; }
+        public Dictionary<string, object> _payload { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="persist"), Preserve]
@@ -981,7 +981,7 @@ namespace Nakama
         /// <summary>
         /// Opaque JSON passed through to the registered provider function.
         /// </summary>
-        IDictionary<string, I> Payload { get; }
+        IDictionary<string, object> Payload { get; }
 
         /// <summary>
         /// The name the provider was registered under during runtime initialization.
@@ -1000,9 +1000,9 @@ namespace Nakama
 
         /// <inheritdoc />
         [IgnoreDataMember]
-        public IDictionary<string, I> Payload  => _payload ?? new Dictionary<string, I>();
+        public IDictionary<string, object> Payload => _payload ?? new Dictionary<string, object>();
         [DataMember(Name="payload"), Preserve]
-        public Dictionary<string, I> _payload { get; set; }
+        public Dictionary<string, object> _payload { get; set; }
 
         /// <inheritdoc />
         [DataMember(Name="provider"), Preserve]
