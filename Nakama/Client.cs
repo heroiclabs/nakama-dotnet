@@ -189,12 +189,12 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateAppleAsync"/>
         public async Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            Dictionary<string, string> vars = null, bool importEmail = true, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateAppleAsync(ServerKey,
                     string.Empty,
-                    new ApiAccountApple { Token = token, _vars = vars }, create, username, null, canceller),
+                    new ApiAccountApple { Token = token, _vars = vars }, create, username, importEmail, canceller),
                 new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
@@ -239,12 +239,12 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateFacebookAsync"/>
         public async Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
-            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            bool import = true, Dictionary<string, string> vars = null, bool importEmail = true, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateFacebookAsync(ServerKey,
                     string.Empty,
-                    new ApiAccountFacebook { Token = token, _vars = vars }, create, username, import, null, canceller),
+                    new ApiAccountFacebook { Token = token, _vars = vars }, create, username, import, importEmail, canceller),
                 new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
@@ -273,12 +273,12 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateGoogleAsync"/>
         public async Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null,
+            Dictionary<string, string> vars = null, bool importEmail = true, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateGoogleAsync(ServerKey,
                     string.Empty,
-                    new ApiAccountGoogle { Token = token, _vars = vars }, create, username, null, canceller),
+                    new ApiAccountGoogle { Token = token, _vars = vars }, create, username, importEmail, canceller),
                 new RetryHistory(token, retryConfiguration ?? GlobalRetryConfiguration, canceller));
             return new Session(response.Token, response.RefreshToken, response.Created);
         }
@@ -654,7 +654,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="LinkAppleAsync"/>
-        public async Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null,
+        public async Task LinkAppleAsync(ISession session, string token, bool importEmail = true, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
@@ -664,7 +664,7 @@ namespace Nakama
             }
 
             await _retryInvoker.InvokeWithRetry(
-                () => _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple { Token = token }, null,
+                () => _apiClient.LinkAppleAsync(session.AuthToken, new ApiAccountApple { Token = token }, importEmail,
                     canceller),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
@@ -715,7 +715,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="LinkFacebookAsync"/>
-        public async Task LinkFacebookAsync(ISession session, string token, bool? import = true,
+        public async Task LinkFacebookAsync(ISession session, string token, bool? import = true, bool importEmail = true,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
@@ -726,7 +726,7 @@ namespace Nakama
 
             await _retryInvoker.InvokeWithRetry(
                 () => _apiClient.LinkFacebookAsync(session.AuthToken, new ApiAccountFacebook { Token = token }, import,
-                    null, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
+                    importEmail, canceller), new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
 
         /// <inheritdoc cref="LinkGameCenterAsync"/>
@@ -753,7 +753,7 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="LinkGoogleAsync"/>
-        public async Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null,
+        public async Task LinkGoogleAsync(ISession session, string token, bool importEmail = true, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
@@ -763,7 +763,7 @@ namespace Nakama
             }
 
             await _retryInvoker.InvokeWithRetry(
-                () => _apiClient.LinkGoogleAsync(session.AuthToken, new ApiAccountGoogle { Token = token }, null,
+                () => _apiClient.LinkGoogleAsync(session.AuthToken, new ApiAccountGoogle { Token = token }, importEmail,
                     canceller),
                 new RetryHistory(session, retryConfiguration ?? GlobalRetryConfiguration, canceller));
         }
