@@ -375,6 +375,11 @@ namespace Nakama
         string Email { get; }
 
         /// <summary>
+        /// The authentication provider identities linked to the user's account.
+        /// </summary>
+        IEnumerable<IApiAccountProviderIdentity> Providers { get; }
+
+        /// <summary>
         /// The user object.
         /// </summary>
         IApiUser User { get; }
@@ -414,6 +419,12 @@ namespace Nakama
 
         /// <inheritdoc />
         [IgnoreDataMember]
+        public IEnumerable<IApiAccountProviderIdentity> Providers => _providers ?? new List<ApiAccountProviderIdentity>(0);
+        [DataMember(Name="providers"), Preserve]
+        public List<ApiAccountProviderIdentity> _providers { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
         public IApiUser User => _user;
         [DataMember(Name="user"), Preserve]
         public ApiUser _user { get; set; }
@@ -433,6 +444,7 @@ namespace Nakama
             output = string.Concat(output, "Devices: [", string.Join(", ", Devices), "], ");
             output = string.Concat(output, "DisableTime: ", DisableTime, ", ");
             output = string.Concat(output, "Email: ", Email, ", ");
+            output = string.Concat(output, "Providers: [", string.Join(", ", Providers), "], ");
             output = string.Concat(output, "User: ", User, ", ");
             output = string.Concat(output, "VerifyTime: ", VerifyTime, ", ");
             output = string.Concat(output, "Wallet: ", Wallet, ", ");
@@ -864,6 +876,108 @@ namespace Nakama
                 varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
             }
             output = string.Concat(output, "Vars: [" + varsString + "]");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// Send credentials for a runtime-registered authentication provider. Used with authenticate/link/unlink.
+    /// </summary>
+    public interface IApiAccountProvider
+    {
+
+        /// <summary>
+        /// Opaque JSON passed through to the registered provider function.
+        /// </summary>
+        IDictionary<string, I> Payload { get; }
+
+        /// <summary>
+        /// The name the provider was registered under during runtime initialization.
+        /// </summary>
+        string Provider { get; }
+
+        /// <summary>
+        /// Extra information that will be bundled in the session token.
+        /// </summary>
+        IDictionary<string, string> Vars { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiAccountProvider : IApiAccountProvider
+    {
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, I> Payload  => _payload ?? new Dictionary<string, I>();
+        [DataMember(Name="payload"), Preserve]
+        public Dictionary<string, I> _payload { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="provider"), Preserve]
+        public string Provider { get; set; }
+
+        /// <inheritdoc />
+        [IgnoreDataMember]
+        public IDictionary<string, string> Vars => _vars ?? new Dictionary<string, string>();
+        [DataMember(Name="vars"), Preserve]
+        public Dictionary<string, string> _vars { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+
+            var payloadString = "";
+            foreach (var kvp in Payload)
+            {
+                payloadString = string.Concat(payloadString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Payload: [" + payloadString + "]");
+            output = string.Concat(output, "Provider: ", Provider, ", ");
+
+            var varsString = "";
+            foreach (var kvp in Vars)
+            {
+                varsString = string.Concat(varsString, "{" + kvp.Key + "=" + kvp.Value + "}");
+            }
+            output = string.Concat(output, "Vars: [" + varsString + "]");
+            return output;
+        }
+    }
+
+    /// <summary>
+    /// A provider identity linked to a user's account.
+    /// </summary>
+    public interface IApiAccountProviderIdentity
+    {
+
+        /// <summary>
+        /// The name the provider was registered under during runtime initialization.
+        /// </summary>
+        string Provider { get; }
+
+        /// <summary>
+        /// The user's ID with that provider.
+        /// </summary>
+        string ProviderUserId { get; }
+    }
+
+    /// <inheritdoc />
+    internal class ApiAccountProviderIdentity : IApiAccountProviderIdentity
+    {
+
+        /// <inheritdoc />
+        [DataMember(Name="provider"), Preserve]
+        public string Provider { get; set; }
+
+        /// <inheritdoc />
+        [DataMember(Name="provider_user_id"), Preserve]
+        public string ProviderUserId { get; set; }
+
+        public override string ToString()
+        {
+            var output = "";
+            output = string.Concat(output, "Provider: ", Provider, ", ");
+            output = string.Concat(output, "ProviderUserId: ", ProviderUserId, ", ");
             return output;
         }
     }
@@ -4536,6 +4650,17 @@ namespace Nakama
     /// <summary>
     /// 
     /// </summary>
+    public enum ProtobufNullValue
+    {
+        /// <summary>
+        /// Represents a JSON `null`.
+        /// </summary>
+        NULL_VALUE = 0,
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IRpcStatus
     {
 
@@ -4722,6 +4847,56 @@ namespace Nakama
             var jsonBody = body.ToJson();
             content = Encoding.UTF8.GetBytes(jsonBody);
             await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
+        /// Authenticate a user with a runtime-registered provider against the server.
+        /// </summary>
+        public async Task<IApiSession> AuthenticateAsync(
+            string basicAuthUsername,
+            string basicAuthPassword,
+            ApiAccountProvider account,
+            bool? create,
+            string username,
+            CancellationToken? cancellationToken)
+        {
+            if (account == null)
+            {
+                throw new ArgumentException("'account' is required but was null.");
+            }
+
+            var urlpath = "/v2/account/authenticate";
+
+            var queryParams = "";
+            if (create != null) {
+                queryParams = string.Concat(queryParams, "create=", create.ToString().ToLower(), "&");
+            }
+            if (username != null) {
+                queryParams = string.Concat(queryParams, "username=", Uri.EscapeDataString(username), "&");
+            }
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(basicAuthUsername))
+            {
+                var credentials = Encoding.UTF8.GetBytes(basicAuthUsername + ":" + basicAuthPassword);
+                var header = string.Concat("Basic ", Convert.ToBase64String(credentials));
+                headers.Add("Authorization", header);
+            }
+
+            byte[] content = null;
+            var jsonBody = account.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+            return contents.FromJson<ApiSession>();
         }
 
         /// <summary>
@@ -5183,6 +5358,42 @@ namespace Nakama
         }
 
         /// <summary>
+        /// Add an authentication provider identity to the current user's account.
+        /// </summary>
+        public async Task LinkAsync(
+            string bearerToken,
+            ApiAccountProvider body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/account/link";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
+        }
+
+        /// <summary>
         /// Add an Apple ID to the social profiles on the current user's account.
         /// </summary>
         public async Task LinkAppleAsync(
@@ -5550,6 +5761,42 @@ namespace Nakama
             content = Encoding.UTF8.GetBytes(jsonBody);
             var contents = await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
             return contents.FromJson<ApiSession>();
+        }
+
+        /// <summary>
+        /// Remove an authentication provider identity from the current user's account.
+        /// </summary>
+        public async Task UnlinkAsync(
+            string bearerToken,
+            ApiAccountProvider body,
+            CancellationToken? cancellationToken)
+        {
+            if (body == null)
+            {
+                throw new ArgumentException("'body' is required but was null.");
+            }
+
+            var urlpath = "/v2/account/unlink";
+
+            var queryParams = "";
+
+            string path = _baseUri.AbsolutePath.TrimEnd('/') + urlpath;
+
+            var uri = new UriBuilder(_baseUri)
+            {
+                Path = path,
+                Query = queryParams
+            }.Uri;
+
+            var httpMethod = "POST";
+            var headers = new Dictionary<string, string>();
+            var header = string.Concat("Bearer ", bearerToken);
+            headers.Add("Authorization", header);
+
+            byte[] content = null;
+            var jsonBody = body.ToJson();
+            content = Encoding.UTF8.GetBytes(jsonBody);
+            await HttpAdapter.SendAsync(httpMethod, uri, headers, content, Timeout, cancellationToken);
         }
 
         /// <summary>
