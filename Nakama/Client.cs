@@ -189,7 +189,14 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateAppleAsync"/>
         public async Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, bool importEmail = true, RetryConfiguration retryConfiguration = null,
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            return await AuthenticateAppleAsync(token, username, create, vars, true, retryConfiguration, canceller);
+        }
+
+        /// <inheritdoc cref="AuthenticateAppleAsync"/>
+        public async Task<ISession> AuthenticateAppleAsync(string token, string username, bool create,
+            Dictionary<string, string> vars, bool importEmail, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateAppleAsync(ServerKey,
@@ -239,7 +246,14 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateFacebookAsync"/>
         public async Task<ISession> AuthenticateFacebookAsync(string token, string username = null, bool create = true,
-            bool import = true, Dictionary<string, string> vars = null, bool importEmail = true, RetryConfiguration retryConfiguration = null,
+            bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            return await AuthenticateFacebookAsync(token, username, create, import, vars, true, retryConfiguration, canceller);
+        }
+
+        /// <inheritdoc cref="AuthenticateFacebookAsync"/>
+        public async Task<ISession> AuthenticateFacebookAsync(string token, string username, bool create, bool import,
+            Dictionary<string, string> vars, bool importEmail, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateFacebookAsync(ServerKey,
@@ -273,7 +287,14 @@ namespace Nakama
 
         /// <inheritdoc cref="AuthenticateGoogleAsync"/>
         public async Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true,
-            Dictionary<string, string> vars = null, bool importEmail = true, RetryConfiguration retryConfiguration = null,
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            return await AuthenticateGoogleAsync(token, username, create, vars, true, retryConfiguration, canceller);
+        }
+
+        /// <inheritdoc cref="AuthenticateGoogleAsync"/>
+        public async Task<ISession> AuthenticateGoogleAsync(string token, string username, bool create,
+            Dictionary<string, string> vars, bool importEmail, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             var response = await _retryInvoker.InvokeWithRetry(() => _apiClient.AuthenticateGoogleAsync(ServerKey,
@@ -654,7 +675,13 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="LinkAppleAsync"/>
-        public async Task LinkAppleAsync(ISession session, string token, bool importEmail = true, RetryConfiguration retryConfiguration = null,
+        public async Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            await LinkAppleAsync(session, token, true, retryConfiguration, canceller);
+        }
+
+        /// <inheritdoc cref="LinkAppleAsync"/>
+        public async Task LinkAppleAsync(ISession session, string token, bool importEmail, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
@@ -715,7 +742,13 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="LinkFacebookAsync"/>
-        public async Task LinkFacebookAsync(ISession session, string token, bool? import = true, bool importEmail = true,
+        public async Task LinkFacebookAsync(ISession session, string token, bool? import = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            await LinkFacebookAsync(session, token, import, true, retryConfiguration, canceller);
+        }
+
+        /// <inheritdoc cref="LinkFacebookAsync"/>
+        public async Task LinkFacebookAsync(ISession session, string token, bool? import, bool importEmail,
             RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
@@ -753,7 +786,13 @@ namespace Nakama
         }
 
         /// <inheritdoc cref="LinkGoogleAsync"/>
-        public async Task LinkGoogleAsync(ISession session, string token, bool importEmail = true, RetryConfiguration retryConfiguration = null,
+        public async Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default)
+        {
+            await LinkGoogleAsync(session, token, true, retryConfiguration, canceller);
+        }
+
+        /// <inheritdoc cref="LinkGoogleAsync"/>
+        public async Task LinkGoogleAsync(ISession session, string token, bool importEmail, RetryConfiguration retryConfiguration = null,
             CancellationToken canceller = default)
         {
             if (AutoRefreshSession && !string.IsNullOrEmpty(session.RefreshToken) &&
