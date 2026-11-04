@@ -141,9 +141,8 @@ namespace Nakama.TinyJson
                         isFirst = false;
                     else
                         stringBuilder.Append(',');
-                    stringBuilder.Append('\"');
-                    stringBuilder.Append((string) key);
-                    stringBuilder.Append("\":");
+                    AppendValue(stringBuilder, key);
+                    stringBuilder.Append(':');
                     AppendValue(stringBuilder, dict[key]);
                 }
                 stringBuilder.Append('}');

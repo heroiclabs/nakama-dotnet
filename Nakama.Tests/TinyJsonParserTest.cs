@@ -108,6 +108,48 @@ namespace Nakama.Tests
             
             Assert.Equal(true, obj["key"]);
         }
+
+        [Fact]
+        public void ToJson_DictionaryKeysWithQuotesBackslashesAndControlCharacters_ProduceValidJson()
+        {
+            var payload = new Dictionary<string, object>
+            {
+                { "say \"hi\"", 1 },
+                { "C:\\saves", 2 },
+                { "line\nbreak\ttab\u0001", 3 },
+                { "outer", new Dictionary<string, object> { { "in\"ner", true } } }
+            };
+
+            var json = payload.ToJson();
+
+            using var document = System.Text.Json.JsonDocument.Parse(json);
+            Assert.Equal(
+                new[] { "say \"hi\"", "C:\\saves", "line\nbreak\ttab\u0001", "outer" },
+                document.RootElement.EnumerateObject().Select(p => p.Name).ToArray());
+            Assert.Equal(
+                new[] { "in\"ner" },
+                document.RootElement.GetProperty("outer").EnumerateObject().Select(p => p.Name).ToArray());
+        }
+
+        [Fact]
+        public void FromJson_EscapedDictionaryKeys_RoundTripToOriginalKeys()
+        {
+            var payload = new Dictionary<string, object>
+            {
+                { "say \"hi\"", 1 },
+                { "C:\\saves", 2 },
+                { "line\nbreak\ttab\u0001", 3 },
+                { "outer", new Dictionary<string, object> { { "in\"ner", true } } }
+            };
+
+            var parsed = payload.ToJson().FromJson<Dictionary<string, object>>();
+
+            Assert.Equal(
+                new[] { "C:\\saves", "line\nbreak\ttab\u0001", "outer", "say \"hi\"" },
+                parsed.Keys.OrderBy(k => k, System.StringComparer.Ordinal).ToArray());
+            var nested = Assert.IsType<Dictionary<string, object>>(parsed["outer"]);
+            Assert.Equal(new[] { "in\"ner" }, nested.Keys.ToArray());
+        }
     }
 
     public interface ITestObject

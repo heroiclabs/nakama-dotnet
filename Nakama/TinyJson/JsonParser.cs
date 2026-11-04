@@ -302,7 +302,7 @@ namespace Nakama.TinyJson
                 {
                     if (elems[i].Length <= 2)
                         continue;
-                    var keyValue = elems[i].Substring(1, elems[i].Length - 2);
+                    var keyValue = (string) ParseValue(typeof(string), elems[i]);
                     var val = ParseValue(valueType, elems[i + 1]);
                     dictionary.Add(keyValue, val);
                 }
@@ -334,7 +334,7 @@ namespace Nakama.TinyJson
                     return null;
                 var dict = new Dictionary<string, object>(elems.Count / 2);
                 for (var i = 0; i < elems.Count; i += 2)
-                    dict.Add(elems[i].Substring(1, elems[i].Length - 2), ParseAnonymousValue(elems[i + 1]));
+                    dict.Add((string) ParseValue(typeof(string), elems[i]), ParseAnonymousValue(elems[i + 1]));
                 return dict;
             }
 

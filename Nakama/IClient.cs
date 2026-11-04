@@ -99,6 +99,20 @@ namespace Nakama
         Task AddGroupUsersAsync(ISession session, string groupId, IEnumerable<string> ids, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Authenticate a user with a provider registered by the server runtime.
+        /// </summary>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <param name="vars">Extra information that will be bundled in the session token.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to a session object.</returns>
+        Task<ISession> AuthenticateAsync(string provider, Dictionary<string, object> payload = null, string username = null, bool create = true,
+            Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Authenticate a user with an Apple ID against the server.
         /// </summary>
         /// <param name="username">A username used to create the user.</param>
@@ -109,6 +123,19 @@ namespace Nakama
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateAppleAsync(string token, string username = null, bool create = true,
             Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Authenticate a user with an Apple ID against the server.
+        /// </summary>
+        /// <param name="username">A username used to create the user.</param>
+        /// <param name="token">The ID token received from Apple to validate.</param>
+        /// <param name="vars">Extra information that will be bundled in the session token.</param>
+        /// <param name="importEmail">If the email address from the provider should be imported into the account.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to a session object.</returns>
+        Task<ISession> AuthenticateAppleAsync(string token, string username, bool create,
+            Dictionary<string, string> vars, bool importEmail, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with a custom id.
@@ -165,6 +192,21 @@ namespace Nakama
             bool import = true, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Authenticate a user with a Facebook auth token.
+        /// </summary>
+        /// <param name="token">An OAuth access token from the Facebook SDK.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <param name="import">If the Facebook friends should be imported.</param>
+        /// <param name="vars">Extra information that will be bundled in the session token.</param>
+        /// <param name="importEmail">If the email address from the provider should be imported into the account.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to a session object.</returns>
+        Task<ISession> AuthenticateFacebookAsync(string token, string username, bool create, bool import,
+            Dictionary<string, string> vars, bool importEmail, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Authenticate a user with Apple Game Center.
         /// </summary>
         /// <param name="bundleId">The bundle id of the Game Center application.</param>
@@ -195,6 +237,20 @@ namespace Nakama
         /// <returns>A task which resolves to a session object.</returns>
         Task<ISession> AuthenticateGoogleAsync(string token, string username = null, bool create = true,
             Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Authenticate a user with a Google auth token.
+        /// </summary>
+        /// <param name="token">An OAuth access token from the Google SDK.</param>
+        /// <param name="username">A username used to create the user. May be <c>null</c>.</param>
+        /// <param name="create">If the user should be created when authenticated.</param>
+        /// <param name="vars">Extra information that will be bundled in the session token.</param>
+        /// <param name="importEmail">If the email address from the provider should be imported into the account.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to a session object.</returns>
+        Task<ISession> AuthenticateGoogleAsync(string token, string username, bool create,
+            Dictionary<string, string> vars, bool importEmail, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Authenticate a user with a Steam auth token.
@@ -444,6 +500,17 @@ namespace Nakama
         Task LeaveGroupAsync(ISession session, string groupId, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Add an authentication provider identity to the current user's account.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task LinkAsync(ISession session, string provider, Dictionary<string, object> payload = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Link an Apple ID to the social profiles on the current user's account.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -452,6 +519,17 @@ namespace Nakama
         /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkAppleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Link an Apple ID to the social profiles on the current user's account.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="token">The ID token received from Apple to validate.</param>
+        /// <param name="importEmail">If the email address from the provider should be imported into the account.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task LinkAppleAsync(ISession session, string token, bool importEmail, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link a custom ID to the user account owned by the session.
@@ -496,6 +574,18 @@ namespace Nakama
         Task LinkFacebookAsync(ISession session, string token, bool? import = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Link a Facebook profile to a user account.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="token">An OAuth access token from the Facebook SDK.</param>
+        /// <param name="import">If the Facebook friends should be imported.</param>
+        /// <param name="importEmail">If the email address from the provider should be imported into the account.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task LinkFacebookAsync(ISession session, string token, bool? import, bool importEmail, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Link a Game Center profile to a user account.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -520,6 +610,17 @@ namespace Nakama
         /// <param name="token">An OAuth access token from the Google SDK.</param>
         /// <returns>A task which represents the asynchronous operation.</returns>
         Task LinkGoogleAsync(ISession session, string token, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
+        /// Link a Google profile to a user account.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="importEmail">If the email address from the provider should be imported into the account.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <param name="token">An OAuth access token from the Google SDK.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task LinkGoogleAsync(ISession session, string token, bool importEmail, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Link a Steam profile to a user account.
@@ -886,6 +987,17 @@ namespace Nakama
         Task<ISession> SessionRefreshAsync(ISession session, Dictionary<string, string> vars = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Remove an authentication provider identity from the current user's account.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which represents the asynchronous operation.</returns>
+        Task UnlinkAsync(ISession session, string provider, Dictionary<string, object> payload = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Remove the Apple ID from the social profiles on the current user's account.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -1008,6 +1120,18 @@ namespace Nakama
             string avatarUrl = null, string langTag = null, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
+        /// Validate a purchase with a provider registered by the server runtime.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="persist">Whether or not to track the purchase in the Nakama database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the validated list of purchases.</returns>
+        Task<IApiValidateIAPPurchaseResponse> ValidatePurchaseAsync(ISession session, string provider, Dictionary<string, object> payload = null, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+        /// <summary>
         /// Validate a purchase receipt against the Apple App Store.
         /// </summary>
         /// <param name="session">The session of the user.</param>
@@ -1053,6 +1177,30 @@ namespace Nakama
         /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
         Task<IApiValidatePurchaseResponse> ValidatePurchaseHuaweiAsync(ISession session, string receipt,
             string signature, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+        /// <summary>
+        /// Validate a Samsung Galaxy Store purchase with the Nakama server.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="purchaseId">The Samsung Galaxy Store purchase id to be validated.</param>
+        /// <param name="persist">Whether or not to track the purchase in the Nakama database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the validated list of purchase receipts.</returns>
+        Task<IApiValidatePurchaseResponse> ValidatePurchaseSamsungAsync(ISession session, string purchaseId,
+            bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
+
+
+        /// <summary>
+        /// Validate a subscription with a provider registered by the server runtime.
+        /// </summary>
+        /// <param name="session">The session of the user.</param>
+        /// <param name="provider">The name the provider was registered under during runtime initialization.</param>
+        /// <param name="payload">Opaque payload passed through to the registered provider.</param>
+        /// <param name="persist">Whether or not to persist the subscription to Nakama's database.</param>
+        /// <param name="retryConfiguration">The retry configuration. See <see cref="RetryConfiguration"/></param>
+        /// <param name="canceller">The <see cref="CancellationToken"/> that can be used to cancel the request while mid-flight.</param>
+        /// <returns>A task which resolves to the subscription validation response.</returns>
+        Task<IApiValidateIAPSubscriptionResponse> ValidateSubscriptionAsync(ISession session, string provider, Dictionary<string, object> payload = null, bool persist = true, RetryConfiguration retryConfiguration = null, CancellationToken canceller = default);
 
         /// <summary>
         /// Validate an Apple subscription receipt.
