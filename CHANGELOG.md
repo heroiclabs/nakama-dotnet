@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.23.0] - 2026-11-08
 ### Added
 - Nakama: "ValidatePurchaseSamsungAsync" for Samsung Galaxy Store purchase validation.
 - Nakama: "AuthenticateAsync", "LinkAsync" and "UnlinkAsync" for authentication providers registered by the server runtime.
