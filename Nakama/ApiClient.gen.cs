@@ -4022,7 +4022,7 @@ namespace Nakama
         /// <summary>
         /// 
         /// </summary>
-        IApiValidatedSubscription Subscription { get; }
+        IEnumerable<IApiValidatedSubscription> Subscription { get; }
     }
 
     /// <inheritdoc />
@@ -4031,14 +4031,14 @@ namespace Nakama
 
         /// <inheritdoc />
         [IgnoreDataMember]
-        public IApiValidatedSubscription Subscription => _subscription;
+        public IEnumerable<IApiValidatedSubscription> Subscription => _subscription ?? new List<ApiValidatedSubscription>(0);
         [DataMember(Name="subscription"), Preserve]
-        public ApiValidatedSubscription _subscription { get; set; }
+        public List<ApiValidatedSubscription> _subscription { get; set; }
 
         public override string ToString()
         {
             var output = "";
-            output = string.Concat(output, "Subscription: ", Subscription, ", ");
+            output = string.Concat(output, "Subscription: [", string.Join(", ", Subscription), "], ");
             return output;
         }
     }
