@@ -117,7 +117,7 @@ namespace Nakama.Tests.Api
             var live = TestsUtil.FromSettingsFile();
             var session = await live.AuthenticateCustomAsync(Guid.NewGuid().ToString());
             var adapter = new RecordingAdapter(
-                $"{{\"subscription\":{{\"user_id\":\"{session.UserId}\", \"product_id\":\"com.example.vip_monthly\", \"original_transaction_id\":\"sub_3Kd8PwQ1nV\", \"store\":1000, \"purchase_time\":\"2026-11-04T09:15:27.512Z\", \"environment\":1, \"expiry_time\":\"2026-12-04T09:15:27.512Z\", \"provider_response\":\"{{\\\"subscription_id\\\":\\\"sub_3Kd8PwQ1nV\\\",\\\"status\\\":\\\"active\\\"}}\", \"active\":true, \"provider\":\"webshop\"}}}}");
+                $"{{\"subscription\":[{{\"user_id\":\"{session.UserId}\", \"product_id\":\"com.example.vip_monthly\", \"original_transaction_id\":\"sub_3Kd8PwQ1nV\", \"store\":1000, \"purchase_time\":\"2026-11-04T09:15:27.512Z\", \"environment\":1, \"expiry_time\":\"2026-12-04T09:15:27.512Z\", \"provider_response\":\"{{\\\"subscription_id\\\":\\\"sub_3Kd8PwQ1nV\\\",\\\"status\\\":\\\"active\\\"}}\", \"active\":true, \"provider\":\"webshop\"}}, {{\"user_id\":\"{session.UserId}\", \"product_id\":\"com.example.vip_yearly\", \"original_transaction_id\":\"sub_7Rt2LmX4cB\", \"store\":1000, \"environment\":1, \"expiry_time\":\"2027-11-04T09:15:27.512Z\", \"active\":true, \"provider\":\"webshop\"}}]}}");
             var client = new Client(live.Scheme, live.Host, live.Port, live.ServerKey, adapter, autoRefreshSession: false);
 
             var response = await client.ValidateSubscriptionAsync(session, "webshop", new Dictionary<string, object>
@@ -140,7 +140,11 @@ namespace Nakama.Tests.Api
             Assert.Contains("\"trial\":true", request.Body);
             Assert.Contains("\"promo_code\":null", request.Body);
             Assert.Contains("\"billing\":{\"interval\":\"month\",\"interval_count\":1}", request.Body);
-            var subscription = response.Subscription;
+            var subscriptions = response.Subscription.ToList();
+            Assert.Equal(2, subscriptions.Count);
+            Assert.Equal("sub_7Rt2LmX4cB", subscriptions[1].OriginalTransactionId);
+            Assert.Equal("com.example.vip_yearly", subscriptions[1].ProductId);
+            var subscription = subscriptions[0];
             Assert.Equal(session.UserId, subscription.UserId);
             Assert.Equal("sub_3Kd8PwQ1nV", subscription.OriginalTransactionId);
             Assert.Equal("com.example.vip_monthly", subscription.ProductId);
