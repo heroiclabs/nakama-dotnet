@@ -90,5 +90,12 @@ namespace Nakama
         /// <param name="offset">The datetime to compare against this refresh token.</param>
         /// <returns>If refresh token has expired.</returns>
         bool HasRefreshExpired(DateTime offset);
+
+        /// <summary>
+        /// Update the current session token with a new authorization token and refresh token.
+        /// </summary>
+        /// <param name="authToken">The authorization token to update into the session.</param>
+        /// <param name="refreshToken">The refresh token to update into the session.</param>
+        void Update(string authToken, string refreshToken);
     }
 }

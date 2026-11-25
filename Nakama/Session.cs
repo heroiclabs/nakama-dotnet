@@ -92,11 +92,7 @@ namespace Nakama
             Update(authToken, refreshToken);
         }
 
-        /// <summary>
-        /// Update the current session token with a new authorization token and refresh token.
-        /// </summary>
-        /// <param name="authToken">The authorization token to update into the session.</param>
-        /// <param name="refreshToken">The refresh token to update into the session.</param>
+        /// <inheritdoc cref="ISession.Update"/>
         public void Update(string authToken, string refreshToken)
         {
             AuthToken = authToken;
